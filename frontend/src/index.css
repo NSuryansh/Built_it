@@ -1,7 +1,14 @@
 @import "tailwindcss";
 
-:root{
-  --nav-color-primary-text: #1F2937;   
-  --nav-color-secondary-text: #4B5563; 
-  --nav-color-orange: #F97316;  
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
