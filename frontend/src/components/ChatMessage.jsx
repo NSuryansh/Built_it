@@ -9,7 +9,7 @@ const ChatMessage = ({ message, isReceived }) => {
       </div>
       <div className={`flex flex-col ${isReceived ? 'items-end' : ''}`}>
         <p className={`px-4 py-2 rounded-lg ${
-          isReceived ? 'bg-orange-50 text-gray-700' : 'bg-gray-100 text-gray-700 shadow-sm'
+          isReceived ? 'bg-[#FFDDC0] text-gray-700' : 'bg-gray-100 text-gray-700 shadow-sm'
         }`}>
           {message}
         </p>

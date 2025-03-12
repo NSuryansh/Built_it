@@ -13,7 +13,7 @@ function App() {
           <ProgressPage />
         </div>
         <div className="w-1/2 flex flex-col border-l">
-          <div className="p-4 border-b bg-orange-50">
+          <div className="p-4 border-b bg-[#FFDDC0]">
             <h2 className="text-2xl font-semibold text-gray-800 ">Calm Bot</h2>
           </div>
           <div className="flex-1 overflow-y-auto p-4 bg-white">

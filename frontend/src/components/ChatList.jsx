@@ -18,8 +18,8 @@ const ChatItem = ({ message, isActive, index, onSelect }) => {
 const ChatList = ({ names, selectedChat, setSelectedChat }) => {
   return (
     <div className="w-80 bg-gray-50 border-r">
-      <div className="p-4 bg-orange-50">
-        <h2 className="text-2xl font-bold text-orange-100">Messages</h2>
+      <div className="p-4 bg-[#FFDDC0]">
+        <h2 className="text-2xl font-bold text-[#FF7700]">Messages</h2>
       </div>
       <div className="overflow-y-auto w-80">
         {names.map((name, index) => (

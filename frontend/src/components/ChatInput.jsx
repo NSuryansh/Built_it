@@ -8,9 +8,9 @@ const ChatInput = () => {
         <input
           type="text"
           placeholder="Type a message..."
-          className="flex-1 px-4 py-2 rounded-full border focus:outline-none focus:border-orange-500"
+          className="flex-1 px-4 py-2 rounded-full border focus:outline-none focus:border-[#FFDDC0]0"
         />
-        <button className="p-2 bg-orange-500 text-white rounded-full hover:bg-orange-600">
+        <button className="p-2 bg-[#FFDDC0]0 text-white rounded-full hover:bg-orange-600">
           <Send className="w-5 h-5" />
         </button>
       </div>
