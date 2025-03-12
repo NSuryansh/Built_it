@@ -36,8 +36,8 @@ const ProgressPage = () => {
 
   return (
     <div className="bg-gray-50 border-r">
-      <div className="p-4 bg-orange-50">
-        <h2 className="text-2xl font-bold text-orange-100">Your Feelings</h2>
+      <div className="p-4 bg-[#FFDDC0]">
+        <h2 className="text-2xl font-bold text-[#FF7700]">Your Feelings</h2>
       </div>
         <div className="p-8">
       

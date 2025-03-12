@@ -9,16 +9,16 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <div className="text-xl font-bold">CalmNest</div>
           <div className="flex space-x-8">
-            <a href="/" className="hover:text-orange-500 transition-colors">Home</a>
-            <a href="/Mood" className="hover:text-orange-500 transition-colors">Mood</a>
-            <a href="/Peer" className="hover:text-orange-500 transition-colors">Peer</a>
-            <a href="#" className="hover:text-orange-500 transition-colors">Book</a>
-            <a href="#" className="hover:text-orange-500 transition-colors">Stress</a>
+            <a href="/" className="hover:text-[#FFDDC0]0 transition-colors">Home</a>
+            <a href="/Mood" className="hover:text-[#FFDDC0]0 transition-colors">Mood</a>
+            <a href="/Peer" className="hover:text-[#FFDDC0]0 transition-colors">Peer</a>
+            <a href="#" className="hover:text-[#FFDDC0]0 transition-colors">Book</a>
+            <a href="#" className="hover:text-[#FFDDC0]0 transition-colors">Stress</a>
           </div>
           <div className="flex items-center space-x-4">
             <Bell className="w-5 h-5" />
             <User className="w-5 h-5" />
-            <button className="bg-orange-500 text-white px-4 py-1 rounded">
+            <button className="bg-[#FF7700] text-white px-4 py-1 rounded">
               Login
             </button>
           </div>

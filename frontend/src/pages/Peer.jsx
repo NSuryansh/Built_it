@@ -56,7 +56,7 @@ function Peer() {
     <div className="flex-1 flex overflow-hidden">
       <ChatList names={chats.map(chat => chat.name)} selectedChat={selectedChat} setSelectedChat={setSelectedChat} />
       <div className="flex-1 flex flex-col">
-        <div className="p-4 border-b bg-orange-50">
+        <div className="p-4 border-b bg-[#FFDDC0]">
           <h2 className="text-2xl font-semibold text-gray-800">{chats[selectedChat].name}</h2>
         </div>
         <div className="flex-1 overflow-y-auto p-4 bg-white">
