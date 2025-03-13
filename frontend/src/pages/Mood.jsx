@@ -7,11 +7,11 @@ export default function Mood() {
   return (
 
       <div className="flex-1 flex overflow-hidden">
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto border-r border-gray-200">
           <ProgressPage />
         </div>
-        <div className="w-1/2 flex flex-col border-l">
-          <div className="p-4 border-b bg-[#FFDDC0]">
+        <div className="w-3/5 flex flex-col">
+          <div className="p-4 border-b border-gray-200 bg-[#FFDDC0]">
             <h2 className="text-2xl font-semibold text-gray-800 ">Calm Bot</h2>
           </div>
           <div className="flex-1 overflow-y-auto p-4 bg-white">

@@ -52,21 +52,27 @@ export default function Peer() {
   const [selectedChat, setSelectedChat] = useState(0);
 
   return (
-    <>
-    <div className="flex-1 flex overflow-hidden">
-      <ChatList names={chats.map(chat => chat.name)} selectedChat={selectedChat} setSelectedChat={setSelectedChat} />
+    <div className="flex h-screen bg-gray-50">
+      <ChatList 
+        names={chats.map(chat => chat.name)} 
+        selectedChat={selectedChat} 
+        setSelectedChat={setSelectedChat} 
+      />
       <div className="flex-1 flex flex-col">
-        <div className="p-4 border-b bg-[#FFDDC0]">
-          <h2 className="text-2xl font-semibold text-gray-800">{chats[selectedChat].name}</h2>
+        <div className="p-6 border-b border-gray-200 bg-orange-100">
+          <h2 className="text-2xl font-bold text-gray-800">{chats[selectedChat].name}</h2>
         </div>
-        <div className="flex-1 overflow-y-auto p-4 bg-white">
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
           {chats[selectedChat].messages.map((msg, index) => (
-            <ChatMessage key={index} message={msg.message} isReceived={msg.self === "False"} />
+            <ChatMessage 
+              key={index} 
+              message={msg.message} 
+              isReceived={msg.self === "False"} 
+            />
           ))}
         </div>
         <ChatInput />
       </div>
     </div>
-    </>
   );
 }

@@ -1,39 +1,33 @@
 import React from 'react';
-import { User } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
-const ChatItem = ({ message, isActive, index, onSelect }) => {
-  return (
-    <button
-      onClick={() => onSelect(index)}
-      className={`w-full p-4 flex items-center gap-3 cursor-pointer transition ${
-        isActive ? 'bg-gray-200 text-black' : 'hover:bg-gray-100'
-      }`}
-    >
-      <User className={`w-8 h-8 ${isActive ? 'text-black' : 'text-gray-600'}`} />
-      <p className={`text-sm flex-1 truncate ${isActive ? 'text-black' : 'text-gray-600'}`}>{message}</p>
-    </button>
-  );
-};
 
-const ChatList = ({ names, selectedChat, setSelectedChat }) => {
+export default function ChatList({ names, selectedChat, setSelectedChat }) {
   return (
-    <div className="w-80 bg-gray-50 border-r">
-      <div className="p-4 bg-[#FFDDC0]">
-        <h2 className="text-2xl font-bold text-[#FF7700]">Messages</h2>
+    <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
+      <div className='bg-orange-100'>
+      <div className="p-4 border-b border-gray-200">
+        <h1 className="text-2xl font-bold text-[#FF7700]">Messages</h1>
       </div>
-      <div className="overflow-y-auto w-80">
+      </div>
+      <div className="space-y-1">
         {names.map((name, index) => (
-          <ChatItem
+          <button
             key={index}
-            message={name}
-            isActive={index === selectedChat}
-            index={index}
-            onSelect={setSelectedChat}
-          />
+            onClick={() => setSelectedChat(index)}
+            className={`w-full p-4 text-left transition-colors duration-150 ease-in-out flex items-center gap-3
+              ${selectedChat === index ? 'bg-orange-50 border-l-4 border-orange-500 hover:bg-orange-100' : 'hover:bg-gray-100'}`}
+          >
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="font-medium text-gray-900">{name}</p>
+              <p className="text-sm text-gray-500">Click to view conversation</p>
+            </div>
+          </button>
         ))}
       </div>
     </div>
   );
-};
-
-export default ChatList;
+}
