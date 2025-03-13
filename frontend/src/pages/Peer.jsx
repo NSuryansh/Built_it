@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
 import ChatList from '../components/ChatList';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 
-function Peer() {
+export default function Peer() {
   const chats = [
     {
       name: "Casual Catch-up",
@@ -53,6 +52,7 @@ function Peer() {
   const [selectedChat, setSelectedChat] = useState(0);
 
   return (
+    <>
     <div className="flex-1 flex overflow-hidden">
       <ChatList names={chats.map(chat => chat.name)} selectedChat={selectedChat} setSelectedChat={setSelectedChat} />
       <div className="flex-1 flex flex-col">
@@ -67,7 +67,6 @@ function Peer() {
         <ChatInput />
       </div>
     </div>
+    </>
   );
 }
-
-export default Peer;

@@ -1,18 +1,24 @@
 import React from 'react';
 import Navbar from './components/Navbar';
-import ChatList from './components/ChatList';
-import ChatMessage from './components/ChatMessage';
-import ChatInput from './components/ChatInput';
 import Peer from './pages/Peer';
 import Mood from './pages/Mood';
-import { Route,Routes } from 'react-router-dom';
+import Landing from './pages/Landing';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
-function App() {
+export default function App() {
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/';
+
   return (
-    <div className="h-screen flex flex-col bg-white">
+    <div
+      className={`h-screen flex flex-col ${
+        isLandingPage ? "bg-cover" : "bg-white"
+      }`}
+      style={isLandingPage ? { backgroundImage: "url('/assests/Pexels Photo by Loc Dang.png')" } : {}}
+    >
       <Navbar />
       <Routes>
-            <Route path="/" element={<div>Welcome to the Home page</div>} />
+            <Route path="/" element={<Landing/>}/>
             <Route path="/Peer" element={<Peer />} />
             <Route path="/Mood" element={<Mood />} />
 
@@ -20,5 +26,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

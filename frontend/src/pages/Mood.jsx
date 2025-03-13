@@ -1,11 +1,9 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
 import ProgressPage from '../components/ProgressPage';
-import ChatList from '../components/ChatList';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 
-function App() {
+export default function Mood() {
   return (
 
       <div className="flex-1 flex overflow-hidden">
@@ -26,5 +24,3 @@ function App() {
       </div>
   );
 }
-
-export default App;
