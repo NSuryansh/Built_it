@@ -1,6 +1,9 @@
 @import "tailwindcss";
-
-
+:root{
+  --landing-text-orange: #FF7700;
+  --landing-text-black: #000000;
+  --landing-text-white: #FFFFFF;
+}
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
