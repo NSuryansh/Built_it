@@ -14,9 +14,9 @@ const Navbar = () => {
             <a href="/" className="hover:text-[#FFDDC0]0 transition-colors">Stress</a>
           </div>
           <div className="flex items-center space-x-4">
-            <Bell className="w-5 h-5" />
-            <User className="w-5 h-5" />
-            <button className="bg-[#FF7700] text-white px-4 py-1 rounded">
+            <button className='cursor-pointer'><Bell className="w-5 h-5" /></button>
+            <button className='cursor-pointer'><User className="w-5 h-5" /></button>
+            <button className="bg-[#FF7700] text-white px-4 py-1 rounded cursor-pointer">
               Login
             </button>
           </div>
