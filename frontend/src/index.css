@@ -3,6 +3,8 @@
   --landing-text-orange: #FF7700;
   --landing-text-black: #000000;
   --landing-text-white: #FFFFFF;
+  --landing-bg-orange: #ff4800;
+  --landing-bg-orange-tansition: #ff3800;
 }
 @keyframes shimmer {
   0% {
