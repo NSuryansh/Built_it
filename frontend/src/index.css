@@ -5,6 +5,17 @@
   --landing-text-white: #FFFFFF;
   --landing-bg-orange: #ff4800;
   --landing-bg-orange-tansition: #ff3800;
+  --text-white: #FFFFFF;
+  --mood-custom-gray-200: #e5e7eb; 
+  --mood-custom-gray-800: #1f2937; 
+  --mood-custom-white: #ffffff; 
+  --mood-custom-peach: #FFDDC0; 
+  --login-bg-peach: #ffddc0;
+  --login-text-color: #000000;
+  --login-input-bg: #ffffff;
+  --login-input-border: #cccccc;
+  --login-button-orange: #ff7300;
+  --login-button-text: #ffffff;
 }
 @keyframes shimmer {
   0% {

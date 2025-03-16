@@ -17,8 +17,7 @@ export default function Landing() {
                 <p>Wheather you are seeking mindfulness techniques, emotional support, or expert</p>
                 <p>guidance, we are here to help</p>
             </div>
-            <button className="bg-[var(--landing-bg-orange)] text-white font-semibold px-6 py-2 mt-4 rounded-full shadow-md 
-                   hover:bg-transparent transition-colors duration-300 ease-in-out">
+            <button className="bg-[var(--landing-bg-orange)] text-[var(--text-white)] font-semibold px-6 py-2 mt-4 rounded-full shadow-md hover:bg-transparent transition-colors duration-300 ease-in-out cursor-pointer">
                 Get Started
             </button>
 
