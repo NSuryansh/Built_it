@@ -1,21 +1,43 @@
 @import "tailwindcss";
-:root{
-  --landing-text-orange: #FF7700;
-  --landing-text-black: #000000;
-  --landing-text-white: #FFFFFF;
+:root {
+  /* Primary Colors */
+  --custom-black: #000;
+  --custom-white: #fff;
+  --custom-primary-orange: #ff7700;
+  --custom-gray-200: #e5e7eb;
+  --custom-gray-500: #6a7282;
+  --custom-gray-600: #4a5565;
+  --custom-gray-800: #1f2937;
+  --custom-peach: #ffddc0;
+
+  /* Landing Page Colors */
+  --landing-text-orange: var(--custom-primary-orange);
+  --landing-text-black: var(--custom-black);
+  --landing-text-white: var(--custom-white);
   --landing-bg-orange: #ff4800;
-  --landing-bg-orange-tansition: #ff3800;
-  --text-white: #FFFFFF;
-  --mood-custom-gray-200: #e5e7eb; 
-  --mood-custom-gray-800: #1f2937; 
-  --mood-custom-white: #ffffff; 
-  --mood-custom-peach: #FFDDC0; 
-  --login-bg-peach: #ffddc0;
-  --login-text-color: #000000;
-  --login-input-bg: #ffffff;
+
+  /* Login Page Colors */
+  --login-text-color: var(--custom-black);
+  --login-bg-peach: var(--custom-peach);
+  --login-input-bg: var(--custom-white);
   --login-input-border: #cccccc;
-  --login-button-orange: #ff7300;
-  --login-button-text: #ffffff;
+  --login-button-orange: var(--custom-primary-orange);
+  --login-button-text: var(--custom-white);
+
+  /* Mood / Peer Page Colors */
+  --mp-custom-gray-200: var(--custom-gray-200);
+  --mp-custom-gray-500: var(--custom-gray-500);
+  --mp-custom-gray-600: var(--custom-gray-600);
+  --mp-custom-gray-800: var(--custom-gray-800);
+  --mp-custom-white: var(--custom-white);
+  --mp-heading-text: var(--custom-primary-orange);
+  --mp-custom-peach: var(--custom-peach);
+
+  /* Peer Page Colors */
+  --peer-custom-orange-50: #fff3e0;
+  --peer-custom-orange-100: #ffe0b2;
+  --peer-custom-orange-500: #ff9800;
+  --peer-custom-pink-500: #f6339a;
 }
 @keyframes shimmer {
   0% {
