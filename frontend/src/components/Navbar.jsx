@@ -12,7 +12,7 @@ const Navbar = () => {
               href="/"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -22,7 +22,7 @@ const Navbar = () => {
               href="/Mood"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/Mood"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -32,7 +32,7 @@ const Navbar = () => {
               href="/Peer"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/Peer"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -42,7 +42,7 @@ const Navbar = () => {
               href="/"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -52,7 +52,7 @@ const Navbar = () => {
               href="/"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >

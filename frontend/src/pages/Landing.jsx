@@ -5,7 +5,7 @@ export default function Landing() {
     const location = useLocation();
     return (
         <div className="flex flex-col items-center justify-center mt-[60px]">
-            <div className="text-[60px] font-extrabold text-[var(--landing-text-orange)]">
+            <div className="text-[60px] font-extrabold text-[var(--landing-bg-orange)]">
                 CalmNest
             </div>
             <div className="text-[50px] font-bold mt-2 text-[var(--landing-text-black)]">
