@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import { Send, Paperclip, Smile } from "lucide-react";
 
-export default function ChatInput() {
-  const [message, setMessage] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (message.trim()) {
-      // Handle message submission
-      setMessage("");
-    }
-  };
-
+const ChatInput = ({ message, setMessage, handleSubmit }) => {
   return (
     <form
       onSubmit={handleSubmit}
@@ -39,11 +29,13 @@ export default function ChatInput() {
         </button>
         <button
           type="submit"
-          className="p-2 cursor-pointer text-[var(--custom-white)] bg-gradient-to-r from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] rounded-full hover:opacity-90 transition-opacity"
+          className="p-2 cursor-pointer text-[var(--mp-custom-white)] bg-gradient-to-r from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] rounded-full hover:opacity-90 transition-opacity"
         >
           <Send className="w-5 h-5" />
         </button>
       </div>
     </form>
   );
-}
+};
+
+export default ChatInput;
