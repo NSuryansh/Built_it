@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Peer from './pages/Peer';
 import Mood from './pages/Mood';
 import Landing from './pages/Landing';
+import Landing_user from './pages/Landing_user';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
 import { Route, Routes, useLocation } from 'react-router-dom';
@@ -25,7 +26,7 @@ export default function App() {
             <Route path="/mood" element={<Mood />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-
+            <Route path="/dashboard" element={<Landing_user/>}/>
         </Routes>
     </div>
   );

@@ -1,11 +1,11 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-export default function Landing() {
+const Landing = () => {
     const location = useLocation();
     return (
         <div className="flex flex-col items-center justify-center mt-[60px]">
-            <div className="text-[60px] font-extrabold text-[var(--landing-text-orange)]">
+            <div className="text-[60px] font-extrabold text-[var(--landing-bg-orange)]">
                 CalmNest
             </div>
             <div className="text-[50px] font-bold mt-2 text-[var(--landing-text-black)]">
@@ -17,7 +17,7 @@ export default function Landing() {
                 <p>guidance, we are here to help</p>
             </div>
             <Link to="/signup">
-                <button className="bg-[var(--landing-bg-orange)] text-[var(--text-white)] font-semibold px-6 py-2 mt-4 rounded-full shadow-md hover:bg-transparent transition-colors duration-300 ease-in-out cursor-pointer">
+                <button className="bg-[var(--landing-text-orange)] text-[var(--landing-text-white)] font-semibold px-6 py-2 mt-4 rounded-full shadow-md hover:bg-[var(--landing-bg-orange)] transition-colors duration-300 ease-in-out cursor-pointer">
                     Get Started
                 </button>
             </Link>
@@ -25,3 +25,5 @@ export default function Landing() {
         </div>
     );
 }
+
+export default Landing;

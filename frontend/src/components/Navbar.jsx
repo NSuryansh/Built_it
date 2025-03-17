@@ -1,7 +1,9 @@
 import React from "react";
 import { Bell, User } from "lucide-react";
+import { useLocation } from "react-router-dom";
+
 const Navbar = () => {
-  const location = window.location.pathname;
+  const location = useLocation().pathname;
   return (
     <nav className="bg-transperent">
       <div className="px-8 py-3">
@@ -12,7 +14,7 @@ const Navbar = () => {
               href="/"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -22,7 +24,7 @@ const Navbar = () => {
               href="/Mood"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/Mood"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -32,7 +34,7 @@ const Navbar = () => {
               href="/Peer"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/Peer"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -42,7 +44,7 @@ const Navbar = () => {
               href="/"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -52,7 +54,7 @@ const Navbar = () => {
               href="/"
               className={`hover:text-[#FF7700] transition-colors ${
                 location === "/"
-                  ? "underline underline-offset-4 text-[#FF7700] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
@@ -66,8 +68,10 @@ const Navbar = () => {
             <button className="cursor-pointer">
               <User className="w-5 h-5" />
             </button>
-            <button className="bg-[#FF7700] text-white px-4 py-1 rounded cursor-pointer"
-            onClick={()=>window.location.href="/login"}>
+            <button
+              className="bg-[#FF7700] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
+              onClick={() => (window.location.href = "/login")}
+            >
               Login
             </button>
           </div>

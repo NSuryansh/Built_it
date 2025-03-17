@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
-import { Send, Paperclip, Smile } from 'lucide-react';
+import React, { useState } from "react";
+import { Send, Paperclip, Smile } from "lucide-react";
 
 export default function ChatInput() {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (message.trim()) {
       // Handle message submission
-      setMessage('');
+      setMessage("");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4 bg-white">
+    <form
+      onSubmit={handleSubmit}
+      className="border-t border-[var(--mp-custom-gray-200)] p-4 bg-[var(--mp-custom-white)]"
+    >
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="p-2 text-gray-500 hover:text-gray-600 transition-colors"
+          className="p-2 cursor-pointer text-[var(--mp-custom-gray-500)] hover:text-[var(--mp-custom-gray-600)] transition-colors"
         >
           <Paperclip className="w-5 h-5" />
         </button>
@@ -26,17 +29,17 @@ export default function ChatInput() {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type a message..."
-          className="flex-1 rounded-full border border-gray-300 px-4 py-2 focus:outline-none focus:border-orange-500"
+          className="flex-1 rounded-full border border-[var(--mp-custom-gray-200)] px-4 py-2 focus:outline-none focus:border-[var(--peer-custom-orange-500)]"
         />
         <button
           type="button"
-          className="p-2 text-gray-500 hover:text-gray-600 transition-colors"
+          className="p-2 cursor-pointer text-[var(--mp-custom-gray-500)] hover:text-[var(--mp-custom-gray-600)] transition-colors"
         >
           <Smile className="w-5 h-5" />
         </button>
         <button
           type="submit"
-          className="p-2 text-white bg-gradient-to-r from-orange-500 to-pink-500 rounded-full hover:opacity-90 transition-opacity"
+          className="p-2 cursor-pointer text-[var(--custom-white)] bg-gradient-to-r from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] rounded-full hover:opacity-90 transition-opacity"
         >
           <Send className="w-5 h-5" />
         </button>
