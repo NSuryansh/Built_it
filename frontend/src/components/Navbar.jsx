@@ -1,7 +1,9 @@
 import React from "react";
 import { Bell, User } from "lucide-react";
+import { useLocation } from "react-router-dom";
+
 const Navbar = () => {
-  const location = window.location.pathname;
+  const location = useLocation().pathname;
   return (
     <nav className="bg-transperent">
       <div className="px-8 py-3">
@@ -66,8 +68,10 @@ const Navbar = () => {
             <button className="cursor-pointer">
               <User className="w-5 h-5" />
             </button>
-            <button className="bg-[#FF7700] text-white px-4 py-1 rounded cursor-pointer"
-            onClick={()=>window.location.href="/login"}>
+            <button
+              className="bg-[#FF7700] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
+              onClick={() => (window.location.href = "/login")}
+            >
               Login
             </button>
           </div>
