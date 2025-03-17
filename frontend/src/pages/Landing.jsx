@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const Landing = () => {
     const location = useLocation();
+
+    
     return (
         <div className="flex flex-col items-center justify-center mt-[60px]">
             <div className="text-[60px] font-extrabold text-[var(--landing-bg-orange)]">
