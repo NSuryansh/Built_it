@@ -17,8 +17,20 @@ model User{
   @@map("user")
   id Int @id @default(autoincrement())
   username String @unique
-  mobile BigInt @unique
+  mobile String @unique
   email String @unique
   password String
-  alt_mobile BigInt
+  alt_mobile String
+}
+
+model Doctor{
+  @@map("doctor")
+  id Int @id @default(autoincrement()) @map("doc_id")
+  name String
+  mobile String @unique
+  email String @unique
+  password String
+  reg_id String @unique
+  desc String?
+  img String?
 }
