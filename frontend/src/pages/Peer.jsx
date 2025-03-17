@@ -1,10 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
 
 export default function Peer() {
-  const chats = [
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (message.trim()) {
+      const newChats = chats;
+      newChats[selectedChat].messages.push({ self: "True", message: message });
+      setChats(newChats);
+      setMessage("");
+    }
+  };
+
+  const [chats, setChats] = useState([
     {
       name: "Casual Catch-up",
       messages: [
@@ -70,7 +82,7 @@ export default function Peer() {
         },
       ],
     },
-  ];
+  ]);
 
   const [selectedChat, setSelectedChat] = useState(0);
 
@@ -92,11 +104,15 @@ export default function Peer() {
             <ChatMessage
               key={index}
               message={msg.message}
-              isReceived={msg.self === "False"}
+              isSent={msg.self === "True"}
             />
           ))}
         </div>
-        <ChatInput />
+        <ChatInput
+          message={message}
+          setMessage={setMessage}
+          handleSubmit={handleSubmit}
+        />
       </div>
     </div>
   );
