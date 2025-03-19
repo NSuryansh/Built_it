@@ -34,3 +34,26 @@ model Doctor{
   desc String?
   img String?
 }
+
+model Events {
+  @@map("events")  
+  id Int @id @default(autoincrement())  
+  title String  
+  description String?
+  dateTime DateTime 
+  venue String   
+}
+
+model Appointments {
+  @@map("appointments")
+  id Int @id @default(autoincrement())
+  user_id    Int    
+  user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  doctor_id Int
+  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete: Cascade)
+
+  @@unique([user_id, doc_id])
+}
+
+
+
