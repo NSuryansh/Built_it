@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-  
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,30 +15,38 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:3000/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          "username": username,
-          "email": email,
-          "password": password,
-          "mobile": mobile,
-          "altNo": altNo
-        }),
-      });
-      const data = await response.json();
-      if (data.status === 201) {
-        alert(data.message);
-        navigate("/login");
-      } else {
-        setError(data.message);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      alert(error);
+    } else {
+      try {
+        const response = await fetch("http://localhost:3000/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "username": username,
+            "email": email,
+            "password": password,
+            "mobile": mobile,
+            "altNo": altNo
+          }),
+        });
+        const data = await response.json();
+        console.log(data)
+        if (data["message"] === "User added") {
+          alert(data.message);
+          navigate("/login");
+        } else {
+          setError(data.message);
+          alert(error);
+        }
+      } catch (error) {
+        setError(error);
+        console.log(error);
       }
-    } catch (error) {
-      setError(error);
-      console.log(error);
     }
   }
   return (
@@ -82,7 +90,7 @@ const SignUp = () => {
             rounded-md"
           onChange={(e) => setAltNo(e.target.value)}
         />
- 
+
         <input
           type="password"
           placeholder="Password"

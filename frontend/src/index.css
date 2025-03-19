@@ -38,6 +38,14 @@
   --peer-custom-orange-100: #ffe0b2;
   --peer-custom-orange-500: #ff9800;
   --peer-custom-pink-500: #f6339a;
+
+  /* Events Display Page Colors*/
+  --events-display-gray-900: #101828;
+  --events-display-gray-600: var(--custom-gray-600);
+  --events-display-gray-800: var(--custom-gray-800);
+
+  /* Calender Page Colors */
+
 }
 
 @keyframes shimmer {

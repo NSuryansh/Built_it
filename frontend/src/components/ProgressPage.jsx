@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProgressBar from "./ProgressBar";
 
-const ProgressPage = () => {
+const ProgressPage = ({ isLandingPage }) => {
   const [scores, setScores] = useState({
     mentalPeace: 0,
     sleepQuality: 0,
@@ -10,9 +10,7 @@ const ProgressPage = () => {
     lessStress: 0,
   });
 
-  // Simulating backend data
   useEffect(() => {
-    // In a real app, this would be an API call
     const mockBackendData = {
       mentalPeace: 40,
       sleepQuality: 65,
@@ -21,7 +19,6 @@ const ProgressPage = () => {
       lessStress: 90,
     };
 
-    // Animate the progress bars
     const timeout = setTimeout(() => {
       setScores(mockBackendData);
     }, 500);
@@ -35,12 +32,13 @@ const ProgressPage = () => {
   };
 
   return (
-    <div className="bg-[var(--mp-custom-white)]">
-      <div className="p-4 bg-[var(--mp-custom-peach)]">
-        <h2 className="text-2xl font-bold text-[var(--mp-heading-text)]">
-          Your Feelings
+    <div className="bg-[var(--mp-custom-white)] max-h-[80vh] rounded-2xl shadow-lg">  
+      <div className={isLandingPage ? "p-4 bg-[var(--custom-white)]" : "p-4 bg-[var(--mp-custom-peach)]"}>
+        <h2 className={isLandingPage ? "text-2xl font-bold text-[var(--custom-black)]" : "text-2xl font-bold text-[var(--mp-heading-text)]"}>
+          {isLandingPage ? "Landing Page Heading" : "Your Feelings"}
         </h2>
       </div>
+
       <div className="p-8">
         <div className="max-w-2xl">
           <ProgressBar label="Mental Peace" value={scores.mentalPeace} />

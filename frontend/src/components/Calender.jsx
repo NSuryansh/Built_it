@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import {format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay,} from "date-fns";
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay } from "date-fns";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Calendar = ({ onDateSelect }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+
   const startDate = startOfWeek(startOfMonth(currentMonth));
   const endDate = endOfWeek(endOfMonth(currentMonth));
   const days = [];
   let day = startDate;
-
-  const planned = [
-    { date: "2022-10-10", title: "Interactive Session" },
-]
 
   while (day <= endDate) {
     days.push(day);
@@ -20,18 +18,21 @@ const Calendar = ({ onDateSelect }) => {
 
   const todayString = format(new Date(), "yyyy-MM-dd");
 
-  const handlePrevMonth = () => setCurrentMonth(addDays(currentMonth, -30));
-  const handleNextMonth = () => setCurrentMonth(addDays(currentMonth, 30));
-
   return (
-    <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-lg">
+    <div className="p-4 bg-white rounded-xl shadow-lg">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={handlePrevMonth} className="px-4 py-2 bg-gray-200 rounded">
-          &#9665;
+        <button
+          onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
+          className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
+        >
+          <ChevronLeft className="w-5 h-5 text-gray-700" />
         </button>
-        <h2 className="text-xl font-semibold">{format(currentMonth, "MMMM yyyy")}</h2>
-        <button onClick={handleNextMonth} className="px-4 py-2 bg-gray-200 rounded">
-          &#9655;
+        <h2 className="text-xl font-semibold text-gray-900">{format(currentMonth, "MMMM yyyy")}</h2>
+        <button
+          onClick={() => setCurrentMonth(addDays(currentMonth, 30))}
+          className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
+        >
+          <ChevronRight className="w-5 h-5 text-gray-700" />
         </button>
       </div>
 
@@ -48,14 +49,9 @@ const Calendar = ({ onDateSelect }) => {
           return (
             <button
               key={index}
-              className={`
-                relative px-4 py-2 rounded 
-                ${isSameMonth(dayItem, currentMonth) ? "text-black" : "text-gray-400"}
-                ${
-                  isSameDay(dayItem, selectedDate)
-                    ? "bg-blue-500 text-white"
-                    : "hover:bg-gray-200"
-                }
+              className={`relative p-2 rounded-lg w-10 h-10 transition-all
+                ${isSameMonth(dayItem, currentMonth) ? "text-gray-900" : "text-gray-400"}
+                ${isSameDay(dayItem, selectedDate) ? "bg-blue-500 text-white" : "hover:bg-gray-200"}
               `}
               onClick={() => {
                 setSelectedDate(dayItem);
@@ -63,13 +59,7 @@ const Calendar = ({ onDateSelect }) => {
               }}
             >
               {isToday && (
-                <span
-                  className="
-                    absolute top-1 left-1/2 
-                    transform -translate-x-1/2 
-                    w-2 h-2 bg-black rounded-full
-                  "
-                />
+                <span className="absolute top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black rounded-full" />
               )}
               {format(dayItem, "d")}
             </button>
