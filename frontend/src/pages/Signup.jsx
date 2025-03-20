@@ -87,7 +87,6 @@ export default function SignUp() {
           placeholder="Username"
           className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-          onChange={(e) => setUsername(e.target.value)}
           required
         />
 
@@ -126,26 +125,9 @@ export default function SignUp() {
           onChange={handleChange}
           className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-          onChange={(e) => setEmail(e.target.value)}
           required
         />
 
-        <input
-          type="text"
-          placeholder="Mobile"
-          className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
-            rounded-md"
-          onChange={(e) => setMobile(e.target.value)}
-          required
-        />
-
-        <input
-          type="text"
-          placeholder="Alternate Mobile"
-          className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
-            rounded-md"
-          onChange={(e) => setAltNo(e.target.value)}
-        />
 
         <input
           type="password"
@@ -155,7 +137,6 @@ export default function SignUp() {
           onChange={handleChange}
           className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-          onChange={(e) => setPassword(e.target.value)}
           required
         />
 
@@ -167,7 +148,6 @@ export default function SignUp() {
           onChange={handleChange}
           className="w-full mb-6 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-          onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
 
@@ -185,5 +165,3 @@ export default function SignUp() {
     </div>
   );
 }
-
-export default SignUp;
