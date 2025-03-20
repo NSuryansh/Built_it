@@ -24,6 +24,7 @@ model User{
   publicKey String
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+  appointment Appointments[]
 }
 
 model Doctor{
@@ -36,6 +37,7 @@ model Doctor{
   reg_id String @unique
   desc String?
   img String?
+  docApp Appointments[]
 }
 
 model Admin{
@@ -66,5 +68,24 @@ model Message {
   createdAt   DateTime @default(now())
   sender      User     @relation("SentMessages",fields: [senderId], references: [id])
   recipient   User     @relation("ReceivedMessages",fields: [recipientId], references: [id])
+}
+
+model Events {
+  @@map("events")  
+  id Int @id @default(autoincrement())  
+  title String  
+  description String?
+  dateTime DateTime 
+  venue String   
+}
+
+model Appointments {
+  @@map("appointments")
+  id Int @id @default(autoincrement())
+  user_id    Int
+  user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  doctor_id Int
+  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete: Cascade)
+
 }
 
