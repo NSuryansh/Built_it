@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Message" ALTER COLUMN "iv" SET DATA TYPE TEXT;
