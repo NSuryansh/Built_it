@@ -1,15 +1,24 @@
 import React from "react";
+import Calendar from "../components/Calender";
 import ProgressPage from "../components/ProgressPage";
-import Calender from "../components/Calender";
 import EventsDisplay from "../components/EventsDisplay";
-import ProgressBar from "../components/ProgressBar";
 
-export default function Landing_user() {
-    return (
-        <div className="flex overflow-hidden">
-            <div className="h-screen min-w-[33.33vw]"><Calender/></div>
-            <div className="h-screen min-w-[33.33vw]"><ProgressPage/></div>
-            <div className="h-screen min-w-[33.33vw] overflow-y-auto"><EventsDisplay/></div>
-        </div>
-    )
+const Landing_user = () => {
+  return (
+    <div className="flex flex-col md:flex-row gap-4 p-6 bg-gradient-to-br from-[var(--mp-custom-peach)] to-[var(--mp-custom-white)] min-h-screen">
+      <div className="h-[85vh] w-full md:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4">
+        <Calendar />
+      </div>
+
+      <div className="h-[85vh] w-full md:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4">
+        <ProgressPage isLandingPage={true} />
+      </div>
+
+      <div className="h-[85vh] w-full md:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
+        <EventsDisplay />
+      </div>
+    </div>
+  );
 }
+
+export default Landing_user;
