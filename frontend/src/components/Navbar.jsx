@@ -21,9 +21,9 @@ const Navbar = () => {
               Home
             </a>
             <a
-              href="/Mood"
+              href="/mood"
               className={`hover:text-[#FF7700] transition-colors ${
-                location === "/Mood"
+                location === "/mood"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
@@ -31,9 +31,9 @@ const Navbar = () => {
               Mood
             </a>
             <a
-              href="/Peer"
+              href="/peer"
               className={`hover:text-[#FF7700] transition-colors ${
-                location === "/Peer"
+                location === "/peer"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
@@ -41,9 +41,9 @@ const Navbar = () => {
               Peer
             </a>
             <a
-              href="/"
+              href="/book"
               className={`hover:text-[#FF7700] transition-colors ${
-                location === "/"
+                location === "/book"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
