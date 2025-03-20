@@ -1,7 +1,10 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate} from "react-router-dom";
 
 export default function SignUp() {
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -66,6 +69,7 @@ export default function SignUp() {
 
       const data = await response.json();
       console.log("Signup successful:", data);
+      navigate("/login");
 
     } catch (error) {
       console.error("Signup error:", error);

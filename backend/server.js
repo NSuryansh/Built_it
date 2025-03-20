@@ -30,8 +30,9 @@ io.on("connection", (socket) => {
             const message = await prisma.message.create({
                 data: { senderId:parseInt(senderId), recipientId:parseInt(recipientId), encryptedText:encryptedText, iv:iv, encryptedAESKey, authTag },
             });
-    
+            console.log(senderId, "message sent to", recipientId);
             if (users.has(recipientId)) {
+                console.log(users.get(recipientId))
                 io.to(users.get(recipientId)).emit("receiveMessage", {
                     senderId, encryptedText, iv, encryptedAESKey, authTag
                 });
@@ -111,7 +112,7 @@ app.get('/profile', async (req, res) => {
         const decoded = jwt.verify(token, SECRET_KEY)
         const user = await prisma.user.findUnique({ where: { username: decoded.username } })
         console.log(user)
-        res.json(JSON.parse(JSON.stringify(user)))
+        res.json(JSON.parse(JSON.stringify({'user':user, 'message':'User found'})))
     } catch (e) {
         console.log(e)
     }

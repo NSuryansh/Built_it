@@ -2,15 +2,74 @@ import React, { useEffect, useState } from "react";
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
+import { useLocation } from "react-router-dom";
+import {io} from "socket.io-client";
+import { decryptMessage } from "../utils/decryptMessage";
+import { generateAESKey } from "../utils/aesKey";
+import {encryptMessage} from "../utils/encryptMessage";
+import { useRef } from "react";
 
 export default function Peer() {
   const [message, setMessage] = useState("");
+  const location = useLocation()
+  const user = location.state
+  const socketRef = useRef(null);
+  const userId = user.id
+  const recId = 15
+  // const socket = io("http://localhost:3001");
+  const [aesKey, setAesKey] = useState();
+  console.log(userId)
+  useEffect(() => {
+    socketRef.current = io("http://localhost:3001");
+    socketRef.current.on("connect", () => {
+      console.log("Connected to WebSocket server");
+      console.log(socketRef.current.id);
+      socketRef.current.emit("register", { userId });
+      // socketRef.current.emit("register", { userId: recId });
+    });
+    return () => {
+      socketRef.current.disconnect();
+    };
+  },[]);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    async function fetchKey() {
+        const key = await generateAESKey();
+        setAesKey(key);
+    }
+    fetchKey();
+}, []);
+
+  
+  useEffect( () => {
+    if(!aesKey) return;
+    socketRef.current.on("receiveMessage", async ({ senderId, encryptedText, iv, encryptedAESKey, authTag }) => {
+      console.log("Message received:", { senderId, encryptedText, iv, encryptedAESKey, authTag });
+      const decrypted = await decryptMessage(encryptedText, iv, encryptedAESKey);
+      console.log("Decrypted message:", decrypted);
+    });
+    return () => {
+      socketRef.current.off("receiveMessage"); 
+  };
+  }, [aesKey]);
+
+
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
       const newChats = chats;
       newChats[selectedChat].messages.push({ self: "True", message: message });
+
+      const { encryptedText, iv } = await encryptMessage(message, aesKey);
+      socketRef.current.emit("sendMessage", {
+        senderId: userId,
+        recipientId: recId,
+        encryptedText,
+        iv,
+        encryptedAESKey: aesKey, 
+        authTag:""
+    });
       setChats(newChats);
       setMessage("");
     }

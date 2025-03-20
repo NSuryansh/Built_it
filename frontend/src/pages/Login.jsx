@@ -35,7 +35,7 @@ export default function Login() {
         }
         else{
           console.log(res2["message"]);
-          navigate("/dashboard");
+          navigate("/peer", {state: res2["user"]});
         }
       }
     else{
