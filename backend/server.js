@@ -130,6 +130,76 @@ app.get('/public-key/:userId', async (req, res) => {
     res.json({ publicKey: user.publicKey });
 });
 
+app.get("/events", async (req, res) => {
+  try {
+    const events = await prisma.event.findMany(); // Fetch all events
+    res.json(events); // Send the events as a JSON response
+  } catch (e) {
+    console.error(e);
+    res.status(0).json({ message: "Error fetching events" });
+  }
+});
+
+app.post("/book", async (req, res) => {
+  const { userId, doctorId, dateTime } = req.body;
+
+  try {
+    // Check if user exists
+    const user = await prisma.User.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if doctor exists
+    const doctor = await prisma.Doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Create appointment
+    const appointment = await prisma.Appointments.create({
+      data: {
+        user_id: userId,
+        doctor_id: doctorId,
+        dateTime: new Date(dateTime),
+      },
+    });
+
+    res
+      .status(0)
+      .json({ message: "Appointment booked successfully", appointment });
+  } catch (error) {
+    console.error(error);
+    res.status(0).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/add", async (req, res) => {
+    try {
+        const { title, description, dateTime, venue } = req.body;
+
+        // Validate required fields
+        if (!title || !dateTime || !venue) {
+            return res.status(400).json({ error: "Title, DateTime, and Venue are required" });
+        }
+
+        // Create the event in Prisma
+        const event = await prisma.Events.create({
+            data: {
+                title,
+                description,
+                dateTime: new Date(dateTime), // Ensure it's a valid Date object
+                venue,
+            },
+        });
+
+        res.status(0).json(event); // Return created event
+    } catch (error) {
+        console.error("Error adding event:", error);
+        res.status(0).json({ error: "Internal server error" });
+    }
+});
+
 server.listen(3001, () => console.log("Server running on port 3001"));
 
 app.listen(port, () => {
