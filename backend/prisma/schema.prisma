@@ -86,6 +86,6 @@ model Appointments {
   user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
   doctor_id Int
   doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete: Cascade)
-
+  dateTime DateTime
 }
 
