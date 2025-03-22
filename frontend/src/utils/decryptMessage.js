@@ -19,7 +19,7 @@
 //         }
 //     }
 import { encryptMessage } from "./encryptMessage";
-import { generateAESKey } from "./aeskey";
+// import { generateAESKey } from "./aeskey";
 function hexStringToUint8Array(hexString) {
     if (hexString.length % 2 !== 0) {
       throw new Error("Invalid hexString");
@@ -30,7 +30,7 @@ function hexStringToUint8Array(hexString) {
     }
     return arrayBuffer;
   }
-  testCrypto();
+  // testCrypto();
   
 
 export async function decryptMessage(encryptedText,iv, key) {
@@ -62,12 +62,12 @@ export async function decryptMessage(encryptedText,iv, key) {
     return decoder.decode(decryptedBuffer);
 }
 
-async function testCrypto() {
-    const key = generateAESKey(); // returns a hex string
-    const plainText = "Hello World!";
-    const { encryptedText, iv } = await encryptMessage(plainText, key);
-    const decryptedText = await decryptMessage(encryptedText, iv, key);
-    console.log("Decrypted Text:", decryptedText);
-  }
+// async function testCrypto() {
+//     const key = generateAESKey(); // returns a hex string
+//     const plainText = "Hello World!";
+//     const { encryptedText, iv } = await encryptMessage(plainText, key);
+//     const decryptedText = await decryptMessage(encryptedText, iv, key);
+//     console.log("Decrypted Text:", decryptedText);
+//   }
   
  

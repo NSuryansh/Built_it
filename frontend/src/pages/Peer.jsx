@@ -102,6 +102,29 @@ export default function Peer() {
     }
   };
 
+  function base64ToHex(base64) {
+    const raw = atob(base64); // Decode base64 to binary
+    return [...raw].map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+}
+
+
+  async function fetchMessages(userId, recipientId) {
+    try {
+        const response = await fetch(`http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`);
+        const messages = await response.json();
+
+        console.log(messages)
+    } catch (error) {
+        console.error("Error fetching messages:", error);
+        return [];
+    }
+}
+
+useEffect(() => {
+    fetchMessages(userId, recId)
+}, [])
+
+
   return (
     <div className="flex h-screen bg-[var(--mp-custom-white)]">
       <ChatList

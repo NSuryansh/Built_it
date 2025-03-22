@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
     socket.on("sendMessage", async ({ senderId, recipientId, encryptedText, iv, encryptedAESKey, authTag }) => {
         try {
             const message = await prisma.message.create({
-                data: { senderId:parseInt(senderId), recipientId:parseInt(recipientId), encryptedText:encryptedText, iv:iv, encryptedAESKey, authTag },
+                data: { senderId: parseInt(senderId), recipientId: parseInt(recipientId), encryptedText: encryptedText, iv: iv, encryptedAESKey, authTag },
             });
             console.log(senderId, "message sent to", recipientId);
             if (users.has(recipientId)) {
@@ -112,7 +112,28 @@ app.get('/profile', async (req, res) => {
         const decoded = jwt.verify(token, SECRET_KEY)
         const user = await prisma.user.findUnique({ where: { username: decoded.username } })
         console.log(user)
-        res.json(JSON.parse(JSON.stringify({'user':user, 'message':'User found'})))
+        res.json(JSON.parse(JSON.stringify({ 'user': user, 'message': 'User found' })))
+    } catch (e) {
+        console.log(e)
+    }
+})
+
+app.get('/messages', async (req, res) => {
+    try {
+        const { userId, recId } = req.query
+        console.log(userId)
+        console.log(recId)
+        const messages = await prisma.message.findMany({
+            where: {
+                OR: [
+                    { senderId: parseInt(userId), recipientId: parseInt(recId) },
+                    { senderId: parseInt(recId), recipientId: parseInt(userId) }
+                ]
+            },
+            orderBy: { createdAt: "asc" }
+        })
+        console.log(messages)
+        res.json(messages)
     } catch (e) {
         console.log(e)
     }
