@@ -112,8 +112,13 @@ export default function Peer() {
     try {
         const response = await fetch(`http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`);
         const messages = await response.json();
-
-        console.log(messages)
+        const decrypted = messages.map(msg=>({
+          senderId:msg["senderId"],
+          recipientId: msg["recipientId"],
+          encryptedAESKey: msg["encryptedAESKey"],
+          decryptedText: decryptMessage(msg["encryptedText"],msg["iv"], msg["encryptedAESKey"])
+        }))
+        console.log(decrypted)
     } catch (error) {
         console.error("Error fetching messages:", error);
         return [];
