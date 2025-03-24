@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
-import FadeLoader from 'react-spinners/FadeLoader'
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 
@@ -177,10 +176,7 @@ const Book = () => {
   };
 
   if (isAuthenticated === null) {
-    return <div className="h-full flex justify-center content-center">
-      <FadeLoader className="" color='#ff4800' radius={6} height={20} width={5} />
-      <p>Loading...</p>
-    </div>;
+    return <div>Loading...</div>;
   }
 
   if (!isAuthenticated) {
@@ -188,7 +184,7 @@ const Book = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen">
       <Navbar />
       {/*<div className="container mx-auto px-4 py-8">
         <div className="flex justify-evenly">
@@ -256,7 +252,7 @@ const Book = () => {
           </div>
         </div>
       </div>*/}
-      <div className="app">
+      <div className="h-full">
         <main className="main">
           {step === 1 && (
             <CalendarStep
@@ -412,14 +408,14 @@ const CalendarStep = ({ onNext, availabilityData }) => {
   };
 
   return (
-    <div className="bg-[#ffddc0] shadow-[0_4px_8px_rgba(0,0,0,0.1)] w-full max-w-[1200px] p-[30px] rounded-[10px]">
+    <div className="bg-[var(--custom-orange-100)] w-full max-w-[1200px] p-[30px] rounded-[10px] border-[var(--custom-orange-200)] border-2">
       <div className="flex justify-between gap-[50px] mb-5">
         {/* Calendar Container */}
-        <div className="flex-[4] bg-[#f2cece] shadow-[0_2px_4px_rgba(0,0,0,0.1)] p-5 rounded-[5px]">
+        <div className="flex-[4] bg-[var(--custom-white)] border-2 border-[var(--custom-orange-200)] p-5 rounded-[5px]">
           <div className="">
             <div className="flex justify-between items-center mb-[30px]">
               <select
-                className="bg-white  p-[5px] rounded-[5px] border-2 border-solid border-[#e34a4a]"
+                className="bg-[var(--custom-primary-orange)] text-[var(--custom-white)] font-bold p-[5px] rounded-[5px] border-2 border-solid border-[var(--custom-orange-900)]"
                 value={months[month]}
                 onChange={handleMonthChange}
               >
@@ -430,7 +426,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
               <select
-                className="bg-white  p-[5px] rounded-[5px] border-2 border-solid border-[#e34a4a]"
+                className="bg-[var(--custom-primary-orange)] text-[var(--custom-white)] font-bold p-[5px] rounded-[5px] border-2 border-solid border-[var(--custom-orange-900)]"
                 value={year}
                 onChange={handleYearChange}
               >
@@ -459,7 +455,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                 <div
                   key={day}
-                  className="text-center font-[bold] text-[#9f2424] text-[15px]"
+                  className="text-center font-bold text-[var(--custom-orange-700)] text-[15px]"
                 >
                   {day}
                 </div>
@@ -548,7 +544,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
       </div>
 
       <button
-        className="bg-[#2b1c12] text-white cursor-pointer block text-lg mx-auto my-0 px-5 py-2.5 rounded-[20px] border-[none]"
+        className="bg-[#2b1c12] disabled:bg-[#ccc] disabled:cursor-not-allowed text-white cursor-pointer block text-lg mx-auto my-0 px-5 py-2.5 rounded-[20px] border-[none]"
         onClick={handleNextClick}
         disabled={!selectedDate}
       >
@@ -594,12 +590,14 @@ const ContactSelectionStep = ({
   return (
     <div className="step-container">
       <h2 className="step-title">Available Contacts on {selectedDate}</h2>
-      <div className="dropdown-container">
-        <label>List of Contacts: </label>
+      <div className="flex items-center gap-5 mb-5">
+        <label className="text-xl font-[bold] text-[#f6cece]">
+          List of Contacts:{" "}
+        </label>
         <select
           value={contactType}
           onChange={(e) => setContactType(e.target.value)}
-          className="dropdown"
+          className="bg-white text-base text-[#473414] p-[5px] rounded-[5px] border-2 border-solid border-black"
         >
           <option value="Doctors">Doctors</option>
           <option value="Counselor">Counselor</option>

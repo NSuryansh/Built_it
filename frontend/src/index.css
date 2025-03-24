@@ -5,6 +5,16 @@
   --custom-black: #000;
   --custom-white: #fff;
   --custom-primary-orange: #ff7700;
+  --custom-orange-50: #fff7f0;
+  --custom-orange-100: #ffede0;
+  --custom-orange-200: #ffd4b3;
+  --custom-orange-300: #ffba85;
+  --custom-orange-400: #ffa157;
+  --custom-orange-500: var(--custom-primary-orange);
+  --custom-orange-600: #cc5f00;
+  --custom-orange-700: #994700;
+  --custom-orange-800: #663000;
+  --custom-orange-900: #331800;
   --custom-gray-200: #e5e7eb;
   --custom-gray-500: #6a7282;
   --custom-gray-600: #4a5565;
@@ -180,14 +190,6 @@ html {
   padding: 40px;
 }
 
-
-
-
-.next-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
 .back-button {
   background-color: #2b1c12;
   color: #fff;
@@ -223,15 +225,11 @@ html {
   color: #473414;
 }
 
-
-
 .contact-name {
   font-size: 14px;
   color: #333;
   flex: 3;
 }
-
-
 
 .contact-details {
   flex: 3;
