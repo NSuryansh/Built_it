@@ -1,72 +1,82 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const Navbar = () => {
   const location = useLocation().pathname;
   const [showDetails, setShowDetails] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const links = [
+    { name: "Home", link: "/dashboard" },
+    { name: "Mood", link: "/mood" },
+    { name: "Peer", link: "/peer" },
+    { name: "Book", link: "/book" },
+    { name: "Stress", link: "/stress" },
+  ];
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <nav className="bg-transperent">
       <div className="px-8 py-3">
         <div className="flex items-center justify-between">
           <div className="text-xl font-bold">CalmNest</div>
-          <div className="flex space-x-8 items-center">
-            <a
-              href="/dashboard"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/dashboard"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
-                  : ""
-              }`}
+          <div className="hidden md:flex space-x-8 items-center">
+            {links.map((item, i) => (
+              <a
+                key={i}
+                href={item.link}
+                className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
+                  location == item.link
+                    ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
+                    : ""
+                }`}
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+          <div className="md:hidden flex items-center z-2">
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-full hover:bg-gray-100"
             >
-              Home
-            </a>
-            <a
-              href="/mood"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/mood"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
-                  : ""
-              }`}
-            >
-              Mood
-            </a>
-            <a
-              href="/peer"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/peer"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
-                  : ""
-              }`}
-            >
-              Peer
-            </a>
-            <a
-              href="/book"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/book"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
-                  : ""
-              }`}
-            >
-              Book
-            </a>
-            <a
-              href="/stress"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/stress"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
-                  : ""
-              }`}
-            >
-              Stress
-            </a>
+              {isOpen ? (
+                <AiOutlineClose size={24} />
+              ) : (
+                <AiOutlineMenu size={24} />
+              )}
+            </button>
+            {isOpen && (
+              <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4">
+                <ul>
+                  {links.map((item, i) => (
+                    <li className="py-2 border-b border-gray-200" key={i}>
+                      <a
+                        href={item.link}
+                        className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
+                          location == item.link
+                            ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
+                            : ""
+                        }`}
+                      >
+                        {item.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           <div className="flex items-center space-x-4">
             <button className="cursor-pointer">
               <Bell className="w-5 h-5" />
             </button>
-             <button
+            <button
               onClick={() => {
                 setShowDetails(!showDetails);
               }}
@@ -85,7 +95,11 @@ const Navbar = () => {
                 <li className="p-3 text-right ">Email ID</li>
                 <li className="p-3 text-right ">Phone Number</li>
                 <li className="p-3 text-right ">Alt Phone Number</li>
-                <a href="/appointments"><li className="p-3 text-right cursor-pointer">Appointments</li></a>
+                <a href="/appointments">
+                  <li className="p-3 text-right cursor-pointer">
+                    Appointments
+                  </li>
+                </a>
               </ol>
               <button className="p-2 m-3 text-right cursor-pointer bg-orange-300 rounded-md">
                 Modify
@@ -95,16 +109,58 @@ const Navbar = () => {
                 Logout
               </button>
             </div>
-            {/* <button
-              className="bg-[var(--custom-primary-orange)] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
-              onClick={() => (window.location.href = "/login")}
-            >
-              Login
-            </button> */}
           </div>
         </div>
       </div>
     </nav>
+    // <nav className="flex justify-between items-center py-4">
+    //   <div className="text-lg font-bold">Logo</div>
+    //   <div className="hidden md:flex md:items-center">
+    //     <ul className="flex items-center space-x-4">
+    //       <li>
+    //         <a href="#" className="hover:text-blue-500">
+    //           Home
+    //         </a>
+    //       </li>
+    //       <li>
+    //         <a href="#" className="hover:text-blue-500">
+    //           About
+    //         </a>
+    //       </li>
+    //       <li>
+    //         <a href="#" className="hover:text-blue-500">
+    //           Contact
+    //         </a>
+    //       </li>
+    //     </ul>
+    //   </div>
+    //   <div className="md:hidden flex items-center">
+    //     <button onClick={toggleMenu} className="p-2 rounded-full hover:bg-gray-100">
+    //       {isOpen ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
+    //     </button>
+    //     {isOpen && (
+    //       <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4">
+    //         <ul>
+    //           <li className="py-2 border-b border-gray-200">
+    //             <a href="#" className="hover:text-blue-500">
+    //               Home
+    //             </a>
+    //           </li>
+    //           <li className="py-2 border-b border-gray-200">
+    //             <a href="#" className="hover:text-blue-500">
+    //               About
+    //             </a>
+    //           </li>
+    //           <li className="py-2">
+    //             <a href="#" className="hover:text-blue-500">
+    //               Contact
+    //             </a>
+    //           </li>
+    //         </ul>
+    //       </div>
+    //     )}
+    //   </div>
+    // </nav>
   );
 };
 

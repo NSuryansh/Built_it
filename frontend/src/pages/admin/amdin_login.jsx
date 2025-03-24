@@ -1,47 +1,35 @@
-import { set } from "date-fns";
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock } from 'lucide-react';
+import { Lock } from "lucide-react";
 
 const AdminLogin = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handlelogin = async () => {
-    // const response = await fetch("http://localhost:3000/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     username: username,
-    //     password: password,
-    //   }),
-    // });
-    // console.log(response);
-    // const res = await response.json();
-    // console.log(res);
+  const handlelogin = async (e) => {
+    e.preventDefault();
+    const response = await fetch("http://localhost:3000/adminLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
+    console.log(response);
+    const res = await response.json();
 
-    // if (res["message"] == "Login successful") {
-    //   console.log(res["message"]);
-    //   const response2 = await fetch("http://localhost:3000/profile", {
-    //     method: "GET",
-    //     headers: { Authorization: "Bearer " + res["token"] },
-    //   });
-    //   const res2 = await response2.json();
-    //   console.log(res2);
-    //   if (res2["message"] == "Unauthorized") {
-    //     console.log(res2["message"]);
-    //   } else {
-    //     console.log(res2["message"]);
-    //     navigate("/peer", { state: res2["user"] });
-    //   }
-    // } else {
-    //   setError(res["message"]);
-    // }
-    navigate("/admin/dashboard");
+    if (res["message"] === "Login successful") {
+      console.log(res["message"]);
+      localStorage.setItem("token", res["token"]);
+      navigate("/admin/dashboard");
+    } else {
+      setError(res["message"]);
+    }
   };
+
   return (
     <div className="min-h-screen bg-[var(--custom-primary-green-50)] flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
@@ -54,24 +42,29 @@ const AdminLogin = () => {
           <h2 className="mt-4 text-3xl font-bold text-[var(--custom-primary-green-900)]">
             Admin Login
           </h2>
+          {error && (
+            <p className="mt-2 text-red-600 text-sm">
+              {error}
+            </p>
+          )}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handlelogin}>
           <div className="space-y-4">
             <div>
               <label
-                htmlFor="username"
+                htmlFor="email"
                 className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
               >
-                Username
+                Email
               </label>
               <input
-                id="username"
-                type="name"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
-                placeholder="admin"
+                placeholder="admin@example.com"
                 required
               />
             </div>
