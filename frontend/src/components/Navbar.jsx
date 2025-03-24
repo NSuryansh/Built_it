@@ -68,12 +68,12 @@ const Navbar = () => {
             <button className="cursor-pointer">
               <User className="w-5 h-5" />
             </button>
-            <button
+            {/* <button
               className="bg-[var(--custom-primary-orange)] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
               onClick={() => (window.location.href = "/login")}
             >
               Login
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
