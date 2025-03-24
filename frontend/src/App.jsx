@@ -1,4 +1,3 @@
-import React from "react";
 import Peer from "./pages/Peer";
 import Mood from "./pages/Mood";
 import Book from "./pages/Book";

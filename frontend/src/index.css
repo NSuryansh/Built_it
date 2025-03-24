@@ -113,3 +113,382 @@ html {
 .react-calendar__tile--active:hover {
   background-color: var(--calendar-custom-button-bg-orange) !important;
 }
+
+.app {
+  font-family: Arial, sans-serif;
+  background-image: url('./background.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  /* Make the background fully transparent */
+  background: transparent;
+  color: #fff;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.login-button {
+  background-color: #f5a623;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  padding: 40px;
+}
+
+.step-container {
+ 
+ background-color: #6f6c6c;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1200px;
+}
+
+.side-by-side-containers {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  margin-bottom: 20px;
+  
+}
+
+.calendar-container {
+  flex: 4; /* Larger size for the calendar */
+  background-color: #F2CECE;
+  padding: 20px;
+  
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.contact-list-container {
+  flex: 1; /* Smaller size for the contact list */
+  background-color: #F2CECE;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-section {
+  /* No additional margin needed since the container provides padding */
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.month-dropdown {
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #e34a4a;
+  background-color: #fff;
+  font-size: 16px;
+}
+
+.arrow-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #333;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.day-header {
+  text-align: center;
+  font-weight: bold;
+  color: #9f2424;
+  font-size: 15px;
+}
+
+.day-button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #F2CECE;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.day-button:hover {
+  background-color: #6f6c6c;
+}
+
+.day-button.selected {
+  background-color: #6f6c6c;
+  color: #fff;
+}
+
+.day-button.available {
+  background-color: #0c8227; /* Light green to indicate availability */
+  color: #155724;
+}
+
+.day-empty {
+  padding: 10px;
+  background-color: transparent;
+}
+
+.next-button {
+  background-color: #2b1c12;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  font-size: 18px;
+}
+
+.next-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.back-button {
+  background-color: #2b1c12;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 0;
+  font-size: 16px;
+}
+
+.dropdown-container {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dropdown-container label {
+  font-size: 20px;
+  font-weight: bold;
+  color: #f6cece;
+  /* background-color: ; */
+}
+
+.dropdown {
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #000000;
+  background-color: #fff;
+  font-size: 16px;
+  color: #473414;
+}
+
+.contact-list-section {
+  /* No additional margin needed since the container provides padding */
+}
+
+.contact-card {
+  background-color: #F2CECE;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.contact-type {
+  color: #413523;
+  font-weight: bold;
+  font-size: 16px;
+  flex: 1;
+}
+
+.contact-name {
+  font-size: 14px;
+  color: #333;
+  flex: 3;
+}
+
+.contact-dropdown {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  flex: 3;
+}
+
+.contact-details {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-details div {
+  font-size: 14px;
+  color: #0c0000;
+}
+
+.contact-actions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.time-slot {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  width: 120px; /* Slightly wider to accommodate time slot text */
+}
+
+.book-button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 80px;
+}
+
+.no-contacts {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bolder;
+  color: #c4c1c1;
+  margin: 20px 0;
+}
+
+.step-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 40px;
+  color: #dfdcdc;
+  text-transform: uppercase;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 150px;
+}
+
+.form-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.form-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form {
+  display: contents;
+}
+
+.label {
+  font-weight: bold;
+  font-size: 20px;
+  color: #333;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #040000;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.textarea {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  min-height: 150px;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.confirm-button {
+  background-color: #ea1a1a;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  display: block;
+  margin: 20px auto 0;
+}
