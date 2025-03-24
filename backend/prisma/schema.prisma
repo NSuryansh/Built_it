@@ -90,3 +90,26 @@ model Appointments {
   reason String?
 }
 
+model Requests {
+  @@map("requests")
+  id Int @id @default(autoincrement())
+  user_id    Int
+  user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  doctor_id Int
+  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete: Cascade)
+  dateTime DateTime
+}
+
+
+model Feelings {
+  @@map("feelings")
+  user_id    Int
+  user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  mental_peace Int
+  sleep_quality Int
+  socail_life Int
+  passion Int
+  less_stress_score Int
+  happiness_score Int
+}
+
