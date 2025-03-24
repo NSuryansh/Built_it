@@ -52,6 +52,7 @@ model Admin{
   id Int @id @default(autoincrement())
   email String @unique
   mobile String @unique
+  password String
 }
 
 model PastDoc{
@@ -101,11 +102,11 @@ model PastAppointments {
   @@map("pastApp")
   id Int @id @default(autoincrement())
   note String
-  doc_id Int
-  user_id Int
+  doc_id Int?
+  user_id Int?
   createdAt DateTime
-  doc Doctor @relation(fields: [doc_id], references: [id])
-  user User @relation(fields: [user_id], references: [id])
+  doc Doctor? @relation(fields: [doc_id], references: [id], onDelete:SetNull )
+  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
 }
 
 model Requests {
