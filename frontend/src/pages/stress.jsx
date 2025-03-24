@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bell, User } from 'lucide-react';
 import VideoSection from '../components/videosection';
+import Navbar from '../components/Navbar';
 
 function Stress() {
   return (
@@ -9,27 +10,9 @@ function Stress() {
       style={{
       }}
     >
-      {/* Navigation */}
-      <nav className="bg-transparent fixed w-full z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="text-xl font-bold text-white">CalmNest</div>
-          <div className="flex items-center space-x-6">
-            <a href="#" className="text-white hover:text-gray-200">Home</a>
-            <a href="#" className="text-white hover:text-gray-200">Mood</a>
-            <a href="#" className="text-white hover:text-gray-200">Peer</a>
-            <a href="#" className="text-white hover:text-gray-200">Book</a>
-            <a href="#" className="text-white hover:text-gray-200">Stress</a>
-            <Bell className="w-5 h-5 cursor-pointer text-white" />
-            <User className="w-5 h-5 cursor-pointer text-white" />
-            <button className="bg-orange-500 text-white px-4 py-1 rounded-md hover:bg-orange-600">
-              Login
-            </button>
-          </div>
-        </div>
-      </nav>
-
+      <Navbar />
       {/* Main Content */}
-      <div className="pt-20 px-4 max-w-7xl mx-auto space-y-8">
+      <div className="pt-10 px-4 max-w-7xl mx-auto space-y-8">
         {/* Guided Meditation Section */}
         <section className="bg-white/90 backdrop-blur-sm rounded-lg p-6">
           <h2 className="text-3xl font-semibold text-red-500 mb-4 text-center">Stress Relief Exercises</h2>
