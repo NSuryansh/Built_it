@@ -12,9 +12,9 @@ const DoctorNavbar = () => {
           <div className="flex space-x-8 items-center">
             <a
               href="/doctor_landing"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
+              className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
                 location === "/doctor_landing"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                   : ""
               }`}
             >
@@ -22,9 +22,9 @@ const DoctorNavbar = () => {
             </a>
             <a
               href="/doctor_appointments"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
+              className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
                 location === "/doctor_appointments"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                   : ""
               }`}
             >
@@ -32,9 +32,9 @@ const DoctorNavbar = () => {
             </a>
             <a
               href="/doctor_profile"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
+              className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
                 location === "/doctor_profile"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
+                  ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                   : ""
               }`}
             >
@@ -49,7 +49,7 @@ const DoctorNavbar = () => {
               <User className="w-5 h-5" />
             </button>
             {/* <button
-              className="bg-[var(--custom-primary-orange)] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
+              className="bg-[var(--custom-primary-blue)] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
               onClick={() => (window.location.href = "/login")}
             >
               Login

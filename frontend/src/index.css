@@ -27,6 +27,7 @@
   --landing-text-black: var(--custom-black);
   --landing-text-white: var(--custom-white);
   --landing-bg-orange: #ff4800;
+  --landing-bg-blue: #0066e3;
 
   /* Login Page Colors */
   --login-text-color: var(--custom-black);
