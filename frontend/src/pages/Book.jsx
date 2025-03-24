@@ -438,13 +438,13 @@ const CalendarStep = ({ onNext, availabilityData }) => {
               </select>
               <div>
                 <button
-                  className="text-lg cursor-pointer text-[#333] border-[none]"
+                  className="text-lg cursor-pointer text-[var(--custom-orange-800)] border-none"
                   onClick={handlePrevMonth}
                 >
                   {"<"}
                 </button>
                 <button
-                  className="text-lg cursor-pointer text-[#333] border-[none]"
+                  className="text-lg cursor-pointer text-[var(--custom-orange-800)] border-none"
                   onClick={handleNextMonth}
                 >
                   {">"}
@@ -475,8 +475,10 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 return (
                   <button
                     key={day}
-                    className={`bg-[#f2cece] cursor-pointer text-sm text-[#333] p-2.5 rounded-[5px] border-[none] hover:bg-[#ffddc0] ${
-                      selectedDate === date ? "bg-[#ffddc0] text-white" : ""
+                    className={`bg-[var(--custom-orange-100)] cursor-pointer text-sm text-[var(--custom-orange-800)] p-2.5 rounded-[5px] border-none ${
+                      selectedDate === date
+                        ? "bg-[var(--custom-orange-500)] text-[var(--custom-white)]"
+                        : "hover:bg-[var(--custom-orange-300)]"
                     } ${isAvailable ? "bg-[#0c8227] text-[#155724]" : ""}`}
                     onClick={() => handleDateClick(day)}
                   >
@@ -489,12 +491,14 @@ const CalendarStep = ({ onNext, availabilityData }) => {
         </div>
 
         {/* Contact List Container with Dropdowns */}
-        <div className="flex-1 bg-[#f2cece] shadow-[0_2px_4px_rgba(0,0,0,0.1)] p-5 rounded-[5px]">
+        <div className="flex-1 bg-[var(--custom-white)] border-2 border-[var(--custom-orange-200)] p-5 rounded-[5px]">
           <div className="">
-            <div className="bg-[#f2cece] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
-              <div className="text-[#413523] font-[bold]  flex-1">Doctors</div>
+            <div className="bg-[var(--custom-orange-100)] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+              <div className="text-[var(--custom-orange-800)] font-bold  flex-1">
+                Doctors
+              </div>
               <select
-                className="border bg-white text-sm flex-[3] p-[5px] rounded-[5px] border-solid border-[#ddd]"
+                className="border text-[var(--custom-white)] bg-[var(--custom-orange-500)] text-sm flex-[3] p-[5px] rounded-[5px] border-solid"
                 onChange={(e) => handlePersonSelect("Doctors", e.target.value)}
               >
                 <option value="">Select a Doctor</option>
@@ -505,10 +509,12 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
             </div>
-            <div className="bg-[#f2cece] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
-              <div className="text-[#413523] font-[bold] flex-1">Counselor</div>
+            <div className="bg-[var(--custom-orange-100)] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+              <div className="text-[var(--custom-orange-800)] font-bold flex-1">
+                Counselor
+              </div>
               <select
-                className="border bg-white text-sm flex-[3] p-[5px] rounded-[5px] border-solid border-[#ddd]"
+                className="border text-[var(--custom-white)] bg-[var(--custom-orange-500)] text-sm flex-[3] p-[5px] rounded-[5px] border-solid"
                 onChange={(e) =>
                   handlePersonSelect("Counselor", e.target.value)
                 }
@@ -521,12 +527,12 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
             </div>
-            <div className="bg-[#f2cece] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
-              <div className="text-[#413523] font-[bold] flex-1">
+            <div className="bg-[var(--custom-orange-100)] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+              <div className="text-[var(--custom-orange-800)] font-bold flex-1">
                 Faculty advisor
               </div>
               <select
-                className="border bg-white text-sm flex-[3] p-[5px] rounded-[5px] border-solid border-[#ddd]"
+                className="border text-[var(--custom-white)] bg-[var(--custom-orange-500)] text-sm flex-[3] p-[5px] rounded-[5px] border-solid"
                 onChange={(e) =>
                   handlePersonSelect("Faculty advisor", e.target.value)
                 }
@@ -544,7 +550,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
       </div>
 
       <button
-        className="bg-[#2b1c12] disabled:bg-[#ccc] disabled:cursor-not-allowed text-white cursor-pointer block text-lg mx-auto my-0 px-5 py-2.5 rounded-[20px] border-[none]"
+        className="bg-[var(--custom-orange-500)] font-bold disabled:bg-[#ccc] disabled:cursor-not-allowed text-[var(--custom-white)] cursor-pointer block text-lg mx-auto my-0 px-5 py-2.5 rounded-[20px] border-none"
         onClick={handleNextClick}
         disabled={!selectedDate}
       >
@@ -588,16 +594,18 @@ const ContactSelectionStep = ({
   };
 
   return (
-    <div className="step-container">
-      <h2 className="step-title">Available Contacts on {selectedDate}</h2>
+    <div className="bg-[var(--custom-orange-100)] w-full max-w-[1200px] p-[30px] rounded-[10px] border-[var(--custom-orange-200)] border-2">
+      <h2 className="text-center font-bold text-[40px] text-[var(--custom-orange-500)] uppercase mb-[30px]">
+        Available Contacts on {selectedDate}
+      </h2>
       <div className="flex items-center gap-5 mb-5">
-        <label className="text-xl font-[bold] text-[#f6cece]">
+        <label className="text-xl font-bold text-[var(--custom-orange-800)]">
           List of Contacts:{" "}
         </label>
         <select
           value={contactType}
           onChange={(e) => setContactType(e.target.value)}
-          className="bg-white text-base text-[#473414] p-[5px] rounded-[5px] border-2 border-solid border-black"
+          className="bg-[var(--custom-white)] text-[var(--custom-orange-900)] p-[5px] rounded-[5px] border-2 border-solid border-[var(--custom-orange-900)]"
         >
           <option value="Doctors">Doctors</option>
           <option value="Counselor">Counselor</option>
@@ -606,14 +614,25 @@ const ContactSelectionStep = ({
       </div>
       {contacts.length > 0 ? (
         contacts.map((contact, index) => (
-          <div key={index} className="contact-card">
-            <div className="contact-type">{contactType}</div>
-            <div className="contact-details">
-              <div>{contact.name}</div>
-              <div>{contact.details}</div>
-              <div>{contact.timing}</div>
+          <div
+            key={index}
+            className="bg-[var(--custom-white)] border-2 border-[var(--custom-orange-200)] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]"
+          >
+            <div className="text-[var(--custom-orange-800)] font-bold  flex-1">
+              {contactType}
             </div>
-            <div className="contact-actions">
+            <div className="flex-[3] flex flex-col gap-2">
+              <div className="text-sm text-[var(--custom-orange-900)]">
+                {contact.name}
+              </div>
+              <div className="text-sm text-[var(--custom-orange-900)]">
+                {contact.details}
+              </div>
+              <div className="text-sm text-[var(--custom-orange-900)]">
+                {contact.timing}
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col gap-2.5 items-end">
               <select
                 className="time-slot"
                 value={selectedTimeSlots[contact.name] || ""}
@@ -629,7 +648,7 @@ const ContactSelectionStep = ({
                 ))}
               </select>
               <button
-                className="book-button"
+                className="bg-[var(--custom-orange-500)] font-bold text-[var(--custom-white)] cursor-pointer w-20 px-[15px] py-[5px] rounded-[15px] border-none"
                 onClick={() => handleBook(contact)}
               >
                 Book
@@ -638,9 +657,14 @@ const ContactSelectionStep = ({
           </div>
         ))
       ) : (
-        <p className="no-contacts">No {contactType} available on this date.</p>
+        <p className="text-center text-3xl font-semibold text-[var(--custom-orange-700)] mx-0 my-5">
+          No {contactType} available on this date.
+        </p>
       )}
-      <button className="back-button" onClick={onBack}>
+      <button
+        className="bg-[var(--custom-orange-900)] text-[var(--custom-white)] cursor-pointer block font-bold mt-5 mb-0 mx-auto px-5 py-2.5 rounded-[20px] border-none"
+        onClick={onBack}
+      >
         Back
       </button>
     </div>
@@ -650,56 +674,71 @@ const ContactSelectionStep = ({
 // Step 3 (previously Step 4): Booking Form
 const BookingFormStep = ({ formData, handleChange, onSubmit, onBack }) => {
   return (
-    <div className="step-container">
-      <h2 className="step-title">ENTER THE DETAILS</h2>
-      <div className="form-container">
-        <form onSubmit={onSubmit} className="form">
-          <div className="form-left">
-            <label className="label">NAME</label>
+    <div className="bg-[var(--custom-orange-100)] border-2 border-[var(--custom-orange-200)] w-full max-w-[1200px] p-[30px] rounded-[10px]">
+      <h2 className="text-center text-[40px] font-bold text-[var(--custom-orange-500)] uppercase mb-[30px]">
+        ENTER THE DETAILS
+      </h2>
+      <div className="flex justify-between gap-[150px]">
+        <form onSubmit={onSubmit} className="contents">
+          <div className="flex-1 flex flex-col gap-[13px]">
+            <label className="font-bold text-xl text-[var(--custom-orange-800)]">
+              NAME
+            </label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="input"
+              className=" w-full box-border p-2.5 rounded-[5px] border-2 border-solid border-[var(--custom-orange-800)]"
               required
             />
-            <label className="label">EMAIL</label>
+            <label className="font-bold text-xl text-[var(--custom-orange-800)]">
+              EMAIL
+            </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="input"
+              className=" w-full box-border p-2.5 rounded-[5px] border-2 border-solid border-[var(--custom-orange-800)]"
               required
             />
-            <label className="label">PHONE NO.</label>
+            <label className="font-bold text-xl text-[var(--custom-orange-800)]">
+              PHONE NO.
+            </label>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="input"
+              className="w-full box-border p-2.5 rounded-[5px] border-2 border-solid border-[var(--custom-orange-800)]"
               required
             />
           </div>
-          <div className="form-right">
-            <label className="label">
+          <div className="flex-1 flex flex-col gap-[15px]">
+            <label className="font-bold text-xl text-[var(--custom-orange-800)]">
               In a brief note about your problem here
             </label>
             <textarea
               name="note"
               value={formData.note}
               onChange={handleChange}
-              className="textarea"
+              className="min-h-[150px] w-full box-border resize-none p-2.5 rounded-[5px] border-2 border-solid border-[var(--custom-orange-800)]"
             />
           </div>
         </form>
       </div>
-      <button type="submit" className="confirm-button" onClick={onSubmit}>
+      <button
+        type="submit"
+        className="bg-[var(--custom-orange-500)] text-[var(--custom-white)] cursor-pointer font-bold block mt-5 mb-0 mx-auto px-5 py-2.5 rounded-[20px] border-none"
+        onClick={onSubmit}
+      >
         Confirm booking
       </button>
-      <button className="back-button" onClick={onBack}>
+      <button
+        className="bg-[var(--custom-orange-900)] text-[var(--custom-white)] cursor-pointer block font-bold mt-5 mb-0 mx-auto px-5 py-2.5 rounded-[20px] border-none"
+        onClick={onBack}
+      >
         Back
       </button>
     </div>
