@@ -51,9 +51,9 @@ const Navbar = () => {
               Book
             </a>
             <a
-              href="/"
+              href="/stress"
               className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/"
+                location === "/stress"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}

@@ -10,11 +10,13 @@ import DoctorLogin from "./pages/doctor/Login";
 import DoctorLanding from "./pages/doctor/Landing";
 import DoctorAppointment from "./pages/doctor/Appointment";
 import DoctorProfile from "./pages/doctor/Profile";
+import Stress from "./pages/stress";
 
 export default function App() {
   const location = useLocation();
   const isBackgroundPage =
     location.pathname === "/" ||
+    location.pathname === "/stress" ||
     location.pathname === "/login" ||
     location.pathname === "/doctor_login" ||
     location.pathname === "/signup" ||
@@ -36,6 +38,7 @@ export default function App() {
         <Route path="/peer" element={<Peer />} />
         <Route path="/mood" element={<Mood />} />
         <Route path="/book" element={<Book />} />
+        <Route path="/stress" element={<Stress />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={<Landing_user />} />
