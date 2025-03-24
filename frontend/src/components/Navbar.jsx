@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation().pathname;
+  const [showDetails, setShowDetails] = useState(false);
   return (
     <nav className="bg-transperent">
       <div className="px-8 py-3">
@@ -65,9 +66,35 @@ const Navbar = () => {
             <button className="cursor-pointer">
               <Bell className="w-5 h-5" />
             </button>
-            <button className="cursor-pointer">
+             <button
+              onClick={() => {
+                setShowDetails(!showDetails);
+              }}
+              className="cursor-pointer relative"
+            >
               <User className="w-5 h-5" />
             </button>
+
+            <div
+              className={`user-details drop-shadow-xs absolute top-12 right-5 list-none bg-orange-200 rounded-md py-1 z-1 ${
+                showDetails ? "opacity-100 visible" : "opacity-0 invisible"
+              }`}
+            >
+              <ol>
+                <li className="p-3 text-right ">User Name</li>
+                <li className="p-3 text-right ">Email ID</li>
+                <li className="p-3 text-right ">Phone Number</li>
+                <li className="p-3 text-right ">Alt Phone Number</li>
+                <li className="p-3 text-right cursor-pointer">Appointments</li>
+              </ol>
+              <button className="p-2 m-3 text-right cursor-pointer bg-orange-300 rounded-md">
+                Modify
+              </button>
+
+              <button className="p-2 m-3 text-right cursor-pointer bg-orange-300 rounded-md">
+                Logout
+              </button>
+            </div>
             {/* <button
               className="bg-[var(--custom-primary-orange)] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
               onClick={() => (window.location.href = "/login")}
