@@ -132,6 +132,57 @@ app.get('/profile', async (req, res) => {
     }
 })
 
+app.get('/chatContacts', async (req, res) => {
+    try {
+        const userId  = req.body["userId"];
+        console.log(req.body["userId"])
+        console.log(userId)
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        const id = parseInt(userId);
+
+        // Fetch all distinct users the given user has chatted with
+        const chatPartners = await prisma.message.findMany({
+            where: {
+                OR: [
+                    { senderId: id },
+                    { recipientId: id }
+                ]
+            },
+            select: {
+                senderId: true,
+                recipientId: true
+            },
+            distinct: ["senderId", "recipientId"]
+        });
+
+        // Extract unique user IDs excluding the current user
+        const uniqueUserIds = new Set();
+        chatPartners.forEach(chat => {
+            if (chat.senderId !== id) uniqueUserIds.add(chat.senderId);
+            if (chat.recipientId !== id) uniqueUserIds.add(chat.recipientId);
+        });
+
+        // Fetch usernames of these users
+        const users = await prisma.user.findMany({
+            where: {
+                id: { in: Array.from(uniqueUserIds) }
+            },
+            select: {
+                id: true,
+                username: true
+            }
+        });
+
+        res.json(users);
+    } catch (error) {
+        console.error("Error fetching chat contacts:", error);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+});
+
 app.get('/messages', async (req, res) => {
     try {
         const { userId, recId } = req.query
