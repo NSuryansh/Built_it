@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
+import FadeLoader from 'react-spinners/FadeLoader'
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 
@@ -176,7 +177,10 @@ const Book = () => {
   };
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return <div className="h-full flex justify-center content-center">
+      <FadeLoader className="" color='#ff4800' radius={6} height={20} width={5} />
+      <p>Loading...</p>
+    </div>;
   }
 
   if (!isAuthenticated) {

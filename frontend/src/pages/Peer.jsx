@@ -8,6 +8,7 @@ import { decryptMessage } from "../utils/decryptMessage";
 import { generateAESKey } from "../utils/aesKey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
+import FadeLoader from 'react-spinners/FadeLoader'
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 
@@ -191,7 +192,10 @@ export default function Peer() {
 
   // Render based on authentication status
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return <div>
+      <FadeLoader color='#ff4800' radius={6} height={20} width={5} />
+      <p>Loading...</p>
+    </div>;
   }
   if (!isAuthenticated) {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
