@@ -8,6 +8,8 @@ import { decryptMessage } from "../utils/decryptMessage";
 import { generateAESKey } from "../utils/aesKey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
+import Navbar from "../components/Navbar";
+import SessionExpired from "../components/Session_expired";
 
 export default function Peer() {
   // Define hooks at the top
@@ -69,9 +71,23 @@ export default function Peer() {
   useEffect(() => {
     if (!aesKey) return;
 
-    const handleReceiveMessage = async ({ senderId, encryptedText, iv, encryptedAESKey }) => {
-      console.log("Message received:", { senderId, encryptedText, iv, encryptedAESKey });
-      const decrypted = await decryptMessage(encryptedText, iv, encryptedAESKey);
+    const handleReceiveMessage = async ({
+      senderId,
+      encryptedText,
+      iv,
+      encryptedAESKey,
+    }) => {
+      console.log("Message received:", {
+        senderId,
+        encryptedText,
+        iv,
+        encryptedAESKey,
+      });
+      const decrypted = await decryptMessage(
+        encryptedText,
+        iv,
+        encryptedAESKey
+      );
       console.log("Decrypted message:", decrypted);
 
       if (lastMessageRef.current === decrypted) return;
@@ -80,7 +96,13 @@ export default function Peer() {
       setChats((prevChats) =>
         prevChats.map((chat, index) =>
           index === selectedChat
-            ? { ...chat, messages: [...chat.messages, { self: "False", message: decrypted }] }
+            ? {
+                ...chat,
+                messages: [
+                  ...chat.messages,
+                  { self: "False", message: decrypted },
+                ],
+              }
             : chat
         )
       );
@@ -99,7 +121,10 @@ export default function Peer() {
       setChats((prevChats) =>
         prevChats.map((chat, index) =>
           index === selectedChat
-            ? { ...chat, messages: [...chat.messages, { self: "True", message }] }
+            ? {
+                ...chat,
+                messages: [...chat.messages, { self: "True", message }],
+              }
             : chat
         )
       );
@@ -127,7 +152,9 @@ export default function Peer() {
   // Fetch messages
   async function fetchMessages(userId, recipientId) {
     try {
-      const response = await fetch(`http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`);
+      const response = await fetch(
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+      );
       const messages = await response.json();
 
       // Use Promise.all to await each decryption if decryptMessage is async
@@ -136,7 +163,11 @@ export default function Peer() {
           senderId: msg["senderId"],
           recipientId: msg["recipientId"],
           encryptedAESKey: msg["encryptedAESKey"],
-          decryptedText: await decryptMessage(msg["encryptedText"], msg["iv"], msg["encryptedAESKey"]),
+          decryptedText: await decryptMessage(
+            msg["encryptedText"],
+            msg["iv"],
+            msg["encryptedAESKey"]
+          ),
         }))
       );
       console.log(decrypted);
@@ -163,38 +194,39 @@ export default function Peer() {
     return <div>Loading...</div>;
   }
   if (!isAuthenticated) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-xl font-semibold text-red-600">Session Timeout</h2>
-          <p className="mt-2">Your session has expired. Please log in again.</p>
-          <button onClick={handleClosePopup} className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer">
-            Go to Login
-          </button>
-        </div>
-      </div>
-    );
+    return <SessionExpired />;
   }
 
   return (
-    <div className="flex h-screen bg-[var(--mp-custom-white)]">
-      <ChatList
-        names={chats.map((chat) => chat.name)}
-        selectedChat={selectedChat}
-        setSelectedChat={setSelectedChat}
-      />
-      <div className="flex-1 flex flex-col">
-        <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
-          <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-            {chats[selectedChat].name}
-          </h2>
+    <div>
+      <Navbar />
+      <div className="flex h-screen bg-[var(--mp-custom-white)]">
+        <ChatList
+          names={chats.map((chat) => chat.name)}
+          selectedChat={selectedChat}
+          setSelectedChat={setSelectedChat}
+        />
+        <div className="flex-1 flex flex-col">
+          <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
+            <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
+              {chats[selectedChat].name}
+            </h2>
+          </div>
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
+            {chats[selectedChat].messages.map((msg, index) => (
+              <ChatMessage
+                key={index}
+                message={msg.message}
+                isSent={msg.self === "True"}
+              />
+            ))}
+          </div>
+          <ChatInput
+            message={message}
+            setMessage={setMessage}
+            handleSubmit={handleSubmit}
+          />
         </div>
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
-          {chats[selectedChat].messages.map((msg, index) => (
-            <ChatMessage key={index} message={msg.message} isSent={msg.self === "True"} />
-          ))}
-        </div>
-        <ChatInput message={message} setMessage={setMessage} handleSubmit={handleSubmit} />
       </div>
     </div>
   );

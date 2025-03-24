@@ -2,7 +2,7 @@ import React from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
-const Navbar = () => {
+const DoctorNavbar = () => {
   const location = useLocation().pathname;
   return (
     <nav className="bg-transperent">
@@ -11,9 +11,9 @@ const Navbar = () => {
           <div className="text-xl font-bold">CalmNest</div>
           <div className="flex space-x-8 items-center">
             <a
-              href="/"
+              href="/doctor_landing"
               className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/"
+                location === "/doctor_landing"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
@@ -21,44 +21,24 @@ const Navbar = () => {
               Home
             </a>
             <a
-              href="/mood"
+              href="/doctor_appointments"
               className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/mood"
+                location === "/doctor_appointments"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
-              Mood
+              Appointments
             </a>
             <a
-              href="/peer"
+              href="/doctor_profile"
               className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/peer"
+                location === "/doctor_profile"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
             >
-              Peer
-            </a>
-            <a
-              href="/book"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/book"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
-                  : ""
-              }`}
-            >
-              Book
-            </a>
-            <a
-              href="/"
-              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
-                  : ""
-              }`}
-            >
-              Stress
+              Profile
             </a>
           </div>
           <div className="flex items-center space-x-4">
@@ -81,4 +61,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default DoctorNavbar;

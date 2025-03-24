@@ -32,7 +32,7 @@ const ProgressPage = ({ isLandingPage }) => {
   };
 
   return (
-    <div className="bg-[var(--mp-custom-white)] max-h-[80vh] rounded-2xl shadow-lg">  
+    <div className="bg-[var(--mp-custom-white)] h-full rounded-2xl shadow-lg">  
       <div className={isLandingPage ? "p-4 bg-[var(--custom-white)]" : "p-4 bg-[var(--mp-custom-peach)]"}>
         <h2 className={isLandingPage ? "text-2xl font-bold text-[var(--custom-black)]" : "text-2xl font-bold text-[var(--mp-heading-text)]"}>
           {isLandingPage ? "Landing Page Heading" : "Your Feelings"}

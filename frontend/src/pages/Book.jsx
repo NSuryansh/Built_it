@@ -4,6 +4,8 @@ import { ChevronDown } from "lucide-react";
 import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
+import Navbar from "../components/Navbar";
+import SessionExpired from "../components/Session_expired";
 
 const Book = () => {
   const [date, setDate] = useState(new Date());
@@ -81,84 +83,74 @@ const Book = () => {
   }
 
   if (!isAuthenticated) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-xl font-semibold text-red-600">Session Timeout</h2>
-          <p className="mt-2">Your session has expired. Please log in again.</p>
-          <button
-            onClick={handleClosePopup}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg"
-          >
-            Go to Login
-          </button>
-        </div>
-      </div>
-    );
+    return <SessionExpired />;
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-evenly">
-        <div className="bg-[var(--custom-white)]/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
-          <Calendar
-            onChange={setDate}
-            value={date}
-            className="w-full max-w-[60vw] !border-none !rounded-lg !bg-transparent"
-            tileClassName="!rounded-lg transition-colors"
-            navigationLabel={({ date }) =>
-              `${date.toLocaleString("default", {
-                month: "long",
-              })} ${date.getFullYear()}`
-            }
-          />
-          <div className="flex justify-end mt-6">
-            <button className="cursor-pointer bg-[var(--calendar-custom-primary-orange)] text-[var(--custom-white)] px-6 py-2 rounded-full hover:bg-[var(--calendar-custom-button-bg-orange)] transition-colors">
-              Next
-            </button>
+    <div>
+      <Navbar />
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-evenly">
+          <div className="bg-[var(--custom-white)]/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
+            <Calendar
+              onChange={setDate}
+              value={date}
+              className="w-full max-w-[60vw] !border-none !rounded-lg !bg-transparent"
+              tileClassName="!rounded-lg transition-colors"
+              navigationLabel={({ date }) =>
+                `${date.toLocaleString("default", {
+                  month: "long",
+                })} ${date.getFullYear()}`
+              }
+            />
+            <div className="flex justify-end mt-6">
+              <button className="cursor-pointer bg-[var(--calendar-custom-primary-orange)] text-[var(--custom-white)] px-6 py-2 rounded-full hover:bg-[var(--calendar-custom-button-bg-orange)] transition-colors">
+                Next
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="w-80">
-          <div className="bg-[var(--custom-white)]/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl">
-            <h3 className="text-lg font-semibold mb-4 text-[var(--calendar-custom-gray-800)]">
-              List of Contacts
-            </h3>
+          <div className="w-80">
+            <div className="bg-[var(--custom-white)]/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl">
+              <h3 className="text-lg font-semibold mb-4 text-[var(--calendar-custom-gray-800)]">
+                List of Contacts
+              </h3>
 
-            <div className="space-y-3">
-              {contactCategories.map((category) => (
-                <div key={category.title} className="space-y-2">
-                  <button
-                    onClick={() => toggleCategory(category.title)}
-                    className="w-full transition-all bg-[var(--calendar-custom-orange-50)] text-[var(--calendar-custom-primary-orange)] p-3 rounded-xl flex items-center justify-between hover:bg-[var(--calendar-custom-orange-100)] "
-                  >
-                    <span>{category.title}</span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform ${
-                        openCategory === category.title ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
+              <div className="space-y-3">
+                {contactCategories.map((category) => (
+                  <div key={category.title} className="space-y-2">
+                    <button
+                      onClick={() => toggleCategory(category.title)}
+                      className="w-full transition-all bg-[var(--calendar-custom-orange-50)] text-[var(--calendar-custom-primary-orange)] p-3 rounded-xl flex items-center justify-between hover:bg-[var(--calendar-custom-orange-100)] "
+                    >
+                      <span>{category.title}</span>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          openCategory === category.title ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
 
-                  {openCategory === category.title && (
-                    <div className="bg-[var(--custom-white)]/90 rounded-xl p-4 space-y-3 ml-2">
-                      {category.contacts.map((contact, index) => (
-                        <div key={index} className="space-y-1">
-                          <h4 className="font-medium text-[var(--calendar-custom-gray-800)]">
-                            {contact.name}
-                          </h4>
-                          <p className="text-sm text-[var(--calendar-custom-gray-600)]">
-                            {contact.role}
-                          </p>
-                          <p className="text-sm text-[var(--calendar-custom-gray-600)]">
-                            {contact.phone}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+                    {openCategory === category.title && (
+                      <div className="bg-[var(--custom-white)]/90 rounded-xl p-4 space-y-3 ml-2">
+                        {category.contacts.map((contact, index) => (
+                          <div key={index} className="space-y-1">
+                            <h4 className="font-medium text-[var(--calendar-custom-gray-800)]">
+                              {contact.name}
+                            </h4>
+                            <p className="text-sm text-[var(--calendar-custom-gray-600)]">
+                              {contact.role}
+                            </p>
+                            <p className="text-sm text-[var(--calendar-custom-gray-600)]">
+                              {contact.phone}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -22,6 +22,7 @@
   --login-bg-peach: var(--custom-peach);
   --login-input-bg: var(--custom-white);
   --login-input-border: #cccccc;
+  --login-light-text: #7a7a7a;
   --login-button-orange: var(--custom-primary-orange);
   --login-button-text: var(--custom-white);
 
