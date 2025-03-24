@@ -76,16 +76,6 @@ const DoctorLogin = () => {
             Login
           </button>
 
-          <p className="mt-6 text-sm text-center text-[var(--login-text-color)]">
-            If not registered{" "}
-            <a
-              href="/doctor_signup"
-              className="underline font-bold text-[var(--login-button-orange)]"
-            >
-              click here
-            </a>
-          </p>
-
           {/* <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
           <hr className="flex-1/3" />
           <div className="flex-1/3 text-center">OR</div>
