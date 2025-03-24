@@ -13,8 +13,8 @@ const app = express()
 app.use(express.json());
 const server = createServer(app)
 const port = 3000
-const SECRET_KEY = "hT9XpzU2Z7yNdD9J7jR1bC5qW1J2sDklFPLV2hOx6pY="
 dotenv.config()
+const SECRET_KEY = process.env.JWT_SECRET_KEY
 
 app.use(cors())
 const io = new Server(server, {
