@@ -125,5 +125,6 @@ model Notifications {
   user User @relation("User",fields:[user_id], references: [id])
   chat_user Int
   chatUser User @relation("ChatInvite",fields: [chat_user], references: [id])
+  created_at DateTime @default(now())
 }
 
