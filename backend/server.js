@@ -5,19 +5,33 @@ import { PrismaClient } from "@prisma/client"
 import cors from "cors"
 import { Server } from "socket.io"
 import { createServer } from "http"
-
+import { v2 as cloudinary } from "cloudinary"
+import dotenv from "dotenv"
 
 const prisma = new PrismaClient()
 const app = express()
 app.use(express.json());
 const server = createServer(app)
 const port = 3000
-const SECRET_KEY = "hT9XpzU2Z7yNdD9J7jR1bC5qW1J2sDklFPLV2hOx6pY="
+dotenv.config()
+const SECRET_KEY = process.env.JWT_SECRET_KEY
 
 app.use(cors())
 const io = new Server(server, {
     cors: { origin: "*", methods: ["GET", "POST"] },
 })
+
+cloudinary.config({
+    cloud_name: 'dt7a9meug',
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+async function uploadImage(path) {
+    const results = await cloudinary.uploader.upload(path)
+    return results["url"]
+}
+
 const users = new Map()
 io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`)
@@ -118,6 +132,57 @@ app.get('/profile', async (req, res) => {
     }
 })
 
+app.get('/chatContacts', async (req, res) => {
+    try {
+        const userId  = req.body["userId"];
+        console.log(req.body["userId"])
+        console.log(userId)
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        const id = parseInt(userId);
+
+        // Fetch all distinct users the given user has chatted with
+        const chatPartners = await prisma.message.findMany({
+            where: {
+                OR: [
+                    { senderId: id },
+                    { recipientId: id }
+                ]
+            },
+            select: {
+                senderId: true,
+                recipientId: true
+            },
+            distinct: ["senderId", "recipientId"]
+        });
+
+        // Extract unique user IDs excluding the current user
+        const uniqueUserIds = new Set();
+        chatPartners.forEach(chat => {
+            if (chat.senderId !== id) uniqueUserIds.add(chat.senderId);
+            if (chat.recipientId !== id) uniqueUserIds.add(chat.recipientId);
+        });
+
+        // Fetch usernames of these users
+        const users = await prisma.user.findMany({
+            where: {
+                id: { in: Array.from(uniqueUserIds) }
+            },
+            select: {
+                id: true,
+                username: true
+            }
+        });
+
+        res.json(users);
+    } catch (error) {
+        console.error("Error fetching chat contacts:", error);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+});
+
 app.get('/messages', async (req, res) => {
     try {
         const { userId, recId } = req.query
@@ -139,28 +204,51 @@ app.get('/messages', async (req, res) => {
     }
 })
 
-app.get('/public-key/:userId', async (req, res) => {
-    const { userId } = req.params;
+// app.get('/public-key/:userId', async (req, res) => {
+//     const { userId } = req.params;
 
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { publicKey: true } });
+//     const user = await prisma.user.findUnique({ where: { id: userId }, select: { publicKey: true } });
 
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
-    }
+//     if (!user) {
+//         return res.status(404).json({ message: "User not found" });
+//     }
 
-    res.json({ publicKey: user.publicKey });
-});
+//     res.json({ publicKey: user.publicKey });
+// });
 
 app.get("/events", async (req, res) => {
-  try {
-    const events = await prisma.event.findMany(); // Fetch all events
-    res.json(events); // Send the events as a JSON response
-  } catch (e) {
-    console.error(e);
-    res.status(0).json({ message: "Error fetching events" });
-  }
+    try {
+        const events = await prisma.events.findMany(); // Fetch all events
+        res.json(events); // Send the events as a JSON response
+    } catch (e) {
+        console.error(e);
+        res.status(0).json({ message: "Error fetching events" });
+    }
 });
 
+app.post('/addDoc', async (req, res) => {
+    const { name, mobile, email, password, reg_id, desc, img } = req.body
+    const hashedPassword = await bcrypt.hash(password, 10)
+    // const imgUrl = uploadImage(img)
+    try {
+        const doc = await prisma.doctor.create({
+            data: {
+                name: name,
+                email: email,
+                mobile: mobile,
+                password: hashedPassword,
+                reg_id: reg_id,
+                desc: desc,
+                img: img
+            }
+        })
+        // const resp = await doc.json()
+        // console.log(resp)
+        res.json({ message: "doc added", doc: doc })
+    }catch(e){
+        res.json({error:e})
+    }
+})
 app.post("/book", async (req, res) => {
   const { userId, doctorId, dateTime } = req.body;
 
@@ -186,6 +274,9 @@ app.post("/book", async (req, res) => {
       },
     });
 
+    //Remove from requests table
+    await prisma.Requests.delete({ where: { id: parseInt(id) } });
+
     res
       .status(0)
       .json({ message: "Appointment booked successfully", appointment });
@@ -195,7 +286,125 @@ app.post("/book", async (req, res) => {
   }
 });
 
-app.post("/add", async (req, res) => {
+app.post("/requests", async (req, res) => {
+  const { userId, doctorId, dateTime } = req.body;
+
+  try {
+    // Check if user exists
+    const user = await prisma.User.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if doctor exists
+    const doctor = await prisma.Doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Create appointment
+    const appointment = await prisma.Requests.create({
+      data: {
+        user_id: userId,
+        doctor_id: doctorId,
+        dateTime: new Date(dateTime),
+      },
+    });
+
+    res
+      .status(0)
+      .json({ message: "Appointment request added successfully", appointment });
+  } catch (error) {
+    console.error(error);
+    res.status(0).json({ message: "Internal Server Error" });
+  }
+});
+
+//GET REQUEST FOR DOCTOR LIST
+app.get("/getdoctors", async (req, res) => {
+  try {
+    const events = await prisma.doctor.findMany(); // Fetch all events
+    res.json(events); // Send the events as a JSON response
+  } catch (e) {
+    console.error(e);
+    res.status(0).json({ message: "Error fetching doctors" });
+  }
+});
+
+app.post('/docLogin', async(req,res)=>{
+    console.log(req.body)
+    const email = req.body["email"]
+    const password = req.body["password"]
+
+    const doctor = await prisma.doctor.findUnique({ where: { email: email } })
+    if (!doctor) {
+        return res.status(401).json({ message: "Email ID is not registered" })
+    }
+    const match = await bcrypt.compare(password, doctor.password)
+    if (!match) {
+        return res.status(401).json({ message: "Incorrect password" })
+    }
+    const token = jwt.sign({ userId: doctor.id, username: doctor.name, email: doctor.email }, SECRET_KEY, {
+        expiresIn: "1h",
+    });
+
+    res.json({ message: "Login successful", token })
+})
+
+app.get('/docProfile', async(req,res)=>{
+    const token = req.headers.authorization?.split(" ")[1]
+    if (!token) {
+        console.log(token)
+        return res.status(401).json({ message: "Unauthorized", token })
+    }
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY)
+        const doctor = await prisma.doctor.findUnique({ where: { email: decoded.email } })
+        console.log(doctor)
+        res.json(JSON.parse(JSON.stringify({ 'doctor': doctor, 'message': 'Doctor found' })))
+    } catch (e) {
+        console.log(e)
+    }
+})
+
+
+
+app.post("/book", async (req, res) => {
+    const { userId, doctorId, dateTime } = req.body;
+
+    try {
+        // Check if user exists
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if doctor exists
+        const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+        if (!doctor) {
+            return res.status(404).json({ message: "Doctor not found" });
+        }
+
+
+        const appointment = await prisma.appointments.create({
+            data: {
+                user_id: userId,
+                doctor_id: doctorId,
+                dateTime: new Date(dateTime),
+            },
+        });
+
+
+        res
+            .status(0)
+            .json({ message: "Appointment booked successfully", appointment });
+    } catch (error) {
+        console.error(error);
+        res.status(0).json({ message: "Internal Server Error" });
+    }
+});
+
+app.post("/addEvent", async (req, res) => {
     try {
         const { title, description, dateTime, venue } = req.body;
 
@@ -205,7 +414,7 @@ app.post("/add", async (req, res) => {
         }
 
         // Create the event in Prisma
-        const event = await prisma.Events.create({
+        const event = await prisma.events.create({
             data: {
                 title,
                 description,
