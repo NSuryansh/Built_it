@@ -139,7 +139,6 @@ app.post("/login", async (req, res) => {
 
   res.json({ message: "Login successful", token });
 });
-
 app.get("/profile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -357,8 +356,8 @@ app.post("/requests", async (req, res) => {
 //GET REQUEST FOR DOCTOR LIST
 app.get("/getdoctors", async (req, res) => {
   try {
-    const events = await prisma.doctor.findMany(); // Fetch all events
-    res.json(events); // Send the events as a JSON response
+    const docs = await prisma.doctor.findMany(); // Fetch all docs
+    res.json(docs); // Send the docs as a JSON response
   } catch (e) {
     console.error(e);
     res.status(0).json({ message: "Error fetching doctors" });
