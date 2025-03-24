@@ -37,13 +37,13 @@ const DoctorLogin = () => {
             LOGIN
           </h1>
 
-        <input
-          type="email"
-          placeholder="email"
-          className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+          <input
+            type="email"
+            placeholder="email"
+            className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
           // value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
           <input
