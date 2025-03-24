@@ -129,6 +129,7 @@ app.get('/profile', async (req, res) => {
         res.json(JSON.parse(JSON.stringify({ 'user': user, 'message': 'User found' })))
     } catch (e) {
         console.log(e)
+        res.json({error:e})
     }
 })
 
