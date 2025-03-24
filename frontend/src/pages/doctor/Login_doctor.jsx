@@ -9,7 +9,8 @@ const DoctorLogin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handlelogin = async () => {
+  const handlelogin = async (e) => {
+    e.preventDefault()
     const response = await fetch("http://localhost:3000/docLogin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
