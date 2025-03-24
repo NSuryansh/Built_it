@@ -198,6 +198,87 @@ app.post('/addDoc', async (req, res) => {
         res.json({error:e})
     }
 })
+app.post("/book", async (req, res) => {
+  const { userId, doctorId, dateTime } = req.body;
+
+  try {
+    // Check if user exists
+    const user = await prisma.User.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if doctor exists
+    const doctor = await prisma.Doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Create appointment
+    const appointment = await prisma.Appointments.create({
+      data: {
+        user_id: userId,
+        doctor_id: doctorId,
+        dateTime: new Date(dateTime),
+      },
+    });
+
+    //Remove from requests table
+    await prisma.Requests.delete({ where: { id: parseInt(id) } });
+
+    res
+      .status(0)
+      .json({ message: "Appointment booked successfully", appointment });
+  } catch (error) {
+    console.error(error);
+    res.status(0).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/requests", async (req, res) => {
+  const { userId, doctorId, dateTime } = req.body;
+
+  try {
+    // Check if user exists
+    const user = await prisma.User.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if doctor exists
+    const doctor = await prisma.Doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Create appointment
+    const appointment = await prisma.Requests.create({
+      data: {
+        user_id: userId,
+        doctor_id: doctorId,
+        dateTime: new Date(dateTime),
+      },
+    });
+
+    res
+      .status(0)
+      .json({ message: "Appointment request added successfully", appointment });
+  } catch (error) {
+    console.error(error);
+    res.status(0).json({ message: "Internal Server Error" });
+  }
+});
+
+//GET REQUEST FOR DOCTOR LIST
+app.get("/getdoctors", async (req, res) => {
+  try {
+    const events = await prisma.doctor.findMany(); // Fetch all events
+    res.json(events); // Send the events as a JSON response
+  } catch (e) {
+    console.error(e);
+    res.status(0).json({ message: "Error fetching doctors" });
+  }
+});
 
 app.post('/docLogin', async(req,res)=>{
     console.log(req.body)
@@ -234,6 +315,8 @@ app.get('/docProfile', async(req,res)=>{
         console.log(e)
     }
 })
+
+
 
 app.post("/book", async (req, res) => {
     const { userId, doctorId, dateTime } = req.body;
