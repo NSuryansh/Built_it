@@ -432,6 +432,24 @@ app.get("/docProfile", async (req, res) => {
   }
 });
 
+app.get("/adminProfile", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    console.log(token);
+    return res.status(401).json({ message: "Unauthorized", token });
+  }
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const admin = await prisma.admin.findUnique({
+      where: { email: decoded.email },
+    });
+    console.log(admin);
+    res.json({ admin: admin, message: "Admin found" });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 // app.post("/book", async (req, res) => {
 //   const userId = req.body['userId'];
 //   const doctorId = req.body['doctorId']
