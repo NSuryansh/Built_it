@@ -87,5 +87,6 @@ model Appointments {
   doctor_id Int
   doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete: Cascade)
   dateTime DateTime
+  reason String?
 }
 
