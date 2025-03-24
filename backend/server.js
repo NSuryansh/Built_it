@@ -477,6 +477,10 @@ app.post("/addEvent", async (req, res) => {
     }
 });
 
+app.post('/notifications', async(req,res)=>{
+
+})
+
 app.get("/notifications", async (req, res) => {
     try {
         const THIRTY_DAYS_AGO = new Date();
@@ -583,7 +587,7 @@ app.delete("/deletedoc", async (req, res) => {
     // Start transaction to move and delete
     await prisma.$transaction([
       // Move to pastdoc table
-      prisma.pastdoc.create({
+      prisma.pastDoc.create({
         data: {
           id: doctor.id,
           name: doctor.name,
