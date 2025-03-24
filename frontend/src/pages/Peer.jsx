@@ -9,6 +9,7 @@ import { generateAESKey } from "../utils/aesKey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
 import FadeLoader from 'react-spinners/FadeLoader';
+import Navbar from "../components/Navbar";
 
 export default function Peer() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -212,6 +213,7 @@ export default function Peer() {
 
   return (
     <div className="flex h-screen bg-[var(--mp-custom-white)]">
+      <Navbar />
       {filteredChats.length > 0 && (
         <ChatList
           names={filteredChats.map((chat) => chat.name)}

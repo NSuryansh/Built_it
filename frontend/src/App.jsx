@@ -24,6 +24,7 @@ export default function App() {
   const isBackgroundPage =
     location.pathname === "/" ||
     location.pathname === "/stress" ||
+    location.pathname === "/appointments" ||
     location.pathname === "/login" ||
     location.pathname === "/signup" ||
     location.pathname === "/book";
