@@ -25,6 +25,8 @@ model User{
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
   appointment Appointments[]
+  request Requests[]
+  feelings Feelings?
 }
 
 model Doctor{
@@ -38,6 +40,7 @@ model Doctor{
   desc String?
   img String?
   docApp Appointments[]
+  request Requests[]
 }
 
 model Admin{
@@ -103,7 +106,7 @@ model Requests {
 
 model Feelings {
   @@map("feelings")
-  user_id    Int
+  user_id    Int @id
   user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
   mental_peace Int
   sleep_quality Int
