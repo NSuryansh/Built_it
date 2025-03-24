@@ -280,7 +280,7 @@ app.post("/book", async (req, res) => {
   const dateTime = req.body["dateTime"];
   const reason = req.body["reason"];
   const appId = req.body["id"];
-  console.log(doctorId);
+  console.log(req.body);
   try {
     // Check if user exists
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -411,6 +411,23 @@ app.post("/adminLogin", async (req, res) => {
 
   res.json({ message: "Login successful", token });
 });
+
+app.get('/reqApp', async(req,res)=>{
+    const docId = Number(req.query["docId"])
+    const appt = await prisma.requests.findMany({
+        where: { doctor_id: docId },
+        include: {
+          user: {
+            select: {
+              username: true,   // assuming "name" is the username
+              mobile: true,
+              email: true,
+            },
+          },
+        },
+      });
+    res.json(appt)
+})
 
 app.get("/docProfile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -662,9 +679,22 @@ app.get("/currentdocappt", async (req, res) => {
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
+    // const appt = await prisma.appointments.findMany({
+    //   where: { doctor_id: doctorId },
+    // }); 
     const appt = await prisma.appointments.findMany({
-      where: { doctor_id: doctorId },
-    }); // Fetch all appts
+        where: { doctor_id: doctorId },
+        include: {
+          user: {
+            select: {
+              username: true,   // assuming "name" is the username
+              mobile: true,
+              email: true,
+            },
+          },
+        },
+      });
+    
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
     console.error(e);
