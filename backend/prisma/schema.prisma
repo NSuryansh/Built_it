@@ -101,3 +101,15 @@ model Requests {
 }
 
 
+model Feelings {
+  @@map("feelings")
+  user_id    Int
+  user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  mental_peace Int
+  sleep_quality Int
+  socail_life Int
+  passion Int
+  less_stress_score Int
+  happiness_score Int
+}
+
