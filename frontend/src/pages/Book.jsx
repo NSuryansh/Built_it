@@ -408,14 +408,14 @@ const CalendarStep = ({ onNext, availabilityData }) => {
   };
 
   return (
-    <div className="step-container">
-      <div className="side-by-side-containers">
+    <div className="bg-[#ffddc0] shadow-[0_4px_8px_rgba(0,0,0,0.1)] w-full max-w-[1200px] p-[30px] rounded-[10px]">
+      <div className="flex justify-between gap-[50px] mb-5">
         {/* Calendar Container */}
-        <div className="calendar-container">
-          <div className="calendar-section">
-            <div className="calendar-header">
+        <div className="flex-[4] bg-[#f2cece] shadow-[0_2px_4px_rgba(0,0,0,0.1)] p-5 rounded-[5px]">
+          <div className="">
+            <div className="flex justify-between items-center mb-[30px]">
               <select
-                className="month-dropdown"
+                className="bg-white  p-[5px] rounded-[5px] border-2 border-solid border-[#e34a4a]"
                 value={months[month]}
                 onChange={handleMonthChange}
               >
@@ -426,7 +426,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
               <select
-                className="month-dropdown"
+                className="bg-white  p-[5px] rounded-[5px] border-2 border-solid border-[#e34a4a]"
                 value={year}
                 onChange={handleYearChange}
               >
@@ -437,22 +437,34 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
               <div>
-                <button className="arrow-button" onClick={handlePrevMonth}>
+                <button
+                  className="text-lg cursor-pointer text-[#333] border-[none]"
+                  onClick={handlePrevMonth}
+                >
                   {"<"}
                 </button>
-                <button className="arrow-button" onClick={handleNextMonth}>
+                <button
+                  className="text-lg cursor-pointer text-[#333] border-[none]"
+                  onClick={handleNextMonth}
+                >
                   {">"}
                 </button>
               </div>
             </div>
-            <div className="calendar">
+            <div className="grid grid-cols-[repeat(7,1fr)] gap-[5px] mb-2.5">
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                <div key={day} className="day-header">
+                <div
+                  key={day}
+                  className="text-center font-[bold] text-[#9f2424] text-[15px]"
+                >
                   {day}
                 </div>
               ))}
               {emptyDays.map((_, index) => (
-                <div key={`empty-${index}`} className="day-empty"></div>
+                <div
+                  key={`empty-${index}`}
+                  className="bg-transparent p-2.5"
+                ></div>
               ))}
               {days.map((day) => {
                 const paddedDay = day < 10 ? `0${day}` : day;
@@ -463,9 +475,9 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 return (
                   <button
                     key={day}
-                    className={`day-button ${
-                      selectedDate === date ? "selected" : ""
-                    } ${isAvailable ? "available" : ""}`}
+                    className={`bg-[#f2cece] cursor-pointer text-sm text-[#333] p-2.5 rounded-[5px] border-[none] hover:bg-[#ffddc0] ${
+                      selectedDate === date ? "bg-[#ffddc0] text-white" : ""
+                    } ${isAvailable ? "bg-[#0c8227] text-[#155724]" : ""}`}
                     onClick={() => handleDateClick(day)}
                   >
                     {day}
@@ -477,12 +489,12 @@ const CalendarStep = ({ onNext, availabilityData }) => {
         </div>
 
         {/* Contact List Container with Dropdowns */}
-        <div className="contact-list-container">
-          <div className="contact-list-section">
-            <div className="contact-card">
-              <div className="contact-type">Doctors</div>
+        <div className="flex-1 bg-[#f2cece] shadow-[0_2px_4px_rgba(0,0,0,0.1)] p-5 rounded-[5px]">
+          <div className="">
+            <div className="bg-[#f2cece] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+              <div className="text-[#413523] font-[bold]  flex-1">Doctors</div>
               <select
-                className="contact-dropdown"
+                className="border bg-white text-sm flex-[3] p-[5px] rounded-[5px] border-solid border-[#ddd]"
                 onChange={(e) => handlePersonSelect("Doctors", e.target.value)}
               >
                 <option value="">Select a Doctor</option>
@@ -493,10 +505,10 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
             </div>
-            <div className="contact-card">
-              <div className="contact-type">Counselor</div>
+            <div className="bg-[#f2cece] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+              <div className="text-[#413523] font-[bold] flex-1">Counselor</div>
               <select
-                className="contact-dropdown"
+                className="border bg-white text-sm flex-[3] p-[5px] rounded-[5px] border-solid border-[#ddd]"
                 onChange={(e) =>
                   handlePersonSelect("Counselor", e.target.value)
                 }
@@ -509,10 +521,12 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
             </div>
-            <div className="contact-card">
-              <div className="contact-type">Faculty advisor</div>
+            <div className="bg-[#f2cece] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+              <div className="text-[#413523] font-[bold] flex-1">
+                Faculty advisor
+              </div>
               <select
-                className="contact-dropdown"
+                className="border bg-white text-sm flex-[3] p-[5px] rounded-[5px] border-solid border-[#ddd]"
                 onChange={(e) =>
                   handlePersonSelect("Faculty advisor", e.target.value)
                 }
@@ -530,7 +544,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
       </div>
 
       <button
-        className="next-button"
+        className="bg-[#2b1c12] text-white cursor-pointer block text-lg mx-auto my-0 px-5 py-2.5 rounded-[20px] border-[none]"
         onClick={handleNextClick}
         disabled={!selectedDate}
       >

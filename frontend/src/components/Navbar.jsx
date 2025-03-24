@@ -11,9 +11,9 @@ const Navbar = () => {
           <div className="text-xl font-bold">CalmNest</div>
           <div className="flex space-x-8 items-center">
             <a
-              href="/"
+              href="/dashboard"
               className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/"
+                location === "/dashboard"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
