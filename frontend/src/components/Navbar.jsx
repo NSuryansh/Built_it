@@ -52,9 +52,9 @@ const Navbar = () => {
               Book
             </a>
             <a
-              href="/"
+              href="/stress"
               className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                location === "/"
+                location === "/stress"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
               }`}
@@ -85,7 +85,7 @@ const Navbar = () => {
                 <li className="p-3 text-right ">Email ID</li>
                 <li className="p-3 text-right ">Phone Number</li>
                 <li className="p-3 text-right ">Alt Phone Number</li>
-                <li className="p-3 text-right cursor-pointer">Appointments</li>
+                <a href="/appointments"><li className="p-3 text-right cursor-pointer">Appointments</li></a>
               </ol>
               <button className="p-2 m-3 text-right cursor-pointer bg-orange-300 rounded-md">
                 Modify
