@@ -22,6 +22,7 @@
   --login-bg-peach: var(--custom-peach);
   --login-input-bg: var(--custom-white);
   --login-input-border: #cccccc;
+  --login-light-text: #7a7a7a;
   --login-button-orange: var(--custom-primary-orange);
   --login-button-text: var(--custom-white);
 
@@ -111,4 +112,242 @@ html {
 
 .react-calendar__tile--active:hover {
   background-color: var(--calendar-custom-button-bg-orange) !important;
+}
+
+.app {
+  font-family: Arial, sans-serif;
+  background-image: url("./background.jpg");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  /* Make the background fully transparent */
+  background: transparent;
+  color: #fff;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.login-button {
+  background-color: #f5a623;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  padding: 40px;
+}
+
+
+
+
+.next-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.back-button {
+  background-color: #2b1c12;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 0;
+  font-size: 16px;
+}
+
+.dropdown-container {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dropdown-container label {
+  font-size: 20px;
+  font-weight: bold;
+  color: #f6cece;
+  /* background-color: ; */
+}
+
+.dropdown {
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #000000;
+  background-color: #fff;
+  font-size: 16px;
+  color: #473414;
+}
+
+
+
+.contact-name {
+  font-size: 14px;
+  color: #333;
+  flex: 3;
+}
+
+
+
+.contact-details {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-details div {
+  font-size: 14px;
+  color: #0c0000;
+}
+
+.contact-actions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.time-slot {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  width: 120px; /* Slightly wider to accommodate time slot text */
+}
+
+.book-button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 80px;
+}
+
+.no-contacts {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bolder;
+  color: #c4c1c1;
+  margin: 20px 0;
+}
+
+.step-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 40px;
+  color: #dfdcdc;
+  text-transform: uppercase;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 150px;
+}
+
+.form-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.form-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form {
+  display: contents;
+}
+
+.label {
+  font-weight: bold;
+  font-size: 20px;
+  color: #333;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #040000;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.textarea {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  min-height: 150px;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.confirm-button {
+  background-color: #ea1a1a;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  display: block;
+  margin: 20px auto 0;
 }

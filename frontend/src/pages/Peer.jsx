@@ -8,6 +8,9 @@ import { decryptMessage } from "../utils/decryptMessage";
 import { generateAESKey } from "../utils/aesKey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
+import FadeLoader from 'react-spinners/FadeLoader'
+import Navbar from "../components/Navbar";
+import SessionExpired from "../components/SessionExpired";
 
 export default function Peer() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -79,9 +82,23 @@ export default function Peer() {
   useEffect(() => {
     if (!aesKey) return;
 
-    const handleReceiveMessage = async ({ senderId, encryptedText, iv, encryptedAESKey }) => {
-      console.log("Message received:", { senderId, encryptedText, iv, encryptedAESKey });
-      const decrypted = await decryptMessage(encryptedText, iv, encryptedAESKey);
+    const handleReceiveMessage = async ({
+      senderId,
+      encryptedText,
+      iv,
+      encryptedAESKey,
+    }) => {
+      console.log("Message received:", {
+        senderId,
+        encryptedText,
+        iv,
+        encryptedAESKey,
+      });
+      const decrypted = await decryptMessage(
+        encryptedText,
+        iv,
+        encryptedAESKey
+      );
       console.log("Decrypted message:", decrypted);
 
       // Avoid duplicate messages
@@ -127,7 +144,9 @@ export default function Peer() {
   // Fetch messages from API and initialize showMessages
   async function fetchMessages(userId, recipientId) {
     try {
-      const response = await fetch(`http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`);
+      const response = await fetch(
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+      );
       const messages = await response.json();
 
       const decrypted_api_messages = await Promise.all(
@@ -135,7 +154,11 @@ export default function Peer() {
           senderId: msg["senderId"],
           recipientId: msg["recipientId"],
           encryptedAESKey: msg["encryptedAESKey"],
-          decryptedText: await decryptMessage(msg["encryptedText"], msg["iv"], msg["encryptedAESKey"]),
+          decryptedText: await decryptMessage(
+            msg["encryptedText"],
+            msg["iv"],
+            msg["encryptedAESKey"]
+          ),
         }))
       );
       console.log(decrypted_api_messages);
@@ -173,20 +196,13 @@ export default function Peer() {
 
   // Render based on authentication status
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return <div>
+      <FadeLoader color='#ff4800' radius={6} height={20} width={5} />
+      <p>Loading...</p>
+    </div>;
   }
   if (!isAuthenticated) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-xl font-semibold text-red-600">Session Timeout</h2>
-          <p className="mt-2">Your session has expired. Please log in again.</p>
-          <button onClick={handleClosePopup} className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer">
-            Go to Login
-          </button>
-        </div>
-      </div>
-    );
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (
@@ -213,7 +229,6 @@ export default function Peer() {
             />
           ))}
         </div>
-        <ChatInput message={message} setMessage={setMessage} handleSubmit={handleSubmit} />
       </div>
     </div>
   );
