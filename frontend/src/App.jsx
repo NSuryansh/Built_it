@@ -6,17 +6,16 @@ import Landing_user from "./pages/Landing_user";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import { Route, Routes, useLocation } from "react-router-dom";
-import DoctorLogin from "./pages/doctor/Login";
-import DoctorLanding from "./pages/doctor/Landing";
-import DoctorAppointment from "./pages/doctor/Appointment";
-import DoctorProfile from "./pages/doctor/Profile";
+import DoctorLogin from "./pages/doctor/Login_doctor";
+import DoctorLanding from "./pages/doctor/Landing_doctor";
+import DoctorAppointment from "./pages/doctor/Appointment_doctor";
+import DoctorProfile from "./pages/doctor/Profile_doctor";
 
 export default function App() {
   const location = useLocation();
   const isBackgroundPage =
     location.pathname === "/" ||
     location.pathname === "/login" ||
-    location.pathname === "/doctor_login" ||
     location.pathname === "/signup" ||
     location.pathname === "/book";
 
