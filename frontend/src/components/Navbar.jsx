@@ -12,7 +12,7 @@ const Navbar = () => {
           <div className="flex space-x-8 items-center">
             <a
               href="/"
-              className={`hover:text-[#FF7700] transition-colors ${
+              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
                 location === "/"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
@@ -22,7 +22,7 @@ const Navbar = () => {
             </a>
             <a
               href="/mood"
-              className={`hover:text-[#FF7700] transition-colors ${
+              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
                 location === "/mood"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
@@ -32,7 +32,7 @@ const Navbar = () => {
             </a>
             <a
               href="/peer"
-              className={`hover:text-[#FF7700] transition-colors ${
+              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
                 location === "/peer"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
@@ -42,7 +42,7 @@ const Navbar = () => {
             </a>
             <a
               href="/book"
-              className={`hover:text-[#FF7700] transition-colors ${
+              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
                 location === "/book"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
@@ -52,7 +52,7 @@ const Navbar = () => {
             </a>
             <a
               href="/"
-              className={`hover:text-[#FF7700] transition-colors ${
+              className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
                 location === "/"
                   ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                   : ""
@@ -68,12 +68,12 @@ const Navbar = () => {
             <button className="cursor-pointer">
               <User className="w-5 h-5" />
             </button>
-            <button
-              className="bg-[#FF7700] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
+            {/* <button
+              className="bg-[var(--custom-primary-orange)] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
               onClick={() => (window.location.href = "/login")}
             >
               Login
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
