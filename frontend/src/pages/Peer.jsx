@@ -2,22 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { decryptMessage } from "../utils/decryptMessage";
 import { generateAESKey } from "../utils/aesKey";
 import { encryptMessage } from "../utils/encryptMessage";
+import { checkAuth } from "../utils/profile";
 
 export default function Peer() {
-  const [message, setMessage] = useState("");
-  const location = useLocation();
-  const user = location.state;
-  const socketRef = useRef(null);
-  const userId = user.id;
-  const recId = 15;
+  // Define hooks at the top
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [aesKey, setAesKey] = useState();
-
-  // Store chats and selectedChat
   const [chats, setChats] = useState([
     { name: "Casual Catch-up", messages: [] },
     { name: "Project Discussion", messages: [] },
@@ -26,22 +21,42 @@ export default function Peer() {
     { name: "Tech Talk", messages: [] },
   ]);
   const [selectedChat, setSelectedChat] = useState(0);
+  const [message, setMessage] = useState("");
 
-  // Track last received message to prevent duplicates
+  const navigate = useNavigate();
+  const socketRef = useRef(null);
   const lastMessageRef = useRef("");
 
+  // Retrieve user data from localStorage
+  const userId = localStorage.getItem("userid");
+  const username = localStorage.getItem("username"); // Currently unused
+  const recId = 15; // Hardcoded recipient id
+
+  // Authentication check
   useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth();
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  // Initialize WebSocket connection
+  useEffect(() => {
+    if (!userId) return;
     socketRef.current = io("http://localhost:3001");
     socketRef.current.on("connect", () => {
       console.log("Connected to WebSocket server");
       socketRef.current.emit("register", { userId });
     });
-
     return () => {
-      socketRef.current.disconnect();
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
     };
-  }, []);
+  }, [userId]);
 
+  // Generate AES key
   useEffect(() => {
     async function fetchKey() {
       const key = await generateAESKey();
@@ -50,16 +65,15 @@ export default function Peer() {
     fetchKey();
   }, []);
 
+  // Handle receiving messages
   useEffect(() => {
     if (!aesKey) return;
 
-    socketRef.current.on("receiveMessage", async ({ senderId, encryptedText, iv, encryptedAESKey }) => {
+    const handleReceiveMessage = async ({ senderId, encryptedText, iv, encryptedAESKey }) => {
       console.log("Message received:", { senderId, encryptedText, iv, encryptedAESKey });
-
       const decrypted = await decryptMessage(encryptedText, iv, encryptedAESKey);
       console.log("Decrypted message:", decrypted);
 
-      // Prevent duplicate messages
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
@@ -70,13 +84,15 @@ export default function Peer() {
             : chat
         )
       );
-    });
-
-    return () => {
-      socketRef.current.off("receiveMessage");
     };
-  }, [aesKey]);
 
+    socketRef.current.on("receiveMessage", handleReceiveMessage);
+    return () => {
+      socketRef.current.off("receiveMessage", handleReceiveMessage);
+    };
+  }, [aesKey, selectedChat]);
+
+  // Submit message
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
@@ -87,7 +103,6 @@ export default function Peer() {
             : chat
         )
       );
-
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
       socketRef.current.emit("sendMessage", {
         senderId: userId,
@@ -97,38 +112,69 @@ export default function Peer() {
         encryptedAESKey: aesKey,
         authTag: "",
       });
-
       setMessage("");
     }
   };
 
+  // Convert base64 to hex
   function base64ToHex(base64) {
-    const raw = atob(base64); // Decode base64 to binary
-    return [...raw].map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-}
+    const raw = atob(base64);
+    return [...raw]
+      .map((char) => char.charCodeAt(0).toString(16).padStart(2, "0"))
+      .join("");
+  }
 
-
+  // Fetch messages
   async function fetchMessages(userId, recipientId) {
     try {
-        const response = await fetch(`http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`);
-        const messages = await response.json();
-        const decrypted = messages.map(msg=>({
-          senderId:msg["senderId"],
+      const response = await fetch(`http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`);
+      const messages = await response.json();
+
+      // Use Promise.all to await each decryption if decryptMessage is async
+      const decrypted = await Promise.all(
+        messages.map(async (msg) => ({
+          senderId: msg["senderId"],
           recipientId: msg["recipientId"],
           encryptedAESKey: msg["encryptedAESKey"],
-          decryptedText: decryptMessage(msg["encryptedText"],msg["iv"], msg["encryptedAESKey"])
+          decryptedText: await decryptMessage(msg["encryptedText"], msg["iv"], msg["encryptedAESKey"]),
         }))
-        console.log(decrypted)
+      );
+      console.log(decrypted);
     } catch (error) {
-        console.error("Error fetching messages:", error);
-        return [];
+      console.error("Error fetching messages:", error);
+      return [];
     }
-}
+  }
 
-useEffect(() => {
-    fetchMessages(userId, recId)
-}, [])
+  // Fetch messages when userId is available
+  useEffect(() => {
+    if (userId) {
+      fetchMessages(userId, recId);
+    }
+  }, [userId]);
 
+  // Handle session timeout
+  const handleClosePopup = () => {
+    navigate("/login");
+  };
+
+  // Render based on authentication status
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>;
+  }
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+          <h2 className="text-xl font-semibold text-red-600">Session Timeout</h2>
+          <p className="mt-2">Your session has expired. Please log in again.</p>
+          <button onClick={handleClosePopup} className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer">
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-[var(--mp-custom-white)]">

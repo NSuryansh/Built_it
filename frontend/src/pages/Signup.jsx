@@ -112,15 +112,7 @@ export default function SignUp() {
           className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
         />
-        <input
-          type="text"
-          placeholder="Alternate number"
-          name="altNo"
-          value={formData.altNo}
-          onChange={handleChange}
-          className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
-            rounded-md"
-        />
+        
         <input
           type="text"
           placeholder="Alternate number"
@@ -131,7 +123,6 @@ export default function SignUp() {
             rounded-md"
           required
         />
-
 
         <input
           type="password"
