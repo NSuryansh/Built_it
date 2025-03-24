@@ -1,48 +1,94 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { Calendar, MapPin, User, ChevronRight } from "lucide-react";
+import FadeLoader from "react-spinners/FadeLoader";
+import { checkAuth } from "../../utils/profile";
+import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
 
 const DoctorLanding = () => {
-  const appointments = [
-    {
-      id: 1,
-      patientName: "Sarah Johnson",
-      time: "09:00 AM",
-      date: "Today",
-      type: "General Checkup",
-    },
-    {
-      id: 2,
-      patientName: "Michael Brown",
-      time: "10:30 AM",
-      date: "Today",
-      type: "Follow-up",
-    },
-    {
-      id: 3,
-      patientName: "Emily Davis",
-      time: "02:00 PM",
-      date: "Tomorrow",
-      type: "Consultation",
-    },
-  ];
+  const [appointments, setAppointments] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-  const events = [
-    {
-      id: 1,
-      title: "Medical Conference",
-      date: "March 15, 2024",
-      location: "City Medical Center",
-      type: "Conference",
-    },
-    {
-      id: 2,
-      title: "Staff Meeting",
-      date: "March 18, 2024",
-      location: "Main Office",
-      type: "Meeting",
-    },
-  ];
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("doc");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  useEffect(() => {
+    
+    const docId = localStorage.getItem("userid");
+    console.log(docId)
+    if (!docId) return; 
+
+    const fetchAppointments = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/currentdocappt?doctorId=${docId}`);
+        const data = await response.json();
+
+        const formattedAppointments = data.map((appt) => {
+          const dateObj = new Date(appt.dateTime);
+          return {
+            id: appt.id,
+            patientName: `User ${appt.user_id}`,
+            time: dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            date: dateObj.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+            type: appt.reason,
+          };
+        });
+
+        setAppointments(formattedAppointments);
+      } catch (error) {
+        console.error("Error fetching appointments", error);
+      }
+    };
+
+    fetchAppointments();
+  }, [isAuthenticated]);
+
+  // Fetch Events
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/events");
+        const data = await response.json();
+
+        const formattedEvents = data.map((event) => {
+          const date = new Date(event.dateTime);
+          return {
+            id: event.id,
+            title: event.title,
+            date: date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+            location: event.venue,
+            type: event.description ? "Session/Conference" : "Meeting",
+          };
+        });
+
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error("Error fetching events", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return (
+      <div>
+        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={() => setIsAuthenticated(null)} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <DoctorNavbar />
@@ -53,9 +99,7 @@ const DoctorLanding = () => {
             {/* Appointments Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Upcoming Appointments
-                </h2>
+                <h2 className="text-xl font-semibold text-gray-900">Upcoming Appointments</h2>
                 <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
                   View All <ChevronRight className="h-4 w-4 ml-1" />
                 </button>
@@ -71,20 +115,12 @@ const DoctorLanding = () => {
                       <User className="h-6 w-6 text-blue-600" />
                     </div>
                     <div className="ml-4 flex-1">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        {appointment.patientName}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {appointment.type}
-                      </p>
+                      <h3 className="text-sm font-medium text-gray-900">{appointment.patientName}</h3>
+                      <p className="text-sm text-gray-500">{appointment.type}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">
-                        {appointment.time}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {appointment.date}
-                      </p>
+                      <p className="text-sm font-medium text-gray-900">{appointment.time}</p>
+                      <p className="text-sm text-gray-500">{appointment.date}</p>
                     </div>
                   </div>
                 ))}
@@ -94,9 +130,7 @@ const DoctorLanding = () => {
             {/* Events Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Upcoming Events
-                </h2>
+                <h2 className="text-xl font-semibold text-gray-900">Upcoming Events</h2>
                 <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
                   View All <ChevronRight className="h-4 w-4 ml-1" />
                 </button>
@@ -104,14 +138,9 @@ const DoctorLanding = () => {
 
               <div className="space-y-4">
                 {events.map((event) => (
-                  <div
-                    key={event.id}
-                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                  >
+                  <div key={event.id} className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        {event.title}
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-900">{event.title}</h3>
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
                         {event.type}
                       </span>
