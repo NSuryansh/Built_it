@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  User,
-  Calendar,
-  Clock,
-  Phone,
-  FileText,
-  AlertCircle,
-} from "lucide-react";
+import {User, Calendar, Clock, Phone, FileText, AlertCircle,} from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorAppointment = () => {

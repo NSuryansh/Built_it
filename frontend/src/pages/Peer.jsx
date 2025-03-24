@@ -8,23 +8,17 @@ import { decryptMessage } from "../utils/decryptMessage";
 import { generateAESKey } from "../utils/aesKey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
-import FadeLoader from 'react-spinners/FadeLoader'
+import FadeLoader from 'react-spinners/FadeLoader';
+import Navbar from "../components/Navbar";
 
 export default function Peer() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [aesKey, setAesKey] = useState();
-  const [chats, setChats] = useState([
-    { name: "tanvi", messages: [], id: 14 },
-    { name: "Suryansh", messages: [], id: 17 },
-    { name: "yatharth", messages: [], id: 18 },
-    { name: "tanveeiii", messages: [], id: 15 }
-  ]);
+  const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(0);
   const [message, setMessage] = useState("");
-  // New state to store messages that will be rendered
   const [showMessages, setShowMessages] = useState([]);
   const [recId, setRecid] = useState(0);
-  // Optionally, you can still use messagesApi if needed
   const [messagesApi, setMessagesApi] = useState();
 
   const navigate = useNavigate();
@@ -34,8 +28,30 @@ export default function Peer() {
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
 
-  // Filter out chats where chat.id === userId
+  // Filter out the current user from contacts
   const filteredChats = chats.filter(chat => chat.id !== userId);
+
+  async function fetchContacts(userId) {
+    try {
+      const response = await fetch(`http://localhost:3000/chatContacts?userId=${userId}`);
+      const contacts = await response.json();
+      // Map API contacts to your chat object shape: { name, id, messages: [] }
+      const updatedChats = contacts.map(contact => ({
+        name: contact.username,
+        id: contact.id,
+        messages: []
+      }));
+      setChats(updatedChats);
+      console.log("Updated Chats:", updatedChats);
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
+      return [];
+    }
+  }
+
+  useEffect(() => {
+    fetchContacts(userId);
+  }, [userId]);
 
   useEffect(() => {
     if (filteredChats.length > 0) {
@@ -174,10 +190,12 @@ export default function Peer() {
 
   // Render based on authentication status
   if (isAuthenticated === null) {
-    return <div>
-      <FadeLoader color='#ff4800' radius={6} height={20} width={5} />
-      <p>Loading...</p>
-    </div>;
+    return (
+      <div>
+        <FadeLoader color='#ff4800' radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
   }
   if (!isAuthenticated) {
     return (
@@ -195,6 +213,7 @@ export default function Peer() {
 
   return (
     <div className="flex h-screen bg-[var(--mp-custom-white)]">
+      <Navbar />
       {filteredChats.length > 0 && (
         <ChatList
           names={filteredChats.map((chat) => chat.name)}

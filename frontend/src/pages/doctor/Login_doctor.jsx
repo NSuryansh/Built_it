@@ -1,46 +1,34 @@
-import { set } from "date-fns";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorLogin = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handlelogin = async () => {
-    // const response = await fetch("http://localhost:3000/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     username: username,
-    //     password: password,
-    //   }),
-    // });
-    // console.log(response);
-    // const res = await response.json();
-    // console.log(res);
+  const handlelogin = async (e) => {
+    e.preventDefault()
+    const response = await fetch("http://localhost:3000/docLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
+    console.log(response);
+    const res = await response.json();
 
-    // if (res["message"] == "Login successful") {
-    //   console.log(res["message"]);
-    //   const response2 = await fetch("http://localhost:3000/profile", {
-    //     method: "GET",
-    //     headers: { Authorization: "Bearer " + res["token"] },
-    //   });
-    //   const res2 = await response2.json();
-    //   console.log(res2);
-    //   if (res2["message"] == "Unauthorized") {
-    //     console.log(res2["message"]);
-    //   } else {
-    //     console.log(res2["message"]);
-    //     navigate("/peer", { state: res2["user"] });
-    //   }
-    // } else {
-    //   setError(res["message"]);
-    // }
-    navigate("/doctor/landing");
+    if (res["message"] == "Login successful") {
+      console.log(res["message"]);
+      localStorage.setItem("token", res["token"]);
+      navigate("/doctor/landing");
+    } else {
+      setError(res["message"]);
+    }
   };
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-[var(--custom-primary-blue)]">
@@ -51,14 +39,13 @@ const DoctorLogin = () => {
           </h1>
 
           <input
-            type="text"
-            placeholder="username"
+            type="email"
+            placeholder="email"
             className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-            // value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+          // value={username}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
           <input
             type="password"
