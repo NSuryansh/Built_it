@@ -27,6 +27,8 @@ model User{
   appointment Appointments[]
   request Requests[]
   feelings Feelings?
+  notif Notifications[] @relation("User")
+  invite Notifications[] @relation("ChatInvite")
 }
 
 model Doctor{
@@ -114,5 +116,14 @@ model Feelings {
   passion Int
   less_stress_score Int
   happiness_score Int
+}
+
+model Notifications {
+  @@map("notif")
+  id Int @id @default(autoincrement())
+  user_id Int
+  user User @relation("User",fields:[user_id], references: [id])
+  chat_user Int
+  chatUser User @relation("ChatInvite",fields: [chat_user], references: [id])
 }
 
