@@ -29,11 +29,12 @@ model User{
   feelings Feelings?
   notif Notifications[] @relation("User")
   invite Notifications[] @relation("ChatInvite")
+  pastApp PastAppointments[]
 }
 
 model Doctor{
   @@map("doctor")
-  id Int @id @default(autoincrement()) @map("doc_id")
+  id Int @id @default(autoincrement())
   name String
   mobile String @unique
   email String @unique
@@ -43,6 +44,7 @@ model Doctor{
   img String?
   docApp Appointments[]
   request Requests[]
+  pastApp PastAppointments[]
 }
 
 model Admin{
@@ -50,6 +52,7 @@ model Admin{
   id Int @id @default(autoincrement())
   email String @unique
   mobile String @unique
+  password String
 }
 
 model PastDoc{
@@ -95,6 +98,17 @@ model Appointments {
   reason String?
 }
 
+model PastAppointments {
+  @@map("pastApp")
+  id Int @id @default(autoincrement())
+  note String
+  doc_id Int?
+  user_id Int?
+  createdAt DateTime
+  doc Doctor? @relation(fields: [doc_id], references: [id], onDelete:SetNull )
+  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+}
+
 model Requests {
   @@map("requests")
   id Int @id @default(autoincrement())
@@ -103,6 +117,7 @@ model Requests {
   doctor_id Int
   doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete: Cascade)
   dateTime DateTime
+  reason String?
 }
 
 
@@ -112,7 +127,7 @@ model Feelings {
   user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
   mental_peace Int
   sleep_quality Int
-  socail_life Int
+  social_life Int
   passion Int
   less_stress_score Int
   happiness_score Int

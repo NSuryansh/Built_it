@@ -7,6 +7,7 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import { error } from "console";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -138,7 +139,6 @@ app.post("/login", async (req, res) => {
 
   res.json({ message: "Login successful", token });
 });
-
 app.get("/profile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -159,8 +159,8 @@ app.get("/profile", async (req, res) => {
 
 app.get("/chatContacts", async (req, res) => {
   try {
-    const userId = req.body["userId"];
-    console.log(req.body["userId"]);
+    const userId = req.query["userId"];
+    console.log(req.query["userId"]);
     console.log(userId);
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
@@ -273,82 +273,91 @@ app.post("/addDoc", async (req, res) => {
     res.json({ error: e });
   }
 });
-app.post("/book", async (req, res) => {
-  const { userId, doctorId, dateTime } = req.body;
 
+app.post("/book", async (req, res) => {
+  const userId = req.body["userId"];
+  const doctorId = req.body["doctorId"];
+  const dateTime = req.body["dateTime"];
+  const reason = req.body["reason"];
+  const appId = req.body["id"];
+  console.log(doctorId);
   try {
     // Check if user exists
-    const user = await prisma.User.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Check if doctor exists
-    const doctor = await prisma.Doctor.findUnique({ where: { id: doctorId } });
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
     // Create appointment
-    const appointment = await prisma.Appointments.create({
+    const appointment = await prisma.appointments.create({
       data: {
         user_id: userId,
         doctor_id: doctorId,
         dateTime: new Date(dateTime),
+        reason: reason,
       },
     });
 
     //Remove from requests table
-    await prisma.Requests.delete({ where: { id: parseInt(id) } });
+    await prisma.requests.delete({ where: { id: parseInt(appId) } });
 
-    res
-      .status(0)
-      .json({ message: "Appointment booked successfully", appointment });
+    res.json({ message: "Appointment booked successfully", appointment });
   } catch (error) {
     console.error(error);
-    res.status(0).json({ message: "Internal Server Error" });
+    res.json({ message: "Internal Server Error" });
   }
 });
 
 app.post("/requests", async (req, res) => {
-  const { userId, doctorId, dateTime } = req.body;
+  const userId = req.body["userId"];
+  const doctorId = req.body["doctorId"];
+  const dateTime = req.body["dateTime"];
+  const reason = req.body["reason"];
 
   try {
     // Check if user exists
-    const user = await prisma.User.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Check if doctor exists
-    const doctor = await prisma.Doctor.findUnique({ where: { id: doctorId } });
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
     // Create appointment
-    const appointment = await prisma.Requests.create({
+    const appointment = await prisma.requests.create({
       data: {
         user_id: userId,
         doctor_id: doctorId,
         dateTime: new Date(dateTime),
+        reason: reason,
       },
     });
 
-    res
-      .status(0)
-      .json({ message: "Appointment request added successfully", appointment });
+    res.json({
+      message: "Appointment request added successfully",
+      appointment,
+    });
   } catch (error) {
     console.error(error);
-    res.status(0).json({ message: "Internal Server Error" });
+    res.json({ message: "Internal Server Error" });
   }
 });
 
 //GET REQUEST FOR DOCTOR LIST
 app.get("/getdoctors", async (req, res) => {
   try {
-    const events = await prisma.doctor.findMany(); // Fetch all events
-    res.json(events); // Send the events as a JSON response
+    const docs = await prisma.doctor.findMany(); // Fetch all docs
+    res.json(docs); // Send the docs as a JSON response
   } catch (e) {
     console.error(e);
     res.status(0).json({ message: "Error fetching doctors" });
@@ -379,6 +388,30 @@ app.post("/docLogin", async (req, res) => {
   res.json({ message: "Login successful", token });
 });
 
+app.post("/adminLogin", async (req, res) => {
+  console.log(req.body);
+  const emailId = req.body["email"];
+  const password = req.body["password"];
+
+  const admin = await prisma.admin.findUnique({ where: { email: emailId } });
+  if (!admin) {
+    return res.status(401).json({ message: "User doesn't exist" });
+  }
+  const match = await bcrypt.compare(password, admin.password);
+  if (!match) {
+    return res.status(401).json({ message: "Incorrect password" });
+  }
+  const token = jwt.sign(
+    { id: admin.id, email: admin.email, mobile: admin.mobile },
+    SECRET_KEY,
+    {
+      expiresIn: "1h",
+    }
+  );
+
+  res.json({ message: "Login successful", token });
+});
+
 app.get("/docProfile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -399,42 +432,68 @@ app.get("/docProfile", async (req, res) => {
   }
 });
 
-app.post("/book", async (req, res) => {
-  const { userId, doctorId, dateTime } = req.body;
-
+app.get("/adminProfile", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    console.log(token);
+    return res.status(401).json({ message: "Unauthorized", token });
+  }
   try {
-    // Check if user exists
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Check if doctor exists
-    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
-    if (!doctor) {
-      return res.status(404).json({ message: "Doctor not found" });
-    }
-
-    const appointment = await prisma.appointments.create({
-      data: {
-        user_id: userId,
-        doctor_id: doctorId,
-        dateTime: new Date(dateTime),
-      },
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const admin = await prisma.admin.findUnique({
+      where: { email: decoded.email },
     });
-
-    res
-      .status(0)
-      .json({ message: "Appointment booked successfully", appointment });
-  } catch (error) {
-    console.error(error);
-    res.status(0).json({ message: "Internal Server Error" });
+    console.log(admin);
+    res.json({ admin: admin, message: "Admin found" });
+  } catch (e) {
+    console.log(e);
   }
 });
 
+// app.post("/book", async (req, res) => {
+//   const userId = req.body['userId'];
+//   const doctorId = req.body['doctorId']
+//   const dateTime = req.body['dateTime']
+//   console.log(req.body)
+//   console.log(doctorId, " hello")
+
+//   try {
+//     console.log("HOAS")
+//     // Check if user exists
+//     const user = await prisma.user.findUnique({ where: { id: userId } });
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Check if doctor exists
+//     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+//     if (!doctor) {
+//       return res.status(404).json({ message: "Doctor not founfdsfdasd" });
+//     }
+
+//     const appointment = await prisma.appointments.create({
+//       data: {
+//         user_id: userId,
+//         doctor_id: doctorId,
+//         dateTime: new Date(dateTime),
+//       },
+//     });
+
+//     res
+//       .status(0)
+//       .json({ message: "Appointment booked successfully", appointment });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(0).json({ message: "Internal Server Error" });
+//   }
+// });
+
 app.post("/addEvent", async (req, res) => {
   try {
-    const { title, description, dateTime, venue } = req.body;
+    const title = req.body["title"];
+    const description = req.body["description"];
+    const dateTime = req.body["dateTime"];
+    const venue = req.body["venue"];
 
     // Validate required fields
     if (!title || !dateTime || !venue) {
@@ -446,25 +505,27 @@ app.post("/addEvent", async (req, res) => {
     // Create the event in Prisma
     const event = await prisma.events.create({
       data: {
-        title,
-        description,
+        title: title,
+        description: description,
         dateTime: new Date(dateTime), // Ensure it's a valid Date object
-        venue,
+        venue: venue,
       },
     });
 
-    res.status(0).json(event); // Return created event
+    res.json(event); // Return created event
   } catch (error) {
     console.error("Error adding event:", error);
-    res.status(0).json({ error: "Internal server error" });
+    res.json({ error: "Internal server error" });
   }
 });
+
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
     const THIRTY_DAYS_AGO = new Date();
     THIRTY_DAYS_AGO.setDate(THIRTY_DAYS_AGO.getDate() - 30);
-    const userId = req.body["userId"];
+    const userId = req.query["userId"];
 
     await prisma.notifications.deleteMany({
       where: {
@@ -513,6 +574,40 @@ app.delete("/deletenotifs", async (req, res) => {
   }
 });
 
+app.post("/deleteApp", async (req, res) => {
+  const appId = Number(req.body["appId"]);
+  const doc_id = Number(req.body["doctorId"]);
+  const user_id = Number(req.body["userId"]);
+  const note = req.body["note"];
+  const dateTime = new Date();
+  console.log(note);
+  try {
+    const deletedApp = await prisma.appointments.delete({
+      where: {
+        id: appId,
+      },
+    });
+    console.log(deletedApp);
+    console.log(dateTime);
+    try {
+      const pastApp = await prisma.pastAppointments.create({
+        data: {
+          note: note,
+          doc_id: doc_id,
+          user_id: user_id,
+          createdAt: dateTime,
+        },
+      });
+      console.log(pastApp);
+      res.json({ message: "Appointment done" });
+    } catch (e) {
+      res.json(e);
+    }
+  } catch (e) {
+    res.json({ error: e });
+  }
+});
+
 app.delete("/deletedoc", async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
 
@@ -531,7 +626,7 @@ app.delete("/deletedoc", async (req, res) => {
     // Start transaction to move and delete
     await prisma.$transaction([
       // Move to pastdoc table
-      prisma.pastdoc.create({
+      prisma.pastDoc.create({
         data: {
           id: doctor.id,
           name: doctor.name,
@@ -551,6 +646,160 @@ app.delete("/deletedoc", async (req, res) => {
   } catch (error) {
     console.error("Error deleting doctor:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/currentdocappt", async (req, res) => {
+  const doctorId = Number(req.query["doctorId"]);
+  // Get today's date range (start and end of today)
+  if (!doctorId) {
+    return res.status(400).json({ message: "Doctor ID is required" });
+  }
+  try {
+    const doctor = await prisma.doctor.findUnique({
+      where: { id: doctorId },
+    });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+    const appt = await prisma.appointments.findMany({
+      where: { doctor_id: doctorId },
+    }); // Fetch all appts
+    res.json(appt); // Send the appts as a JSON response
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Error fetching current appointments" });
+  }
+});
+
+app.get("/pastdocappt", async (req, res) => {
+  const doctorId = req.query["doctorId"];
+  // Get today's date range (start and end of today)
+  if (!doctorId) {
+    return res.status(400).json({ message: "Doctor ID is required" });
+  }
+  try {
+    const doctor = await prisma.Doctor.findUnique({
+      where: { id: doctorId },
+    });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+    const appt = await prisma.pastAppointments.findMany({
+      where: { doc_id: doctorId },
+    }); // Fetch all appts
+    res.json(appt); // Send the appts as a JSON response
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Error fetching past appointments" });
+  }
+});
+
+app.get("/pastuserappt", async (req, res) => {
+  const userId = req.query["userId"];
+  // Get today's date range (start and end of today)
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const appt = await prisma.pastAppointments.findMany({
+      where: { user_id: userId },
+    }); // Fetch all appts
+    res.json(appt); // Send the appts as a JSON response
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Error fetching past appointments" });
+  }
+});
+
+app.get("/currentuserappt", async (req, res) => {
+  const userId = req.query["userId"];
+  // Get today's date range (start and end of today)
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const appt = await prisma.appointments.findMany({
+      where: { user_id: userId },
+    }); // Fetch all appts
+    res.json(appt); // Send the appts as a JSON response
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Error fetching current appointments" });
+  }
+});
+
+app.get("/getfeelings", async (req, res) => {
+  const userId = req.query["userId"]; // Fix: Use query parameters
+
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
+  try {
+    const feelings = await prisma.feelings.findUnique({
+      where: { user_id: userId },
+    });
+
+    if (!feelings) {
+      return res
+        .status(404)
+        .json({ message: "No feelings found for this user" });
+    }
+
+    res.status(200).json(feelings);
+  } catch (error) {
+    console.error("Error fetching feelings:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/feelings", async (req, res) => {
+  try {
+    const { userId, menPeace, sleepQ, socLife, passion, lsScore, happyScore } =
+      req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const feelings = await prisma.feelings.upsert({
+      where: { user_id: userId },
+      update: {
+        mental_peace: menPeace,
+        sleep_quality: sleepQ,
+        social_life: socLife,
+        passion: passion,
+        less_stress_score: lsScore,
+        happiness_score: happyScore,
+      },
+      create: {
+        user_id: userId,
+        mental_peace: menPeace,
+        sleep_quality: sleepQ,
+        social_life: socLife,
+        passion: passion,
+        less_stress_score: lsScore,
+        happiness_score: happyScore,
+      },
+    });
+
+    res.status(200).json(feelings);
+  } catch (error) {
+    console.error("Error adding/updating feelings:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

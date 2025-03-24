@@ -12,7 +12,7 @@ import {
   Save,
   X,
 } from "lucide-react";
-import DoctorNavbar from "../../components/doctor/Navbar";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorProfile = () => {
   const [isEditing, setIsEditing] = useState(false);

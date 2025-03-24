@@ -80,10 +80,17 @@ export default function Login() {
             <p className="w-full text-center">
               Login as a&nbsp;
               <a
-                href="/doctor_login"
+                href="/doctor/login"
                 className="underline font-bold text-[var(--login-button-orange)]"
               >
                 Doctor
+              </a>
+              &nbsp;or&nbsp;
+              <a
+                href="/admin/login"
+                className="underline font-bold text-[var(--login-button-orange)]"
+              >
+                Admin
               </a>
             </p>
           </div>

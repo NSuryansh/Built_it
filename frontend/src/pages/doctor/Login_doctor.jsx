@@ -2,7 +2,7 @@ import { set } from "date-fns";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DoctorNavbar from "../../components/doctor/Navbar";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorLogin = () => {
   const [username, setUsername] = useState("");
@@ -40,12 +40,12 @@ const DoctorLogin = () => {
     // } else {
     //   setError(res["message"]);
     // }
-    navigate("/doctor_landing");
+    navigate("/doctor/landing");
   };
   return (
-    <div className="h-screen flex flex-col">
-      <div className="flex items-center justify-center h-full">
-        <div className="bg-[var(--login-bg-peach)] w-80 p-10 rounded-md shadow-md">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-r from-[var(--custom-primary-blue)]">
+      <div className="bg-[var(--custom-white)] w-80 p-10 rounded-md shadow-md">
+        <form onSubmit={handlelogin}>
           <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
             LOGIN
           </h1>
@@ -53,10 +53,11 @@ const DoctorLogin = () => {
           <input
             type="text"
             placeholder="username"
-            className="w-full mb-8 p-3  border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+            className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
             // value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
 
           <input
@@ -66,33 +67,17 @@ const DoctorLogin = () => {
             rounded-md"
             // value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
 
           <button
-            className="w-full py-2 bg-[var(--login-button-orange)] text-[var(--login-button-text)]
+            className="w-full py-2 bg-[var(--custom-primary-blue)] text-[var(--login-button-text)]
             font-semibold rounded-md hover:opacity-90 transition-opacity cursor-pointer"
-            onClick={handlelogin}
+            type="submit"
           >
             Login
           </button>
-
-          {/* <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
-          <hr className="flex-1/3" />
-          <div className="flex-1/3 text-center">OR</div>
-          <hr className="flex-1/3" />
-        </div>
-        <div className="flex w-full mt-2">
-          <p className="w-full text-center">
-            Login as a&nbsp;
-            <a
-              href="/doctor_login"
-              className="underline font-bold text-[var(--login-button-orange)]"
-            >
-              Doctor
-            </a>
-          </p>
-        </div> */}
-        </div>
+        </form>
       </div>
     </div>
   );

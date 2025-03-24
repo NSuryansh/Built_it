@@ -1,5 +1,5 @@
 import React from "react";
-import DoctorNavbar from "../../components/doctor/Navbar";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { Calendar, MapPin, User, ChevronRight } from "lucide-react";
 
 const DoctorLanding = () => {
