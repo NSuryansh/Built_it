@@ -432,6 +432,24 @@ app.get("/docProfile", async (req, res) => {
   }
 });
 
+app.get("/adminProfile", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    console.log(token);
+    return res.status(401).json({ message: "Unauthorized", token });
+  }
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const admin = await prisma.admin.findUnique({
+      where: { email: decoded.email },
+    });
+    console.log(admin);
+    res.json({ admin: admin, message: "Admin found" });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 // app.post("/book", async (req, res) => {
 //   const userId = req.body['userId'];
 //   const doctorId = req.body['doctorId']
@@ -507,7 +525,7 @@ app.get("/notifications", async (req, res) => {
   try {
     const THIRTY_DAYS_AGO = new Date();
     THIRTY_DAYS_AGO.setDate(THIRTY_DAYS_AGO.getDate() - 30);
-    const userId = req.body["userId"];
+    const userId = req.query["userId"];
 
     await prisma.notifications.deleteMany({
       where: {
@@ -655,7 +673,7 @@ app.get("/currentdocappt", async (req, res) => {
 });
 
 app.get("/pastdocappt", async (req, res) => {
-  const doctorId = req.body["doctorId"];
+  const doctorId = req.query["doctorId"];
   // Get today's date range (start and end of today)
   if (!doctorId) {
     return res.status(400).json({ message: "Doctor ID is required" });
@@ -667,8 +685,8 @@ app.get("/pastdocappt", async (req, res) => {
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
-    const appt = await prisma.PastAppointments.findMany({
-      where: { id: doctorId },
+    const appt = await prisma.pastAppointments.findMany({
+      where: { doc_id: doctorId },
     }); // Fetch all appts
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
@@ -678,19 +696,19 @@ app.get("/pastdocappt", async (req, res) => {
 });
 
 app.get("/pastuserappt", async (req, res) => {
-  const userId = req.body["userId"];
+  const userId = req.query["userId"];
   // Get today's date range (start and end of today)
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
   }
   try {
-    const user = await prisma.User.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: userId },
     });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const appt = await prisma.PastAppointments.findMany({
+    const appt = await prisma.pastAppointments.findMany({
       where: { user_id: userId },
     }); // Fetch all appts
     res.json(appt); // Send the appts as a JSON response
@@ -701,19 +719,19 @@ app.get("/pastuserappt", async (req, res) => {
 });
 
 app.get("/currentuserappt", async (req, res) => {
-  const userId = req.body["userId"];
+  const userId = req.query["userId"];
   // Get today's date range (start and end of today)
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
   }
   try {
-    const user = await prisma.User.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: userId },
     });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const appt = await prisma.Appointments.findMany({
+    const appt = await prisma.appointments.findMany({
       where: { user_id: userId },
     }); // Fetch all appts
     res.json(appt); // Send the appts as a JSON response
@@ -724,7 +742,7 @@ app.get("/currentuserappt", async (req, res) => {
 });
 
 app.get("/getfeelings", async (req, res) => {
-  const userId = req.body["userId"]; // Fix: Use query parameters
+  const userId = req.query["userId"]; // Fix: Use query parameters
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });
