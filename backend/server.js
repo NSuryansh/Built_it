@@ -632,7 +632,7 @@ app.delete("/deletedoc", async (req, res) => {
 });
 
 app.get("/currentdocappt", async (req, res) => {
-  const doctorId = req.body["doctorId"];
+  const doctorId = req.query["doctorId"];
   // Get today's date range (start and end of today)
   if (!doctorId) {
     return res.status(400).json({ message: "Doctor ID is required" });
