@@ -562,6 +562,47 @@ app.post('/deleteApp', async (req, res) => {
 
 })
 
+app.delete("/deletedoc", async (req, res) => {
+  const doctorId = parseInt(req.body["doctorID"]);
+
+  try {
+    // Find the doctor
+    const doctor = await prisma.doctor.findUnique({
+      where: { id: doctorId },
+    });
+
+    if (!doctorId || isNaN(doctorId)) {
+      return res
+        .status(404)
+        .json({ error: "Doctor not found OR Invalid Doctor ID" });
+    }
+
+    // Start transaction to move and delete
+    await prisma.$transaction([
+      // Move to pastdoc table
+      prisma.pastdoc.create({
+        data: {
+          id: doctor.id,
+          name: doctor.name,
+          mobile: doctor.mobile,
+          email: doctor.email,
+          reg_id: doctor.reg_id,
+          removedAt: new Date(),
+        },
+      }),
+      // Delete from doc table
+      prisma.doctor.delete({
+        where: { id: doctorId },
+      }),
+    ]);
+
+    res.json({ message: "Doctor moved to PastDoc and deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting doctor:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 server.listen(3001, () => console.log("Server running on port 3001"));
 
 app.listen(port, () => {

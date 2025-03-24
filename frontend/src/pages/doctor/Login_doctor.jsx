@@ -2,7 +2,7 @@ import { set } from "date-fns";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DoctorNavbar from "../../components/doctor/Navbar";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorLogin = () => {
   const [username, setUsername] = useState("");
@@ -40,43 +40,42 @@ const DoctorLogin = () => {
     // } else {
     //   setError(res["message"]);
     // }
-    navigate("/doctor_landing");
+    navigate("/doctor/landing");
   };
   return (
-    <div className="h-screen flex flex-col">
-      <div className="flex items-center justify-center h-full">
-        <div className="bg-[var(--login-bg-peach)] w-80 p-10 rounded-md shadow-md">
-          <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
-            LOGIN
-          </h1>
+    <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-400">
+      <div className="bg-[var(--custom-white)] w-80 p-10 rounded-md shadow-md">
+        <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
+          LOGIN
+        </h1>
 
-          <input
-            type="text"
-            placeholder="username"
-            className="w-full mb-8 p-3  border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+        <input
+          type="text"
+          placeholder="username"
+          className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-            // value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          // value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
 
-          <input
-            type="password"
-            placeholder="password"
-            className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+        <input
+          type="password"
+          placeholder="password"
+          className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-            // value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          // value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <button
-            className="w-full py-2 bg-[var(--login-button-orange)] text-[var(--login-button-text)]
+        <button
+          className="w-full py-2 bg-[var(--custom-primary-blue)] text-[var(--login-button-text)]
             font-semibold rounded-md hover:opacity-90 transition-opacity cursor-pointer"
-            onClick={handlelogin}
-          >
-            Login
-          </button>
+          onClick={handlelogin}
+        >
+          Login
+        </button>
 
-          {/* <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
+        {/* <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
           <hr className="flex-1/3" />
           <div className="flex-1/3 text-center">OR</div>
           <hr className="flex-1/3" />
@@ -92,7 +91,6 @@ const DoctorLogin = () => {
             </a>
           </p>
         </div> */}
-        </div>
       </div>
     </div>
   );

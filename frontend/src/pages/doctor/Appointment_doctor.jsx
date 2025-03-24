@@ -7,7 +7,7 @@ import {
   FileText,
   AlertCircle,
 } from "lucide-react";
-import DoctorNavbar from "../../components/doctor/Navbar";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorAppointment = () => {
   const appointments = [
