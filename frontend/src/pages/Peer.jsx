@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { decryptMessage } from "../utils/decryptMessage";
 import { generateAESKey } from "../utils/aesKey";
@@ -13,27 +13,37 @@ import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 
 export default function Peer() {
-  // Define hooks at the top
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [aesKey, setAesKey] = useState();
   const [chats, setChats] = useState([
-    { name: "Casual Catch-up", messages: [] },
-    { name: "Project Discussion", messages: [] },
-    { name: "Weekend Plans", messages: [] },
-    { name: "Gaming Squad", messages: [] },
-    { name: "Tech Talk", messages: [] },
+    { name: "tanvi", messages: [], id: 14 },
+    { name: "Suryansh", messages: [], id: 17 },
+    { name: "yatharth", messages: [], id: 18 },
+    { name: "tanveeiii", messages: [], id: 15 }
   ]);
   const [selectedChat, setSelectedChat] = useState(0);
   const [message, setMessage] = useState("");
+  // New state to store messages that will be rendered
+  const [showMessages, setShowMessages] = useState([]);
+  const [recId, setRecid] = useState(0);
+  // Optionally, you can still use messagesApi if needed
+  const [messagesApi, setMessagesApi] = useState();
 
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
 
-  // Retrieve user data from localStorage
-  const userId = localStorage.getItem("userid");
-  const username = localStorage.getItem("username"); // Currently unused
-  const recId = 15; // Hardcoded recipient id
+  const userId = parseInt(localStorage.getItem("userid"), 10);
+  const username = localStorage.getItem("username");
+
+  // Filter out chats where chat.id === userId
+  const filteredChats = chats.filter(chat => chat.id !== userId);
+
+  useEffect(() => {
+    if (filteredChats.length > 0) {
+      setRecid(filteredChats[selectedChat].id);
+    }
+  }, [selectedChat, filteredChats]);
 
   // Authentication check
   useEffect(() => {
@@ -62,13 +72,13 @@ export default function Peer() {
   // Generate AES key
   useEffect(() => {
     async function fetchKey() {
-      const key = await generateAESKey();
+      const key = generateAESKey();
       setAesKey(key);
     }
     fetchKey();
   }, []);
 
-  // Handle receiving messages
+  // Handle receiving messages and update showMessages
   useEffect(() => {
     if (!aesKey) return;
 
@@ -91,44 +101,33 @@ export default function Peer() {
       );
       console.log("Decrypted message:", decrypted);
 
+      // Avoid duplicate messages
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
-      setChats((prevChats) =>
-        prevChats.map((chat, index) =>
-          index === selectedChat
-            ? {
-                ...chat,
-                messages: [
-                  ...chat.messages,
-                  { self: "False", message: decrypted },
-                ],
-              }
-            : chat
-        )
-      );
+      // Append the received message to showMessages
+      setShowMessages((prev) => [
+        ...prev,
+        { decryptedText: decrypted, senderId }
+      ]);
     };
 
     socketRef.current.on("receiveMessage", handleReceiveMessage);
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
-  }, [aesKey, selectedChat]);
+  }, [aesKey]);
 
-  // Submit message
+  // Submit message and update showMessages
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
-      setChats((prevChats) =>
-        prevChats.map((chat, index) =>
-          index === selectedChat
-            ? {
-                ...chat,
-                messages: [...chat.messages, { self: "True", message }],
-              }
-            : chat
-        )
-      );
+      // Update local state for sent message
+      setShowMessages((prev) => [
+        ...prev,
+        { decryptedText: message, senderId: userId }
+      ]);
+
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
       socketRef.current.emit("sendMessage", {
         senderId: userId,
@@ -142,15 +141,7 @@ export default function Peer() {
     }
   };
 
-  // Convert base64 to hex
-  function base64ToHex(base64) {
-    const raw = atob(base64);
-    return [...raw]
-      .map((char) => char.charCodeAt(0).toString(16).padStart(2, "0"))
-      .join("");
-  }
-
-  // Fetch messages
+  // Fetch messages from API and initialize showMessages
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
@@ -158,8 +149,7 @@ export default function Peer() {
       );
       const messages = await response.json();
 
-      // Use Promise.all to await each decryption if decryptMessage is async
-      const decrypted = await Promise.all(
+      const decrypted_api_messages = await Promise.all(
         messages.map(async (msg) => ({
           senderId: msg["senderId"],
           recipientId: msg["recipientId"],
@@ -171,19 +161,33 @@ export default function Peer() {
           ),
         }))
       );
-      console.log(decrypted);
+      console.log(decrypted_api_messages);
+
+      setMessagesApi(decrypted_api_messages);
+
+      // Set both messagesApi and showMessages to display the full conversation
+      const filteredMessages = decrypted_api_messages.filter(msg =>
+        (msg.senderId === userId && msg.recipientId === recipientId) ||
+        (msg.senderId === recipientId && msg.recipientId === userId)
+      );
+      setShowMessages(filteredMessages);
+
     } catch (error) {
       console.error("Error fetching messages:", error);
       return [];
     }
   }
 
-  // Fetch messages when userId is available
   useEffect(() => {
-    if (userId) {
-      fetchMessages(userId, recId);
+    console.log("Current showMessages", showMessages);
+  }, [showMessages]);
+
+  // Re-fetch messages when chat selection changes
+  useEffect(() => {
+    if (userId && filteredChats.length > 0) {
+      fetchMessages(userId, filteredChats[selectedChat]?.id);
     }
-  }, [userId]);
+  }, [selectedChat, userId]);
 
   // Handle session timeout
   const handleClosePopup = () => {
@@ -202,34 +206,28 @@ export default function Peer() {
   }
 
   return (
-    <div>
-      <Navbar />
-      <div className="flex h-screen bg-[var(--mp-custom-white)]">
+    <div className="flex h-screen bg-[var(--mp-custom-white)]">
+      {filteredChats.length > 0 && (
         <ChatList
-          names={chats.map((chat) => chat.name)}
+          names={filteredChats.map((chat) => chat.name)}
           selectedChat={selectedChat}
           setSelectedChat={setSelectedChat}
         />
-        <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
-            <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-              {chats[selectedChat].name}
-            </h2>
-          </div>
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
-            {chats[selectedChat].messages.map((msg, index) => (
-              <ChatMessage
-                key={index}
-                message={msg.message}
-                isSent={msg.self === "True"}
-              />
-            ))}
-          </div>
-          <ChatInput
-            message={message}
-            setMessage={setMessage}
-            handleSubmit={handleSubmit}
-          />
+      )}
+      <div className="flex-1 flex flex-col">
+        <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
+          <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
+            {filteredChats[selectedChat]?.name || "Select a chat"}
+          </h2>
+        </div>
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
+          {showMessages.map((msg, index) => (
+            <ChatMessage
+              key={index}
+              message={msg.decryptedText}
+              isSent={msg.senderId === userId}
+            />
+          ))}
         </div>
       </div>
     </div>
