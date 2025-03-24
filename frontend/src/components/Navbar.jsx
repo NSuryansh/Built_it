@@ -85,7 +85,7 @@ const Navbar = () => {
                 <li className="p-3 text-right ">Email ID</li>
                 <li className="p-3 text-right ">Phone Number</li>
                 <li className="p-3 text-right ">Alt Phone Number</li>
-                <li className="p-3 text-right cursor-pointer">Appointments</li>
+                <a href="/appointments"><li className="p-3 text-right cursor-pointer">Appointments</li></a>
               </ol>
               <button className="p-2 m-3 text-right cursor-pointer bg-orange-300 rounded-md">
                 Modify

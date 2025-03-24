@@ -16,6 +16,7 @@ import DoctorsList from "./pages/admin/admin_doctor_list";
 import EventsList from "./pages/admin/admin_event_list";
 import AddEvent from "./pages/admin/admin_add_event";
 import AddDoctor from "./pages/admin/admin_add_doctor";
+import Appointments from "./pages/Appointments";
 
 export default function App() {
   const location = useLocation();
@@ -43,6 +44,7 @@ export default function App() {
         <Route path="/book" element={<Book />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/appointments" element={<Appointments />} />
         <Route path="/dashboard" element={<Landing_user />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />
         <Route path="/doctor/landing" element={<DoctorLanding />} />

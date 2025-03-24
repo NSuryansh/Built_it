@@ -3,33 +3,34 @@ import { Link, useLocation } from "react-router-dom";
 
 const Landing = () => {
   const location = useLocation();
-
+  const width = window.screen.width;
+  
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center mt-[60px]">
-        <div className="text-[60px] font-extrabold text-[var(--landing-bg-orange)]">
+    <div className="px-2 sm:px-4 min-h-screen overflow-y-hidden">
+      <div className="flex flex-col h-full items-center justify-center">
+        <div className="text-[45px] sm:text-[55px] font-extrabold text-[var(--landing-bg-orange)]">
           CalmNest
         </div>
-        <div className="text-[50px] font-bold mt-2 text-[var(--landing-text-black)]">
+        <div className="text-[30px] sm:text-[35px] text-center font-bold mt-2 text-[var(--landing-text-black)]">
           Find Peace - Get Support - Thrive
         </div>
-        <div className="text-[35px] mt-2 flex flex-col items-center text-[var(--landing-text-black)]">
+        <div className="text-[15px] sm:text-[20px] text-center mt-2 flex flex-col items-center text-[var(--landing-text-black)]">
           <p>
             At CalmNest we provide a safe space for your mental wellness
             journey.
           </p>
+          <br />
           <p>
             Whether you are seeking mindfulness techniques, emotional support,
-            or expert
+            or expert guidance, we are here to help
           </p>
-          <p>guidance, we are here to help</p>
         </div>
         <Link to="/signup">
           <button className="bg-[var(--landing-text-orange)] text-[var(--landing-text-white)] font-semibold px-6 py-2 mt-4 rounded-full shadow-md hover:bg-[var(--landing-bg-orange)] transition-colors duration-300 ease-in-out cursor-pointer">
             Get Started
           </button>
         </Link>
-        <img src="/assests/plates.png" alt="" className="h-[180px]" />
+        <img src="/assests/plates.png" alt="" className="hidden md:block" />
       </div>
     </div>
   );

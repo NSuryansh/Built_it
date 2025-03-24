@@ -89,81 +89,79 @@ export default function SignUp() {
     <div className="h-screen flex flex-col">
       <div className="flex items-center justify-center h-full bg-[var(--background-image)] bg-cover bg-center">
         <div className="bg-[var(--login-bg-peach)] w-96 p-8 rounded-md shadow-md">
-          <form onSubmit={handleSignup}>
-            <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-6 text-center">
-              SIGN UP
-            </h1>
+          <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-6 text-center">
+            SIGN UP
+          </h1>
 
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Username"
-              className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="Username"
+            className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-              required
-            />
+            required
+          />
 
-            <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+          <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-            />
-            <input
-              type="text"
-              placeholder="Phone Number"
-              name="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+          />
+          <input
+            type="text"
+            placeholder="Phone Number"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+            className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-            />
+          />
 
-            <input
-              type="text"
-              placeholder="Alternate number"
-              name="altNo"
-              value={formData.altNo}
-              onChange={handleChange}
-              className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+          <input
+            type="text"
+            placeholder="Alternate number"
+            name="altNo"
+            value={formData.altNo}
+            onChange={handleChange}
+            className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-              required
-            />
+            required
+          />
 
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full mb-4 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-              required
-            />
+            required
+          />
 
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="w-full mb-6 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full mb-6 p-2 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-              required
-            />
+            required
+          />
 
-            <button
-              type="submit"
-              className="w-full py- bg-[var(--login-button-orange)] text-[var(--login-button-text)]    font-semibold rounded-md hover:opacity-90 transition-opacity"
-            >
-              Sign Up
-            </button>
-          </form>
+          <button
+            onClick={handleSignup}
+            className="w-full py- bg-[var(--login-button-orange)] text-[var(--login-button-text)]    font-semibold rounded-md hover:opacity-90 transition-opacity"
+          >
+            Sign Up
+          </button>
 
           <p className="mt-6 text-sm text-center text-[var(--login-text-color)]">
             Already have an account?{" "}

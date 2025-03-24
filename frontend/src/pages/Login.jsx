@@ -31,36 +31,35 @@ export default function Login() {
     <div className="h-screen flex flex-col justify-center">
       <div className="h-full flex items-center justify-center">
         <div className="bg-[var(--login-bg-peach)] w-80 p-10 rounded-md shadow-md">
-          <form onSubmit={handlelogin}>
-            <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
-              LOGIN
-            </h1>
+          <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
+            LOGIN
+          </h1>
 
-            <input
-              type="text"
-              placeholder="username"
-              className="w-full mb-8 p-3  border border-[var(--login-input-border)] bg-[var(--login-input-bg)] rounded-md"
-              // value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+          <input
+            type="text"
+            placeholder="username"
+            className="w-full mb-8 p-3  border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+            rounded-md"
+            // value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-            <input
-              type="password"
-              placeholder="password"
-              className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)] rounded-md"
-              // value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <input
+            type="password"
+            placeholder="password"
+            className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+            rounded-md"
+            // value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-            <button
-              className="w-full py-2 bg-[var(--login-button-orange)] text-[var(--login-button-text)] font-semibold rounded-md hover:opacity-90 transition-opacity cursor-pointer"
-              type="submit"
-            >
-              Login
-            </button>
-          </form>
+          <button
+            className="w-full py-2 bg-[var(--login-button-orange)] text-[var(--login-button-text)]
+            font-semibold rounded-md hover:opacity-90 transition-opacity cursor-pointer"
+            onClick={handlelogin}
+          >
+            Login
+          </button>
 
           <p className="mt-6 text-sm text-center text-[var(--login-text-color)]">
             If not registered{" "}
