@@ -49,7 +49,7 @@ export default function App() {
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/doctor/appointments" element={<DoctorAppointment />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/doctor_list" element={<DoctorsList />} />
         <Route path="/admin/event_list" element={<EventsList />} />
         <Route path="/admin/add_event" element={<AddEvent />} />
