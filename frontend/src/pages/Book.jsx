@@ -5,7 +5,7 @@ import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
-import SessionExpired from "../components/Session_expired";
+import SessionExpired from "../components/SessionExpired";
 
 const Book = () => {
   const [date, setDate] = useState(new Date());
@@ -83,7 +83,7 @@ const Book = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired />;
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (

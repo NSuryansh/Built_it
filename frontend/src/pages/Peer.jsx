@@ -9,7 +9,7 @@ import { generateAESKey } from "../utils/aesKey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
-import SessionExpired from "../components/Session_expired";
+import SessionExpired from "../components/SessionExpired";
 
 export default function Peer() {
   // Define hooks at the top
@@ -194,7 +194,7 @@ export default function Peer() {
     return <div>Loading...</div>;
   }
   if (!isAuthenticated) {
-    return <SessionExpired />;
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (

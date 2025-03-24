@@ -1,6 +1,6 @@
 import React from "react";
 
-const SessionExpired = () => {
+const SessionExpired = ({ handleClosePopup }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -8,7 +8,7 @@ const SessionExpired = () => {
         <p className="mt-2">Your session has expired. Please log in again.</p>
         <button
           onClick={handleClosePopup}
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg"
+          className="mt-4 cursor-pointer bg-red-500 text-white px-4 py-2 rounded-lg"
         >
           Go to Login
         </button>

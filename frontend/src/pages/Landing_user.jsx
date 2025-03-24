@@ -5,7 +5,7 @@ import ProgressPage from "../components/ProgressPage";
 import EventsDisplay from "../components/EventsDisplay";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
-import SessionExpired from "../components/Session_expired";
+import SessionExpired from "../components/SessionExpired";
 
 const Landing_user = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -28,7 +28,7 @@ const Landing_user = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired />;
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (

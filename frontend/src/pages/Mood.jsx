@@ -5,7 +5,7 @@ import ChatInput from "../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
-import SessionExpired from "../components/Session_expired";
+import SessionExpired from "../components/SessionExpired";
 
 export default function Mood() {
   const [message, setMessage] = useState("");
@@ -54,7 +54,7 @@ export default function Mood() {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired />;
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (
