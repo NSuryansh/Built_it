@@ -29,7 +29,7 @@ export default function Login() {
   };
   return (
     <div className="h-screen flex flex-col justify-center">
-      <div className="h-full flex items-center justify-center">
+      <div className="h-full px-4 flex items-center justify-center">
         <div className="bg-[var(--login-bg-peach)] w-80 p-10 rounded-md shadow-md">
           <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
             LOGIN

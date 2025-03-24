@@ -87,7 +87,7 @@ export default function SignUp() {
 
   return (
     <div className="h-screen flex flex-col">
-      <div className="flex items-center justify-center h-full bg-[var(--background-image)] bg-cover bg-center">
+      <div className="flex px-4 items-center justify-center h-full bg-[var(--background-image)] bg-cover bg-center">
         <div className="bg-[var(--login-bg-peach)] w-96 p-8 rounded-md shadow-md">
           <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-6 text-center">
             SIGN UP
