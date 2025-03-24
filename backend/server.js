@@ -160,8 +160,8 @@ app.get("/profile", async (req, res) => {
 
 app.get("/chatContacts", async (req, res) => {
     try {
-        const userId = req.body["userId"];
-        console.log(req.body["userId"]);
+        const userId = req.query["userId"];
+        console.log(req.query["userId"]);
         console.log(userId);
         if (!userId) {
             return res.status(400).json({ message: "User ID is required" });
@@ -448,7 +448,10 @@ app.get("/docProfile", async (req, res) => {
 
 app.post("/addEvent", async (req, res) => {
     try {
-        const { title, description, dateTime, venue } = req.body;
+        const title = req.body["title"]
+        const description = req.body["description"]
+        const dateTime = req.body["dateTime"]
+        const venue = req.body["venue"]
 
         // Validate required fields
         if (!title || !dateTime || !venue) {
@@ -460,17 +463,17 @@ app.post("/addEvent", async (req, res) => {
         // Create the event in Prisma
         const event = await prisma.events.create({
             data: {
-                title,
-                description,
+                title:title,
+                description:description,
                 dateTime: new Date(dateTime), // Ensure it's a valid Date object
-                venue,
+                venue:venue,
             },
         });
 
-        res.status(0).json(event); // Return created event
+        res.json(event); // Return created event
     } catch (error) {
         console.error("Error adding event:", error);
-        res.status(0).json({ error: "Internal server error" });
+        res.json({ error: "Internal server error" });
     }
 });
 
