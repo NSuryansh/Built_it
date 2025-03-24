@@ -388,6 +388,30 @@ app.post("/docLogin", async (req, res) => {
   res.json({ message: "Login successful", token });
 });
 
+app.post("/adminLogin", async (req, res) => {
+  console.log(req.body);
+  const emailId = req.body["email"];
+  const password = req.body["password"];
+
+  const admin = await prisma.admin.findUnique({ where: { email: emailId } });
+  if (!admin) {
+    return res.status(401).json({ message: "User doesn't exist" });
+  }
+  const match = await bcrypt.compare(password, admin.password);
+  if (!match) {
+    return res.status(401).json({ message: "Incorrect password" });
+  }
+  const token = jwt.sign(
+    { id: admin.id, email: admin.email, mobile: admin.mobile },
+    SECRET_KEY,
+    {
+      expiresIn: "1h",
+    }
+  );
+
+  res.json({ message: "Login successful", token });
+});
+
 app.get("/docProfile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -477,9 +501,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post('/notifications', async(req,res)=>{
-
-})
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
