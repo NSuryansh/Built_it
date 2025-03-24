@@ -10,6 +10,8 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import DoctorLogin from "./pages/doctor/Login";
 import DoctorSignUp from "./pages/doctor/Signup";
 import DoctorLanding from "./pages/doctor/Landing";
+import DoctorAppointment from "./pages/doctor/Appointment";
+import DoctorProfile from "./pages/doctor/Profile";
 
 export default function App() {
   const location = useLocation();
@@ -43,6 +45,8 @@ export default function App() {
         <Route path="/doctor_login" element={<DoctorLogin />} />
         <Route path="/doctor_signup" element={<DoctorSignUp />} />
         <Route path="/doctor_landing" element={<DoctorLanding />} />
+        <Route path="/doctor_profile" element={<DoctorProfile />} />
+        <Route path="/doctor_appointments" element={<DoctorAppointment />} />
       </Routes>
     </div>
   );

@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -31,7 +30,6 @@ export default function Login() {
   };
   return (
     <div className="h-screen flex flex-col justify-center">
-      <Navbar />
       <div className="h-full flex items-center justify-center">
         <div className="bg-[var(--login-bg-peach)] w-80 p-10 rounded-md shadow-md">
           <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
@@ -66,10 +64,30 @@ export default function Login() {
 
           <p className="mt-6 text-sm text-center text-[var(--login-text-color)]">
             If not registered{" "}
-            <a href="/signup" className="underline">
+            <a
+              href="/signup"
+              className="underline font-bold text-[var(--login-button-orange)]"
+            >
               click here
             </a>
           </p>
+
+          <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
+            <hr className="flex-1/3" />
+            <div className="flex-1/3 text-center">OR</div>
+            <hr className="flex-1/3" />
+          </div>
+          <div className="flex w-full mt-2">
+            <p className="w-full text-center">
+              Login as a&nbsp;
+              <a
+                href="/doctor_login"
+                className="underline font-bold text-[var(--login-button-orange)]"
+              >
+                Doctor
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
