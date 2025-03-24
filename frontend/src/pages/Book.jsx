@@ -184,7 +184,7 @@ const Book = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       {/*<div className="container mx-auto px-4 py-8">
         <div className="flex justify-evenly">
@@ -252,7 +252,7 @@ const Book = () => {
           </div>
         </div>
       </div>*/}
-      <div className="h-full">
+      <div className="h-full flex justify-center items-center">
         <main className="main">
           {step === 1 && (
             <CalendarStep

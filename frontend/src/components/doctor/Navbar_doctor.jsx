@@ -11,9 +11,9 @@ const DoctorNavbar = () => {
           <div className="text-xl font-bold">CalmNest</div>
           <div className="flex space-x-8 items-center">
             <a
-              href="/doctor_landing"
+              href="/doctor/landing"
               className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                location === "/doctor_landing"
+                location === "/doctor/landing"
                   ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                   : ""
               }`}
@@ -21,9 +21,9 @@ const DoctorNavbar = () => {
               Home
             </a>
             <a
-              href="/doctor_appointments"
+              href="/doctor/appointments"
               className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                location === "/doctor_appointments"
+                location === "/doctor/appointments"
                   ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                   : ""
               }`}
@@ -31,9 +31,9 @@ const DoctorNavbar = () => {
               Appointments
             </a>
             <a
-              href="/doctor_profile"
+              href="/doctor/profile"
               className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                location === "/doctor_profile"
+                location === "/doctor/profile"
                   ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                   : ""
               }`}
