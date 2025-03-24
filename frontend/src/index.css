@@ -21,6 +21,17 @@
   --custom-gray-800: #1f2937;
   --custom-peach: #ffddc0;
   --custom-primary-blue: #004ba8;
+  --custom-primary-green: #048A81;
+  --custom-primary-green-50: #E6F5F4;
+  --custom-primary-green-100: #CCE9E7;
+  --custom-primary-green-200: #99D4D0;
+  --custom-primary-green-300: #66BEB8;
+  --custom-primary-green-400: #33A8A1;
+  --custom-primary-green-500: #048A81;
+  --custom-primary-green-600: #037E76;
+  --custom-primary-green-700: #02726A;
+  --custom-primary-green-800: #02665F;
+  --custom-primary-green-900: #015A54;
 
   /* Landing Page Colors */
   --landing-text-orange: var(--custom-primary-orange);
@@ -28,6 +39,7 @@
   --landing-text-white: var(--custom-white);
   --landing-bg-orange: #ff4800;
   --landing-bg-blue: #0066e3;
+  --landing-bg-green: #00b6aa;
 
   /* Login Page Colors */
   --login-text-color: var(--custom-black);
