@@ -81,10 +81,10 @@ const EventsList = () => {
                   <p className="text-sm text-[var(--custom-primary-green-600)]">Location</p>
                   <p className="font-medium">{event.location}</p>
                 </div>
-                <div>
+                {/* <div>
                   <p className="text-sm text-[var(--custom-primary-green-600)]">Expected Attendees</p>
                   <p className="font-medium">{event.attendees}</p>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}
