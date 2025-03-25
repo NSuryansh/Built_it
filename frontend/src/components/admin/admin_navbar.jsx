@@ -8,7 +8,15 @@ const AdminNavbar = () => {
     <nav className="bg-transperent">
       <div className="px-8 py-3">
         <div className="flex items-center justify-between">
-          <div className="text-xl font-bold">CalmNest</div>
+          <div className="flex">
+            <img
+              src="/assests/logo.jpg"
+              alt="logo"
+              width={25}
+              className="rounded mr-2"
+            />
+            <div className="text-xl font-bold">Vitality</div>
+          </div>
           <div className="flex space-x-8 items-center">
             <a
               href="/admin/dashboard"
