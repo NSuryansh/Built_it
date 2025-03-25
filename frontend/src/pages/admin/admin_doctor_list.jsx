@@ -1,41 +1,58 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Trash2, UserPlus } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 
 const DoctorsList = () => {
-  const doctors = [
-    {
-      id: 1,
-      name: "Dr. Sarah Wilson",
-      specialty: "Cardiologist",
-      email: "sarah.wilson@example.com",
-    },
-    {
-      id: 2,
-      name: "Dr. Michael Chen",
-      specialty: "Neurologist",
-      email: "michael.chen@example.com",
-    },
-    {
-      id: 3,
-      name: "Dr. Emily Brown",
-      specialty: "Pediatrician",
-      email: "emily.brown@example.com",
-    },
-    {
-      id: 4,
-      name: "Dr. James Taylor",
-      specialty: "Orthopedist",
-      email: "james.taylor@example.com",
-    },
-    {
-      id: 5,
-      name: "Dr. Lisa Anderson",
-      specialty: "Dermatologist",
-      email: "lisa.anderson@example.com",
-    },
-  ];
+  // const doctors = [
+  //   {
+  //     id: 1,
+  //     name: "Dr. Sarah Wilson",
+  //     specialty: "Cardiologist",
+  //     email: "sarah.wilson@example.com",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Dr. Michael Chen",
+  //     specialty: "Neurologist",
+  //     email: "michael.chen@example.com",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Dr. Emily Brown",
+  //     specialty: "Pediatrician",
+  //     email: "emily.brown@example.com",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Dr. James Taylor",
+  //     specialty: "Orthopedist",
+  //     email: "james.taylor@example.com",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Dr. Lisa Anderson",
+  //     specialty: "Dermatologist",
+  //     email: "lisa.anderson@example.com",
+  //   },
+  // ];
+
+  const [doctors, setDoc] = useState([])
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      const res = await fetch("http://localhost:3000/getdoctors");
+      const resp = await res.json();
+      setDoc(resp);
+    };
+  
+    fetchDoctors();
+  }, []);
+  
+  
+  useEffect(() => {
+    console.log(doctors)
+  }, [doctors])
+  
 
   const handleDelete = (id) => {
     // Handle doctor deletion
