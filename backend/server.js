@@ -315,8 +315,8 @@ app.post("/book", async (req, res) => {
 });
 
 app.post("/requests", async (req, res) => {
-  const userId = req.body["userId"];
-  const doctorId = req.body["doctorId"];
+  const userId = Number(req.body["userId"]);
+  const doctorId = Number(req.body["doctorId"]);
   const dateTime = req.body["dateTime"];
   const reason = req.body["reason"];
 
