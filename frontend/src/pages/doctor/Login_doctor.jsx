@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorLogin = () => {
   const [email, setEmail] = useState("");
@@ -30,6 +31,8 @@ const DoctorLogin = () => {
     }
   };
   return (
+    <>
+    <DoctorNavbar/>
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-[var(--custom-primary-blue)]">
       <div className="bg-[var(--custom-white)] w-80 p-10 rounded-md shadow-md">
         <form onSubmit={handlelogin}>
@@ -66,6 +69,7 @@ const DoctorLogin = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

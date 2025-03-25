@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const AdminNavbar = () => {
   const location = useLocation().pathname;
@@ -12,10 +13,16 @@ const AdminNavbar = () => {
     { name: "Doctors", link: "/admin/doctor_list" },
     { name: "Events", link: "/admin/event_list" },
   ];
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleLogout = () => {
+    localStorage.clear()
+    navigate("/admin/login")
+  }
 
   return (
     <nav className="bg-transperent">
@@ -109,7 +116,7 @@ const AdminNavbar = () => {
 
                   <div className="flex gap-2">
                     <button
-                      // onClick={onLogout}
+                      onClick={handleLogout}
                       className="flex-1 bg-green-200 hover:bg-green-300 text-green-900 rounded px-4 py-2 text-sm font-medium transition-colors"
                     >
                       Logout

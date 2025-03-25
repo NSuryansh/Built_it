@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Building,
-  GraduationCap,
-  Clock,
-  Award,
-  Edit2,
-  Save,
-  X,
-} from "lucide-react";
+import { User, Mail, Phone, MapPin, Building, GraduationCap, Clock, Award, Edit2, Save, X,  } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import Footer from "../../components/Footer";
 
