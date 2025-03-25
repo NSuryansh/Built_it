@@ -117,8 +117,8 @@ const DoctorAppointment = () => {
                             <button className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
                               Reschedule
                             </button>
-                            <button className="px-4 py-2 bg-red-50 text-red-700 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
-                              Cancel
+                            <button className="px-4 py-2 bg-red-50 text-green-700 text-sm font-medium rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
+                              Mark as Done
                             </button>
                           </div>
                         </div>
