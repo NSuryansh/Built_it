@@ -40,7 +40,7 @@ const Navbar = () => {
               </a>
             ))}
           </div>
-          <div className="md:hidden flex items-center z-2">
+          <div className="md:hidden transition-all flex items-center z-2">
             <button
               onClick={toggleMenu}
               className="p-2 rounded-full hover:bg-gray-100"
@@ -52,10 +52,10 @@ const Navbar = () => {
               )}
             </button>
             {isOpen && (
-              <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4">
+              <div className="absolute top-16 left-[12%] w-[80%] bg-white rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
-                    <li className="py-2 border-b border-gray-200" key={i}>
+                    <li className="py-2 border-b text-center border-gray-200" key={i}>
                       <a
                         href={item.link}
                         className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${

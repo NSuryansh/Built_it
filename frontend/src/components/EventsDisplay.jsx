@@ -52,7 +52,7 @@ const EventsDisplay = () => {
           <h3 className="text-lg font-semibold text-[var(--events-display-gray-900)]">{event.name}</h3>
           <p className="text-gray-700 mt-1">{event.detail}</p>
 
-          <div className="flex items-center mt-3 space-x-4 text-[var(--events-display-gray-600)]">
+          <div className="flex flex-wrap items-center mt-3 space-x-4 text-[var(--events-display-gray-600)]">
             <p className="flex items-center text-sm">
               <Calendar className="w-4 h-4 mr-1" /> {event.date}
             </p>
