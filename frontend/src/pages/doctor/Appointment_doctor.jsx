@@ -2,13 +2,17 @@ import React, { useEffect } from "react";
 import { User, CircleUser, Clock, Phone, FileText } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { useState } from "react";
-import emailjs from "@emailjs/browser"
+import emailjs from "@emailjs/browser";
+import { DayPicker } from "react-day-picker";
+
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
   const [completedNotes, setCompletedNotes] = useState({});
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [selectedDate, setSelectedDate] = useState();
   const [appointments, setapp] = useState([]);
   const [curr, setcurr] = useState([]);
-  const [comp, setcomp] = useState([])
+  const [comp, setcomp] = useState([]);
 
   const handleMarkAsDone = (id) => {
     setCompletedNotes((prev) => ({
@@ -26,13 +30,6 @@ const DoctorAppointment = () => {
   const handleNoteChange = (e) => {
     setNote(e.target.value);
   };
-
-  // const handleNoteChange = (id, value) => {
-  //   setCompletedNotes((prev) => ({
-  //     ...prev,
-  //     [id]: value,
-  //   }));
-  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,7 +72,7 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    console.log(note)
+    console.log(note);
     const res = await fetch("http://localhost:3000/deleteApp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -83,33 +80,50 @@ const DoctorAppointment = () => {
         appId: appointment["id"],
         doctorId: appointment["doctor_id"],
         userId: appointment["user_id"],
-        note: note
-      })
-    })
-    const resp = await res.json()
-    setFixed(!fixed)
-    console.log(resp)
-  }
+        note: note,
+      }),
+    });
+    const resp = await res.json();
+    setFixed(!fixed);
+    console.log(resp);
+  };
 
-  const emailParams = async(appointment, time)=>{
-    docName = localStorage.getItem("username")
+  const emailParams = async (appointment, time) => {
+    docName = localStorage.getItem("username");
     var params = {
       id: appointment["id"],
       username: appointment["user"]["username"],
       doctor: appointment["user"]["docName"],
       origTime: appointment["dateTime"],
       newTime: time,
-      email: appointment["user"]["email"]
-    }
+      email: appointment["user"]["email"],
+    };
 
-    emailjs.send('service_coucldi','template_b96adyb', params).then(
-      (repsonse)=>{
-        console.log("success", repsonse.status)
-      },(error)=>{
-        console.log(error)
+    emailjs.send("service_coucldi", "template_b96adyb", params).then(
+      (repsonse) => {
+        console.log("success", repsonse.status);
+      },
+      (error) => {
+        console.log(error);
       }
-    )
-  }
+    );
+  };
+
+  const handleReschedule = (appointmentId) => {
+    setSelectedAppointment(
+      appointmentId === selectedAppointment ? null : appointmentId
+    );
+  };
+
+  const handleDateSelect = (date, appointmentId) => {
+    setSelectedDate(date);
+    if (date) {
+      console.log(
+        `Rescheduling appointment ${appointmentId} to ${date}`
+      );
+      setSelectedAppointment(null);
+    }
+  };
 
   return (
     <div>
@@ -172,12 +186,17 @@ const DoctorAppointment = () => {
                           </div>
 
                           <div className="mt-4 flex items-center space-x-3">
-                            <button className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
+                            <button
+                              onClick={() => handleReschedule(appointment.id)}
+                              className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                            >
                               Reschedule
                             </button>
                             {completedNotes[appointment.id] !== undefined ? (
                               <button
-                                onClick={() => {deleteApp(appointment)}}
+                                onClick={() => {
+                                  deleteApp(appointment);
+                                }}
                                 className="px-4 py-2 bg-red-50 text-blue-700 text-sm font-medium rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
                               >
                                 Done
@@ -190,23 +209,64 @@ const DoctorAppointment = () => {
                                 Mark as Done
                               </button>
                             )}
-                            {completedNotes[appointment.id] !== undefined && (
-                              <div className="mt-4">
-                                <input
-                                  type="text"
-                                  placeholder="Enter completion notes..."
-                                  className="w-full p-2 border border-gray-300 rounded-lg"
-                                  value={note}
-                                  onChange={handleNoteChange
-                                    // handleNoteChange(
-                                    //   // appointment.id,
-                                    //   // e.target.value
-                                    // )
-                                  }
-                                />
-                              </div>
-                            )}
                           </div>
+                          {selectedAppointment === appointment.id && (
+                            <div className="mt-4 bg-white w-fit rounded-lg border border-gray-200 p-4">
+                              <DayPicker
+                                mode="single"
+                                selected={selectedDate}
+                                onSelect={(date) =>
+                                  handleDateSelect(date, appointment.id)
+                                }
+                                showOutsideDays
+                                classNames={{
+                                  months: "flex flex-col",
+                                  month: "space-y-4",
+                                  caption:
+                                    "flex justify-center relative items-center",
+                                  caption_label:
+                                    "text-sm font-semibold text-gray-900",
+                                  nav: "space-x-1 flex items-center",
+                                  nav_button:
+                                    "h-7 w-7 bg-transparent p-0 opacity-75 hover:opacity-100",
+                                  nav_button_previous: "absolute left-1",
+                                  nav_button_next: "absolute right-1",
+                                  table: "w-full border-collapse space-y-1",
+                                  head_row: "flex",
+                                  head_cell:
+                                    "text-gray-500 rounded-md w-10 font-normal text-[0.8rem]",
+                                  row: "flex w-full mt-2",
+                                  cell: "text-center text-sm relative p-0 hover:bg-gray-100 rounded-md",
+                                  day: "h-10 w-10 font-normal aria-selected:opacity-100",
+                                  day_selected:
+                                    "bg-blue-500 text-white hover:bg-blue-600 hover:text-white focus:bg-blue-500 focus:text-white",
+                                  day_today:
+                                    "bg-gray-100 text-blue-700 font-semibold",
+                                  day_outside: "text-gray-400 opacity-50",
+                                  day_disabled: "text-gray-400 opacity-50",
+                                  day_range_middle: "aria-selected:bg-gray-100",
+                                  day_hidden: "invisible",
+                                }}
+                              />
+                            </div>
+                          )}
+                          {completedNotes[appointment.id] !== undefined && (
+                            <div className="mt-4">
+                              <input
+                                type="text"
+                                placeholder="Enter completion notes..."
+                                className="w-full p-2 border border-gray-300 rounded-lg"
+                                value={note}
+                                onChange={
+                                  handleNoteChange
+                                  // handleNoteChange(
+                                  //   // appointment.id,
+                                  //   // e.target.value
+                                  // )
+                                }
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
