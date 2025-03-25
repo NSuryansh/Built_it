@@ -24,7 +24,7 @@ export default function Login() {
       localStorage.setItem("token", res["token"]);
       navigate("/dashboard");
     } else {
-      setError(res["message"]);
+      alert(res["message"])
     }
   };
   return (
