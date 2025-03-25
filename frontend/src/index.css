@@ -85,6 +85,10 @@ html {
   font-family: "Poppins", sans-serif;
 }
 
+button{
+  cursor: pointer;
+}
+
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);

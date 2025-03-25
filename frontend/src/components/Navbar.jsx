@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Bell, User } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const location = useLocation().pathname;
   const [showDetails, setShowDetails] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,11 @@ const Navbar = () => {
     { name: "Book", link: "/book" },
     { name: "Stress", link: "/stress" },
   ];
+
+  const username = "Abc";
+  const email = "1@gmail.com";
+  const phoneNumber = "1234567890";
+  const altPhoneNumber = "0987654321";
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -55,7 +61,10 @@ const Navbar = () => {
               <div className="absolute top-16 left-[12%] w-[80%] bg-white rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
-                    <li className="py-2 border-b text-center border-gray-200" key={i}>
+                    <li
+                      className="py-2 border-b text-center border-gray-200"
+                      key={i}
+                    >
                       <a
                         href={item.link}
                         className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
@@ -86,81 +95,62 @@ const Navbar = () => {
             </button>
 
             <div
-              className={`user-details drop-shadow-xs absolute top-12 right-5 list-none bg-orange-200 rounded-md py-1 z-1 ${
+              className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-orange-700)] rounded-lg top-12 right-5 list-none z-1 ${
                 showDetails ? "opacity-100 visible" : "opacity-0 invisible"
               }`}
             >
-              <ol>
-                <li className="p-3 text-right ">User Name</li>
-                <li className="p-3 text-right ">Email ID</li>
-                <li className="p-3 text-right ">Phone Number</li>
-                <li className="p-3 text-right ">Alt Phone Number</li>
-                <a href="/appointments">
-                  <li className="p-3 text-right cursor-pointer">
-                    Appointments
-                  </li>
-                </a>
-              </ol>
-              <button className="p-2 m-3 text-right cursor-pointer bg-orange-300 rounded-md">
-                Modify
-              </button>
+              <div className="w-64 bg-[var(--custom-orange-100)] rounded-lg shadow-lg p-6">
+                <div className="space-y-4">
+                  <div className="text-center space-y-1">
+                    <h3 className="text-lg font-semibold text-[var(--custom-orange-900)]">
+                      {username}
+                    </h3>
+                    <p className="text-sm text-[var(--custom-orange-700)]">
+                      {email}
+                    </p>
+                  </div>
 
-              <button className="p-2 m-3 text-right cursor-pointer bg-orange-300 rounded-md">
-                Logout
-              </button>
+                  <div className="space-y-2">
+                    <div className="text-sm text-[var(--custom-orange-800)]">
+                      <p>Phone Number</p>
+                      <p className="font-medium">{phoneNumber}</p>
+                    </div>
+
+                    <div className="text-sm text-[var(--custom-orange-800)]">
+                      <p>Alt Phone Number</p>
+                      <p className="font-medium">{altPhoneNumber}</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <a href="/appointments">
+                      <button className="text-sm px-4 py-2 rounded bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] w-full font-medium">
+                        Appointments
+                      </button>
+                    </a>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => navigate("/modify_profile")}
+                      className="flex-1 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
+                    >
+                      Modify
+                    </button>
+                    <button
+                      // onClick={onLogout}
+                      className="flex-1 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </nav>
-    // <nav className="flex justify-between items-center py-4">
-    //   <div className="text-lg font-bold">Logo</div>
-    //   <div className="hidden md:flex md:items-center">
-    //     <ul className="flex items-center space-x-4">
-    //       <li>
-    //         <a href="#" className="hover:text-blue-500">
-    //           Home
-    //         </a>
-    //       </li>
-    //       <li>
-    //         <a href="#" className="hover:text-blue-500">
-    //           About
-    //         </a>
-    //       </li>
-    //       <li>
-    //         <a href="#" className="hover:text-blue-500">
-    //           Contact
-    //         </a>
-    //       </li>
-    //     </ul>
-    //   </div>
-    //   <div className="md:hidden flex items-center">
-    //     <button onClick={toggleMenu} className="p-2 rounded-full hover:bg-gray-100">
-    //       {isOpen ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
-    //     </button>
-    //     {isOpen && (
-    //       <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4">
-    //         <ul>
-    //           <li className="py-2 border-b border-gray-200">
-    //             <a href="#" className="hover:text-blue-500">
-    //               Home
-    //             </a>
-    //           </li>
-    //           <li className="py-2 border-b border-gray-200">
-    //             <a href="#" className="hover:text-blue-500">
-    //               About
-    //             </a>
-    //           </li>
-    //           <li className="py-2">
-    //             <a href="#" className="hover:text-blue-500">
-    //               Contact
-    //             </a>
-    //           </li>
-    //         </ul>
-    //       </div>
-    //     )}
-    //   </div>
-    // </nav>
   );
 };
 
