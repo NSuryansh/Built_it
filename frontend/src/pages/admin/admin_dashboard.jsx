@@ -62,8 +62,8 @@ const AdminDashboard = () => {
   return (
     <div className="flex flex-col">
       <AdminNavbar />
-      <div className="space-y-8 max-w-7xl md:min-w-5xl mx-auto mb-5">
-        <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">
+      <div className="space-y-4 max-w-7xl md:min-w-5xl mx-auto mb-5">
+        <h1 className="text-3xl font-bold text-center md:text-left text-[var(--custom-primary-green-900)]">
           Dashboard Overview
         </h1>
 

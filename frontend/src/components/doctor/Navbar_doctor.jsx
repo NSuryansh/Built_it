@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const DoctorNavbar = () => {
   const location = useLocation().pathname;
@@ -53,15 +54,40 @@ const DoctorNavbar = () => {
             <button className="cursor-pointer">
               <Bell className="w-5 h-5" />
             </button>
-            <button className="cursor-pointer">
+            <button
+              onClick={() => {
+                setShowDetails(!showDetails);
+              }}
+              className="cursor-pointer"
+            >
               <User className="w-5 h-5" />
             </button>
-            {/* <button
-              className="bg-[var(--custom-primary-blue)] text-[var(--custom-white)] px-4 py-1 rounded cursor-pointer"
-              onClick={() => (window.location.href = "/login")}
+
+            <div
+              className={`user-details drop-shadow-xs absolute border-2 border-blue-700 rounded-lg top-12 right-5 list-none z-1 ${
+                showDetails ? "opacity-100 visible" : "opacity-0 invisible"
+              }`}
             >
-              Login
-            </button> */}
+              <div className="w-64 bg-blue-100 rounded-lg shadow-lg p-6">
+                <div className="space-y-4">
+                  <div className="text-center space-y-1">
+                    <h3 className="text-lg font-semibold text-blue-900">
+                      Doctor
+                    </h3>
+                    <p className="text-sm text-blue-700">abc@gmail.com</p>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      // onClick={onLogout}
+                      className="flex-1 bg-blue-200 hover:bg-blue-300 text-blue-900 rounded px-4 py-2 text-sm font-medium transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
