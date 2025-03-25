@@ -31,7 +31,7 @@ export default function App() {
 
   return (
     <div
-      className={`h-screen flex flex-col ${
+      className={`min-h-screen h-full flex flex-col ${
         isBackgroundPage ? "bg-cover" : "bg-white"
       }`}
       style={
