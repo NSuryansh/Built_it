@@ -682,6 +682,7 @@ import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
+import Footer from "../components/Footer";
 
 const Book = () => {
   // step 1: select a doctor; step 2: booking form
@@ -697,7 +698,7 @@ const Book = () => {
     // you can add a preferred date if needed:
     date: "",
   });
-  
+
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
@@ -742,7 +743,7 @@ const Book = () => {
       doctorName: selectedDoctor.name,
       ...formData,
     };
-    const user_id = localStorage.getItem("userid")
+    const user_id = localStorage.getItem("userid");
 
     try {
       const res = await fetch("http://localhost:3000/requests", {
@@ -752,7 +753,7 @@ const Book = () => {
           userId: user_id,
           doctorId: selectedDoctor.id,
           dateTime: formData.date,
-          reason: formData.note
+          reason: formData.note,
         }),
       });
       const respData = await res.json();
@@ -788,9 +789,12 @@ const Book = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="h-full my-auto mx-2 md:mx-10 flex justify-center items-center">
+      <div className="h-full min-h-screen my-auto mx-2 md:mx-10 flex justify-center items-center mb-5">
         {step === 1 && (
-          <DoctorSelectionStep doctors={doctors} onSelect={handleDoctorSelect} />
+          <DoctorSelectionStep
+            doctors={doctors}
+            onSelect={handleDoctorSelect}
+          />
         )}
         {step === 2 && (
           <BookingFormStep
@@ -802,6 +806,7 @@ const Book = () => {
           />
         )}
       </div>
+      <Footer color={"orange"} />
     </div>
   );
 };
@@ -848,7 +853,13 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
 };
 
 // Step 2: Booking Form Component
-const BookingFormStep = ({ formData, handleChange, onSubmit, onBack, selectedDoctor }) => {
+const BookingFormStep = ({
+  formData,
+  handleChange,
+  onSubmit,
+  onBack,
+  selectedDoctor,
+}) => {
   return (
     <div className="bg-[var(--custom-orange-100)] border-2 border-[var(--custom-orange-200)] w-full max-w-[1200px] p-8 rounded-[10px]">
       <h2 className="text-center text-3xl font-bold text-[var(--custom-orange-500)] uppercase mb-8">
@@ -937,4 +948,3 @@ const BookingFormStep = ({ formData, handleChange, onSubmit, onBack, selectedDoc
     </div>
   );
 };
-

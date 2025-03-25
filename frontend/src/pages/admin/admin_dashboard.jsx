@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import Footer from "../../components/Footer";
 import { checkAuth } from "../../utils/profile";
 
 const AdminDashboard = () => {
@@ -78,7 +79,7 @@ const AdminDashboard = () => {
   return (
     <div className="flex flex-col">
       <AdminNavbar />
-      <div className="space-y-8 max-w-7xl md:min-w-5xl mx-auto">
+      <div className="space-y-8 max-w-7xl md:min-w-5xl mx-auto mb-5">
         <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">
           Dashboard Overview
         </h1>
@@ -139,8 +140,8 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-
       </div>
+      <Footer color={'green'} />
     </div>
   );
 };

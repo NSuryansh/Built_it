@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
+import Footer from "../../components/Footer";
 
 const DoctorProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -359,6 +360,7 @@ const DoctorProfile = () => {
           </div>
         </div>
       </div>
+      <Footer color={'blue'} />
     </div>
   );
 };
