@@ -4,43 +4,26 @@ import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
-import FadeLoader from 'react-spinners/FadeLoader'
+import FadeLoader from "react-spinners/FadeLoader";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 
 export default function Mood() {
   const [message, setMessage] = useState("");
-
   const [chats, setChats] = useState([
     {
       self: "False",
       message:
         "Hello! I'm here to help you track and improve your well-being. How are you feeling today?",
     },
-    {
-      self: "True",
-      message: "I'm feeling a bit stressed today.",
-    },
-    {
-      self: "False",
-      message:
-        "I understand. Let's look at your progress and see where we can make improvements.",
-    },
   ]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (message.trim()) {
-      setChats([...chats, { self: "True", message: message }]);
-      setMessage("");
-    }
-  };
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const verifyAuth = async () => {
-      const authStatus = await checkAuth();
+      const authStatus = await checkAuth("user");
       setIsAuthenticated(authStatus);
     };
     verifyAuth();
@@ -50,11 +33,55 @@ export default function Mood() {
     navigate("/login");
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    const newChats = [...chats, { self: "True", message }];
+    setChats(newChats);
+    setMessage("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: "default_user", message }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Handle both structured and unstructured responses
+      const botMessage = data.response?.text || 
+                         (typeof data.response === 'string' ? data.response : 
+                         "I'm sorry, I couldn't process your message.");
+
+      setChats([
+        ...newChats, 
+        { self: "False", message: botMessage }
+      ]);
+    } catch (error) {
+      console.error("Request failed:", error);
+      setChats([
+        ...newChats, 
+        { self: "False", message: "Sorry, there was an error processing your message." }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (isAuthenticated === null) {
-    return <div>
-      <FadeLoader color='#ff4800' radius={6} height={20} width={5} />
-      <p>Loading...</p>
-    </div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
@@ -82,6 +109,11 @@ export default function Mood() {
                 isSent={msg.self === "True"}
               />
             ))}
+            {isLoading && (
+              <div className="flex justify-center items-center my-2">
+                <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+              </div>
+            )}
           </div>
           <ChatInput
             message={message}
