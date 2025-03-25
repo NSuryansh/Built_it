@@ -14,16 +14,21 @@ const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
 
   const [appointments, setapp] = useState([]);
+  const [curr, setcurr] = useState([])
   useEffect(() => {
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
       const res = await fetch(`http://localhost:3000/reqApp?docId=${docId}`);
+      const res2 = await fetch(`http://localhost:3000/currentdocappt?doctorId=${docId}`)
       const resp2 = await res.json();
+      const resp = await res2.json()
+      console.log(resp)
       setapp(resp2);
+      setcurr(resp)
     };
 
     fetchData();
-  }, [fixed]);
+  }, [fixed])
 
   useEffect(() => {
     console.log(appointments);
@@ -67,7 +72,7 @@ const DoctorAppointment = () => {
 
               <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 <div className="grid grid-cols-1 divide-y divide-gray-200">
-                  {appointments.map((appointment) => (
+                  {curr.map((appointment) => (
                     <div
                       key={appointment.id}
                       className="p-6 hover:bg-gray-50 transition-colors"
@@ -179,15 +184,15 @@ const DoctorAppointment = () => {
                           </div>
 
                           <div className="mt-4 flex space-x-3">
-                            <button className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                            <button onClick={() => { acceptApp(appointment) }} className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
                               Accept
                             </button>
                             <button className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
                               Reschedule
                             </button>
-                            <button className="px-4 py-2 bg-red-50 text-red-700 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
+                            {/* <button className="px-4 py-2 bg-red-50 text-red-700 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
                               Decline
-                            </button>
+                            </button> */}
                           </div>
                         </div>
                       </div>
