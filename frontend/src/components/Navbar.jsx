@@ -17,6 +17,8 @@ const Navbar = () => {
     { name: "Stress", link: "/stress" },
   ];
 
+  // Retrieve usertype from localStorage
+  const userType = localStorage.getItem("user_type");
   const username = "Abc";
   const email = "1@gmail.com";
   const phoneNumber = "1234567890";
@@ -25,6 +27,17 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleLogout = () =>{
+    localStorage.clear()
+    if(userType === "user"){
+      navigate("/login")
+    }else if(userType === "doc"){
+      navigate("/doctor/login")
+    }else{
+      navigate("admin/login")
+    }
+  }
 
   return (
     <nav className="bg-transperent">
@@ -45,7 +58,7 @@ const Navbar = () => {
                 key={i}
                 href={item.link}
                 className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                  location == item.link
+                  location === item.link
                     ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                     : ""
                 }`}
@@ -76,7 +89,7 @@ const Navbar = () => {
                       <a
                         href={item.link}
                         className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                          location == item.link
+                          location === item.link
                             ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                             : ""
                         }`}
@@ -93,68 +106,80 @@ const Navbar = () => {
             <button className="cursor-pointer">
               <Bell className="w-5 h-5" />
             </button>
-            <button
-              onClick={() => {
-                setShowDetails(!showDetails);
-              }}
-              className="cursor-pointer relative"
-            >
-              <User className="w-5 h-5" />
-            </button>
 
-            <div
-              className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-orange-700)] rounded-lg top-12 right-5 list-none z-1 ${
-                showDetails ? "opacity-100 visible" : "opacity-0 invisible"
-              }`}
-            >
-              <div className="w-64 bg-[var(--custom-orange-100)] rounded-lg shadow-lg p-6">
-                <div className="space-y-4">
-                  <div className="text-center space-y-1">
-                    <h3 className="text-lg font-semibold text-[var(--custom-orange-900)]">
-                      {username}
-                    </h3>
-                    <p className="text-sm text-[var(--custom-orange-700)]">
-                      {email}
-                    </p>
-                  </div>
+            {userType ? (
+              <>
+                <button
+                  onClick={() => {
+                    setShowDetails(!showDetails);
+                  }}
+                  className="cursor-pointer relative"
+                >
+                  <User className="w-5 h-5" />
+                </button>
 
-                  <div className="space-y-2">
-                    <div className="text-sm text-[var(--custom-orange-800)]">
-                      <p>Phone Number</p>
-                      <p className="font-medium">{phoneNumber}</p>
+                <div
+                  className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-orange-700)] rounded-lg top-12 right-5 list-none z-1 ${
+                    showDetails ? "opacity-100 visible" : "opacity-0 invisible"
+                  }`}
+                >
+                  <div className="w-64 bg-[var(--custom-orange-100)] rounded-lg shadow-lg p-6">
+                    <div className="space-y-4">
+                      <div className="text-center space-y-1">
+                        <h3 className="text-lg font-semibold text-[var(--custom-orange-900)]">
+                          {username}
+                        </h3>
+                        <p className="text-sm text-[var(--custom-orange-700)]">
+                          {email}
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="text-sm text-[var(--custom-orange-800)]">
+                          <p>Phone Number</p>
+                          <p className="font-medium">{phoneNumber}</p>
+                        </div>
+
+                        <div className="text-sm text-[var(--custom-orange-800)]">
+                          <p>Alt Phone Number</p>
+                          <p className="font-medium">{altPhoneNumber}</p>
+                        </div>
+                      </div>
+
+                      <div className="pt-2">
+                        <a href="/appointments">
+                          <button className="text-sm px-4 py-2 rounded bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] w-full font-medium">
+                            Appointments
+                          </button>
+                        </a>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => navigate("/modify_profile")}
+                          className="flex-1 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
+                        >
+                          Modify
+                        </button>
+                        <button
+                          onClick={handleLogout}
+                          className="flex-1 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
+                        >
+                          Logout
+                        </button>
+                      </div>
                     </div>
-
-                    <div className="text-sm text-[var(--custom-orange-800)]">
-                      <p>Alt Phone Number</p>
-                      <p className="font-medium">{altPhoneNumber}</p>
-                    </div>
-                  </div>
-
-                  <div className="pt-2">
-                    <a href="/appointments">
-                      <button className="text-sm px-4 py-2 rounded bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] w-full font-medium">
-                        Appointments
-                      </button>
-                    </a>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => navigate("/modify_profile")}
-                      className="flex-1 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
-                    >
-                      Modify
-                    </button>
-                    <button
-                      // onClick={onLogout}
-                      className="flex-1 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
-                    >
-                      Logout
-                    </button>
                   </div>
                 </div>
-              </div>
-            </div>
+              </>
+            ) : (
+              <button
+                onClick={() => navigate("/login")}
+                className="px-4 py-2 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded font-medium"
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       </div>

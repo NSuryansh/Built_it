@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const ModifyProfile = ({
   username,
@@ -28,6 +29,8 @@ const ModifyProfile = ({
   };
 
   return (
+    <div>
+    <Navbar/>
     <div className="min-h-screen bg-gradient-to-b from-[var(--custom-orange-50)] to-[var(--custom-white)] py-12">
       <div className="max-w-md mx-auto bg-[var(--custom-white)] rounded-xl shadow-lg overflow-hidden">
         <div className="px-6 py-8">
@@ -137,6 +140,7 @@ const ModifyProfile = ({
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 };
