@@ -4,6 +4,7 @@ import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { DayPicker } from "react-day-picker";
+import Footer from '../../components/Footer';
 
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
@@ -259,10 +260,6 @@ const DoctorAppointment = () => {
                                 value={note}
                                 onChange={
                                   handleNoteChange
-                                  // handleNoteChange(
-                                  //   // appointment.id,
-                                  //   // e.target.value
-                                  // )
                                 }
                               />
                             </div>
@@ -338,9 +335,9 @@ const DoctorAppointment = () => {
                             >
                               Accept
                             </button>
-                            <button className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
+                            {/* <button className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
                               Reschedule
-                            </button>
+                            </button> */}
                             {/* <button className="px-4 py-2 bg-red-50 text-red-700 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
                               Decline
                             </button> */}
@@ -414,6 +411,7 @@ const DoctorAppointment = () => {
           </div> */}
         </div>
       </div>
+      <Footer color={'blue'}/>
     </div>
   );
 };

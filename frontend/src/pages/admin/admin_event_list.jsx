@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Calendar, Trash2 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import Footer from "../../components/Footer";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
@@ -40,7 +41,7 @@ const EventsList = () => {
   return (
     <div className="flex flex-col">
       <AdminNavbar />
-      <div className="space-y-6 md:min-w-5xl max-w-7xl mx-auto">
+      <div className="space-y-6 md:min-w-5xl max-w-7xl mx-auto mb-4">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">Events List</h1>
           <Link
@@ -90,6 +91,7 @@ const EventsList = () => {
           ))}
         </div>
       </div>
+      <Footer color={'green'} />
     </div>
   );
 };

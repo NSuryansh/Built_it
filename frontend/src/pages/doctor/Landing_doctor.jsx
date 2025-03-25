@@ -4,6 +4,7 @@ import { Calendar, MapPin, User, ChevronRight } from "lucide-react";
 import FadeLoader from "react-spinners/FadeLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
+import Footer from "../../components/Footer";
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
@@ -158,6 +159,7 @@ const DoctorLanding = () => {
           </div>
         </div>
       </div>
+      <Footer color={'blue'} />
     </div>
   );
 };
