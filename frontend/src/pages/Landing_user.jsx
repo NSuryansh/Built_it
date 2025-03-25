@@ -7,6 +7,7 @@ import { checkAuth } from "../utils/profile";
 import FadeLoader from 'react-spinners/FadeLoader'
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
+import Footer from "../components/Footer";
 
 const Landing_user = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -51,6 +52,8 @@ const Landing_user = () => {
           <EventsDisplay />
         </div>
       </div>
+      
+      <Footer color={'orange'} />
     </div>
   );
 };

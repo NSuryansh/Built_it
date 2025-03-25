@@ -40,7 +40,7 @@ export default function Mood() {
 
   useEffect(() => {
     const verifyAuth = async () => {
-      const authStatus = await checkAuth();
+      const authStatus = await checkAuth("user");
       setIsAuthenticated(authStatus);
     };
     verifyAuth();
