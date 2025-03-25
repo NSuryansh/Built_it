@@ -525,7 +525,7 @@ const ContactSelectionStep = ({
   };
 
   return (
-    <div className="bg-[var(--custom-orange-100)] w-full max-w-[1200px] p-[30px] rounded-[10px] border-[var(--custom-orange-200)] border-2">
+    <div className="bg-[var(--custom-orange-100)] w-full max-w-[1200px] p-[10px] sm:p-[30px] rounded-[10px] border-[var(--custom-orange-200)] border-2">
       <h2 className="text-center font-bold text-[40px] text-[var(--custom-orange-500)] uppercase mb-[30px]">
         Available Contacts on {selectedDate}
       </h2>
@@ -547,9 +547,9 @@ const ContactSelectionStep = ({
         contacts.map((contact, index) => (
           <div
             key={index}
-            className="bg-[var(--custom-white)] border-2 border-[var(--custom-orange-200)] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]"
+            className="bg-[var(--custom-white)] border-2 border-[var(--custom-orange-200)] flex flex-col sm:flex-row justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]"
           >
-            <div className="text-[var(--custom-orange-800)] font-bold  flex-1">
+            <div className="text-[var(--custom-orange-800)] font-bold flex-1">
               {contactType}
             </div>
             <div className="flex-[3] flex flex-col gap-2">
@@ -563,7 +563,7 @@ const ContactSelectionStep = ({
                 {contact.timing}
               </div>
             </div>
-            <div className="flex-1 flex flex-col gap-2.5 items-end">
+            <div className="flex-1 flex items-center sm:flex-col gap-2.5 sm:items-end">
               <select
                 className="time-slot"
                 value={selectedTimeSlots[contact.name] || ""}
@@ -609,7 +609,7 @@ const BookingFormStep = ({ formData, handleChange, onSubmit, onBack }) => {
       <h2 className="text-center text-[40px] font-bold text-[var(--custom-orange-500)] uppercase mb-[30px]">
         ENTER THE DETAILS
       </h2>
-      <div className="flex justify-between gap-[150px]">
+      <div className="flex justify-between flex-col sm:flex-row sm:gap-[150px]">
         <form onSubmit={onSubmit} className="contents">
           <div className="flex-1 flex flex-col gap-[13px]">
             <label className="font-bold text-xl text-[var(--custom-orange-800)]">
@@ -646,7 +646,7 @@ const BookingFormStep = ({ formData, handleChange, onSubmit, onBack }) => {
               required
             />
           </div>
-          <div className="flex-1 flex flex-col gap-[15px]">
+          <div className="flex-1 flex flex-col mt-[13px] sm:mt-0 gap-[15px]">
             <label className="font-bold text-xl text-[var(--custom-orange-800)]">
               In a brief note about your problem here
             </label>
