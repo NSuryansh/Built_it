@@ -1,14 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AddEvent = () => {
   const navigate = useNavigate();
+  
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted');
-    navigate('/admin/event_list');
+
+    // Combine date and time to form a valid ISO date-time string
+    const dateTime = new Date(`${date}T${time}`);
+    
+    try {
+      const response = await fetch("http://localhost:3000/addEvent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title,
+          description: description,
+          dateTime: dateTime,
+          venue: location,
+        }),
+      });
+      
+      const data = await response.json();
+
+      if (data.error) {
+        setError(data.error);
+      } else {
+        // Form submitted successfully, navigate to event list
+        navigate('/admin/event_list');
+      }
+    } catch (err) {
+      console.error('Error adding event:', err);
+      setError("Internal error while adding event");
+    }
   };
 
   return (
@@ -16,6 +48,7 @@ const AddEvent = () => {
       <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">Add New Event</h1>
 
       <div className="bg-white p-6 min-w-2xl rounded-xl shadow-lg max-w-2xl">
+        {error && <p className="text-red-600 mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <label htmlFor="title" className="block text-sm font-medium text-[var(--custom-primary-green-900)]">
@@ -24,6 +57,8 @@ const AddEvent = () => {
             <input
               type="text"
               id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
               required
             />
@@ -36,6 +71,23 @@ const AddEvent = () => {
             <input
               type="date"
               id="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
+              required
+            />
+          </div>
+          
+          {/* Added Time Field */}
+          <div className="space-y-2">
+            <label htmlFor="time" className="block text-sm font-medium text-[var(--custom-primary-green-900)]">
+              Time
+            </label>
+            <input
+              type="time"
+              id="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
               className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
               required
             />
@@ -48,18 +100,8 @@ const AddEvent = () => {
             <input
               type="text"
               id="location"
-              className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="attendees" className="block text-sm font-medium text-[var(--custom-primary-green-900)]">
-              Expected Attendees
-            </label>
-            <input
-              type="number"
-              id="attendees"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
               required
             />
@@ -72,6 +114,8 @@ const AddEvent = () => {
             <textarea
               id="description"
               rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
               required
             ></textarea>

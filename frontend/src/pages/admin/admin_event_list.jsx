@@ -1,51 +1,41 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Calendar, Trash2 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 
 const EventsList = () => {
-  const events = [
-    {
-      id: 1,
-      title: "Medical Conference",
-      date: "2024-03-25",
-      location: "Main Auditorium",
-      attendees: 50,
-    },
-    {
-      id: 2,
-      title: "Staff Training",
-      date: "2024-03-28",
-      location: "Training Room B",
-      attendees: 25,
-    },
-    {
-      id: 3,
-      title: "Vaccination Drive",
-      date: "2024-04-01",
-      location: "Community Center",
-      attendees: 100,
-    },
-    {
-      id: 4,
-      title: "Board Meeting",
-      date: "2024-04-05",
-      location: "Conference Room A",
-      attendees: 15,
-    },
-    {
-      id: 5,
-      title: "Health Workshop",
-      date: "2024-04-10",
-      location: "Seminar Hall",
-      attendees: 75,
-    },
-  ];
-
+  const [events, setEvents] = useState([]);
   const handleDelete = (id) => {
-    // Handle event deletion
+    
     console.log("Delete event with id:", id);
   };
+
+  useEffect(() => {
+      const fetchEvents = async () => {
+        try {
+          const response = await fetch("http://localhost:3000/events");
+          const data = await response.json();
+  
+          const formattedEvents = data.map((event) => {
+            const date = new Date(event.dateTime);
+            return {
+              id: event.id,
+              title: event.title,
+              date: date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+              location: event.venue,
+              type: event.description ? "Session/Conference" : "Meeting",
+            };
+          });
+          
+          setEvents(formattedEvents);
+        } catch (error) {
+          console.error("Error fetching events", error);
+        }
+      };
+  
+      fetchEvents();
+    }, []);
 
   return (
     <div className="flex flex-col">
