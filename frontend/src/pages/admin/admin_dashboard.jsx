@@ -1,18 +1,12 @@
 import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { useState, useEffect } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 
 const AdminDashboard = () => {
-  // Sample data for the chart
-  const data = [
+  const [events, setEvents] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  ; const data = [
     { name: "Jan", appointments: 65 },
     { name: "Feb", appointments: 59 },
     { name: "Mar", appointments: 80 },
@@ -21,19 +15,48 @@ const AdminDashboard = () => {
     { name: "Jun", appointments: 55 },
   ];
 
-  // Sample doctors data
-  const doctors = [
-    { id: 1, name: "Dr. Sarah Wilson", specialty: "Cardiologist" },
-    { id: 2, name: "Dr. Michael Chen", specialty: "Neurologist" },
-    { id: 3, name: "Dr. Emily Brown", specialty: "Pediatrician" },
-  ];
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/getdoctors");
+        const data = await response.json();
+        console.log(data);
+        setDoctors(data); // Set the state with the fetched data
+      } catch (error) {
+        console.log("Error fetching doctors: ", error);
+      }
+    };
+    fetchDoctors();
+  }, []);
 
-  // Sample upcoming events
-  const events = [
-    { id: 1, title: "Medical Conference", date: "2024-03-25" },
-    { id: 2, title: "Staff Training", date: "2024-03-28" },
-    { id: 3, title: "Vaccination Drive", date: "2024-04-01" },
-  ];
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/events");
+        const data = await response.json();
+
+        const upcomingEvents = data.filter((event) => new Date(event.dateTime) > new Date());
+
+        const formattedEvents = upcomingEvents.map((event) => {
+          const date = new Date(event.dateTime);
+          return {
+            id: event.id,
+            title: event.title,
+            date: date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+            location: event.venue,
+            type: event.description ? "Session/Conference" : "Meeting",
+          };
+        });
+
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error("Error fetching events", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -59,9 +82,8 @@ const AdminDashboard = () => {
             </ResponsiveContainer>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
+        <div className="flex flex-row space-x-8">
+          <div className="w-1/2 bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
             <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
               Available Doctors
             </h2>
@@ -71,13 +93,18 @@ const AdminDashboard = () => {
                   <h3 className="font-semibold text-[var(--custom-primary-green-900)]">
                     {doctor.name}
                   </h3>
-                  <p className="text-[var(--custom-primary-green-600)]">{doctor.specialty}</p>
+                  <p className="text-[var(--custom-primary-green-600)]">
+                    Email: {doctor.email}
+                  </p>
+                  <p className="text-[var(--custom-primary-green-600)]">
+                    Mobile: {doctor.mobile}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
+          <div className="w-1/2 bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
             <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
               Upcoming Events
             </h2>
@@ -95,6 +122,7 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
