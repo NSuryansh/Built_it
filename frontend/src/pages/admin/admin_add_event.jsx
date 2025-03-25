@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FadeLoader from "react-spinners/FadeLoader";
 import { checkAuth } from "../../utils/profile";
+import AdminNavbar from '../../components/admin/admin_navbar';
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -67,8 +68,10 @@ const AddEvent = () => {
   }
 
   return (
+    <>
+    <AdminNavbar/>
     <div className="space-y-6 py-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center">
-      <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">Add New Event</h1>
+      <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-[-20px]">Add New Event</h1>
 
       <div className="bg-white p-6 min-w-2xl rounded-xl shadow-lg max-w-2xl">
         {error && <p className="text-red-600 mb-4">{error}</p>}
@@ -162,6 +165,7 @@ const AddEvent = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

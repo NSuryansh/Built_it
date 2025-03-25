@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FadeLoader from "react-spinners/FadeLoader";
 import { checkAuth } from "../../utils/profile";
+import AdminNavbar from '../../components/admin/admin_navbar';
 
 const AddDoctor = () => {
   const navigate = useNavigate();
@@ -63,8 +64,10 @@ const AddDoctor = () => {
   }
 
   return (
-    <div className="space-y-6 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center h-screen">
-      <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">Add New Doctor</h1>
+    <>
+    <AdminNavbar/>
+    <div className="space-y-6 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center h-screen ">
+      <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-6">Add New Doctor</h1>
 
       <div className="bg-white p-6 min-w-2xl rounded-xl shadow-lg max-w-2xl">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -173,6 +176,7 @@ const AddDoctor = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 
