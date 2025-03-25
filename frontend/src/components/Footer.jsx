@@ -15,7 +15,7 @@ const Footer = ({ color }) => {
                   : "text-[var(--custom-primary-blue)]"
               }`}
             >
-              CalmNest
+              Vitality
             </h2>
             <p className="mt-2 text-sm text-gray-500">
               Your safe space at IIT Indore, where mental wellness comes first.

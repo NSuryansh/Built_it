@@ -6,14 +6,14 @@ const Landing = () => {
     <div className="px-2 sm:px-4 min-h-screen flex justify-center items-center overflow-y-hidden">
       <div className="flex flex-col h-full items-center justify-center">
         <div className="text-[45px] sm:text-[55px] font-extrabold text-[var(--landing-bg-orange)]">
-          CalmNest
+          Vitality
         </div>
         <div className="text-[30px] sm:text-[35px] text-center font-bold mt-2 text-[var(--landing-text-black)]">
           Find Peace - Get Support - Thrive
         </div>
         <div className="text-[15px] sm:text-[20px] text-center mt-2 flex flex-col items-center text-[var(--landing-text-black)]">
           <p>
-            At CalmNest we provide a safe space for your mental wellness
+            At Vitality we provide a safe space for your mental wellness
             journey.
           </p>
           <br />
