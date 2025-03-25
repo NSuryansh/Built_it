@@ -18,6 +18,7 @@ import AddEvent from "./pages/admin/admin_add_event";
 import AddDoctor from "./pages/admin/admin_add_doctor";
 import Appointments from "./pages/Appointments";
 import Stress from "./pages/stress";
+import ModifyProfile from "./pages/Modify_profile";
 
 export default function App() {
   const location = useLocation();
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/stress" element={<Stress />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/modify_profile" element={<ModifyProfile />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/dashboard" element={<Landing_user />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />

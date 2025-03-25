@@ -2,9 +2,6 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Landing = () => {
-  const location = useLocation();
-  const width = window.screen.width;
-  
   return (
     <div className="px-2 sm:px-4 min-h-screen overflow-y-hidden">
       <div className="flex flex-col h-full items-center justify-center">
