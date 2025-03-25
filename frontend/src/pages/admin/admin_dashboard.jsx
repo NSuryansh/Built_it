@@ -5,6 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { checkAuth } from "../../utils/profile";
+import FadeLoader from "react-spinners/FadeLoader";
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
@@ -14,7 +15,7 @@ const AdminDashboard = () => {
   
     useEffect(() => {
       const verifyAuth = async () => {
-        const authStatus = await checkAuth("user");
+        const authStatus = await checkAuth("admin");
         setIsAuthenticated(authStatus);
       };
       verifyAuth();
@@ -72,8 +73,17 @@ const AdminDashboard = () => {
     fetchEvents();
   }, []);
 
-  if(!isAuthenticated){
-    navigate("/admin/login")
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (

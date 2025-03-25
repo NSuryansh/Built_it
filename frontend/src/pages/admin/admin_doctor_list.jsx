@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Trash2, UserPlus } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
+import FadeLoader from "react-spinners/FadeLoader";
+import { checkAuth } from "../../utils/profile";
 
 const DoctorsList = () => {
   // const doctors = [
@@ -39,26 +41,47 @@ const DoctorsList = () => {
   // ];
 
   const [doctors, setDoc] = useState([])
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
   useEffect(() => {
     const fetchDoctors = async () => {
       const res = await fetch("http://localhost:3000/getdoctors");
       const resp = await res.json();
       setDoc(resp);
     };
-  
+
     fetchDoctors();
   }, []);
-  
-  
+
+
   useEffect(() => {
     console.log(doctors)
   }, [doctors])
-  
+
 
   const handleDelete = (id) => {
     // Handle doctor deletion
     console.log("Delete doctor with id:", id);
   };
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen ">

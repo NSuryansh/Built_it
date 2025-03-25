@@ -5,7 +5,15 @@ export const checkAuth = async (userType) => {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/${userType === "user" ? "profile" : "docprofile"}`, {
+        let user = "";
+        if(userType === "user"){
+            user = "profile";
+        }else if(userType === "doc"){
+            user = "docprofile";
+        }else{
+            user = "adminprofile";
+        }
+        const response = await fetch(`http://localhost:3000/${user}`, {
             method: "GET",
             headers: { Authorization: "Bearer " + token },
         });
@@ -23,13 +31,17 @@ export const checkAuth = async (userType) => {
             localStorage.setItem("user_mobile", res2["user"]["mobile"]);
             localStorage.setItem("user_email", res2["user"]["email"]);
             localStorage.setItem("user_alt_mobile", res2["user"]["alt_mobile"]);
-        } else {
+        } else if(userType === "doc") {
             localStorage.setItem("userid", res2['doctor']["id"]);
             localStorage.setItem("username", res2['doctor']["name"]);
             localStorage.setItem("user_mobile", res2['doctor']["mobile"]);
             localStorage.setItem("user_email", res2['doctor']["email"]);
             localStorage.setItem("reg_id", res2['doctor']["reg_id"]);
             localStorage.setItem("desc", res2['doctor']["desc"] || "");
+        } else {
+            localStorage.setItem("userid", res2["admin"]["id"]);
+            localStorage.setItem("user_email", res2["admin"]["email"]);
+            localStorage.setItem("user_mobile", res2["admin"]["mobile"]);
         }
     } catch (error) {
         console.log(error);

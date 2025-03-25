@@ -1,10 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import FadeLoader from "react-spinners/FadeLoader";
+import { checkAuth } from "../../utils/profile";
 
 const AddDoctor = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: "", email: "", mobile: "", password: "", regId: "", desc: "" });
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+    
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+        setIsAuthenticated(authStatus);
+      };
+      verifyAuth();
+  }, []);
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,6 +48,19 @@ const AddDoctor = () => {
     // Handle form submission
 
   };
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   return (
     <div className="space-y-6 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center h-screen">

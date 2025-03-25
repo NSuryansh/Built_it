@@ -1,22 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import FadeLoader from "react-spinners/FadeLoader";
+import { checkAuth } from "../../utils/profile";
 
 const AddEvent = () => {
   const navigate = useNavigate();
-  
+
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Combine date and time to form a valid ISO date-time string
     const dateTime = new Date(`${date}T${time}`);
-    
+
     try {
       const response = await fetch("http://localhost:3000/addEvent", {
         method: "POST",
@@ -28,7 +39,7 @@ const AddEvent = () => {
           venue: location,
         }),
       });
-      
+
       const data = await response.json();
 
       if (data.error) {
@@ -42,6 +53,18 @@ const AddEvent = () => {
       setError("Internal error while adding event");
     }
   };
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   return (
     <div className="space-y-6 py-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center">
@@ -77,7 +100,7 @@ const AddEvent = () => {
               required
             />
           </div>
-          
+
           {/* Added Time Field */}
           <div className="space-y-2">
             <label htmlFor="time" className="block text-sm font-medium text-[var(--custom-primary-green-900)]">

@@ -4,39 +4,63 @@ import { useState, useEffect } from "react";
 import { Calendar, Trash2 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
+import FadeLoader from "react-spinners/FadeLoader";
+import { checkAuth } from "../../utils/profile";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
   const handleDelete = (id) => {
-    
+
     console.log("Delete event with id:", id);
   };
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
-      const fetchEvents = async () => {
-        try {
-          const response = await fetch("http://localhost:3000/events");
-          const data = await response.json();
-  
-          const formattedEvents = data.map((event) => {
-            const date = new Date(event.dateTime);
-            return {
-              id: event.id,
-              title: event.title,
-              date: date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
-              location: event.venue,
-              type: event.description ? "Session/Conference" : "Meeting",
-            };
-          });
-          
-          setEvents(formattedEvents);
-        } catch (error) {
-          console.error("Error fetching events", error);
-        }
-      };
-  
-      fetchEvents();
-    }, []);
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/events");
+        const data = await response.json();
+
+        const formattedEvents = data.map((event) => {
+          const date = new Date(event.dateTime);
+          return {
+            id: event.id,
+            title: event.title,
+            date: date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+            location: event.venue,
+            type: event.description ? "Session/Conference" : "Meeting",
+          };
+        });
+
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error("Error fetching events", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   return (
     <div className="flex flex-col">
