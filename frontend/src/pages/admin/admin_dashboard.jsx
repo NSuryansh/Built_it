@@ -1,12 +1,25 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
+import { checkAuth } from "../../utils/profile";
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
   const [doctors, setDoctors] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      const verifyAuth = async () => {
+        const authStatus = await checkAuth("user");
+        setIsAuthenticated(authStatus);
+      };
+      verifyAuth();
+    }, []);
+
   ; const data = [
     { name: "Jan", appointments: 65 },
     { name: "Feb", appointments: 59 },
@@ -58,6 +71,10 @@ const AdminDashboard = () => {
 
     fetchEvents();
   }, []);
+
+  if(!isAuthenticated){
+    navigate("/admin/login")
+  }
 
   return (
     <div className="flex flex-col">
