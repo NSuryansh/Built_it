@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Landing = () => {
   return (
-    <div className="px-2 sm:px-4 min-h-screen overflow-y-hidden">
+    <div className="px-2 sm:px-4 min-h-screen flex justify-center items-center overflow-y-hidden">
       <div className="flex flex-col h-full items-center justify-center">
         <div className="text-[45px] sm:text-[55px] font-extrabold text-[var(--landing-bg-orange)]">
           CalmNest

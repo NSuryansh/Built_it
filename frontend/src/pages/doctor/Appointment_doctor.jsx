@@ -1,34 +1,48 @@
 import React, { useEffect } from "react";
-import {
-  User,
-  CircleUser,
-  Calendar,
-  Clock,
-  Phone,
-  FileText,
-  AlertCircle,
-} from "lucide-react";
+import { User, CircleUser, Clock, Phone, FileText } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { useState } from "react";
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
-
+  const [completedNotes, setCompletedNotes] = useState({});
   const [appointments, setapp] = useState([]);
-  const [curr, setcurr] = useState([])
+  const [curr, setcurr] = useState([]);
+  const [comp, setcomp] = useState([])
+
+  const handleMarkAsDone = (id) => {
+    setCompletedNotes((prev) => ({
+      ...prev,
+      [id]: prev[id] ? "" : "",
+    }));
+  };
+
+  const handleDone = (e) => {
+    e.preventDefault();
+  };
+
+  const handleNoteChange = (id, value) => {
+    setCompletedNotes((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
       const res = await fetch(`http://localhost:3000/reqApp?docId=${docId}`);
-      const res2 = await fetch(`http://localhost:3000/currentdocappt?doctorId=${docId}`)
+      const res2 = await fetch(
+        `http://localhost:3000/currentdocappt?doctorId=${docId}`
+      );
       const resp2 = await res.json();
-      const resp = await res2.json()
-      console.log(resp)
+      const resp = await res2.json();
+      console.log(resp);
       setapp(resp2);
-      setcurr(resp)
+      setcurr(resp);
     };
 
     fetchData();
-  }, [fixed])
+  }, [fixed]);
 
   useEffect(() => {
     console.log(appointments);
@@ -87,7 +101,7 @@ const DoctorAppointment = () => {
                             <h3 className="text-lg font-medium text-gray-900">
                               {appointment.patientName}
                             </h3>
-                            <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                               {appointment.status}
                             </span>
                           </div>
@@ -113,13 +127,41 @@ const DoctorAppointment = () => {
                             </div>
                           </div>
 
-                          <div className="mt-4 flex space-x-3">
+                          <div className="mt-4 flex items-center space-x-3">
                             <button className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
                               Reschedule
                             </button>
-                            <button className="px-4 py-2 bg-red-50 text-green-700 text-sm font-medium rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
-                              Mark as Done
-                            </button>
+                            {completedNotes[appointment.id] !== undefined ? (
+                              <button
+                                onClick={() => handleDone}
+                                className="px-4 py-2 bg-red-50 text-blue-700 text-sm font-medium rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
+                              >
+                                Done
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleMarkAsDone(appointment.id)}
+                                className="px-4 py-2 bg-red-50 text-blue-700 text-sm font-medium rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
+                              >
+                                Mark as Done
+                              </button>
+                            )}
+                            {completedNotes[appointment.id] !== undefined && (
+                              <div className="mt-4">
+                                <input
+                                  type="text"
+                                  placeholder="Enter completion notes..."
+                                  className="w-full p-2 border border-gray-300 rounded-lg"
+                                  value={completedNotes[appointment.id]}
+                                  onChange={(e) =>
+                                    handleNoteChange(
+                                      appointment.id,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -184,7 +226,12 @@ const DoctorAppointment = () => {
                           </div>
 
                           <div className="mt-4 flex space-x-3">
-                            <button onClick={() => { acceptApp(appointment) }} className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                            <button
+                              onClick={() => {
+                                acceptApp(appointment);
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                            >
                               Accept
                             </button>
                             <button className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
@@ -199,6 +246,65 @@ const DoctorAppointment = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="mb-6 mt-10">
+              <h1 className="text-2xl font-bold text-gray-900">
+                Completed Appointments
+              </h1>
+              <p className="mt-1 text-sm text-gray-500">
+                See your completed appointments
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <div className="grid grid-cols-1 divide-y divide-gray-200">
+                {comp.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="p-6 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-start space-x-6">
+                      <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                        <User className="h-6 w-6 text-blue-600" />
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-medium text-gray-900">
+                            {appointment.patientName}
+                          </h3>
+                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                            {appointment.status}
+                          </span>
+                        </div>
+
+                        <div className="mt-2 grid grid-cols-1 gap-4">
+                          <div className="space-y-3">
+                            <div className="flex items-center text-sm text-gray-500">
+                              <CircleUser className="h-4 w-4 mr-2" />
+                              {appointment.user.username}
+                            </div>
+                            <div className="flex items-center text-sm text-gray-500">
+                              <Clock className="h-4 w-4 mr-2" />
+                              {appointment.dateTime}
+                            </div>
+                            <div className="flex items-center text-sm text-gray-500">
+                              <Phone className="h-4 w-4 mr-2" />
+                              {appointment.user.mobile}
+                            </div>
+                            <div className="flex items-start text-sm text-gray-500">
+                              <FileText className="h-4 w-4 mr-2 mt-1" />
+                              <span>{appointment.reason}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
