@@ -5,6 +5,18 @@ import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const DoctorNavbar = () => {
   const location = useLocation().pathname;
+  const [isOpen, setIsOpen] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+  const links = [
+    { name: "Home", link: "/doctor/landing" },
+    { name: "Appointments", link: "/doctor/appointments" },
+    { name: "Profile", link: "/doctor/profile" },
+  ];
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <nav className="bg-transperent">
       <div className="px-8 py-3">
@@ -18,38 +30,56 @@ const DoctorNavbar = () => {
             />
             <div className="text-xl font-bold">Vitality</div>
           </div>
-          <div className="flex space-x-8 items-center">
-            <a
-              href="/doctor/landing"
-              className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                location === "/doctor/landing"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
-                  : ""
-              }`}
-            >
-              Home
-            </a>
-            <a
-              href="/doctor/appointments"
-              className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                location === "/doctor/appointments"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
-                  : ""
-              }`}
-            >
-              Appointments
-            </a>
-            <a
-              href="/doctor/profile"
-              className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                location === "/doctor/profile"
-                  ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
-                  : ""
-              }`}
-            >
-              Profile
-            </a>
-          </div>
+          <div className="hidden md:flex space-x-8 items-center">
+                      {links.map((item, i) => (
+                        <a
+                          key={i}
+                          href={item.link}
+                          className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                            location == item.link
+                              ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
+                              : ""
+                          }`}
+                        >
+                          {item.name}
+                        </a>
+                      ))}
+                    </div>
+                    <div className="md:hidden transition-all flex items-center z-2">
+                      <button
+                        onClick={toggleMenu}
+                        className="p-2 rounded-full hover:bg-gray-100"
+                      >
+                        {isOpen ? (
+                          <AiOutlineClose size={24} />
+                        ) : (
+                          <AiOutlineMenu size={24} />
+                        )}
+                      </button>
+                      {isOpen && (
+                        <div className="absolute top-16 left-[12%] w-[80%] bg-white rounded-2xl shadow-md p-4">
+                          <ul>
+                            {links.map((item, i) => (
+                              <li
+                                className="py-2 border-b text-center border-gray-200"
+                                key={i}
+                              >
+                                <a
+                                  href={item.link}
+                                  className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                                    location == item.link
+                                      ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
+                                      : ""
+                                  }`}
+                                >
+                                  {item.name}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
           <div className="flex items-center space-x-4">
             <button className="cursor-pointer">
               <Bell className="w-5 h-5" />
