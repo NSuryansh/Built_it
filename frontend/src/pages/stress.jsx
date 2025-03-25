@@ -2,8 +2,17 @@ import React from 'react';
 import { Bell, User } from 'lucide-react';
 import VideoSection from '../components/videosection';
 import Navbar from '../components/Navbar';
+import { useState, useEffect } from 'react';
 
 function Stress() {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  useEffect(() => {
+      const verifyAuth = async () => {
+        const authStatus = await checkAuth("user");
+        setIsAuthenticated(authStatus);
+      };
+      verifyAuth();
+    }, []);
   return (
     <div 
       className="min-h-screen bg-cover bg-center bg-fixed"
