@@ -21,12 +21,18 @@ const DoctorAppointment = () => {
     e.preventDefault();
   };
 
-  const handleNoteChange = (id, value) => {
-    setCompletedNotes((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+  const [note, setNote] = useState("");
+
+  const handleNoteChange = (e) => {
+    setNote(e.target.value);
   };
+
+  // const handleNoteChange = (id, value) => {
+  //   setCompletedNotes((prev) => ({
+  //     ...prev,
+  //     [id]: value,
+  //   }));
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,9 +74,11 @@ const DoctorAppointment = () => {
     setFixed(!fixed);
   };
 
-  const deleteApp = async (appointment, note) => {
+  const deleteApp = async (appointment) => {
+    console.log(note)
     const res = await fetch("http://localhost:3000/deleteApp", {
-      method: "DELETE",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         appId: appointment["id"],
         doctorId: appointment["doctor_id"],
@@ -79,7 +87,8 @@ const DoctorAppointment = () => {
       })
     })
     const resp = await res.json()
-
+    setFixed(!fixed)
+    console.log(resp)
   }
 
   const emailParams = async(appointment, time)=>{
@@ -168,7 +177,7 @@ const DoctorAppointment = () => {
                             </button>
                             {completedNotes[appointment.id] !== undefined ? (
                               <button
-                                onClick={() => handleDone}
+                                onClick={() => {deleteApp(appointment)}}
                                 className="px-4 py-2 bg-red-50 text-blue-700 text-sm font-medium rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
                               >
                                 Done
@@ -187,12 +196,12 @@ const DoctorAppointment = () => {
                                   type="text"
                                   placeholder="Enter completion notes..."
                                   className="w-full p-2 border border-gray-300 rounded-lg"
-                                  value={completedNotes[appointment.id]}
-                                  onChange={(e) =>
-                                    handleNoteChange(
-                                      appointment.id,
-                                      e.target.value
-                                    )
+                                  value={note}
+                                  onChange={handleNoteChange
+                                    // handleNoteChange(
+                                    //   // appointment.id,
+                                    //   // e.target.value
+                                    // )
                                   }
                                 />
                               </div>
@@ -284,7 +293,7 @@ const DoctorAppointment = () => {
               </div>
             </div>
           </div>
-          <div>
+          {/* <div>
             <div className="mb-6 mt-10">
               <h1 className="text-2xl font-bold text-gray-900">
                 Completed Appointments
@@ -342,7 +351,7 @@ const DoctorAppointment = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
