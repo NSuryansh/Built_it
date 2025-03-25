@@ -7,6 +7,7 @@ import { checkAuth } from "../utils/profile";
 import FadeLoader from 'react-spinners/FadeLoader'
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
+import Footer from "../components/Footer";
 
 const Landing_user = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -38,19 +39,21 @@ const Landing_user = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex h-full flex-col md:flex-row gap-4 p-6 bg-gradient-to-br from-[var(--mp-custom-peach)] to-[var(--mp-custom-white)] min-h-screen">
-        <div className="h-[85vh] w-full md:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4">
+      <div className="flex h-full flex-col lg:flex-row gap-4 p-6 bg-gradient-to-br from-[var(--mp-custom-peach)] to-[var(--mp-custom-white)] min-h-screen">
+        <div className="w-full lg:h-[85vh] lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4">
           <Calendar />
         </div>
 
-        <div className="h-[85vh] w-full md:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4">
+        <div className="lg:h-[85vh] w-full lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
           <ProgressPage isLandingPage={true} />
         </div>
 
-        <div className="h-[85vh] w-full md:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
+        <div className="lg:h-[85vh] w-full lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
           <EventsDisplay />
         </div>
       </div>
+      
+      <Footer color={'orange'} />
     </div>
   );
 };

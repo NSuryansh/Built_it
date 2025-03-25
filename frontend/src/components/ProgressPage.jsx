@@ -35,19 +35,19 @@ const ProgressPage = ({ isLandingPage }) => {
     <div className="bg-[var(--mp-custom-white)] h-full rounded-2xl shadow-lg">  
       <div className={isLandingPage ? "p-4 bg-[var(--custom-white)]" : "p-4 bg-[var(--mp-custom-peach)]"}>
         <h2 className={isLandingPage ? "text-2xl font-bold text-[var(--custom-black)]" : "text-2xl font-bold text-[var(--mp-heading-text)]"}>
-          {isLandingPage ? "Landing Page Heading" : "Your Feelings"}
+          {isLandingPage ? "Your Happiness Score" : "Your Feelings"}
         </h2>
       </div>
 
-      <div className="p-8">
-        <div className="max-w-2xl">
+      <div className="p-8 flex justify-center items-center w-full">
+        <div className="max-w-2xl w-full">
           <ProgressBar label="Mental Peace" value={scores.mentalPeace} />
           <ProgressBar label="Sleep Quality" value={scores.sleepQuality} />
           <ProgressBar label="Social Life" value={scores.socialLife} />
           <ProgressBar label="Passion" value={scores.passion} />
           <ProgressBar label="Less Stress" value={scores.lessStress} />
 
-          <div className="mt-12 text-center">
+          <div className="mt-8 text-center">
             <div className="text-6xl font-bold text-[--mp-custom-gray-800] mb-2">
               {calculateHappinessScore()}
             </div>
