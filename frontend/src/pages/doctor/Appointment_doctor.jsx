@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { useState } from "react";
+import emailjs from "@emailjs/browser"
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
 
@@ -52,6 +53,40 @@ const DoctorAppointment = () => {
     console.log(resp);
     setFixed(!fixed);
   };
+
+  const deleteApp = async (appointment, note) => {
+    const res = await fetch("http://localhost:3000/deleteApp", {
+      method: "DELETE",
+      body: JSON.stringify({
+        appId: appointment["id"],
+        doctorId: appointment["doctor_id"],
+        userId: appointment["user_id"],
+        note: note
+      })
+    })
+    const resp = await res.json()
+
+  }
+
+  const emailParams = async(appointment, time)=>{
+    docName = localStorage.getItem("username")
+    var params = {
+      id: appointment["id"],
+      username: appointment["user"]["username"],
+      doctor: appointment["user"]["docName"],
+      origTime: appointment["dateTime"],
+      newTime: time,
+      email: appointment["user"]["email"]
+    }
+
+    emailjs.send('service_coucldi','template_b96adyb', params).then(
+      (repsonse)=>{
+        console.log("success", repsonse.status)
+      },(error)=>{
+        console.log(error)
+      }
+    )
+  }
 
   return (
     <div>
