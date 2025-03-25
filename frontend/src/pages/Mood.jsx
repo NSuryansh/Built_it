@@ -92,10 +92,10 @@ export default function Mood() {
     <div className="h-screen flex flex-col">
       <Navbar />
       <div className="flex-1 h-full flex overflow-hidden">
-        <div className="flex-1 overflow-y-auto border-r border-[var(--mp-custom-gray-200)]">
+        <div className="flex-1 hidden sm:block overflow-y-auto border-r border-[var(--mp-custom-gray-200)]">
           <ProgressPage />
         </div>
-        <div className="w-3/5 flex flex-col">
+        <div className="sm:w-3/5 w-full flex flex-col">
           <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
             <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
               Calm Bot

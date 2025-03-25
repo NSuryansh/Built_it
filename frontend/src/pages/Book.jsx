@@ -186,74 +186,7 @@ const Book = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      {/*<div className="container mx-auto px-4 py-8">
-        <div className="flex justify-evenly">
-          <div className="bg-[var(--custom-white)]/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
-            <Calendar
-              onChange={setDate}
-              value={date}
-              className="w-full max-w-[60vw] !border-none !rounded-lg !bg-transparent"
-              tileClassName="!rounded-lg transition-colors"
-              navigationLabel={({ date }) =>
-                `${date.toLocaleString("default", {
-                  month: "long",
-                })} ${date.getFullYear()}`
-              }
-            />
-            <div className="flex justify-end mt-6">
-              <button className="cursor-pointer bg-[var(--calendar-custom-primary-orange)] text-[var(--custom-white)] px-6 py-2 rounded-full hover:bg-[var(--calendar-custom-button-bg-orange)] transition-colors">
-                Next
-              </button>
-            </div>
-          </div>
-
-          <div className="w-80">
-            <div className="bg-[var(--custom-white)]/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl">
-              <h3 className="text-lg font-semibold mb-4 text-[var(--calendar-custom-gray-800)]">
-                List of Contacts
-              </h3>
-
-              <div className="space-y-3">
-                {contactCategories.map((category) => (
-                  <div key={category.title} className="space-y-2">
-                    <button
-                      onClick={() => toggleCategory(category.title)}
-                      className="w-full transition-all bg-[var(--calendar-custom-orange-50)] text-[var(--calendar-custom-primary-orange)] p-3 rounded-xl flex items-center justify-between hover:bg-[var(--calendar-custom-orange-100)] "
-                    >
-                      <span>{category.title}</span>
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform ${
-                          openCategory === category.title ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-
-                    {openCategory === category.title && (
-                      <div className="bg-[var(--custom-white)]/90 rounded-xl p-4 space-y-3 ml-2">
-                        {category.contacts.map((contact, index) => (
-                          <div key={index} className="space-y-1">
-                            <h4 className="font-medium text-[var(--calendar-custom-gray-800)]">
-                              {contact.name}
-                            </h4>
-                            <p className="text-sm text-[var(--calendar-custom-gray-600)]">
-                              {contact.role}
-                            </p>
-                            <p className="text-sm text-[var(--calendar-custom-gray-600)]">
-                              {contact.phone}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>*/}
-      <div className="h-full flex justify-center items-center">
-        <main className="main">
+      <div className="h-full my-auto mx-2 md:mx-10 flex justify-center items-center">
           {step === 1 && (
             <CalendarStep
               onNext={handleDateSelect}
@@ -280,9 +213,7 @@ const Book = () => {
               onBack={handleBack}
             />
           )}
-        </main>
       </div>
-      );
     </div>
   );
 };
@@ -408,8 +339,8 @@ const CalendarStep = ({ onNext, availabilityData }) => {
   };
 
   return (
-    <div className="bg-[var(--custom-orange-100)] w-full max-w-[1200px] p-[30px] rounded-[10px] border-[var(--custom-orange-200)] border-2">
-      <div className="flex justify-between gap-[50px] mb-5">
+    <div className="bg-[var(--custom-orange-100)] w-full max-w-[1200px] p-[10px] sm:p-[30px] rounded-[10px] border-[var(--custom-orange-200)] border-2">
+      <div className="flex flex-col lg:flex-row justify-between gap-[50px] mb-5">
         {/* Calendar Container */}
         <div className="flex-[4] bg-[var(--custom-white)] border-2 border-[var(--custom-orange-200)] p-5 rounded-[5px]">
           <div className="">
@@ -493,7 +424,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
         {/* Contact List Container with Dropdowns */}
         <div className="flex-1 bg-[var(--custom-white)] border-2 border-[var(--custom-orange-200)] p-5 rounded-[5px]">
           <div className="">
-            <div className="bg-[var(--custom-orange-100)] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+            <div className="bg-[var(--custom-orange-100)] flex flex-col sm:flex-row justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
               <div className="text-[var(--custom-orange-800)] font-bold  flex-1">
                 Doctors
               </div>
@@ -509,7 +440,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
             </div>
-            <div className="bg-[var(--custom-orange-100)] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+            <div className="bg-[var(--custom-orange-100)] flex flex-col sm:flex-row justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
               <div className="text-[var(--custom-orange-800)] font-bold flex-1">
                 Counselor
               </div>
@@ -527,7 +458,7 @@ const CalendarStep = ({ onNext, availabilityData }) => {
                 ))}
               </select>
             </div>
-            <div className="bg-[var(--custom-orange-100)] flex justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
+            <div className="bg-[var(--custom-orange-100)] flex flex-col sm:flex-row justify-between items-center gap-5 mb-2.5 p-[15px] rounded-[5px]">
               <div className="text-[var(--custom-orange-800)] font-bold flex-1">
                 Faculty advisor
               </div>
