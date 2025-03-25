@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bell, User } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import FadeLoader from 'react-spinners/FadeLoader';
 
 // Sample data for appointments
 const previousAppointments = [

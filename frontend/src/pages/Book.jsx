@@ -682,6 +682,7 @@ import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
+import FadeLoader from "react-spinners/FadeLoader";
 import Footer from "../components/Footer";
 
 const Book = () => {
@@ -779,7 +780,12 @@ const Book = () => {
   };
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
