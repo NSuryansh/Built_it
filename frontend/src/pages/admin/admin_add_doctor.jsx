@@ -4,14 +4,7 @@ import { useState } from 'react';
 
 const AddDoctor = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    mobile: "",
-    password: "",
-    regId: "",
-    desc: ""
-  });
+  const [formData, setFormData] = useState({ name: "", email: "", mobile: "", password: "", regId: "", desc: "" });
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
