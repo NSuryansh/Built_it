@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock } from "lucide-react";
 
-export default function Login() {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -34,7 +34,7 @@ export default function Login() {
         <div className="text-center">
           <div className="flex justify-center">
             <div className="p-3 bg-[var(--custom-orange-100)] rounded-full">
-              <Lock className="h-8 w-8 text-[var(--custom-orange-600)]" />
+              <Lock className="h-8 w-8 text-[var(--custom-orange-500)]" />
             </div>
           </div>
           <h2 className="mt-4 text-3xl font-bold text-[var(--custom-orange-900)]">
@@ -78,6 +78,12 @@ export default function Login() {
               placeholder="••••••••"
               required
             />
+            <button
+              onClick={() => navigate('/forgot_password')}
+              className="mt-1 text-sm text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)] transition-colors"
+            >
+              Forgot Password?
+            </button>
           </div>
         </div>
 
@@ -124,3 +130,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default Login;

@@ -19,6 +19,9 @@ import AddDoctor from "./pages/admin/admin_add_doctor";
 import Appointments from "./pages/Appointments";
 import Stress from "./pages/stress";
 import ModifyProfile from "./pages/Modify_profile";
+import ForgotPassword from "./pages/ForgotPassword";
+import DoctorForgotPassword from "./pages/doctor/ForgotPassword_doctor";
+import AdminForgotPassword from "./pages/admin/admin_forgot_password";
 
 export default function App() {
   const location = useLocation();
@@ -48,14 +51,17 @@ export default function App() {
         <Route path="/stress" element={<Stress />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot_password" element={<ForgotPassword />} />
         <Route path="/modify_profile" element={<ModifyProfile />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/dashboard" element={<Landing_user />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />
+        <Route path="/doctor/forgot_password" element={<DoctorForgotPassword />} />
         <Route path="/doctor/landing" element={<DoctorLanding />} />
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/doctor/appointments" element={<DoctorAppointment />} />
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/forgot_password" element={<AdminForgotPassword />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/doctor_list" element={<DoctorsList />} />
         <Route path="/admin/event_list" element={<EventsList />} />

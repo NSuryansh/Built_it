@@ -84,6 +84,12 @@ const AdminLogin = () => {
                 placeholder="••••••••"
                 required
               />
+              <button
+                  onClick={() => navigate("/admin/forgot_password")}
+                  className="mt-1 text-sm text-[var(--custom-primary-green-600)] hover:text-[var(--custom-primary-green-700)] transition-colors"
+                >
+                  Forgot Password?
+                </button>
             </div>
           </div>
 

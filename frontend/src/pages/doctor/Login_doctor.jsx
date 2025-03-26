@@ -85,6 +85,12 @@ const DoctorLogin = () => {
                   placeholder="••••••••"
                   required
                 />
+                <button
+                  onClick={() => navigate("/doctor/forgot_password")}
+                  className="mt-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  Forgot Password?
+                </button>
               </div>
             </div>
 
