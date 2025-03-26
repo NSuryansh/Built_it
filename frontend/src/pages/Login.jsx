@@ -83,7 +83,7 @@ export default function Login() {
 
         <button
           onClick={handlelogin}
-          className="w-full py-3 px-4 bg-[var(--custom-orange-600)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-700)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
+          className="w-full mt-6 py-3 px-4 bg-[var(--custom-orange-600)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-700)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
         >
           Login
         </button>
