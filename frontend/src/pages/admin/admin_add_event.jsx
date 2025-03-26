@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
 
@@ -60,7 +60,7 @@ const AddEvent = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );

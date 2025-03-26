@@ -27,10 +27,7 @@ export default function App() {
   const location = useLocation();
   const isBackgroundPage =
     location.pathname === "/" ||
-    location.pathname === "/stress" ||
-    location.pathname === "/signup" ||
-    location.pathname === "/appointments" ||
-    location.pathname === "/book";
+    location.pathname === "/appointments";
 
   return (
     <div

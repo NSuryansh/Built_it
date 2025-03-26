@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Trash2, UserPlus } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 
 const DoctorsList = () => {
@@ -54,7 +54,7 @@ const DoctorsList = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );

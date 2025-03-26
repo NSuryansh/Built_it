@@ -682,7 +682,7 @@ import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import Footer from "../components/Footer";
 
 const Book = () => {
@@ -784,7 +784,7 @@ const Book = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
@@ -795,7 +795,7 @@ const Book = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-[var(--custom-orange-100)] flex flex-col">
       <Navbar />
       <div className="h-full min-h-screen my-auto mx-2 md:mx-10 flex justify-center items-center mb-5">
         {step === 1 && (
@@ -824,7 +824,7 @@ export default Book;
 // Step 1: Doctor Selection Component
 const DoctorSelectionStep = ({ doctors, onSelect }) => {
   return (
-    <div className="bg-[var(--custom-orange-100)] w-full max-w-[1200px] p-8 rounded-[10px] border-2 border-[var(--custom-orange-200)]">
+    <div className="bg-[var(--custom-white)] w-full max-w-[1200px] p-8 rounded-[10px] border-2 border-[var(--custom-orange-200)]">
       <h2 className="text-center font-bold text-3xl text-[var(--custom-orange-500)] uppercase mb-8">
         Select a Doctor
       </h2>
@@ -833,7 +833,7 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
-              className="bg-[var(--custom-white)] p-6 rounded-xl shadow hover:shadow-lg cursor-pointer"
+              className="bg-[var(--custom-orange-100)] p-6 rounded-xl shadow hover:shadow-lg cursor-pointer"
               onClick={() => onSelect(doctor)}
             >
               <h3 className="text-xl font-bold text-[var(--custom-orange-800)]">
