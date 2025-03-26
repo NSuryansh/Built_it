@@ -11,12 +11,13 @@ import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
+import { AiFillCloseCircle, AiOutlineCloseCircle } from "react-icons/ai";
 
 const Peer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [aesKey, setAesKey] = useState();
   const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(0);
+  const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState("");
   const [showMessages, setShowMessages] = useState([]);
   const [recId, setRecid] = useState(0);
@@ -279,6 +280,7 @@ const Peer = () => {
               names={filteredChats.map((chat) => chat.name)}
               selectedChat={selectedChat}
               setSelectedChat={setSelectedChat}
+              setShowChatList={setShowChatList}
             />
           </div>
         ) : (
@@ -287,10 +289,18 @@ const Peer = () => {
           </div>
         )}
         <div className="flex-1 h-full justify-between flex flex-col">
-          <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
+          <div className="p-4 flex justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
             <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
               {filteredChats[selectedChat]?.name || "Select a chat"}
             </h2>
+            <button
+              onClick={() => {
+                setShowChatList(false);
+                setSelectedChat(null);
+              }}
+            >
+              <AiOutlineCloseCircle size={24} />
+            </button>
           </div>
           <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
             {showMessages.map((msg, index) => (
@@ -316,6 +326,7 @@ const Peer = () => {
                 names={filteredChats.map((chat) => chat.name)}
                 selectedChat={selectedChat}
                 setSelectedChat={setSelectedChat}
+                setShowChatList={setShowChatList}
               />
             </div>
           ) : (
@@ -326,10 +337,13 @@ const Peer = () => {
         ) : null}
         {showChatList === false ? (
           <div className="flex-1 h-full justify-between flex flex-col">
-            <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
+            <div className="p-4 flex border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
               <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
                 {filteredChats[selectedChat]?.name || "Select a chat"}
               </h2>
+              <button>
+                <AiOutlineCloseCircle />
+              </button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
               {showMessages.map((msg, index) => (
