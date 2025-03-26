@@ -12,7 +12,7 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 
-export default function Peer() {
+const Peer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [aesKey, setAesKey] = useState();
   const [chats, setChats] = useState([]);
@@ -271,7 +271,7 @@ export default function Peer() {
     <div className="flex flex-col h-screen bg-[var(--mp-custom-white)]">
       <Navbar />
       <ToastContainer />
-      <div className="flex h-full">
+      <div className="md:flex h-full hidden">
         {filteredChats.length > 0 ? (
           <ChatList
             names={filteredChats.map((chat) => chat.name)}
@@ -279,7 +279,7 @@ export default function Peer() {
             setSelectedChat={setSelectedChat}
           />
         ) : (
-          <div className="w-3/12 h-full flex justify-center items-center">
+          <div className="md:w-4/12 lg:w-3/12 h-full flex justify-center items-center">
             You have no chats
           </div>
         )}
@@ -308,6 +308,8 @@ export default function Peer() {
     </div>
   );
 }
+
+export default Peer;
 
 // import React, { useEffect, useState, useRef } from "react";
 // import ChatList from "../components/ChatList";

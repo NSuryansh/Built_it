@@ -3,7 +3,7 @@ import { MessageSquare } from "lucide-react";
 
 export default function ChatList({ names, selectedChat, setSelectedChat }) {
   return (
-    <div className="w-80 bg-[var(--mp-custom-white)] border-r border-[var(--mp-custom-gray-200)] overflow-y-auto">
+    <div className="md:w-4/12 lg:w-3/12 bg-[var(--mp-custom-white)] border-r border-[var(--mp-custom-gray-200)] overflow-y-auto">
       <div className="bg-[var(--mp-custom-peach)]">
         <div className="p-4 border-b border-[var(--mp-custom-gray-200)]">
           <h1 className="text-2xl font-bold text-[var(--mp-heading-text)]">

@@ -116,6 +116,41 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.put("/updateUser", async (req, res) => {
+  try {
+    const { id, username, mobile, email, alt_mobile } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const updatedData = {
+      ...(username && { username }),
+      ...(mobile && { mobile }),
+      ...(email && { email }),
+      ...(alt_mobile && { alt_mobile }),
+    };
+
+    // Ensure at least one field is being updated
+    if (Object.keys(updatedData).length === 0) {
+      return res
+        .status(400)
+        .json({ error: "No valid fields provided for update." });
+    }
+
+    // Update user details in Prisma
+    const updatedUser = await prisma.user.update({
+      where: { id: id },
+      data: updatedData,
+    });
+
+    res.json({ message: "User updated successfully", updatedUser });
+  } catch (error) {
+    console.error("Error updating user: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/login", async (req, res) => {
   console.log(req.body);
   const username = req.body["username"];
