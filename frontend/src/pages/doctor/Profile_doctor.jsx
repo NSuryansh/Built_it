@@ -53,7 +53,7 @@ const DoctorProfile = () => {
   if (isAuthenticated === null) {
     return (
       <div>
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
