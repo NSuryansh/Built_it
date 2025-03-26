@@ -128,7 +128,7 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex items-center space-x-4">
-            <button id="bell-icon" className="cursor-pointer"  onClick={handleNotification}>
+            <button id="bell-icon" className="cursor-pointer" onClick={()=>handleBellClick()} >
               <Bell className="w-5 h-5" />
             </button>
             {showNotifications && <NotificationPanel/>}
