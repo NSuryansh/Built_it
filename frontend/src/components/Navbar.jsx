@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { checkAuth } from "../utils/profile";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation().pathname;
   const [showDetails, setShowDetails] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   const links = [
     { name: "Home", link: "/dashboard" },
@@ -24,6 +26,14 @@ const Navbar = () => {
   const phoneNumber = "1234567890";
   const altPhoneNumber = "0987654321";
 
+    useEffect(() => {
+      const verifyAuth = async () => {
+        const authStatus = await checkAuth("user");
+        setIsAuthenticated(authStatus);
+      };
+      verifyAuth();
+    }, []);
+  
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -36,6 +46,14 @@ const Navbar = () => {
       navigate("/doctor/login")
     }else{
       navigate("admin/login")
+    }
+  }
+
+  const handleNotification = () => {
+    if(isAuthenticated){
+      return
+    }else{
+      navigate("/login");
     }
   }
 
@@ -104,11 +122,11 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex items-center space-x-4">
-            <button className="cursor-pointer">
+            <button className="cursor-pointer" onClick={handleNotification}>
               <Bell className="w-5 h-5" />
             </button>
 
-            {userType ? (
+            {isAuthenticated ? (
               <>
                 <button
                   onClick={() => {
