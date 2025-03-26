@@ -131,7 +131,7 @@ app.post("/signup", async (req, res) => {
 
 app.put("/modifyUser", async (req, res) => {
   try {
-    const { id, username, mobile, email, alt_mobile } = req.body;
+    const { id, username, email, mobile, alt_mobile } = req.body;
 
     if (!id) {
       return res.status(400).json({ error: "User ID is required" });
