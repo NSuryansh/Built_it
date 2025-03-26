@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import NotificationPanel from "./NotifficationPanel";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation().pathname;
   const [showDetails, setShowDetails] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const links = [
     { name: "Home", link: "/dashboard" },
@@ -38,6 +40,10 @@ const Navbar = () => {
       navigate("admin/login")
     }
   }
+
+  const handleBellClick = () => {
+    setShowNotifications(!showNotifications);
+  };
 
   return (
     <nav className="bg-transperent">
@@ -104,9 +110,10 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex items-center space-x-4">
-            <button className="cursor-pointer">
+            <button id="bell-icon" className="cursor-pointer" onClick={()=>handleBellClick()}>
               <Bell className="w-5 h-5" />
             </button>
+            {showNotifications && <NotificationPanel/>}
 
             {userType ? (
               <>
