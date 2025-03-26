@@ -30,9 +30,29 @@ const EventsList = () => {
         );
       } else {
         console.error("Failed to delete the event");
+        toast("Failed to delete the event", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     } catch (error) {
       console.error("Error deleting event:", error);
+      toast("Failed to delete the event", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
     }
   };
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -71,6 +91,16 @@ const EventsList = () => {
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
 

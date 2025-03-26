@@ -6,7 +6,7 @@ import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
 import Footer from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
@@ -54,6 +54,16 @@ const DoctorLanding = () => {
         setAppointments(formattedAppointments);
       } catch (error) {
         console.error("Error fetching appointments", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
 
@@ -87,6 +97,16 @@ const DoctorLanding = () => {
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
 
@@ -112,6 +132,7 @@ const DoctorLanding = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <DoctorNavbar />
+      <ToastContainer />
       <div className="h-full bg-gray-50">
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import { ToastContainer, toast } from "react-toastify";
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -54,6 +55,16 @@ const AddEvent = () => {
       }
     } catch (err) {
       console.error("Error adding event:", err);
+      toast("Internal error while adding event", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       setError("Internal error while adding event");
     }
   };
@@ -73,6 +84,7 @@ const AddEvent = () => {
   return (
     <>
       <AdminNavbar />
+      <ToastContainer />
       <div className="space-y-6 py-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center">
         <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-[-20px]">
           Add New Event

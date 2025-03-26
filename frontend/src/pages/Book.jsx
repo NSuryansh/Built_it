@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Footer from "../components/Footer";
+import { ToastContainer, toast } from "react-toastify";
 
 const Book = () => {
   // step 1: select a doctor; step 2: booking form
@@ -44,6 +45,16 @@ const Book = () => {
         setDoctors(data);
       } catch (err) {
         console.error("Error fetching doctors:", err);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
     fetchDoctors();
@@ -95,6 +106,16 @@ const Book = () => {
       });
     } catch (err) {
       console.error("Error submitting booking request:", err);
+      toast("Error while booking appointment", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
     }
   };
 
@@ -118,6 +139,7 @@ const Book = () => {
   return (
     <div className="min-h-screen bg-[var(--custom-orange-100)] flex flex-col">
       <Navbar />
+      <ToastContainer />
       <div className="h-full min-h-screen my-auto mx-2 md:mx-10 flex justify-center items-center mb-5">
         {step === 1 && (
           <DoctorSelectionStep
