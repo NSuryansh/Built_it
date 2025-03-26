@@ -10,7 +10,7 @@ const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
   const [completedNotes, setCompletedNotes] = useState({});
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(null);
   const [appointments, setapp] = useState([]);
   const [curr, setcurr] = useState([]);
   const [comp, setcomp] = useState([]);
@@ -90,17 +90,27 @@ const DoctorAppointment = () => {
   };
 
   const emailParams = async (appointment, time) => {
-    docName = localStorage.getItem("username");
+    const docName = localStorage.getItem("username");
+    console.log(appointment)
     var params = {
       id: appointment["id"],
       username: appointment["user"]["username"],
-      doctor: appointment["user"]["docName"],
+      doctor: docName,
       origTime: appointment["dateTime"],
       newTime: time,
       email: appointment["user"]["email"],
     };
-
-    emailjs.send("service_coucldi", "template_b96adyb", params).then(
+    const res = await fetch("http://localhost:3000/reschedule", {
+      method:"POST",
+      headers:{ "Content-Type": "application/json" },
+      body: JSON.stringify({
+        appId: appointment
+      })
+    })
+    const resp = await res.json()
+    console.log(resp)
+    setFixed(!fixed)
+    emailjs.send("service_coucldi", "template_b96adyb", params, '5rqHkmhJJfAxWBFNo').then(
       (repsonse) => {
         console.log("success", repsonse.status);
       },
@@ -110,10 +120,16 @@ const DoctorAppointment = () => {
     );
   };
 
-  const handleReschedule = (appointmentId) => {
+  const handleReschedule = async (appointment) => {
+    console.log("in reschedule")
+    console.log(appointment)
+    const appointmentId = appointment.id
     setSelectedAppointment(
       appointmentId === selectedAppointment ? null : appointmentId
     );
+    if(selectedDate){
+      const res = await emailParams(appointment, selectedDate)
+    }
   };
 
   const handleDateSelect = (date, appointmentId) => {
@@ -186,7 +202,7 @@ const DoctorAppointment = () => {
 
                           <div className="mt-4 flex items-center space-x-3">
                             <button
-                              onClick={() => handleReschedule(appointment.id)}
+                              onClick={() => handleReschedule(appointment)}
                               className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
                             >
                               Reschedule
@@ -302,12 +318,6 @@ const DoctorAppointment = () => {
                             >
                               Accept
                             </button>
-                            {/* <button className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
-                              Reschedule
-                            </button> */}
-                            {/* <button className="px-4 py-2 bg-red-50 text-red-700 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
-                              Decline
-                            </button> */}
                           </div>
                         </div>
                       </div>
@@ -317,65 +327,6 @@ const DoctorAppointment = () => {
               </div>
             </div>
           </div>
-          {/* <div>
-            <div className="mb-6 mt-10">
-              <h1 className="text-2xl font-bold text-gray-900">
-                Completed Appointments
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                See your completed appointments
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-              <div className="grid grid-cols-1 divide-y divide-gray-200">
-                {comp.map((appointment) => (
-                  <div
-                    key={appointment.id}
-                    className="p-6 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-start space-x-6">
-                      <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-                        <User className="h-6 w-6 text-blue-600" />
-                      </div>
-
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-medium text-gray-900">
-                            {appointment.patientName}
-                          </h3>
-                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                            {appointment.status}
-                          </span>
-                        </div>
-
-                        <div className="mt-2 grid grid-cols-1 gap-4">
-                          <div className="space-y-3">
-                            <div className="flex items-center text-sm text-gray-500">
-                              <CircleUser className="h-4 w-4 mr-2" />
-                              {appointment.user.username}
-                            </div>
-                            <div className="flex items-center text-sm text-gray-500">
-                              <Clock className="h-4 w-4 mr-2" />
-                              {appointment.dateTime}
-                            </div>
-                            <div className="flex items-center text-sm text-gray-500">
-                              <Phone className="h-4 w-4 mr-2" />
-                              {appointment.user.mobile}
-                            </div>
-                            <div className="flex items-start text-sm text-gray-500">
-                              <FileText className="h-4 w-4 mr-2 mt-1" />
-                              <span>{appointment.reason}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
       <Footer color={"blue"} />
