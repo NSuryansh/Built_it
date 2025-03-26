@@ -94,17 +94,7 @@ const AdminLogin = () => {
             Login
           </button>
         </form>
-        <p className="mt-6 text-sm text-center text-[var(--login-text-color)]">
-          If not registered{" "}
-          <a
-            href="/signup"
-            className="underline font-bold text-[var(--custom-primary-green)]"
-          >
-            click here
-          </a>
-        </p>
-
-        <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
+        <div className="flex justify-center mt-4 mb-2 items-center text-[var(--login-light-text)]">
           <hr className="flex-1/3" />
           <div className="flex-1/3 text-center">OR</div>
           <hr className="flex-1/3" />
@@ -113,17 +103,17 @@ const AdminLogin = () => {
           <p className="w-full text-center">
             Login as a&nbsp;
             <a
+              href="/login"
+              className="underline font-bold text-[var(--custom-primary-green)]"
+            >
+              User
+            </a>
+            &nbsp;or&nbsp;
+            <a
               href="/doctor/login"
               className="underline font-bold text-[var(--custom-primary-green)]"
             >
               Doctor
-            </a>
-            &nbsp;or&nbsp;
-            <a
-              href="/admin/login"
-              className="underline font-bold text-[var(--custom-primary-green)]"
-            >
-              Admin
             </a>
           </p>
         </div>
