@@ -13,7 +13,8 @@ import {
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { checkAuth } from "../../utils/profile";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { ToastContainer, toast } from "react-toastify";
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
@@ -49,6 +50,16 @@ const AdminDashboard = () => {
         setDoctors(data); // Set the state with the fetched data
       } catch (error) {
         console.log("Error fetching doctors: ", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
     fetchDoctors();
@@ -84,6 +95,16 @@ const AdminDashboard = () => {
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
 
@@ -93,7 +114,7 @@ const AdminDashboard = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
@@ -106,6 +127,7 @@ const AdminDashboard = () => {
   return (
     <div className="flex flex-col">
       <AdminNavbar />
+      <ToastContainer />
       <div className="space-y-4 max-w-7xl md:min-w-5xl mx-auto mb-5">
         <h1 className="text-3xl font-bold text-center md:text-left text-[var(--custom-primary-green-900)]">
           Dashboard Overview

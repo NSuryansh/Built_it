@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 import { checkAuth } from "../utils/profile";
 import SessionExpired from "../components/SessionExpired";
 import { useNavigate } from "react-router-dom";
-
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const Stress = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -24,21 +24,21 @@ const Stress = () => {
     navigate("/login");
   };
 
+  if(isAuthenticated === null){
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} /> 
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if(!isAuthenticated){
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
-  if(isAuthenticated === null){
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p>Loading...</p>
-      </div>
-    );
-  }
   return (
-    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{}}>
+    <div className="min-h-screen bg-[var(--custom-orange-100)]" style={{}}>
       <Navbar />
       {/* Main Content */}
       <div className="pt-10 px-4 max-w-7xl mx-auto space-y-8 mb-8">
@@ -104,6 +104,6 @@ const Stress = () => {
       <Footer color="orange" />
     </div>
   );
-}
+};
 
 export default Stress;

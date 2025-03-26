@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, Eye, EyeOff } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
 
 const DoctorLogin = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,11 @@ const DoctorLogin = () => {
 
   const handlelogin = async (e) => {
     e.preventDefault();
+    if (email === "" || password === "") {
+      setError("Please fill the fields");
+      return;
+    }
+    setError("");
     const response = await fetch(
       "https://built-it-xjiq.onrender.com/docLogin",
       {
@@ -31,12 +37,22 @@ const DoctorLogin = () => {
       localStorage.setItem("token", res["token"]);
       navigate("/doctor/landing");
     } else {
-      setError(res["message"]);
+      toast(res["message"], {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
     }
   };
   return (
     <>
       <div className="min-h-screen bg-blue-50 flex items-center justify-center p-4">
+        <ToastContainer />
         <div className="max-w-md w-full space-y-2 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
           <div className="text-center">
             <div className="flex justify-center">

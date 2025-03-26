@@ -8,8 +8,9 @@ import { decryptMessage } from "../utils/decryptMessage";
 import { generateAESKey } from "../utils/aeskey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Peer() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -37,7 +38,12 @@ export default function Peer() {
         `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
-      // Map API contacts to your chat object shape: { name, id, messages: [] }
+
+      if (!contacts || !Array.isArray(contacts)) {
+        console.warn("No contacts received.");
+        return; // or setChats([]) if you want to ensure chats is always an array
+      }
+
       const updatedChats = contacts.map((contact) => ({
         name: contact.username,
         id: contact.id,
@@ -47,13 +53,25 @@ export default function Peer() {
       console.log("Updated Chats:", updatedChats);
     } catch (error) {
       console.error("Error fetching contacts:", error);
+      toast('Error while fetching data', {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return [];
     }
   }
 
   useEffect(() => {
-    fetchContacts(userId);
-  }, [userId]);
+    if (isAuthenticated && userId) {
+      fetchContacts(userId);
+    }
+  }, [isAuthenticated, userId]);
 
   useEffect(() => {
     if (filteredChats.length > 0) {
@@ -97,6 +115,7 @@ export default function Peer() {
   // Handle receiving messages and update showMessages
   useEffect(() => {
     if (!aesKey) return;
+    if (!isAuthenticated) return;
 
     const handleReceiveMessage = async ({
       senderId,
@@ -190,6 +209,16 @@ export default function Peer() {
       setShowMessages(filteredMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
+      toast('Error while fetching data', {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return [];
     }
   }
@@ -214,7 +243,7 @@ export default function Peer() {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
@@ -241,6 +270,7 @@ export default function Peer() {
   return (
     <div className="flex flex-col h-screen bg-[var(--mp-custom-white)]">
       <Navbar />
+      <ToastContainer />
       <div className="flex h-full">
         {filteredChats.length > 0 ? (
           <ChatList
@@ -249,9 +279,9 @@ export default function Peer() {
             setSelectedChat={setSelectedChat}
           />
         ) : (
-          <div className="w-3/12 h-full flex justify-center items-center">You have no chats</div>
-
-
+          <div className="w-3/12 h-full flex justify-center items-center">
+            You have no chats
+          </div>
         )}
         <div className="flex-1 h-full justify-between flex flex-col">
           <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
@@ -278,7 +308,6 @@ export default function Peer() {
     </div>
   );
 }
-
 
 // import React, { useEffect, useState, useRef } from "react";
 // import ChatList from "../components/ChatList";

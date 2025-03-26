@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import { ToastContainer, toast } from "react-toastify";
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -54,13 +55,23 @@ const AddEvent = () => {
       }
     } catch (err) {
       console.error("Error adding event:", err);
+      toast("Internal error while adding event", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       setError("Internal error while adding event");
     }
   };
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
@@ -73,6 +84,7 @@ const AddEvent = () => {
   return (
     <>
       <AdminNavbar />
+      <ToastContainer />
       <div className="space-y-6 py-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center">
         <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-[-20px]">
           Add New Event
