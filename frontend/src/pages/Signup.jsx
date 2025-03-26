@@ -64,18 +64,21 @@ export default function SignUp() {
       console.log(publicKeyPEM);
       localStorage.setItem("privateKey", privateKeyPEM);
 
-      const response = await fetch("http://localhost:3000/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          mobile: mobile,
-          password: password,
-          altNo: altNo,
-          publicKey: publicKeyPEM,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it-xjiq.onrender.com/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            mobile: mobile,
+            password: password,
+            altNo: altNo,
+            publicKey: publicKeyPEM,
+          }),
+        }
+      );
 
       const data = await response.json();
       console.log("Signup successful:", data);

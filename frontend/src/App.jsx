@@ -11,7 +11,7 @@ import DoctorLanding from "./pages/doctor/Landing_doctor";
 import DoctorAppointment from "./pages/doctor/Appointment_doctor";
 import DoctorProfile from "./pages/doctor/Profile_doctor";
 import AdminDashboard from "./pages/admin/admin_dashboard";
-import AdminLogin from "./pages/admin/amdin_login";
+import AdminLogin from "./pages/admin/admin_login";
 import DoctorsList from "./pages/admin/admin_doctor_list";
 import EventsList from "./pages/admin/admin_event_list";
 import AddEvent from "./pages/admin/admin_add_event";

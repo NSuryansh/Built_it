@@ -20,10 +20,9 @@ const DoctorLanding = () => {
   }, []);
 
   useEffect(() => {
-    
     const docId = localStorage.getItem("userid");
-    console.log(docId)
-    if (!docId) return; 
+    console.log(docId);
+    if (!docId) return;
 
     const fetchAppointments = async () => {
       try {
@@ -35,8 +34,15 @@ const DoctorLanding = () => {
           return {
             id: appt.id,
             patientName: `User ${appt.user_id}`,
-            time: dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-            date: dateObj.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+            time: dateObj.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            date: dateObj.toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
             type: appt.reason,
           };
         });
@@ -54,7 +60,9 @@ const DoctorLanding = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/events");
+        const response = await fetch(
+          "https://built-it-xjiq.onrender.com/events"
+        );
         const data = await response.json();
 
         const formattedEvents = data.map((event) => {
@@ -62,7 +70,11 @@ const DoctorLanding = () => {
           return {
             id: event.id,
             title: event.title,
-            date: date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+            date: date.toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
             location: event.venue,
             type: event.description ? "Session/Conference" : "Meeting",
           };
@@ -100,7 +112,9 @@ const DoctorLanding = () => {
             {/* Appointments Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">Upcoming Appointments</h2>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Upcoming Appointments
+                </h2>
                 <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
                   View All <ChevronRight className="h-4 w-4 ml-1" />
                 </button>
@@ -110,7 +124,7 @@ const DoctorLanding = () => {
                 {appointments.map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex flex-col justify-between sm:flex-row items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                       <User className="h-6 w-6 text-blue-600" />
@@ -131,7 +145,9 @@ const DoctorLanding = () => {
             {/* Events Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">Upcoming Events</h2>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Upcoming Events
+                </h2>
                 <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
                   View All <ChevronRight className="h-4 w-4 ml-1" />
                 </button>
@@ -146,11 +162,15 @@ const DoctorLanding = () => {
                         {event.type}
                       </span>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      <span>{event.date}</span>
-                      <MapPin className="h-4 w-4 ml-4 mr-1" />
-                      <span>{event.location}</span>
+                    <div className="flex flex-col md:flex-col lg:flex-row sm:flex-row space-y-2 lg:space-y-0 sm:space-y-0 md:space-y-2 items-center text-sm text-gray-500">
+                      <div className="flex">
+                        <Calendar className="h-4 w-4 mr-1" />
+                        <span>{event.date}</span>
+                      </div>
+                      <div className="flex">
+                        <MapPin className="h-4 w-4 ml-4 mr-1" />
+                        <span>{event.location}</span>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -159,7 +179,7 @@ const DoctorLanding = () => {
           </div>
         </div>
       </div>
-      <Footer color={'blue'} />
+      <Footer color={"blue"} />
     </div>
   );
 };

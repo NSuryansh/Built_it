@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import NotificationPanel from "./NotifficationPanel";
+import { checkAuth } from "../utils/profile";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const Navbar = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   const links = [
     { name: "Home", link: "/dashboard" },
@@ -26,6 +28,14 @@ const Navbar = () => {
   const phoneNumber = "1234567890";
   const altPhoneNumber = "0987654321";
 
+    useEffect(() => {
+      const verifyAuth = async () => {
+        const authStatus = await checkAuth("user");
+        setIsAuthenticated(authStatus);
+      };
+      verifyAuth();
+    }, []);
+  
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -44,6 +54,14 @@ const Navbar = () => {
   const handleBellClick = () => {
     setShowNotifications(!showNotifications);
   };
+
+  const handleNotification = () => {
+    if(isAuthenticated){
+      return
+    }else{
+      navigate("/login");
+    }
+  }
 
   return (
     <nav className="bg-transperent">
@@ -110,12 +128,12 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex items-center space-x-4">
-            <button id="bell-icon" className="cursor-pointer" onClick={()=>handleBellClick()}>
+            <button id="bell-icon" className="cursor-pointer"  onClick={handleNotification}>
               <Bell className="w-5 h-5" />
             </button>
             {showNotifications && <NotificationPanel/>}
 
-            {userType ? (
+            {isAuthenticated ? (
               <>
                 <button
                   onClick={() => {

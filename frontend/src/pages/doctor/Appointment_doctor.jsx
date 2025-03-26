@@ -35,9 +35,11 @@ const DoctorAppointment = () => {
   useEffect(() => {
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
-      const res = await fetch(`http://localhost:3000/reqApp?docId=${docId}`);
+      const res = await fetch(
+        `https://built-it-xjiq.onrender.com/reqApp?docId=${docId}`
+      );
       const res2 = await fetch(
-        `http://localhost:3000/currentdocappt?doctorId=${docId}`
+        `https://built-it-xjiq.onrender.com/currentdocappt?doctorId=${docId}`
       );
       const resp2 = await res.json();
       const resp = await res2.json();
@@ -55,7 +57,7 @@ const DoctorAppointment = () => {
 
   const acceptApp = async (appointment) => {
     console.log(appointment);
-    const res = await fetch("http://localhost:3000/book", {
+    const res = await fetch("https://built-it-xjiq.onrender.com/book", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -74,7 +76,7 @@ const DoctorAppointment = () => {
 
   const deleteApp = async (appointment) => {
     console.log(note);
-    const res = await fetch("http://localhost:3000/deleteApp", {
+    const res = await fetch("https://built-it-xjiq.onrender.com/deleteApp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -100,7 +102,7 @@ const DoctorAppointment = () => {
       newTime: time,
       email: appointment["user"]["email"],
     };
-    const res = await fetch("http://localhost:3000/reschedule", {
+    const res = await fetch("https://built-it-xjiq.onrender.com/reschedule", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

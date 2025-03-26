@@ -27,6 +27,13 @@ export default function Peer() {
 
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   // Filter out the current user from contacts
   const filteredChats = chats.filter((chat) => chat.id !== userId);
@@ -34,10 +41,15 @@ export default function Peer() {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `https://built-it-xjiq.onrender.com/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
-      // Map API contacts to your chat object shape: { name, id, messages: [] }
+      
+      if (!contacts || !Array.isArray(contacts)) {
+        console.warn("No contacts received.");
+        return; // or setChats([]) if you want to ensure chats is always an array
+      }
+      
       const updatedChats = contacts.map((contact) => ({
         name: contact.username,
         id: contact.id,
@@ -47,13 +59,16 @@ export default function Peer() {
       console.log("Updated Chats:", updatedChats);
     } catch (error) {
       console.error("Error fetching contacts:", error);
-      return [];
     }
   }
+  
 
   useEffect(() => {
-    fetchContacts(userId);
-  }, [userId]);
+    if (isAuthenticated && userId) {
+      fetchContacts(userId);
+    }
+  }, [isAuthenticated, userId]);
+  
 
   useEffect(() => {
     if (filteredChats.length > 0) {
@@ -62,18 +77,12 @@ export default function Peer() {
   }, [selectedChat, filteredChats]);
 
   // Authentication check
-  useEffect(() => {
-    const verifyAuth = async () => {
-      const authStatus = await checkAuth("user");
-      setIsAuthenticated(authStatus);
-    };
-    verifyAuth();
-  }, []);
+
 
   // Initialize WebSocket connection
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3001");
+    socketRef.current = io("https://built-it-xjiq.onrender.com");
     socketRef.current.on("connect", () => {
       console.log("Connected to WebSocket server");
       socketRef.current.emit("register", { userId });
@@ -97,6 +106,7 @@ export default function Peer() {
   // Handle receiving messages and update showMessages
   useEffect(() => {
     if (!aesKey) return;
+    if(!isAuthenticated) return;
 
     const handleReceiveMessage = async ({
       senderId,
@@ -161,7 +171,7 @@ export default function Peer() {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `https://built-it-xjiq.onrender.com/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
 
@@ -249,7 +259,9 @@ export default function Peer() {
             setSelectedChat={setSelectedChat}
           />
         ) : (
-          <div className="w-3/12 h-full flex justify-center items-center">You have no chats</div>
+          <div className="w-3/12 h-full flex justify-center items-center">
+            You have no chats
+          </div>
         )}
         <div className="flex-1 h-full justify-between flex flex-col">
           <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">

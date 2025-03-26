@@ -10,14 +10,17 @@ const AdminLogin = () => {
 
   const handlelogin = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:3000/adminLogin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
+    const response = await fetch(
+      "https://built-it-xjiq.onrender.com/adminLogin",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      }
+    );
     console.log(response);
     const res = await response.json();
 
@@ -32,7 +35,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-[var(--custom-primary-green-50)] flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-8 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
+      <div className="max-w-md w-full space-y-2 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
         <div className="text-center">
           <div className="flex justify-center">
             <div className="p-3 bg-[var(--custom-primary-green-100)] rounded-full">
@@ -42,11 +45,7 @@ const AdminLogin = () => {
           <h2 className="mt-4 text-3xl font-bold text-[var(--custom-primary-green-900)]">
             Admin Login
           </h2>
-          {error && (
-            <p className="mt-2 text-red-600 text-sm">
-              {error}
-            </p>
-          )}
+          {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handlelogin}>
@@ -95,6 +94,29 @@ const AdminLogin = () => {
             Login
           </button>
         </form>
+        <div className="flex justify-center mt-4 mb-2 items-center text-[var(--login-light-text)]">
+          <hr className="flex-1/3" />
+          <div className="flex-1/3 text-center">OR</div>
+          <hr className="flex-1/3" />
+        </div>
+        <div className="flex w-full mt-2">
+          <p className="w-full text-center">
+            Login as a&nbsp;
+            <a
+              href="/login"
+              className="underline font-bold text-[var(--custom-primary-green)]"
+            >
+              User
+            </a>
+            &nbsp;or&nbsp;
+            <a
+              href="/doctor/login"
+              className="underline font-bold text-[var(--custom-primary-green)]"
+            >
+              Doctor
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

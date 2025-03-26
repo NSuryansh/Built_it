@@ -11,18 +11,23 @@ const EventsList = () => {
   const [events, setEvents] = useState([]);
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
-  
+
     try {
-      const response = await fetch(`http://localhost:3000/events`, {
-        method: "POST",
-        headers: {"Content-type": "application/json"},
-        body: JSON.stringify({
-          id: id
-        })
-      });
-  
+      const response = await fetch(
+        `https://built-it-xjiq.onrender.com/events`,
+        {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            id: id,
+          }),
+        }
+      );
+
       if (response.ok) {
-        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+        setEvents((prevEvents) =>
+          prevEvents.filter((event) => event.id !== id)
+        );
       } else {
         console.error("Failed to delete the event");
       }
@@ -43,7 +48,9 @@ const EventsList = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/events");
+        const response = await fetch(
+          "https://built-it-xjiq.onrender.com/events"
+        );
         const data = await response.json();
 
         const formattedEvents = data.map((event) => {
@@ -51,7 +58,11 @@ const EventsList = () => {
           return {
             id: event.id,
             title: event.title,
-            date: date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+            date: date.toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
             location: event.venue,
             type: event.description ? "Session/Conference" : "Meeting",
           };
@@ -84,7 +95,9 @@ const EventsList = () => {
       <AdminNavbar />
       <div className="space-y-6 md:min-w-5xl max-w-7xl mx-auto mb-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">Events List</h1>
+          <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">
+            Events List
+          </h1>
           <Link
             to="/admin/add_event"
             className="flex items-center gap-2 bg-[var(--custom-primary-green-600)] text-[var(--custom-white)] px-4 py-2 rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors"
@@ -96,7 +109,10 @@ const EventsList = () => {
 
         <div className="grid gap-6 mb-10">
           {events.map((event) => (
-            <div key={event.id} className="bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
+            <div
+              key={event.id}
+              className="bg-[var(--custom-white)] p-6 rounded-xl shadow-lg"
+            >
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-xl font-semibold text-[var(--custom-primary-green-900)]">
@@ -120,7 +136,9 @@ const EventsList = () => {
               </div>
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-[var(--custom-primary-green-600)]">Location</p>
+                  <p className="text-sm text-[var(--custom-primary-green-600)]">
+                    Location
+                  </p>
                   <p className="font-medium">{event.location}</p>
                 </div>
                 {/* <div>
@@ -132,7 +150,7 @@ const EventsList = () => {
           ))}
         </div>
       </div>
-      <Footer color={'green'} />
+      <Footer color={"green"} />
     </div>
   );
 };
