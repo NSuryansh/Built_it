@@ -9,9 +9,26 @@ import { checkAuth } from "../../utils/profile";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
-  const handleDelete = (id) => {
-
-    console.log("Delete event with id:", id);
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this event?")) return;
+  
+    try {
+      const response = await fetch(`http://localhost:3000/events`, {
+        method: "POST",
+        headers: {"Content-type": "application/json"},
+        body: JSON.stringify({
+          id: id
+        })
+      });
+  
+      if (response.ok) {
+        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+      } else {
+        console.error("Failed to delete the event");
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
   };
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
