@@ -6,7 +6,17 @@ import SessionExpired from "../components/SessionExpired";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Footer from "../components/Footer";
 import { ToastContainer, toast } from "react-toastify";
-import { Phone, Mail, User, Stethoscope, Calendar, Clock, FileText, ArrowLeft, Check } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  User,
+  Stethoscope,
+  Calendar,
+  Clock,
+  FileText,
+  ArrowLeft,
+  Check,
+} from "lucide-react";
 
 const Book = () => {
   // step 1: select a doctor; step 2: booking form
@@ -168,39 +178,6 @@ export default Book;
 // Step 1: Doctor Selection Component
 const DoctorSelectionStep = ({ doctors, onSelect }) => {
   return (
-    // <div className="bg-[var(--custom-white)] w-full max-w-[1200px] p-8 rounded-[10px] border-2 border-[var(--custom-orange-200)]">
-    //   <h2 className="text-center font-bold text-3xl text-[var(--custom-orange-500)] uppercase mb-8">
-    //     Select a Doctor
-    //   </h2>
-    //   {doctors.length > 0 ? (
-    //     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    //       {doctors.map((doctor) => (
-    //         <div
-    //           key={doctor.id}
-    //           className="bg-[var(--custom-orange-100)] p-6 rounded-xl shadow hover:shadow-lg cursor-pointer"
-    //           onClick={() => onSelect(doctor)}
-    //         >
-    //           <h3 className="text-xl font-bold text-[var(--custom-orange-800)]">
-    //             {doctor.name}
-    //           </h3>
-    //           <p className="mt-2 text-sm text-[var(--custom-orange-700)]">
-    //             {doctor.desc ? doctor.desc : "No description available."}
-    //           </p>
-    //           <p className="mt-2 text-sm text-[var(--custom-orange-700)]">
-    //             Mobile: {doctor.mobile}
-    //           </p>
-    //           <p className="mt-2 text-sm text-[var(--custom-orange-700)]">
-    //             Email: {doctor.email}
-    //           </p>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   ) : (
-    //     <p className="text-center text-xl font-semibold text-[var(--custom-orange-700)]">
-    //       No doctors available.
-    //     </p>
-    //   )}
-    // </div>
     <div className="bg-[var(--custom-white)] w-full max-w-[1200px] p-4 md:p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-4 md:mb-8">
         <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
@@ -268,91 +245,6 @@ const BookingFormStep = ({
   selectedDoctor,
 }) => {
   return (
-    // <div className="bg-[var(--custom-orange-100)] border-2 border-[var(--custom-orange-200)] w-full max-w-[1200px] p-8 rounded-[10px]">
-    //   <h2 className="text-center text-3xl font-bold text-[var(--custom-orange-500)] uppercase mb-8">
-    //     Booking Details for {selectedDoctor.name}
-    //   </h2>
-    //   <form onSubmit={onSubmit} className="flex flex-col gap-6">
-    //     <div className="flex flex-col">
-    //       <label className="font-bold text-lg text-[var(--custom-orange-800)]">
-    //         Name
-    //       </label>
-    //       <input
-    //         type="text"
-    //         name="name"
-    //         value={formData.name}
-    //         onChange={handleChange}
-    //         className="p-2 rounded border border-[var(--custom-orange-800)]"
-    //         required
-    //       />
-    //     </div>
-    //     <div className="flex flex-col">
-    //       <label className="font-bold text-lg text-[var(--custom-orange-800)]">
-    //         Email
-    //       </label>
-    //       <input
-    //         type="email"
-    //         name="email"
-    //         value={formData.email}
-    //         onChange={handleChange}
-    //         className="p-2 rounded border border-[var(--custom-orange-800)]"
-    //         required
-    //       />
-    //     </div>
-    //     <div className="flex flex-col">
-    //       <label className="font-bold text-lg text-[var(--custom-orange-800)]">
-    //         Phone Number
-    //       </label>
-    //       <input
-    //         type="tel"
-    //         name="phone"
-    //         value={formData.phone}
-    //         onChange={handleChange}
-    //         className="p-2 rounded border border-[var(--custom-orange-800)]"
-    //         required
-    //       />
-    //     </div>
-    //     <div className="flex flex-col">
-    //       <label className="font-bold text-lg text-[var(--custom-orange-800)]">
-    //         Brief Note about Your Problem
-    //       </label>
-    //       <textarea
-    //         name="note"
-    //         value={formData.note}
-    //         onChange={handleChange}
-    //         className="min-h-[150px] p-2 rounded border border-[var(--custom-orange-800)]"
-    //       />
-    //     </div>
-    //     {/* Optional: If you want to let users choose a date */}
-    //     <div className="flex flex-col">
-    //       <label className="font-bold text-lg text-[var(--custom-orange-800)]">
-    //         Preferred Date
-    //       </label>
-    //       <input
-    //         type="datetime-local"
-    //         name="date"
-    //         value={formData.date}
-    //         onChange={handleChange}
-    //         className="p-2 rounded border border-[var(--custom-orange-800)]"
-    //       />
-    //     </div>
-    //     <div className="flex justify-between mt-6">
-    //       <button
-    //         type="button"
-    //         onClick={onBack}
-    //         className="bg-[var(--custom-orange-900)] text-white font-bold py-2 px-4 rounded"
-    //       >
-    //         Back
-    //       </button>
-    //       <button
-    //         type="submit"
-    //         className="bg-[var(--custom-orange-500)] text-white font-bold py-2 px-4 rounded"
-    //       >
-    //         Confirm Booking
-    //       </button>
-    //     </div>
-    //   </form>
-    // </div>
     <div className="bg-gradient-to-b from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
         <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
