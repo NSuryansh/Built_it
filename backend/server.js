@@ -250,6 +250,22 @@ app.get("/events", async (req, res) => {
   }
 });
 
+app.post("/events", async (req, res) => {
+  const id  = req.body["id"];
+
+  try {
+    const resp = await prisma.events.delete({
+      where:{
+        id: id
+      }
+    })
+    res.json(resp)
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.post("/addDoc", async (req, res) => {
   const { name, mobile, email, password, reg_id, desc, img } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
