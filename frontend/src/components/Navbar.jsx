@@ -22,10 +22,10 @@ const Navbar = () => {
 
   // Retrieve usertype from localStorage
   const userType = localStorage.getItem("user_type");
-  const username = "Abc";
-  const email = "1@gmail.com";
-  const phoneNumber = "1234567890";
-  const altPhoneNumber = "0987654321";
+  const username = localStorage.getItem("username");
+  const email = localStorage.getItem("user_email");
+  const phoneNumber = localStorage.getItem("user_mobile");
+  const altPhoneNumber = localStorage.getItem("user_alt_mobile");
 
   useEffect(() => {
     const verifyAuth = async () => {
