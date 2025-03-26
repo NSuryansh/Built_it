@@ -239,6 +239,38 @@ app.post("/reschedule", async (req, res) => {
   }
 });
 
+app.get('/getPastApp', async (req, res) => {
+  const {docId }= req.query
+  try {
+    const app = await prisma.pastAppointments.findMany({
+      where: {
+        doc_id: Number(docId)
+      }
+    })
+    res.json(app)
+  }catch(e){
+    res.json(e)
+  }
+})
+
+app.get('/getPastEvents', async(req, res)=>{
+  try{
+    const currDate = new Date()
+    currDate.setDate(currDate-30)
+    const events = await prisma.pastEvents.findMany({
+      where:{
+        eventDate: {
+          gte: thirtyDaysAgo,
+          lte: new Date(),
+        },
+      }
+    })
+    res.json(events)
+  }catch(e){
+    res.json(e)
+  }
+})
+
 // app.get('/public-key/:userId', async (req, res) => {
 //     const { userId } = req.params;
 
@@ -523,43 +555,6 @@ app.get("/adminProfile", async (req, res) => {
   }
 });
 
-// app.post("/book", async (req, res) => {
-//   const userId = req.body['userId'];
-//   const doctorId = req.body['doctorId']
-//   const dateTime = req.body['dateTime']
-//   console.log(req.body)
-//   console.log(doctorId, " hello")
-
-//   try {
-//     console.log("HOAS")
-//     // Check if user exists
-//     const user = await prisma.user.findUnique({ where: { id: userId } });
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Check if doctor exists
-//     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
-//     if (!doctor) {
-//       return res.status(404).json({ message: "Doctor not founfdsfdasd" });
-//     }
-
-//     const appointment = await prisma.appointments.create({
-//       data: {
-//         user_id: userId,
-//         doctor_id: doctorId,
-//         dateTime: new Date(dateTime),
-//       },
-//     });
-
-//     res
-//       .status(0)
-//       .json({ message: "Appointment booked successfully", appointment });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(0).json({ message: "Internal Server Error" });
-//   }
-// });
 
 app.post("/addEvent", async (req, res) => {
   try {
@@ -592,7 +587,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {

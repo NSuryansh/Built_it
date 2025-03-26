@@ -109,6 +109,15 @@ model PastAppointments {
   user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
 }
 
+model PastEvents{
+  @@map("pastEvents")
+  id Int @id @default(autoincrement())
+  title String
+  description String?
+  dateTime DateTime
+  venue String
+}
+
 model Requests {
   @@map("requests")
   id Int @id @default(autoincrement())
