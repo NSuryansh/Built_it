@@ -1,7 +1,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { checkAuth } from "../../utils/profile";
@@ -10,18 +18,18 @@ import FadeLoader from "react-spinners/FadeLoader";
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
   const [doctors, setDoctors] = useState([]);
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
-    const navigate = useNavigate();
-  
-    useEffect(() => {
-      const verifyAuth = async () => {
-        const authStatus = await checkAuth("admin");
-        setIsAuthenticated(authStatus);
-      };
-      verifyAuth();
-    }, []);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate();
 
-  ; const data = [
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  const data = [
     { name: "Jan", appointments: 65 },
     { name: "Feb", appointments: 59 },
     { name: "Mar", appointments: 80 },
@@ -33,7 +41,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await fetch("http://localhost:3000/getdoctors");
+        const response = await fetch(
+          "https://built-it-xjiq.onrender.com/getdoctors"
+        );
         const data = await response.json();
         console.log(data);
         setDoctors(data); // Set the state with the fetched data
@@ -44,21 +54,28 @@ const AdminDashboard = () => {
     fetchDoctors();
   }, []);
 
-
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/events");
+        const response = await fetch(
+          "https://built-it-xjiq.onrender.com/events"
+        );
         const data = await response.json();
 
-        const upcomingEvents = data.filter((event) => new Date(event.dateTime) > new Date());
+        const upcomingEvents = data.filter(
+          (event) => new Date(event.dateTime) > new Date()
+        );
 
         const formattedEvents = upcomingEvents.map((event) => {
           const date = new Date(event.dateTime);
           return {
             id: event.id,
             title: event.title,
-            date: date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+            date: date.toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
             location: event.venue,
             type: event.description ? "Session/Conference" : "Meeting",
           };
@@ -117,7 +134,10 @@ const AdminDashboard = () => {
             </h2>
             <div className="space-y-4">
               {doctors.map((doctor) => (
-                <div key={doctor.id} className="p-4 bg-[var(--custom-primary-green-50)] rounded-lg">
+                <div
+                  key={doctor.id}
+                  className="p-4 bg-[var(--custom-primary-green-50)] rounded-lg"
+                >
                   <h3 className="font-semibold text-[var(--custom-primary-green-900)]">
                     {doctor.name}
                   </h3>
@@ -138,7 +158,10 @@ const AdminDashboard = () => {
             </h2>
             <div className="space-y-4">
               {events.map((event) => (
-                <div key={event.id} className="p-4 bg-[var(--custom-primary-green-50)] rounded-lg">
+                <div
+                  key={event.id}
+                  className="p-4 bg-[var(--custom-primary-green-50)] rounded-lg"
+                >
                   <h3 className="font-semibold text-[var(--custom-primary-green-900)]">
                     {event.title}
                   </h3>
@@ -151,7 +174,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-      <Footer color={'green'} />
+      <Footer color={"green"} />
     </div>
   );
 };

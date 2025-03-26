@@ -41,7 +41,7 @@ export default function Peer() {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `https://built-it-xjiq.onrender.com/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
       
@@ -82,7 +82,7 @@ export default function Peer() {
   // Initialize WebSocket connection
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3001");
+    socketRef.current = io("https://built-it-xjiq.onrender.com");
     socketRef.current.on("connect", () => {
       console.log("Connected to WebSocket server");
       socketRef.current.emit("register", { userId });
@@ -171,7 +171,7 @@ export default function Peer() {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `https://built-it-xjiq.onrender.com/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
 
@@ -259,7 +259,9 @@ export default function Peer() {
             setSelectedChat={setSelectedChat}
           />
         ) : (
-          <div className="w-3/12 h-full flex justify-center items-center">You have no chats</div>
+          <div className="w-3/12 h-full flex justify-center items-center">
+            You have no chats
+          </div>
         )}
         <div className="flex-1 h-full justify-between flex flex-col">
           <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">

@@ -34,7 +34,7 @@ const AdminNavbar = () => {
               alt="logo"
               width={25}
               height={25}
-              className="rounded mr-2"
+              className="rounded-md mr-2"
             />
             <div className="text-xl font-bold">Vitality</div>
           </div>

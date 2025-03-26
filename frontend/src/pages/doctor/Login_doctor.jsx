@@ -10,15 +10,18 @@ const DoctorLogin = () => {
   const navigate = useNavigate();
 
   const handlelogin = async (e) => {
-    e.preventDefault()
-    const response = await fetch("http://localhost:3000/docLogin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
+    e.preventDefault();;
+    const response = await fetch(
+      "https://built-it-xjiq.onrender.com/docLogin",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      }
+    );
     console.log(response);
     const res = await response.json();
 
@@ -32,43 +35,76 @@ const DoctorLogin = () => {
   };
   return (
     <>
-    <DoctorNavbar/>
-    <div className="flex items-center justify-center h-screen bg-gradient-to-r from-[var(--custom-primary-blue)]">
-      <div className="bg-[var(--custom-white)] w-80 p-10 rounded-md shadow-md">
-        <form onSubmit={handlelogin}>
-          <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
-            LOGIN
-          </h1>
+      <DoctorNavbar />
+      <div className="flex items-center justify-center h-screen bg-gradient-to-r from-[var(--custom-primary-blue)]">
+        <div className="bg-[var(--custom-white)] w-80 p-10 rounded-md shadow-md">
+          <form onSubmit={handlelogin}>
+            <h1 className="text-2xl font-bold text-[var(--login-text-color)] mb-4 text-center">
+              LOGIN
+            </h1>
 
-          <input
-            type="email"
-            placeholder="email"
-            className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+            <input
+              type="email"
+              placeholder="email"
+              className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-          // value={username}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+              // value={username}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-          <input
-            type="password"
-            placeholder="password"
-            className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
+            <input
+              type="password"
+              placeholder="password"
+              className="w-full mb-8 p-3 border border-[var(--login-input-border)] bg-[var(--login-input-bg)]
             rounded-md"
-            // value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+              // value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-          <button
-            className="w-full py-2 bg-[var(--custom-primary-blue)] text-[var(--login-button-text)]
+            <button
+              className="w-full py-2 bg-[var(--custom-primary-blue)] text-[var(--login-button-text)]
             font-semibold rounded-md hover:opacity-90 transition-opacity cursor-pointer"
-            type="submit"
-          >
-            Login
-          </button>
-        </form>
+              type="submit"
+            >
+              Login
+            </button>
+          </form>
+          <p className="mt-6 text-sm text-center text-[var(--login-text-color)]">
+            If not registered{" "}
+            <a
+              href="/signup"
+              className="underline font-bold text-[var(--custom-primary-blue)]"
+            >
+              click here
+            </a>
+          </p>
+
+          <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
+            <hr className="flex-1/3" />
+            <div className="flex-1/3 text-center">OR</div>
+            <hr className="flex-1/3" />
+          </div>
+          <div className="flex w-full mt-2">
+            <p className="w-full text-center">
+              Login as a&nbsp;
+              <a
+                href="/admin/login"
+                className="underline font-bold text-[var(--custom-primary-blue)]"
+              >
+                Admin
+              </a>
+              &nbsp;or&nbsp;
+              <a
+                href="/login"
+                className="underline font-bold text-[var(--custom-primary-blue)]"
+              >
+                User
+              </a>
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
     </>
   );
 };
