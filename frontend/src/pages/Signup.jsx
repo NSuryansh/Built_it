@@ -109,7 +109,7 @@ export default function SignUp() {
             {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
           </div>
 
-          <form onSubmit={handleSignup}>
+          <form >
             <div className="space-y-4">
               <div>
                 <label
@@ -227,7 +227,7 @@ export default function SignUp() {
 
             <button
               onClick={handleSignup}
-              type="submit"
+              type="button"
               className="w-full mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
             >
               Sign Up
