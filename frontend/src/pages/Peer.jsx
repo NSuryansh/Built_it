@@ -11,15 +11,17 @@ import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
+import { AiFillCloseCircle, AiOutlineCloseCircle } from "react-icons/ai";
 
 const Peer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [aesKey, setAesKey] = useState();
   const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(0);
+  const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState("");
   const [showMessages, setShowMessages] = useState([]);
   const [recId, setRecid] = useState(0);
+  const [showChatList, setShowChatList] = useState(true);
   const [messagesApi, setMessagesApi] = useState();
 
   const navigate = useNavigate();
@@ -53,7 +55,7 @@ const Peer = () => {
       console.log("Updated Chats:", updatedChats);
     } catch (error) {
       console.error("Error fetching contacts:", error);
-      toast('Error while fetching data', {
+      toast("Error while fetching data", {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -209,7 +211,7 @@ const Peer = () => {
       setShowMessages(filteredMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
-      toast('Error while fetching data', {
+      toast("Error while fetching data", {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -273,21 +275,32 @@ const Peer = () => {
       <ToastContainer />
       <div className="md:flex h-full hidden">
         {filteredChats.length > 0 ? (
-          <ChatList
-            names={filteredChats.map((chat) => chat.name)}
-            selectedChat={selectedChat}
-            setSelectedChat={setSelectedChat}
-          />
+          <div className="md:w-4/12 lg:w-3/12">
+            <ChatList
+              names={filteredChats.map((chat) => chat.name)}
+              selectedChat={selectedChat}
+              setSelectedChat={setSelectedChat}
+              setShowChatList={setShowChatList}
+            />
+          </div>
         ) : (
           <div className="md:w-4/12 lg:w-3/12 h-full flex justify-center items-center">
             You have no chats
           </div>
         )}
         <div className="flex-1 h-full justify-between flex flex-col">
-          <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
+          <div className="p-4 flex justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
             <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
               {filteredChats[selectedChat]?.name || "Select a chat"}
             </h2>
+            <button
+              onClick={() => {
+                setShowChatList(false);
+                setSelectedChat(null);
+              }}
+            >
+              <AiOutlineCloseCircle size={24} />
+            </button>
           </div>
           <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
             {showMessages.map((msg, index) => (
@@ -305,9 +318,53 @@ const Peer = () => {
           />
         </div>
       </div>
+      <div className="md:hidden h-full">
+        {showChatList === true ? (
+          filteredChats.length > 0 ? (
+            <div>
+              <ChatList
+                names={filteredChats.map((chat) => chat.name)}
+                selectedChat={selectedChat}
+                setSelectedChat={setSelectedChat}
+                setShowChatList={setShowChatList}
+              />
+            </div>
+          ) : (
+            <div className="w-full h-full flex justify-center items-center">
+              You have no chats
+            </div>
+          )
+        ) : null}
+        {showChatList === false ? (
+          <div className="flex-1 h-full justify-between flex flex-col">
+            <div className="p-4 flex border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
+              <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
+                {filteredChats[selectedChat]?.name || "Select a chat"}
+              </h2>
+              <button>
+                <AiOutlineCloseCircle />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
+              {showMessages.map((msg, index) => (
+                <ChatMessage
+                  key={index}
+                  message={msg.decryptedText}
+                  isSent={msg.senderId === userId}
+                />
+              ))}
+            </div>
+            <ChatInput
+              message={message}
+              setMessage={setMessage}
+              handleSubmit={handleSubmit}
+            />
+          </div>
+        ) : null}
+      </div>
     </div>
   );
-}
+};
 
 export default Peer;
 
