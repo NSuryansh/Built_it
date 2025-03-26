@@ -3,8 +3,8 @@ import { User, CircleUser, Clock, Phone, FileText } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
-import { DayPicker } from "react-day-picker";
-import Footer from '../../components/Footer';
+import { DateTimePicker } from "../../components/doctor/DateTimePicker";
+import Footer from "../../components/Footer";
 
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
@@ -119,9 +119,7 @@ const DoctorAppointment = () => {
   const handleDateSelect = (date, appointmentId) => {
     setSelectedDate(date);
     if (date) {
-      console.log(
-        `Rescheduling appointment ${appointmentId} to ${date}`
-      );
+      console.log(`Rescheduling appointment ${appointmentId} to ${date}`);
       setSelectedAppointment(null);
     }
   };
@@ -213,41 +211,12 @@ const DoctorAppointment = () => {
                           </div>
                           {selectedAppointment === appointment.id && (
                             <div className="mt-4 bg-white w-fit rounded-lg border border-gray-200 p-4">
-                              <DayPicker
-                                mode="single"
+                              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                                Select Date and Time
+                              </h2>
+                              <DateTimePicker
                                 selected={selectedDate}
-                                onSelect={(date) =>
-                                  handleDateSelect(date, appointment.id)
-                                }
-                                showOutsideDays
-                                classNames={{
-                                  months: "flex flex-col",
-                                  month: "space-y-4",
-                                  caption:
-                                    "flex justify-center relative items-center",
-                                  caption_label:
-                                    "text-sm font-semibold text-gray-900",
-                                  nav: "space-x-1 flex items-center",
-                                  nav_button:
-                                    "h-7 w-7 bg-transparent p-0 opacity-75 hover:opacity-100",
-                                  nav_button_previous: "absolute left-1",
-                                  nav_button_next: "absolute right-1",
-                                  table: "w-full border-collapse space-y-1",
-                                  head_row: "flex",
-                                  head_cell:
-                                    "text-gray-500 rounded-md w-10 font-normal text-[0.8rem]",
-                                  row: "flex w-full mt-2",
-                                  cell: "text-center text-sm relative p-0 hover:bg-gray-100 rounded-md",
-                                  day: "h-10 w-10 font-normal aria-selected:opacity-100",
-                                  day_selected:
-                                    "bg-blue-500 text-white hover:bg-blue-600 hover:text-white focus:bg-blue-500 focus:text-white",
-                                  day_today:
-                                    "bg-gray-100 text-blue-700 font-semibold",
-                                  day_outside: "text-gray-400 opacity-50",
-                                  day_disabled: "text-gray-400 opacity-50",
-                                  day_range_middle: "aria-selected:bg-gray-100",
-                                  day_hidden: "invisible",
-                                }}
+                                onSelect={setSelectedDate}
                               />
                             </div>
                           )}
@@ -258,9 +227,7 @@ const DoctorAppointment = () => {
                                 placeholder="Enter completion notes..."
                                 className="w-full p-2 border border-gray-300 rounded-lg"
                                 value={note}
-                                onChange={
-                                  handleNoteChange
-                                }
+                                onChange={handleNoteChange}
                               />
                             </div>
                           )}
@@ -411,7 +378,7 @@ const DoctorAppointment = () => {
           </div> */}
         </div>
       </div>
-      <Footer color={'blue'}/>
+      <Footer color={"blue"} />
     </div>
   );
 };

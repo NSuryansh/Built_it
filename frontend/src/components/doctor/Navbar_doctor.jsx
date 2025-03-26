@@ -31,55 +31,55 @@ const DoctorNavbar = () => {
             <div className="text-xl font-bold">Vitality</div>
           </div>
           <div className="hidden md:flex space-x-8 items-center">
-                      {links.map((item, i) => (
-                        <a
-                          key={i}
-                          href={item.link}
-                          className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                            location == item.link
-                              ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
-                              : ""
-                          }`}
-                        >
-                          {item.name}
-                        </a>
-                      ))}
-                    </div>
-                    <div className="md:hidden transition-all flex items-center z-2">
-                      <button
-                        onClick={toggleMenu}
-                        className="p-2 rounded-full hover:bg-gray-100"
+            {links.map((item, i) => (
+              <a
+                key={i}
+                href={item.link}
+                className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                  location == item.link
+                    ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
+                    : ""
+                }`}
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+          <div className="md:hidden transition-all flex items-center z-2">
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-full hover:bg-gray-100"
+            >
+              {isOpen ? (
+                <AiOutlineClose size={24} />
+              ) : (
+                <AiOutlineMenu size={24} />
+              )}
+            </button>
+            {isOpen && (
+              <div className="absolute top-16 left-[12%] w-[80%] bg-white rounded-2xl shadow-md p-4">
+                <ul>
+                  {links.map((item, i) => (
+                    <li
+                      className="py-2 border-b text-center border-gray-200"
+                      key={i}
+                    >
+                      <a
+                        href={item.link}
+                        className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                          location == item.link
+                            ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
+                            : ""
+                        }`}
                       >
-                        {isOpen ? (
-                          <AiOutlineClose size={24} />
-                        ) : (
-                          <AiOutlineMenu size={24} />
-                        )}
-                      </button>
-                      {isOpen && (
-                        <div className="absolute top-16 left-[12%] w-[80%] bg-white rounded-2xl shadow-md p-4">
-                          <ul>
-                            {links.map((item, i) => (
-                              <li
-                                className="py-2 border-b text-center border-gray-200"
-                                key={i}
-                              >
-                                <a
-                                  href={item.link}
-                                  className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                                    location == item.link
-                                      ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
-                                      : ""
-                                  }`}
-                                >
-                                  {item.name}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                        {item.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
           <div className="flex items-center space-x-4">
             <button className="cursor-pointer">
               <Bell className="w-5 h-5" />
