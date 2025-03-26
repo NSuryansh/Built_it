@@ -1,13 +1,13 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 const Landing = () => {
   return (
     <>
     <Navbar/>
-    <div className="px-2 sm:px-4 min-h-screen flex justify-center items-center overflow-y-hidden">
-      <div className="flex flex-col h-full items-center justify-center">
+    <div className="px-2 sm:px-4 flex justify-center items-center overflow-y-hidden">
+      <div className="flex flex-col mt-8 h-full items-center justify-center">
         <div className="text-[45px] sm:text-[55px] font-extrabold text-[var(--landing-bg-orange)]">
           Vitality
         </div>
