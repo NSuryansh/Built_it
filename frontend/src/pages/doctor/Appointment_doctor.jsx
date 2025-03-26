@@ -91,7 +91,7 @@ const DoctorAppointment = () => {
 
   const emailParams = async (appointment, time) => {
     const docName = localStorage.getItem("username");
-    console.log(appointment)
+    console.log(appointment);
     var params = {
       id: appointment["id"],
       username: appointment["user"]["username"],
@@ -101,34 +101,36 @@ const DoctorAppointment = () => {
       email: appointment["user"]["email"],
     };
     const res = await fetch("http://localhost:3000/reschedule", {
-      method:"POST",
-      headers:{ "Content-Type": "application/json" },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        appId: appointment
-      })
-    })
-    const resp = await res.json()
-    console.log(resp)
-    setFixed(!fixed)
-    emailjs.send("service_coucldi", "template_b96adyb", params, '5rqHkmhJJfAxWBFNo').then(
-      (repsonse) => {
-        console.log("success", repsonse.status);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+        appId: appointment,
+      }),
+    });
+    const resp = await res.json();
+    console.log(resp);
+    setFixed(!fixed);
+    emailjs
+      .send("service_coucldi", "template_b96adyb", params, "5rqHkmhJJfAxWBFNo")
+      .then(
+        (repsonse) => {
+          console.log("success", repsonse.status);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   };
 
   const handleReschedule = async (appointment) => {
-    console.log("in reschedule")
-    console.log(appointment)
-    const appointmentId = appointment.id
+    console.log("in reschedule");
+    console.log(appointment);
+    const appointmentId = appointment.id;
     setSelectedAppointment(
       appointmentId === selectedAppointment ? null : appointmentId
     );
-    if(selectedDate){
-      const res = await emailParams(appointment, selectedDate)
+    if (selectedDate) {
+      const res = await emailParams(appointment, selectedDate);
     }
   };
 
@@ -201,12 +203,6 @@ const DoctorAppointment = () => {
                           </div>
 
                           <div className="mt-4 flex items-center space-x-3">
-                            <button
-                              onClick={() => handleReschedule(appointment)}
-                              className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-                            >
-                              Reschedule
-                            </button>
                             {completedNotes[appointment.id] !== undefined ? (
                               <button
                                 onClick={() => {
@@ -225,17 +221,6 @@ const DoctorAppointment = () => {
                               </button>
                             )}
                           </div>
-                          {selectedAppointment === appointment.id && (
-                            <div className="mt-4 bg-white w-fit rounded-lg border border-gray-200 p-4">
-                              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                                Select Date and Time
-                              </h2>
-                              <DateTimePicker
-                                selected={selectedDate}
-                                onSelect={setSelectedDate}
-                              />
-                            </div>
-                          )}
                           {completedNotes[appointment.id] !== undefined && (
                             <div className="mt-4">
                               <input
@@ -318,7 +303,24 @@ const DoctorAppointment = () => {
                             >
                               Accept
                             </button>
+                            <button
+                              onClick={() => handleReschedule(appointment)}
+                              className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                            >
+                              Reschedule
+                            </button>
                           </div>
+                          {selectedAppointment === appointment.id && (
+                            <div className="mt-4 bg-white w-fit rounded-lg border border-gray-200 p-4">
+                              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                                Select Date and Time
+                              </h2>
+                              <DateTimePicker
+                                selected={selectedDate}
+                                onSelect={setSelectedDate}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

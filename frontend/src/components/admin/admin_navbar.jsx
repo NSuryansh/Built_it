@@ -30,9 +30,10 @@ const AdminNavbar = () => {
         <div className="flex items-center justify-between">
           <div className="flex">
             <img
-              src="/assests/logo.jpg"
+              src="/assests/logo.png"
               alt="logo"
               width={25}
+              height={25}
               className="rounded mr-2"
             />
             <div className="text-xl font-bold">Vitality</div>
