@@ -18,6 +18,7 @@ import AddEvent from "./pages/admin/admin_add_event";
 import AddDoctor from "./pages/admin/admin_add_doctor";
 import Appointments from "./pages/Appointments";
 import Stress from "./pages/stress";
+import Events from "./pages/Events";
 import ModifyProfile from "./pages/Modify_profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import DoctorForgotPassword from "./pages/doctor/ForgotPassword_doctor";
@@ -27,10 +28,7 @@ export default function App() {
   const location = useLocation();
   const isBackgroundPage =
     location.pathname === "/" ||
-    location.pathname === "/stress" ||
-    location.pathname === "/signup" ||
-    location.pathname === "/appointments" ||
-    location.pathname === "/book";
+    location.pathname === "/appointments";
 
   return (
     <div
@@ -49,6 +47,7 @@ export default function App() {
         <Route path="/mood" element={<Mood />} />
         <Route path="/book" element={<Book />} />
         <Route path="/stress" element={<Stress />} />
+        <Route path="/events" element={<Events />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot_password" element={<ForgotPassword />} />

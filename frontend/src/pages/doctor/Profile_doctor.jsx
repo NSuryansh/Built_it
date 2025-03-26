@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Mail, Phone, MapPin, Building, GraduationCap, Clock, Award, Edit2, Save, X,  } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import Footer from "../../components/Footer";
+
+
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { checkAuth } from "../../utils/profile";
+import { useNavigate } from "react-router-dom";
+import SessionExpired from "../../components/SessionExpired";
 
 const DoctorProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -31,7 +37,31 @@ const DoctorProfile = () => {
       "Basic Life Support",
     ],
   });
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate();
 
+    useEffect(() => {
+      const verifyAuth = async () => {
+        const authStatus = await checkAuth("doc");
+        setIsAuthenticated(authStatus);
+      };
+      verifyAuth();
+    }, []);
+  const handleClosePopup = () => {
+    navigate("/doctor/login");
+  };
+  if (isAuthenticated === null) {
+    return (
+      <div>
+        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
   const [editedProfile, setEditedProfile] = useState(profile);
 
   const handleSave = () => {

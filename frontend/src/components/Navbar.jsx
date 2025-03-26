@@ -17,6 +17,7 @@ const Navbar = () => {
     { name: "Peer", link: "/peer" },
     { name: "Book", link: "/book" },
     { name: "Stress", link: "/stress" },
+    { name: "Events", link: "/events" },
   ];
 
   // Retrieve usertype from localStorage
@@ -58,7 +59,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-transperent">
+    <nav className={`${location === '/'  || location === '/peer' || location === '/mood' ? 'bg-transparent' : 'bg-[var(--custom-orange-100)]'}`}>
       <div className="px-8 py-3">
         <div className="flex items-center justify-between">
           <div className="flex">

@@ -98,3 +98,20 @@ button {
     transform: translateX(100%);
   }
 }
+
+.custom-toast {
+  background-color: var(--custom-orange-100) !important;
+  color: var(--custom-orange-900) !important;
+  font-family: inherit;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.Toastify__progress-bar {
+  background: var(--custom-orange-500) !important;
+}
+
+.Toastify__close-button {
+  color: var(--custom-orange-900) !important;
+}

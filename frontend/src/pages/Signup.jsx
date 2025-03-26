@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -56,6 +57,16 @@ const SignUp = () => {
   }
 
   async function handleSignup() {
+    if (
+      formData.username === "" ||
+      formData.email === "" ||
+      formData.mobile === "" ||
+      formData.password === "" ||
+      formData.confirmPassword === ""
+    ) {
+      setError("Please fill the fields");
+      return;
+    }
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -69,9 +80,10 @@ const SignUp = () => {
       formData;
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match");
       return;
     }
+
     try {
       const { publicKey, privateKey } = await generateKeyPair();
       console.log(publicKey);
@@ -101,12 +113,23 @@ const SignUp = () => {
       navigate("/login");
     } catch (error) {
       console.error("Signup error:", error);
+      toast(error, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
     }
   }
 
   return (
     <>
       <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">
+        <ToastContainer />
         <div className="max-w-md w-full space-y-2 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
           <div className="text-center">
             <div className="flex justify-center">
