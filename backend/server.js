@@ -228,17 +228,16 @@ app.get("/messages", async (req, res) => {
   }
 });
 
-app.post('/reschedule', async(req,res)=>{
-  const id = req.body["appId"]
-  console.log(id)
-  try{
-    const reschedule = await prisma.requests.delete({where: { id: id}})
-    res.json(reschedule)
-  }catch(e){
-    res.json(e)
+app.post("/reschedule", async (req, res) => {
+  const id = req.body["appId"];
+  console.log(id);
+  try {
+    const reschedule = await prisma.requests.delete({ where: { id: id } });
+    res.json(reschedule);
+  } catch (e) {
+    res.json(e);
   }
-  
-})
+});
 
 // app.get('/public-key/:userId', async (req, res) => {
 //     const { userId } = req.params;
@@ -262,16 +261,45 @@ app.get("/events", async (req, res) => {
   }
 });
 
+app.put("/updateUser", async (req, res) => {
+  try {
+    const { userId, username, mobile, email, alt_mobile } = req.body;
+
+    // Validate required fields
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const updatedData = {
+      ...(username && { username }),
+      ...(mobile && { mobile }),
+      ...(email && { email }),
+      ...(alt_mobile && { alt_mobile }),
+    };
+
+    // Update the user details in Prisma
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: updatedData,
+    });
+
+    res.json({ message: "User updated successfully", updatedUser });
+  } catch (error) {
+    console.error("Error updating user: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/events", async (req, res) => {
-  const id  = req.body["id"];
+  const id = req.body["id"];
 
   try {
     const resp = await prisma.events.delete({
-      where:{
-        id: id
-      }
-    })
-    res.json(resp)
+      where: {
+        id: id,
+      },
+    });
+    res.json(resp);
   } catch (error) {
     console.error("Error deleting event:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -440,22 +468,22 @@ app.post("/adminLogin", async (req, res) => {
   res.json({ message: "Login successful", token });
 });
 
-app.get('/reqApp', async(req,res)=>{
-    const docId = Number(req.query["docId"])
-    const appt = await prisma.requests.findMany({
-        where: { doctor_id: docId },
-        include: {
-          user: {
-            select: {
-              username: true,   // assuming "name" is the username
-              mobile: true,
-              email: true,
-            },
-          },
+app.get("/reqApp", async (req, res) => {
+  const docId = Number(req.query["docId"]);
+  const appt = await prisma.requests.findMany({
+    where: { doctor_id: docId },
+    include: {
+      user: {
+        select: {
+          username: true, // assuming "name" is the username
+          mobile: true,
+          email: true,
         },
-      });
-    res.json(appt)
-})
+      },
+    },
+  });
+  res.json(appt);
+});
 
 app.get("/docProfile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -709,20 +737,20 @@ app.get("/currentdocappt", async (req, res) => {
     }
     // const appt = await prisma.appointments.findMany({
     //   where: { doctor_id: doctorId },
-    // }); 
+    // });
     const appt = await prisma.appointments.findMany({
-        where: { doctor_id: doctorId },
-        include: {
-          user: {
-            select: {
-              username: true,   // assuming "name" is the username
-              mobile: true,
-              email: true,
-            },
+      where: { doctor_id: doctorId },
+      include: {
+        user: {
+          select: {
+            username: true, // assuming "name" is the username
+            mobile: true,
+            email: true,
           },
         },
-      });
-    
+      },
+    });
+
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
     console.error(e);
