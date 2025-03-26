@@ -1,11 +1,12 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { Lock, Eye, EyeOff } from "lucide-react";
 
 const DoctorLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -76,15 +77,30 @@ const DoctorLogin = () => {
                 >
                   Password
                 </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="••••••••"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="mt-1 w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-900"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+                <button
+                  onClick={() => navigate("/doctor/forgot_password")}
+                  className="mt-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  Forgot Password?
+                </button>
               </div>
             </div>
 
@@ -103,19 +119,19 @@ const DoctorLogin = () => {
           <div className="flex w-full mt-2">
             <p className="w-full text-center">
               Login as a&nbsp;
-              <a
-                href="/login"
+              <button
+                onClick={() => navigate("/login")}
                 className="underline font-bold text-blue-500"
               >
                 User
-              </a>
+              </button>
               &nbsp;or&nbsp;
-              <a
-                href="/admin/login"
+              <button
+                onClick={() => navigate("/admin/login")}
                 className="underline font-bold text-blue-500"
               >
                 Admin
-              </a>
+              </button>
             </p>
           </div>
         </div>

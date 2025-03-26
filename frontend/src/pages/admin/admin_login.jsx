@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { Lock, Eye, EyeOff } from "lucide-react";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -75,15 +76,30 @@ const AdminLogin = () => {
               >
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
-                placeholder="••••••••"
-                required
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
+                  placeholder="••••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[var(--custom-primary-green-900)]"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              <button
+                onClick={() => navigate("/admin/forgot_password")}
+                className="mt-1 text-sm text-[var(--custom-primary-green-600)] hover:text-[var(--custom-primary-green-700)] transition-colors"
+              >
+                Forgot Password?
+              </button>
             </div>
           </div>
 
@@ -102,19 +118,19 @@ const AdminLogin = () => {
         <div className="flex w-full mt-2">
           <p className="w-full text-center">
             Login as a&nbsp;
-            <a
-              href="/login"
+            <button
+              onClick={() => navigate("/login")}
               className="underline font-bold text-[var(--custom-primary-green)]"
             >
               User
-            </a>
+            </button>
             &nbsp;or&nbsp;
-            <a
-              href="/doctor/login"
+            <button
+              onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-primary-green)]"
             >
               Doctor
-            </a>
+            </button>
           </p>
         </div>
       </div>

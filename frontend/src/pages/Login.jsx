@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { Lock, Eye, EyeOff } from "lucide-react";
 
-export default function Login() {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -34,7 +35,7 @@ export default function Login() {
         <div className="text-center">
           <div className="flex justify-center">
             <div className="p-3 bg-[var(--custom-orange-100)] rounded-full">
-              <Lock className="h-8 w-8 text-[var(--custom-orange-600)]" />
+              <Lock className="h-8 w-8 text-[var(--custom-orange-500)]" />
             </div>
           </div>
           <h2 className="mt-4 text-3xl font-bold text-[var(--custom-orange-900)]">
@@ -69,32 +70,47 @@ export default function Login() {
             >
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
-              placeholder="••••••••"
-              required
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
+                placeholder="••••••••"
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[var(--custom-orange-900)]"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            <button
+              onClick={() => navigate("/forgot_password")}
+              className="mt-1 text-sm text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)] transition-colors"
+            >
+              Forgot Password?
+            </button>
           </div>
         </div>
 
         <button
           onClick={handlelogin}
-          className="w-full mt-6 py-3 px-4 bg-[var(--custom-orange-600)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-700)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
+          className="w-full mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
         >
           Login
         </button>
         <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
           If not registered{" "}
-          <a
-            href="/signup"
+          <button
+            onClick={() => navigate("/signup")}
             className="underline font-bold text-[var(--custom-primary-orange)]"
           >
             click here
-          </a>
+          </button>
         </p>
 
         <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
@@ -105,22 +121,24 @@ export default function Login() {
         <div className="flex w-full mt-2">
           <p className="w-full text-center">
             Login as a&nbsp;
-            <a
-              href="/doctor/login"
+            <button
+              onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
             >
               Doctor
-            </a>
+            </button>
             &nbsp;or&nbsp;
-            <a
-              href="/admin/login"
+            <button
+              onClick={() => navigate("admin/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
             >
               Admin
-            </a>
+            </button>
           </p>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Login;

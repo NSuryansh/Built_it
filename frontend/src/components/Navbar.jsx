@@ -26,36 +26,36 @@ const Navbar = () => {
   const phoneNumber = "1234567890";
   const altPhoneNumber = "0987654321";
 
-    useEffect(() => {
-      const verifyAuth = async () => {
-        const authStatus = await checkAuth("user");
-        setIsAuthenticated(authStatus);
-      };
-      verifyAuth();
-    }, []);
-  
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleLogout = () =>{
-    localStorage.clear()
-    if(userType === "user"){
-      navigate("/login")
-    }else if(userType === "doc"){
-      navigate("/doctor/login")
-    }else{
-      navigate("admin/login")
+  const handleLogout = () => {
+    localStorage.clear();
+    if (userType === "user") {
+      navigate("/login");
+    } else if (userType === "doc") {
+      navigate("/doctor/login");
+    } else {
+      navigate("admin/login");
     }
-  }
+  };
 
   const handleNotification = () => {
-    if(isAuthenticated){
-      return
-    }else{
+    if (isAuthenticated) {
+      return;
+    } else {
       navigate("/login");
     }
-  }
+  };
 
   return (
     <nav className="bg-transperent">
@@ -73,9 +73,9 @@ const Navbar = () => {
           </div>
           <div className="hidden md:flex space-x-8 items-center">
             {links.map((item, i) => (
-              <a
+              <button
                 key={i}
-                href={item.link}
+                onClick={() => navigate(item.link)}
                 className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
                   location === item.link
                     ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
@@ -83,7 +83,7 @@ const Navbar = () => {
                 }`}
               >
                 {item.name}
-              </a>
+              </button>
             ))}
           </div>
           <div className="md:hidden transition-all flex items-center z-2">
@@ -105,8 +105,8 @@ const Navbar = () => {
                       className="py-2 border-b text-center border-gray-200"
                       key={i}
                     >
-                      <a
-                        href={item.link}
+                      <button
+                        onClick={() => navigate(item.link)}
                         className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
                           location === item.link
                             ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
@@ -114,7 +114,7 @@ const Navbar = () => {
                         }`}
                       >
                         {item.name}
-                      </a>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -166,11 +166,14 @@ const Navbar = () => {
                       </div>
 
                       <div className="pt-2">
-                        <a href="/appointments">
-                          <button className="text-sm px-4 py-2 rounded bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] w-full font-medium">
-                            Appointments
-                          </button>
-                        </a>
+                        <button
+                          onClick={() => {
+                            navigate("/appointments");
+                          }}
+                          className="text-sm px-4 py-2 rounded bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] w-full font-medium"
+                        >
+                          Appointments
+                        </button>
                       </div>
 
                       <div className="flex gap-2">
