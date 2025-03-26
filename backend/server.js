@@ -116,7 +116,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.put("/updateUser", async (req, res) => {
+app.put("/modifyUser", async (req, res) => {
   try {
     const { id, username, mobile, email, alt_mobile } = req.body;
 
