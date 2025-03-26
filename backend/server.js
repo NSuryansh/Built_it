@@ -228,6 +228,18 @@ app.get("/messages", async (req, res) => {
   }
 });
 
+app.post('/reschedule', async(req,res)=>{
+  const id = req.body["appId"]
+  console.log(id)
+  try{
+    const reschedule = await prisma.requests.delete({where: { id: id}})
+    res.json(reschedule)
+  }catch(e){
+    res.json(e)
+  }
+  
+})
+
 // app.get('/public-key/:userId', async (req, res) => {
 //     const { userId } = req.params;
 
