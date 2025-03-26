@@ -116,12 +116,39 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.put("/updateUser", async (req, res) => {
+app.put("/modifyUser", async (req, res) => {
   try {
     const { id, username, mobile, email, alt_mobile } = req.body;
 
-    if (!userId) {
+    if (!id) {
       return res.status(400).json({ error: "User ID is required" });
+    }
+
+    if (username) {
+      const existingUsername = await prisma.user.findUnique({
+        where: { username },
+      });
+      if (existingUsername && existingUsername.id !== id) {
+        return res.status(400).json({ error: "Username is already in use" });
+      }
+    }
+
+    if (mobile) {
+      const existingMobile = await prisma.user.findUnique({
+        where: { mobile },
+      });
+      if (existingMobile && existingMobile.id !== id) {
+        return res
+          .status(400)
+          .json({ error: "Mobile Number is already in use" });
+      }
+    }
+
+    if (email) {
+      const existingEmail = await prisma.user.findUnique({ where: { email } });
+      if (existingEmail && existingEmail.id !== id) {
+        return res.status(400).json({ error: "Email is already in use" });
+      }
     }
 
     const updatedData = {
@@ -274,37 +301,37 @@ app.post("/reschedule", async (req, res) => {
   }
 });
 
-app.get('/getPastApp', async (req, res) => {
-  const {docId }= req.query
+app.get("/getPastApp", async (req, res) => {
+  const { docId } = req.query;
   try {
     const app = await prisma.pastAppointments.findMany({
       where: {
-        doc_id: Number(docId)
-      }
-    })
-    res.json(app)
-  }catch(e){
-    res.json(e)
+        doc_id: Number(docId),
+      },
+    });
+    res.json(app);
+  } catch (e) {
+    res.json(e);
   }
-})
+});
 
-app.get('/getPastEvents', async(req, res)=>{
-  try{
-    const currDate = new Date()
-    currDate.setDate(currDate-30)
+app.get("/getPastEvents", async (req, res) => {
+  try {
+    const currDate = new Date();
+    currDate.setDate(currDate - 30);
     const events = await prisma.pastEvents.findMany({
-      where:{
+      where: {
         eventDate: {
           gte: thirtyDaysAgo,
           lte: new Date(),
         },
-      }
-    })
-    res.json(events)
-  }catch(e){
-    res.json(e)
+      },
+    });
+    res.json(events);
+  } catch (e) {
+    res.json(e);
   }
-})
+});
 
 // app.get('/public-key/:userId', async (req, res) => {
 //     const { userId } = req.params;
@@ -590,7 +617,6 @@ app.get("/adminProfile", async (req, res) => {
   }
 });
 
-
 app.post("/addEvent", async (req, res) => {
   try {
     const title = req.body["title"];
@@ -622,7 +648,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => { });
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
