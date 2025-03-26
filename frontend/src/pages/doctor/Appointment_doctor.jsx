@@ -6,6 +6,11 @@ import emailjs from "@emailjs/browser";
 import { DateTimePicker } from "../../components/doctor/DateTimePicker";
 import Footer from "../../components/Footer";
 
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { checkAuth } from "../../utils/profile";
+import { useNavigate } from "react-router-dom";
+import SessionExpired from "../../components/SessionExpired";
+
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
   const [completedNotes, setCompletedNotes] = useState({});
@@ -14,6 +19,16 @@ const DoctorAppointment = () => {
   const [appointments, setapp] = useState([]);
   const [curr, setcurr] = useState([]);
   const [comp, setcomp] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate();
+
+    useEffect(() => {
+      const verifyAuth = async () => {
+        const authStatus = await checkAuth("doc");
+        setIsAuthenticated(authStatus);
+      };
+      verifyAuth();
+    }, []);
 
   const handleMarkAsDone = (id) => {
     setCompletedNotes((prev) => ({
@@ -33,6 +48,9 @@ const DoctorAppointment = () => {
   };
 
   useEffect(() => {
+    const docId = localStorage.getItem("userid");
+    console.log(docId);
+    if (!docId) return;
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
       const res = await fetch(
@@ -123,6 +141,9 @@ const DoctorAppointment = () => {
         }
       );
   };
+  const handleClosePopup = () => {
+    navigate("/doctor/login");
+  };
 
   const handleReschedule = async (appointment) => {
     console.log("in reschedule");
@@ -143,6 +164,19 @@ const DoctorAppointment = () => {
       setSelectedAppointment(null);
     }
   };
+
+  if (isAuthenticated === null) {
+    return (
+      <div>
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   return (
     <div>

@@ -8,7 +8,7 @@ import { decryptMessage } from "../utils/decryptMessage";
 import { generateAESKey } from "../utils/aeskey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 
 export default function Peer() {
@@ -224,7 +224,7 @@ export default function Peer() {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );

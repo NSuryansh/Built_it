@@ -4,7 +4,7 @@ import Calendar from "../components/Calender";
 import ProgressPage from "../components/ProgressPage";
 import EventsDisplay from "../components/EventsDisplay";
 import { checkAuth } from "../utils/profile";
-import FadeLoader from 'react-spinners/FadeLoader'
+import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 import Footer from "../components/Footer";
@@ -28,7 +28,7 @@ const Landing_user = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );

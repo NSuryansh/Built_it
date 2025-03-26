@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { Calendar, MapPin, User, ChevronRight } from "lucide-react";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
 import Footer from "../../components/Footer";
+import { useNavigate } from "react-router-dom";
+
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
@@ -92,14 +94,17 @@ const DoctorLanding = () => {
   if (isAuthenticated === null) {
     return (
       <div>
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
   }
+  const handleClosePopup = () => {
+    navigate("/doctor/login");
+  };
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={() => setIsAuthenticated(null)} />;
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (
