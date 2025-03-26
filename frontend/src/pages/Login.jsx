@@ -87,7 +87,7 @@ export default function Login() {
         >
           Login
         </button>
-        <p className="mt-6 text-sm text-center text-[var(--login-text-color)]">
+        <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
           If not registered{" "}
           <a
             href="/signup"
