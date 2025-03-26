@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,133 +7,158 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
+model User {
+  id               Int                @id @default(autoincrement())
+  username         String             @unique
+  mobile           String             @unique
+  email            String             @unique
+  password         String
+  alt_mobile       String
+  publicKey        String
+  receivedMessages Message[]          @relation("ReceivedMessages")
+  sentMessages     Message[]          @relation("SentMessages")
+  appointment      Appointments[]
+  feelings         feelings?
+  invite           Notifications[]    @relation("ChatInvite")
+  notif            Notifications[]    @relation("User")
+  pastApp          PastAppointments[]
+  request          Requests[]
+  resetTokens PasswordResetToken[]
+
   @@map("user")
-  id Int @id @default(autoincrement())
-  username String @unique
-  mobile String @unique
-  email String @unique
-  password String
-  alt_mobile String
-  publicKey String
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
-  appointment Appointments[]
-  request Requests[]
-  feelings Feelings?
-  notif Notifications[] @relation("User")
-  invite Notifications[] @relation("ChatInvite")
-  pastApp PastAppointments[]
 }
 
-model Doctor{
+model PasswordResetToken {
+  @@map("passwordResetToken")
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Doctor {
+  name     String
+  mobile   String             @unique
+  email    String             @unique
+  password String
+  reg_id   String             @unique
+  desc     String?
+  img      String?
+  id       Int                @id @default(autoincrement())
+  docApp   Appointments[]
+  pastApp  PastAppointments[]
+  request  Requests[]
+
   @@map("doctor")
-  id Int @id @default(autoincrement())
-  name String
-  mobile String @unique
-  email String @unique
-  password String
-  reg_id String @unique
-  desc String?
-  img String?
-  docApp Appointments[]
-  request Requests[]
-  pastApp PastAppointments[]
 }
 
-model Admin{
+model Admin {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  mobile   String @unique
+  password String
+
   @@map("admin")
-  id Int @id @default(autoincrement())
-  email String @unique
-  mobile String @unique
-  password String
 }
 
-model PastDoc{
-  @@map("pastDoc")
-  id Int @id @default(autoincrement())
-  name String
-  mobile String @unique
-  email String @unique
-  reg_id String @unique
+model PastDoc {
+  id        Int      @id @default(autoincrement())
+  name      String
+  mobile    String   @unique
+  email     String   @unique
+  reg_id    String   @unique
   removedAt DateTime @default(now())
+
+  @@map("pastDoc")
 }
 
 model Message {
-  id          String   @id @default(uuid())
-  senderId    Int
-  recipientId Int
-  encryptedText String
-  iv          String
+  id              String   @id @default(uuid())
+  encryptedText   String
+  iv              String
+  createdAt       DateTime @default(now())
+  senderId        Int
+  recipientId     Int
   encryptedAESKey String
-  authTag String
-  createdAt   DateTime @default(now())
-  sender      User     @relation("SentMessages",fields: [senderId], references: [id])
-  recipient   User     @relation("ReceivedMessages",fields: [recipientId], references: [id])
+  authTag         String
+  recipient       User     @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  sender          User     @relation("SentMessages", fields: [senderId], references: [id])
 }
 
 model Events {
-  @@map("events")  
-  id Int @id @default(autoincrement())  
-  title String  
+  id          Int      @id @default(autoincrement())
+  title       String
   description String?
-  dateTime DateTime 
-  venue String   
+  dateTime    DateTime
+  venue       String
+
+  @@map("events")
 }
 
 model Appointments {
-  @@map("appointments")
-  id Int @id @default(autoincrement())
-  user_id    Int
-  user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  user_id   Int
   doctor_id Int
-  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete: Cascade)
-  dateTime DateTime
-  reason String?
+  dateTime  DateTime
+  reason    String?
+  doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("appointments")
 }
 
 model PastAppointments {
-  @@map("pastApp")
-  id Int @id @default(autoincrement())
-  note String
-  doc_id Int?
-  user_id Int?
+  id        Int      @id @default(autoincrement())
+  note      String
+  doc_id    Int?
+  user_id   Int?
   createdAt DateTime
-  doc Doctor? @relation(fields: [doc_id], references: [id], onDelete:SetNull )
-  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  doc       Doctor?  @relation(fields: [doc_id], references: [id])
+  user      User?    @relation(fields: [user_id], references: [id])
+
+  @@map("pastApp")
 }
 
 model Requests {
-  @@map("requests")
-  id Int @id @default(autoincrement())
-  user_id    Int
-  user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  user_id   Int
   doctor_id Int
-  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete: Cascade)
-  dateTime DateTime
-  reason String?
-}
+  dateTime  DateTime
+  reason    String?
+  doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-
-model Feelings {
-  @@map("feelings")
-  user_id    Int @id
-  user   User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  mental_peace Int
-  sleep_quality Int
-  social_life Int
-  passion Int
-  less_stress_score Int
-  happiness_score Int
+  @@map("requests")
 }
 
 model Notifications {
-  @@map("notif")
-  id Int @id @default(autoincrement())
-  user_id Int
-  user User @relation("User",fields:[user_id], references: [id])
-  chat_user Int
-  chatUser User @relation("ChatInvite",fields: [chat_user], references: [id])
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  chat_user  Int
   created_at DateTime @default(now())
+  chatUser   User     @relation("ChatInvite", fields: [chat_user], references: [id])
+  user       User     @relation("User", fields: [user_id], references: [id])
+
+  @@map("notif")
 }
 
+model feelings {
+  user_id           Int  @id
+  mental_peace      Int
+  sleep_quality     Int
+  socail_life       Int
+  passion           Int
+  less_stress_score Int
+  happiness_score   Int
+  user              User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model PastEvents{
+  @@map("pastEvents")
+  id          Int @id @default(autoincrement())
+  title       String
+  description String?
+  dateTime    DateTime
+  venue       String
+}

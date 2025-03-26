@@ -4,9 +4,10 @@ import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Mood() {
   const [message, setMessage] = useState("");
@@ -65,6 +66,16 @@ export default function Mood() {
       setChats([...newChats, { self: "False", message: botMessage }]);
     } catch (error) {
       console.error("Request failed:", error);
+      toast("Error while processing your message", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       setChats([
         ...newChats,
         {
@@ -80,7 +91,7 @@ export default function Mood() {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
@@ -93,6 +104,7 @@ export default function Mood() {
   return (
     <div className="h-screen flex flex-col">
       <Navbar />
+      <ToastContainer />
       <div className="flex-1 h-full flex overflow-hidden">
         <div className="flex-1 hidden sm:block overflow-y-auto border-r border-[var(--mp-custom-gray-200)]">
           <ProgressPage />
@@ -113,7 +125,12 @@ export default function Mood() {
             ))}
             {isLoading && (
               <div className="flex justify-center items-center my-2">
-                <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+                <PacmanLoader
+                  color="#ff4800"
+                  radius={6}
+                  height={20}
+                  width={5}
+                />
               </div>
             )}
           </div>

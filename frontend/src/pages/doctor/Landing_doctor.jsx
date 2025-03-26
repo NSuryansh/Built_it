@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { Calendar, MapPin, User, ChevronRight } from "lucide-react";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
 import Footer from "../../components/Footer";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
@@ -26,7 +28,9 @@ const DoctorLanding = () => {
 
     const fetchAppointments = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/currentdocappt?doctorId=${docId}`);
+        const response = await fetch(
+          `http://localhost:3000/currentdocappt?doctorId=${docId}`
+        );
         const data = await response.json();
 
         const formattedAppointments = data.map((appt) => {
@@ -50,6 +54,16 @@ const DoctorLanding = () => {
         setAppointments(formattedAppointments);
       } catch (error) {
         console.error("Error fetching appointments", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
 
@@ -83,6 +97,16 @@ const DoctorLanding = () => {
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
 
@@ -92,19 +116,23 @@ const DoctorLanding = () => {
   if (isAuthenticated === null) {
     return (
       <div>
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
   }
+  const handleClosePopup = () => {
+    navigate("/doctor/login");
+  };
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={() => setIsAuthenticated(null)} />;
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (
     <div className="min-h-screen flex flex-col">
       <DoctorNavbar />
+      <ToastContainer />
       <div className="h-full bg-gray-50">
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -130,12 +158,20 @@ const DoctorLanding = () => {
                       <User className="h-6 w-6 text-blue-600" />
                     </div>
                     <div className="ml-4 flex-1">
-                      <h3 className="text-sm font-medium text-gray-900">{appointment.patientName}</h3>
-                      <p className="text-sm text-gray-500">{appointment.type}</p>
+                      <h3 className="text-sm font-medium text-gray-900">
+                        {appointment.patientName}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {appointment.type}
+                      </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">{appointment.time}</p>
-                      <p className="text-sm text-gray-500">{appointment.date}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {appointment.time}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {appointment.date}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -155,9 +191,14 @@ const DoctorLanding = () => {
 
               <div className="space-y-4">
                 {events.map((event) => (
-                  <div key={event.id} className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <div
+                    key={event.id}
+                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-sm font-medium text-gray-900">{event.title}</h3>
+                      <h3 className="text-sm font-medium text-gray-900">
+                        {event.title}
+                      </h3>
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
                         {event.type}
                       </span>

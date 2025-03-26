@@ -1,5 +1,6 @@
 import express from "express";
 import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
@@ -7,7 +8,10 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer"
+// import emailjs from "@emailjs/browser";
 import { error } from "console";
+// global.location = { href: "http://localhost" };
 
 const prisma = new PrismaClient();
 const app = express();
@@ -16,6 +20,15 @@ const server = createServer(app);
 const port = 3000;
 dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com", // e.g., smtp.gmail.com
+  port: 465,
+  secure: true,
+  auth: {
+    user: "spython.webd@gmail.com",
+    pass: "bxaq xyym avnp dgxm",
+  },
+})
 
 app.use(cors());
 const io = new Server(server, {
@@ -113,6 +126,68 @@ app.post("/signup", async (req, res) => {
     res.status(201).json({ message: "User added" });
   } catch (e) {
     console.log(e);
+  }
+});
+
+app.put("/modifyUser", async (req, res) => {
+  try {
+    const { id, username, email, mobile, alt_mobile } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    if (username) {
+      const existingUsername = await prisma.user.findUnique({
+        where: { username },
+      });
+      if (existingUsername && existingUsername.id !== id) {
+        return res.status(400).json({ error: "Username is already in use" });
+      }
+    }
+
+    if (mobile) {
+      const existingMobile = await prisma.user.findUnique({
+        where: { mobile },
+      });
+      if (existingMobile && existingMobile.id !== id) {
+        return res
+          .status(400)
+          .json({ error: "Mobile Number is already in use" });
+      }
+    }
+
+    if (email) {
+      const existingEmail = await prisma.user.findUnique({ where: { email } });
+      if (existingEmail && existingEmail.id !== id) {
+        return res.status(400).json({ error: "Email is already in use" });
+      }
+    }
+
+    const updatedData = {
+      ...(username && { username }),
+      ...(mobile && { mobile }),
+      ...(email && { email }),
+      ...(alt_mobile && { alt_mobile }),
+    };
+
+    // Ensure at least one field is being updated
+    if (Object.keys(updatedData).length === 0) {
+      return res
+        .status(400)
+        .json({ error: "No valid fields provided for update." });
+    }
+
+    // Update user details in Prisma
+    const updatedUser = await prisma.user.update({
+      where: { id: id },
+      data: updatedData,
+    });
+
+    res.json({ message: "User updated successfully", updatedUser });
+  } catch (error) {
+    console.error("Error updating user: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -236,6 +311,38 @@ app.post("/reschedule", async (req, res) => {
     res.json(reschedule);
   } catch (e) {
     res.json(e);
+  }
+});
+
+app.get('/getPastApp', async (req, res) => {
+  const { docId } = req.query
+  try {
+    const app = await prisma.pastAppointments.findMany({
+      where: {
+        doc_id: Number(docId)
+      }
+    })
+    res.json(app)
+  } catch (e) {
+    res.json(e)
+  }
+});
+
+app.get('/getPastEvents', async (req, res) => {
+  try {
+    const currDate = new Date()
+    currDate.setDate(currDate - 30)
+    const events = await prisma.pastEvents.findMany({
+      where: {
+        eventDate: {
+          gte: thirtyDaysAgo,
+          lte: new Date(),
+        },
+      }
+    })
+    res.json(events)
+  } catch (e) {
+    res.json(e)
   }
 });
 
@@ -522,44 +629,6 @@ app.get("/adminProfile", async (req, res) => {
     console.log(e);
   }
 });
-
-// app.post("/book", async (req, res) => {
-//   const userId = req.body['userId'];
-//   const doctorId = req.body['doctorId']
-//   const dateTime = req.body['dateTime']
-//   console.log(req.body)
-//   console.log(doctorId, " hello")
-
-//   try {
-//     console.log("HOAS")
-//     // Check if user exists
-//     const user = await prisma.user.findUnique({ where: { id: userId } });
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Check if doctor exists
-//     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
-//     if (!doctor) {
-//       return res.status(404).json({ message: "Doctor not founfdsfdasd" });
-//     }
-
-//     const appointment = await prisma.appointments.create({
-//       data: {
-//         user_id: userId,
-//         doctor_id: doctorId,
-//         dateTime: new Date(dateTime),
-//       },
-//     });
-
-//     res
-//       .status(0)
-//       .json({ message: "Appointment booked successfully", appointment });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(0).json({ message: "Internal Server Error" });
-//   }
-// });
 
 app.post("/addEvent", async (req, res) => {
   try {
@@ -888,6 +957,91 @@ app.post("/feelings", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+async function sendEmail(to, subject, text){
+  // var params = {
+  //   email: email,
+  //   resetLink: link
+  // }
+  // emailjs
+  //     .send("service_coucldi", "template_7iypoq7", params, "5rqHkmhJJfAxWBFNo")
+  //     .then(
+  //       (repsonse) => {
+  //         console.log("success", repsonse.status);
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //       }
+  //     );
+  try {
+    const info = await transporter.sendMail({
+      from: '"Vitality" tanveeiii15@gmail.com',
+      to,
+      subject,
+      text,
+    });
+    console.log("Email sent:", info.messageId);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+}
+app.post('/forgotPassword', async (req, res) => {
+  const email = req.body["email"]
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email
+      }
+    })
+    console.log(user)
+    const token = uuidv4()
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000)
+    const tokengen = await prisma.passwordResetToken.create({
+      data: {
+        token: token,
+        expiresAt: expiresAt,
+        userId: user.id
+      }
+    })
+    console.log(tokengen)
+    const resetLink = `http://localhost:5173/reset-password?token=${token}`
+    const subject = "Reset Your Password";
+    const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
+    sendEmail(user.email, subject, message)
+    res.json({ message: "Password reset token generated. Check your email for instructions." })
+  } catch (e) {
+    res.json(e)
+  }
+})
+
+app.post('/resetPassword', async(req,res)=>{
+  const token = req.body["token"]
+  const password = req.body["password"]
+  try{
+    const resetEntry = await prisma.passwordResetToken.findUnique({
+      where:{
+        token: token
+      }
+    })
+    if (!resetEntry || new Date() > resetEntry.expiresAt) {
+      return res.status(400).json({ error: "Invalid or expired token" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await prisma.user.update({
+      where: { id: resetEntry.userId },
+      data: { password: hashedPassword },
+    });
+
+    await prisma.passwordResetToken.delete({
+      where: { token: token },
+    });
+
+    res.json({ message: "Password updated successfully" });
+  }catch(error){
+    console.error("Error in resetPassword endpoint:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
 
 server.listen(3001, () => console.log("Server running on port 3001"));
 

@@ -1,9 +1,20 @@
 export const checkAuth = async (userType) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        return false;
+    function isTokenExpired(token) {
+        if (!token) return false; 
+        try {
+            const payload = JSON.parse(atob(token.split(".")[1])); 
+            const currentTime = Math.floor(Date.now() / 1000); 
+            return payload.exp < currentTime; 
+        } catch (error) {
+            console.log("Error in validating the JWST Token: ", error);
+            return false; 
+        }
     }
-
+    
+    const token = localStorage.getItem("token");
+    if (isTokenExpired(token)) {
+        return false;  
+    }
     try {
         let user = "";
         if(userType === "user"){

@@ -20,39 +20,14 @@ const AdminNavbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.clear()
-    navigate("/admin/login")
-  }
+    localStorage.clear();
+    navigate("/admin/login");
+  };
 
   return (
     <nav className="bg-transperent">
       <div className="px-8 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex">
-            <img
-              src="/assests/logo.png"
-              alt="logo"
-              width={25}
-              height={25}
-              className="rounded-md mr-2"
-            />
-            <div className="text-xl font-bold">Vitality</div>
-          </div>
-          <div className="hidden md:flex space-x-8 items-center">
-            {links.map((item, i) => (
-              <a
-                key={i}
-                href={item.link}
-                className={`hover:text-[var(--custom-primary-green)] focus:text-[var(--custom-primary-green)] transition-colors ${
-                  location == item.link
-                    ? "underline underline-offset-4 text-[var(--landing-bg-green)] decoration-2"
-                    : ""
-                }`}
-              >
-                {item.name}
-              </a>
-            ))}
-          </div>
           <div className="md:hidden transition-all flex items-center z-2">
             <button
               onClick={toggleMenu}
@@ -65,15 +40,15 @@ const AdminNavbar = () => {
               )}
             </button>
             {isOpen && (
-              <div className="absolute top-16 left-[12%] w-[80%] bg-white rounded-2xl shadow-md p-4">
+              <div className="absolute top-16 left-[2%] w-[40%] bg-white rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
                     <li
                       className="py-2 border-b text-center border-gray-200"
                       key={i}
                     >
-                      <a
-                        href={item.link}
+                      <button
+                        onClick={() => navigate(item.link)}
                         className={`hover:text-[var(--custom-primary-green)] focus:text-[var(--custom-primary-green)] transition-colors ${
                           location == item.link
                             ? "underline underline-offset-4 text-[var(--landing-bg-green)] decoration-2"
@@ -81,12 +56,37 @@ const AdminNavbar = () => {
                         }`}
                       >
                         {item.name}
-                      </a>
+                      </button>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+          </div>
+          <div className="flex">
+            <img
+              src="/assests/logo.png"
+              alt="logo"
+              width={25}
+              height={25}
+              className="rounded-md mr-2"
+            />
+            <div className="text-xl font-bold">Vitality</div>
+          </div>
+          <div className="hidden md:flex space-x-8 items-center">
+            {links.map((item, i) => (
+              <button
+                key={i}
+                onClick={() => navigate(item.link)}
+                className={`hover:text-[var(--custom-primary-green)] focus:text-[var(--custom-primary-green)] transition-colors ${
+                  location == item.link
+                    ? "underline underline-offset-4 text-[var(--landing-bg-green)] decoration-2"
+                    : ""
+                }`}
+              >
+                {item.name}
+              </button>
+            ))}
           </div>
           <div className="flex items-center space-x-4">
             <button className="cursor-pointer">

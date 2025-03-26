@@ -99,45 +99,19 @@ button {
   }
 }
 
-@layer components {
-  .calendar-wrapper {
-    @apply p-4 bg-white rounded-xl shadow-lg border border-gray-100;
-  }
+.custom-toast {
+  background-color: var(--custom-orange-100) !important;
+  color: var(--custom-orange-900) !important;
+  font-family: inherit;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
 
-  .rdp {
-    --rdp-cell-size: 40px;
-    margin: 0;
-  }
+.Toastify__progress-bar {
+  background: var(--custom-orange-500) !important;
+}
 
-  .rdp-button {
-    @apply w-10 h-10 text-sm font-medium transition-colors duration-200;
-  }
-
-  .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
-    @apply bg-blue-50 text-blue-700;
-  }
-
-  .rdp-day_selected:not(.rdp-day_outside) {
-    @apply bg-blue-500 text-white hover:bg-blue-600;
-  }
-
-  .rdp-day_today {
-    @apply font-bold text-blue-700;
-  }
-
-  .rdp-head_cell {
-    @apply font-semibold text-sm text-gray-600;
-  }
-
-  .rdp-nav_button {
-    @apply hover:bg-blue-50 rounded-lg transition-colors duration-200;
-  }
-
-  .rdp-caption {
-    @apply mb-4;
-  }
-
-  .rdp-month {
-    @apply p-0;
-  }
+.Toastify__close-button {
+  color: var(--custom-orange-900) !important;
 }

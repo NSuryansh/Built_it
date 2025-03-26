@@ -15,7 +15,7 @@ import typer
 from typing import List, Optional
 
 load_dotenv()
-
+os.environ['GROQ_API_KEY'] = "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"
 AGENT_DB_PATH = "tmp/agents.db"
 MEMORY_DB_PATH = "tmp/agent_memory.db"
 
@@ -26,7 +26,7 @@ def fetch_previous_sessions(user_id: str) -> List[str]:
     return agent_storage.get_all_session_ids(user_id)
 
 def load_existing_memory(session_id: str):
-    memories = memory_db.get_memories(session_id=session_id)
+    memories = memory_db.read_memories(user_id=session_id)
     return memories if memories else []
 
 def Mental_Agent(user_id: Optional[str] = typer.Argument(None, help="User ID for the study session")):

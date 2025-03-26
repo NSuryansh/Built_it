@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Calendar, Trash2 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
-import FadeLoader from "react-spinners/FadeLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 
 const EventsList = () => {
@@ -30,9 +30,29 @@ const EventsList = () => {
         );
       } else {
         console.error("Failed to delete the event");
+        toast("Failed to delete the event", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     } catch (error) {
       console.error("Error deleting event:", error);
+      toast("Failed to delete the event", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
     }
   };
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -71,6 +91,16 @@ const EventsList = () => {
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
       }
     };
 
@@ -80,7 +110,7 @@ const EventsList = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FadeLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#048a81" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>
     );
