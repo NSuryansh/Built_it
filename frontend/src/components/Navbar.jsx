@@ -59,7 +59,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-[var(--custom-orange-100)]">
+    <nav className={`${location === '/' ? 'bg-transparent' : 'bg-[var(--custom-orange-100)]'}`}>
       <div className="px-8 py-3">
         <div className="flex items-center justify-between">
           <div className="flex">
