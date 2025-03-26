@@ -89,12 +89,12 @@ export default function Login() {
         </button>
         <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
           If not registered{" "}
-          <a
-            href="/signup"
+          <button
+            onClick={() => navigate("/signup")}
             className="underline font-bold text-[var(--custom-primary-orange)]"
           >
             click here
-          </a>
+          </button>
         </p>
 
         <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
@@ -105,19 +105,19 @@ export default function Login() {
         <div className="flex w-full mt-2">
           <p className="w-full text-center">
             Login as a&nbsp;
-            <a
-              href="/doctor/login"
+            <button
+              onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
             >
               Doctor
-            </a>
+            </button>
             &nbsp;or&nbsp;
-            <a
-              href="/admin/login"
+            <button
+              onClick={() => navigate("admin/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
             >
               Admin
-            </a>
+            </button>
           </p>
         </div>
       </div>

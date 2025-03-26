@@ -109,7 +109,7 @@ export default function SignUp() {
             {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
           </div>
 
-          <form >
+          <form>
             <div className="space-y-4">
               <div>
                 <label
@@ -236,12 +236,12 @@ export default function SignUp() {
 
           <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
             Already have an account?{" "}
-            <a
-              href="/login"
+            <button
+              onClick={() => navigate("/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
             >
               Login here
-            </a>
+            </button>
           </p>
         </div>
       </div>

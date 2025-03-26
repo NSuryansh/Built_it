@@ -42,9 +42,9 @@ const DoctorNavbar = () => {
           </div>
           <div className="hidden md:flex space-x-8 items-center">
             {links.map((item, i) => (
-              <a
+              <button
                 key={i}
-                href={item.link}
+                onClick={() => navigate(item.link)}
                 className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
                   location == item.link
                     ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
@@ -52,7 +52,7 @@ const DoctorNavbar = () => {
                 }`}
               >
                 {item.name}
-              </a>
+              </button>
             ))}
           </div>
           <div className="md:hidden transition-all flex items-center z-2">
@@ -74,8 +74,8 @@ const DoctorNavbar = () => {
                       className="py-2 border-b text-center border-gray-200"
                       key={i}
                     >
-                      <a
-                        href={item.link}
+                      <button
+                        onClick={() => navigate(item.link)}
                         className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
                           location == item.link
                             ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
@@ -83,7 +83,7 @@ const DoctorNavbar = () => {
                         }`}
                       >
                         {item.name}
-                      </a>
+                      </button>
                     </li>
                   ))}
                 </ul>

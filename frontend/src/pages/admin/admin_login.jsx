@@ -102,19 +102,19 @@ const AdminLogin = () => {
         <div className="flex w-full mt-2">
           <p className="w-full text-center">
             Login as a&nbsp;
-            <a
-              href="/login"
+            <button
+              onClick={() => navigate("/login")}
               className="underline font-bold text-[var(--custom-primary-green)]"
             >
               User
-            </a>
+            </button>
             &nbsp;or&nbsp;
-            <a
-              href="/doctor/login"
+            <button
+              onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-primary-green)]"
             >
               Doctor
-            </a>
+            </button>
           </p>
         </div>
       </div>
