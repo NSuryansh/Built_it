@@ -26,8 +26,6 @@ export default function App() {
     location.pathname === "/" ||
     location.pathname === "/stress" ||
     location.pathname === "/appointments" ||
-    location.pathname === "/login" ||
-    location.pathname === "/signup" ||
     location.pathname === "/book";
 
   return (
