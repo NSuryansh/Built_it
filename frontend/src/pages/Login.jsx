@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, Eye, EyeOff } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -10,6 +11,11 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handlelogin = async () => {
+    if (username === "" || password === "") {
+      setError("Please fill the fields");
+      return;
+    }
+    setError("");
     const response = await fetch("https://built-it-xjiq.onrender.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -26,11 +32,21 @@ const Login = () => {
       localStorage.setItem("token", res["token"]);
       navigate("/dashboard");
     } else {
-      alert(res["message"]);
+      toast(res["message"], {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
     }
   };
   return (
     <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">
+      <ToastContainer />
       <div className="max-w-md w-full space-y-2 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
         <div className="text-center">
           <div className="flex justify-center">
