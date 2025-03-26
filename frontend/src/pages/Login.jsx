@@ -145,7 +145,7 @@ const Login = () => {
             </button>
             &nbsp;or&nbsp;
             <button
-              onClick={() => navigate("admin/login")}
+              onClick={() => navigate("/admin/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
             >
               Admin
