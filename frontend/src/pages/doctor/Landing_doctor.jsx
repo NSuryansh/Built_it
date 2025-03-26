@@ -5,12 +5,14 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
 import Footer from "../../components/Footer";
+import { useNavigate } from "react-router-dom";
+
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
@@ -99,9 +101,12 @@ const DoctorLanding = () => {
       </div>
     );
   }
+  const handleClosePopup = () => {
+    navigate("/doctor/login");
+  };
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={() => setIsAuthenticated(null)} />;
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (

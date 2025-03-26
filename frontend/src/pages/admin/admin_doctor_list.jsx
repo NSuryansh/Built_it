@@ -5,6 +5,7 @@ import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const DoctorsList = () => {
   const [doctors, setDoc] = useState([]);

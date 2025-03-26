@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import { checkAuth } from "../utils/profile";
 import SessionExpired from "../components/SessionExpired";
 import { useNavigate } from "react-router-dom";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const Stress = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -23,18 +24,19 @@ const Stress = () => {
     navigate("/login");
   };
 
-  if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
-  }
-
-  if (isAuthenticated === null) {
+  if(isAuthenticated === null){
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} /> 
         <p>Loading...</p>
       </div>
     );
   }
+
+  if(!isAuthenticated){
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
+
   return (
     <div className="min-h-screen bg-[var(--custom-orange-100)]" style={{}}>
       <Navbar />
