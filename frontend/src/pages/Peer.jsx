@@ -27,6 +27,13 @@ export default function Peer() {
 
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   // Filter out the current user from contacts
   const filteredChats = chats.filter((chat) => chat.id !== userId);
@@ -37,7 +44,12 @@ export default function Peer() {
         `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
-      // Map API contacts to your chat object shape: { name, id, messages: [] }
+      
+      if (!contacts || !Array.isArray(contacts)) {
+        console.warn("No contacts received.");
+        return; // or setChats([]) if you want to ensure chats is always an array
+      }
+      
       const updatedChats = contacts.map((contact) => ({
         name: contact.username,
         id: contact.id,
@@ -47,13 +59,16 @@ export default function Peer() {
       console.log("Updated Chats:", updatedChats);
     } catch (error) {
       console.error("Error fetching contacts:", error);
-      return [];
     }
   }
+  
 
   useEffect(() => {
-    fetchContacts(userId);
-  }, [userId]);
+    if (isAuthenticated && userId) {
+      fetchContacts(userId);
+    }
+  }, [isAuthenticated, userId]);
+  
 
   useEffect(() => {
     if (filteredChats.length > 0) {
@@ -62,13 +77,7 @@ export default function Peer() {
   }, [selectedChat, filteredChats]);
 
   // Authentication check
-  useEffect(() => {
-    const verifyAuth = async () => {
-      const authStatus = await checkAuth("user");
-      setIsAuthenticated(authStatus);
-    };
-    verifyAuth();
-  }, []);
+
 
   // Initialize WebSocket connection
   useEffect(() => {
@@ -97,6 +106,7 @@ export default function Peer() {
   // Handle receiving messages and update showMessages
   useEffect(() => {
     if (!aesKey) return;
+    if(!isAuthenticated) return;
 
     const handleReceiveMessage = async ({
       senderId,
