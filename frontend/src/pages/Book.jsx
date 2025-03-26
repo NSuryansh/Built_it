@@ -716,7 +716,9 @@ const Book = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors");
+        const res = await fetch(
+          "https://built-it-xjiq.onrender.com/getdoctors"
+        );
         const data = await res.json();
         setDoctors(data);
       } catch (err) {
@@ -747,7 +749,7 @@ const Book = () => {
     const user_id = localStorage.getItem("userid");
 
     try {
-      const res = await fetch("http://localhost:3000/requests", {
+      const res = await fetch("https://built-it-xjiq.onrender.com/requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

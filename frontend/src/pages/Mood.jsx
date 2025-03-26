@@ -43,7 +43,7 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/chat", {
+      const response = await fetch("https://built-it-xjiq.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: "default_user", message }),
@@ -54,21 +54,23 @@ export default function Mood() {
       }
 
       const data = await response.json();
-      
-      // Handle both structured and unstructured responses
-      const botMessage = data.response?.text || 
-                         (typeof data.response === 'string' ? data.response : 
-                         "I'm sorry, I couldn't process your message.");
 
-      setChats([
-        ...newChats, 
-        { self: "False", message: botMessage }
-      ]);
+      // Handle both structured and unstructured responses
+      const botMessage =
+        data.response?.text ||
+        (typeof data.response === "string"
+          ? data.response
+          : "I'm sorry, I couldn't process your message.");
+
+      setChats([...newChats, { self: "False", message: botMessage }]);
     } catch (error) {
       console.error("Request failed:", error);
       setChats([
-        ...newChats, 
-        { self: "False", message: "Sorry, there was an error processing your message." }
+        ...newChats,
+        {
+          self: "False",
+          message: "Sorry, there was an error processing your message.",
+        },
       ]);
     } finally {
       setIsLoading(false);
