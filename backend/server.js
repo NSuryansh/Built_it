@@ -315,7 +315,7 @@ app.post("/reschedule", async (req, res) => {
 });
 
 app.get('/getPastApp', async (req, res) => {
-  const {docId }= req.query
+  const { docId } = req.query
   try {
     const app = await prisma.pastAppointments.findMany({
       where: {
@@ -323,15 +323,15 @@ app.get('/getPastApp', async (req, res) => {
       }
     })
     res.json(app)
-  }catch(e){
+  } catch (e) {
     res.json(e)
   }
 });
 
-app.get('/getPastEvents', async(req, res)=>{
-  try{
+app.get('/getPastEvents', async (req, res) => {
+  try {
     const currDate = new Date()
-    currDate.setDate(currDate-30)
+    currDate.setDate(currDate - 30)
     const events = await prisma.pastEvents.findMany({
       where: {
         eventDate: {
@@ -341,7 +341,7 @@ app.get('/getPastEvents', async(req, res)=>{
       }
     })
     res.json(events)
-  }catch(e){
+  } catch (e) {
     res.json(e)
   }
 });
