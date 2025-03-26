@@ -17,6 +17,7 @@ const Navbar = () => {
     { name: "Peer", link: "/peer" },
     { name: "Book", link: "/book" },
     { name: "Stress", link: "/stress" },
+    { name: "Events", link: "/events" },
   ];
 
   // Retrieve usertype from localStorage

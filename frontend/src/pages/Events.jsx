@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from "../components/Navbar";
 
 import { Bell, User, CalendarCheck, CalendarClock, CalendarX } from 'lucide-react';
+import Footer from '../components/Footer';
 
 // Mock data for events
 const pastEvents = Array.from({ length: 10 }, (_, i) => ({
@@ -30,7 +31,7 @@ const upcomingEvents = Array.from({ length: 10 }, (_, i) => ({
 
 function Events() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-100 to-orange-100">
+    <div className="min-h-screen bg-gradient-to-b from-orange-100 via-pink-100 to-orange-100">
       {/* Navigation Bar */}
       <Navbar />
 
@@ -126,6 +127,7 @@ function Events() {
           </div>
         </section>
       </main>
+      <Footer color={'orange'} />
     </div>
   );
 }
