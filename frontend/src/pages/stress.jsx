@@ -1,5 +1,5 @@
 import React from "react";
-import { Bell, User } from "lucide-react";
+import { Bell, User, ExternalLink } from "lucide-react";
 import VideoSection from "../components/videosection";
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
@@ -8,6 +8,41 @@ import { checkAuth } from "../utils/profile";
 import SessionExpired from "../components/SessionExpired";
 import { useNavigate } from "react-router-dom";
 import PacmanLoader from "react-spinners/PacmanLoader";
+
+const articles = [
+  {
+    id: 1,
+    title: "Understanding and Managing Stress",
+    description: "Learn about the different types of stress and effective strategies to manage them in your daily life.",
+    url: "https://www.nimh.nih.gov/health/publications/so-stressed-out-fact-sheet",
+    readTime: "5 min read",
+    source: "National Institute of Mental Health"
+  },
+  {
+    id: 2,
+    title: "The Science Behind Stress and Mental Health",
+    description: "Explore the biological mechanisms of stress and its impact on mental well-being.",
+    url: "https://www.health.harvard.edu/staying-healthy/understanding-the-stress-response",
+    readTime: "8 min read",
+    source: "Harvard Health"
+  },
+  {
+    id: 3,
+    title: "Mindfulness Techniques for Stress Relief",
+    description: "Discover practical mindfulness exercises that can help reduce stress and anxiety.",
+    url: "https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/mindfulness-exercises/art-20046356",
+    readTime: "6 min read",
+    source: "Mayo Clinic"
+  },
+  {
+    id: 4,
+    title: "Work-Related Stress Management",
+    description: "Tips and strategies for managing stress in the workplace and maintaining work-life balance.",
+    url: "https://www.apa.org/topics/healthy-workplaces/work-stress",
+    readTime: "7 min read",
+    source: "American Psychological Association"
+  }
+];
 
 const Stress = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -42,6 +77,38 @@ const Stress = () => {
       <Navbar />
       {/* Main Content */}
       <div className="pt-10 px-4 max-w-7xl mx-auto space-y-8 mb-8">
+        {/* Articles Section */}
+        <section className="bg-white/90 backdrop-blur-sm rounded-lg p-6">
+          <h2 className="text-3xl font-semibold text-red-500 mb-6 text-center">
+            Mental Health Resources
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {articles.map((article) => (
+              <a
+                key={article.id}
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              >
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-semibold text-gray-800 flex-1">
+                      {article.title}
+                    </h3>
+                    <ExternalLink className="h-5 w-5 text-gray-400 flex-shrink-0 ml-2" />
+                  </div>
+                  <p className="text-sm text-gray-600 mb-4">{article.description}</p>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-red-500">{article.source}</span>
+                    <span className="text-gray-500">{article.readTime}</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
         {/* Guided Meditation Section */}
         <section className="bg-white/90 backdrop-blur-sm rounded-lg p-6">
           <h2 className="text-3xl font-semibold text-red-500 mb-4 text-center">
