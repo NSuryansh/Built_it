@@ -37,12 +37,12 @@ export default function Peer() {
         `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
-      
+
       if (!contacts || !Array.isArray(contacts)) {
         console.warn("No contacts received.");
         return; // or setChats([]) if you want to ensure chats is always an array
       }
-      
+
       const updatedChats = contacts.map((contact) => ({
         name: contact.username,
         id: contact.id,
@@ -61,7 +61,6 @@ export default function Peer() {
       fetchContacts(userId);
     }
   }, [isAuthenticated, userId]);
-  
 
   useEffect(() => {
     if (filteredChats.length > 0) {
@@ -70,7 +69,13 @@ export default function Peer() {
   }, [selectedChat, filteredChats]);
 
   // Authentication check
-
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   // Initialize WebSocket connection
   useEffect(() => {
@@ -99,7 +104,7 @@ export default function Peer() {
   // Handle receiving messages and update showMessages
   useEffect(() => {
     if (!aesKey) return;
-    if(!isAuthenticated) return;
+    if (!isAuthenticated) return;
 
     const handleReceiveMessage = async ({
       senderId,
@@ -252,9 +257,9 @@ export default function Peer() {
             setSelectedChat={setSelectedChat}
           />
         ) : (
-          <div className="w-3/12 h-full flex justify-center items-center">You have no chats</div>
-
-
+          <div className="w-3/12 h-full flex justify-center items-center">
+            You have no chats
+          </div>
         )}
         <div className="flex-1 h-full justify-between flex flex-col">
           <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
@@ -281,7 +286,6 @@ export default function Peer() {
     </div>
   );
 }
-
 
 // import React, { useEffect, useState, useRef } from "react";
 // import ChatList from "../components/ChatList";
