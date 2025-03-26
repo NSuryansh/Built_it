@@ -305,44 +305,6 @@ const DoctorProfile = () => {
                     ))}
                   </div>
                 </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Availability
-                  </h3>
-                  <div className="space-y-3">
-                    {Object.entries(profile.availability).map(
-                      ([day, hours]) => (
-                        <div
-                          key={day}
-                          className="flex items-center justify-between"
-                        >
-                          <span className="text-gray-600 capitalize">
-                            {day}
-                          </span>
-                          {isEditing ? (
-                            <input
-                              type="text"
-                              value={editedProfile.availability[day]}
-                              onChange={(e) =>
-                                setEditedProfile({
-                                  ...editedProfile,
-                                  availability: {
-                                    ...editedProfile.availability,
-                                    [day]: e.target.value,
-                                  },
-                                })
-                              }
-                              className="w-48 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
-                            />
-                          ) : (
-                            <span className="text-gray-600">{hours}</span>
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
