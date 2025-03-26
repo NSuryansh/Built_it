@@ -232,7 +232,7 @@ app.post('/reschedule', async(req,res)=>{
   const id = req.body["appId"]
   console.log(id)
   try{
-    const reschedule = await prisma.requests.find({where: { id: id}})
+    const reschedule = await prisma.requests.delete({where: { id: id}})
     res.json(reschedule)
   }catch(e){
     res.json(e)

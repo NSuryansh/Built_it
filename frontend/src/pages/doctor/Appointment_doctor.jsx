@@ -104,7 +104,7 @@ const DoctorAppointment = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        appId: appointment,
+        appId: appointment["id"],
       }),
     });
     const resp = await res.json();
