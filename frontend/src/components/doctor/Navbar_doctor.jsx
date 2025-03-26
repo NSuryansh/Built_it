@@ -30,6 +30,41 @@ const DoctorNavbar = () => {
     <nav className="bg-transperent">
       <div className="px-8 py-3">
         <div className="flex items-center justify-between">
+          <div className="md:hidden transition-all flex items-center z-2">
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-full hover:bg-gray-100"
+            >
+              {isOpen ? (
+                <AiOutlineClose size={24} />
+              ) : (
+                <AiOutlineMenu size={24} />
+              )}
+            </button>
+            {isOpen && (
+              <div className="absolute top-16 left-[2%] w-[40%] bg-white rounded-2xl shadow-md p-4">
+                <ul>
+                  {links.map((item, i) => (
+                    <li
+                      className="py-2 border-b text-center border-gray-200"
+                      key={i}
+                    >
+                      <button
+                        onClick={() => navigate(item.link)}
+                        className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                          location == item.link
+                            ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
+                            : ""
+                        }`}
+                      >
+                        {item.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
           <div className="flex">
             <img
               src="/assests/logo.png"
@@ -54,41 +89,6 @@ const DoctorNavbar = () => {
                 {item.name}
               </button>
             ))}
-          </div>
-          <div className="md:hidden transition-all flex items-center z-2">
-            <button
-              onClick={toggleMenu}
-              className="p-2 rounded-full hover:bg-gray-100"
-            >
-              {isOpen ? (
-                <AiOutlineClose size={24} />
-              ) : (
-                <AiOutlineMenu size={24} />
-              )}
-            </button>
-            {isOpen && (
-              <div className="absolute top-16 left-[12%] w-[80%] bg-white rounded-2xl shadow-md p-4">
-                <ul>
-                  {links.map((item, i) => (
-                    <li
-                      className="py-2 border-b text-center border-gray-200"
-                      key={i}
-                    >
-                      <button
-                        onClick={() => navigate(item.link)}
-                        className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                          location == item.link
-                            ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
-                            : ""
-                        }`}
-                      >
-                        {item.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
           <div className="flex items-center space-x-4">
             <button className="cursor-pointer">
