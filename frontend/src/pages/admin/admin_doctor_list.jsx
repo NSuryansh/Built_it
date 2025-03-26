@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Trash2, UserPlus } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
@@ -7,39 +7,6 @@ import FadeLoader from "react-spinners/FadeLoader";
 import { checkAuth } from "../../utils/profile";
 
 const DoctorsList = () => {
-  // const doctors = [
-  //   {
-  //     id: 1,
-  //     name: "Dr. Sarah Wilson",
-  //     specialty: "Cardiologist",
-  //     email: "sarah.wilson@example.com",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Dr. Michael Chen",
-  //     specialty: "Neurologist",
-  //     email: "michael.chen@example.com",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Dr. Emily Brown",
-  //     specialty: "Pediatrician",
-  //     email: "emily.brown@example.com",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Dr. James Taylor",
-  //     specialty: "Orthopedist",
-  //     email: "james.taylor@example.com",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Dr. Lisa Anderson",
-  //     specialty: "Dermatologist",
-  //     email: "lisa.anderson@example.com",
-  //   },
-  // ];
-
   const [doctors, setDoc] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
@@ -50,6 +17,7 @@ const DoctorsList = () => {
     };
     verifyAuth();
   }, []);
+
   useEffect(() => {
     const fetchDoctors = async () => {
       const res = await fetch("https://built-it-xjiq.onrender.com/getdoctors");
@@ -64,10 +32,25 @@ const DoctorsList = () => {
     console.log(doctors);
   }, [doctors]);
 
-  const handleDelete = (id) => {
-    // Handle doctor deletion
-    console.log("Delete doctor with id:", id);
+  const handleDelete = async (doctorId) => {
+    try {
+      const res = await fetch("https://built-it-xjiq.onrender.com/deletedoc", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ doctorID: doctorId }),
+      });
+      const resp = await res.json();
+      // Optionally, you can update your state to remove the deleted doctor
+      setDoc((prevDoctors) =>
+        prevDoctors.filter((doctor) => doctor.id !== doctorId)
+      );
+    } catch (error) {
+      console.error("Error deleting doctor:", error);
+    }
   };
+
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
@@ -82,7 +65,7 @@ const DoctorsList = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen ">
+    <div className="flex flex-col min-h-screen">
       <AdminNavbar />
       <div className="space-y-6 md:min-w-5xl max-w-7xl mx-auto mb-auto">
         <div className="flex justify-between items-center">
