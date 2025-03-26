@@ -1,5 +1,6 @@
 import express from "express";
 import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
@@ -7,7 +8,10 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer"
+// import emailjs from "@emailjs/browser";
 import { error } from "console";
+// global.location = { href: "http://localhost" };
 
 const prisma = new PrismaClient();
 const app = express();
@@ -16,6 +20,15 @@ const server = createServer(app);
 const port = 3000;
 dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com", // e.g., smtp.gmail.com
+  port: 465,
+  secure: true,
+  auth: {
+    user: "spython.webd@gmail.com",
+    pass: "bxaq xyym avnp dgxm",
+  },
+})
 
 app.use(cors());
 const io = new Server(server, {
@@ -275,7 +288,7 @@ app.post("/reschedule", async (req, res) => {
 });
 
 app.get('/getPastApp', async (req, res) => {
-  const {docId }= req.query
+  const { docId } = req.query
   try {
     const app = await prisma.pastAppointments.findMany({
       where: {
@@ -283,17 +296,17 @@ app.get('/getPastApp', async (req, res) => {
       }
     })
     res.json(app)
-  }catch(e){
+  } catch (e) {
     res.json(e)
   }
 })
 
-app.get('/getPastEvents', async(req, res)=>{
-  try{
+app.get('/getPastEvents', async (req, res) => {
+  try {
     const currDate = new Date()
-    currDate.setDate(currDate-30)
+    currDate.setDate(currDate - 30)
     const events = await prisma.pastEvents.findMany({
-      where:{
+      where: {
         eventDate: {
           gte: thirtyDaysAgo,
           lte: new Date(),
@@ -301,7 +314,7 @@ app.get('/getPastEvents', async(req, res)=>{
       }
     })
     res.json(events)
-  }catch(e){
+  } catch (e) {
     res.json(e)
   }
 })
@@ -918,6 +931,91 @@ app.post("/feelings", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+async function sendEmail(to, subject, text){
+  // var params = {
+  //   email: email,
+  //   resetLink: link
+  // }
+  // emailjs
+  //     .send("service_coucldi", "template_7iypoq7", params, "5rqHkmhJJfAxWBFNo")
+  //     .then(
+  //       (repsonse) => {
+  //         console.log("success", repsonse.status);
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //       }
+  //     );
+  try {
+    const info = await transporter.sendMail({
+      from: '"Vitality" tanveeiii15@gmail.com',
+      to,
+      subject,
+      text,
+    });
+    console.log("Email sent:", info.messageId);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+}
+app.post('/forgotPassword', async (req, res) => {
+  const email = req.body["email"]
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email
+      }
+    })
+    console.log(user)
+    const token = uuidv4()
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000)
+    const tokengen = await prisma.passwordResetToken.create({
+      data: {
+        token: token,
+        expiresAt: expiresAt,
+        userId: user.id
+      }
+    })
+    console.log(tokengen)
+    const resetLink = `http://localhost:5173/reset-password?token=${token}`
+    const subject = "Reset Your Password";
+    const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
+    sendEmail(user.email, subject, message)
+    res.json({ message: "Password reset token generated. Check your email for instructions." })
+  } catch (e) {
+    res.json(e)
+  }
+})
+
+app.post('/resetPassword', async(req,res)=>{
+  const token = req.body["token"]
+  const password = req.body["password"]
+  try{
+    const resetEntry = await prisma.passwordResetToken.findUnique({
+      where:{
+        token: token
+      }
+    })
+    if (!resetEntry || new Date() > resetEntry.expiresAt) {
+      return res.status(400).json({ error: "Invalid or expired token" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await prisma.user.update({
+      where: { id: resetEntry.userId },
+      data: { password: hashedPassword },
+    });
+
+    await prisma.passwordResetToken.delete({
+      where: { token: token },
+    });
+
+    res.json({ message: "Password updated successfully" });
+  }catch(error){
+    console.error("Error in resetPassword endpoint:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
 
 server.listen(3001, () => console.log("Server running on port 3001"));
 
