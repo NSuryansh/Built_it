@@ -1,35 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from "../components/Navbar";
 
 import { Bell, User, CalendarCheck, CalendarClock, CalendarX } from 'lucide-react';
 import Footer from '../components/Footer';
 
 // Mock data for events
-const pastEvents = Array.from({ length: 10 }, (_, i) => ({
-  id: `past-${i + 1}`,
-  name: `Event-${i + 1}`,
-  date: '2024-02-15',
-  detail: 'A wonderful past event that brought people together',
-  venue: 'Grand Plaza Hotel'
-}));
+// const pastEvents = Array.from({ length: 10 }, (_, i) => ({
+//   id: `past-${i + 1}`,
+//   name: `Event-${i + 1}`,
+//   date: '2024-02-15',
+//   detail: 'A wonderful past event that brought people together',
+//   venue: 'Grand Plaza Hotel'
+// }));
 
-const currentEvents = Array.from({ length: 10 }, (_, i) => ({
-  id: `current-${i + 1}`,
-  name: `Event-${i + 1}`,
-  date: '2024-03-15',
-  detail: 'An exciting ongoing event you won\'t want to miss',
-  venue: 'City Convention Center'
-}));
+// const currentEvents = Array.from({ length: 10 }, (_, i) => ({
+//   id: `current-${i + 1}`,
+//   name: `Event-${i + 1}`,
+//   date: '2024-03-15',
+//   detail: 'An exciting ongoing event you won\'t want to miss',
+//   venue: 'City Convention Center'
+// }));
 
-const upcomingEvents = Array.from({ length: 10 }, (_, i) => ({
-  id: `upcoming-${i + 1}`,
-  name: `Event-${i + 1}`,
-  date: '2024-04-15',
-  detail: 'Join us for this amazing upcoming event',
-  venue: 'Metropolitan Arena'
-}));
+  const upcomingEvents = Array.from({ length: 10 }, (_, i) => ({
+    id: `upcoming-${i + 1}`,
+    name: `Event-${i + 1}`,
+    date: '2024-04-15',
+    detail: 'Join us for this amazing upcoming event',
+    venue: 'Metropolitan Arena'
+  }));
 
 function Events() {
+
+  const [currentEvents, setcurrentEvents] = useState([])
+  const [pastEvents, setpastEvents] = useState([])
+
+  async function getCurrEvents() {
+    const res = await fetch('http://localhost:3000/events')
+    const resp = await res.json()
+    setcurrentEvents(resp)
+  }
+
+  async function getPastEvents() {
+    const res = await fetch('http://localhost:3000/getPastEvents')
+    const resp = await res.json()
+    setpastEvents(resp)
+  }
+
+  useEffect(() => {
+    getCurrEvents()
+    
+  }, [])
+  useEffect(() => {
+    getPastEvents()
+  }, [])
+  
+  
+
+  useEffect(() => {
+    console.log(currentEvents)
+  }, [currentEvents])
+
+  useEffect(() => {
+    console.log(pastEvents)
+  }, [pastEvents])
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-100 via-pink-100 to-orange-100">
       {/* Navigation Bar */}
@@ -56,9 +90,9 @@ function Events() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {pastEvents.map((event) => (
                   <tr key={event.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{event.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.date}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{event.detail}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{event.title}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.dateTime}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{event.description}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.venue}</td>
                   </tr>
                 ))}
@@ -71,7 +105,7 @@ function Events() {
         <section className="mb-12">
           <div className="flex items-center mb-4">
             <CalendarCheck className="h-6 w-6 text-orange-500 mr-2" />
-            <h2 className="text-2xl font-semibold text-gray-800">Current Events</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">Upcoming Events</h2>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4 overflow-auto max-h-[300px]">
             <table className="min-w-full">
@@ -86,9 +120,9 @@ function Events() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {currentEvents.map((event) => (
                   <tr key={event.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{event.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.date}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{event.detail}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{event.title}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.dateTime}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{event.description}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.venue}</td>
                   </tr>
                 ))}
@@ -98,7 +132,7 @@ function Events() {
         </section>
 
         {/* Upcoming Events Section */}
-        <section>
+        {/* <section>
           <div className="flex items-center mb-4">
             <CalendarClock className="h-6 w-6 text-green-500 mr-2" />
             <h2 className="text-2xl font-semibold text-gray-800">Upcoming Events</h2>
@@ -125,7 +159,7 @@ function Events() {
               </tbody>
             </table>
           </div>
-        </section>
+        </section> */}
       </main>
       <Footer color={'orange'} />
     </div>

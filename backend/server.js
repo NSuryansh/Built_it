@@ -340,17 +340,20 @@ app.get('/getPastApp', async (req, res) => {
 
 app.get('/getPastEvents', async (req, res) => {
   try {
-    const currDate = new Date()
-    currDate.setDate(currDate - 30)
-    const events = await prisma.pastEvents.findMany({
+    console.log("hello")
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const events = await prisma.events.findMany({
       where: {
-        eventDate: {
+        dateTime: {
           gte: thirtyDaysAgo,
           lte: new Date(),
         },
       }
-    })
-    res.json(events)
+    });
+    console.log(events)
+    res.json(events);
   } catch (e) {
     res.json(e)
   }
@@ -370,7 +373,13 @@ app.get('/getPastEvents', async (req, res) => {
 
 app.get("/events", async (req, res) => {
   try {
-    const events = await prisma.events.findMany(); // Fetch all events
+    const events = await prisma.events.findMany({
+      where:{
+        dateTime:{
+          gte: new Date()
+        }
+      }
+    }); // Fetch all events
     res.json(events); // Send the events as a JSON response
   } catch (e) {
     console.error(e);
