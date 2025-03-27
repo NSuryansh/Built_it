@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { KeyRound, Eye, EyeOff } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
-const DoctorForgotPassword = () => {
+const ResetPassword = () => {
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
@@ -9,8 +12,10 @@ const DoctorForgotPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
@@ -20,36 +25,53 @@ const DoctorForgotPassword = () => {
       setError("Password must be at least 8 characters long");
       return;
     }
-    setError("");
-    // Handle password reset logic here
-    console.log("Password reset submitted");
+    const token = searchParams.get('token');
+
+    const response = await fetch(`http://localhost:3000/resetPassword`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        password: formData.password,
+        token: token
+      })
+    })
+    const res = await response.json();
+    console.log(res.message);
+    toast("Password updated successfully!", {
+      position: "bottom-right", autoClose: 3000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,
+      className: "custom-toast",
+    });
+    setTimeout(() => {
+      navigate("/login")
+    }, 2000);
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
+    <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">
+      <ToastContainer />
+      <div className="bg-[var(--custom-white)] rounded-2xl shadow-xl w-full max-w-md p-8">
         <div className="flex justify-center mb-8">
-          <div className="bg-blue-100 p-3 rounded-full">
-            <KeyRound className="w-8 h-8 text-blue-500" />
+          <div className="bg-[var(--custom-orange-100)] p-3 rounded-full">
+            <KeyRound className="w-8 h-8 text-[var(--custom-orange-500)]" />
           </div>
         </div>
 
-        <h1 className="text-3xl font-bold text-center text-blue-900 mb-2">
+        <h1 className="text-3xl font-bold text-center text-[var(--custom-orange-900)] mb-2">
           Reset Password
         </h1>
-        <p className="text-center text-blue-700 mb-8">
+        <p className="text-center text-[var(--custom-orange-700)] mb-8">
           Enter your new password below
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-blue-900 text-sm font-medium mb-2">
+            <label className="block text-[var(--custom-orange-900)] text-sm font-medium mb-2">
               New Password
             </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full px-4 py-3 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 rounded-lg border border-[var(--custom-orange-200)] focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent transition-colors"
                 placeholder="Enter new password"
                 value={formData.password}
                 onChange={(e) =>
@@ -58,7 +80,7 @@ const DoctorForgotPassword = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-900"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[var(--custom-orange-900)]"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -67,13 +89,13 @@ const DoctorForgotPassword = () => {
           </div>
 
           <div>
-            <label className="block text-blue-900 text-sm font-medium mb-2">
+            <label className="block text-[var(--custom-orange-900)] text-sm font-medium mb-2">
               Confirm New Password
             </label>
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                className="w-full px-4 py-3 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 rounded-lg border border-[var(--custom-orange-200)] focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent transition-colors"
                 placeholder="Confirm new password"
                 value={formData.confirmPassword}
                 onChange={(e) =>
@@ -82,7 +104,7 @@ const DoctorForgotPassword = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-900"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[var(--custom-orange-900)]"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -96,7 +118,7 @@ const DoctorForgotPassword = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-400 hover:bg-blue-500 text-white font-medium py-3 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+            className="w-full bg-[var(--custom-orange-400)] hover:bg-[var(--custom-orange-500)] text-[var(--custom-white)] font-medium py-3 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             Reset Password
           </button>
@@ -106,4 +128,4 @@ const DoctorForgotPassword = () => {
   );
 };
 
-export default DoctorForgotPassword;
+export default ResetPassword;
