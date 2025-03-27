@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
@@ -23,6 +23,23 @@ const AdminNavbar = () => {
     localStorage.clear();
     navigate("/admin/login");
   };
+
+  const useOutsideAlerter = (ref) => {
+      useEffect(() => {
+        function handleClickOutside(event) {
+          if (ref.current && !ref.current.contains(event.target)) {
+            setShowDetails(false);
+          }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, [ref]);
+    };
+  
+    const wrapperRef = useRef(null);
+    useOutsideAlerter(wrapperRef);
 
   return (
     <nav className="bg-transperent">
@@ -88,7 +105,7 @@ const AdminNavbar = () => {
               </button>
             ))}
           </div>
-          <div className="flex items-center space-x-4">
+          <div ref={wrapperRef} className="flex items-center space-x-4">
             <button className="cursor-pointer">
               <Bell className="w-5 h-5" />
             </button>
