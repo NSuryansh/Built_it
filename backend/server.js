@@ -129,6 +129,16 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.get('/getUsers', async (req, res) => {
+  try {
+      const users = await prisma.user.findMany();
+      res.json(users);
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.put("/modifyUser", async (req, res) => {
   try {
     const { id, username, email, mobile, alt_mobile } = req.body;

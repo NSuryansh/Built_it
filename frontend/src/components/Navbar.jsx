@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import NotificationPanel from "./NotifficationPanel";
 import { checkAuth } from "../utils/profile";
+import { ToastContainer, toast } from "react-toastify";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -53,6 +54,19 @@ const Navbar = () => {
   };
 
   const handleBellClick = () => {
+    if (!isAuthenticated) {
+      toast("Please login first!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+      return;
+    }
     setShowNotifications(!showNotifications);
   };
 
@@ -66,12 +80,12 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`${
-        location === "/" || location === "/peer" || location === "/mood"
+      className={`${location === "/" || location === "/peer" || location === "/mood"
           ? "bg-transparent"
           : "bg-[var(--custom-orange-100)]"
-      }`}
+        }`}
     >
+      <ToastContainer/>
       <div className="px-8 py-3">
         <div className="flex items-center justify-between">
           <div className="md:hidden transition-all flex items-center z-2">
@@ -95,11 +109,10 @@ const Navbar = () => {
                     >
                       <button
                         onClick={() => navigate(item.link)}
-                        className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                          location === item.link
+                        className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${location === item.link
                             ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                             : ""
-                        }`}
+                          }`}
                       >
                         {item.name}
                       </button>
@@ -124,21 +137,20 @@ const Navbar = () => {
               <button
                 key={i}
                 onClick={() => navigate(item.link)}
-                className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
-                  location === item.link
+                className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${location === item.link
                     ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                     : ""
-                }`}
+                  }`}
               >
                 {item.name}
               </button>
             ))}
           </div>
           <div className="flex items-center space-x-4">
-            <button id="bell-icon" className="cursor-pointer" onClick={()=>handleBellClick()} >
+            <button id="bell-icon" className="cursor-pointer" onClick={() => handleBellClick()} >
               <Bell className="w-5 h-5" />
             </button>
-            {showNotifications && <NotificationPanel/>}
+            {showNotifications && isAuthenticated && <NotificationPanel />}
 
             {isAuthenticated ? (
               <>
@@ -152,9 +164,8 @@ const Navbar = () => {
                 </button>
 
                 <div
-                  className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-orange-700)] rounded-lg top-12 right-5 list-none z-1 ${
-                    showDetails ? "opacity-100 visible" : "opacity-0 invisible"
-                  }`}
+                  className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-orange-700)] rounded-lg top-12 right-5 list-none z-1 ${showDetails ? "opacity-100 visible" : "opacity-0 invisible"
+                    }`}
                 >
                   <div className="w-64 bg-[var(--custom-orange-100)] rounded-lg shadow-lg p-6">
                     <div className="space-y-4">
