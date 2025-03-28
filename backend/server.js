@@ -143,6 +143,8 @@ app.put("/modifyUser", async (req, res) => {
   try {
     const { id, username, email, mobile, alt_mobile } = req.body;
 
+    console.log(req.body)
+
     if (!id) {
       return res.status(400).json({ error: "User ID is required" });
     }
@@ -151,7 +153,8 @@ app.put("/modifyUser", async (req, res) => {
       const existingUsername = await prisma.user.findUnique({
         where: { username },
       });
-      if (existingUsername && existingUsername.id !== id) {
+      console.log(existingUsername)
+      if (existingUsername && existingUsername.id !== Number(id)) {
         return res.status(400).json({ error: "Username is already in use" });
       }
     }
@@ -160,7 +163,7 @@ app.put("/modifyUser", async (req, res) => {
       const existingMobile = await prisma.user.findUnique({
         where: { mobile },
       });
-      if (existingMobile && existingMobile.id !== id) {
+      if (existingMobile && existingMobile.id !== Number(id)) {
         return res
           .status(400)
           .json({ error: "Mobile Number is already in use" });
@@ -169,7 +172,7 @@ app.put("/modifyUser", async (req, res) => {
 
     if (email) {
       const existingEmail = await prisma.user.findUnique({ where: { email } });
-      if (existingEmail && existingEmail.id !== id) {
+      if (existingEmail && existingEmail.id !== Number(id)) {
         return res.status(400).json({ error: "Email is already in use" });
       }
     }
@@ -190,7 +193,7 @@ app.put("/modifyUser", async (req, res) => {
 
     // Update user details in Prisma
     const updatedUser = await prisma.user.update({
-      where: { id: id },
+      where: { id: Number(id) },
       data: updatedData,
     });
 

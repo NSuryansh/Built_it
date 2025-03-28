@@ -13,12 +13,14 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   });
 
   const dataToSend = {
-    id: localStorage.getItem("id"), // Correctly assigning id
+    id: localStorage.getItem("userid"), // Correctly assigning id
     ...formData, // Spreading formData properties
   };
 
   const onSave = async (dataToSend) => {
     try {
+
+      console.log(dataToSend)
       const response = await fetch("http://localhost:3000/modifyUser", {
         method: "PUT", // Use PUT to modify user details
         headers: {
