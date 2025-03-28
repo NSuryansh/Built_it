@@ -101,7 +101,7 @@ const Navbar = () => {
   return (
     <nav
       className={`${
-        location === "/" || location === "/peer" || location === "/mood"
+        location === "/" || location === "/peer" || location === "/mood" || location === "/movies"
           ? "bg-transparent"
           : "bg-[var(--custom-orange-100)]"
       }`}
