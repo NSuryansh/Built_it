@@ -76,7 +76,7 @@ const Peer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `https://built-it-xjiq.onrender.com/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
 
@@ -233,7 +233,7 @@ const Peer = () => {
     try {
       console.log(recipientId, "AAAAALLLLLEE");
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `https://built-it-xjiq.onrender.com/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       console.log(messages);

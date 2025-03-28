@@ -57,13 +57,16 @@ const DoctorLogin = () => {
       toast("Please enter an email", { position: "bottom-right" });
       return;
     }
-    const response = await fetch("http://localhost:3000/forgotDoctorPassword", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
+    const response = await fetch(
+      "https://built-it-xjiq.onrender.com/forgotDoctorPassword",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    );
     const res = await response.json();
     toast(res.message, { position: "bottom-right" });
     setShowForgotModal(false);

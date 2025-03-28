@@ -53,7 +53,7 @@ const Login = () => {
       toast("Please enter an email", { position: "bottom-right" });
       return;
     }
-    const response = await fetch("http://localhost:3000/forgotPassword", {
+    const response = await fetch("https://built-it-xjiq.onrender.com/forgotPassword", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

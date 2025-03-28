@@ -56,13 +56,16 @@ const AdminLogin = () => {
       toast("Please enter an email", { position: "bottom-right" });
       return;
     }
-    const response = await fetch("http://localhost:3000/forgotAdminPassword", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
+    const response = await fetch(
+      "http://built-it-xjiq.onrender.com/forgotAdminPassword",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    );
     const res = await response.json();
     toast(res.message, { position: "bottom-right" });
     setShowForgotModal(false);
@@ -172,7 +175,9 @@ const AdminLogin = () => {
       {showForgotModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-[var(--custom-white)] p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h3 className="text-xl font-bold text-[var(--custom-primary-green-900)] mb-4">Reset Password</h3>
+            <h3 className="text-xl font-bold text-[var(--custom-primary-green-900)] mb-4">
+              Reset Password
+            </h3>
             <p className="mb-4 text-sm">Please enter your email address:</p>
             <input
               type="email"

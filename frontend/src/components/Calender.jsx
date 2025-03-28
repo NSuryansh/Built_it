@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay } from "date-fns";
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  addDays,
+  isSameMonth,
+  isSameDay,
+} from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Calendar = ({ onDateSelect }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -13,21 +22,31 @@ const Calendar = ({ onDateSelect }) => {
 
   // Fetch past events
   useEffect(() => {
-    axios.get("http://localhost:3000/getPastEvents")
-      .then(response => {
-        setPastEvents(response.data.map(event => format(new Date(event.dateTime), "yyyy-MM-dd")));
+    axios
+      .get("http://built-it-xjiq.onrender.com/getPastEvents")
+      .then((response) => {
+        setPastEvents(
+          response.data.map((event) =>
+            format(new Date(event.dateTime), "yyyy-MM-dd")
+          )
+        );
       })
-      .catch(error => console.error("Error fetching past events:", error));
+      .catch((error) => console.error("Error fetching past events:", error));
   }, []);
 
   // Fetch future events
   useEffect(() => {
-    axios.get("http://localhost:3000/events")
-      .then(response => {
-        setFutureEvents(response.data.map(event => format(new Date(event.dateTime), "yyyy-MM-dd")));
+    axios
+      .get("http://built-it-xjiq.onrender.com/events")
+      .then((response) => {
+        setFutureEvents(
+          response.data.map((event) =>
+            format(new Date(event.dateTime), "yyyy-MM-dd")
+          )
+        );
         console.log(futureEvents);
       })
-      .catch(error => console.error("Error fetching future events:", error));
+      .catch((error) => console.error("Error fetching future events:", error));
   }, []);
 
   const startDate = startOfWeek(startOfMonth(currentMonth));
@@ -51,7 +70,9 @@ const Calendar = ({ onDateSelect }) => {
         >
           <ChevronLeft className="w-5 h-5 text-gray-700" />
         </button>
-        <h2 className="text-xl font-semibold text-gray-900">{format(currentMonth, "MMMM yyyy")}</h2>
+        <h2 className="text-xl font-semibold text-gray-900">
+          {format(currentMonth, "MMMM yyyy")}
+        </h2>
         <button
           onClick={() => setCurrentMonth(addDays(currentMonth, 30))}
           className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
@@ -76,8 +97,18 @@ const Calendar = ({ onDateSelect }) => {
             <button
               key={index}
               className={`relative p-2 rounded-lg w-10 h-10 transition-all
-                ${isSameMonth(dayItem, currentMonth) ? "text-gray-900" : "text-gray-400"}
-                ${isPastEvent ? "bg-red-500 text-white" : isFutureEvent ? "bg-blue-500 text-white" : "hover:bg-gray-200"}
+                ${
+                  isSameMonth(dayItem, currentMonth)
+                    ? "text-gray-900"
+                    : "text-gray-400"
+                }
+                ${
+                  isPastEvent
+                    ? "bg-red-500 text-white"
+                    : isFutureEvent
+                    ? "bg-blue-500 text-white"
+                    : "hover:bg-gray-200"
+                }
                 ${isSameDay(dayItem, selectedDate) ? "ring-2 ring-black" : ""}
               `}
               onClick={() => {

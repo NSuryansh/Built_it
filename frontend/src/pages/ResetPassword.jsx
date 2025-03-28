@@ -27,14 +27,17 @@ const ResetPassword = () => {
     }
     const token = searchParams.get("token");
 
-    const response = await fetch(`http://localhost:3000/resetPassword`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        password: formData.password,
-        token: token,
-      }),
-    });
+    const response = await fetch(
+      `https://built-it-xjiq.onrender.com/resetPassword`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: formData.password,
+          token: token,
+        }),
+      }
+    );
     const res = await response.json();
     console.log(res.message);
     toast("Password updated successfully!", {
