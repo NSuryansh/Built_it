@@ -57,7 +57,7 @@ const AdminLogin = () => {
       return;
     }
     const response = await fetch(
-      "http://built-it-xjiq.onrender.com/forgotAdminPassword",
+      "https://built-it-xjiq.onrender.com/forgotAdminPassword",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

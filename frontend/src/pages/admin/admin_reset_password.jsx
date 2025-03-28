@@ -28,7 +28,7 @@ const AdminResetPassword = () => {
     const token = searchParams.get("token");
 
     const response = await fetch(
-      `http://built-it-xjiq.onrender.com/resetAdminPassword`,
+      `https://built-it-xjiq.onrender.com/resetAdminPassword`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

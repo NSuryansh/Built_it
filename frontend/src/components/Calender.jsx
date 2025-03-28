@@ -23,7 +23,7 @@ const Calendar = ({ onDateSelect }) => {
   // Fetch past events
   useEffect(() => {
     axios
-      .get("http://built-it-xjiq.onrender.com/getPastEvents")
+      .get("https://built-it-xjiq.onrender.com/getPastEvents")
       .then((response) => {
         setPastEvents(
           response.data.map((event) =>
@@ -37,7 +37,7 @@ const Calendar = ({ onDateSelect }) => {
   // Fetch future events
   useEffect(() => {
     axios
-      .get("http://built-it-xjiq.onrender.com/events")
+      .get("https://built-it-xjiq.onrender.com/events")
       .then((response) => {
         setFutureEvents(
           response.data.map((event) =>
