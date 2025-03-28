@@ -118,7 +118,7 @@ const DoctorsList = () => {
                   className="hover:bg-[var(--custom-primary-green-50)]"
                 >
                   <td className="px-6 py-4">{doctor.name}</td>
-                  <td className="px-6 py-4">{doctor.specialty}</td>
+                  <td className="px-6 py-4">{doctor.desc}</td>
                   <td className="px-6 py-4">{doctor.email}</td>
                   <td className="px-6 py-4">
                     <button
