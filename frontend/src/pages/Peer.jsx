@@ -24,10 +24,11 @@ const Peer = () => {
   const [recId, setRecid] = useState(0);
   const [showChatList, setShowChatList] = useState(true);
   const [messagesApi, setMessagesApi] = useState();
-
+  const [reloader, setReloader] = useState(true);
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
+  const messagesEndRef = useRef(null); // Ref for scrolling to bottom
 
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
@@ -198,7 +199,17 @@ const Peer = () => {
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
-  }, [aesKey]);
+  }, [aesKey, isAuthenticated]);
+
+  // Scroll to bottom helper
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Effect to scroll to the bottom whenever showMessages change:
+  useEffect(() => {
+    scrollToBottom();
+  }, [showMessages]);
 
   // Submit message and update showMessages
   const handleSubmit = async (e) => {
@@ -221,12 +232,14 @@ const Peer = () => {
       });
       setMessage("");
     }
+    // Removed reloader toggle to prevent overriding sent message
+    // setReloader((prev) => !prev);
   };
 
   // Fetch messages from API and initialize showMessages
   async function fetchMessages(userId, recipientId) {
     try {
-      console.log(recipientId, "AAAAALLLLLEE")
+      // console.log(recipientId, "AAAAALLLLLEE")
       const response = await fetch(
         `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
@@ -244,7 +257,7 @@ const Peer = () => {
           ),
         }))
       );
-      console.log(decrypted_api_messages);
+      // console.log(decrypted_api_messages);
 
       setMessagesApi(decrypted_api_messages);
       
@@ -281,9 +294,10 @@ const Peer = () => {
   // Re-fetch messages when chat selection changes
   useEffect(() => {
     if (userId && filteredChats.length > 0) {
+      console.log("hello")
       fetchMessages(userId, filteredChats[selectedChat]?.id);
     }
-  }, [selectedChat, userId]);
+  }, [selectedChat, userId, reloader]);
 
   // Handle session timeout
   const handleClosePopup = () => {
@@ -359,6 +373,7 @@ const Peer = () => {
                 isSent={msg.senderId === userId}
               />
             ))}
+            <div ref={messagesEndRef} />
           </div>
           <ChatInput
             message={message}
@@ -402,6 +417,7 @@ const Peer = () => {
                   isSent={msg.senderId === userId}
                 />
               ))}
+              <div ref={messagesEndRef} />
             </div>
             <ChatInput
               message={message}
