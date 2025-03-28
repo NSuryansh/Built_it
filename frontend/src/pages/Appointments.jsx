@@ -42,8 +42,6 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 //   },
 // ];
 
-
-
 // const upcomingAppointments = [
 //   {
 //     id: 1,
@@ -88,13 +86,17 @@ const UserAppointments = () => {
   const user_id = localStorage.getItem("userid");
 
   async function getPrevApp() {
-    const res = await fetch(`http://localhost:3000/pastuserappt?userId=${user_id}`);
+    const res = await fetch(
+      `https://built-it-xjiq.onrender.com/pastuserappt?userId=${user_id}`
+    );
     const resp = await res.json();
     setpreviousAppointments(resp);
   }
 
   async function getCurrApp() {
-    const res = await fetch(`http://localhost:3000/currentuserappt?userId=${user_id}`);
+    const res = await fetch(
+      `https://built-it-xjiq.onrender.com/currentuserappt?userId=${user_id}`
+    );
     const resp = await res.json();
     setupcomingAppointments(resp);
   }

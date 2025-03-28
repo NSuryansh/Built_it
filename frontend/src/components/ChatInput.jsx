@@ -1,52 +1,14 @@
-import React, { useState } from "react";
-import { Send, Paperclip, Smile } from "lucide-react";
-import axios from "axios";
+import React from "react";
+import { Send } from "lucide-react";
 
 const ChatInput = ({ message, setMessage, handleSubmit }) => {
-  const [file, setFile] = useState(null);
-
-  const onFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  const onFileUpload = () => {
-    const formData = new FormData();
-
-    formData.append("myFile", file, file.name);
-    console.log(file);
-    axios.post("api/uploadfile", formData);
-  };
-
-  const fileData = () => {
-    if (file) {
-      return (
-        <div>
-          <p className="mb-2">File Name: {file.name}</p>
-        </div>
-      );
-    }
-  };
-
   return (
     <>
       <form
         onSubmit={handleSubmit}
         className="border-t border-[var(--mp-custom-gray-200)] p-4 bg-[var(--mp-custom-white)]"
       >
-        {file && fileData()}
         <div className="flex items-center gap-3">
-          <input
-            type="file"
-            id="file-upload"
-            onChange={(e) => setFile(e.target.files[0])}
-            style={{ display: "none" }}
-          />
-          <label
-            htmlFor="file-upload"
-            className="p-2 cursor-pointer text-[var(--mp-custom-gray-500)] hover:text-[var(--mp-custom-gray-600)] transition-colors"
-          >
-            <Paperclip className="w-5 h-5" />
-          </label>
           <input
             type="text"
             value={message}

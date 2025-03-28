@@ -31,13 +31,13 @@ function Events() {
   const [pastEvents, setpastEvents] = useState([]);
 
   async function getCurrEvents() {
-    const res = await fetch("http://localhost:3000/events");
+    const res = await fetch("https://built-it-xjiq.onrender.com/events");
     const resp = await res.json();
     setcurrentEvents(resp);
   }
 
   async function getPastEvents() {
-    const res = await fetch("http://localhost:3000/getPastEvents");
+    const res = await fetch("https://built-it-xjiq.onrender.com/getPastEvents");
     const resp = await res.json();
     setpastEvents(resp);
   }
@@ -110,7 +110,7 @@ function Events() {
                         {event.title}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {format(event.dateTime,'dd-MMM-yyyy h:mm')}
+                        {format(event.dateTime, "dd-MMM-yyyy h:mm")}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {event.description}
@@ -162,7 +162,7 @@ function Events() {
                         {event.title}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {format(event.dateTime,'dd-MMM-yyyy h:mm')}
+                        {format(event.dateTime, "dd-MMM-yyyy h:mm")}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {event.description}
