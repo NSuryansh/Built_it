@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Bell, User } from "lucide-react";
+import { Bell, User, Calendar } from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
@@ -83,35 +83,33 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 // ];
 
 const UserAppointments = () => {
-  const [previousAppointments, setpreviousAppointments] = useState([])
-  const [upcomingAppointments, setupcomingAppointments] = useState([])
-  const user_id = localStorage.getItem("userid")
+  const [previousAppointments, setpreviousAppointments] = useState([]);
+  const [upcomingAppointments, setupcomingAppointments] = useState([]);
+  const user_id = localStorage.getItem("userid");
 
   async function getPrevApp() {
-    const res = await fetch(`http://localhost:3000/pastuserappt?userId=${user_id}`)
-    const resp = await res.json()
-    setpreviousAppointments(resp)
+    const res = await fetch(`http://localhost:3000/pastuserappt?userId=${user_id}`);
+    const resp = await res.json();
+    setpreviousAppointments(resp);
   }
 
   async function getCurrApp() {
-    // const user_id = localStorage.getItem("userId")
-    const res = await fetch(`http://localhost:3000/currentuserappt?userId=${user_id}`)
-    const resp = await res.json()
-    setupcomingAppointments(resp)
+    const res = await fetch(`http://localhost:3000/currentuserappt?userId=${user_id}`);
+    const resp = await res.json();
+    setupcomingAppointments(resp);
   }
 
   useEffect(() => {
-    getPrevApp()
-    getCurrApp()
-  }, [])
+    getPrevApp();
+    getCurrApp();
+  }, []);
 
-  useEffect(() => {
-
-  }, [previousAppointments])
-
-  useEffect(() => {
-
-  }, [upcomingAppointments])
+  const NoAppointmentsMessage = ({ message }) => (
+    <div className="flex flex-col items-center justify-center py-8">
+      <Calendar className="h-12 w-12 text-gray-400 mb-3" />
+      <p className="text-lg text-gray-500 font-medium">{message}</p>
+    </div>
+  );
 
   return (
     <div>
@@ -124,36 +122,40 @@ const UserAppointments = () => {
             Previous Appointments
           </h2>
           <div className="max-h-[300px] overflow-y-auto">
-            {previousAppointments.map((appointment) => (
-              <div
-                key={appointment.id}
-                className="border-b border-gray-200 py-4 last:border-b-0"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-gray-100 p-2 rounded-full">
-                      <User className="h-6 w-6 text-gray-600" />
+            {previousAppointments.length > 0 ? (
+              previousAppointments.map((appointment) => (
+                <div
+                  key={appointment.id}
+                  className="border-b border-gray-200 py-4 last:border-b-0"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-gray-100 p-2 rounded-full">
+                        <User className="h-6 w-6 text-gray-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-800">
+                          {appointment.doctor}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {appointment.details}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium text-gray-800">
-                        {appointment.doctor}
-                      </h3>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-gray-800">
+                        {appointment.date}
+                      </p>
                       <p className="text-sm text-gray-600">
-                        {appointment.details}
+                        {appointment.timing}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-gray-800">
-                      {appointment.date}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {appointment.timing}
-                    </p>
-                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <NoAppointmentsMessage message="No previous appointments found" />
+            )}
           </div>
         </div>
 
@@ -163,36 +165,40 @@ const UserAppointments = () => {
             Upcoming Appointments
           </h2>
           <div className="max-h-[300px] overflow-y-auto">
-            {upcomingAppointments.map((appointment) => (
-              <div
-                key={appointment.id}
-                className="border-b border-gray-200 py-4 last:border-b-0"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-gray-100 p-2 rounded-full">
-                      <User className="h-6 w-6 text-gray-600" />
+            {upcomingAppointments.length > 0 ? (
+              upcomingAppointments.map((appointment) => (
+                <div
+                  key={appointment.id}
+                  className="border-b border-gray-200 py-4 last:border-b-0"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-gray-100 p-2 rounded-full">
+                        <User className="h-6 w-6 text-gray-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-800">
+                          {appointment.doctor}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {appointment.details}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium text-gray-800">
-                        {appointment.doctor}
-                      </h3>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-gray-800">
+                        {appointment.date}
+                      </p>
                       <p className="text-sm text-gray-600">
-                        {appointment.details}
+                        {appointment.timing}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-gray-800">
-                      {appointment.date}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {appointment.timing}
-                    </p>
-                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <NoAppointmentsMessage message="No upcoming appointments scheduled" />
+            )}
           </div>
         </div>
       </div>

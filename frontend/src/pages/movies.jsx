@@ -40,16 +40,16 @@ const MovieSection = ({ title, movies }) => {
 
 const movieData = {
   feelGood: [
-    { title: "La La Land", image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=2069" },
-    { title: "The Secret Life of Walter Mitty", image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=2025" },
-    { title: "Little Miss Sunshine", image: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&q=80&w=2070" },
-    { title: "Soul", image: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&q=80&w=2070" },
+    { title: "La La Land", image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcROdG2hxWRGPiw_BvG1kZNeFy6mSf1VJl627bz1xRBaemQqhAqb&psig=AOvVaw2uAy9AdmdlNjs2aGl_1Y_X&ust=1743271351506000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCOj8hoCurYwDFQAAAAAdAAAAABAE" },
+    { title: "The Secret Life of Walter Mitty", image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQOUyXlSiN6ER7Ru5qksGEOq09ij1zxHIN1UmIill7BRR2gp3OV&psig=AOvVaw3wQ0nAmhDVgWvsMu_m6INa&ust=1743271525205000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLDj4dGurYwDFQAAAAAdAAAAABA"},
+    { title: "Little Miss Sunshine", image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRZ0cUJ-yvCKNvYnq0dEBwi3jQEh9SpPgbW9lvSrTjspwQUwKd6&psig=AOvVaw0zCFd1w2Qj6KLOHwWiqhPr&ust=1743271447276000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPihqL-urYwDFQAAAAAdAAAAABA"},
+    { title: "Soul", image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcR-HcNukY4KpY1oCN-5nFtRgWoUbCOfL8Ge7acUa-oBNG11CCXk&psig=AOvVaw3B4l33Tut9K7NPBdqKTFi0&ust=1743271586929000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLCT8vCurYwDFQAAAAAdAAAAABAE" },
   ],
   comedy: [
-    { title: "The Hangover", image: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&q=80&w=2070" },
-    { title: "Bridesmaids", image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=2025" },
-    { title: "Superbad", image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=2069" },
-    { title: "The Other Guys", image: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&q=80&w=2070" },
+    { title: "The Hangover", image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRWuhUtUEH-YWbeUfEEkJ3FmgrM9wJfo0DBtdR_tqvLNPXn7KNu&psig=AOvVaw1BPSBOGvi92DJBlKBs3mV-&ust=1743274078136000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNjXjJO4rYwDFQAAAAAdAAAAABAE" },
+    { title: "Bridesmaids", image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcSfFFwMta2D-y9M84M1DGV3yjweztkRReNLjuQeP2HxBV9ZEt6b&psig=AOvVaw0ZqQbFMNeL6AQGd2poaFPi&ust=1743274129957000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLjq2qu4rYwDFQAAAAAdAAAAABAE" },
+    { title: "Superbad", image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTJmGobpUVCddF0JO9XmZjQ6xsHGC53RXulyGpAxr0nK7nuuaK4&psig=AOvVaw0o7vZc7ODQCcxQ3c4fZxU_&ust=1743274152862000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCIiL3ra4rYwDFQAAAAAdAAAAABAE" },
+    { title: "The Other Guys", image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcSX6NKee11WMdxDRSYTEfk3azKK8AA29IjhnCrSRUzzcM4RqYit&psig=AOvVaw0xetNLAKbvZsN_WBs7kL-G&ust=1743274173933000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCMCz5MC4rYwDFQAAAAAdAAAAABAE" },
   ],
   motivational: [
     { title: "The Pursuit of Happyness", image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=2069" },
