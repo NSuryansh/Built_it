@@ -1,5 +1,5 @@
 import Peer from "./pages/Peer";
-import Movies from "./pages/Movies";
+import Movies from "./pages/movies";
 import Mood from "./pages/Mood";
 import Book from "./pages/Book";
 import Landing from "./pages/Landing";
