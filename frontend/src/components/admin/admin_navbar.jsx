@@ -14,6 +14,9 @@ const AdminNavbar = () => {
     { name: "Events", link: "/admin/event_list" },
   ];
   const navigate = useNavigate();
+  const userType = localStorage.getItem("user_type");
+  const username = localStorage.getItem("username");
+  const email = localStorage.getItem("user_email");
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -25,21 +28,21 @@ const AdminNavbar = () => {
   };
 
   const useOutsideAlerter = (ref) => {
-      useEffect(() => {
-        function handleClickOutside(event) {
-          if (ref.current && !ref.current.contains(event.target)) {
-            setShowDetails(false);
-          }
+    useEffect(() => {
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setShowDetails(false);
         }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
-        };
-      }, [ref]);
-    };
-  
-    const wrapperRef = useRef(null);
-    useOutsideAlerter(wrapperRef);
+      }
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
 
   return (
     <nav className="bg-transperent">
@@ -127,9 +130,9 @@ const AdminNavbar = () => {
                 <div className="space-y-4">
                   <div className="text-center space-y-1">
                     <h3 className="text-lg font-semibold text-green-900">
-                      Admin
+                      {username}
                     </h3>
-                    <p className="text-sm text-green-700">abc@gmail.com</p>
+                    <p className="text-sm text-green-700">{email}</p>
                   </div>
 
                   <div className="flex gap-2">

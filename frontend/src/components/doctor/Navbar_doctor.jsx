@@ -15,11 +15,14 @@ const DoctorNavbar = () => {
   ];
   const navigate = useNavigate();
 
+  const userType = localStorage.getItem("user_type");
+  const username = localStorage.getItem("username");
+  const email = localStorage.getItem("user_email");
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const userType = localStorage.getItem("user_type");
 
   const handleLogout = () => {
     localStorage.clear();
@@ -131,9 +134,9 @@ const DoctorNavbar = () => {
                     <div className="space-y-4">
                       <div className="text-center space-y-1">
                         <h3 className="text-lg font-semibold text-blue-900">
-                          Doctor
+                          {username}
                         </h3>
-                        <p className="text-sm text-blue-700">abc@gmail.com</p>
+                        <p className="text-sm text-blue-700">{email}</p>
                       </div>
 
                       <div className="flex gap-2">
