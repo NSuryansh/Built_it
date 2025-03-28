@@ -55,6 +55,7 @@ model Doctor {
 
 model Admin {
   id       Int    @id @default(autoincrement())
+  name     String
   email    String @unique
   mobile   String @unique
   password String
