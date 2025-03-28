@@ -12,6 +12,7 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 import { AiFillCloseCircle, AiOutlineCloseCircle } from "react-icons/ai";
+import { useSearchParams } from "react-router-dom";
 
 const Peer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -30,6 +31,31 @@ const Peer = () => {
 
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
+  const [searchParams] = useSearchParams();
+
+  const newChatId = searchParams.get("userId");
+  const newChatUsername = searchParams.get("username")
+
+// Assume newChatId and newChatUsername are already defined from searchParams
+useEffect(() => {
+  console.log("AEEEEE HALLLLO", newChatId, " ", newChatUsername)
+  if (newChatId && newChatUsername ) {
+    const existingIndex = chats.findIndex((chat) => chat.id === newChatId);
+
+    if (existingIndex !== -1) {
+      setSelectedChat(existingIndex);
+      setRecid(chats[existingIndex].id);
+    } else {
+      const newContact = { name: newChatUsername, id: newChatId, messages: [] };
+      setChats((prevChats) => {
+        const updatedChats = [...prevChats, newContact];
+        setSelectedChat(updatedChats.length - 1);
+        setRecid(newContact.id);
+        return updatedChats;
+      });
+    }
+  }
+}, [newChatId, newChatUsername]);
 
   // Filter out the current user from contacts
   const filteredChats = chats.filter((chat) => chat.id !== userId);
