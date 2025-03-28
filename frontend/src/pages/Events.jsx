@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from "../components/Navbar";
-import { Bell, User, CalendarCheck, CalendarClock, CalendarX } from 'lucide-react';
+import { CalendarCheck, CalendarX } from 'lucide-react';
 import Footer from '../components/Footer';
 // Mock data for events
 // const pastEvents = Array.from({ length: 10 }, (_, i) => ({
