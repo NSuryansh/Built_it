@@ -37,7 +37,7 @@ const Peer = () => {
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
   useEffect(() => {
-    if(newChatId) {
+    if (newChatId) {
       setRecid(newChatId);
     }
   }, [newChatId]);
@@ -53,7 +53,11 @@ const Peer = () => {
         setSelectedChat(existingIndex);
         setRecid(chats[existingIndex].id);
       } else {
-        const newContact = { name: newChatUsername, id: newChatId, messages: [] };
+        const newContact = {
+          name: newChatUsername,
+          id: newChatId,
+          messages: [],
+        };
         setChats((prevChats) => {
           const updatedChats = [...prevChats, newContact];
           setSelectedChat(updatedChats.length - 1);
@@ -71,20 +75,22 @@ const Peer = () => {
 
   async function fetchContacts(userId) {
     try {
-      const response = await fetch(`http://localhost:3000/chatContacts?userId=${userId}`);
+      const response = await fetch(
+        `http://localhost:3000/chatContacts?userId=${userId}`
+      );
       const contacts = await response.json();
-  
+
       if (!contacts || !Array.isArray(contacts)) {
         console.warn("No contacts received.");
         return;
       }
-  
+
       const updatedChats = contacts.map((contact) => ({
         name: contact.username,
         id: contact.id,
         messages: [],
       }));
-  
+
       // Merge new chat if not already included
       setChats((prevChats) => {
         // Convert both IDs to string for a consistent comparison
@@ -111,7 +117,6 @@ const Peer = () => {
       return [];
     }
   }
-  
 
   useEffect(() => {
     if (isAuthenticated && userId) {
@@ -121,7 +126,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (filteredChats.length > 0) {
-      console.log(filteredChats)
+      console.log(filteredChats);
       setRecid(filteredChats[selectedChat].id);
     }
   }, [selectedChat]);
@@ -226,12 +231,12 @@ const Peer = () => {
   // Fetch messages from API and initialize showMessages
   async function fetchMessages(userId, recipientId) {
     try {
-      console.log(recipientId, "AAAAALLLLLEE")
+      console.log(recipientId, "AAAAALLLLLEE");
       const response = await fetch(
         `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
-      console.log(messages)
+      console.log(messages);
       const decrypted_api_messages = await Promise.all(
         messages.map(async (msg) => ({
           senderId: msg["senderId"],
@@ -247,7 +252,7 @@ const Peer = () => {
       console.log(decrypted_api_messages);
 
       setMessagesApi(decrypted_api_messages);
-      
+
       // Set both messagesApi and showMessages to display the full conversation
       const filteredMessages = decrypted_api_messages.filter((msg) => {
         return (
@@ -255,8 +260,8 @@ const Peer = () => {
           (msg.senderId === recipientId && msg.recipientId === userId)
         );
       });
-      console.log(filteredMessages)
-      
+      console.log(filteredMessages);
+
       setShowMessages(filteredMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -342,14 +347,6 @@ const Peer = () => {
             <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
               {filteredChats[selectedChat]?.name || "Select a chat"}
             </h2>
-            <button
-              onClick={() => {
-                setShowChatList(false);
-                setSelectedChat(null);
-              }}
-            >
-              <AiOutlineCloseCircle size={24} />
-            </button>
           </div>
           <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
             {showMessages.map((msg, index) => (
@@ -386,11 +383,15 @@ const Peer = () => {
         ) : null}
         {showChatList === false ? (
           <div className="flex-1 h-full justify-between flex flex-col">
-            <div className="p-4 flex border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
+            <div className="p-4 flex w-full justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
               <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
                 {filteredChats[selectedChat]?.name || "Select a chat"}
               </h2>
-              <button>
+              <button
+                onClick={() => {
+                  setShowChatList(true);
+                }}
+              >
                 <AiOutlineCloseCircle />
               </button>
             </div>
