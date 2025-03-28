@@ -1,0 +1,17 @@
+{
+    "name": "Vitality",
+    "short_name": "Vitality",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "lang": "en",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "/assets/final-image.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ]
+}
