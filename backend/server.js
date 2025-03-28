@@ -245,6 +245,21 @@ app.get("/profile", async (req, res) => {
   }
 });
 
+// app.post('/admin', async(req,res)=>{
+//   const email = req.body["email"]
+//   const password = req.body["password"]
+//   const mobile = req.body["mobile"]
+//   const hashedPassword = await bcrypt.hash(password, 10)
+//   const admin = await prisma.admin.create({
+//     data:{
+//       email: email,
+//       mobile: mobile,
+//       password: hashedPassword
+//     }
+//   })
+//   res.json(admin)
+// })
+
 app.get("/chatContacts", async (req, res) => {
   try {
     const userId = req.query["userId"];
