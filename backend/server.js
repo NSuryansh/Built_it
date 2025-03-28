@@ -873,21 +873,22 @@ app.get("/pastdocappt", async (req, res) => {
 });
 
 app.get("/pastuserappt", async (req, res) => {
-  const userId = req.query["userId"];
-  // Get today's date range (start and end of today)
+  const userId = Number(req.query["userId"]);
+  console.log(userId)
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
   }
   try {
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: (userId) },
     });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     const appt = await prisma.pastAppointments.findMany({
-      where: { user_id: userId },
+      where: { user_id: (userId) },
     }); // Fetch all appts
+    console.log(appt)
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
     console.error(e);
@@ -896,7 +897,7 @@ app.get("/pastuserappt", async (req, res) => {
 });
 
 app.get("/currentuserappt", async (req, res) => {
-  const userId = req.query["userId"];
+  const userId = Number(req.query["userId"]);
   // Get today's date range (start and end of today)
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });

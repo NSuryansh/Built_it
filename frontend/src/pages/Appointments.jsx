@@ -1,86 +1,118 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bell, User } from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
 // Sample data for appointments
-const previousAppointments = [
-  {
-    id: 1,
-    doctor: "Dr. Sarah Wilson",
-    details: "Cardiologist - Heart Center",
-    date: "2024-02-15",
-    timing: "10:00 AM",
-  },
-  {
-    id: 2,
-    doctor: "Dr. Michael Chen",
-    details: "Neurologist - Brain & Spine Institute",
-    date: "2024-02-10",
-    timing: "2:30 PM",
-  },
-  {
-    id: 3,
-    doctor: "Dr. Emily Brooks",
-    details: "Dermatologist - Skin Care Clinic",
-    date: "2024-02-01",
-    timing: "11:15 AM",
-  },
-  {
-    id: 4,
-    doctor: "Dr. James Miller",
-    details: "Orthopedist - Joint Care Center",
-    date: "2024-01-25",
-    timing: "3:45 PM",
-  },
-  {
-    id: 5,
-    doctor: "Dr. Lisa Thompson",
-    details: "Psychiatrist - Mental Health Center",
-    date: "2024-01-20",
-    timing: "1:00 PM",
-  },
-];
+// const previousAppointments = [
+//   {
+//     id: 1,
+//     doctor: "Dr. Sarah Wilson",
+//     details: "Cardiologist - Heart Center",
+//     date: "2024-02-15",
+//     timing: "10:00 AM",
+//   },
+//   {
+//     id: 2,
+//     doctor: "Dr. Michael Chen",
+//     details: "Neurologist - Brain & Spine Institute",
+//     date: "2024-02-10",
+//     timing: "2:30 PM",
+//   },
+//   {
+//     id: 3,
+//     doctor: "Dr. Emily Brooks",
+//     details: "Dermatologist - Skin Care Clinic",
+//     date: "2024-02-01",
+//     timing: "11:15 AM",
+//   },
+//   {
+//     id: 4,
+//     doctor: "Dr. James Miller",
+//     details: "Orthopedist - Joint Care Center",
+//     date: "2024-01-25",
+//     timing: "3:45 PM",
+//   },
+//   {
+//     id: 5,
+//     doctor: "Dr. Lisa Thompson",
+//     details: "Psychiatrist - Mental Health Center",
+//     date: "2024-01-20",
+//     timing: "1:00 PM",
+//   },
+// ];
 
-const upcomingAppointments = [
-  {
-    id: 1,
-    doctor: "Dr. Robert Johnson",
-    details: "Dentist - Dental Care Plus",
-    date: "2024-03-05",
-    timing: "9:30 AM",
-  },
-  {
-    id: 2,
-    doctor: "Dr. Patricia Lee",
-    details: "Ophthalmologist - Vision Care",
-    date: "2024-03-10",
-    timing: "2:00 PM",
-  },
-  {
-    id: 3,
-    doctor: "Dr. David Clark",
-    details: "ENT Specialist - Ear & Throat Center",
-    date: "2024-03-15",
-    timing: "11:45 AM",
-  },
-  {
-    id: 4,
-    doctor: "Dr. Susan White",
-    details: "Gynecologist - Women's Health",
-    date: "2024-03-20",
-    timing: "4:15 PM",
-  },
-  {
-    id: 5,
-    doctor: "Dr. Kevin Martinez",
-    details: "Physiotherapist - Physical Rehab",
-    date: "2024-03-25",
-    timing: "10:30 AM",
-  },
-];
+
+
+// const upcomingAppointments = [
+//   {
+//     id: 1,
+//     doctor: "Dr. Robert Johnson",
+//     details: "Dentist - Dental Care Plus",
+//     date: "2024-03-05",
+//     timing: "9:30 AM",
+//   },
+//   {
+//     id: 2,
+//     doctor: "Dr. Patricia Lee",
+//     details: "Ophthalmologist - Vision Care",
+//     date: "2024-03-10",
+//     timing: "2:00 PM",
+//   },
+//   {
+//     id: 3,
+//     doctor: "Dr. David Clark",
+//     details: "ENT Specialist - Ear & Throat Center",
+//     date: "2024-03-15",
+//     timing: "11:45 AM",
+//   },
+//   {
+//     id: 4,
+//     doctor: "Dr. Susan White",
+//     details: "Gynecologist - Women's Health",
+//     date: "2024-03-20",
+//     timing: "4:15 PM",
+//   },
+//   {
+//     id: 5,
+//     doctor: "Dr. Kevin Martinez",
+//     details: "Physiotherapist - Physical Rehab",
+//     date: "2024-03-25",
+//     timing: "10:30 AM",
+//   },
+// ];
 
 const UserAppointments = () => {
+  const [previousAppointments, setpreviousAppointments] = useState([])
+  const [upcomingAppointments, setupcomingAppointments] = useState([])
+  const user_id = localStorage.getItem("userid")
+
+  async function getPrevApp() {
+    const res = await fetch(`http://localhost:3000/pastuserappt?userId=${user_id}`)
+    const resp = await res.json()
+    setpreviousAppointments(resp)
+  }
+
+  async function getCurrApp() {
+    // const user_id = localStorage.getItem("userId")
+    const res = await fetch(`http://localhost:3000/currentuserappt?userId=${user_id}`)
+    const resp = await res.json()
+    setupcomingAppointments(resp)
+  }
+
+  useEffect(() => {
+    getPrevApp()
+    getCurrApp()
+  }, [])
+
+  useEffect(() => {
+
+  }, [previousAppointments])
+
+  useEffect(() => {
+
+  }, [upcomingAppointments])
+
   return (
     <div>
       <Navbar />
