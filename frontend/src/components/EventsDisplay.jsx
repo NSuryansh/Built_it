@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
+import { format } from "date-fns";
 
 const EventsDisplay = () => {
   // const events = [
@@ -71,7 +72,8 @@ const EventsDisplay = () => {
 
           <div className="flex flex-wrap items-center mt-3 space-x-4 text-[var(--events-display-gray-600)]">
             <p className="flex items-center text-sm">
-              <Calendar className="w-4 h-4 mr-1" /> {event.dateTime}
+              <Calendar className="w-4 h-4 mr-1" />{" "}
+              {format(event.dateTime, "dd-MMM-yyyy h:mm")}
             </p>
             {/* <p className="flex items-center text-sm">
               <Clock className="w-4 h-4 mr-1" /> {event.time}

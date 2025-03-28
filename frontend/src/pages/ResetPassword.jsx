@@ -25,24 +25,33 @@ const ResetPassword = () => {
       setError("Password must be at least 8 characters long");
       return;
     }
-    const token = searchParams.get('token');
+    const token = searchParams.get("token");
 
-    const response = await fetch(`http://localhost:3000/resetPassword`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        password: formData.password,
-        token: token
-      })
-    })
+    const response = await fetch(
+      `https://built-it-xjiq.onrender.com/resetPassword`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: formData.password,
+          token: token,
+        }),
+      }
+    );
     const res = await response.json();
     console.log(res.message);
     toast("Password updated successfully!", {
-      position: "bottom-right", autoClose: 3000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
       className: "custom-toast",
     });
     setTimeout(() => {
-      navigate("/login")
+      navigate("/login");
     }, 2000);
   };
 

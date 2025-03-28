@@ -86,9 +86,26 @@ const DoctorAppointment = () => {
         id: appointment["id"],
       }),
     });
-
+    
     const resp = await res.json();
     console.log(resp);
+    const docName = localStorage.getItem("username");
+
+    var params = {
+      doctor: docName, 
+      dateTime: appointment.dateTime,
+      email: appointment.user.email
+    }
+    emailjs
+      .send("service_coucldi", "template_9at0fnv", params, "5rqHkmhJJfAxWBFNo")
+      .then(
+        (repsonse) => {
+          console.log("success", repsonse.status);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     setFixed(!fixed);
   };
 
@@ -167,7 +184,7 @@ const DoctorAppointment = () => {
 
   if (isAuthenticated === null) {
     return (
-      <div>
+      <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>

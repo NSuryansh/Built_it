@@ -7,6 +7,7 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -47,6 +48,27 @@ const AdminLogin = () => {
         className: "custom-toast",
       });
     }
+  };
+
+  const handleForgotPassword = async () => {
+    // console.log(email, "AEEE HALLLLO")
+    if (!email) {
+      toast("Please enter an email", { position: "bottom-right" });
+      return;
+    }
+    const response = await fetch(
+      "https://built-it-xjiq.onrender.com/forgotAdminPassword",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    );
+    const res = await response.json();
+    toast(res.message, { position: "bottom-right" });
+    setShowForgotModal(false);
   };
 
   return (
@@ -111,7 +133,7 @@ const AdminLogin = () => {
                 </button>
               </div>
               <button
-                onClick={() => navigate("/admin/forgot_password")}
+                onClick={() => setShowForgotModal(true)}
                 className="mt-1 text-sm text-[var(--custom-primary-green-600)] hover:text-[var(--custom-primary-green-700)] transition-colors"
               >
                 Forgot Password?
@@ -150,6 +172,37 @@ const AdminLogin = () => {
           </p>
         </div>
       </div>
+      {showForgotModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-[var(--custom-white)] p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 className="text-xl font-bold text-[var(--custom-primary-green-900)] mb-4">
+              Reset Password
+            </h3>
+            <p className="mb-4 text-sm">Please enter your email address:</p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your.email@example.com"
+              className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
+            />
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setShowForgotModal(false)}
+                className="mr-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleForgotPassword}
+                className="px-4 py-2 text-sm bg-[var(--custom-primary-green-400)] text-[var(--custom-white)] rounded hover:bg-[var(--custom-primary-green-500)] transition-colors"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

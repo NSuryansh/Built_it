@@ -29,7 +29,7 @@ const DoctorLanding = () => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/currentdocappt?doctorId=${docId}`
+          `https://built-it-xjiq.onrender.com/currentdocappt?doctorId=${docId}`
         );
         const data = await response.json();
 
@@ -115,7 +115,7 @@ const DoctorLanding = () => {
 
   if (isAuthenticated === null) {
     return (
-      <div>
+      <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
         <p>Loading...</p>
       </div>

@@ -24,12 +24,12 @@ import ModifyProfile from "./pages/Modify_profile";
 import ResetPassword from "./pages/ResetPassword";
 import DoctorResetPassword from "./pages/doctor/ResetPassword_doctor";
 import AdminResetPassword from "./pages/admin/admin_reset_password";
+import { ToastContainer } from "react-toastify";
 
 export default function App() {
   const location = useLocation();
   const isBackgroundPage =
-    location.pathname === "/" ||
-    location.pathname === "/appointments";
+    location.pathname === "/" || location.pathname === "/appointments";
 
   return (
     <div
@@ -42,6 +42,7 @@ export default function App() {
           : {}
       }
     >
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/peer" element={<Peer />} />
@@ -57,7 +58,10 @@ export default function App() {
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/dashboard" element={<Landing_user />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />
-        <Route path="/doctor/reset_password" element={<DoctorResetPassword />} />
+        <Route
+          path="/doctor/reset_password"
+          element={<DoctorResetPassword />}
+        />
         <Route path="/doctor/landing" element={<DoctorLanding />} />
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/doctor/appointments" element={<DoctorAppointment />} />

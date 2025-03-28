@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { KeyRound, Eye, EyeOff } from "lucide-react";
 
 const AdminResetPassword = () => {
@@ -9,8 +11,10 @@ const AdminResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
@@ -21,8 +25,34 @@ const AdminResetPassword = () => {
       return;
     }
     setError("");
-    // Handle password reset logic here
-    console.log("Password reset submitted");
+    const token = searchParams.get("token");
+
+    const response = await fetch(
+      `https://built-it-xjiq.onrender.com/resetAdminPassword`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: formData.password,
+          token: token,
+        }),
+      }
+    );
+    const res = await response.json();
+    console.log(res.message);
+    toast("Password updated successfully!", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      className: "custom-toast",
+    });
+    setTimeout(() => {
+      navigate("/admin/login");
+    }, 2000);
   };
 
   return (

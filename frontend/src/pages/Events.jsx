@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { CalendarCheck, CalendarX } from 'lucide-react';
 import Footer from '../components/Footer';
@@ -23,13 +23,13 @@ function Events() {
   const [pastEvents, setpastEvents] = useState([]);
 
   async function getCurrEvents() {
-    const res = await fetch('http://localhost:3000/events');
+    const res = await fetch("https://built-it-xjiq.onrender.com/events");
     const resp = await res.json();
     setcurrentEvents(resp);
   }
 
   async function getPastEvents() {
-    const res = await fetch('http://localhost:3000/getPastEvents');
+    const res = await fetch("https://built-it-xjiq.onrender.com/getPastEvents");
     const resp = await res.json();
     setpastEvents(resp);
   }
@@ -60,7 +60,7 @@ function Events() {
       </td>
     </tr>
   );
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-100 via-pink-100 to-orange-100">
       {/* Navigation Bar */}
@@ -72,26 +72,44 @@ function Events() {
         <section className="mb-12">
           <div className="flex items-center mb-4">
             <CalendarX className="h-6 w-6 text-gray-600 mr-2" />
-            <h2 className="text-2xl font-semibold text-gray-800">Past Events</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Past Events
+            </h2>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4 overflow-auto max-h-[300px]">
             <table className="min-w-full">
               <thead className="bg-gray-50 sticky top-0">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venue</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Event
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Details
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Venue
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {pastEvents.length > 0 ? (
                   pastEvents.map((event) => (
                     <tr key={event.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{event.title}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.dateTime}</td>
-                      <td className="px-6 py-4 text-sm text-gray-500">{event.description}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.venue}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {event.title}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {format(event.dateTime, "dd-MMM-yyyy h:mm")}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {event.description}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {event.venue}
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -106,26 +124,44 @@ function Events() {
         <section className="mb-12">
           <div className="flex items-center mb-4">
             <CalendarCheck className="h-6 w-6 text-orange-500 mr-2" />
-            <h2 className="text-2xl font-semibold text-gray-800">Upcoming Events</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Upcoming Events
+            </h2>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4 overflow-auto max-h-[300px]">
             <table className="min-w-full">
               <thead className="bg-gray-50 sticky top-0">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venue</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Event
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Details
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Venue
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {currentEvents.length > 0 ? (
                   currentEvents.map((event) => (
                     <tr key={event.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{event.title}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.dateTime}</td>
-                      <td className="px-6 py-4 text-sm text-gray-500">{event.description}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.venue}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {event.title}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {format(event.dateTime, "dd-MMM-yyyy h:mm")}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {event.description}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {event.venue}
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -136,7 +172,7 @@ function Events() {
           </div>
         </section>
       </main>
-      <Footer color={'orange'} />
+      <Footer color={"orange"} />
     </div>
   );
 }

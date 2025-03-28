@@ -22,7 +22,7 @@ export default function ChatList({
             key={index}
             onClick={() => {
               setSelectedChat(index);
-              setShowChatList(true);
+              setShowChatList(false);
             }}
             className={`w-full p-4 text-left transition-colors duration-150 ease-in-out flex cursor-pointer items-center gap-3
               ${
