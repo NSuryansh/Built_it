@@ -41,8 +41,8 @@ const Landing_user = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex h-full flex-col lg:flex-row gap-4 p-6 bg-[var(--custom-orange-100)] min-h-screen">
-        <div className="w-full lg:h-[85vh] lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4">
+      <div className="flex h-full flex-col lg:flex-row gap-4 p-3 md:p-6 bg-[var(--custom-orange-100)] min-h-screen">
+        <div className="w-full lg:h-[85vh] lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-2 md:p-4">
           <Calendar />
         </div>
 

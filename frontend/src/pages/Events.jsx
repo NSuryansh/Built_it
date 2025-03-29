@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { CalendarCheck, CalendarX } from 'lucide-react';
 import Footer from '../components/Footer';
+import { format } from "date-fns";
 // Mock data for events
 // const pastEvents = Array.from({ length: 10 }, (_, i) => ({
 //   id: `past-${i + 1}`,

@@ -62,70 +62,96 @@ const Calendar = ({ onDateSelect }) => {
   const todayString = format(new Date(), "yyyy-MM-dd");
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow-lg">
-      <div className="flex justify-between items-center mb-4">
-        <button
-          onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
-          className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
-        >
-          <ChevronLeft className="w-5 h-5 text-gray-700" />
-        </button>
-        <h2 className="text-xl font-semibold text-gray-900">
-          {format(currentMonth, "MMMM yyyy")}
-        </h2>
-        <button
-          onClick={() => setCurrentMonth(addDays(currentMonth, 30))}
-          className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
-        >
-          <ChevronRight className="w-5 h-5 text-gray-700" />
-        </button>
-      </div>
+    <div className="flex items-center justify-center p-2 md:p-4">
+      <div className="p-2 md:p-6 bg-white rounded-xl shadow-lg max-w-md w-full">
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
+            className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
+          >
+            <ChevronLeft className="w-5 h-5 text-gray-700" />
+          </button>
+          <h2 className="text-2xl font-bold text-gray-900">
+            {format(currentMonth, "MMMM yyyy")}
+          </h2>
+          <button
+            onClick={() => setCurrentMonth(addDays(currentMonth, 30))}
+            className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
+          >
+            <ChevronRight className="w-5 h-5 text-gray-700" />
+          </button>
+        </div>
 
-      <div className="grid grid-cols-7 gap-2 text-center">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayLabel) => (
-          <div key={dayLabel} className="font-semibold text-gray-700">
-            {dayLabel}
-          </div>
-        ))}
-        {days.map((dayItem, index) => {
-          const dayString = format(dayItem, "yyyy-MM-dd");
-          const isToday = dayString === todayString;
-          const isPastEvent = pastEvents.includes(dayString);
-          const isFutureEvent = futureEvents.includes(dayString);
-
-          return (
-            <button
-              key={index}
-              className={`relative p-2 rounded-lg w-10 h-10 transition-all
-                ${
-                  isSameMonth(dayItem, currentMonth)
-                    ? "text-gray-900"
-                    : "text-gray-400"
-                }
-                ${
-                  isPastEvent
-                    ? "bg-red-500 text-white"
-                    : isFutureEvent
-                    ? "bg-blue-500 text-white"
-                    : "hover:bg-gray-200"
-                }
-                ${isSameDay(dayItem, selectedDate) ? "ring-2 ring-black" : ""}
-              `}
-              onClick={() => {
-                setSelectedDate(dayItem);
-                if (isPastEvent || isFutureEvent) {
-                  navigate("/events");
-                }
-                onDateSelect && onDateSelect(dayItem);
-              }}
+        <div className="grid grid-cols-7 gap-4 mb-4">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayLabel) => (
+            <div
+              key={dayLabel}
+              className="font-medium text-gray-500 text-center"
             >
-              {isToday && (
-                <span className="absolute top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black rounded-full" />
-              )}
-              {format(dayItem, "d")}
-            </button>
-          );
-        })}
+              {dayLabel}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 gap-2">
+          {days.map((dayItem, index) => {
+            const dayString = format(dayItem, "yyyy-MM-dd");
+            const isToday = dayString === todayString;
+            const isPastEvent = pastEvents.includes(dayString);
+            const isFutureEvent = futureEvents.includes(dayString);
+
+            return (
+              <button
+                key={index}
+                className={`
+                  relative p-2 rounded-lg aspect-square flex items-center justify-center
+                  transition-all duration-200 text-sm font-medium
+                  ${
+                    isSameMonth(dayItem, currentMonth)
+                      ? "text-gray-900"
+                      : "text-gray-400"
+                  }
+                  ${
+                    isToday
+                      ? "ring-2 ring-blue-500 ring-offset-2 font-bold"
+                      : ""
+                  }
+                  ${
+                    isPastEvent
+                      ? "bg-red-500 text-white hover:bg-red-600"
+                      : isFutureEvent
+                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      : "hover:bg-gray-100"
+                  }
+                  ${isSameDay(dayItem, selectedDate) ? "ring-2 ring-black" : ""}
+                `}
+                onClick={() => {
+                  setSelectedDate(dayItem);
+                  if (isPastEvent || isFutureEvent) {
+                    navigate("/events");
+                  }
+                  onDateSelect && onDateSelect(dayItem);
+                }}
+              >
+                {format(dayItem, "d")}
+                {(isPastEvent || isFutureEvent) && (
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 flex gap-4 justify-center text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <span className="text-gray-600">Past Events</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span className="text-gray-600">Future Events</span>
+          </div>
+        </div>
       </div>
     </div>
   );
