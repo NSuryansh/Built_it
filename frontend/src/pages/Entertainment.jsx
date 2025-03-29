@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ChevronDown, Bell, User } from "lucide-react";
 import Navbar from "../components/Navbar";
 
-function Movies() {
+function Entertainment() {
   const [activeSection, setActiveSection] = useState(null);
 
   const sections = {
@@ -428,4 +428,4 @@ function Movies() {
   );
 }
 
-export default Movies;
+export default  Entertainment;

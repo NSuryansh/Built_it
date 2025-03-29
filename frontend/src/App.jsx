@@ -1,5 +1,5 @@
 import Peer from "./pages/Peer";
-import Movies from "./pages/movies";
+import Entertainment from "./pages/Entertainment";
 import Mood from "./pages/Mood";
 import Book from "./pages/Book";
 import Landing from "./pages/Landing";
@@ -49,7 +49,7 @@ export default function App() {
         <Route path="/mood" element={<Mood />} />
         <Route path="/book" element={<Book />} />
         <Route path="/stress" element={<Stress />} />
-        <Route path="/movies" element={<Movies />} />
+        <Route path="/entertainment" element={<Entertainment />} />
         <Route path="/events" element={<Events />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
