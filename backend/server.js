@@ -1034,6 +1034,9 @@ app.post("/forgotPassword", async (req, res) => {
       },
     });
     console.log(user);
+    if(!user){
+      res.json({message:"No user found with this email"})
+    }
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const tokengen = await prisma.passwordResetToken.create({
