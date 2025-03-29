@@ -11,7 +11,7 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 // import emailjs from "@emailjs/browser";
 import { error } from "console";
-// global.location = { href: "http://localhost" };
+import axios from "axios";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -1212,4 +1212,21 @@ server.listen(3001, () => console.log("Server running on port 3001"));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+});
+
+
+app.post('/node-chat', async (req, res) => {
+  try {
+    const { user_id, message } = req.body;
+
+    const response = await axios.post('http://localhost:5000/chatWithBot', {
+      user_id,
+      message
+    }); 
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error calling Flask API:', error.message);
+    res.status(500).json({ error: error.message });
+  }
 });
