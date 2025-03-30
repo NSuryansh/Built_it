@@ -56,7 +56,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   return (
     <div>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-b from-[var(--custom-orange-50)] to-[var(--custom-white)] py-12">
+      <div className="min-h-screen bg-[var(--custom-orange-100)] py-12">
         <div className="max-w-md mx-auto bg-[var(--custom-white)] rounded-xl shadow-lg overflow-hidden">
           <div className="px-6 py-8">
             <div className="text-center mb-8">
@@ -137,7 +137,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   htmlFor="alt_mobile"
                   className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
-                  Alternative Phone Number
+                  Alternate Phone Number
                 </label>
                 <input
                   type="tel"

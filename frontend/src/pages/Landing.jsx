@@ -8,7 +8,7 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
+     < Navbar />
       {/* <div
         className={`px-4 sm:px-8 flex h-[${
           windowDimensions.height - height
