@@ -12,7 +12,7 @@ import nodemailer from "nodemailer";
 // import emailjs from "@emailjs/browser";
 import { error } from "console";
 import axios from "axios";
-import webpush  from "web-push";
+import webpush from "web-push";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -744,7 +744,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1376,16 +1376,22 @@ app.get("/available-slots", async (req, res) => {
 
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
+  console.log(email)
   try {
     const otp = Math.trunc(100000 + Math.random() * 900000);
+    console.log(otp)
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    const otpgen = await prisma.otpVerif.create({
-      data: {
-        token: otp,
-        expiresAt: expiresAt,
-        useremail: email,
-      },
-    });
+    console.log(expiresAt)
+    
+      const otpgen = await prisma.otpVerification.create({
+        data: {
+          token: otp,
+          expiresAt: expiresAt,
+          useremail: email,
+        },
+      });
+    
+    console.log(otpgen)
     const subject = "OTP Verification";
     const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
     sendEmail(email, subject, message);
