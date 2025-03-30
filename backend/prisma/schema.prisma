@@ -163,3 +163,32 @@ model PastEvents{
   dateTime    DateTime
   venue       String
 }
+
+
+model Slots {
+   @@map("slots")
+  id       Int      @id @default(autoincrement())
+  doctor_id     Int
+  doctor        Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  starting_time DateTime
+ }
+
+model DoctorLeave {
+  @@map("doctor_leave")
+ id Int @id @default(autoincrement())
+  doctor_id Int
+  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete:Cascade)
+  date_start DateTime
+  date_end DateTime
+}
+
+model Booked {
+  @@map("booked")
+  id Int @id @default(autoincrement())
+  doctor_id Int 
+  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete:Cascade)
+  starting_time DateTime
+  apt_id Int
+  appointments Appointments @relation(fields:[apt_id], references:[id], onDelete:Cascade)
+}
+
