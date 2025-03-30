@@ -1,3 +1,5 @@
+import collections.abc
+collections.Iterable = collections.abc.Iterable  # Compatibility fix
 from agno.agent import Agent, AgentMemory
 from agno.models.groq import Groq  
 from agno.embedder.google import GeminiEmbedder
@@ -5,69 +7,55 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.knowledge.json import JSONKnowledgeBase
 from agno.vectordb.lancedb import LanceDb, SearchType
 from agno.memory.classifier import MemoryClassifier
-from agno.memory.db.sqlite import SqliteMemoryDb
 from agno.memory.manager import MemoryManager
 from agno.memory.summarizer import MemorySummarizer
-from agno.storage.agent.sqlite import SqliteAgentStorage    
+from agno.storage.agent.sqlite import SqliteAgentStorage
 from dotenv import load_dotenv
 import os
-import typer
-from typing import List, Optional
+import csv
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 load_dotenv()
 os.environ['GROQ_API_KEY'] = "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"
-AGENT_DB_PATH = "tmp/agents.db"
-MEMORY_DB_PATH = "tmp/agent_memory.db"
 
-agent_storage = SqliteAgentStorage(table_name="study_sessions", db_file=AGENT_DB_PATH)
-memory_db = SqliteMemoryDb(table_name="study_memory", db_file=MEMORY_DB_PATH)
+# Initialize databases
+agent_storage = SqliteAgentStorage(table_name="study_sessions", db_file="tmp/agents.db")
 
-def fetch_previous_sessions(user_id: str) -> List[str]:
-    return agent_storage.get_all_session_ids(user_id)
+# CSV file for storing user prompts
+memory_csv_file = "tmp/memory.csv"
 
-def load_existing_memory(session_id: str):
-    memories = memory_db.read_memories(user_id=session_id)
-    return memories if memories else []
+# Create CSV file with headers if it doesn't exist
+if not os.path.exists(memory_csv_file):
+    with open(memory_csv_file, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["user_id", "session_id", "prompt", "timestamp"])
 
-def Mental_Agent(user_id: Optional[str] = typer.Argument(None, help="User ID for the study session")):
-    if user_id is None:
-        user_id = typer.prompt("Enter your user ID", default="default_user")
+app = Flask(__name__)
 
-    session_id: Optional[str] = None
-    existing_sessions = fetch_previous_sessions(user_id)
+CORS(app)
 
-    if existing_sessions:
-        print("\nExisting Sessions:")
-        for i, session in enumerate(existing_sessions, 1):
-            print(f"{i}. {session}")
+def store_user_prompt(user_id: str, session_id: str, prompt: str):
+    """Stores user prompts in a CSV file."""
+    with open(memory_csv_file, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([user_id, session_id, prompt, "CURRENT_TIMESTAMP"])
 
-        session_idx = typer.prompt("Choose a session number to continue (or press Enter for most recent)", default=1)
-
-        try:
-            session_id = existing_sessions[int(session_idx) - 1]
-        except (ValueError, IndexError):
-            session_id = existing_sessions[0]
-
-    agent = Agent(
+def create_mental_agent(user_id: str, session_id: str = None) -> Agent:
+    return Agent(
         name="Helper",
         user_id=user_id,
         session_id=session_id,
-        model=Groq(id="llama-3.3-70b-versatile", api_key=os.getenv("GROQ_API_KEY")),
+        model=Groq(id="llama-3.3-70b-versatile"),
         memory=AgentMemory(
-            db=memory_db,
             create_user_memories=True,
             update_user_memories_after_run=True,
             classifier=MemoryClassifier(model=Groq(id="llama-3.3-70b-versatile")),
             summarizer=MemorySummarizer(model=Groq(id="llama-3.3-70b-versatile")),
-            manager=MemoryManager(model=Groq(id="llama-3.3-70b-versatile"), db=memory_db, user_id=user_id),
+            manager=MemoryManager(model=Groq(id="llama-3.3-70b-versatile"), user_id=user_id),
         ),
         storage=agent_storage,
-        description="An AI psychiatrist supporting engineering students with their mental well-being.",
-        instructions=[
-            "Refer to your knowledge base to guide discussions based on students' mental health.",
-            "If necessary, search the web for additional insights.",
-            "Prioritize your stored knowledge over web results whenever possible."
-        ],
+        description="AI psychiatrist for engineering students",
         knowledge=JSONKnowledgeBase(
             path="mental-health-data.json",
             vector_db=LanceDb(
@@ -80,27 +68,30 @@ def Mental_Agent(user_id: Optional[str] = typer.Argument(None, help="User ID for
         tools=[DuckDuckGoTools()],
         markdown=True,
         read_chat_history=True,
-        search_knowledge=True,
-        add_history_to_messages=True,
-        num_history_responses=3,
-        show_tool_calls=False,
+        search_knowledge=True
     )
 
-    if session_id is None:
-        session_id = agent.session_id
-        print(f"Started a new session: {session_id}")
-    else:
-        print(f"Resuming session: {session_id}")
-
-    past_memories = load_existing_memory(session_id)
-    if past_memories:
-        print(f"Loaded {len(past_memories)} previous memory entries.")
-        agent.memory.load_memories(past_memories)
-
-    if agent.knowledge is not None:
-        agent.knowledge.load()
-
-    agent.cli_app(markdown=True, stream=True)
+@app.route('/chatWithBot', methods=['POST'])
+def chat_handler():
+    try:
+        data = request.get_json()
+        user_id = data.get("user_id", "default_user")
+        message = data["message"]
+        
+        agent = create_mental_agent(user_id)
+        response = agent.run(message=message, markdown=True)
+        
+        # Store user prompt in CSV file
+        store_user_prompt(user_id, agent.session_id, message)
+        
+        return jsonify({
+            "response": str(response.content),
+            "session_id": agent.session_id,
+            "user_id": user_id
+        })
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    typer.run(Mental_Agent)
+    app.run(host="0.0.0.0", port=5000, debug=True)

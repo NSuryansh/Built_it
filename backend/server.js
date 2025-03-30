@@ -11,7 +11,7 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 // import emailjs from "@emailjs/browser";
 import { error } from "console";
-// global.location = { href: "http://localhost" };
+import axios from "axios";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -25,8 +25,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "spython.webd@gmail.com",
-    pass: "bxaq xyym avnp dgxm",
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
   },
 });
 
@@ -1034,6 +1034,9 @@ app.post("/forgotPassword", async (req, res) => {
       },
     });
     console.log(user);
+    if(!user){
+      res.json({message:"No user found with this email"})
+    }
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const tokengen = await prisma.passwordResetToken.create({
@@ -1212,4 +1215,21 @@ server.listen(3001, () => console.log("Server running on port 3001"));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+});
+
+
+app.post('/node-chat', async (req, res) => {
+  try {
+    const { user_id, message } = req.body;
+
+    const response = await axios.post('http://localhost:5000/chatWithBot', {
+      user_id,
+      message
+    }); 
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error calling Flask API:', error.message);
+    res.status(500).json({ error: error.message });
+  }
 });

@@ -1,67 +1,135 @@
+import os
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.linear_model import LinearRegression
-from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import mean_squared_error, r2_score
+import json
+from typing import List, Dict, Union
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.prompts import PromptTemplate
+from langchain.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, Field
 
-file_path = "emotional_score.csv"
-df = pd.read_csv(file_path)
+# Define MentalHealthMetrics model
+class MentalHealthMetrics(BaseModel):
+    mental_health_score: float = Field(description="Mental health score (0-10 scale)")
+    stress_score: float = Field(description="Stress score (0-10 scale)")
+    academic_performance_score: float = Field(description="Academic performance score (0-10 scale)")
+    sleep_quality_score: float = Field(description="Sleep quality score (0-10 scale)")
 
-positive_factors = ["Happiness Level", "Social Support"]
-negative_factors = ["Stress Level", "Anxiety Level"]
+# Function to analyze mental health metrics
+def analyze_mental_health(messages: List[str], student_id: str = "STUDENT_DEFAULT", api_key: str = None) -> Dict[str, Union[MentalHealthMetrics, Dict]]:
+    api_key = "AIzaSyA14oa8vKeVWZsYAyRpel8sGOAp4bo9MaY"
+    if not api_key:
+        raise ValueError("Google API Key must be provided")
+    
+    llm = ChatGoogleGenerativeAI(google_api_key=api_key, model="gemini-2.0-flash")
+    output_parser = PydanticOutputParser(pydantic_object=MentalHealthMetrics)
+    
+    prompt = PromptTemplate(
+        template="""Analyze the following chat conversation from a student.
 
-scaler = MinMaxScaler()
-df[positive_factors] = scaler.fit_transform(df[positive_factors])
-df[negative_factors] = scaler.fit_transform(df[negative_factors])
+Student ID: {student_id}
 
-df["Emotional Score"] = (
-    df[positive_factors].sum(axis=1) - df[negative_factors].sum(axis=1)
-) * 50 + 50
+Chat History:
+{chat_history}
 
-df.to_csv("emotional_score.csv", index=False)
+Provide ONLY numerical scores following these strict guidelines:
+1. Mental Health Score: 0-10 scale 
+   - 0: Extremely poor mental health
+   - 10: Excellent mental health
+2. Stress Score: 0-10 scale
+   - 0: No stress at all
+   - 10: Extremely high stress
+3. Academic Performance Score: 0-10 scale
+   - 0: Critically poor academic performance
+   - 10: Exceptional academic performance
+4. Sleep Quality Score: 0-10 scale
+   - 0: Extremely poor sleep (insomnia, constant interruptions)
+   - 10: Perfect, restorative sleep with ideal duration and quality
 
-df = pd.read_csv("emotional_score.csv")
-X = df.drop(columns=["Emotional Score"])
-Y = df["Emotional Score"]
+{format_instructions}
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+IMPORTANT: Ensure scores are precise and based on the entire conversation context, paying special attention to any mentions of sleep, rest, tiredness, or energy levels.
+""",
+        input_variables=["student_id", "chat_history"],
+        partial_variables={
+            "format_instructions": output_parser.get_format_instructions()
+        }
+    )
+    
+    chat_context = "\n".join(messages)
+    
+    try:
+        chain_input = {"student_id": student_id, "chat_history": chat_context}
+        response = llm.invoke(prompt.format_prompt(**chain_input))
+        metrics = output_parser.parse(response.content)
+        
+        metrics_dict = {
+            "mental_health_score": metrics.mental_health_score,
+            "stress_score": metrics.stress_score,
+            "academic_performance_score": metrics.academic_performance_score,
+            "sleep_quality_score": metrics.sleep_quality_score,
+        }
+        
+        return {
+            "metrics_model": metrics,
+            "metrics_json": metrics_dict,
+            "json_string": json.dumps(metrics_dict)
+        }
+    
+    except Exception as e:
+        print(f"Error in metric calculation: {e}")
+        
+        default_metrics = MentalHealthMetrics(
+            mental_health_score=3.0,
+            stress_score=3.0,
+            academic_performance_score=3.0,
+            sleep_quality_score=3.0
+        )
+        
+        default_dict = {
+            "mental_health_score": 3.0,
+            "stress_score": 3.0,
+            "academic_performance_score": 3.0,
+            "sleep_quality_score": 3.0
+        }
+        
+        return {
+            "metrics_model": default_metrics,
+            "metrics_json": default_dict,
+            "json_string": json.dumps(default_dict)
+        }
 
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
 
-lin_reg = LinearRegression()
-lin_reg.fit(X_train, Y_train)
-Y_pred_lin = lin_reg.predict(X_test)
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+import pandas as pd
+import os
+import collections
+collections.Iterable = collections.abc.Iterable
+app = Flask(__name__)
+CORS(app)  # Enable CORS for cross-origin requests
 
-nn_reg = MLPRegressor(hidden_layer_sizes=(256, 128, 64, 32, 16, 8, 4), activation='relu', max_iter=500, random_state=42)
-nn_reg.fit(X_train_scaled, Y_train)
-Y_pred_nn = nn_reg.predict(X_test_scaled)
+@app.route('/analyze', methods=['GET'])
+def analyze_user():
+    user_id = request.args.get('user_id')
+    print(user_id)
+    try:
+        # Load and filter CSV data
+        data = pd.read_csv('tmp/memory.csv')
+        user_data = data[data['user_id'] == int(user_id)]
+        print(user_data)
+        if user_data.empty:
+            return jsonify({"error": "User not found"}), 404
+            
+        # Get prompts and calculate metrics
+        prompts = user_data['prompt'].tolist()
+        result = analyze_mental_health(prompts, user_id)
+        
+        return jsonify(result['metrics_json'])
+        
+    except FileNotFoundError:
+        return jsonify({"error": "Data file missing"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-def evaluate_model(name, Y_true, Y_pred):
-    mse = mean_squared_error(Y_true, Y_pred)
-    r2 = r2_score(Y_true, Y_pred)
-    print(f"{name} Model:\nMSE: {mse:.4f}\nR2 Score: {r2:.4f}\n")
-
-evaluate_model("Linear Regression", Y_test, Y_pred_lin)
-evaluate_model("Neural Network Regressor", Y_test, Y_pred_nn)
-
-plt.figure(figsize=(10, 6))
-sns.histplot(df["Emotional Score"], bins=30, kde=True, color='blue')
-plt.title("Distribution of Emotional Score")
-plt.xlabel("Emotional Score")
-plt.ylabel("Frequency")
-plt.show()
-
-features_to_plot = ["Stress Level", "Anxiety Level", "Happiness Level"]
-for feature in features_to_plot:
-    plt.figure(figsize=(8, 5))
-    sns.histplot(df[feature], bins=30, kde=True, color='green')
-    plt.title(f"Distribution of {feature}")
-    plt.xlabel(feature)
-    plt.ylabel("Frequency")
-    plt.show()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)

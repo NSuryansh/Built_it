@@ -1,0 +1,8 @@
+user_id,session_id,prompt,timestamp
+1,ea2721c8-e950-44c7-b93c-8598b98bc02f,Hello,CURRENT_TIMESTAMP
+1,ce5c7007-c1f3-4560-a615-b1bc635308d5,Hello,CURRENT_TIMESTAMP
+2,99f799d8-2735-4eec-8a37-e048bd4dfe4f,hi,CURRENT_TIMESTAMP
+2,950e7c24-a046-4379-94f2-500d5f77c9b1,i am sad after seeing my marks,CURRENT_TIMESTAMP
+2,6a84c6b8-00df-4505-984f-cde6e6489c88,i'd like to drink some vodka to forget all this,CURRENT_TIMESTAMP
+2,a06e4ec1-1879-4478-8b62-b0c9547f39e2,huuh,CURRENT_TIMESTAMP
+2,9f71e5d3-6ccb-4eeb-baef-02657e23d6c8,you are idiot,CURRENT_TIMESTAMP
