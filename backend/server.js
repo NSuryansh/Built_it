@@ -1340,3 +1340,20 @@ app.post("/otpGenerate", async (req, res) => {
     res.json(e);
   }
 });
+
+
+app.post('/scores-bot', async(req, res) => {
+  try{
+    const {user_id} = req.body;
+
+    const response = await axios.post('http://localhost:5000/analyze',{
+      user_id,
+    })
+
+    console.log(response.data.json);
+    res.json(response.data);
+  }catch (error)  {
+    console.error('Error calling the Flas API: ', error.message);
+    res.status(500).json({ error: error.message });
+  }
+})
