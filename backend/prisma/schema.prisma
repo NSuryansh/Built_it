@@ -17,6 +17,7 @@ model User {
   publicKey        String
   rollNo           Int                @unique
   department       String
+  acadProg         String
   receivedMessages Message[]          @relation("ReceivedMessages")
   sentMessages     Message[]          @relation("SentMessages")
   appointment      Appointments[]
@@ -51,7 +52,9 @@ model Doctor {
   docApp   Appointments[]
   pastApp  PastAppointments[]
   request  Requests[]
-
+  slot Slots[]
+  leave DoctorLeave[]
+  bookings Booked[]
   @@map("doctor")
 }
 
@@ -107,7 +110,7 @@ model Appointments {
   reason    String?
   doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
+  bookings Booked[]
   @@map("appointments")
 }
 
