@@ -460,7 +460,7 @@ function Entertainment() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--custom-orange-50)]">
+    <div className="min-h-screen bg-[var(--custom-orange-100)]">
       {/* Navigation Bar */}
       <Navbar />
 
@@ -487,8 +487,8 @@ function Entertainment() {
             {activeSection === key && (
               <div className="mt-4 bg-white rounded-lg shadow-md p-6">
                 {section.categories.map((category, index) => (
-                  <div key={index} className={`${index !== 1 && 'text-center'} mb-8`}>
-                    <h3 className={`text-[var(--custom-orange-800)] ${index === 1 ? 'text-lg' : 'text-3xl font-extra'} font-semibold mb-4`}>
+                  <div key={index} className={`${index === 0 && 'text-center'} mb-8`}>
+                    <h3 className={`text-[var(--custom-orange-800)] ${index !== 0 ? 'text-lg font-semibold' : 'text-3xl font-extrabold'} mb-4`}>
                       {category.name}
                     </h3>
                     {category.items && (
