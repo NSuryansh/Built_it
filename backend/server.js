@@ -109,6 +109,9 @@ app.post("/signup", async (req, res) => {
   const password = req.body["password"];
   const altNo = req.body["altNo"];
   const pubKey = req.body["publicKey"];
+  const department = req.body["department"]
+  const acadProg = req.body["acadProg"]
+  const rollNo = req.body["rollNo"]
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -121,6 +124,9 @@ app.post("/signup", async (req, res) => {
         password: hashedPassword,
         alt_mobile: altNo,
         publicKey: pubKey,
+        rollNo: rollNo,
+        acadProg: acadProg,
+        department: department
       },
     });
     res.status(201).json({ message: "User added" });
@@ -451,6 +457,33 @@ app.post("/events", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+app.post("/addSlot", async(req,res)=>{
+  const doc_id = Number(req.body["doc_id"])
+  const slotTime = req.body["time"]
+  const slot = await prisma.slots.create({
+    data:{
+      doctor_id: doc_id,
+      starting_time: Date(slotTime)
+    }
+  })
+  res.json(slot)
+})
+
+app.post("/addLeave", async(req,res)=>{
+  const doc_id = Number(req.body["doc_id"])
+  const startTime = Date(req.body["startTime"])
+  const endTime = Date(req.body["endTime"])
+  const leave = await prisma.doctorLeave.create({
+    data:{
+      doctor_id: doc_id,
+      date_start: startTime,
+      date_end: endTime
+    }
+  })
+
+  res.json(leave)
+})
 
 app.post("/addDoc", async (req, res) => {
   const { name, mobile, email, password, reg_id, desc, img } = req.body;
