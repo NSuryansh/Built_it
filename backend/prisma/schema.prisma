@@ -15,6 +15,8 @@ model User {
   password         String
   alt_mobile       String
   publicKey        String
+  rollNo           Int                @unique
+  department       String
   receivedMessages Message[]          @relation("ReceivedMessages")
   sentMessages     Message[]          @relation("SentMessages")
   appointment      Appointments[]
