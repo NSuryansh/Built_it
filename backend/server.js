@@ -1034,8 +1034,8 @@ app.post("/forgotPassword", async (req, res) => {
       },
     });
     console.log(user);
-    if(!user){
-      res.json({message:"No user found with this email"})
+    if (!user) {
+      res.json({ message: "No user found with this email" });
     }
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
@@ -1217,19 +1217,64 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-
-app.post('/node-chat', async (req, res) => {
+app.post("/node-chat", async (req, res) => {
   try {
     const { user_id, message } = req.body;
 
-    const response = await axios.post('http://localhost:5000/chatWithBot', {
+    const response = await axios.post("http://localhost:5000/chatWithBot", {
       user_id,
-      message
-    }); 
+      message,
+    });
 
     res.json(response.data);
   } catch (error) {
-    console.error('Error calling Flask API:', error.message);
+    console.error("Error calling Flask API:", error.message);
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/available-slots", async (req, res) => {
+  const { doctor_id } = req.body;
+
+  try {
+    // Fetch booked appointments for the doctor
+    const bookedSlots = await prisma.appointments.findMany({
+      where: { doctor_id },
+      select: { dateTime: true },
+    });
+
+    // Fetch leave duration for the doctor
+    const doctorLeaves = await prisma.doctorLeave.findMany({
+      where: { doctor_id },
+      select: { date_start: true, date_end: true },
+    });
+
+    // Fetch all available slots for the doctor
+    let availableSlots = await prisma.slots.findMany({
+      where: { doctor_id },
+    });
+
+    // Filter out slots that are in booked appointments
+    availableSlots = availableSlots.filter(
+      (slot) =>
+        !bookedSlots.some(
+          (b) => b.dateTime.getTime() === slot.starting_time.getTime()
+        )
+    );
+
+    // Filter out slots that fall within leave duration
+    availableSlots = availableSlots.filter(
+      (slot) =>
+        !doctorLeaves.some(
+          (leave) =>
+            slot.starting_time >= leave.date_start &&
+            slot.starting_time <= leave.date_end
+        )
+    );
+
+    res.json({ availableSlots });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Couldn't fetch the slots" });
   }
 });
