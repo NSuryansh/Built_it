@@ -109,6 +109,9 @@ app.post("/signup", async (req, res) => {
   const password = req.body["password"];
   const altNo = req.body["altNo"];
   const pubKey = req.body["publicKey"];
+  const department = req.body["department"];
+  const acadProg = req.body["acadProg"];
+  const rollNo = req.body["rollNo"];
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -121,6 +124,9 @@ app.post("/signup", async (req, res) => {
         password: hashedPassword,
         alt_mobile: altNo,
         publicKey: pubKey,
+        rollNo: rollNo,
+        acadProg: acadProg,
+        department: department,
       },
     });
     res.status(201).json({ message: "User added" });
@@ -450,6 +456,33 @@ app.post("/events", async (req, res) => {
     console.error("Error deleting event:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
+});
+
+app.post("/addSlot", async (req, res) => {
+  const doc_id = Number(req.body["doc_id"]);
+  const slotTime = req.body["time"];
+  const slot = await prisma.slots.create({
+    data: {
+      doctor_id: doc_id,
+      starting_time: Date(slotTime),
+    },
+  });
+  res.json(slot);
+});
+
+app.post("/addLeave", async (req, res) => {
+  const doc_id = Number(req.body["doc_id"]);
+  const startTime = Date(req.body["startTime"]);
+  const endTime = Date(req.body["endTime"]);
+  const leave = await prisma.doctorLeave.create({
+    data: {
+      doctor_id: doc_id,
+      date_start: startTime,
+      date_end: endTime,
+    },
+  });
+
+  res.json(leave);
 });
 
 app.post("/addDoc", async (req, res) => {
@@ -1034,8 +1067,8 @@ app.post("/forgotPassword", async (req, res) => {
       },
     });
     console.log(user);
-    if(!user){
-      res.json({message:"No user found with this email"})
+    if (!user) {
+      res.json({ message: "No user found with this email" });
     }
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
@@ -1217,19 +1250,93 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-
-app.post('/node-chat', async (req, res) => {
+app.post("/node-chat", async (req, res) => {
   try {
     const { user_id, message } = req.body;
 
-    const response = await axios.post('http://localhost:5000/chatWithBot', {
+    const response = await axios.post("http://localhost:5000/chatWithBot", {
       user_id,
-      message
-    }); 
+      message,
+    });
 
     res.json(response.data);
   } catch (error) {
-    console.error('Error calling Flask API:', error.message);
+    console.error("Error calling Flask API:", error.message);
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/available-slots", async (req, res) => {
+  const { doctor_id } = req.body;
+
+  try {
+    const bookedSlots = await prisma.appointments.findMany({
+      where: { doctor_id },
+      select: { dateTime: true },
+    });
+
+    const doctorLeaves = await prisma.doctorLeave.findMany({
+      where: { doctor_id },
+      select: { date_start: true, date_end: true },
+    });
+
+    let availableSlots = await prisma.slots.findMany({
+      where: { doctor_id },
+    });
+
+    availableSlots = availableSlots.filter(
+      (slot) =>
+        !bookedSlots.some(
+          (b) => b.dateTime.getTime() === slot.starting_time.getTime()
+        )
+    );
+
+    availableSlots = availableSlots.filter(
+      (slot) =>
+        !doctorLeaves.some(
+          (leave) =>
+            slot.starting_time >= leave.date_start &&
+            slot.starting_time <= leave.date_end
+        )
+    );
+
+    res.json({ availableSlots });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Couldn't fetch the slots" });
+  }
+});
+
+app.post("/otpGenerate", async (req, res) => {
+  const email = req.body["email"];
+  try {
+    // const user = await prisma.user.findUnique({
+    //   where: {
+    //     email: email,
+    //   },
+    // });
+    // console.log(user);
+    // if (!user) {
+    //   res.json({ message: "No user found with this email" });
+    // }
+    const otp = Math.trunc(100000 + Math.random() * 900000);
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    const otpgen = await prisma.otpVerif.create({
+      data: {
+        token: otp,
+        expiresAt: expiresAt,
+        useremail: email,
+      },
+    });
+    console.log(otpgen);
+
+    const subject = "OTP Verification";
+    const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
+    sendEmail(email, subject, message);
+    res.json({
+      message: "OTP sent to your mail!",
+    });
+  } catch (e) {
+    res.json(e);
   }
 });

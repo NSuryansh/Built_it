@@ -28,8 +28,7 @@ import { ToastContainer } from "react-toastify";
 
 export default function App() {
   const location = useLocation();
-  const isBackgroundPage =
-    location.pathname === "/" || location.pathname === "/appointments";
+  const isBackgroundPage = location.pathname === "/appointments";
 
   return (
     <div

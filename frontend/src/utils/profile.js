@@ -24,10 +24,12 @@ export const checkAuth = async (userType) => {
     } else {
       user = "adminprofile";
     }
+    // console("HAHAHAHAHAHAh")
     const response = await fetch(`https://built-it-xjiq.onrender.com/${user}`, {
       method: "GET",
       headers: { Authorization: "Bearer " + token },
     });
+    
 
     if (!response.ok) {
       return false;
