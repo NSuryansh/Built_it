@@ -28,9 +28,6 @@ import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 
 export default function App() {
-  const location = useLocation();
-  const isBackgroundPage =
-    location.pathname === "/" || location.pathname === "/appointments";
 
     const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
 
