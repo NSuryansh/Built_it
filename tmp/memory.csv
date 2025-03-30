@@ -6,3 +6,5 @@ user_id,session_id,prompt,timestamp
 2,6a84c6b8-00df-4505-984f-cde6e6489c88,i'd like to drink some vodka to forget all this,CURRENT_TIMESTAMP
 2,a06e4ec1-1879-4478-8b62-b0c9547f39e2,huuh,CURRENT_TIMESTAMP
 2,9f71e5d3-6ccb-4eeb-baef-02657e23d6c8,you are idiot,CURRENT_TIMESTAMP
+1,6461dce0-daf9-4ec2-b647-0cf772f300f6,hi,CURRENT_TIMESTAMP
+1,6046159c-052f-42f9-927d-612524017122,i am stressed for marks,CURRENT_TIMESTAMP

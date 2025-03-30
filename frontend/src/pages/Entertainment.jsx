@@ -1,14 +1,66 @@
-import React, { useState } from "react";
-import { ChevronDown, Bell, User } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
 import Navbar from "../components/Navbar";
+import SessionExpired from "../components/SessionExpired";
+import { checkAuth } from "../utils/profile";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { useNavigate } from "react-router-dom";
 
 function Entertainment() {
   const [activeSection, setActiveSection] = useState(null);
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  // Verify authentication
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  const handleClosePopup = () => {
+    navigate("/login");
+  };
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   const sections = {
     movies: {
       title: "Movies",
       categories: [
+        {
+          name: "Top Pick",
+          items: [
+            {
+              title: "La La Land",
+              image:
+                "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300&h=200&fit=crop",
+            },
+            {
+              title: "The Tree of Life",
+              image:
+                "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&q=80&w=2070",
+            },
+            {
+              title: "Inception",
+              image:
+                "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&h=200&fit=crop",
+            },
+          ],
+        },
         {
           name: "Feel Good Movies",
           items: [
@@ -111,10 +163,34 @@ function Entertainment() {
         },
       ],
     },
+    
     books: {
+     
       title: "Books",
       categories: [
         {
+         
+          name: "Top Pick",
+          items: [
+            {
+              title: "The 7 Habits of Highly Effective People",
+              image:
+                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
+            },
+            {
+              title: "Atomic Habits",
+              image:
+                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
+            },
+            {
+              title: "Long Walk to Freedom – Nelson Mandela",
+              image:
+                "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=200&fit=crop",
+            },
+          ],
+        },
+        {
+         
           name: "Self-Help",
           items: [
             {
@@ -191,9 +267,30 @@ function Entertainment() {
         },
       ],
     },
+    
     music: {
       title: "Music",
       categories: [
+        {
+          name: "Top Pick",
+          items: [
+            {
+              title: "Lofi Study – Lofi Girl",
+              image:
+                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
+            },
+            {
+              title: "Bohemian Rhapsody - Queen",
+              image:
+                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
+            },
+            {
+              title: "Buddha’s Flute – Relaxing Tibetan Music",
+              image:
+                "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=300&h=200&fit=crop",
+            },
+          ],
+        },
         {
           name: "Relaxing",
           items: [
@@ -390,8 +487,8 @@ function Entertainment() {
             {activeSection === key && (
               <div className="mt-4 bg-white rounded-lg shadow-md p-6">
                 {section.categories.map((category, index) => (
-                  <div key={index} className="mb-8">
-                    <h3 className="text-[var(--custom-orange-800)] text-lg font-semibold mb-4">
+                  <div key={index} className={`${index !== 1 && 'text-center'} mb-8`}>
+                    <h3 className={`text-[var(--custom-orange-800)] ${index === 1 ? 'text-lg' : 'text-3xl font-extra'} font-semibold mb-4`}>
                       {category.name}
                     </h3>
                     {category.items && (
@@ -408,7 +505,7 @@ function Entertainment() {
                                 alt={item.title}
                                 className="w-full h-48 object-cover rounded-lg shadow-md"
                               />
-                              <div className="absolute inset-0 bg-orange-600/0 group-hover:bg-orange-600/10 transition-colors rounded-lg" />
+                              <div className="text-center absolute inset-0 bg-orange-600/0 group-hover:bg-orange-600/10 transition-colors rounded-lg" />
                             </div>
                             <p className="mt-2 text-center text-[var(--custom-orange-900)] group-hover:text-[var(--custom-orange-700)] transition-colors">
                               {item.title}
@@ -428,4 +525,4 @@ function Entertainment() {
   );
 }
 
-export default  Entertainment;
+export default Entertainment;

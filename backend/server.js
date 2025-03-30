@@ -115,9 +115,9 @@ app.post("/signup", async (req, res) => {
   const password = req.body["password"];
   const altNo = req.body["altNo"];
   const pubKey = req.body["publicKey"];
-  const department = req.body["department"]
-  const acadProg = req.body["acadProg"]
-  const rollNo = req.body["rollNo"]
+  const department = req.body["department"];
+  const acadProg = req.body["acadProg"];
+  const rollNo = req.body["rollNo"];
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -132,7 +132,7 @@ app.post("/signup", async (req, res) => {
         publicKey: pubKey,
         rollNo: rollNo,
         acadProg: acadProg,
-        department: department
+        department: department,
       },
     });
     res.status(201).json({ message: "User added" });
@@ -464,32 +464,32 @@ app.post("/events", async (req, res) => {
   }
 });
 
-app.post("/addSlot", async(req,res)=>{
-  const doc_id = Number(req.body["doc_id"])
-  const slotTime = req.body["time"]
+app.post("/addSlot", async (req, res) => {
+  const doc_id = Number(req.body["doc_id"]);
+  const slotTime = req.body["time"];
   const slot = await prisma.slots.create({
-    data:{
+    data: {
       doctor_id: doc_id,
-      starting_time: Date(slotTime)
-    }
-  })
-  res.json(slot)
-})
+      starting_time: Date(slotTime),
+    },
+  });
+  res.json(slot);
+});
 
-app.post("/addLeave", async(req,res)=>{
-  const doc_id = Number(req.body["doc_id"])
-  const startTime = Date(req.body["startTime"])
-  const endTime = Date(req.body["endTime"])
+app.post("/addLeave", async (req, res) => {
+  const doc_id = Number(req.body["doc_id"]);
+  const startTime = Date(req.body["startTime"]);
+  const endTime = Date(req.body["endTime"]);
   const leave = await prisma.doctorLeave.create({
-    data:{
+    data: {
       doctor_id: doc_id,
       date_start: startTime,
-      date_end: endTime
-    }
-  })
+      date_end: endTime,
+    },
+  });
 
-  res.json(leave)
-})
+  res.json(leave);
+});
 
 app.post("/addDoc", async (req, res) => {
   const { name, mobile, email, password, reg_id, desc, img } = req.body;
@@ -535,20 +535,25 @@ app.post("/book", async (req, res) => {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
-    // Create appointment
-    const appointment = await prisma.appointments.create({
-      data: {
-        user_id: userId,
-        doctor_id: doctorId,
-        dateTime: new Date(dateTime),
-        reason: reason,
-      },
+    const result = await prisma.$transaction(async (prisma) => {
+      // Create appointment
+      const appointment = await prisma.appointments.create({
+        data: {
+          user_id: userId,
+          doctor_id: doctorId,
+          dateTime: new Date(dateTime),
+          reason: reason,
+        },
+      });
+
+      //Remove from requests table
+      const reqDel = await prisma.requests.delete({
+        where: { id: parseInt(appId) },
+      });
+      console.log(reqDel);
+      return { appointment, reqDel };
     });
-
-    //Remove from requests table
-    await prisma.requests.delete({ where: { id: parseInt(appId) } });
-
-    res.json({ message: "Appointment booked successfully", appointment });
+    res.json({ message: "Appointment booked successfully", result });
   } catch (error) {
     console.error(error);
     res.json({ message: "Internal Server Error" });
@@ -1332,24 +1337,20 @@ app.get("/available-slots", async (req, res) => {
   const { doctor_id } = req.body;
 
   try {
-    // Fetch booked appointments for the doctor
     const bookedSlots = await prisma.appointments.findMany({
       where: { doctor_id },
       select: { dateTime: true },
     });
 
-    // Fetch leave duration for the doctor
     const doctorLeaves = await prisma.doctorLeave.findMany({
       where: { doctor_id },
       select: { date_start: true, date_end: true },
     });
 
-    // Fetch all available slots for the doctor
     let availableSlots = await prisma.slots.findMany({
       where: { doctor_id },
     });
 
-    // Filter out slots that are in booked appointments
     availableSlots = availableSlots.filter(
       (slot) =>
         !bookedSlots.some(
@@ -1357,7 +1358,6 @@ app.get("/available-slots", async (req, res) => {
         )
     );
 
-    // Filter out slots that fall within leave duration
     availableSlots = availableSlots.filter(
       (slot) =>
         !doctorLeaves.some(
@@ -1371,5 +1371,44 @@ app.get("/available-slots", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Couldn't fetch the slots" });
+  }
+});
+
+app.post("/otpGenerate", async (req, res) => {
+  const email = req.body["email"];
+  try {
+    const otp = Math.trunc(100000 + Math.random() * 900000);
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    const otpgen = await prisma.otpVerif.create({
+      data: {
+        token: otp,
+        expiresAt: expiresAt,
+        useremail: email,
+      },
+    });
+    const subject = "OTP Verification";
+    const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
+    sendEmail(email, subject, message);
+    res.json({
+      message: "OTP sent to your mail!",
+    });
+  } catch (e) {
+    res.json(e);
+  }
+});
+
+app.post("/scores-bot", async (req, res) => {
+  try {
+    const { user_id } = req.body;
+
+    const response = await axios.post("http://localhost:5000/analyze", {
+      user_id,
+    });
+
+    console.log(response.data.json);
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error calling the Flas API: ", error.message);
+    res.status(500).json({ error: error.message });
   }
 });

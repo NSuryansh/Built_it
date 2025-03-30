@@ -6,7 +6,7 @@ import Landing from "./pages/Landing";
 import Landing_user from "./pages/Landing_user";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import DoctorLogin from "./pages/doctor/Login_doctor";
 import DoctorLanding from "./pages/doctor/Landing_doctor";
 import DoctorAppointment from "./pages/doctor/Appointment_doctor";
@@ -98,16 +98,7 @@ export default function App() {
     
 
   return (
-    <div
-      className={`min-h-screen h-full flex flex-col ${
-        isBackgroundPage ? "bg-cover" : "bg-white"
-      }`}
-      style={
-        isBackgroundPage
-          ? { backgroundImage: "url('/assests/Pexels Photo by Loc Dang.png')" }
-          : {}
-      }
-    >
+    <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Landing />} />

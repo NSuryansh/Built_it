@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
-import SessionExpired from "../components/SessionExpired";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Footer from "../components/Footer";
 import { ToastContainer, toast } from "react-toastify";
@@ -41,6 +40,7 @@ const Book = () => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("user");
       setIsAuthenticated(authStatus);
+      console(isAuthenticated);
     };
     verifyAuth();
   }, []);
@@ -70,6 +70,12 @@ const Book = () => {
     };
     fetchDoctors();
   }, []);
+
+  useEffect(() => {
+    formData.name = localStorage.getItem("username");
+    formData.email = localStorage.getItem("user_email");
+    formData.phone = localStorage.getItem("user_mobile");
+  }, [isAuthenticated]);
 
   const handleDoctorSelect = (doctor) => {
     setSelectedDoctor(doctor);
@@ -105,6 +111,16 @@ const Book = () => {
       const respData = await res.json();
       console.log(respData);
       // alert("Booking Confirmed!");
+      toast("Booking Confirmed", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       setStep(1);
       // Optionally, clear form and selected doctor
       setSelectedDoctor(null);
@@ -130,10 +146,6 @@ const Book = () => {
     }
   };
 
-  const handleClosePopup = () => {
-    navigate("/login");
-  };
-
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
@@ -141,10 +153,6 @@ const Book = () => {
         <p>Loading...</p>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (
@@ -264,21 +272,26 @@ const BookingFormStep = ({
 
       <form onSubmit={onSubmit} className="space-y-6 max-w-3xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="group">
-            <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
-              <User className="w-4 h-4" />
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none"
-              placeholder="Enter your full name"
-              required
-            />
-          </div>
+          {
+            <div className="group">
+              <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
+                <User className="w-4 h-4" />
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 rounded-lg border-2 ${
+                  formData.name === "" ? "" : "bg-gray-200 cursor-not-allowed"
+                } focus:border-[var(--custom-orange-400)] border-[var(--custom-orange-200)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none`}
+                placeholder="Enter your full name"
+                required
+                disabled={formData.name === "" ? false : true}
+              />
+            </div>
+          }
 
           <div className="group">
             <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
@@ -290,8 +303,11 @@ const BookingFormStep = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none"
+              className={`w-full ${
+                formData.name === "" ? "" : "bg-gray-200 cursor-not-allowed"
+              } px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none`}
               placeholder="Enter your email"
+              disabled={formData.email === "" ? false : true}
               required
             />
           </div>
@@ -306,8 +322,11 @@ const BookingFormStep = ({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none"
+              className={`w-full px-4 py-3 rounded-lg border-2 ${
+                formData.phone === "" ? "" : "bg-gray-200 cursor-not-allowed"
+              } focus:border-[var(--custom-orange-400)] border-[var(--custom-orange-200)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none`}
               placeholder="Enter your phone number"
+              disabled={formData.phone === "" ? false : true}
               required
             />
           </div>

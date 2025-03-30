@@ -9,12 +9,15 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [acadProg, setAcadProg] = useState("");
+  const [rollNo, setRollNo] = useState("");
 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     mobile: "",
     altNo: "",
+    department: "",
     password: "",
     confirmPassword: "",
   });
@@ -61,10 +64,16 @@ const SignUp = () => {
       formData.username === "" ||
       formData.email === "" ||
       formData.mobile === "" ||
+      formData.altNo === "" ||
+      formData.department === "" ||
       formData.password === "" ||
       formData.confirmPassword === ""
     ) {
       setError("Please fill the fields");
+      return;
+    }
+    if (formData.mobile === formData.altNo) {
+      setError("Phone number and Emergency contact number cannot be same");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
@@ -76,13 +85,15 @@ const SignUp = () => {
       return;
     }
     setError("");
+
+    
+
+    if(formData.email[0] === 'p'){
+      setAcadProg('phd');
+    }
+
     const { username, email, mobile, password, altNo, confirmPassword } =
       formData;
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
 
     try {
       const { publicKey, privateKey } = await generateKeyPair();
@@ -185,6 +196,25 @@ const SignUp = () => {
 
               <div>
                 <label
+                  htmlFor="department"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
+                >
+                  Department
+                </label>
+                <input
+                  id="department"
+                  type="text"
+                  name="department"
+                  value={formData.altNo}
+                  onChange={handleChange}
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
+                  placeholder="Department"
+                  required
+                />
+              </div>
+
+              <div>
+                <label
                   htmlFor="mobile"
                   className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
@@ -207,7 +237,7 @@ const SignUp = () => {
                   htmlFor="altNo"
                   className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
-                  Alternate Number
+                  Emergency Contact Number
                 </label>
                 <input
                   id="altNo"
@@ -216,7 +246,8 @@ const SignUp = () => {
                   value={formData.altNo}
                   onChange={handleChange}
                   className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
-                  placeholder="Enter alternate number (optional)"
+                  placeholder="Emergency Contact Number"
+                  required
                 />
               </div>
 

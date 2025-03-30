@@ -23,7 +23,6 @@ const DoctorNavbar = () => {
     setIsOpen(!isOpen);
   };
 
-
   const handleLogout = () => {
     localStorage.clear();
     navigate("/doctor/login");
@@ -34,6 +33,7 @@ const DoctorNavbar = () => {
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
           setShowDetails(false);
+          setIsOpen(false);
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -44,15 +44,20 @@ const DoctorNavbar = () => {
   };
 
   const wrapperRef = useRef(null);
+  const hamburgerRef = useRef(null);
   useOutsideAlerter(wrapperRef);
+  useOutsideAlerter(hamburgerRef);
 
   return (
     <nav className="bg-transperent">
-      <div className="px-8 py-3">
+      <div className="px-4 md:px-8 py-3">
         <div className="flex items-center justify-between">
           <div className="md:hidden transition-all flex items-center z-2">
             <button
-              onClick={toggleMenu}
+              onClick={() => {
+                setShowDetails(false);
+                toggleMenu();
+              }}
               className="p-2 rounded-full hover:bg-gray-100"
             >
               {isOpen ? (
@@ -62,7 +67,10 @@ const DoctorNavbar = () => {
               )}
             </button>
             {isOpen && (
-              <div className="absolute top-16 left-[2%] w-[40%] bg-white rounded-2xl shadow-md p-4">
+              <div
+                ref={hamburgerRef}
+                className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4"
+              >
                 <ul>
                   {links.map((item, i) => (
                     <li
@@ -118,6 +126,7 @@ const DoctorNavbar = () => {
               <>
                 <button
                   onClick={() => {
+                    setIsOpen(false);
                     setShowDetails(!showDetails);
                   }}
                   className="cursor-pointer relative"
