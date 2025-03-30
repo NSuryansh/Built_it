@@ -12,6 +12,7 @@ import nodemailer from "nodemailer";
 // import emailjs from "@emailjs/browser";
 import { error } from "console";
 import axios from "axios";
+import webpush  from "web-push";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -29,6 +30,11 @@ const transporter = nodemailer.createTransport({
     pass: process.env.SMTP_PASSWORD,
   },
 });
+
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY
+
+webpush.setVapidDetails("mailto:spython.webd@gmail.com", publicVapidKey, privateVapidKey)
 
 app.use(cors());
 const io = new Server(server, {
@@ -1241,6 +1247,62 @@ app.post("/resetAdminPassword", async (req, res) => {
   } catch (error) {
     console.error("Error in resetPassword endpoint:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/save-subscription", async (req, res) => {
+  try {
+    const { endpoint, keys } = req.body;
+
+    // Check if the subscription already exists
+    const existingSub = await prisma.subscription.findUnique({
+      where: { endpoint },
+    });
+
+    if (!existingSub) {
+      await prisma.subscription.create({
+        data: {
+          endpoint,
+          authKey: keys.auth,
+          p256dhKey: keys.p256dh,
+        },
+      });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error saving subscription:", error);
+    res.status(500).json({ success: false, message: "Error saving subscription" });
+  }
+});
+
+app.post("/send-notification", async (req, res) => {
+  try {
+    const subscriptions = await prisma.subscription.findMany();
+    const message = req.body["message"]
+    const notificationPayload = JSON.stringify({
+      title: "New Alert!",
+      body: message,
+      url: "http://localhost:5173"
+    });
+
+    subscriptions.forEach((sub) => {
+      webpush.sendNotification(
+        {
+          endpoint: sub.endpoint,
+          keys: {
+            auth: sub.authKey,
+            p256dh: sub.p256dhKey,
+          },
+        },
+        notificationPayload
+      ).catch(console.error);
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error sending notification:", error);
+    res.status(500).json({ success: false, message: "Error sending notification" });
   }
 });
 
