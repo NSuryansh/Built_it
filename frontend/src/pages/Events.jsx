@@ -3,22 +3,7 @@ import Navbar from "../components/Navbar";
 import { CalendarCheck, CalendarX } from 'lucide-react';
 import Footer from '../components/Footer';
 import { format } from "date-fns";
-// Mock data for events
-// const pastEvents = Array.from({ length: 10 }, (_, i) => ({
-//   id: `past-${i + 1}`,
-//   name: `Event-${i + 1}`,
-//   date: '2024-02-15',
-//   detail: 'A wonderful past event that brought people together',
-//   venue: 'Grand Plaza Hotel'
-// }));
 
-// const currentEvents = Array.from({ length: 10 }, (_, i) => ({
-//   id: `current-${i + 1}`,
-//   name: `Event-${i + 1}`,
-//   date: '2024-03-15',
-//   detail: 'An exciting ongoing event you won\'t want to miss',
-//   venue: 'City Convention Center'
-// }));
 function Events() {
   const [currentEvents, setcurrentEvents] = useState([]);
   const [pastEvents, setpastEvents] = useState([]);
@@ -64,12 +49,9 @@ function Events() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-100 via-pink-100 to-orange-100">
-      {/* Navigation Bar */}
       <Navbar />
 
-      {/* Main Content */}
       <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Past Events Section */}
         <section className="mb-12">
           <div className="flex items-center mb-4">
             <CalendarX className="h-6 w-6 text-gray-600 mr-2" />
