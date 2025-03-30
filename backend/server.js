@@ -1330,6 +1330,36 @@ app.post("/otpGenerate", async (req, res) => {
   }
 });
 
+app.post("/otpcheck", async (req, res) => {
+  const otp = req.body["otp"];
+  const email = req.body["email"];
+  try{
+    const otpRecord = await prisma.otpVerif.findFirst({
+      where: {
+        useremail: email,
+        token: Number(otp),
+      },
+      orderBy: {
+        createdAt: 'desc', 
+      },
+    });
+
+    if (!otpRecord) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+    if (new Date() > otpRecord.expiresAt) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+    await prisma.otpVerif.delete({
+      where: { id: otpRecord.id },
+    });
+    res.json({ message: "OTP verified successfully!" });
+  } catch (e) {
+    res.status(500).json({ error: "An error occurred during OTP verification", details: e.message });
+  }
+});
+
+
 
 app.post('/scores-bot', async(req, res) => {
   try{
