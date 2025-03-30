@@ -12,7 +12,7 @@ import nodemailer from "nodemailer";
 // import emailjs from "@emailjs/browser";
 import { error } from "console";
 import axios from "axios";
-import webpush  from "web-push";
+import webpush from "web-push";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -744,7 +744,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1376,16 +1376,22 @@ app.get("/available-slots", async (req, res) => {
 
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
+  console.log(email)
   try {
     const otp = Math.trunc(100000 + Math.random() * 900000);
+    console.log(otp)
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    const otpgen = await prisma.otpVerif.create({
-      data: {
-        token: otp,
-        expiresAt: expiresAt,
-        useremail: email,
-      },
-    });
+    console.log(expiresAt)
+    
+      const otpgen = await prisma.otpVerification.create({
+        data: {
+          token: otp,
+          expiresAt: expiresAt,
+          useremail: email,
+        },
+      });
+    
+    console.log(otpgen)
     const subject = "OTP Verification";
     const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
     sendEmail(email, subject, message);
@@ -1396,6 +1402,36 @@ app.post("/otpGenerate", async (req, res) => {
     res.json(e);
   }
 });
+
+app.post("/otpcheck", async (req, res) => {
+  const otp = req.body["otp"];
+  const email = req.body["email"];
+  try{
+    const otpRecord = await prisma.otpVerif.findFirst({
+      where: {
+        useremail: email,
+        token: Number(otp),
+      },
+      orderBy: {
+        createdAt: 'desc', 
+      },
+    });
+
+    if (!otpRecord) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+    if (new Date() > otpRecord.expiresAt) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+    await prisma.otpVerif.delete({
+      where: { id: otpRecord.id },
+    });
+    res.json({ message: "OTP verified successfully!" });
+  } catch (e) {
+    res.status(500).json({ error: "An error occurred during OTP verification", details: e.message });
+  }
+});
+
 
 app.post("/scores-bot", async (req, res) => {
   try {

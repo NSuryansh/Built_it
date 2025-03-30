@@ -27,7 +27,7 @@ model User {
   pastApp          PastAppointments[]
   request          Requests[]
   resetTokens PasswordResetToken[]
-  otpverifs otpVerification[]
+  // otpverifs otpVerification[]
   chatbot Chatbot[]
 
   @@map("user")
@@ -45,10 +45,10 @@ model PasswordResetToken {
 model otpVerification {
   @@map("otpverif")
   id        Int      @id @default(autoincrement())
-  token     String   @unique
+  token     Int   
   expiresAt DateTime
-  useremail    Int
-  user      User     @relation(fields: [useremail], references: [id])
+  useremail    String
+  // user      User     @relation(fields: [useremail], references: [id])
 }
 
 model Doctor {
