@@ -1310,15 +1310,6 @@ app.get("/available-slots", async (req, res) => {
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
   try {
-    // const user = await prisma.user.findUnique({
-    //   where: {
-    //     email: email,
-    //   },
-    // });
-    // console.log(user);
-    // if (!user) {
-    //   res.json({ message: "No user found with this email" });
-    // }
     const otp = Math.trunc(100000 + Math.random() * 900000);
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const otpgen = await prisma.otpVerif.create({
@@ -1328,8 +1319,6 @@ app.post("/otpGenerate", async (req, res) => {
         useremail: email,
       },
     });
-    console.log(otpgen);
-
     const subject = "OTP Verification";
     const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
     sendEmail(email, subject, message);
