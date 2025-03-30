@@ -529,20 +529,25 @@ app.post("/book", async (req, res) => {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
-    // Create appointment
-    const appointment = await prisma.appointments.create({
-      data: {
-        user_id: userId,
-        doctor_id: doctorId,
-        dateTime: new Date(dateTime),
-        reason: reason,
-      },
+    const result = await prisma.$transaction(async (prisma) => {
+      // Create appointment
+      const appointment = await prisma.appointments.create({
+        data: {
+          user_id: userId,
+          doctor_id: doctorId,
+          dateTime: new Date(dateTime),
+          reason: reason,
+        },
+      });
+
+      //Remove from requests table
+      const reqDel = await prisma.requests.delete({
+        where: { id: parseInt(appId) },
+      });
+      console.log(reqDel);
+      return { appointment, reqDel };
     });
-
-    //Remove from requests table
-    await prisma.requests.delete({ where: { id: parseInt(appId) } });
-
-    res.json({ message: "Appointment booked successfully", appointment });
+    res.json({ message: "Appointment booked successfully", result });
   } catch (error) {
     console.error(error);
     res.json({ message: "Internal Server Error" });
@@ -1341,19 +1346,18 @@ app.post("/otpGenerate", async (req, res) => {
   }
 });
 
+app.post("/scores-bot", async (req, res) => {
+  try {
+    const { user_id } = req.body;
 
-app.post('/scores-bot', async(req, res) => {
-  try{
-    const {user_id} = req.body;
-
-    const response = await axios.post('http://localhost:5000/analyze',{
+    const response = await axios.post("http://localhost:5000/analyze", {
       user_id,
-    })
+    });
 
     console.log(response.data.json);
     res.json(response.data);
-  }catch (error)  {
-    console.error('Error calling the Flas API: ', error.message);
+  } catch (error) {
+    console.error("Error calling the Flas API: ", error.message);
     res.status(500).json({ error: error.message });
   }
-})
+});
