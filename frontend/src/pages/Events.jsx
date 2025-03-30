@@ -23,6 +23,22 @@ function Events() {
     verifyAuth();
   }, []);
 
+  useEffect(() => {
+    getCurrEvents();
+  }, []);
+
+  useEffect(() => {
+    getPastEvents();
+  }, []);
+
+  useEffect(() => {
+    console.log(currentEvents);
+  }, [currentEvents]);
+
+  useEffect(() => {
+    console.log(pastEvents);
+  }, [pastEvents]);
+
   const handleClosePopup = () => {
     navigate("/login");
   };
@@ -51,22 +67,6 @@ function Events() {
     const resp = await res.json();
     setpastEvents(resp);
   }
-
-  useEffect(() => {
-    getCurrEvents();
-  }, []);
-
-  useEffect(() => {
-    getPastEvents();
-  }, []);
-
-  useEffect(() => {
-    console.log(currentEvents);
-  }, [currentEvents]);
-
-  useEffect(() => {
-    console.log(pastEvents);
-  }, [pastEvents]);
 
   const NoEventsMessage = ({ message }) => (
     <tr>

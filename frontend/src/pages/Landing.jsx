@@ -110,7 +110,7 @@ const Landing = () => {
         {/* CTA Section */}
         <div className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto bg-[var(--custom-orange-500)] rounded-2xl overflow-hidden shadow-xl">
-            <div className="flex items-center px-8 py-16 justify-evenly text-center">
+            <div className="flex flex-col md:flex-row items-center px-8 py-16 justify-evenly text-center">
               <div className="">
                 <h2 className="text-3xl font-bold text-[var(--custom-white)] mb-4">
                   Start Your Journey Today
@@ -119,16 +119,15 @@ const Landing = () => {
                   Take the first step towards better mental health. Our team of
                   professionals is here to support you every step of the way.
                 </p>
-                <Link
-                  to="/book"
-                  className="bg-[var(--custom-white)] text-[var(--custom-orange-500)] px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-300"
-                >
-                  Book Free Consultation
+                <Link to="/book">
+                  <button className="bg-[var(--custom-white)] text-[var(--custom-orange-500)] px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-300">
+                    Book Free Consultation
+                  </button>
                 </Link>
               </div>
               <img
                 src="/assets/qr-code.svg"
-                className="w-[250px]"
+                className="w-[250px] mt-16"
                 alt="qr-code"
               />
             </div>
