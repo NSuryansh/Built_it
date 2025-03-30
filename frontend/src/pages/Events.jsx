@@ -1,12 +1,44 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { CalendarCheck, CalendarX } from 'lucide-react';
-import Footer from '../components/Footer';
+import { CalendarCheck, CalendarX } from "lucide-react";
+import Footer from "../components/Footer";
 import { format } from "date-fns";
+import SessionExpired from "../components/SessionExpired";
+import { checkAuth } from "../utils/profile";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { useNavigate } from "react-router-dom";
 
 function Events() {
   const [currentEvents, setcurrentEvents] = useState([]);
   const [pastEvents, setpastEvents] = useState([]);
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  // Verify authentication
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  const handleClosePopup = () => {
+    navigate("/login");
+  };
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   async function getCurrEvents() {
     const res = await fetch("https://built-it-xjiq.onrender.com/events");
