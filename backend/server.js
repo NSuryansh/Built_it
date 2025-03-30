@@ -109,9 +109,9 @@ app.post("/signup", async (req, res) => {
   const password = req.body["password"];
   const altNo = req.body["altNo"];
   const pubKey = req.body["publicKey"];
-  const department = req.body["department"]
-  const acadProg = req.body["acadProg"]
-  const rollNo = req.body["rollNo"]
+  const department = req.body["department"];
+  const acadProg = req.body["acadProg"];
+  const rollNo = req.body["rollNo"];
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -126,7 +126,7 @@ app.post("/signup", async (req, res) => {
         publicKey: pubKey,
         rollNo: rollNo,
         acadProg: acadProg,
-        department: department
+        department: department,
       },
     });
     res.status(201).json({ message: "User added" });
@@ -458,32 +458,32 @@ app.post("/events", async (req, res) => {
   }
 });
 
-app.post("/addSlot", async(req,res)=>{
-  const doc_id = Number(req.body["doc_id"])
-  const slotTime = req.body["time"]
+app.post("/addSlot", async (req, res) => {
+  const doc_id = Number(req.body["doc_id"]);
+  const slotTime = req.body["time"];
   const slot = await prisma.slots.create({
-    data:{
+    data: {
       doctor_id: doc_id,
-      starting_time: Date(slotTime)
-    }
-  })
-  res.json(slot)
-})
+      starting_time: Date(slotTime),
+    },
+  });
+  res.json(slot);
+});
 
-app.post("/addLeave", async(req,res)=>{
-  const doc_id = Number(req.body["doc_id"])
-  const startTime = Date(req.body["startTime"])
-  const endTime = Date(req.body["endTime"])
+app.post("/addLeave", async (req, res) => {
+  const doc_id = Number(req.body["doc_id"]);
+  const startTime = Date(req.body["startTime"]);
+  const endTime = Date(req.body["endTime"]);
   const leave = await prisma.doctorLeave.create({
-    data:{
+    data: {
       doctor_id: doc_id,
       date_start: startTime,
-      date_end: endTime
-    }
-  })
+      date_end: endTime,
+    },
+  });
 
-  res.json(leave)
-})
+  res.json(leave);
+});
 
 app.post("/addDoc", async (req, res) => {
   const { name, mobile, email, password, reg_id, desc, img } = req.body;
@@ -1304,5 +1304,39 @@ app.get("/available-slots", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Couldn't fetch the slots" });
+  }
+});
+
+app.post("/otpGenerate", async (req, res) => {
+  const email = req.body["email"];
+  try {
+    // const user = await prisma.user.findUnique({
+    //   where: {
+    //     email: email,
+    //   },
+    // });
+    // console.log(user);
+    // if (!user) {
+    //   res.json({ message: "No user found with this email" });
+    // }
+    const otp = Math.trunc(100000 + Math.random() * 900000);
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    const otpgen = await prisma.otpVerif.create({
+      data: {
+        token: otp,
+        expiresAt: expiresAt,
+        useremail: email,
+      },
+    });
+    console.log(otpgen);
+
+    const subject = "OTP Verification";
+    const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
+    sendEmail(email, subject, message);
+    res.json({
+      message: "OTP sent to your mail!",
+    });
+  } catch (e) {
+    res.json(e);
   }
 });
