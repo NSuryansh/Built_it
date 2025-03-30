@@ -1,9 +1,41 @@
-import { useState } from "react";
-import { ChevronDown} from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
 import Navbar from "../components/Navbar";
+import SessionExpired from "../components/SessionExpired";
+import { checkAuth } from "../utils/profile";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { useNavigate } from "react-router-dom";
 
 function Entertainment() {
   const [activeSection, setActiveSection] = useState(null);
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  // Verify authentication
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  const handleClosePopup = () => {
+    navigate("/login");
+  };
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   const sections = {
     movies: {
@@ -493,4 +525,4 @@ function Entertainment() {
   );
 }
 
-export default  Entertainment;
+export default Entertainment;

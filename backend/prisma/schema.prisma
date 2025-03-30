@@ -17,6 +17,7 @@ model User {
   publicKey        String
   rollNo           Int                @unique
   department       String
+  acadProg         String
   receivedMessages Message[]          @relation("ReceivedMessages")
   sentMessages     Message[]          @relation("SentMessages")
   appointment      Appointments[]
@@ -26,6 +27,8 @@ model User {
   pastApp          PastAppointments[]
   request          Requests[]
   resetTokens PasswordResetToken[]
+  otpverifs otpVerification[]
+  chatbot Chatbot[]
 
   @@map("user")
 }
@@ -37,6 +40,15 @@ model PasswordResetToken {
   expiresAt DateTime
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model otpVerification {
+  @@map("otpverif")
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  useremail    Int
+  user      User     @relation(fields: [useremail], references: [id])
 }
 
 model Doctor {
@@ -51,7 +63,9 @@ model Doctor {
   docApp   Appointments[]
   pastApp  PastAppointments[]
   request  Requests[]
-
+  slot Slots[]
+  leave DoctorLeave[]
+  // bookings Booked[]
   @@map("doctor")
 }
 
@@ -107,7 +121,7 @@ model Appointments {
   reason    String?
   doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
+  // bookings Booked[]
   @@map("appointments")
 }
 
@@ -150,7 +164,7 @@ model feelings {
   user_id           Int  @id
   mental_peace      Int
   sleep_quality     Int
-  socail_life       Int
+  social_life       Int
   passion           Int
   less_stress_score Int
   happiness_score   Int
@@ -184,13 +198,23 @@ model DoctorLeave {
   date_end DateTime
 }
 
-model Booked {
-  @@map("booked")
-  id Int @id @default(autoincrement())
-  doctor_id Int 
-  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete:Cascade)
-  starting_time DateTime
-  apt_id Int
-  appointments Appointments @relation(fields:[apt_id], references:[id], onDelete:Cascade)
-}
+// model Booked {
+//   @@map("booked")
+//   id Int @id @default(autoincrement())
+//   doctor_id Int 
+//   doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete:Cascade)
+//   starting_time DateTime
+//   apt_id Int
+//   appointments Appointments @relation(fields:[apt_id], references:[id], onDelete:Cascade)
 
+// }
+
+model Chatbot {
+  @@map("chatbot")
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  isBot     Boolean  @default(false) 
+  message   String
+  sentAt DateTime @default(now())
+}
