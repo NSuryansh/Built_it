@@ -6,7 +6,7 @@ import Landing from "./pages/Landing";
 import Landing_user from "./pages/Landing_user";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import DoctorLogin from "./pages/doctor/Login_doctor";
 import DoctorLanding from "./pages/doctor/Landing_doctor";
 import DoctorAppointment from "./pages/doctor/Appointment_doctor";
@@ -26,23 +26,78 @@ import ResetPassword from "./pages/ResetPassword";
 import DoctorResetPassword from "./pages/doctor/ResetPassword_doctor";
 import AdminResetPassword from "./pages/admin/admin_reset_password";
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
 import { Profiler } from "react";
 
 export default function App() {
-  const location = useLocation();
-  const isBackgroundPage = location.pathname === "/appointments";
+
+    const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
+
+    const urlBase64ToUint8Array = (base64String) => {
+      const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/\-/g, "+")
+        .replace(/_/g, "/");
+    
+      const rawData = atob(base64);
+      return new Uint8Array([...rawData].map((char) => char.charCodeAt(0)));
+    };
+    
+    const convertedVapidKey = urlBase64ToUint8Array(SERVER_KEY);
+
+
+    const subscribeToPush = async () => {
+      console.log(SERVER_KEY)
+      console.log(import.meta.env)
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: convertedVapidKey,
+      });
+      console.log("Push Subscription:", JSON.stringify(subscription));
+  
+      // saveSubscription(subscription)
+      const res = await fetch("http://localhost:3000/save-subscription", {
+          method: "POST",
+          body: JSON.stringify(subscription),
+          headers: { "Content-Type": "application/json" },
+        })
+
+        const resp = await res.json()
+        console.log(resp)
+
+        // const res2 = await fetch("http://localhost:3000/send-notification", {
+        //   method: "POST",
+        //   body: JSON.stringify({
+        //     message:"HI"
+        //   }),
+        //   headers:{"Content-type":"Application/json"}
+        // }); 
+        // const data = await res2.json();
+        // console.log("Notification Response:", data);
+      // return subscription;
+    };
+
+    const requestNotificationPermission = async () => {
+      if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          console.log("Notification permission granted.");
+        } else {
+          console.log("Notification permission denied.");
+        }
+      }
+      subscribeToPush()
+    };
+
+    useEffect(() => {
+      requestNotificationPermission();
+    }, []);
+
+    
 
   return (
-    <div
-      className={`min-h-screen h-full flex flex-col ${
-        isBackgroundPage ? "bg-cover" : "bg-white"
-      }`}
-      style={
-        isBackgroundPage
-          ? { backgroundImage: "url('/assests/Pexels Photo by Loc Dang.png')" }
-          : {}
-      }
-    >
+    <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Landing />} />

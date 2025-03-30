@@ -218,3 +218,11 @@ model Chatbot {
   message   String
   sentAt DateTime @default(now())
 }
+
+model Subscription {
+  id        String @id @default(uuid())  // Unique ID
+  endpoint  String @unique               // Unique push endpoint
+  authKey   String                        // Authentication key
+  p256dhKey String                        // Public encryption key
+  createdAt DateTime @default(now())      // Timestamp
+}
