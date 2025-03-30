@@ -6,6 +6,12 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+import pandas as pd
+import os
+import collections
+collections.Iterable = collections.abc.Iterable
 
 # Define MentalHealthMetrics model
 class MentalHealthMetrics(BaseModel):
@@ -99,19 +105,15 @@ IMPORTANT: Ensure scores are precise and based on the entire conversation contex
         }
 
 
-from flask import Flask, jsonify, request
-from flask_cors import CORS
-import pandas as pd
-import os
-import collections
-collections.Iterable = collections.abc.Iterable
-app = Flask(__name__)
-CORS(app)  # Enable CORS for cross-origin requests
 
-@app.route('/analyze', methods=['GET'])
+app = Flask(__name__)
+CORS(app)  
+
+@app.route('/analyze', methods=['POST'])
 def analyze_user():
-    user_id = request.args.get('user_id')
-    print(user_id)
+    data_id = request.get_json()
+    user_id = data_id.get('user_id')
+    print(user_id, "userof")
     try:
         # Load and filter CSV data
         data = pd.read_csv('tmp/memory.csv')
