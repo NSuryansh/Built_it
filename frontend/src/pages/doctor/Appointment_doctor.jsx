@@ -5,11 +5,12 @@ import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { DateTimePicker } from "../../components/doctor/DateTimePicker";
 import Footer from "../../components/Footer";
-
+import { format } from "date-fns";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
+import { toast } from "react-toastify";
 
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
@@ -22,23 +23,19 @@ const DoctorAppointment = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
 
-    useEffect(() => {
-      const verifyAuth = async () => {
-        const authStatus = await checkAuth("doc");
-        setIsAuthenticated(authStatus);
-      };
-      verifyAuth();
-    }, []);
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("doc");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   const handleMarkAsDone = (id) => {
     setCompletedNotes((prev) => ({
       ...prev,
       [id]: prev[id] ? "" : "",
     }));
-  };
-
-  const handleDone = (e) => {
-    e.preventDefault();
   };
 
   const [note, setNote] = useState("");
@@ -86,16 +83,16 @@ const DoctorAppointment = () => {
         id: appointment["id"],
       }),
     });
-    
+
     const resp = await res.json();
     console.log(resp);
     const docName = localStorage.getItem("username");
 
     var params = {
-      doctor: docName, 
+      doctor: docName,
       dateTime: appointment.dateTime,
-      email: appointment.user.email
-    }
+      email: appointment.user.email,
+    };
     emailjs
       .send("service_coucldi", "template_9at0fnv", params, "5rqHkmhJJfAxWBFNo")
       .then(
@@ -162,6 +159,24 @@ const DoctorAppointment = () => {
     navigate("/doctor/login");
   };
 
+  const handleDateSelect = (date, appointmentId) => {
+    setSelectedDate(date);
+    if (date) {
+      console.log(`Rescheduling appointment ${appointmentId} to ${date}`);
+      toast("Booking Rescheduled", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+      setSelectedAppointment(null);
+    }
+  };
+
   const handleReschedule = async (appointment) => {
     console.log("in reschedule");
     console.log(appointment);
@@ -171,14 +186,7 @@ const DoctorAppointment = () => {
     );
     if (selectedDate) {
       const res = await emailParams(appointment, selectedDate);
-    }
-  };
-
-  const handleDateSelect = (date, appointmentId) => {
-    setSelectedDate(date);
-    if (date) {
-      console.log(`Rescheduling appointment ${appointmentId} to ${date}`);
-      setSelectedAppointment(null);
+      handleDateSelect(selectedDate, appointmentId);
     }
   };
 
@@ -219,22 +227,13 @@ const DoctorAppointment = () => {
                       key={appointment.id}
                       className="p-6 hover:bg-gray-50 transition-colors"
                     >
-                      <div className="flex items-start space-x-6">
+                      <div className="flex flex-col sm:flex-row items-center justify-center md:items-start space-x-6">
                         <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
                           <User className="h-6 w-6 text-blue-600" />
                         </div>
 
                         <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-medium text-gray-900">
-                              {appointment.patientName}
-                            </h3>
-                            <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                              {appointment.status}
-                            </span>
-                          </div>
-
-                          <div className="mt-2 grid grid-cols-1 gap-4">
+                          <div className="mt-4 grid grid-cols-1 gap-4">
                             <div className="space-y-3">
                               <div className="flex items-center text-sm text-gray-500">
                                 <CircleUser className="h-4 w-4 mr-2" />
@@ -242,7 +241,10 @@ const DoctorAppointment = () => {
                               </div>
                               <div className="flex items-center text-sm text-gray-500">
                                 <Clock className="h-4 w-4 mr-2" />
-                                {appointment.dateTime}
+                                {format(
+                                  appointment.dateTime,
+                                  "dd-MMM-yyyy h:mm a"
+                                )}
                               </div>
                               <div className="flex items-center text-sm text-gray-500">
                                 <Phone className="h-4 w-4 mr-2" />
@@ -311,22 +313,13 @@ const DoctorAppointment = () => {
                       key={appointment.id}
                       className="p-6 hover:bg-gray-50 transition-colors"
                     >
-                      <div className="flex items-start space-x-6">
+                      <div className="flex flex-col sm:flex-row items-center justify-center sm:items-start space-x-6">
                         <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
                           <User className="h-6 w-6 text-amber-600" />
                         </div>
 
                         <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-medium text-gray-900">
-                              {appointment.patientName}
-                            </h3>
-                            <span className="px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
-                              {appointment.status}
-                            </span>
-                          </div>
-
-                          <div className="mt-2 grid grid-cols-1 gap-4">
+                          <div className="mt-4 grid grid-cols-1 gap-4">
                             <div className="space-y-3">
                               <div className="flex items-center text-sm text-gray-500">
                                 <CircleUser className="h-4 w-4 mr-2" />
@@ -334,7 +327,10 @@ const DoctorAppointment = () => {
                               </div>
                               <div className="flex items-center text-sm text-gray-500">
                                 <Clock className="h-4 w-4 mr-2" />
-                                {appointment.dateTime}
+                                {format(
+                                  appointment.dateTime,
+                                  "dd-MMM-yyyy h:mm a"
+                                )}
                               </div>
                               <div className="flex items-center text-sm text-gray-500">
                                 <Phone className="h-4 w-4 mr-2" />
@@ -372,6 +368,7 @@ const DoctorAppointment = () => {
                                 selected={selectedDate}
                                 onSelect={setSelectedDate}
                               />
+                              {selectedDate && <button></button>}
                             </div>
                           )}
                         </div>

@@ -42,15 +42,15 @@ const Landing_user = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div className="flex h-full flex-col lg:flex-row gap-4 p-3 md:p-6 bg-[var(--custom-orange-100)] min-h-screen">
-        <div className="w-full lg:h-[85vh] lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-2 md:p-4">
+        <div className="w-full lg:min-h-[85vh] h-fit lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-2 md:p-4">
           <Calendar />
         </div>
 
-        <div className="lg:h-[85vh] w-full lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
+        <div className="lg:min-h-[85vh] w-full h-fit lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
           <ProgressPage isLandingPage={true} />
         </div>
 
-        <div className="lg:h-[85vh] w-full lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
+        <div className="lg:min-h-[85vh] h-fit w-full lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
           <EventsDisplay />
         </div>
       </div>

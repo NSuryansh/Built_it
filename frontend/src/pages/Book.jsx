@@ -111,6 +111,16 @@ const Book = () => {
       const respData = await res.json();
       console.log(respData);
       // alert("Booking Confirmed!");
+      toast("Booking Confirmed", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       setStep(1);
       // Optionally, clear form and selected doctor
       setSelectedDoctor(null);

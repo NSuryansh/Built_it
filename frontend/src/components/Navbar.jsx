@@ -86,6 +86,7 @@ const Navbar = () => {
         if (ref.current && !ref.current.contains(event.target)) {
           setShowNotifications(false);
           setShowDetails(false);
+          setIsOpen(false);
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -96,7 +97,9 @@ const Navbar = () => {
   };
 
   const wrapperRef = useRef(null);
+  const hamburgerRef = useRef(null);
   useOutsideAlerter(wrapperRef);
+  useOutsideAlerter(hamburgerRef);
 
   return (
     <nav
@@ -112,7 +115,11 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <div className="lg:hidden transition-all flex items-center z-2">
             <button
-              onClick={toggleMenu}
+              onClick={() => {
+                setShowDetails(false);
+                setShowNotifications(false);
+                toggleMenu();
+              }}
               className="p-2 rounded-full hover:bg-gray-100"
             >
               {isOpen ? (
@@ -123,7 +130,7 @@ const Navbar = () => {
             </button>
             {isOpen && (
               <div
-                ref={wrapperRef}
+                ref={hamburgerRef}
                 className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4"
               >
                 <ul>
@@ -179,6 +186,7 @@ const Navbar = () => {
               className="cursor-pointer"
               onClick={() => {
                 setShowDetails(false);
+                setIsOpen(false);
                 handleBellClick();
               }}
             >
@@ -191,6 +199,7 @@ const Navbar = () => {
                 <button
                   onClick={() => {
                     setShowNotifications(false);
+                    setIsOpen(false);
                     setShowDetails(!showDetails);
                   }}
                   className="cursor-pointer relative"
