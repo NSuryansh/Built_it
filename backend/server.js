@@ -1237,24 +1237,20 @@ app.get("/available-slots", async (req, res) => {
   const { doctor_id } = req.body;
 
   try {
-    // Fetch booked appointments for the doctor
     const bookedSlots = await prisma.appointments.findMany({
       where: { doctor_id },
       select: { dateTime: true },
     });
 
-    // Fetch leave duration for the doctor
     const doctorLeaves = await prisma.doctorLeave.findMany({
       where: { doctor_id },
       select: { date_start: true, date_end: true },
     });
 
-    // Fetch all available slots for the doctor
     let availableSlots = await prisma.slots.findMany({
       where: { doctor_id },
     });
 
-    // Filter out slots that are in booked appointments
     availableSlots = availableSlots.filter(
       (slot) =>
         !bookedSlots.some(
@@ -1262,7 +1258,6 @@ app.get("/available-slots", async (req, res) => {
         )
     );
 
-    // Filter out slots that fall within leave duration
     availableSlots = availableSlots.filter(
       (slot) =>
         !doctorLeaves.some(
