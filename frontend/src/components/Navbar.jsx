@@ -13,6 +13,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const ref = useRef(null);
 
   const links = [
     { name: "Home", link: "/dashboard" },
@@ -22,7 +23,6 @@ const Navbar = () => {
     { name: "Stress", link: "/stress" },
     { name: "Events", link: "/events" },
     { name: "Entertainment", link: "/entertainment" },
-
   ];
 
   // Retrieve usertype from localStorage
@@ -100,16 +100,17 @@ const Navbar = () => {
 
   return (
     <nav
+      ref={ref}
       className={`${
-        location === "/" || location === "/peer" || location === "/mood" || location === "/movies"
+        location === "/peer" || location === "/mood" || location === "/movies"
           ? "bg-transparent"
           : "bg-[var(--custom-orange-100)]"
       }`}
     >
       <ToastContainer />
-      <div className="px-8 py-3">
+      <div className="px-4 lg:px-8 py-3">
         <div className="flex items-center justify-between">
-          <div className="md:hidden transition-all flex items-center z-2">
+          <div className="lg:hidden transition-all flex items-center z-2">
             <button
               onClick={toggleMenu}
               className="p-2 rounded-full hover:bg-gray-100"
@@ -121,7 +122,10 @@ const Navbar = () => {
               )}
             </button>
             {isOpen && (
-              <div className="absolute top-16 left-[2%] w-[40%] bg-white rounded-2xl shadow-md p-4">
+              <div
+                ref={wrapperRef}
+                className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4"
+              >
                 <ul>
                   {links.map((item, i) => (
                     <li
@@ -154,7 +158,7 @@ const Navbar = () => {
             />
             <div className="text-xl font-bold">Vitality</div>
           </div>
-          <div className="hidden md:flex space-x-8 items-center">
+          <div className="hidden lg:flex space-x-8 items-center">
             {links.map((item, i) => (
               <button
                 key={i}
