@@ -26,11 +26,7 @@ const fyAcadCal = [
     start_date: "2024-08-08",
     end_date: "2024-08-08",
   },
-  {
-    title: "Collection of students' feedback (half semester courses)",
-    start_date: "2024-09-09",
-    end_date: "2024-09-12",
-  },
+
   {
     title: "Mid Semester Examination (MSE)",
     start_date: "2024-09-17",
@@ -43,7 +39,7 @@ const fyAcadCal = [
   },
   {
     title:
-      "Mid Semester Break (MSB) [for BTech 1st year and Preparatory students only]",
+      "Mid Semester Break for BTech 1st year and Preparatory students only",
     start_date: "2024-09-29",
     end_date: "2024-10-06",
   },
@@ -52,31 +48,19 @@ const fyAcadCal = [
     start_date: "2024-10-07",
     end_date: "2024-10-07",
   },
-  {
-    title: "Online Allocation of Teaching Duties for Next Semester by HoD",
-    start_date: "2024-10-15",
-    end_date: "2024-10-18",
-  },
+
   {
     title: "Online course registration by students for the next semester",
     start_date: "2024-11-04",
     end_date: "2024-11-08",
   },
-  {
-    title: "Collection of students' feedback",
-    start_date: "2024-11-11",
-    end_date: "2024-11-14",
-  },
+
   {
     title: "Practical Examinations",
     start_date: "2024-11-14",
     end_date: "2024-11-19",
   },
-  {
-    title: "Last day of Teaching (Autumn Semester)",
-    start_date: "2024-11-22",
-    end_date: "2024-11-22",
-  },
+
   {
     title: "End Semester Examination (ESE)",
     start_date: "2024-11-23",
@@ -114,23 +98,14 @@ const fyAcadCal = [
     start_date: "2025-01-13",
     end_date: "2025-01-13",
   },
-  {
-    title: "Submission of nomination for Best BTP Award by the HoD",
-    start_date: "2025-01-31",
-    end_date: "2025-01-31",
-  },
-  {
-    title: "Collection of students' feedback (half semester courses)",
-    start_date: "2025-02-24",
-    end_date: "2025-02-28",
-  },
+
   {
     title: "Mid Semester Examination (MSE)",
     start_date: "2025-03-03",
     end_date: "2025-03-10",
   },
   {
-    title: "Mid Semester Break (MSB) [only for BTech and Preparatory students]",
+    title: "Mid Semester Break for BTech and Preparatory students",
     start_date: "2025-03-11",
     end_date: "2025-03-16",
   },
@@ -140,30 +115,17 @@ const fyAcadCal = [
     end_date: "2025-03-17",
   },
   {
-    title: "Online Allocation of Teaching Duties for Next Semester by HoD",
-    start_date: "2025-03-21",
-    end_date: "2025-03-28",
-  },
-  {
     title: "Online course registration by students for the next semester",
     start_date: "2025-04-02",
     end_date: "2025-04-07",
   },
-  {
-    title: "Collection of students' feedback",
-    start_date: "2025-04-22",
-    end_date: "2025-04-25",
-  },
+
   {
     title: "Practical Examinations",
     start_date: "2025-04-26",
     end_date: "2025-04-30",
   },
-  {
-    title: "Last day of Teaching (Spring Semester)",
-    start_date: "2025-05-01",
-    end_date: "2025-05-01",
-  },
+
   {
     title: "End Semester Examination (ESE)",
     start_date: "2025-05-03",
@@ -173,11 +135,6 @@ const fyAcadCal = [
     title: "Re-examination of ESE (if permitted)",
     start_date: "2025-05-13",
     end_date: "2025-05-15",
-  },
-  {
-    title: "Online No dues for Graduating UG students",
-    start_date: "2025-05-05",
-    end_date: "2025-05-09",
   },
   {
     title: "Semester Break Vacations (only for BTech and Preparatory students)",

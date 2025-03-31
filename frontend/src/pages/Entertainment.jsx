@@ -1,525 +1,203 @@
-import React, { useState, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import React, { useState } from 'react';
+import { Music, Book, Gamepad2, Film, ChevronDown, ChevronUp } from 'lucide-react';
 import Navbar from "../components/Navbar";
-import SessionExpired from "../components/SessionExpired";
-import { checkAuth } from "../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
-import { useNavigate } from "react-router-dom";
 
-function Entertainment() {
-  const [activeSection, setActiveSection] = useState(null);
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-
-  // Verify authentication
-  useEffect(() => {
-    const verifyAuth = async () => {
-      const authStatus = await checkAuth("user");
-      setIsAuthenticated(authStatus);
-    };
-    verifyAuth();
-  }, []);
-
-  const handleClosePopup = () => {
-    navigate("/login");
-  };
-
-  if (isAuthenticated === null) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p>Loading...</p>
-      </div>
-    );
+const movies = [
+  {
+    title: "Inside Out",
+    image: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=500&q=80",
+    link: "https://www.google.com/search?q=inside+out+movie",
+    category: "Feel Good"
+  },
+  {
+    title: "The Secret Life of Walter Mitty",
+    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
+    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    category: "Adventure"
+  },
+  {
+    title: "Big Hero 6",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Animation"
   }
+];
 
-  if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+const books = [
+  {
+    title: "The Happiness of Pursuit",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    category: "Self Help"
+  },
+  {
+    title: "Atomic Habits",
+    image: "https://images.unsplash.com/photo-1544716278-e513176f20b5?w=500&q=80",
+    link: "https://www.google.com/search?q=atomic+habits+book",
+    category: "Personal Development"
+  },
+  {
+    title: "The Power of Now",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Mindfulness"
   }
+];
 
-  const sections = {
-    movies: {
-      title: "Movies",
-      categories: [
-        {
-          name: "Top Pick",
-          items: [
-            {
-              title: "La La Land",
-              image:
-                "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300&h=200&fit=crop",
-            },
-            {
-              title: "The Tree of Life",
-              image:
-                "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&q=80&w=2070",
-            },
-            {
-              title: "Inception",
-              image:
-                "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Feel Good Movies",
-          items: [
-            {
-              title: "La La Land",
-              image:
-                "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300&h=200&fit=crop",
-            },
-            {
-              title: "The Secret Life of Walter Mitty",
-              image:
-                "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Big Fish",
-              image:
-                "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Legally Blonde",
-              image:
-                "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Comedy and Stress Relief Movies",
-          items: [
-            {
-              title: "The Hangover",
-              image:
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRWuhUtUEH-YWbeUfEEkJ3FmgrM9wJfo0DBtdR_tqvLNPXn7KNu&psig=AOvVaw1BPSBOGvi92DJBlKBs3mV-&ust=1743274078136000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNjXjJO4rYwDFQAAAAAdAAAAABAE",
-            },
-            {
-              title: "Bridesmaids",
-              image:
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcSfFFwMta2D-y9M84M1DGV3yjweztkRReNLjuQeP2HxBV9ZEt6b&psig=AOvVaw0ZqQbFMNeL6AQGd2poaFPi&ust=1743274129957000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLjq2qu4rYwDFQAAAAAdAAAAABAE",
-            },
-            {
-              title: "Superbad",
-              image:
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTJmGobpUVCddF0JO9XmZjQ6xsHGC53RXulyGpAxr0nK7nuuaK4&psig=AOvVaw0o7vZc7ODQCcxQ3c4fZxU_&ust=1743274152862000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCIiL3ra4rYwDFQAAAAAdAAAAABAE",
-            },
-            {
-              title: "The Other Guys",
-              image:
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcSX6NKee11WMdxDRSYTEfk3azKK8AA29IjhnCrSRUzzcM4RqYit&psig=AOvVaw0xetNLAKbvZsN_WBs7kL-G&ust=1743274173933000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCMCz5MC4rYwDFQAAAAAdAAAAABAE",
-            },
-          ],
-        },
-        {
-          name: "Motivational and Self Improvement Movies",
-          items: [
-            {
-              title: "The Pursuit of Happyness",
-              image:
-                "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=2069",
-            },
-            {
-              title: "Rocky",
-              image:
-                "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=2025",
-            },
-            {
-              title: "The Theory of Everything",
-              image:
-                "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&q=80&w=2070",
-            },
-            {
-              title: "A Beautiful Mind",
-              image:
-                "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&q=80&w=2070",
-            },
-          ],
-        },
-        {
-          name: "Mindfulness and Relaxation Movies",
-          items: [
-            {
-              title: "Peaceful Warrior",
-              image:
-                "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=2069",
-            },
-            {
-              title: "Spring, Summer, Fall, Winter... and Spring",
-              image:
-                "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=2025",
-            },
-            {
-              title: "Samsara",
-              image:
-                "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&q=80&w=2070",
-            },
-            {
-              title: "The Tree of Life",
-              image:
-                "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&q=80&w=2070",
-            },
-          ],
-        },
-      ],
-    },
-    
-    books: {
-     
-      title: "Books",
-      categories: [
-        {
-         
-          name: "Top Pick",
-          items: [
-            {
-              title: "The 7 Habits of Highly Effective People",
-              image:
-                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Atomic Habits",
-              image:
-                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Long Walk to Freedom – Nelson Mandela",
-              image:
-                "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-         
-          name: "Self-Help",
-          items: [
-            {
-              title: "Atomic Habits",
-              image:
-                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
-            },
-            {
-              title: "The Power of Now",
-              image:
-                "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=200&fit=crop",
-            },
-            {
-              title: "The 7 Habits of Highly Effective People",
-              image:
-                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
-            },
-            {
-              title: "The Four Agreements",
-              image:
-                "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Fiction",
-          items: [
-            {
-              title: "The Shattered Realm",
-              image:
-                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Echoes of Eldoria",
-              image:
-                "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Stellar Exodus",
-              image:
-                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Chrono Rift",
-              image:
-                "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Biography",
-          items: [
-            {
-              title: "The Diary of a Young Girl – Anne Frank",
-              image:
-                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Alexander Hamilton – Ron Chernow",
-              image:
-                "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=200&fit=crop",
-            },
-            {
-              title: "The Story of My Experiments with Truth – Mahatma Gandhi",
-              image:
-                "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Long Walk to Freedom – Nelson Mandela",
-              image:
-                "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-      ],
-    },
-    
-    music: {
-      title: "Music",
-      categories: [
-        {
-          name: "Top Pick",
-          items: [
-            {
-              title: "Lofi Study – Lofi Girl",
-              image:
-                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Bohemian Rhapsody - Queen",
-              image:
-                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Buddha’s Flute – Relaxing Tibetan Music",
-              image:
-                "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Relaxing",
-          items: [
-            {
-              title: "Ambient Sounds",
-              image:
-                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Classical Piano",
-              image:
-                "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Clair de Lune – Claude Debussy",
-              image:
-                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Moonlight Sonata – Ludwig van Beethoven",
-              image:
-                "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Meditation",
-          items: [
-            {
-              title: "Gayatri Mantra – Deva Premal",
-              image:
-                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Buddha’s Flute – Relaxing Tibetan Music",
-              image:
-                "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Deep Peace – Bill Douglas",
-              image:
-                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
-            },
-            {
-              title: "A Moment of Peace – Liquid Mind",
-              image:
-                "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Focus",
-          items: [
-            {
-              title: "Lofi Study – Lofi Girl",
-              image:
-                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Coffee & Jazz – Chillhop Music",
-              image:
-                "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Rainy Day Study – Lofi Fruits",
-              image:
-                "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Max Richter – Sleep",
-              image:
-                "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-      ],
-    },
-    games: {
-      title: "Games",
-      categories: [
-        {
-          name: "Casual",
-          items: [
-            {
-              title: "Candy Crush Saga",
-              image:
-                "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Sybway Suffer",
-              image:
-                "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Stardew Valley",
-              image:
-                "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Journey",
-              image:
-                "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Puzzle",
-          items: [
-            {
-              title: "Tetris – The legendary block-stacking game",
-              image:
-                "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Sudoku – Number-based logic puzzle",
-              image:
-                "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=300&h=200&fit=crop",
-            },
-            {
-              title:
-                "Portal & Portal 2 – Physics-based first-person puzzle game",
-              image:
-                "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Baba Is You – Unique rule-changing logic game",
-              image:
-                "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-        {
-          name: "Adventure",
-          items: [
-            {
-              title: "Tetris – The legendary block-stacking game",
-              image:
-                "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Sudoku – Number-based logic puzzle",
-              image:
-                "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=300&h=200&fit=crop",
-            },
-            {
-              title:
-                "Portal & Portal 2 – Physics-based first-person puzzle game",
-              image:
-                "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&h=200&fit=crop",
-            },
-            {
-              title: "Baba Is You – Unique rule-changing logic game",
-              image:
-                "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=300&h=200&fit=crop",
-            },
-          ],
-        },
-      ],
-    },
-  };
+const music = [
+  {
+    title: "Weightless - Marconi Union",
+    image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    category: "Ambient"
+  },
+  {
+    title: "Meditation Music",
+    image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    category: "Meditation"
+  },
+  {
+    title: "Nature Sounds",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Nature"
+  }
+];
 
-  const handleItemClick = (title) => {
-    window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(title)}`,
-      "_blank"
-    );
-  };
+const games = [
+  {
+    title: "Journey",
+    image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
+    link: "https://www.google.com/search?q=journey+game",
+    category: "Adventure"
+  },
+  {
+    title: "Stardew Valley",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "Simulation"
+  },
+  {
+    title: "Animal Crossing",
+    image: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=500&q=80",
+    link: "https://www.google.com/search?q=animal+crossing+game",
+    category: "Life Simulation"
+  }
+];
+
+const categories = {
+  movies: ['Top Picks', 'Feel Good', 'Adventure', 'Animation', 'Comedy', 'Drama'],
+  books: ['Top Picks', 'Self Help', 'Personal Development', 'Mindfulness', 'Fiction', 'Non-Fiction'],
+  music: ['Top Picks', 'Ambient', 'Meditation', 'Nature', 'Classical', 'Lo-fi'],
+  games: ['Top Picks', 'Adventure', 'Simulation', 'Life Simulation', 'Puzzle', 'RPG']
+};
+
+function EntertainmentSection({ title, items, icon: Icon, categories }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('Top Picks');
+
+  const filteredItems = items.filter(item => 
+    selectedCategory === 'Top Picks' || item.category === selectedCategory
+  );
 
   return (
-    <div className="min-h-screen bg-[var(--custom-orange-100)]">
-      {/* Navigation Bar */}
-      <Navbar />
+    <div className="mb-12">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-200"
+      >
+        <div className="flex items-center gap-2">
+          <Icon className="w-6 h-6 text-amber-700" />
+          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+        </div>
+        {isOpen ? (
+          <ChevronUp className="w-6 h-6 text-gray-500" />
+        ) : (
+          <ChevronDown className="w-6 h-6 text-gray-500" />
+        )}
+      </button>
 
-      {/* Content Section */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {Object.entries(sections).map(([key, section]) => (
-          <div key={key} className="mb-4">
-            <button
-              className="w-full bg-[var(--custom-orange-200)] p-4 rounded-lg flex justify-between items-center hover:bg-[var(--custom-orange-300)] transition-colors"
-              onClick={() =>
-                setActiveSection(activeSection === key ? null : key)
-              }
-            >
-              <span className="text-[var(--custom-orange-900)] text-lg font-medium">
-                {section.title}
-              </span>
-              <ChevronDown
-                className={`transform transition-transform text-[var(--custom-orange-700)] ${
-                  activeSection === key ? "rotate-180" : ""
+      {isOpen && (
+        <div className="mt-4">
+          <div className="flex flex-wrap gap-2 mb-6">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+                  selectedCategory === category
+                    ? 'bg-amber-700 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
-              />
-            </button>
-
-            {activeSection === key && (
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6">
-                {section.categories.map((category, index) => (
-                  <div key={index} className={`${index === 0 && 'text-center'} mb-8`}>
-                    <h3 className={`text-[var(--custom-orange-800)] ${index !== 0 ? 'text-lg font-semibold' : 'text-3xl font-extrabold'} mb-4`}>
-                      {category.name}
-                    </h3>
-                    {category.items && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {category.items.map((item, itemIndex) => (
-                          <div
-                            key={itemIndex}
-                            className="cursor-pointer transform hover:scale-105 transition-transform"
-                            onClick={() => handleItemClick(item.title)}
-                          >
-                            <div className="relative group">
-                              <img
-                                src={item.image}
-                                alt={item.title}
-                                className="w-full h-48 object-cover rounded-lg shadow-md"
-                              />
-                              <div className="text-center absolute inset-0 bg-orange-600/0 group-hover:bg-orange-600/10 transition-colors rounded-lg" />
-                            </div>
-                            <p className="mt-2 text-center text-[var(--custom-orange-900)] group-hover:text-[var(--custom-orange-700)] transition-colors">
-                              {item.title}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+              >
+                {category}
+              </button>
+            ))}
           </div>
-        ))}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item, index) => (
+              <a
+                key={index}
+                href={item.spotifyLink || item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-64 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                  <div className="p-4 w-full">
+                    <h3 className="text-white font-semibold">{item.title}</h3>
+                    <span className="text-gray-300 text-sm">{item.category}</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Entertainment() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-12 text-center">
+          Entertainment Hub
+        </h1>
+        
+        <EntertainmentSection 
+          title="Movies" 
+          items={movies} 
+          icon={Film} 
+          categories={categories.movies}
+        />
+        <EntertainmentSection 
+          title="Books" 
+          items={books} 
+          icon={Book} 
+          categories={categories.books}
+        />
+        <EntertainmentSection 
+          title="Music" 
+          items={music} 
+          icon={Music} 
+          categories={categories.music}
+        />
+        <EntertainmentSection 
+          title="Games" 
+          items={games} 
+          icon={Gamepad2} 
+          categories={categories.games}
+        />
       </div>
     </div>
   );

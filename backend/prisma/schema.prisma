@@ -186,7 +186,7 @@ model Slots {
   id       Int      @id @default(autoincrement())
   doctor_id     Int
   doctor        Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
-  starting_time DateTime
+  starting_time DateTime @db.Time()
  }
 
 model DoctorLeave {

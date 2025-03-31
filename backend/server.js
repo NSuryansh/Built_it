@@ -748,7 +748,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1365,38 +1365,71 @@ app.post("/node-chat", async (req, res) => {
 });
 
 app.get("/available-slots", async (req, res) => {
-  const { doctor_id } = req.body;
+  const { docId, date } = req.query;
+  const doctor_id = Number(docId);
+
+  if (!date) {
+    return res.status(400).json({ error: "Please provide a valid date." });
+  }
+
+  const selectedDate = new Date(date + "T00:00:00Z"); 
 
   try {
     const bookedSlots = await prisma.appointments.findMany({
-      where: { doctor_id },
+      where: {
+        doctor_id,
+        dateTime: {
+          gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)), 
+          lt: new Date(selectedDate.setUTCHours(23, 59, 59, 999)),
+        },
+      },
       select: { dateTime: true },
     });
-
     const doctorLeaves = await prisma.doctorLeave.findMany({
-      where: { doctor_id },
+      where: {
+        doctor_id: doctor_id,
+        OR: [
+          {
+            date_start: { lte: new Date(selectedDate.setUTCHours(23, 59, 59, 999)) }, 
+            date_end: { gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)) }, 
+          },
+        ],
+      },
       select: { date_start: true, date_end: true },
     });
 
     let availableSlots = await prisma.slots.findMany({
-      where: { doctor_id },
+      where: { doctor_id: doctor_id },
     });
 
-    availableSlots = availableSlots.filter(
-      (slot) =>
-        !bookedSlots.some(
-          (b) => b.dateTime.getTime() === slot.starting_time.getTime()
-        )
-    );
+    const bookedTimes = bookedSlots.map((b) => {
+      const dateObj = new Date(b.dateTime);
+      return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes(); 
+    });
 
-    availableSlots = availableSlots.filter(
-      (slot) =>
-        !doctorLeaves.some(
-          (leave) =>
-            slot.starting_time >= leave.date_start &&
-            slot.starting_time <= leave.date_end
-        )
-    );
+    const leavePeriods = doctorLeaves.map((leave) => ({
+      start: new Date(leave.date_start).getTime(),
+      end: new Date(leave.date_end).getTime(),
+    }));
+
+    availableSlots = availableSlots.filter((slot) => {
+      const slotTime = new Date(slot.starting_time);
+      const slotMinutes = slotTime.getUTCHours() * 60 + slotTime.getUTCMinutes(); 
+
+      return !bookedTimes.includes(slotMinutes);
+    });
+
+    availableSlots = availableSlots.filter((slot) => {
+      const slotDateTime = new Date(selectedDate); 
+      const slotTime = new Date(slot.starting_time);
+
+      slotDateTime.setUTCHours(slotTime.getUTCHours(), slotTime.getUTCMinutes(), 0, 0);
+      const slotTimestamp = slotDateTime.getTime();
+
+      return !leavePeriods.some(
+        (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end
+      );
+    });
 
     res.json({ availableSlots });
   } catch (error) {
@@ -1404,6 +1437,49 @@ app.get("/available-slots", async (req, res) => {
     res.status(500).json({ error: "Couldn't fetch the slots" });
   }
 });
+
+
+
+// app.get("/available-slots", async (req, res) => {
+//   const { docId } = req.query;
+//   const doctor_id = Number(docId)
+//   try {
+//     const bookedSlots = await prisma.appointments.findMany({
+//       where: { doctor_id },
+//       select: { dateTime: true },
+//     });
+
+//     const doctorLeaves = await prisma.doctorLeave.findMany({
+//       where: { doctor_id },
+//       select: { date_start: true, date_end: true },
+//     });
+
+//     let availableSlots = await prisma.slots.findMany({
+//       where: { doctor_id },
+//     });
+
+//     availableSlots = availableSlots.filter(
+//       (slot) =>
+//         !bookedSlots.some(
+//           (b) => b.dateTime.getTime() === slot.starting_time.getTime()
+//         )
+//     );
+
+//     availableSlots = availableSlots.filter(
+//       (slot) =>
+//         !doctorLeaves.some(
+//           (leave) =>
+//             slot.starting_time >= leave.date_start &&
+//             slot.starting_time <= leave.date_end
+//         )
+//     );
+
+//     res.json({ availableSlots });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Couldn't fetch the slots" });
+//   }
+// });
 
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
