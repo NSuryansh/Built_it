@@ -13,8 +13,6 @@ import nodemailer from "nodemailer";
 import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
-import acadCal from "../frontend/src/utils/2nd_yr_onwards_academic_calendar.js";
-import fyAcadCal from "../frontend/src/utils/1st_yr_academic_calendar.js";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -1350,12 +1348,14 @@ app.post("/send-notification", async (req, res) => {
 
 app.post("/node-chat", async (req, res) => {
   try {
+    console.log("HELOE")
     const { user_id, message } = req.body;
 
     const response = await axios.post("http://localhost:5000/chatWithBot", {
       user_id,
       message,
     });
+    console.log(response.data)
 
     res.json(response.data);
   } catch (error) {
