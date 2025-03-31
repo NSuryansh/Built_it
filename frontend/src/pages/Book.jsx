@@ -109,7 +109,8 @@ const Book = () => {
       });
       const respData = await res.json();
       console.log(respData);
-      toast("Booking Confirmed", {
+      // alert("Booking Confirmed!");
+      toast("Appointment Requested", {
         position: "bottom-right",
         autoClose: 3000,
         className: "custom-toast",
@@ -177,7 +178,7 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
       <div className="flex items-center justify-center gap-3 mb-4 md:mb-8">
         <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
         <h2 className="text-center font-bold text-3xl text-[var(--custom-orange-500)] uppercase">
-          Select a Doctor
+          Select a Doctor / Counsellor
         </h2>
       </div>
 
@@ -186,11 +187,11 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
-              className="bg-[var(--custom-orange-50)] hover:bg-[var(--custom-orange-100)] p-3 md:p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-200)] hover:border-[var(--custom-orange-300)]"
+              className="bg-[var(--custom-orange-50)] hover:bg-[var(--custom-orange-100)] p-3 lg:p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-200)] hover:border-[var(--custom-orange-300)]"
               onClick={() => onSelect(doctor)}
             >
-              <div className="flex items-start gap-2 md:gap-4">
-                <div className="bg-[var(--custom-orange-200)] rounded-full p-3 transition-colors duration-300">
+              <div className="flex items-start gap-2 lg:gap-4 md:flex-col md:justify-center md:items-center lg:flex-row">
+                <div className="bg-[var(--custom-orange-200)] rounded-full p-3 group-hover:bg-[var(--custom-orange-300)] transition-colors duration-300">
                   <User className="w-6 h-6 text-[var(--custom-orange-700)]" />
                 </div>
                 <div className="flex-1">

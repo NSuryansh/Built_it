@@ -148,6 +148,37 @@ const SignUp = () => {
       });
       return;
     }
+
+    if (formData.mobile.length !== 10) {
+      setError("Enter a valid phone number");
+      toast("Enter a valid phone number", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+      return;
+    }
+
+    if (formData.altNo.length !== 10) {
+      setError("Enter a valid emergency contact number");
+      toast("Enter a valid emergency contact number", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+      return;
+    }
+
     if (formData.password.length < 8) {
       setError("Password must be atleast 8 characters long");
       toast("Password must be atleast 8 characters long", {
@@ -196,7 +227,6 @@ const SignUp = () => {
     }
 
     let numfound = false;
-    let numIndex = 0;
     let roll = "";
     for (let i = 0; i < address.length; i++) {
       if (address[i] >= "0" && address[i] <= "9") {
