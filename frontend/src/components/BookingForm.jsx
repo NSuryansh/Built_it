@@ -148,8 +148,7 @@ const BookingFormStep = ({
                     const date = new Date();
                     date.setDate(date.getDate() + index);
                     const formattedDate = date.toISOString().split("T")[0];
-                    const displayDate = date.toLocaleDateString("en-US", {
-                      weekday: "short",
+                    const displayDate = date.toLocaleDateString("en-IN", {
                       month: "short",
                       day: "numeric",
                     });

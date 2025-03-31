@@ -1,84 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Bell, User, Calendar } from "lucide-react";
+import { User, Calendar, CalendarClock, History, Clock, FileText } from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
-
-// Sample data for appointments
-// const previousAppointments = [
-//   {
-//     id: 1,
-//     doctor: "Dr. Sarah Wilson",
-//     details: "Cardiologist - Heart Center",
-//     date: "2024-02-15",
-//     timing: "10:00 AM",
-//   },
-//   {
-//     id: 2,
-//     doctor: "Dr. Michael Chen",
-//     details: "Neurologist - Brain & Spine Institute",
-//     date: "2024-02-10",
-//     timing: "2:30 PM",
-//   },
-//   {
-//     id: 3,
-//     doctor: "Dr. Emily Brooks",
-//     details: "Dermatologist - Skin Care Clinic",
-//     date: "2024-02-01",
-//     timing: "11:15 AM",
-//   },
-//   {
-//     id: 4,
-//     doctor: "Dr. James Miller",
-//     details: "Orthopedist - Joint Care Center",
-//     date: "2024-01-25",
-//     timing: "3:45 PM",
-//   },
-//   {
-//     id: 5,
-//     doctor: "Dr. Lisa Thompson",
-//     details: "Psychiatrist - Mental Health Center",
-//     date: "2024-01-20",
-//     timing: "1:00 PM",
-//   },
-// ];
-
-// const upcomingAppointments = [
-//   {
-//     id: 1,
-//     doctor: "Dr. Robert Johnson",
-//     details: "Dentist - Dental Care Plus",
-//     date: "2024-03-05",
-//     timing: "9:30 AM",
-//   },
-//   {
-//     id: 2,
-//     doctor: "Dr. Patricia Lee",
-//     details: "Ophthalmologist - Vision Care",
-//     date: "2024-03-10",
-//     timing: "2:00 PM",
-//   },
-//   {
-//     id: 3,
-//     doctor: "Dr. David Clark",
-//     details: "ENT Specialist - Ear & Throat Center",
-//     date: "2024-03-15",
-//     timing: "11:45 AM",
-//   },
-//   {
-//     id: 4,
-//     doctor: "Dr. Susan White",
-//     details: "Gynecologist - Women's Health",
-//     date: "2024-03-20",
-//     timing: "4:15 PM",
-//   },
-//   {
-//     id: 5,
-//     doctor: "Dr. Kevin Martinez",
-//     details: "Physiotherapist - Physical Rehab",
-//     date: "2024-03-25",
-//     timing: "10:30 AM",
-//   },
-// ];
+import { format } from "date-fns";
 
 const UserAppointments = () => {
   const [previousAppointments, setpreviousAppointments] = useState([]);
@@ -87,17 +11,19 @@ const UserAppointments = () => {
 
   async function getPrevApp() {
     const res = await fetch(
-      `https://built-it-xjiq.onrender.com/pastuserappt?userId=${user_id}`
+      `http://localhost:3000/pastuserappt?userId=${user_id}`
     );
     const resp = await res.json();
+    console.log(resp);
     setpreviousAppointments(resp);
   }
 
   async function getCurrApp() {
     const res = await fetch(
-      `https://built-it-xjiq.onrender.com/currentuserappt?userId=${user_id}`
+      `http://localhost:3000/currentuserappt?userId=${user_id}`
     );
     const resp = await res.json();
+    console.log(resp);
     setupcomingAppointments(resp);
   }
 
@@ -114,91 +40,116 @@ const UserAppointments = () => {
   );
 
   return (
-    <div className="bg-[var(--custom-orange-100)]">
+    <div className="min-h-screen bg-[var(--custom-orange-100)]">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Previous Appointments Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Previous Appointments
-          </h2>
-          <div className="max-h-[300px] overflow-y-auto">
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <History className="w-5 h-5 text-gray-600" />
+              Previous Appointments
+            </h2>
+            <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
+              {previousAppointments.length} Total
+            </span>
+          </div>
+          <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
             {previousAppointments.length > 0 ? (
-              previousAppointments.map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="border-b border-gray-200 py-4 last:border-b-0"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-gray-100 p-2 rounded-full">
-                        <User className="h-6 w-6 text-gray-600" />
+              <div className="space-y-4">
+                {previousAppointments.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="bg-gray-50 rounded-lg p-4 transition-all duration-200 hover:bg-gray-100"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-white p-2 rounded-full shadow-sm">
+                          <User className="h-6 w-6 text-gray-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-800">
+                            {appointment.doc.name}
+                          </h3>
+                          <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            {appointment.createdAt}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-medium text-gray-800">
-                          {appointment.doctor}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {appointment.details}
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <button className="text-gray-500 hover:text-gray-700 transition-colors">
+                          <FileText className="w-5 h-5" />
+                        </button>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-800">
-                        {appointment.date}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {appointment.timing}
-                      </p>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <NoAppointmentsMessage message="No previous appointments found" />
+              <div className="text-center py-8">
+                <NoAppointmentsMessage message="No previous appointments found" />
+              </div>
             )}
           </div>
         </div>
 
         {/* Upcoming Appointments Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Upcoming Appointments
-          </h2>
-          <div className="max-h-[300px] overflow-y-auto">
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <CalendarClock className="w-5 h-5 text-gray-600" />
+              Upcoming Appointments
+            </h2>
+            <span className="px-3 py-1 bg-orange-50 text-orange-600 rounded-full text-sm font-medium">
+              {upcomingAppointments.length} Scheduled
+            </span>
+          </div>
+          <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
             {upcomingAppointments.length > 0 ? (
-              upcomingAppointments.map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="border-b border-gray-200 py-4 last:border-b-0"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-gray-100 p-2 rounded-full">
-                        <User className="h-6 w-6 text-gray-600" />
+              <div className="space-y-4">
+                {upcomingAppointments.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="bg-orange-50 rounded-lg p-4 transition-all duration-200 hover:bg-orange-100"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-white p-2 rounded-full shadow-sm">
+                          <User className="h-6 w-6 text-orange-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-800">
+                            {appointment.doctor.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {appointment.reason}
+                          </p>
+                          <p className="text-sm text-orange-600 mt-2 flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {format(
+                              appointment.dateTime,
+                              "dd-MMM-yyyy hh:mm a"
+                            )}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-medium text-gray-800">
-                          {appointment.doctor}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {appointment.details}
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <button className="text-orange-500 hover:text-orange-700 transition-colors">
+                          <FileText className="w-5 h-5" />
+                        </button>
+                        <button className="text-orange-500 hover:text-orange-700 transition-colors">
+                          <Calendar className="w-5 h-5" />
+                        </button>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-800">
-                        {appointment.date}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {appointment.timing}
-                      </p>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <NoAppointmentsMessage message="No upcoming appointments scheduled" />
+              <div className="text-center py-8">
+                <NoAppointmentsMessage message="No upcoming appointments scheduled" />
+              </div>
             )}
           </div>
         </div>

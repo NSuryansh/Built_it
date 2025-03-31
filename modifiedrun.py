@@ -76,6 +76,7 @@ def create_mental_agent(user_id: str, session_id: str = None) -> Agent:
 @app.route('/chatWithBot', methods=['POST'])
 def chat_handler():
     try:
+        print("HIHI")
         data = request.get_json()
         user_id = data.get("user_id", "default_user")
         message = data["message"]
@@ -96,4 +97,4 @@ def chat_handler():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+   app.run(host='::1', port=5000)

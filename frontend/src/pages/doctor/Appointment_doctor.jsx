@@ -46,7 +46,6 @@ const DoctorAppointment = () => {
 
   useEffect(() => {
     const docId = localStorage.getItem("userid");
-    console.log(docId);
     if (!docId) return;
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
@@ -58,7 +57,18 @@ const DoctorAppointment = () => {
       );
       const resp2 = await res.json();
       const resp = await res2.json();
-      console.log(resp);
+      var date = new Date();
+      var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+      for (var i = 0; i < resp.length; i++) {
+        resp[i].dateTime = new Date(
+          new Date(resp[i].dateTime).getTime() + userTimezoneOffset
+        );
+      }
+      for (var i = 0; i < resp2.length; i++) {
+        resp2[i].dateTime = new Date(
+          new Date(resp2[i].dateTime).getTime() + userTimezoneOffset
+        );
+      }
       setapp(resp2);
       setcurr(resp);
     };
