@@ -60,9 +60,10 @@ const DoctorProfile = () => {
     const experience = localStorage.getItem("experience");
     const address = localStorage.getItem("address");
     const city = localStorage.getItem("city");
-    const certification = localStorage.getItem("certification");
-    const education = localStorage.getItem("education");
+    const certification = localStorage.getItem("certification").split(",");
+    const education = localStorage.getItem("education").split(",");
     const availability = localStorage.getItem("availability");
+    console.log(availability);
     // const email = localStorage.getItem("user_email");
     setProfile({
       ...profile,
@@ -75,7 +76,7 @@ const DoctorProfile = () => {
       city: city,
       certifications: certification,
       education: education,
-      availability: availability,
+      // availability: availability,
     });
     setEditedProfile({
       ...profile,
@@ -88,7 +89,7 @@ const DoctorProfile = () => {
       city: city,
       certifications: certification,
       education: education,
-      availability: availability,
+      // availability: availability,
     });
     console.log(profile);
   }, []);
@@ -111,6 +112,11 @@ const DoctorProfile = () => {
   }
 
   const handleSave = () => {
+    localStorage.setItem("experience", editedProfile.experience);
+    localStorage.setItem("address", editedProfile.address);
+    localStorage.setItem("city", editedProfile.city);
+    localStorage.setItem("certification", editedProfile.certifications);
+    localStorage.setItem("education", editedProfile.education);
     setProfile(editedProfile);
     setIsEditing(false);
   };
