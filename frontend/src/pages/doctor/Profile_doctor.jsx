@@ -65,6 +65,7 @@ const DoctorProfile = () => {
       phone: phone,
       specialization: desc,
     });
+    setEditedProfile(profile);
   }, []);
 
   const handleClosePopup = () => {
