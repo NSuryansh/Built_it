@@ -19,6 +19,7 @@ const SignUp = () => {
     mobile: "",
     altNo: "",
     department: "",
+    rollNo: "",
     password: "",
     confirmPassword: "",
   });
@@ -177,7 +178,7 @@ const SignUp = () => {
     }
 
     const lowerCaseEmail = formData.email.toLowerCase();
-    const [roll, domain] = formData.email.split("@");
+    const [address, domain] = formData.email.split("@");
 
     if (domain != "iiti.ac.in") {
       setError("Please sign up with your institute email id");
@@ -194,24 +195,45 @@ const SignUp = () => {
       return;
     }
 
+    let numfound = false;
+    let numIndex = 0;
+    let roll = "";
+    for (let i = 0; i < address.length; i++) {
+      if (address[i] >= "0" && address[i] <= "9") {
+        numfound = true;
+        numIndex = i;
+        roll += address[i];
+      } else if (numfound === true) {
+        setError("Please enter a valid email address");
+        setFormData({ ...formData, rollNo: "" });
+        toast("Please enter a valid email address", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
+        return;
+      }
+      setFormData({ ...formData, rollNo: roll });
+    }
+
+    console.log(formData.rollNo);
+
     // Example condition for academic program
     if (lowerCaseEmail.startsWith("phd")) {
       setAcadProg("PHD");
-    } else if (
-      lowerCaseEmail.startsWith("mt") ||
-      lowerCaseEmail.startsWith("ms") ||
-      lowerCaseEmail.startsWith("msc")
-    ) {
+    } else if (formData.rollNo.length === 10) {
       setAcadProg("PG");
     } else {
       setAcadProg("UG");
     }
 
     console.log(acadProg);
-    console.log(formData.department);
 
-    setError("Something");
-    return;
     await sendOTP();
   }
 
@@ -226,17 +248,21 @@ const SignUp = () => {
       const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
       localStorage.setItem("privateKey", privateKeyPEM);
 
-      const { username, email, mobile, password, altNo } = formData;
+      const { username, email, mobile, password, altNo, department, rollNo } =
+        formData;
       const response = await fetch("http://localhost:3000/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username,
-          email,
-          mobile,
-          password,
-          altNo,
+          username: username,
+          email: email,
+          mobile: mobile,
+          password: password,
+          altNo: altNo,
           publicKey: publicKeyPEM,
+          department: department,
+          acadProg: acadProg,
+          rollNo: rollNo,
         }),
       });
       const data = await response.json();
@@ -329,32 +355,24 @@ const SignUp = () => {
                   required
                 >
                   <option value="">Select a department</option>
-                  <option value="Astronomy, Astrophysics and Space Engineering">
-                    Astronomy, Astrophysics and Space Engineering
+                  <option value="Astronomy, Astrophysics and Space">
+                    Astronomy, Astrophysics and Space
                   </option>
-                  <option value="Biosciences and Biomedical Engineering">
-                    Biosciences and Biomedical Engineering
+                  <option value="Biosciences and Biomedical">
+                    Biosciences and Biomedical
                   </option>
-                  <option value="Chemical Engineering">
-                    Chemical Engineering
-                  </option>
+                  <option value="Chemical">Chemical</option>
                   <option value="Chemistry">Chemistry</option>
-                  <option value="Civil Engineering">Civil Engineering</option>
-                  <option value="Computer Science and Engineering">
-                    Computer Science and Engineering
-                  </option>
-                  <option value="Electrical Engineering">
-                    Electrical Engineering
-                  </option>
+                  <option value="Civil">Civil</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Electrical">Electrical</option>
                   <option value="Humanities and Social Sciences">
                     Humanities and Social Sciences
                   </option>
                   <option value="Mathematics">Mathematics</option>
-                  <option value="Mechanical Engineering">
-                    Mechanical Engineering
-                  </option>
-                  <option value="Metallurgical Engineering and Materials Science">
-                    Metallurgical Engineering and Materials Science
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Metallurgical and Materials Science">
+                    Metallurgical and Materials Science
                   </option>
                   <option value="Physics">Physics</option>
                   <option value="School of Innovation">
@@ -475,7 +493,7 @@ const SignUp = () => {
         {otpSent && (
           <div className="space-y-4">
             <p className="text-center">
-              Enter the OTP sent to your registered number/email.
+              Enter the OTP sent to your registered email.
             </p>
             <input
               type="text"
