@@ -87,17 +87,19 @@ const UserAppointments = () => {
 
   async function getPrevApp() {
     const res = await fetch(
-      `https://built-it-xjiq.onrender.com/pastuserappt?userId=${user_id}`
+      `http://localhost:3000/pastuserappt?userId=${user_id}`
     );
     const resp = await res.json();
+    console.log(resp)
     setpreviousAppointments(resp);
   }
 
   async function getCurrApp() {
     const res = await fetch(
-      `https://built-it-xjiq.onrender.com/currentuserappt?userId=${user_id}`
+      `http://localhost:3000/currentuserappt?userId=${user_id}`
     );
     const resp = await res.json();
+    console.log(resp)
     setupcomingAppointments(resp);
   }
 
@@ -136,20 +138,20 @@ const UserAppointments = () => {
                       </div>
                       <div>
                         <h3 className="font-medium text-gray-800">
-                          {appointment.doctor}
+                          {appointment.doc.name}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        {/* <p className="text-sm text-gray-600">
                           {appointment.details}
-                        </p>
+                        </p> */}
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium text-gray-800">
-                        {appointment.date}
+                        {appointment.createdAt}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      {/* <p className="text-sm text-gray-600">
                         {appointment.timing}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>
@@ -179,20 +181,20 @@ const UserAppointments = () => {
                       </div>
                       <div>
                         <h3 className="font-medium text-gray-800">
-                          {appointment.doctor}
+                          {appointment.doctor.name}
                         </h3>
                         <p className="text-sm text-gray-600">
-                          {appointment.details}
+                          {appointment.reason}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium text-gray-800">
-                        {appointment.date}
+                        {appointment.dateTime}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      {/* <p className="text-sm text-gray-600">
                         {appointment.timing}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>

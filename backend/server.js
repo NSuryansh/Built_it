@@ -952,6 +952,9 @@ app.get("/pastuserappt", async (req, res) => {
     }
     const appt = await prisma.pastAppointments.findMany({
       where: { user_id: userId },
+      include:{
+        doc:true
+      }
     }); // Fetch all appts
     console.log(appt);
     res.json(appt); // Send the appts as a JSON response
@@ -976,6 +979,9 @@ app.get("/currentuserappt", async (req, res) => {
     }
     const appt = await prisma.appointments.findMany({
       where: { user_id: userId },
+      include:{
+        doctor:true
+      }
     }); // Fetch all appts
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
@@ -1287,12 +1293,12 @@ app.post("/resetAdminPassword", async (req, res) => {
 app.post("/save-subscription", async (req, res) => {
   try {
     const { endpoint, keys } = req.body;
-
+    console.log(req.body)
     // Check if the subscription already exists
     const existingSub = await prisma.subscription.findUnique({
       where: { endpoint },
     });
-
+    console.log(existingSub)
     if (!existingSub) {
       await prisma.subscription.create({
         data: {
