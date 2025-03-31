@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   User,
   Mail,
@@ -10,6 +10,7 @@ import {
   AlignCenterVertical as Certificate,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import { toast, ToastContainer } from "react-toastify";
 
 const AdminDoctorProfile = () => {
   const doctor = {
@@ -39,10 +40,30 @@ const AdminDoctorProfile = () => {
     ],
   };
 
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await fetch(
+          "https://built-it-xjiq.onrender.com/getdoctors"
+        );
+        const data = await res.json();
+        setDoctors(data);
+      } catch (err) {
+        console.error("Error fetching doctors:", err);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          className: "custom-toast",
+        });
+      }
+    };
+    fetchDoctors();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
-
+      <ToastContainer />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-12">

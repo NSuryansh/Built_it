@@ -130,7 +130,7 @@ const DoctorsList = () => {
                     </button>
                   </td>
                   <td className="px-6 py-4">
-                    <Link to={`/admin/doctor_profile?id=${doctor.id}`}>View</Link>
+                    <Link className="font-bold" to={`/admin/doctor_profile?id=${doctor.id}`}>View</Link>
                   </td>
                 </tr>
               ))}
