@@ -25,7 +25,6 @@ import ModifyProfile from "./pages/Modify_profile";
 import ResetPassword from "./pages/ResetPassword";
 import DoctorResetPassword from "./pages/doctor/ResetPassword_doctor";
 import AdminResetPassword from "./pages/admin/admin_reset_password";
-import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 
 export default function App() {
@@ -96,7 +95,6 @@ export default function App() {
 
   return (
     <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>
-      <ToastContainer />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/peer" element={<Peer />} />
