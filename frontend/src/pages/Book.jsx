@@ -79,6 +79,43 @@ const Book = () => {
   // On form submission, send the booking request to the backend's requests API
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const lowerCaseEmail = formData.email.toLowerCase();
+    const [address, domain] = lowerCaseEmail.split("@");
+
+    if (domain != "iiti.ac.in") {
+      toast("Please book with your institute email id", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+      return;
+    }
+
+    let numfound = false;
+    for (let i = 0; i < address.length; i++) {
+      if (address[i] >= "0" && address[i] <= "9") {
+        numfound = true;
+      } else if (numfound === true) {
+        toast("Please enter a valid email address", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
+        return;
+      }
+    }
+
     const payload = {
       doctorId: selectedDoctor.id,
       doctorName: selectedDoctor.name,

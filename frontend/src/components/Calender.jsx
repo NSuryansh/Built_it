@@ -12,6 +12,7 @@ import {
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import fyAcadCal from "../utils/1st_yr_academic_calendar"; // Adjust the path as needed
 
 const Calendar = ({ onDateSelect }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -44,10 +45,19 @@ const Calendar = ({ onDateSelect }) => {
             format(new Date(event.dateTime), "yyyy-MM-dd")
           )
         );
-        console.log(futureEvents);
       })
       .catch((error) => console.error("Error fetching future events:", error));
   }, []);
+
+  // Helper: Check if a day falls within any academic event period
+  const isAcadEventDay = (day) => {
+    return fyAcadCal.some((event) => {
+      const eventStart = new Date(event.start_date);
+      const eventEnd = new Date(event.end_date);
+      // Compare only the date part
+      return day >= eventStart && day <= eventEnd;
+    });
+  };
 
   const startDate = startOfWeek(startOfMonth(currentMonth));
   const endDate = endOfWeek(endOfMonth(currentMonth));
@@ -99,6 +109,16 @@ const Calendar = ({ onDateSelect }) => {
             const isToday = dayString === todayString;
             const isPastEvent = pastEvents.includes(dayString);
             const isFutureEvent = futureEvents.includes(dayString);
+            const isAcadEvent = isAcadEventDay(dayItem);
+
+            // Determine the event styling
+            const eventStyle = isPastEvent
+              ? "bg-red-500 text-white hover:bg-red-600"
+              : isFutureEvent
+              ? "bg-blue-500 text-white hover:bg-blue-600"
+              : isAcadEvent
+              ? "bg-green-500 text-white hover:bg-green-600"
+              : "hover:bg-gray-100";
 
             return (
               <button
@@ -111,30 +131,20 @@ const Calendar = ({ onDateSelect }) => {
                       ? "text-gray-900"
                       : "text-gray-400"
                   }
-                  ${
-                    isToday
-                      ? "ring-2 ring-blue-500 ring-offset-2 font-bold"
-                      : ""
-                  }
-                  ${
-                    isPastEvent
-                      ? "bg-red-500 text-white hover:bg-red-600"
-                      : isFutureEvent
-                      ? "bg-blue-500 text-white hover:bg-blue-600"
-                      : "hover:bg-gray-100"
-                  }
+                  ${isToday ? "ring-2 ring-blue-500 ring-offset-2 font-bold" : ""}
+                  ${eventStyle}
                   ${isSameDay(dayItem, selectedDate) ? "ring-2 ring-black" : ""}
                 `}
                 onClick={() => {
                   setSelectedDate(dayItem);
-                  if (isPastEvent || isFutureEvent) {
+                  if (isPastEvent || isFutureEvent || isAcadEvent) {
                     navigate("/events");
                   }
                   onDateSelect && onDateSelect(dayItem);
                 }}
               >
                 {format(dayItem, "d")}
-                {(isPastEvent || isFutureEvent) && (
+                {(isPastEvent || isFutureEvent || isAcadEvent) && (
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white" />
                 )}
               </button>
@@ -150,6 +160,10 @@ const Calendar = ({ onDateSelect }) => {
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
             <span className="text-gray-600">Future Events</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <span className="text-gray-600">Academic Events</span>
           </div>
         </div>
       </div>

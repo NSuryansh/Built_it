@@ -105,6 +105,7 @@ const Navbar = () => {
         location === "/peer" ||
         location === "/mood" ||
         location === "/movies" ||
+        location === "/entertainment" ||
         location === "/events"
           ? "bg-transparent"
           : "bg-[var(--custom-orange-100)]"

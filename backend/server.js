@@ -1348,12 +1348,14 @@ app.post("/send-notification", async (req, res) => {
 
 app.post("/node-chat", async (req, res) => {
   try {
+    console.log("HELOE")
     const { user_id, message } = req.body;
 
     const response = await axios.post("http://localhost:5000/chatWithBot", {
       user_id,
       message,
     });
+    console.log(response.data)
 
     res.json(response.data);
   } catch (error) {
