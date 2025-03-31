@@ -112,16 +112,25 @@ const Calendar = ({ onDateSelect }) => {
                       : "text-gray-400"
                   }
                   ${
-                    isToday
-                      ? "ring-2 ring-blue-500 ring-offset-2 font-bold"
+                    isPastEvent && !isToday
+                    ? "bg-red-500 text-white hover:bg-red-600"
+                    : isFutureEvent && !isToday
+                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                    : ""
+                  }
+                  ${
+                    isToday && isPastEvent
+                      ? "ring-2 ring-black text-white bg-blue-500 hover:bg-blue-600 ring-offset-2 font-bold"
                       : ""
                   }
                   ${
-                    isPastEvent
-                      ? "bg-red-500 text-white hover:bg-red-600"
-                      : isFutureEvent
-                      ? "bg-blue-500 text-white hover:bg-blue-600"
-                      : "hover:bg-gray-100"
+                    !isToday && !isPastEvent && !isFutureEvent
+                      ? "hover:bg-gray-100"
+                      : ""
+                  }
+                  ${
+                    isToday && !isPastEvent
+                      ? "ring-2 ring-blue-50 ring-offset-2 font-bold" : ""
                   }
                   ${isSameDay(dayItem, selectedDate) ? "ring-2 ring-black" : ""}
                 `}
