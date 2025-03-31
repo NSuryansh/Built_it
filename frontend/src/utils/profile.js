@@ -1,6 +1,7 @@
 export const checkAuth = async (userType) => {
   function isTokenExpired(token) {
-    if (!token) return false;
+    if (token === null) return true;
+    
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const currentTime = Math.floor(Date.now() / 1000);
@@ -11,7 +12,9 @@ export const checkAuth = async (userType) => {
     }
   }
 
+  
   const token = localStorage.getItem("token");
+  // console.log(token)
   if (isTokenExpired(token)) {
     return false;
   }
