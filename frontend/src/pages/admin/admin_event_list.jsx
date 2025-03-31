@@ -6,6 +6,7 @@ import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
+import { ToastContainer, toast } from "react-toastify";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
@@ -123,6 +124,7 @@ const EventsList = () => {
   return (
     <div className="flex flex-col">
       <AdminNavbar />
+      <ToastContainer />
       <div className="space-y-6 md:min-w-5xl max-w-7xl mx-auto mb-4">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">

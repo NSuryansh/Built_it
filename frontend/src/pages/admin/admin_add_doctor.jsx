@@ -70,7 +70,7 @@ const AddDoctor = () => {
   }
 
   return (
-    <>
+    <div className="bg-[var(--custom-primary-green-50)]">
       <AdminNavbar />
       <div className="space-y-6 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center h-screen ">
         <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-6">
@@ -202,7 +202,7 @@ const AddDoctor = () => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

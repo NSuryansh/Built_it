@@ -82,7 +82,7 @@ const AddEvent = () => {
   }
 
   return (
-    <>
+    <div className="bg-[var(--custom-primary-green-50)]">
       <AdminNavbar />
       <ToastContainer />
       <div className="space-y-6 py-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center">
@@ -197,7 +197,7 @@ const AddEvent = () => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
