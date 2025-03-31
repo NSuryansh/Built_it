@@ -144,7 +144,7 @@ const Peer = () => {
   // Initialize WebSocket connection
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3001",{
+    socketRef.current = io("http://44.229.200.200:3001",{
       transports: ["websocket"]
     });
     socketRef.current.on("connect", () => {
