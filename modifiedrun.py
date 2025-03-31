@@ -18,6 +18,8 @@ from flask_cors import CORS
 
 load_dotenv()
 os.environ['GROQ_API_KEY'] = "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"
+load_dotenv(dotenv_path="backend/.env")
+
 
 # Initialize databases
 agent_storage = SqliteAgentStorage(table_name="study_sessions", db_file="tmp/agents.db")
