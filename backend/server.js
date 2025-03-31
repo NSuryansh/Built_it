@@ -117,7 +117,7 @@ app.post("/signup", async (req, res) => {
   const pubKey = req.body["publicKey"];
   const department = req.body["department"];
   const acadProg = req.body["acadProg"];
-  const rollNo = req.body["rollNo"];
+  const rollNo = Number(req.body["rollNo"]);
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -993,7 +993,8 @@ app.get('/pastApp', async (req, res) => {
         }
       },
       include:{
-        user:true
+        user:true,
+        doc:true
       }
     })
     console.log(pastApp)
