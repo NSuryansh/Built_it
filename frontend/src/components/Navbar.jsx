@@ -86,7 +86,6 @@ const Navbar = () => {
         if (ref.current && !ref.current.contains(event.target)) {
           setShowNotifications(false);
           setShowDetails(false);
-          setIsOpen(false);
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -97,9 +96,7 @@ const Navbar = () => {
   };
 
   const wrapperRef = useRef(null);
-  const hamburgerRef = useRef(null);
   useOutsideAlerter(wrapperRef);
-  useOutsideAlerter(hamburgerRef);
 
   return (
     <nav
@@ -117,7 +114,6 @@ const Navbar = () => {
       <div className="px-4 lg:px-8 py-3">
         <div className="flex items-center justify-between">
           <div
-            ref={hamburgerRef}
             className="lg:hidden transition-all flex items-center z-2"
           >
             <button
