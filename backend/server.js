@@ -356,19 +356,19 @@ app.post("/reschedule", async (req, res) => {
   }
 });
 
-app.get("/getPastApp", async (req, res) => {
-  const { docId } = req.query;
-  try {
-    const app = await prisma.pastAppointments.findMany({
-      where: {
-        doc_id: Number(docId),
-      },
-    });
-    res.json(app);
-  } catch (e) {
-    res.json(e);
-  }
-});
+// app.get("/getPastApp", async (req, res) => {
+//   const { docId } = req.query;
+//   try {
+//     const app = await prisma.pastAppointments.findMany({
+//       where: {
+//         doc_id: Number(docId),
+//       },
+//     });
+//     res.json(app);
+//   } catch (e) {
+//     res.json(e);
+//   }
+// });
 
 app.get("/getPastEvents", async (req, res) => {
   try {
@@ -917,7 +917,7 @@ app.get("/pastdocappt", async (req, res) => {
     return res.status(400).json({ message: "Doctor ID is required" });
   }
   try {
-    const doctor = await prisma.Doctor.findUnique({
+    const doctor = await prisma.doctor.findUnique({
       where: { id: doctorId },
     });
     if (!doctor) {
