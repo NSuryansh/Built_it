@@ -54,7 +54,7 @@ export const checkAuth = async (userType) => {
       localStorage.setItem("user_mobile", res2["doctor"]["mobile"]);
       localStorage.setItem("user_email", res2["doctor"]["email"]);
       localStorage.setItem("reg_id", res2["doctor"]["reg_id"]);
-      localStorage.setItem("desc", res2["doctor"]["desc"] || "");
+      localStorage.setItem("desc", res2["doctor"]["desc"] || "<Please Change>");
       localStorage.setItem("user_type", userType);
     } else {
       localStorage.setItem("userid", res2["admin"]["id"]);

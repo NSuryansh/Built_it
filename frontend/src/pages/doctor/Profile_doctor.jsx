@@ -65,7 +65,13 @@ const DoctorProfile = () => {
       phone: phone,
       specialization: desc,
     });
-    setEditedProfile(profile);
+    setEditedProfile({
+      ...profile,
+      name: username,
+      email: email,
+      phone: phone,
+      specialization: desc,
+    });
   }, []);
 
   const handleClosePopup = () => {
