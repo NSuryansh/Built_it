@@ -993,7 +993,8 @@ app.get('/pastApp', async (req, res) => {
         }
       },
       include:{
-        user:true
+        user:true,
+        doc:true
       }
     })
     console.log(pastApp)
