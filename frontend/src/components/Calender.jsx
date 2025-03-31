@@ -17,11 +17,11 @@ import fyAcadCal from "../utils/1st_yr_academic_calendar"; // Adjust the path as
 const Calendar = ({ onDateSelect }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
-  const [pastEvents, setPastEvents] = useState([]); // List for past event dates
-  const [futureEvents, setFutureEvents] = useState([]); // List for future event dates
+  const [pastEvents, setPastEvents] = useState([]); // Fetched past events (if needed)
+  const [futureEvents, setFutureEvents] = useState([]); // Fetched future events (if needed)
   const navigate = useNavigate();
 
-  // Fetch past events
+  // Fetch past events (if still required elsewhere)
   useEffect(() => {
     axios
       .get("https://built-it-xjiq.onrender.com/getPastEvents")
@@ -35,7 +35,7 @@ const Calendar = ({ onDateSelect }) => {
       .catch((error) => console.error("Error fetching past events:", error));
   }, []);
 
-  // Fetch future events
+  // Fetch future events (if still required elsewhere)
   useEffect(() => {
     axios
       .get("https://built-it-xjiq.onrender.com/events")
@@ -49,21 +49,32 @@ const Calendar = ({ onDateSelect }) => {
       .catch((error) => console.error("Error fetching future events:", error));
   }, []);
 
-  // Helper: Check if a day falls within any academic event period
-  const isAcadEventDay = (day) => {
-    return fyAcadCal.some((event) => {
-      const eventStart = new Date(event.start_date);
-      const eventEnd = new Date(event.end_date);
-      // Compare only the date part
-      return day >= eventStart && day <= eventEnd;
-    });
+  // Helper: Returns a style string only for academic event boundaries (start or end dates)
+  const getAcadBoundaryStyle = (day) => {
+    const dayString = format(day, "yyyy-MM-dd");
+    // Check if the day matches any academic event's start or end date
+    const isBoundary = fyAcadCal.some(
+      (event) => event.start_date === dayString || event.end_date === dayString
+    );
+    if (!isBoundary) return "";
+
+    // Get today's date without time
+    const today = new Date(new Date().toDateString());
+    if (day < today) {
+      return "bg-red-500 text-white hover:bg-red-600";
+    } else if (day > today) {
+      return "bg-green-500 text-white hover:bg-green-600";
+    } else {
+      // Day is exactly today; you can choose a style (here blue is used)
+      return "bg-blue-500 text-white hover:bg-blue-600";
+    }
   };
 
+  // Calculate the days to display in the month view
   const startDate = startOfWeek(startOfMonth(currentMonth));
   const endDate = endOfWeek(endOfMonth(currentMonth));
   const days = [];
   let day = startDate;
-
   while (day <= endDate) {
     days.push(day);
     day = addDays(day, 1);
@@ -74,6 +85,7 @@ const Calendar = ({ onDateSelect }) => {
   return (
     <div className="flex items-center justify-center p-2 md:p-4">
       <div className="p-2 md:p-6 bg-white rounded-xl shadow-lg max-w-md w-full">
+        {/* Header with month navigation */}
         <div className="flex justify-between items-center mb-6">
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
@@ -92,33 +104,26 @@ const Calendar = ({ onDateSelect }) => {
           </button>
         </div>
 
+        {/* Days of the week header */}
         <div className="grid grid-cols-7 gap-4 mb-4">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayLabel) => (
-            <div
-              key={dayLabel}
-              className="font-medium text-gray-500 text-center"
-            >
+            <div key={dayLabel} className="font-medium text-gray-500 text-center">
               {dayLabel}
             </div>
           ))}
         </div>
 
+        {/* Calendar grid */}
         <div className="grid grid-cols-7 gap-2">
           {days.map((dayItem, index) => {
             const dayString = format(dayItem, "yyyy-MM-dd");
             const isToday = dayString === todayString;
-            const isPastEvent = pastEvents.includes(dayString);
-            const isFutureEvent = futureEvents.includes(dayString);
-            const isAcadEvent = isAcadEventDay(dayItem);
-
-            // Determine the event styling
-            const eventStyle = isPastEvent
-              ? "bg-red-500 text-white hover:bg-red-600"
-              : isFutureEvent
-              ? "bg-blue-500 text-white hover:bg-blue-600"
-              : isAcadEvent
-              ? "bg-green-500 text-white hover:bg-green-600"
-              : "hover:bg-gray-100";
+            // Get academic boundary style if applicable
+            const acadStyle = getAcadBoundaryStyle(dayItem);
+            // Default style if no academic boundary style applies
+            const defaultStyle = "hover:bg-gray-100";
+            // If acadStyle is not empty, it will override the default
+            const appliedStyle = acadStyle || defaultStyle;
 
             return (
               <button
@@ -126,25 +131,22 @@ const Calendar = ({ onDateSelect }) => {
                 className={`
                   relative p-2 rounded-lg aspect-square flex items-center justify-center
                   transition-all duration-200 text-sm font-medium
-                  ${
-                    isSameMonth(dayItem, currentMonth)
-                      ? "text-gray-900"
-                      : "text-gray-400"
-                  }
+                  ${isSameMonth(dayItem, currentMonth) ? "text-gray-900" : "text-gray-400"}
                   ${isToday ? "ring-2 ring-blue-500 ring-offset-2 font-bold" : ""}
-                  ${eventStyle}
+                  ${appliedStyle}
                   ${isSameDay(dayItem, selectedDate) ? "ring-2 ring-black" : ""}
                 `}
                 onClick={() => {
                   setSelectedDate(dayItem);
-                  if (isPastEvent || isFutureEvent || isAcadEvent) {
+                  // Navigate if the day is an academic boundary (start or end date)
+                  if (acadStyle) {
                     navigate("/events");
                   }
                   onDateSelect && onDateSelect(dayItem);
                 }}
               >
                 {format(dayItem, "d")}
-                {(isPastEvent || isFutureEvent || isAcadEvent) && (
+                {acadStyle && (
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white" />
                 )}
               </button>
@@ -152,18 +154,19 @@ const Calendar = ({ onDateSelect }) => {
           })}
         </div>
 
+        {/* Legend */}
         <div className="mt-6 flex gap-4 justify-center text-sm">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <span className="text-gray-600">Past Events</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-            <span className="text-gray-600">Future Events</span>
+            <span className="text-gray-600">Past Academic Event Boundary</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className="text-gray-600">Academic Events</span>
+            <span className="text-gray-600">Future Academic Event Boundary</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span className="text-gray-600">Today's Academic Event Boundary</span>
           </div>
         </div>
       </div>
