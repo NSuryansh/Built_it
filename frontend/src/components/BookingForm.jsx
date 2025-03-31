@@ -7,7 +7,7 @@ import {
   Phone,
   Stethoscope,
   User,
-  Calendar
+  Calendar,
 } from "lucide-react";
 
 const BookingFormStep = ({
@@ -102,7 +102,7 @@ const BookingFormStep = ({
             <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
               <Calendar className="w-4 h-4" />
               <Clock className="w-4 h-4" />
-              Preferred Date & Time
+              Preferred Date
             </label>
             <input
               type="datetime-local"
