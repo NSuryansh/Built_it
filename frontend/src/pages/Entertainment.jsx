@@ -108,7 +108,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
         className="w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-200"
       >
         <div className="flex items-center gap-2">
-          <Icon className="w-6 h-6 text-indigo-600" />
+          <Icon className="w-6 h-6 text-amber-700" />
           <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
         </div>
         {isOpen ? (
@@ -127,7 +127,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
                   selectedCategory === category
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-amber-700 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
