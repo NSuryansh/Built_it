@@ -3,6 +3,7 @@ import Entertainment from "./pages/Entertainment";
 import Mood from "./pages/Mood";
 import Book from "./pages/Book";
 import Landing from "./pages/Landing";
+import Dinogame from "./pages/dino";
 import Landing_user from "./pages/Landing_user";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
@@ -102,6 +103,7 @@ export default function App() {
         <Route path="/book" element={<Book />} />
         <Route path="/stress" element={<Stress />} />
         <Route path="/entertainment" element={<Entertainment />} />
+        <Route path="/entertainment/dinogame" element={<Dinogame />} />
         <Route path="/events" element={<Events />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
