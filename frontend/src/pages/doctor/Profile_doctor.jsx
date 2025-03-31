@@ -57,6 +57,12 @@ const DoctorProfile = () => {
     const email = localStorage.getItem("user_email");
     const phone = localStorage.getItem("user_mobile");
     const desc = localStorage.getItem("desc");
+    const experience = localStorage.getItem("experience");
+    const address = localStorage.getItem("address");
+    const city = localStorage.getItem("city");
+    const certification = localStorage.getItem("certification");
+    const education = localStorage.getItem("education");
+    const availability = localStorage.getItem("availability");
     // const email = localStorage.getItem("user_email");
     setProfile({
       ...profile,
@@ -64,6 +70,12 @@ const DoctorProfile = () => {
       email: email,
       phone: phone,
       specialization: desc,
+      experience: experience,
+      address: address,
+      city: city,
+      certifications: certification,
+      education: education,
+      availability: availability,
     });
     setEditedProfile({
       ...profile,
@@ -71,7 +83,14 @@ const DoctorProfile = () => {
       email: email,
       phone: phone,
       specialization: desc,
+      experience: experience,
+      address: address,
+      city: city,
+      certifications: certification,
+      education: education,
+      availability: availability,
     });
+    console.log(profile);
   }, []);
 
   const handleClosePopup = () => {
@@ -149,6 +168,7 @@ const DoctorProfile = () => {
                 {isEditing ? (
                   <input
                     type="text"
+                    disabled
                     value={editedProfile.name}
                     onChange={(e) =>
                       setEditedProfile({
@@ -156,7 +176,7 @@ const DoctorProfile = () => {
                         name: e.target.value,
                       })
                     }
-                    className="text-2xl font-bold text-gray-900 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
+                    className="text-2xl cursor-not-allowed font-bold text-gray-900 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
                   />
                 ) : (
                   <h2 className="text-2xl font-bold text-gray-900">
@@ -181,6 +201,7 @@ const DoctorProfile = () => {
                       {isEditing ? (
                         <input
                           type="email"
+                          disabled
                           value={editedProfile.email}
                           onChange={(e) =>
                             setEditedProfile({
@@ -188,7 +209,7 @@ const DoctorProfile = () => {
                               email: e.target.value,
                             })
                           }
-                          className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
+                          className="flex-1 cursor-not-allowed bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
                         />
                       ) : (
                         <span className="text-gray-600">{profile.email}</span>
@@ -199,6 +220,7 @@ const DoctorProfile = () => {
                       {isEditing ? (
                         <input
                           type="tel"
+                          disabled
                           value={editedProfile.phone}
                           onChange={(e) =>
                             setEditedProfile({
@@ -206,7 +228,7 @@ const DoctorProfile = () => {
                               phone: e.target.value,
                             })
                           }
-                          className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
+                          className="flex-1 cursor-not-allowed bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
                         />
                       ) : (
                         <span className="text-gray-600">{profile.phone}</span>
@@ -293,6 +315,7 @@ const DoctorProfile = () => {
                       {isEditing ? (
                         <input
                           type="text"
+                          disabled
                           value={editedProfile.specialization}
                           onChange={(e) =>
                             setEditedProfile({
@@ -300,7 +323,7 @@ const DoctorProfile = () => {
                               specialization: e.target.value,
                             })
                           }
-                          className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
+                          className="flex-1 cursor-not-allowed bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
                         />
                       ) : (
                         <span className="text-gray-600">

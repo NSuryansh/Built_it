@@ -1,7 +1,7 @@
 export const checkAuth = async (userType) => {
   function isTokenExpired(token) {
     if (token === null) return true;
-    
+
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const currentTime = Math.floor(Date.now() / 1000);
@@ -12,7 +12,6 @@ export const checkAuth = async (userType) => {
     }
   }
 
-  
   const token = localStorage.getItem("token");
   // console.log(token)
   if (isTokenExpired(token)) {
@@ -32,7 +31,6 @@ export const checkAuth = async (userType) => {
       method: "GET",
       headers: { Authorization: "Bearer " + token },
     });
-    
 
     if (!response.ok) {
       return false;
@@ -55,6 +53,26 @@ export const checkAuth = async (userType) => {
       localStorage.setItem("user_email", res2["doctor"]["email"]);
       localStorage.setItem("reg_id", res2["doctor"]["reg_id"]);
       localStorage.setItem("desc", res2["doctor"]["desc"] || "<Please Change>");
+      localStorage.setItem("address", "<Please Change>");
+      localStorage.setItem("city", "<Please Change>");
+      localStorage.setItem("experience", "<Please Change>");
+      localStorage.setItem("education", [
+        "<Please Change>",
+        "<Please Change>",
+        "<Please Change>",
+      ]);
+      localStorage.setItem("certification", [
+        "<Please Change>",
+        "<Please Change>",
+        "<Please Change>",
+      ]);
+      localStorage.setItem("availability", {
+        monday: "<Please change>",
+        tuesday: "<Please change>",
+        wednesday: "<Please change>",
+        thursday: "<Please change>",
+        friday: "<Please change>",
+      });
       localStorage.setItem("user_type", userType);
     } else {
       localStorage.setItem("userid", res2["admin"]["id"]);

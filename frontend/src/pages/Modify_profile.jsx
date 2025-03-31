@@ -137,7 +137,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   htmlFor="alt_mobile"
                   className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
-                  Alternate Phone Number
+                  Emergency Contact Number
                 </label>
                 <input
                   type="tel"
