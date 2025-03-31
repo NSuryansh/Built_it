@@ -40,6 +40,27 @@ const AdminDashboard = () => {
   ];
 
   useEffect(() => {
+    const fetchAppoinments = async() => {
+      try {
+        // const response = await fetch("http://localhost:3000/")
+        console.log("HELLO")
+      }catch (error) {
+        console.log("Error fetching doctors: ", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
+    }
+    }
+  })
+
+  useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const response = await fetch(
