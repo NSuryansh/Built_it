@@ -980,6 +980,27 @@ app.get("/currentuserappt", async (req, res) => {
   }
 });
 
+app.get('/pastApp', async (req, res) => {
+  const currDate = new Date()
+  const oneYear = new Date()
+  oneYear.setFullYear(currDate.getFullYear() - 1)
+  try {
+    const pastApp = await prisma.pastAppointments.findMany({
+      where: {
+        createdAt: {
+          gte: oneYear,
+          lte: currDate
+        }
+      }
+    })
+    console.log(pastApp)
+    res.json(pastApp)
+  } catch (e) {
+    console.log(e)
+    res.json(e)
+  }
+})
+
 app.get("/getfeelings", async (req, res) => {
   const userId = req.query["userId"]; // Fix: Use query parameters
 
@@ -1382,15 +1403,15 @@ app.post("/otpGenerate", async (req, res) => {
     console.log(otp)
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     console.log(expiresAt)
-    
-      const otpgen = await prisma.otpVerification.create({
-        data: {
-          token: otp,
-          expiresAt: expiresAt,
-          useremail: email,
-        },
-      });
-    
+
+    const otpgen = await prisma.otpVerification.create({
+      data: {
+        token: otp,
+        expiresAt: expiresAt,
+        useremail: email,
+      },
+    });
+
     console.log(otpgen)
     const subject = "OTP Verification";
     const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
@@ -1407,20 +1428,20 @@ app.post("/otpcheck", async (req, res) => {
   const otp = req.body["otp"];
   const email = req.body["email"];
   console.log(otp, "OTP")
-  
-  try{
+
+  try {
     const otpRecord = await prisma.otpVerification.findFirstOrThrow({
       where: {
         token: Number(otp),
         useremail: email,
       },
       orderBy: {
-        expiresAt: 'desc', 
+        expiresAt: 'desc',
       },
     });
     console.log(otpRecord)
     console.log(email, "JKSFJK")
-  
+
 
     if (!otpRecord) {
       return res.status(400).json({ message: "Invalid OTP" });
