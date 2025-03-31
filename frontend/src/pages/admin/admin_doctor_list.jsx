@@ -109,6 +109,7 @@ const DoctorsList = () => {
                 <th className="px-6 py-4 text-left text-[var(--custom-primary-green-900)]">
                   Actions
                 </th>
+                <th className="px-6 py-4 text-left text-[var(--custom-primary-green-900)]"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--custom-primary-green-100)]">
@@ -123,10 +124,13 @@ const DoctorsList = () => {
                   <td className="px-6 py-4">
                     <button
                       onClick={() => handleDelete(doctor.id)}
-                      className="text-red-600 hover:text-red-800 transition-colors"
+                      className="text-red-600 flex justify-center items-center hover:text-red-800 transition-colors"
                     >
                       <Trash2 size={20} />
                     </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Link to={`/admin/doctor_profile?id=${doctor.id}`}>View</Link>
                   </td>
                 </tr>
               ))}

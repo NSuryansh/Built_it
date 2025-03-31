@@ -18,7 +18,6 @@ const BookingFormStep = ({
   selectedDoctor,
   isAuthenticated,
 }) => {
-
   return (
     <div className="bg-gradient-to-b from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
@@ -99,7 +98,7 @@ const BookingFormStep = ({
             />
           </div>
 
-          <div className="group">
+          {/* <div className="group">
             <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
               <Calendar className="w-4 h-4" />
               <Clock className="w-4 h-4" />
@@ -109,10 +108,92 @@ const BookingFormStep = ({
               type="datetime-local"
               name="date"
               value={formData.date}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e);
+                console.log(formData.date);
+              }}
               className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none"
               required
             />
+          </div> */}
+
+          <div className="group space-y-4">
+            <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium">
+              <Calendar className="w-4 h-4" />
+              <Clock className="w-4 h-4" />
+              Preferred Date & Time
+            </label>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Date Selection */}
+              <div>
+                <select
+                  name="date"
+                  value={formData.date.split("T")[0]}
+                  onChange={(e) => {
+                    const newDate = e.target.value;
+                    const currentTime = formData.date.split("T")[1] || "09:00";
+                    handleChange({
+                      target: {
+                        name: "date",
+                        value: `${newDate}T${currentTime}`,
+                      },
+                    });
+                  }}
+                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-white"
+                  required
+                >
+                  <option value="">Select Date</option>
+                  {[...Array(14)].map((_, index) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() + index);
+                    const formattedDate = date.toISOString().split("T")[0];
+                    const displayDate = date.toLocaleDateString("en-US", {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                    });
+                    return (
+                      <option key={formattedDate} value={formattedDate}>
+                        {displayDate}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              {/* Time Selection */}
+              <div>
+                <select
+                  name="time"
+                  value={formData.date.split("T")[1] || "09:00"}
+                  onChange={(e) => {
+                    const currentDate =
+                      formData.date.split("T")[0] ||
+                      new Date().toISOString().split("T")[0];
+                    handleChange({
+                      target: {
+                        name: "date",
+                        value: `${currentDate}T${e.target.value}`,
+                      },
+                    });
+                  }}
+                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-white"
+                  required
+                >
+                  <option value="">Select Time</option>
+                  {[...Array(9)].map((_, index) => {
+                    const hour = index + 9; // Starting from 9 AM
+                    const time = `${hour.toString().padStart(2, "0")}:00`;
+                    return (
+                      <option key={time} value={time}>
+                        {hour > 12 ? `${hour - 12}:00 PM` : `${hour}:00 AM`}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
