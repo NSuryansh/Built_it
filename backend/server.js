@@ -13,6 +13,8 @@ import nodemailer from "nodemailer";
 import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
+import acadCal from "../frontend/src/utils/2nd_yr_onwards_academic_calendar.js";
+import fyAcadCal from "../frontend/src/utils/1st_yr_academic_calendar.js";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -31,10 +33,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const publicVapidKey = process.env.PUBLIC_VAPID_KEY
-const privateVapidKey = process.env.PRIVATE_VAPID_KEY
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
-webpush.setVapidDetails("mailto:spython.webd@gmail.com", publicVapidKey, privateVapidKey)
+webpush.setVapidDetails(
+  "mailto:spython.webd@gmail.com",
+  publicVapidKey,
+  privateVapidKey
+);
 
 app.use(cors());
 const io = new Server(server, {
@@ -744,7 +750,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => { });
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -980,30 +986,30 @@ app.get("/currentuserappt", async (req, res) => {
   }
 });
 
-app.get('/pastApp', async (req, res) => {
-  const currDate = new Date()
-  const oneYear = new Date()
-  oneYear.setFullYear(currDate.getFullYear() - 1)
+app.get("/pastApp", async (req, res) => {
+  const currDate = new Date();
+  const oneYear = new Date();
+  oneYear.setFullYear(currDate.getFullYear() - 1);
   try {
     const pastApp = await prisma.pastAppointments.findMany({
       where: {
         createdAt: {
           gte: oneYear,
-          lte: currDate
-        }
+          lte: currDate,
+        },
       },
-      include:{
-        user:true,
-        doc:true
-      }
-    })
-    console.log(pastApp)
-    res.json(pastApp)
+      include: {
+        user: true,
+        doc: true,
+      },
+    });
+    console.log(pastApp);
+    res.json(pastApp);
   } catch (e) {
-    console.log(e)
-    res.json(e)
+    console.log(e);
+    res.json(e);
   }
-})
+});
 
 app.get("/getfeelings", async (req, res) => {
   const userId = req.query["userId"]; // Fix: Use query parameters
@@ -1302,37 +1308,43 @@ app.post("/save-subscription", async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error("Error saving subscription:", error);
-    res.status(500).json({ success: false, message: "Error saving subscription" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error saving subscription" });
   }
 });
 
 app.post("/send-notification", async (req, res) => {
   try {
     const subscriptions = await prisma.subscription.findMany();
-    const message = req.body["message"]
+    const message = req.body["message"];
     const notificationPayload = JSON.stringify({
       title: "New Alert!",
       body: message,
-      url: "http://localhost:5173"
+      url: "http://localhost:5173",
     });
 
     subscriptions.forEach((sub) => {
-      webpush.sendNotification(
-        {
-          endpoint: sub.endpoint,
-          keys: {
-            auth: sub.authKey,
-            p256dh: sub.p256dhKey,
+      webpush
+        .sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: {
+              auth: sub.authKey,
+              p256dh: sub.p256dhKey,
+            },
           },
-        },
-        notificationPayload
-      ).catch(console.error);
+          notificationPayload
+        )
+        .catch(console.error);
     });
 
     res.json({ success: true });
   } catch (error) {
     console.error("Error sending notification:", error);
-    res.status(500).json({ success: false, message: "Error sending notification" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error sending notification" });
   }
 });
 
@@ -1401,12 +1413,12 @@ app.get("/available-slots", async (req, res) => {
 
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
-  console.log(email)
+  console.log(email);
   try {
     const otp = Math.trunc(100000 + Math.random() * 900000);
-    console.log(otp)
+    console.log(otp);
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    console.log(expiresAt)
+    console.log(expiresAt);
 
     const otpgen = await prisma.otpVerification.create({
       data: {
@@ -1416,7 +1428,7 @@ app.post("/otpGenerate", async (req, res) => {
       },
     });
 
-    console.log(otpgen)
+    console.log(otpgen);
     const subject = "OTP Verification";
     const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
     sendEmail(email, subject, message);
@@ -1431,7 +1443,7 @@ app.post("/otpGenerate", async (req, res) => {
 app.post("/otpcheck", async (req, res) => {
   const otp = req.body["otp"];
   const email = req.body["email"];
-  console.log(otp, "OTP")
+  console.log(otp, "OTP");
 
   try {
     const otpRecord = await prisma.otpVerification.findFirstOrThrow({
@@ -1440,12 +1452,11 @@ app.post("/otpcheck", async (req, res) => {
         useremail: email,
       },
       orderBy: {
-        expiresAt: 'desc',
+        expiresAt: "desc",
       },
     });
-    console.log(otpRecord)
-    console.log(email, "JKSFJK")
-
+    console.log(otpRecord);
+    console.log(email, "JKSFJK");
 
     if (!otpRecord) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -1458,10 +1469,12 @@ app.post("/otpcheck", async (req, res) => {
     });
     res.json({ message: "Email verified" });
   } catch (e) {
-    res.status(500).json({ error: "An error occurred during OTP verification", details: e.message });
+    res.status(500).json({
+      error: "An error occurred during OTP verification",
+      details: e.message,
+    });
   }
 });
-
 
 app.post("/scores-bot", async (req, res) => {
   try {
