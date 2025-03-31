@@ -18,6 +18,7 @@ const BookingFormStep = ({
   selectedDoctor,
   isAuthenticated,
 }) => {
+
   return (
     <div className="bg-gradient-to-b from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
