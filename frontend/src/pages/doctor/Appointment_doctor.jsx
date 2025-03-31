@@ -11,7 +11,6 @@ import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
 import { toast } from "react-toastify";
-import { format } from "date-fns";
 
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
