@@ -90,7 +90,7 @@ const DoctorAppointment = () => {
 
     var params = {
       doctor: docName,
-      dateTime: appointment.dateTime,
+      dateTime: format(appointment.dateTime, "dd-MMM-yyyy hh:mm a"),
       email: appointment.user.email,
     };
     emailjs
@@ -130,7 +130,7 @@ const DoctorAppointment = () => {
       id: appointment["id"],
       username: appointment["user"]["username"],
       doctor: docName,
-      origTime: appointment["dateTime"],
+      origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
       newTime: time,
       email: appointment["user"]["email"],
     };

@@ -86,7 +86,6 @@ const Navbar = () => {
         if (ref.current && !ref.current.contains(event.target)) {
           setShowNotifications(false);
           setShowDetails(false);
-          setIsOpen(false);
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -97,15 +96,16 @@ const Navbar = () => {
   };
 
   const wrapperRef = useRef(null);
-  const hamburgerRef = useRef(null);
   useOutsideAlerter(wrapperRef);
-  useOutsideAlerter(hamburgerRef);
 
   return (
     <nav
       ref={ref}
       className={`${
-        location === "/peer" || location === "/mood" || location === "/movies"
+        location === "/peer" ||
+        location === "/mood" ||
+        location === "/movies" ||
+        location === "/events"
           ? "bg-transparent"
           : "bg-[var(--custom-orange-100)]"
       }`}
@@ -113,7 +113,9 @@ const Navbar = () => {
       <ToastContainer />
       <div className="px-4 lg:px-8 py-3">
         <div className="flex items-center justify-between">
-          <div className="lg:hidden transition-all flex items-center z-2">
+          <div
+            className="lg:hidden transition-all flex items-center z-2"
+          >
             <button
               onClick={() => {
                 setShowDetails(false);
@@ -129,10 +131,7 @@ const Navbar = () => {
               )}
             </button>
             {isOpen && (
-              <div
-                ref={hamburgerRef}
-                className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4"
-              >
+              <div className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
                     <li

@@ -148,6 +148,37 @@ const SignUp = () => {
       });
       return;
     }
+
+    if (formData.mobile.length !== 10) {
+      setError("Enter a valid phone number");
+      toast("Enter a valid phone number", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+      return;
+    }
+
+    if (formData.altNo.length !== 10) {
+      setError("Enter a valid emergency contact number");
+      toast("Enter a valid emergency contact number", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+      return;
+    }
+
     if (formData.password.length < 8) {
       setError("Password must be atleast 8 characters long");
       toast("Password must be atleast 8 characters long", {
@@ -178,7 +209,7 @@ const SignUp = () => {
     }
 
     const lowerCaseEmail = formData.email.toLowerCase();
-    const [address, domain] = formData.email.split("@");
+    const [address, domain] = lowerCaseEmail.split("@");
 
     if (domain != "iiti.ac.in") {
       setError("Please sign up with your institute email id");
@@ -196,12 +227,10 @@ const SignUp = () => {
     }
 
     let numfound = false;
-    let numIndex = 0;
     let roll = "";
     for (let i = 0; i < address.length; i++) {
       if (address[i] >= "0" && address[i] <= "9") {
         numfound = true;
-        numIndex = i;
         roll += address[i];
       } else if (numfound === true) {
         setError("Please enter a valid email address");
@@ -221,8 +250,6 @@ const SignUp = () => {
       setFormData({ ...formData, rollNo: roll });
     }
 
-    console.log(formData.rollNo);
-
     // Example condition for academic program
     if (lowerCaseEmail.startsWith("phd")) {
       setAcadProg("PHD");
@@ -231,8 +258,6 @@ const SignUp = () => {
     } else {
       setAcadProg("UG");
     }
-
-    console.log(acadProg);
 
     await sendOTP();
   }
