@@ -15,6 +15,7 @@ import {
   FileText,
   ArrowLeft,
   Check,
+  Octagon, // added stop sign icon
 } from "lucide-react";
 
 const Book = () => {
@@ -28,7 +29,6 @@ const Book = () => {
     email: "",
     phone: "",
     note: "",
-    // you can add a preferred date if needed:
     date: "",
   });
 
@@ -40,7 +40,6 @@ const Book = () => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("user");
       setIsAuthenticated(authStatus);
-      console(isAuthenticated);
     };
     verifyAuth();
   }, []);
@@ -59,11 +58,6 @@ const Book = () => {
         toast("Error while fetching data", {
           position: "bottom-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
           className: "custom-toast",
         });
       }
@@ -71,10 +65,16 @@ const Book = () => {
     fetchDoctors();
   }, []);
 
+  // Populate formData fields if authenticated; allow manual input if not authenticated.
   useEffect(() => {
-    formData.name = localStorage.getItem("username");
-    formData.email = localStorage.getItem("user_email");
-    formData.phone = localStorage.getItem("user_mobile");
+    if (isAuthenticated) {
+      setFormData((prev) => ({
+        ...prev,
+        name: localStorage.getItem("username") || "",
+        email: localStorage.getItem("user_email") || "",
+        phone: localStorage.getItem("user_mobile") || "",
+      }));
+    }
   }, [isAuthenticated]);
 
   const handleDoctorSelect = (doctor) => {
@@ -89,7 +89,6 @@ const Book = () => {
   // On form submission, send the booking request to the backend's requests API
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // construct the request payload – you can include doctor details and booking details here
     const payload = {
       doctorId: selectedDoctor.id,
       doctorName: selectedDoctor.name,
@@ -111,18 +110,12 @@ const Book = () => {
       const respData = await res.json();
       console.log(respData);
       // alert("Booking Confirmed!");
-      toast("Booking Confirmed", {
+      toast("Appointment Requested", {
         position: "bottom-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
         className: "custom-toast",
       });
       setStep(1);
-      // Optionally, clear form and selected doctor
       setSelectedDoctor(null);
       setFormData({
         name: "",
@@ -136,11 +129,6 @@ const Book = () => {
       toast("Error while booking appointment", {
         position: "bottom-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
         className: "custom-toast",
       });
     }
@@ -173,6 +161,7 @@ const Book = () => {
             onSubmit={handleSubmit}
             onBack={() => setStep(1)}
             selectedDoctor={selectedDoctor}
+            isAuthenticated={isAuthenticated}
           />
         )}
       </div>
@@ -183,14 +172,13 @@ const Book = () => {
 
 export default Book;
 
-// Step 1: Doctor Selection Component
 const DoctorSelectionStep = ({ doctors, onSelect }) => {
   return (
     <div className="bg-[var(--custom-white)] w-full max-w-[1200px] p-4 md:p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-4 md:mb-8">
         <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
         <h2 className="text-center font-bold text-3xl text-[var(--custom-orange-500)] uppercase">
-          Select a Doctor
+          Select a Doctor / Counsellor
         </h2>
       </div>
 
@@ -199,21 +187,20 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
-              className="bg-[var(--custom-orange-50)] hover:bg-[var(--custom-orange-100)] p-3 md:p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-200)] hover:border-[var(--custom-orange-300)]"
+              className="bg-[var(--custom-orange-50)] hover:bg-[var(--custom-orange-100)] p-3 lg:p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-200)] hover:border-[var(--custom-orange-300)]"
               onClick={() => onSelect(doctor)}
             >
-              <div className="flex items-start gap-2 md:gap-4">
+              <div className="flex items-start gap-2 lg:gap-4 md:flex-col md:justify-center md:items-center lg:flex-row">
                 <div className="bg-[var(--custom-orange-200)] rounded-full p-3 group-hover:bg-[var(--custom-orange-300)] transition-colors duration-300">
                   <User className="w-6 h-6 text-[var(--custom-orange-700)]" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-[var(--custom-orange-800)] group-hover:text-[var(--custom-orange-900)] transition-colors duration-300">
+                  <h3 className="text-xl font-bold text-[var(--custom-orange-800)] transition-colors duration-300">
                     {doctor.name}
                   </h3>
                   <p className="mt-3 text-sm text-[var(--custom-orange-700)] line-clamp-2">
                     {doctor.desc ? doctor.desc : "No description available."}
                   </p>
-
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center gap-2 text-sm text-[var(--custom-orange-700)]">
                       <Phone className="w-4 h-4" />
@@ -251,6 +238,7 @@ const BookingFormStep = ({
   onSubmit,
   onBack,
   selectedDoctor,
+  isAuthenticated,
 }) => {
   return (
     <div className="bg-gradient-to-b from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
@@ -272,43 +260,43 @@ const BookingFormStep = ({
 
       <form onSubmit={onSubmit} className="space-y-6 max-w-3xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {
-            <div className="group">
-              <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
-                <User className="w-4 h-4" />
-                Full Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-lg border-2 ${
-                  formData.name === "" ? "" : "bg-gray-200 cursor-not-allowed"
-                } focus:border-[var(--custom-orange-400)] border-[var(--custom-orange-200)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none`}
-                placeholder="Enter your full name"
-                required
-                disabled={formData.name === "" ? false : true}
-              />
-            </div>
-          }
+          <div className="group">
+            <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
+              <User className="w-4 h-4" />
+              Full Name
+              {isAuthenticated}
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
+              placeholder="Enter your full name"
+              required
+              disabled={isAuthenticated}
+            />
+          </div>
 
           <div className="group">
             <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
               <Mail className="w-4 h-4" />
               Email Address
+              {isAuthenticated}
             </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full ${
-                formData.name === "" ? "" : "bg-gray-200 cursor-not-allowed"
-              } px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="Enter your email"
-              disabled={formData.email === "" ? false : true}
               required
+              disabled={isAuthenticated}
             />
           </div>
 
@@ -316,18 +304,19 @@ const BookingFormStep = ({
             <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
               <Phone className="w-4 h-4" />
               Phone Number
+              {isAuthenticated}
             </label>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 ${
-                formData.phone === "" ? "" : "bg-gray-200 cursor-not-allowed"
-              } focus:border-[var(--custom-orange-400)] border-[var(--custom-orange-200)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="Enter your phone number"
-              disabled={formData.phone === "" ? false : true}
               required
+              disabled={isAuthenticated}
             />
           </div>
 
