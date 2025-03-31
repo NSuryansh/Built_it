@@ -1,15 +1,5 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import React, { useState, useEffect } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { checkAuth } from "../../utils/profile";
@@ -17,13 +7,10 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import { ToastContainer, toast } from "react-toastify";
 
 const AdminDashboard = () => {
-  const [events, setEvents] = useState([]);
-  const [doctors, setDoctors] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [appointmentsUG, setAppointmentsUG] = useState({});
   const [appointmentsPG, setAppointmentsPG] = useState({});
   const [appointmentsPHD, setAppointmentsPHD] = useState({});
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -33,62 +20,35 @@ const AdminDashboard = () => {
     verifyAuth();
   }, []);
 
-  const data = [
-    { name: "Jan", appointments: 65 },
-    { name: "Feb", appointments: 59 },
-    { name: "Mar", appointments: 80 },
-    { name: "Apr", appointments: 81 },
-    { name: "May", appointments: 56 },
-    { name: "Jun", appointments: 55 },
-  ];
-
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const now = new Date();
-        const intervals = { "1": 1, "3": 3, "6": 6, "12": 12 };
         const response = await fetch("http://localhost:3000/pastApp");
         const data = await response.json();
         if (response.ok) {
-          const result = {}
+          const result = {};
           data.forEach((app) => {
-            const branch = app.user.acadProg
-            const date = app.createdAt
-            const docName = app.doc.name
-            // console.log(docName, date, branch)
-            const appDate = new Date(date);
-            const diffMonths = ((now.getFullYear() - appDate.getFullYear()) * 12) + (now.getMonth() - appDate.getMonth());
+            const branch = app.user.acadProg;
+            const docName = app.doc.name;
             if (!result[docName]) {
-              result[docName] = {
-                PhD: { "1": 0, "3": 0, "6": 0, "12": 0 },
-                PG: { "1": 0, "3": 0, "6": 0, "12": 0 },
-                UG: { "1": 0, "3": 0, "6": 0, "12": 0 },
-              };
+              result[docName] = { UG: 0, PG: 0, PhD: 0 };
             }
+            result[docName][branch] += 1;
+          });
+          
+          const ugAppointments = {};
+          const pgAppointments = {};
+          const phdAppointments = {};
 
-            Object.keys(intervals).forEach((key) => {
-              // console.log(diffMonths)
-              if (diffMonths < intervals[key]) {
-                result[docName][branch][key] += 1;
-              }
-            });
+          Object.entries(result).forEach(([doc, counts]) => {
+            ugAppointments[doc] = counts.UG;
+            pgAppointments[doc] = counts.PG;
+            phdAppointments[doc] = counts.PhD;
           });
 
-          const phDAppointments = {};
-          const pgAppointments = {};
-          const ugAppointments = {};
-
-          for (const doc in result) {
-            phDAppointments[doc] = result[doc].PhD;
-            pgAppointments[doc] = result[doc].PG;
-            ugAppointments[doc] = result[doc].UG;
-          }
-
-          setAppointmentsPHD(phDAppointments);
-          setAppointmentsPG(pgAppointments);
           setAppointmentsUG(ugAppointments);
-
-          // console.log("Aggregated Appointments:", result);
+          setAppointmentsPG(pgAppointments);
+          setAppointmentsPHD(phdAppointments);
         } else {
           console.error("Error in fetching appointments: ", data.message);
         }
@@ -101,86 +61,18 @@ const AdminDashboard = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
-          className: "custom-toast",
         });
       }
     };
-
     fetchAppointments();
   }, []);
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await fetch(
-          "https://built-it-xjiq.onrender.com/getdoctors"
-        );
-        const data = await response.json();
-        // console.log(data);
-        setDoctors(data); 
-      } catch (error) {
-        console.error("Error fetching doctors: ", error);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
-      }
-    };
-    fetchDoctors();
-  }, []);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch(
-          "https://built-it-xjiq.onrender.com/events"
-        );
-        const data = await response.json();
-
-        const upcomingEvents = data.filter(
-          (event) => new Date(event.dateTime) > new Date()
-        );
-
-        const formattedEvents = upcomingEvents.map((event) => {
-          const date = new Date(event.dateTime);
-          return {
-            id: event.id,
-            title: event.title,
-            date: date.toLocaleDateString(undefined, {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }),
-            location: event.venue,
-            type: event.description ? "Session/Conference" : "Meeting",
-          };
-        });
-
-        setEvents(formattedEvents);
-      } catch (error) {
-        console.error("Error fetching events", error);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
-      }
-    };
-
-    fetchEvents();
-  }, []);
+  const histogramData = Object.keys(appointmentsUG).map((doc) => ({
+    name: doc,
+    UG: appointmentsUG[doc] || 0,
+    PG: appointmentsPG[doc] || 0,
+    PhD: appointmentsPHD[doc] || 0,
+  }));
 
   if (isAuthenticated === null) {
     return (
@@ -189,10 +81,6 @@ const AdminDashboard = () => {
         <p>Loading...</p>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (
@@ -206,64 +94,21 @@ const AdminDashboard = () => {
 
         <div className="bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
           <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-            Monthly Appointments
+            Appointments per Doctor
           </h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data}>
+              <BarChart data={histogramData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="appointments" fill="#048A81" />
+                <Legend />
+                <Bar dataKey="UG" fill="#048A81" name="UG Appointments" />
+                <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
+                <Bar dataKey="PhD" fill="#FB8500" name="PhD Appointments" />
               </BarChart>
             </ResponsiveContainer>
-          </div>
-        </div>
-        <div className="flex flex-row space-x-8">
-          <div className="w-1/2 bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
-            <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-              Available Doctors
-            </h2>
-            <div className="space-y-4">
-              {doctors.map((doctor) => (
-                <div
-                  key={doctor.id}
-                  className="p-4 bg-[var(--custom-primary-green-50)] rounded-lg"
-                >
-                  <h3 className="font-semibold text-[var(--custom-primary-green-900)]">
-                    {doctor.name}
-                  </h3>
-                  <p className="text-[var(--custom-primary-green-600)]">
-                    Email: {doctor.email}
-                  </p>
-                  <p className="text-[var(--custom-primary-green-600)]">
-                    Mobile: {doctor.mobile}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="w-1/2 bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
-            <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-              Upcoming Events
-            </h2>
-            <div className="space-y-4">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="p-4 bg-[var(--custom-primary-green-50)] rounded-lg"
-                >
-                  <h3 className="font-semibold text-[var(--custom-primary-green-900)]">
-                    {event.title}
-                  </h3>
-                  <p className="text-[var(--custom-primary-green-600)]">
-                    {new Date(event.date).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
