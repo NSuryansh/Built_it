@@ -23,34 +23,27 @@ import SessionExpired from "../../components/SessionExpired";
 const DoctorProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
-    name: "Dr. Sarah Wilson",
-    email: "dr.wilson@medcare.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Medical Center Drive, Suite 200",
-    city: "San Francisco, CA 94105",
-    specialization: "General Medicine",
-    experience: "15 years",
-    education: [
-      "MD - Stanford University School of Medicine",
-      "Residency - UCSF Medical Center",
-      "Board Certified in Internal Medicine",
-    ],
+    name: "<Please change>",
+    email: "<Please change>",
+    phone: "<Please change>",
+    address: "<Please change>",
+    city: "<Please change>",
+    specialization: "<Please change>",
+    experience: "<Please change>",
+    education: ["<Please change>", "<Please change>", "<Please change>"],
     availability: {
-      monday: "9:00 AM - 5:00 PM",
-      tuesday: "9:00 AM - 5:00 PM",
-      wednesday: "9:00 AM - 5:00 PM",
-      thursday: "9:00 AM - 5:00 PM",
-      friday: "9:00 AM - 3:00 PM",
+      monday: "<Please change>",
+      tuesday: "<Please change>",
+      wednesday: "<Please change>",
+      thursday: "<Please change>",
+      friday: "<Please change>",
     },
-    certifications: [
-      "American Board of Internal Medicine",
-      "Advanced Cardiac Life Support",
-      "Basic Life Support",
-    ],
+    certifications: ["<Please change>", "<Please change>", "<Please change>"],
   });
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [editedProfile, setEditedProfile] = useState(profile);
+
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
@@ -58,9 +51,33 @@ const DoctorProfile = () => {
     };
     verifyAuth();
   }, []);
+
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    const email = localStorage.getItem("user_email");
+    const phone = localStorage.getItem("user_mobile");
+    const desc = localStorage.getItem("desc");
+    // const email = localStorage.getItem("user_email");
+    setProfile({
+      ...profile,
+      name: username,
+      email: email,
+      phone: phone,
+      specialization: desc,
+    });
+    setEditedProfile({
+      ...profile,
+      name: username,
+      email: email,
+      phone: phone,
+      specialization: desc,
+    });
+  }, []);
+
   const handleClosePopup = () => {
     navigate("/doctor/login");
   };
+
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">

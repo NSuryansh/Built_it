@@ -89,7 +89,7 @@ const DoctorNavbar = () => {
           </div>
           <div className="flex">
             <img
-              src="/assests/logo.png"
+              src="/assests/logo.svg"
               alt="logo"
               width={25}
               height={25}

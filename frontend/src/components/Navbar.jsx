@@ -47,6 +47,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     if (userType === "user") {
+      res.clearCookie("refreshToken")
       navigate("/login");
     } else if (userType === "doc") {
       navigate("/doctor/login");
@@ -157,7 +158,7 @@ const Navbar = () => {
           </div>
           <div className="flex">
             <img
-              src="/assests/logo.png"
+              src="/assests/logo.svg"
               alt="logo"
               width={25}
               height={25}
