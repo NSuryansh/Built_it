@@ -50,12 +50,12 @@ export default function Mood() {
         body: JSON.stringify({ user_id: localStorage.getItem("userid"), message }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
 
       const data = await response.json();
-
+      console.log(data)
       // Handle both structured and unstructured responses
       const botMessage =
         data.response?.text ||
