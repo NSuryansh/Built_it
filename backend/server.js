@@ -13,8 +13,6 @@ import nodemailer from "nodemailer";
 import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
-import acadCal from "../frontend/src/utils/2nd_yr_onwards_academic_calendar.js";
-import fyAcadCal from "../frontend/src/utils/1st_yr_academic_calendar.js";
 
 const prisma = new PrismaClient();
 const app = express();
