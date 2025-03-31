@@ -20,6 +20,9 @@ const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [appointmentsUG, setAppointmentsUG] = useState({});
+  const [appointmentsPG, setAppointmentsPG] = useState({});
+  const [appointmentsPHD, setAppointmentsPHD] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,12 +43,54 @@ const AdminDashboard = () => {
   ];
 
   useEffect(() => {
-    const fetchAppoinments = async() => {
+    const fetchAppointments = async () => {
       try {
-        // const response = await fetch("http://localhost:3000/")
-        console.log("HELLO")
-      }catch (error) {
-        console.log("Error fetching doctors: ", error);
+        const now = new Date();
+        const intervals = { "1": 1, "3": 3, "6": 6, "12": 12 };
+
+        const response = await fetch("http://localhost:3000/");
+        const data = await response.json();
+        if (data.ok) {
+          const result = {};
+          data.forEach((app) => {
+            const { docName, branch, date } = app;
+            const appDate = new Date(date);
+            const diffMonths = ((now.getFullYear() - appDate.getFullYear()) * 12) + (now.getMonth() - appDate.getMonth());
+            if (!result[docName]) {
+              result[docName] = {
+                PhD: { "1": 0, "3": 0, "6": 0, "12": 0 },
+                PG: { "1": 0, "3": 0, "6": 0, "12": 0 },
+                UG: { "1": 0, "3": 0, "6": 0, "12": 0 },
+              };
+            }
+
+            Object.keys(intervals).forEach((key) => {
+              if (diffMonths < intervals[key]) {
+                result[docName][branch][key] += 1;
+              }
+            });
+          });
+
+          const phDAppointments = {};
+          const pgAppointments = {};
+          const ugAppointments = {};
+
+          for (const doc in result) {
+            phDAppointments[doc] = result[doc].PhD;
+            pgAppointments[doc] = result[doc].PG;
+            ugAppointments[doc] = result[doc].UG;
+          }
+
+          setAppointmentsPHD(phDAppointments);
+          setAppointmentsPG(pgAppointments);
+          setAppointmentsUG(ugAppointments);
+
+          console.log("Aggregated Appointments:", result);
+        } else {
+          console.error("Error in fetching appointments: ", fetchedData.message);
+        }
+      } catch (error) {
+        console.log("Error fetching appointments: ", error);
         toast("Error while fetching data", {
           position: "bottom-right",
           autoClose: 3000,
@@ -56,9 +101,11 @@ const AdminDashboard = () => {
           progress: undefined,
           className: "custom-toast",
         });
-    }
-    }
-  })
+      }
+    };
+
+    fetchAppointments();
+  }, []);
 
   useEffect(() => {
     const fetchDoctors = async () => {
