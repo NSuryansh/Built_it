@@ -33,7 +33,6 @@ const DoctorNavbar = () => {
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
           setShowDetails(false);
-          setIsOpen(false);
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -44,9 +43,7 @@ const DoctorNavbar = () => {
   };
 
   const wrapperRef = useRef(null);
-  const hamburgerRef = useRef(null);
   useOutsideAlerter(wrapperRef);
-  useOutsideAlerter(hamburgerRef);
 
   return (
     <nav className="bg-transperent">
@@ -55,8 +52,8 @@ const DoctorNavbar = () => {
           <div className="md:hidden transition-all flex items-center z-2">
             <button
               onClick={() => {
-                setShowDetails(false);
                 toggleMenu();
+                setShowDetails(false);
               }}
               className="p-2 rounded-full hover:bg-gray-100"
             >
@@ -67,10 +64,7 @@ const DoctorNavbar = () => {
               )}
             </button>
             {isOpen && (
-              <div
-                ref={hamburgerRef}
-                className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4"
-              >
+              <div className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
                     <li
