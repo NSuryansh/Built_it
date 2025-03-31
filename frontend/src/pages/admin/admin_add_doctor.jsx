@@ -72,7 +72,7 @@ const AddDoctor = () => {
   return (
     <div className="bg-[var(--custom-primary-green-50)]">
       <AdminNavbar />
-      <div className="space-y-6 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center h-screen ">
+      <div className="space-y-6 mb-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center min-h-screen ">
         <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-6">
           Add New Doctor
         </h1>
