@@ -34,6 +34,12 @@ const transporter = nodemailer.createTransport({
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 webpush.setVapidDetails(
   "mailto:spython.webd@gmail.com",
   publicVapidKey,
