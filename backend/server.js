@@ -748,7 +748,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => { });
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -952,9 +952,9 @@ app.get("/pastuserappt", async (req, res) => {
     }
     const appt = await prisma.pastAppointments.findMany({
       where: { user_id: userId },
-      include:{
-        doc:true
-      }
+      include: {
+        doc: true,
+      },
     }); // Fetch all appts
     console.log(appt);
     res.json(appt); // Send the appts as a JSON response
@@ -979,9 +979,9 @@ app.get("/currentuserappt", async (req, res) => {
     }
     const appt = await prisma.appointments.findMany({
       where: { user_id: userId },
-      include:{
-        doctor:true
-      }
+      include: {
+        doctor: true,
+      },
     }); // Fetch all appts
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
@@ -1293,12 +1293,12 @@ app.post("/resetAdminPassword", async (req, res) => {
 app.post("/save-subscription", async (req, res) => {
   try {
     const { endpoint, keys } = req.body;
-    console.log(req.body)
+    console.log(req.body);
     // Check if the subscription already exists
     const existingSub = await prisma.subscription.findUnique({
       where: { endpoint },
     });
-    console.log(existingSub)
+    console.log(existingSub);
     if (!existingSub) {
       await prisma.subscription.create({
         data: {
@@ -1354,14 +1354,14 @@ app.post("/send-notification", async (req, res) => {
 
 app.post("/node-chat", async (req, res) => {
   try {
-    console.log("HELOE")
+    console.log("HELOE");
     const { user_id, message } = req.body;
 
     const response = await axios.post("http://localhost:5000/chatWithBot", {
       user_id,
       message,
     });
-    console.log(response.data)
+    console.log(response.data);
 
     res.json(response.data);
   } catch (error) {
@@ -1378,14 +1378,14 @@ app.get("/available-slots", async (req, res) => {
     return res.status(400).json({ error: "Please provide a valid date." });
   }
 
-  const selectedDate = new Date(date + "T00:00:00Z"); 
+  const selectedDate = new Date(date + "T00:00:00Z");
 
   try {
     const bookedSlots = await prisma.appointments.findMany({
       where: {
         doctor_id,
         dateTime: {
-          gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)), 
+          gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)),
           lt: new Date(selectedDate.setUTCHours(23, 59, 59, 999)),
         },
       },
@@ -1396,8 +1396,10 @@ app.get("/available-slots", async (req, res) => {
         doctor_id: doctor_id,
         OR: [
           {
-            date_start: { lte: new Date(selectedDate.setUTCHours(23, 59, 59, 999)) }, 
-            date_end: { gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)) }, 
+            date_start: {
+              lte: new Date(selectedDate.setUTCHours(23, 59, 59, 999)),
+            },
+            date_end: { gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)) },
           },
         ],
       },
@@ -1410,7 +1412,7 @@ app.get("/available-slots", async (req, res) => {
 
     const bookedTimes = bookedSlots.map((b) => {
       const dateObj = new Date(b.dateTime);
-      return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes(); 
+      return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes();
     });
 
     const leavePeriods = doctorLeaves.map((leave) => ({
@@ -1420,16 +1422,22 @@ app.get("/available-slots", async (req, res) => {
 
     availableSlots = availableSlots.filter((slot) => {
       const slotTime = new Date(slot.starting_time);
-      const slotMinutes = slotTime.getUTCHours() * 60 + slotTime.getUTCMinutes(); 
+      const slotMinutes =
+        slotTime.getUTCHours() * 60 + slotTime.getUTCMinutes();
 
       return !bookedTimes.includes(slotMinutes);
     });
 
     availableSlots = availableSlots.filter((slot) => {
-      const slotDateTime = new Date(selectedDate); 
+      const slotDateTime = new Date(selectedDate);
       const slotTime = new Date(slot.starting_time);
 
-      slotDateTime.setUTCHours(slotTime.getUTCHours(), slotTime.getUTCMinutes(), 0, 0);
+      slotDateTime.setUTCHours(
+        slotTime.getUTCHours(),
+        slotTime.getUTCMinutes(),
+        0,
+        0
+      );
       const slotTimestamp = slotDateTime.getTime();
 
       return !leavePeriods.some(
@@ -1443,8 +1451,6 @@ app.get("/available-slots", async (req, res) => {
     res.status(500).json({ error: "Couldn't fetch the slots" });
   }
 });
-
-
 
 // app.get("/available-slots", async (req, res) => {
 //   const { docId } = req.query;
@@ -1572,4 +1578,63 @@ server.listen(3001, () => console.log("Server running on port 3001"));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+});
+
+app.put("/modify-doctor", async (req, res) => {
+  try {
+    const { id, name, email, mobile, desc } = req.body;
+
+    console.log(req.body);
+
+    const doctorId = parseInt(id, 10);
+    if (isNaN(doctorId) || doctorId <= 0) {
+      return res.status(400).json({ error: "Invalid doctor ID" });
+    }
+
+    const orConditions = [];
+    if (name) orConditions.push({ name });
+    if (mobile) orConditions.push({ mobile });
+    if (email) orConditions.push({ email });
+
+    const existingDoctor = orConditions.length
+      ? await prisma.doctor.findFirst({
+          where: { OR: orConditions },
+        })
+      : null;
+
+    if (existingDoctor && existingDoctor.id !== doctorId) {
+      return res
+        .status(400)
+        .json({ error: "Name, mobile, or email is already in use" });
+    }
+
+    const updatedData = {};
+    if (name?.trim()) updatedData.name = name;
+    if (mobile?.trim()) updatedData.mobile = mobile;
+    if (email?.trim()) updatedData.email = email;
+    if (desc?.trim()) updatedData.desc = desc;
+
+    if (Object.keys(updatedData).length === 0) {
+      return res
+        .status(400)
+        .json({ error: "No valid fields provided for update." });
+    }
+
+    try {
+      const updatedDoctor = await prisma.doctor.update({
+        where: { id: doctorId },
+        data: updatedData,
+      });
+
+      res.json({ message: "Doctor updated successfully", updatedDoctor });
+    } catch (error) {
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "Doctor not found" });
+      }
+      throw error;
+    }
+  } catch (error) {
+    console.error("Error updating Doctor: ", error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
+  }
 });

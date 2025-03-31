@@ -16,3 +16,8 @@ user_id,session_id,prompt,timestamp
 10,0742c8ff-9804-43a7-8a81-ce12e666b2ec,hi,CURRENT_TIMESTAMP
 10,d0394cd9-95f3-41d0-8ab2-9ed3d3ca324d,I am sleepy,CURRENT_TIMESTAMP
 10,1042b56b-359a-40c6-be5c-cb9cc1b133bc,Do it,CURRENT_TIMESTAMP
+10,e448efff-41cf-4e12-98d4-d8cb6f2dfa80,hello,CURRENT_TIMESTAMP
+10,becb9ba9-84e2-4cae-9332-2cb83d542566,hii,CURRENT_TIMESTAMP
+10,4ede5318-fcf7-485c-b342-e8b92aa8d8d3,i am feeling very sad,CURRENT_TIMESTAMP
+10,71f14672-7dc2-45a9-9641-0402e961edd5,my girlfriend left me,CURRENT_TIMESTAMP
+10,df2b5818-8b6b-4a71-9c03-580378b56bd0,yes give me suggestions,CURRENT_TIMESTAMP
