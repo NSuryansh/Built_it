@@ -991,6 +991,9 @@ app.get('/pastApp', async (req, res) => {
           gte: oneYear,
           lte: currDate
         }
+      },
+      include:{
+        user:true
       }
     })
     console.log(pastApp)
