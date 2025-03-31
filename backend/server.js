@@ -1335,12 +1335,6 @@ app.post("/send-notification", async (req, res) => {
   }
 });
 
-server.listen(3001, () => console.log("Server running on port 3001"));
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-
 app.post("/node-chat", async (req, res) => {
   try {
     const { user_id, message } = req.body;
@@ -1476,4 +1470,10 @@ app.post("/scores-bot", async (req, res) => {
     console.error("Error calling the Flas API: ", error.message);
     res.status(500).json({ error: error.message });
   }
+});
+
+server.listen(3001, () => console.log("Server running on port 3001"));
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
