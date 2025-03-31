@@ -59,15 +59,13 @@ const SignUp = () => {
           email: formData.email
         })
       });
+      console.log(response)
+      const res = await response.json()
       if (response.ok) {
-        if (response.message === "Email verified") {
-          toast("The user has been added successfully", {
-            position: "bottom-right",
-            autoClose: 3000,
-          });
-          setTimeout(() => {
-            navigate("/login")
-          }, [300])
+        if (res.message === "Email verified") {
+          return true;
+        }else{
+          return false;
         }
       } else {
         console.error("Error sending OTP: ", error)
@@ -143,6 +141,7 @@ const SignUp = () => {
   async function handleOTPVerification() {
     setError("");
     const otpValid = await verifyOTP();
+    console.log(otpValid)
     if (!otpValid) return;
     try {
       const { publicKey, privateKey } = await generateKeyPair();
@@ -151,7 +150,7 @@ const SignUp = () => {
       localStorage.setItem("privateKey", privateKeyPEM);
 
       const { username, email, mobile, password, altNo } = formData;
-      const response = await fetch("https://built-it-xjiq.onrender.com/signup", {
+      const response = await fetch("http://localhost:3000/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
