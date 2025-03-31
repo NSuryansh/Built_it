@@ -56,23 +56,23 @@ const SignUp = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           otp: otp,
-          email: formData.email
-        })
+          email: formData.email,
+        }),
       });
-      console.log(response)
-      const res = await response.json()
+      console.log(response);
+      const res = await response.json();
       if (response.ok) {
         if (res.message === "Email verified") {
           return true;
-        }else{
+        } else {
           return false;
         }
       } else {
-        console.error("Error sending OTP: ", error)
+        console.error("Error sending OTP: ", error);
         setError(data.message || "Failed to send OTP");
       }
     } catch (error) {
-      console.error("Error sending OTP: ", error)
+      console.error("Error sending OTP: ", error);
       setError("Failed to send OTP");
     }
   }
@@ -93,13 +93,17 @@ const SignUp = () => {
 
   async function exportKeyToPEM(key) {
     const exported = await window.crypto.subtle.exportKey("spki", key);
-    const exportedAsBase64 = btoa(String.fromCharCode(...new Uint8Array(exported)));
+    const exportedAsBase64 = btoa(
+      String.fromCharCode(...new Uint8Array(exported))
+    );
     return exportedAsBase64.match(/.{1,64}/g).join("\n");
   }
 
   async function exportPrivateKeyToPEM(privateKey) {
     const exported = await window.crypto.subtle.exportKey("pkcs8", privateKey);
-    const exportedAsBase64 = btoa(String.fromCharCode(...new Uint8Array(exported)));
+    const exportedAsBase64 = btoa(
+      String.fromCharCode(...new Uint8Array(exported))
+    );
     return exportedAsBase64.match(/.{1,64}/g).join("\n");
   }
 
@@ -117,31 +121,104 @@ const SignUp = () => {
       formData.confirmPassword === ""
     ) {
       setError("Please fill the fields");
+      toast("Please fill the fields", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
     if (formData.mobile === formData.altNo) {
       setError("Phone number and Emergency contact number cannot be the same");
+      toast("Phone number and Emergency contact number cannot be the same", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+      return;
+    }
+    if (formData.password.length < 8) {
+      setError("Password must be atleast 8 characters long");
+      toast("Password must be atleast 8 characters long", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      toast("Passwords do not match", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
-    if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters long");
+
+    const lowerCaseEmail = formData.email.toLowerCase();
+    const [roll, domain] = formData.email.split("@");
+
+    if (domain != "iiti.ac.in") {
+      setError("Please sign up with your institute email id");
+      toast("Please sign up with your institute email id", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
+
     // Example condition for academic program
-    if (formData.email[0] === "p") {
-      setAcadProg("phd");
+    if (lowerCaseEmail.startsWith("phd")) {
+      setAcadProg("PHD");
+    } else if (
+      lowerCaseEmail.startsWith("mt") ||
+      lowerCaseEmail.startsWith("ms") ||
+      lowerCaseEmail.startsWith("msc")
+    ) {
+      setAcadProg("PG");
+    } else {
+      setAcadProg("UG");
     }
+
+    console.log(acadProg);
+    console.log(formData.department);
+
+    setError("Something");
+    return;
     await sendOTP();
   }
 
   async function handleOTPVerification() {
     setError("");
     const otpValid = await verifyOTP();
-    console.log(otpValid)
+    console.log(otpValid);
     if (!otpValid) return;
     try {
       const { publicKey, privateKey } = await generateKeyPair();
@@ -243,16 +320,47 @@ const SignUp = () => {
                 >
                   Department
                 </label>
-                <input
+                <select
                   id="department"
-                  type="text"
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
-                  placeholder="Department"
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent bg-white"
                   required
-                />
+                >
+                  <option value="">Select a department</option>
+                  <option value="Astronomy, Astrophysics and Space Engineering">
+                    Astronomy, Astrophysics and Space Engineering
+                  </option>
+                  <option value="Biosciences and Biomedical Engineering">
+                    Biosciences and Biomedical Engineering
+                  </option>
+                  <option value="Chemical Engineering">
+                    Chemical Engineering
+                  </option>
+                  <option value="Chemistry">Chemistry</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Computer Science and Engineering">
+                    Computer Science and Engineering
+                  </option>
+                  <option value="Electrical Engineering">
+                    Electrical Engineering
+                  </option>
+                  <option value="Humanities and Social Sciences">
+                    Humanities and Social Sciences
+                  </option>
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="Mechanical Engineering">
+                    Mechanical Engineering
+                  </option>
+                  <option value="Metallurgical Engineering and Materials Science">
+                    Metallurgical Engineering and Materials Science
+                  </option>
+                  <option value="Physics">Physics</option>
+                  <option value="School of Innovation">
+                    School of Innovation
+                  </option>
+                </select>
               </div>
 
               <div>
@@ -344,7 +452,11 @@ const SignUp = () => {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[var(--custom-orange-900)]"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showConfirmPassword ? (
+                      <EyeOff size={20} />
+                    ) : (
+                      <Eye size={20} />
+                    )}
                   </button>
                 </div>
               </div>
