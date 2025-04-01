@@ -69,18 +69,13 @@ const send_message_to_sw = (msg) =>
   }
 );
 
-document.body.addEventListener(
-  "click"
-  ,()=>
-    send_message_to_sw(
-      {
-        action:"delete"
-        ,cache:/^v1$/
-        ,url:/.*bundle.js$/
-      }
-    )
-    .then(
-      (msg)=>
-        console.log("deleted:",msg)
-    )
-);
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.addEventListener("click", () => {
+    send_message_to_sw({
+      action: "delete",
+      cache: /^v1$/,
+      url: /.*bundle.js$/
+    })
+    .then((msg) => console.log("deleted:", msg));
+  });
+});
