@@ -11,7 +11,7 @@ import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
-import { AiFillCloseCircle, AiOutlineCloseCircle } from "react-icons/ai";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
 
 const Peer = () => {
@@ -144,9 +144,9 @@ const Peer = () => {
   // Initialize WebSocket connection
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3001",{
+    socketRef.current = io("https://built-it-xjiq.onrender.com/",{
       transports: ["websocket"]
-    });
+    })
     socketRef.current.on("connect", () => {
       console.log("Connected to WebSocket server");
       socketRef.current.emit("register", { userId });

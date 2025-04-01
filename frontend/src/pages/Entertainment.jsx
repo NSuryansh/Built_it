@@ -271,7 +271,7 @@ import Navbar from "../components/Navbar";
 const movies = [
   {
     title: "The Greatest Showman",
-    image: "https://m.media-amazon.com/images/I/81cJ8sO7HPL.AC_SY679.jpg",
+    image: "https://m.media-amazon.com/images/I/71xBLRBYOiL.AC_SY679.jpg",
     link: "https://www.google.com/search?q=inside+out+movie",
     category: "Feel Good"
   },

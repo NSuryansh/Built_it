@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ProgressPage from "../components/ProgressPage";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
@@ -21,6 +21,15 @@ export default function Mood() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chats]);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -47,7 +56,10 @@ export default function Mood() {
       const response = await fetch("http://localhost:3000/node-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: localStorage.getItem("userid"), message }),
+        body: JSON.stringify({
+          user_id: localStorage.getItem("userid"),
+          message,
+        }),
       });
 
       // if (!response.ok) {
@@ -55,7 +67,7 @@ export default function Mood() {
       // }
 
       const data = await response.json();
-      console.log(data)
+      console.log(data);
       // Handle both structured and unstructured responses
       const botMessage =
         data.response?.text ||
@@ -115,7 +127,7 @@ export default function Mood() {
               Calm Bot
             </h2>
           </div>
-          <div className="flex-1 overflow-y-auto p-4 bg-[var(--mp-custom-white)]">
+          <div className="flex-1 overflow-y-auto flex flex-col p-4 bg-[var(--mp-custom-white)]">
             {chats.map((msg, index) => (
               <ChatMessage
                 message={msg.message}
@@ -133,6 +145,7 @@ export default function Mood() {
                 />
               </div>
             )}
+            <div className="h-1" ref={messagesEndRef} />
           </div>
           <ChatInput
             message={message}
