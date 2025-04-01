@@ -8,47 +8,47 @@ datasource db {
 }
 
 model User {
-  id               Int                @id @default(autoincrement())
-  username         String             @unique
-  mobile           String             @unique
-  email            String             @unique
+  id               Int                  @id @default(autoincrement())
+  username         String               @unique
+  mobile           String               @unique
+  email            String               @unique
   password         String
   alt_mobile       String
   publicKey        String
-  rollNo           Int                @unique
+  rollNo           Int                  @unique
   department       String
   acadProg         String
-  receivedMessages Message[]          @relation("ReceivedMessages")
-  sentMessages     Message[]          @relation("SentMessages")
+  receivedMessages Message[]            @relation("ReceivedMessages")
+  sentMessages     Message[]            @relation("SentMessages")
   appointment      Appointments[]
   feelings         feelings?
-  invite           Notifications[]    @relation("ChatInvite")
-  notif            Notifications[]    @relation("User")
+  invite           Notifications[]      @relation("ChatInvite")
+  notif            Notifications[]      @relation("User")
   pastApp          PastAppointments[]
   request          Requests[]
-  resetTokens PasswordResetToken[]
-  // otpverifs otpVerification[]
-  chatbot Chatbot[]
+  resetTokens      PasswordResetToken[]
+  chatbot          Chatbot[]
 
   @@map("user")
 }
 
 model PasswordResetToken {
-  @@map("passwordResetToken")
   id        Int      @id @default(autoincrement())
   token     String   @unique
   expiresAt DateTime
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+
+  @@map("passwordResetToken")
 }
 
 model otpVerification {
-  @@map("otpverif")
   id        Int      @id @default(autoincrement())
-  token     Int   
+  token     Int
   expiresAt DateTime
-  useremail    String
-  // user      User     @relation(fields: [useremail], references: [id])
+  useremail String
+
+  @@map("otpverif")
 }
 
 model Doctor {
@@ -63,8 +63,10 @@ model Doctor {
   docApp   Appointments[]
   pastApp  PastAppointments[]
   request  Requests[]
-  slot Slots[]
-  leave DoctorLeave[]
+  slot     Slots[]
+  leave    DoctorLeave[]
+  emerApp  EmergencyApp[]
+
   // bookings Booked[]
   @@map("doctor")
 }
@@ -121,7 +123,7 @@ model Appointments {
   reason    String?
   doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  // bookings Booked[]
+
   @@map("appointments")
 }
 
@@ -171,58 +173,61 @@ model feelings {
   user              User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model PastEvents{
-  @@map("pastEvents")
-  id          Int @id @default(autoincrement())
+model PastEvents {
+  id          Int      @id @default(autoincrement())
   title       String
   description String?
   dateTime    DateTime
   venue       String
+
+  @@map("pastEvents")
 }
 
-
 model Slots {
-   @@map("slots")
-  id       Int      @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   doctor_id     Int
   doctor        Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   starting_time DateTime @db.Time()
- }
 
-model DoctorLeave {
-  @@map("doctor_leave")
- id Int @id @default(autoincrement())
-  doctor_id Int
-  doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete:Cascade)
-  date_start DateTime
-  date_end DateTime
+  @@map("slots")
 }
 
-// model Booked {
-//   @@map("booked")
-//   id Int @id @default(autoincrement())
-//   doctor_id Int 
-//   doctor Doctor @relation(fields:[doctor_id], references:[id], onDelete:Cascade)
-//   starting_time DateTime
-//   apt_id Int
-//   appointments Appointments @relation(fields:[apt_id], references:[id], onDelete:Cascade)
+model DoctorLeave {
+  id         Int      @id @default(autoincrement())
+  doctor_id  Int
+  doctor     Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  date_start DateTime
+  date_end   DateTime
 
-// }
+  @@map("doctor_leave")
+}
 
 model Chatbot {
+  id      Int      @id @default(autoincrement())
+  user_id Int
+  user    User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  isBot   Boolean  @default(false)
+  message String
+  sentAt  DateTime @default(now())
+
   @@map("chatbot")
-  id        Int      @id @default(autoincrement())
-  user_id   Int
-  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  isBot     Boolean  @default(false) 
-  message   String
-  sentAt DateTime @default(now())
 }
 
 model Subscription {
-  id        String @id @default(uuid())  // Unique ID
-  endpoint  String @unique               // Unique push endpoint
-  authKey   String                        // Authentication key
-  p256dhKey String                        // Public encryption key
-  createdAt DateTime @default(now())      // Timestamp
+  id        String   @id @default(uuid())
+  endpoint  String   @unique
+  authKey   String
+  p256dhKey String
+  createdAt DateTime @default(now())
+}
+
+model EmergencyApp {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String
+  dateTime  DateTime
+  reason    String
+  doctor_id Int
+  doctor    Doctor   @relation(fields: [doctor_id], references: [id])
 }
