@@ -105,10 +105,11 @@ def analyze_mental_health(messages: List[str], student_id: str = "STUDENT_DEFAUL
     api_key = "AIzaSyA14oa8vKeVWZsYAyRpel8sGOAp4bo9MaY"
     if not api_key:
         raise ValueError("Google API Key must be provided")
-    
+    print("LLM")
     llm = ChatGoogleGenerativeAI(google_api_key=api_key, model="gemini-2.0-flash")
+    print("PARSER")
     output_parser = PydanticOutputParser(pydantic_object=MentalHealthMetrics)
-    
+    print("PROMPT")
     prompt = PromptTemplate(
     template="""Analyze the following chat conversation from a student.
 
@@ -219,13 +220,16 @@ def analyze_user():
     try:
         # Load and filter CSV data
         data = pd.read_csv('tmp/memory.csv')
-        user_data = data[data['user_id'] == int(user_id)]
+        # Compare user_id as string instead of converting to int
+        user_data = data[data['user_id'] == user_id]
         print(user_data)
         if user_data.empty:
             return jsonify({"error": "User not found"}), 404
             
         # Get prompts and calculate metrics
         prompts = user_data['prompt'].tolist()
+        
+        print("HELEoooo")
         result = analyze_mental_health(prompts, user_id)
         
         return jsonify(result['metrics_json'])
