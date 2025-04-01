@@ -71,6 +71,10 @@ def create_mental_agent(user_id: str, session_id: str = None) -> Agent:
             manager=MemoryManager(model=Groq(id="llama-3.3-70b-versatile"), user_id=user_id),
         ),
         storage=agent_storage,
+        instructions=["You are a helpful mental health assistant for engineering students. Keep your responses concise and to the point." 
+    "Limit your responses to 2-3 short sentences whenever possible. Focus on practical advice and avoid lengthy explanations."
+    "Only provide detailed information when explicitly requested."     
+        ], 
         description="AI psychiatrist for engineering students",
         knowledge=JSONKnowledgeBase(
             path="mental-health-data.json",
@@ -106,7 +110,7 @@ def analyze_mental_health(messages: List[str], student_id: str = "STUDENT_DEFAUL
     output_parser = PydanticOutputParser(pydantic_object=MentalHealthMetrics)
     
     prompt = PromptTemplate(
-        template="""Analyze the following chat conversation from a student.
+    template="""Analyze the following chat conversation from a student.
 
 Student ID: {student_id}
 
@@ -117,20 +121,23 @@ Provide ONLY numerical scores following these strict guidelines:
 1. Mental Health Score: 0-10 scale 
    - 0: Extremely poor mental health
    - 10: Excellent mental health
+   - 11: Insufficient data to determine a score
 2. Stress Score: 0-10 scale
    - 0: No stress at all
    - 10: Extremely high stress
+   - 11: Insufficient data to determine a score
 3. Academic Performance Score: 0-10 scale
    - 0: Critically poor academic performance
    - 10: Exceptional academic performance
+   - 11: Insufficient data to determine a score
 4. Sleep Quality Score: 0-10 scale
    - 0: Extremely poor sleep (insomnia, constant interruptions)
    - 10: Perfect, restorative sleep with ideal duration and quality
+   - 11: Insufficient data to determine a score
 
 {format_instructions}
 
-IMPORTANT: Ensure scores are precise and based on the entire conversation context, paying special attention to any mentions of sleep, rest, tiredness, or energy levels.
-""",
+IMPORTANT: Ensure scores are precise and based on the entire conversation context, paying special attention to any mentions of sleep, rest, tiredness, or energy levels. If there is not enough data to confidently determine a score for any category, return 11 instead.""",
         input_variables=["student_id", "chat_history"],
         partial_variables={
             "format_instructions": output_parser.get_format_instructions()
@@ -188,7 +195,7 @@ def chat_handler():
         data = request.get_json()
         user_id = data.get("user_id", "default_user")
         message = data["message"]
-        
+        message=message+"Reply in 2-3 sentences only and avoid lengthy explanations. Provide detailed information only when explicitly requested."
         agent = create_mental_agent(user_id)
         response = agent.run(message=message, markdown=True)
         

@@ -144,9 +144,6 @@ const Peer = () => {
   // Initialize WebSocket connection
   useEffect(() => {
     if (!userId) return;
-    // socketRef.current = io("wss://built-it-xjiq.onrender.com",{
-    //   transports: ["websocket"]
-    // });
     socketRef.current = io("https://built-it-xjiq.onrender.com/",{
       transports: ["websocket"]
     })
