@@ -1575,11 +1575,11 @@ app.post("/scores-bot", async (req, res) => {
   }
 });
 
-server.listen(3001, () => console.log("Server running on port 3001"));
+server.listen(3000, () => console.log("Server running on port 3000"));
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server running on port ${port}`);
+// });
 
 app.put("/modify-doctor", async (req, res) => {
   try {
