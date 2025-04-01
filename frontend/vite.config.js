@@ -25,8 +25,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       // strategies: 'injectManifest',
-      srcDir: 'public',
-      filename: 'sw.js',
+      // srcDir: 'public',
+      // filename: 'sw.js',
     })
   ],
 })
