@@ -29,7 +29,7 @@ const AdminDashboard = () => {
           const result = {};
           data.forEach((app) => {
             const branch = app.user.acadProg;
-            const docName = app.doc.name;
+            const docName = app.doc.name.split(" ")[0];
             if (!result[docName]) {
               result[docName] = { UG: 0, PG: 0, PhD: 0 };
             }
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
           Dashboard Overview
         </h1>
 
-        <div className="bg-[var(--custom-white)] p-6 rounded-xl shadow-lg">
+        <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg">
           <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
             Appointments per Doctor
           </h2>
