@@ -9,6 +9,7 @@ import {
   User,
   Calendar,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const BookingFormStep = ({
   formData,
@@ -18,6 +19,37 @@ const BookingFormStep = ({
   selectedDoctor,
   isAuthenticated,
 }) => {
+  const [slots, setAvailableSlots] = useState([])
+  const [date, setSelectedDate] = useState("")
+  const [time, setSelectedTime] = useState("")
+  const fetchAvailableSlots = async (date) => {
+    try {
+      const doctorId = selectedDoctor.id
+      const response = await fetch(`http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`);
+      const data = await response.json();
+      console.log(data)
+      setAvailableSlots(data.availableSlots);
+    } catch (error) {
+      console.error('Error fetching available slots:', error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(slots)
+  }, [slots])
+  
+
+  const handleDateChange = (event) => {
+    const date = event.target.value;
+    setSelectedDate(date);
+    setSelectedTime('');
+    fetchAvailableSlots(date);
+  };
+
+  const handleTimeChange = (event) => {
+    setSelectedTime(event.target.value);
+  };
+
   return (
     <div className="bg-gradient-to-b from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
@@ -49,9 +81,8 @@ const BookingFormStep = ({
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               placeholder="Enter your full name"
               required
               disabled={isAuthenticated}
@@ -69,9 +100,8 @@ const BookingFormStep = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               placeholder="Enter your email"
               required
               disabled={isAuthenticated}
@@ -89,9 +119,8 @@ const BookingFormStep = ({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               placeholder="Enter your phone number"
               required
               disabled={isAuthenticated}
@@ -138,7 +167,8 @@ const BookingFormStep = ({
                         name: "date",
                         value: `${newDate}T${currentTime}`,
                       },
-                    });
+                    })
+                    fetchAvailableSlots(newDate);
                   }}
                   className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-white"
                   required
@@ -173,7 +203,7 @@ const BookingFormStep = ({
                     handleChange({
                       target: {
                         name: "date",
-                        value: `${currentDate}T${e.target.value}`,
+                        value: `${currentDate}T${e.target.value}:00`,
                       },
                     });
                   }}
@@ -181,15 +211,11 @@ const BookingFormStep = ({
                   required
                 >
                   <option value="">Select Time</option>
-                  {[...Array(9)].map((_, index) => {
-                    const hour = index + 9; // Starting from 9 AM
-                    const time = `${hour.toString().padStart(2, "0")}:00`;
-                    return (
-                      <option key={time} value={time}>
-                        {hour > 12 ? `${hour - 12}:00 PM` : `${hour}:00 AM`}
-                      </option>
-                    );
-                  })}
+                  {Array.isArray(slots) && slots.map((slot) => (
+                    <option key={slot.id} value={slot.starting_time}>
+                      {slot.starting_time.split("T")[1].slice(0, 5)}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

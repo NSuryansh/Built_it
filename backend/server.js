@@ -46,7 +46,11 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173","https://built-it.vercel.app"], // Change this to your frontend URL in production
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
+}));
 const io = new Server(server, {
   cors: { origin: "https://built-it-xjiq.onrender.com", methods: ["GET", "POST"], credentials: true },
   transports: ["websocket", "polling"],
@@ -1581,12 +1585,6 @@ app.post("/scores-bot", async (req, res) => {
   }
 });
 
-server.listen(3000, () => console.log("Server running on port 3000"));
-
-// app.listen(port, () => {
-//   console.log(`Server running on port ${port}`);
-// });
-
 app.put("/modify-doctor", async (req, res) => {
   try {
     const { id, name, email, mobile, desc } = req.body;
@@ -1645,3 +1643,5 @@ app.put("/modify-doctor", async (req, res) => {
     res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 });
+
+server.listen(3000, () => console.log("Server running on port 3000"));
