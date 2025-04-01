@@ -14,12 +14,63 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Calendar = ({ onDateSelect }) => {
+const DoctorCalendar = ({ onDateSelect }) => {
+  const [appointments, setAppointments] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [pastEvents, setPastEvents] = useState([]); // List for past event dates
   const [futureEvents, setFutureEvents] = useState([]); // List for future event dates
   const navigate = useNavigate();
+
+    useEffect(() => {
+      const docId = localStorage.getItem("userid");
+      console.log(docId);
+      if (!docId) return;
+  
+      const fetchAppointments = async () => {
+        try {
+          const response = await fetch(
+            `https://built-it-xjiq.onrender.com/currentdocappt?doctorId=${docId}`
+          );
+          const data = await response.json();
+  
+          const formattedAppointments = data.map((appt) => {
+            const dateObj = new Date(appt.dateTime);
+            return {
+              id: appt.id,
+              patientName: `User ${appt.user_id}`,
+              time: dateObj.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+              date: dateObj.toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+              type: appt.reason,
+            };
+          });
+  
+          setAppointments(formattedAppointments);
+        } catch (error) {
+          console.error("Error fetching appointments", error);
+          toast("Error while fetching data", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            className: "custom-toast",
+          });
+        }
+      };
+  
+      fetchAppointments();
+    }, [isAuthenticated]);
 
   const sendLink = (rollNo) => {
     // console.log(currentMonth);
@@ -153,7 +204,7 @@ const Calendar = ({ onDateSelect }) => {
                 onClick={() => {
                   setSelectedDate(dayItem);
                   if (isPastEvent || isFutureEvent) {
-                    navigate("/events");
+                    navigate("/doctor/appointments");
                   }
                   onDateSelect && onDateSelect(dayItem);
                 }}
@@ -170,23 +221,23 @@ const Calendar = ({ onDateSelect }) => {
         <div className="mt-6 flex gap-4 justify-center text-sm">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <span className="text-gray-600">Past Events</span>
+            <span className="text-gray-600">Past Appointments</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-            <span className="text-gray-600">Future Events</span>
+            <span className="text-gray-600">Future Appointments</span>
           </div>
         </div>
 
-        <a href={linkAcadCalender} target="_blank">
+        {/* <a href={linkAcadCalender} target="_blank">
           <div className="flex gap-2 w-[100%] justify-center mx-auto mt-3 items-center">
             <Link size={15}/>
             <div className="text-sm text-gray-600">Academic Calender</div>
           </div>
-        </a>
+        </a> */}
       </div>
     </div>
   );
 };
 
-export default Calendar;
+export default DoctorCalendar;

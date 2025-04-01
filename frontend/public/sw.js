@@ -1,1 +1,10 @@
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.5.3/workbox-sw.js");self.addEventListener("push",o=>{console.log(o);const s=o.data.json();self.registration.showNotification(s.title,{body:s.body,icon:"../assets/final-image.png"})});workbox.precaching.precacheAndRoute([{"revision":null,"url":"assets/index-7FMitsiv.js"},{"revision":null,"url":"assets/index-BVYRHdX9.css"},{"revision":"98ba0d0e4934720e80766926f3ddd362","url":"index.html"},{"revision":"c87bc09bc8c553cdc65803fe4889304c","url":"registerSW.js"},{"revision":"0ea228e7df59c6bb040fe1825d955a7e","url":"sw.js"},{"revision":"9c5a53f066e90c55aef0f05e3e29b9ea","url":"workbox-e3490c72.js"},{"revision":"46f628c0debc48c8542baf45117e07eb","url":"manifest.webmanifest"}]||[]);
+if(!self.define){let e,s={};const i=(i,n)=>(i=new URL(i+".js",n).href,s[i]||new Promise((s=>{if("document"in self){const e=document.createElement("script");e.src=i,e.onload=s,document.head.appendChild(e)}else e=i,importScripts(i),s()})).then((()=>{let e=s[i];if(!e)throw new Error(`Module ${i} didn’t register its module`);return e})));self.define=(n,r)=>{const t=e||("document"in self?document.currentScript.src:"")||location.href;if(s[t])return;let o={};const l=e=>i(e,t),c={module:{uri:t},exports:o,require:l};s[t]=Promise.all(n.map((e=>c[e]||l(e)))).then((e=>(r(...e),o)))}}define(["./workbox-e3490c72"],(function(e){"use strict";self.addEventListener("message",(e=>{e.data&&"SKIP_WAITING"===e.data.type&&self.skipWaiting()})),e.precacheAndRoute([{url:"assets/index-BVYRHdX9.css",revision:null},{url:"assets/index-DnmjN0GB.js",revision:null},{url:"index.html",revision:"37aaa139c5b6ac53704409553c7add30"},{url:"registerSW.js",revision:"1872c500de691dce40960bb85481de07"},{url:"manifest.webmanifest",revision:"46f628c0debc48c8542baf45117e07eb"}],{}),e.cleanupOutdatedCaches(),e.registerRoute(new e.NavigationRoute(e.createHandlerBoundToURL("index.html")))}));
+
+self.addEventListener("push", (event) => {
+    console.log(event)
+    const data = event.data.json();
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "../assets/final-image.png",
+    });
+  });

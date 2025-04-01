@@ -44,15 +44,15 @@ export default function App() {
   const convertedVapidKey = urlBase64ToUint8Array(SERVER_KEY);
 
   const subscribeToPush = async () => {
-    // console.log(SERVER_KEY);
-    // console.log(import.meta.env);
+    console.log(SERVER_KEY);
+    console.log(import.meta.env);
     console.log(convertedVapidKey)
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: convertedVapidKey,
     });
-    // console.log("Push Subscription:", JSON.stringify(subscription));
+    console.log("Push Subscription:", JSON.stringify(subscription));
 
     // saveSubscription(subscription)
     const res = await fetch("https://built-it-xjiq.onrender.com/save-subscription", {
@@ -63,7 +63,7 @@ export default function App() {
 
     const resp = await res.json();
 
-    console.log(resp)
+    // console.log(resp)
     // console.log(resp);
 
     // const res2 = await fetch("http://localhost:3000/send-notification", {
@@ -85,9 +85,9 @@ export default function App() {
     ) {
       const permission = await Notification.requestPermission();
       if (permission === "granted") {
-        // console.log("Notification permission granted.");
+        console.log("Notification permission granted.");
       } else {
-        // console.log("Notification permission denied.");
+        console.log("Notification permission denied.");
       }
     }
     subscribeToPush();
