@@ -47,8 +47,9 @@ const ProgressPage = ({ isLandingPage }) => {
   const calculateHappinessScore = () => {
     const scoreValues = Object.values(scores);
     if (scoreValues.length === 0) return 0;
-    const total = scoreValues.reduce((sum, value) => sum + value, 0);
-    return Math.round(total / scoreValues.length);
+    const filteredScores = scoreValues.filter(score => score !== 11);
+    const total = filteredScores.reduce((sum, value) => sum + value, 0);
+    return Math.round(total / filteredScores.length);
   };
 
   return (
