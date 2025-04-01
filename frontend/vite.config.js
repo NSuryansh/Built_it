@@ -6,22 +6,27 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    react(), 
+    react(),
     tailwindcss(),
     VitePWA({
-      manifest:{
-        icons:[
+      manifest: {
+        icons: [
           {
-            src:"https://res.cloudinary.com/dt7a9meug/image/upload/v1743195011/final-image_yopbua.png",
-            sizes:"144x144",
-            type:"image/png",
+            src: "https://res.cloudinary.com/dt7a9meug/image/upload/v1743195011/final-image_yopbua.png",
+            sizes: "144x144",
+            type: "image/png",
             // purpose:"any maskable"
           }
         ],
-        theme_color:"#ffffff",
-        name:"Vitality",
-        short_name:"Vitality"
-      }
+        theme_color: "#ffffff",
+        name: "Vitality",
+        short_name: "Vitality"
+      },
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'service-worker.js',
     })
   ],
 })
