@@ -221,7 +221,7 @@ def analyze_user():
         # Load and filter CSV data
         data = pd.read_csv('tmp/memory.csv')
         print(data, "dara")
-        user_data = data[data['user_id'] == userid]
+        user_data = data[data['user_id'] == user_id]
         print(user_data, "AEEE HALLLLLo")
         if user_data.empty:
             return jsonify({"error": "User not found"}), 404
