@@ -46,6 +46,7 @@ export default function App() {
   const subscribeToPush = async () => {
     // console.log(SERVER_KEY);
     // console.log(import.meta.env);
+    console.log(convertedVapidKey)
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
