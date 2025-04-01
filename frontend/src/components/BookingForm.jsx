@@ -47,7 +47,7 @@ const BookingFormStep = ({
   };
 
   const handleTimeChange = (event) => {
-    setSelectedTime(event.target.value.split("T")[1]);
+    setSelectedTime(event.target.value);
   };
 
   return (
@@ -180,10 +180,9 @@ const BookingFormStep = ({
               <div>
                 <select
                   name="time"
-                  value={formData.date.split("T")[1]}
+                  value={time}
                   onChange={(e) => {
                     const currentDate = formData.date.split("T")[0];
-                    console.log(formData.date.split("T")[1])
                     handleChange({
                       target: {
                         name: "date",
@@ -193,7 +192,6 @@ const BookingFormStep = ({
                     handleTimeChange(e);
                   }}
                   className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-white"
-                  required
                 >
                   <option value="">Select Time</option>
                   {Array.isArray(slots) &&

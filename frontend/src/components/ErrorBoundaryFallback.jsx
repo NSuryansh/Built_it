@@ -1,6 +1,5 @@
 import React from "react";
 import { AlertOctagon, RefreshCw } from "lucide-react";
-import { useLocation } from "react-router-dom";
 import Dinogame from "../pages/dino";
 
 const ErrorBoundaryFallback = () => {
@@ -22,7 +21,7 @@ const ErrorBoundaryFallback = () => {
             While we fix this, why not try the classic Chrome dinosaur game? Press spacebar to jump!
           </p>
           <button
-            onClick={() => useLocation.reload()}
+            onClick={() => window.location.reload()}
             className="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
           >
             <RefreshCw className="w-4 h-4 mr-2" />

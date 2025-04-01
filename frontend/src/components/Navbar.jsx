@@ -231,7 +231,7 @@ const Navbar = () => {
                         </div>
 
                         <div className="text-sm text-[var(--custom-orange-800)]">
-                          <p>Alt Phone Number</p>
+                          <p>Emergency Contact Number</p>
                           <p className="font-medium">{altPhoneNumber}</p>
                         </div>
                       </div>
