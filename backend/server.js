@@ -34,9 +34,12 @@ const transporter = nodemailer.createTransport({
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 
@@ -46,13 +49,19 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-app.use(cors({
-  origin: ["http://localhost:5173","https://built-it.vercel.app"], // Change this to your frontend URL in production
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://built-it.vercel.app"], // Change this to your frontend URL in production
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
 const io = new Server(server, {
-  cors: { origin: "https://built-it-xjiq.onrender.com", methods: ["GET", "POST"], credentials: true },
+  cors: {
+    origin: "https://built-it-xjiq.onrender.com",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
   transports: ["websocket", "polling"],
 });
 
@@ -1432,7 +1441,7 @@ app.get("/available-slots", async (req, res) => {
       return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes();
     });
 
-    console.log(bookedSlots)
+    console.log(bookedSlots);
 
     const leavePeriods = doctorLeaves.map((leave) => ({
       start: new Date(leave.date_start).getTime(),
@@ -1463,7 +1472,7 @@ app.get("/available-slots", async (req, res) => {
         (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end
       );
     });
-    console.log(availableSlots)
+    console.log(availableSlots);
     res.json({ availableSlots });
   } catch (error) {
     console.error(error);
@@ -1471,19 +1480,19 @@ app.get("/available-slots", async (req, res) => {
   }
 });
 
-app.get('/check-user', async(req,res)=>{
-  const {username} = req.query
+app.get("/check-user", async (req, res) => {
+  const { username } = req.query;
   const user = await prisma.user.findUnique({
     where: {
-      username: username
-    }
-  })
-  if(user){
-    res.json({message: "Username already exists!"})
-  }else{
-    res.json({message: "No such username"})
+      username: username,
+    },
+  });
+  if (user) {
+    res.json({ message: "Username already exists!" });
+  } else {
+    res.json({ message: "No such username" });
   }
-})
+});
 
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
@@ -1625,37 +1634,62 @@ app.put("/modify-doctor", async (req, res) => {
   }
 });
 
-app.post('/emerApp', async(req,res)=>{
-  const {name, email, phone, dateTime, reason, docId} = req.body
+app.post("/emerApp", async (req, res) => {
+  const { name, email, phone, dateTime, reason, docId } = req.body;
   const user = await prisma.user.findUnique({
     where: {
-      email: email
-    }
-  })
-  if(user){
+      email: email,
+    },
+  });
+  if (user) {
     const app = await prisma.appointments.create({
-      data:{
+      data: {
         user_id: user.id,
         doctor_id: Number(docId),
         dateTime: new Date(dateTime),
-        reason: reason
-      }
-    })
-    res.json(app)
-  }else{
+        reason: reason,
+      },
+    });
+    res.json(app);
+  } else {
     const app = await prisma.emergencyApp.create({
-      data:{
+      data: {
         name: name,
         email: email,
         phone: phone,
         dateTime: new Date(dateTime),
         reason: reason,
-        doctor_id: Number(docId)
-      }
-    })
-    console.log(app)
-    res.json(app)
+        doctor_id: Number(docId),
+      },
+    });
+    console.log(app);
+    res.json(app);
   }
-})
+});
 
 server.listen(3000, () => console.log("Server running on port 3000"));
+
+app.post("/add-slot", async (req, res) => {
+  const doctorId = req.body["doctorId"];
+  const startTime = req.body["startTime"];
+  console.log(req.body);
+  try {
+    // Check if doctor exists
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    const newSlot = await prisma.slots.create({
+      data: {
+        doctor_id: doctorId,
+        starting_time: startTime,
+      },
+    });
+
+    res.json({ message: "Slot Added Successfully", newSlot });
+  } catch (error) {
+    console.error(error);
+    res.json({ message: "Internal Server Error" });
+  }
+});
