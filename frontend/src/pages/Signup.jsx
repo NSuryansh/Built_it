@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
+import { checkAuth } from "../utils/profile";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -23,6 +25,29 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const userAuthStatus = await checkAuth("user");
+      if (userAuthStatus) {
+        setIsAuthenticated(userAuthStatus);
+        navigate("/dashboard");
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+    verifyAuth();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });

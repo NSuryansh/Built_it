@@ -58,10 +58,8 @@ const DoctorProfile = () => {
     const city = localStorage.getItem("city");
     const certification = localStorage.getItem("certification").split(",");
     const education = localStorage.getItem("education").split(",");
-    // const availability = localStorage.getItem("availability").split(",");
+    const availability = localStorage.getItem("slot").split(",");
     console.log(localStorage.getItem("slot"));
-    // console.log(JSON.parse(localStorage.getItem("availability")));
-    // const email = localStorage.getItem("user_email");
     setProfile({
       ...profile,
       name: username,
@@ -73,7 +71,7 @@ const DoctorProfile = () => {
       city: city,
       certifications: certification,
       education: education,
-      // availability: availability,
+      availability: availability,
     });
     setEditedProfile({
       ...profile,
@@ -86,7 +84,7 @@ const DoctorProfile = () => {
       city: city,
       certifications: certification,
       education: education,
-      // availability: availability,
+      availability: availability,
     });
     console.log(profile);
   }, []);
