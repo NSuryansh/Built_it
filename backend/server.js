@@ -1426,6 +1426,8 @@ app.get("/available-slots", async (req, res) => {
       return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes();
     });
 
+    console.log(bookedSlots)
+
     const leavePeriods = doctorLeaves.map((leave) => ({
       start: new Date(leave.date_start).getTime(),
       end: new Date(leave.date_end).getTime(),
@@ -1455,13 +1457,27 @@ app.get("/available-slots", async (req, res) => {
         (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end
       );
     });
-
+    console.log(availableSlots)
     res.json({ availableSlots });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Couldn't fetch the slots" });
   }
 });
+
+app.get('/check-user', async(req,res)=>{
+  const {username} = req.query
+  const user = await prisma.user.findUnique({
+    where: {
+      username: username
+    }
+  })
+  if(user){
+    res.json({message: "Username already exists!"})
+  }else{
+    res.json({message: "No such username"})
+  }
+})
 
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
