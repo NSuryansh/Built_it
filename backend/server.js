@@ -34,6 +34,12 @@ const transporter = nodemailer.createTransport({
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 webpush.setVapidDetails(
   "mailto:spython.webd@gmail.com",
   publicVapidKey,
@@ -42,8 +48,8 @@ webpush.setVapidDetails(
 
 app.use(cors());
 const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] },
-  transports: ["websocket", "polling"]
+  cors: { origin: "https://built-it-xjiq.onrender.com", methods: ["GET", "POST"], credentials: true },
+  transports: ["websocket", "polling"],
 });
 
 cloudinary.config({
@@ -1575,11 +1581,11 @@ app.post("/scores-bot", async (req, res) => {
   }
 });
 
-server.listen(3001, () => console.log("Server running on port 3001"));
+server.listen(3000, () => console.log("Server running on port 3000"));
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server running on port ${port}`);
+// });
 
 app.put("/modify-doctor", async (req, res) => {
   try {

@@ -7,9 +7,11 @@ import {
   Award,
   Briefcase,
   GraduationCap,
+  ArrowLeft,
   AlignCenterVertical as Certificate,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 const AdminDoctorProfile = () => {
@@ -65,6 +67,14 @@ const AdminDoctorProfile = () => {
       <AdminNavbar />
       <ToastContainer />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Link
+          to='/admin/doctor_list'
+          className="mb-6 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Link>
+
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-12">
             <div className="flex items-center space-x-8">
