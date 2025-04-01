@@ -1,45 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Users, Brain, Sparkles, ChevronRight } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { checkAuth } from "../utils/profile";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const userAuthStatus = await checkAuth("user");
+      if (userAuthStatus) {
+        setIsAuthenticated(userAuthStatus);
+        navigate("/dashboard");
+      } else {
+        const docAuthStatus = await checkAuth("doc");
+        if (docAuthStatus) {
+          setIsAuthenticated(docAuthStatus);
+          navigate("/doctor/landing");
+        } else {
+          const adminAuthStatus = await checkAuth("admin");
+          if (adminAuthStatus) {
+            setIsAuthenticated(adminAuthStatus);
+            navigate("/admin/dashboard");
+          } else {
+            setIsAuthenticated(false);
+          }
+        }
+      }
+    };
+    verifyAuth();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
-     < Navbar />
-      {/* <div
-        className={`px-4 sm:px-8 flex h-[${
-          windowDimensions.height - height
-        }px] justify-center items-center`}
-      >
-        <div className="flex flex-col mt-8 h-full items-center justify-center">
-          <div className="text-[45px] sm:text-[55px] font-extrabold text-[var(--landing-bg-orange)]">
-            Vitality
-          </div>
-          <div className="text-[30px] sm:text-[35px] text-center font-bold mt-2 text-[var(--landing-text-black)]">
-            Find Peace - Get Support - Thrive
-          </div>
-          <div className="text-[15px] sm:text-[20px] text-center mt-2 flex flex-col items-center text-[var(--landing-text-black)]">
-            <p>
-              At Vitality we provide a safe space for your mental wellness
-              journey.
-            </p>
-            <br />
-            <p>
-              Whether you are seeking mindfulness techniques, emotional support,
-              or expert guidance, we are here to help
-            </p>
-          </div>
-          <Link to="/signup">
-            <button className="bg-[var(--landing-text-orange)] text-[var(--landing-text-white)] font-semibold px-6 py-2 mt-4 rounded-full shadow-md hover:bg-[var(--landing-bg-orange)] transition-colors duration-300 ease-in-out cursor-pointer">
-              Get Started
-            </button>
-          </Link>
-          <img src="/assests/plates.png" alt="" className="hidden md:block" />
-        </div>
-      </div> */}
+      <Navbar />
       <div className="bg-[var(--custom-orange-100)]">
         <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">

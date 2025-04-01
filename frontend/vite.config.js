@@ -22,11 +22,11 @@ export default defineConfig({
         name: "Vitality",
         short_name: "Vitality"
       },
-      registerType: 'autoUpdate',
-      injectRegister: 'auto',
-      strategies: 'injectManifest',
-      srcDir: 'src',
-      filename: 'service-worker.js',
+      // registerType: 'autoUpdate',
+      // injectRegister: 'auto',
+      // strategies: 'injectManifest',
+      // srcDir: 'public',
+      // filename: 'sw.js',
     })
   ],
 })
