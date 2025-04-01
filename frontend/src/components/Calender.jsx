@@ -179,7 +179,7 @@ const Calendar = ({ onDateSelect }) => {
         </div>
 
         <a href={linkAcadCalender} target="_blank">
-          <div className="flex gap-2 w-[55%] mx-auto mt-3 items-center">
+          <div className="flex gap-2 w-[100%] justify-center mx-auto mt-3 items-center">
             <Link size={15}/>
             <div className="text-sm text-gray-600">Academic Calender</div>
           </div>
