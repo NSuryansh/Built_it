@@ -11,6 +11,16 @@ import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
 import { toast } from "react-toastify";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
+} from "recharts";
 
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
@@ -21,6 +31,12 @@ const DoctorAppointment = () => {
   const [curr, setcurr] = useState([]);
   const [comp, setcomp] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [timePeriodData, setTimePeriodData] = useState({
+    "Last 1 Month": { UG: 0, PG: 0, PhD: 0 },
+    "Last 3 Months": { UG: 0, PG: 0, PhD: 0 },
+    "Last 6 Months": { UG: 0, PG: 0, PhD: 0 },
+    "Last 12 Months": { UG: 0, PG: 0, PhD: 0 },
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -79,6 +95,72 @@ const DoctorAppointment = () => {
   useEffect(() => {
     console.log(appointments);
   }, [appointments]);
+
+  useEffect(() => {
+    const docId = localStorage.getItem("userid");
+    console.log(docId, "DOCJ")
+    if (!docId) return;
+
+    const fetchPastAppointments = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/pastdocappt?doctorId=${docId}`);
+        const data = await response.json();
+        console.log(data, "DATA JKL")
+        if (response.ok) {
+          const periods = {
+            "Last 1 Month": { UG: 0, PG: 0, PhD: 0 },
+            "Last 3 Months": { UG: 0, PG: 0, PhD: 0 },
+            "Last 6 Months": { UG: 0, PG: 0, PhD: 0 },
+            "Last 12 Months": { UG: 0, PG: 0, PhD: 0 },
+          };
+
+          const now = new Date();
+
+          data.forEach((app) => {
+            const apptDate = new Date(app.createdAt);
+            const diffTime = now - apptDate;
+            const diffDays = diffTime / (1000 * 3600 * 24);
+            const branch = app.user.acadProg;
+
+            if (diffDays <= 30) {
+              periods["Last 1 Month"][branch] += 1;
+              periods["Last 3 Months"][branch] += 1;
+              periods["Last 6 Months"][branch] += 1;
+              periods["Last 12 Months"][branch] += 1;
+            } else if (diffDays <= 90) {
+              periods["Last 3 Months"][branch] += 1;
+              periods["Last 6 Months"][branch] += 1;
+              periods["Last 12 Months"][branch] += 1;
+            } else if (diffDays <= 180) {
+              periods["Last 6 Months"][branch] += 1;
+              periods["Last 12 Months"][branch] += 1;
+            } else if (diffDays <= 365) {
+              periods["Last 12 Months"][branch] += 1;
+            }
+          });
+
+          setTimePeriodData(periods);
+        } else {
+          console.error("Error in fetching past appointments: ", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching past appointments: ", error);
+        toast("Error while fetching past appointments", {
+          position: "bottom-right",
+          autoClose: 3000,
+        });
+      }
+    };
+    fetchPastAppointments();
+  }, []);
+
+  const histogramData = Object.keys(timePeriodData).map((period) => ({
+    name: period,
+    UG: timePeriodData[period].UG || 0,
+    PG: timePeriodData[period].PG || 0,
+    PhD: timePeriodData[period].PhD || 0,
+  }));
+
 
   const acceptApp = async (appointment) => {
     console.log(appointment);
@@ -387,6 +469,28 @@ const DoctorAppointment = () => {
                   ))}
                 </div>
               </div>
+            </div>
+
+
+          </div>
+          {/* Past Appointments Segregation Graph */}
+          <div className="w-full mt-10 bg-white rounded-xl shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Past Appointments Segregation (Last 1, 3, 6, & 12 Months)
+            </h2>
+            <div className="h-96 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={histogramData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="UG" fill="#155DFC" name="UG Appointments" />
+                  <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
+                  <Bar dataKey="PhD" fill="#FB8500" name="PhD Appointments" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
