@@ -306,11 +306,113 @@ const movies = [
     category: "Adventure"
   },
   {
+    title: "Interstellar",
+    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
+    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    category: "Adventure"
+  },
+  {
+    title: "Mad Max: Fury Road",
+    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
+    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    category: "Adventure"
+  },
+  {
+    title: "The Revenant",
+    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
+    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    category: "Adventure"
+  },
+  {
+    title: "Life of Pi",
+    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
+    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    category: "Adventure"
+  },
+  {
     title: "Big Hero 6",
     image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
     link: "https://www.google.com/search?q=big+hero+6+movie",
     category: "Animation"
-  }
+  },
+  {
+    title: "Spider-Man: Into the Spider-Verse ",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Animation"
+  }, {
+    title: "How to Train Your Dragon",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Animation"
+  },
+   {
+    title: "Inside Out",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Animation"
+  }, {
+    title: "Frozen",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Animation"
+  },
+  {
+    title: "21 Jump Street",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Comedy"
+  },
+  {
+    title: "We’re the Millers",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Comedy"
+  },
+  {
+    title: "Welcome",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Comedy"
+  },
+  {
+    title: "Fukrey ",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Comedy"
+  },
+  {
+    title: "3 Idiots",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Comedy"
+  },
+  {
+    title: "Manchester by the Sea",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Drama"
+  },{
+    title: "Nomadland ",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Drama"
+  },{
+    title: "The Whale",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Drama"
+  },{
+    title: "Slumdog Millionaire",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Drama"
+  },{
+    title: "The Revenant",
+    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
+    link: "https://www.google.com/search?q=big+hero+6+movie",
+    category: "Drama"
+  },
 ];
 
 const books = [
@@ -322,16 +424,119 @@ const books = [
   },
   {
     title: "Atomic Habits",
-    image: "https://images.unsplash.com/photo-1544716278-e513176f20b5?w=500&q=80",
-    link: "https://www.google.com/search?q=atomic+habits+book",
-    category: "Personal Development"
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    category: "Self Help"
   },
+  {
+    title: "The 7 Habits of Highly Effective People ",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    category: "Self Help"
+  },
+  {
+    title: "The Power of Now",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    category: "Self Help"
+  },
+  {
+    title: "The 5 AM Club",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    category: "Self Help"
+  },
+  
   {
     title: "The Power of Now",
     image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
     link: "https://www.google.com/search?q=the+power+of+now+book",
     category: "Mindfulness"
-  }
+  },
+  {
+    title: "Wherever You Go, There You Are",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Mindfulness"
+  },
+  {
+    title: "Peace Is Every Step",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Mindfulness"
+  },
+  {
+    title: "10% Happier",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Mindfulness"
+  },
+  {
+    title: "The Art of Living",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Mindfulness"
+  },
+  {
+    title: "To Kill a Mockingbird",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Fiction"
+  },
+  {
+    title: "The Great Gatsby",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Fiction"
+  },
+  {
+    title: "The Book Thief",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Fiction"
+  },
+  {
+    title: "A Man Called Ove",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Fiction"
+  },
+  {
+    title: "The Night Circus",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Fiction"
+  },
+  {
+    title: "Steve Jobs",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Non-Fiction"
+  },
+  {
+    title: "The Diary of a Young Girl",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Non-Fiction"
+  },
+  {
+    title: "The Power of Habit",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Non-Fiction"
+  },
+  {
+    title: "The Psychology of Money",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Non-Fiction"
+  },
+  {
+    title: "Educated",
+    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
+    link: "https://www.google.com/search?q=the+power+of+now+book",
+    category: "Non-Fiction"
+  },
 ];
 
 const music = [
@@ -342,25 +547,193 @@ const music = [
     category: "Ambient"
   },
   {
-    title: "Meditation Music",
+    title: "Harold Budd & Brian Eno",
+    image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    category: "Ambient"
+  },
+  {
+    title: "Tangerine Dream",
+    image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    category: "Ambient"
+  },
+  {
+    title: "Solar Fields – Blue Moon Station ",
+    image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    category: "Ambient"
+  },
+  {
+    title: "Gas – Pop",
+    image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    category: "Ambient"
+  },
+  {
+    title: "Brian Eno",
     image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
     spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
     category: "Meditation"
   },
   {
-    title: "Nature Sounds",
+    title: "Max Richter – Dream 3",
+    image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    category: "Meditation"
+  },
+  {
+    title: "Liquid Mind",
+    image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    category: "Meditation"
+  },
+  {
+    title: "Snatam Kaur – Ong Namo",
+    image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    category: "Meditation"
+  },
+  {
+    title: "Steven Halpern – Deep Alpha",
+    image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    category: "Meditation"
+  },
+  {
+    title: "Gentle Rainfall ",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
     spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
     category: "Nature"
-  }
+  },
+  {
+    title: "Thunderstorm ",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Nature"
+  },
+  {
+    title: "Waves Crashing on Shore",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Nature"
+  },
+  {
+    title: "Waterfall",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Nature"
+  },
+  {
+    title: "Raga Shankarabharanam",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Nature"
+  },
+  {
+    title: "Raga Bhairav",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Classical"
+  },
+  {
+    title: "Rainforest Stream ",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Classical"
+  },
+  {
+    title: "Pyotr Ilyich Tchaikovsky – Swan Lake",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Classical"
+  },
+  {
+    title: "Johann Sebastian Bach – Air on the G String",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Classical"
+  },
+  {
+    title: "Ludwig van Beethoven – Symphony No. 9 ",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Classical"
+  },
+  {
+    title: "Chillhop Essentials ",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Lo-fi"
+  },
+  {
+    title: "Study Beats ",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Lo-fi"
+  },
+  {
+    title: "Idealism – Both of Us",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Lo-fi"
+  },
+  {
+    title: "Joey Pecoraro – 5AM ",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Lo-fi"
+  },
+  {
+    title: "Jinsang – Solitude ",
+    image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    category: "Lo-fi"
+  },
 ];
 
 const games = [
   {
-    title: "Journey",
+    title: "Assassin's Creed Odyssey",
     image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
     link: "https://www.google.com/search?q=journey+game",
     category: "Adventure"
+  },
+  {
+    title: "Tomb Raider ",
+    image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
+    link: "https://www.google.com/search?q=journey+game",
+    category: "Adventure"
+  },
+  {
+    title: "The Legend of Zelda: Breath of the Wild",
+    image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
+    link: "https://www.google.com/search?q=journey+game",
+    category: "Adventure"
+  },
+  {
+    title: "Red Dead Redemption 2",
+    image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
+    link: "https://www.google.com/search?q=journey+game",
+    category: "Adventure"
+  },
+  {
+    title: "Planet Coaster",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "Simulation"
+  },
+  {
+    title: "My Time at Portia",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "Simulation"
+  },
+  {
+    title: "The Sims Series",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "Simulation"
   },
   {
     title: "Stardew Valley",
@@ -369,18 +742,34 @@ const games = [
     category: "Simulation"
   },
   {
-    title: "Animal Crossing",
-    image: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=500&q=80",
-    link: "https://www.google.com/search?q=animal+crossing+game",
-    category: "Life Simulation"
-  }
+    title: "Candy Crush Saga",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "Puzzle"
+  },
+  {
+    title: "Monument Valley",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "Puzzle"
+  },{
+    title: "Sudoku",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "Puzzle"
+  },{
+    title: "Tetris",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "Puzzle"
+  },
 ];
 
 const categories = {
   movies: ['Top Picks', 'Feel Good', 'Adventure', 'Animation', 'Comedy', 'Drama'],
-  books: ['Top Picks', 'Self Help', 'Personal Development', 'Mindfulness', 'Fiction', 'Non-Fiction'],
+  books: ['Top Picks', 'Self Help', 'Mindfulness', 'Fiction', 'Non-Fiction'],
   music: ['Top Picks', 'Ambient', 'Meditation', 'Nature', 'Classical', 'Lo-fi'],
-  games: ['Top Picks', 'Adventure', 'Simulation', 'Life Simulation', 'Puzzle', 'RPG']
+  games: ['Top Picks', 'Adventure', 'Simulation', 'Puzzle', 'RPG']
 };
 
 function EntertainmentSection({ title, items, icon: Icon, categories }) {
