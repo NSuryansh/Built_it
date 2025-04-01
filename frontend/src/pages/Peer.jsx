@@ -11,7 +11,7 @@ import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
-import { AiFillCloseCircle, AiOutlineCloseCircle } from "react-icons/ai";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
 
 const Peer = () => {
