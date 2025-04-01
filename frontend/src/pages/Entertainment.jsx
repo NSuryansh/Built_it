@@ -816,7 +816,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
       
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors duration-300"
+        className="w-full flex items-center justify-between p-6 hover:bg-gray-100 transition-colors duration-300"
       >
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-full bg-gray-100">

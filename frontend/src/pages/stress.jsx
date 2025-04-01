@@ -118,7 +118,7 @@ const Stress = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-red-600 to-orange-500 text-white py-16">
+      <div className="relative overflow-hidden bg-gradient-to-r from-amber-200 to-orange-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative z-10">
             <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
