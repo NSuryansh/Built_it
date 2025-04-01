@@ -47,7 +47,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     if (userType === "user") {
-      res.clearCookie("refreshToken")
+      // res.clearCookie("refreshToken")
       navigate("/login");
     } else if (userType === "doc") {
       navigate("/doctor/login");

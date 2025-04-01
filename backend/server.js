@@ -1463,47 +1463,6 @@ app.get("/available-slots", async (req, res) => {
   }
 });
 
-// app.get("/available-slots", async (req, res) => {
-//   const { docId } = req.query;
-//   const doctor_id = Number(docId)
-//   try {
-//     const bookedSlots = await prisma.appointments.findMany({
-//       where: { doctor_id },
-//       select: { dateTime: true },
-//     });
-
-//     const doctorLeaves = await prisma.doctorLeave.findMany({
-//       where: { doctor_id },
-//       select: { date_start: true, date_end: true },
-//     });
-
-//     let availableSlots = await prisma.slots.findMany({
-//       where: { doctor_id },
-//     });
-
-//     availableSlots = availableSlots.filter(
-//       (slot) =>
-//         !bookedSlots.some(
-//           (b) => b.dateTime.getTime() === slot.starting_time.getTime()
-//         )
-//     );
-
-//     availableSlots = availableSlots.filter(
-//       (slot) =>
-//         !doctorLeaves.some(
-//           (leave) =>
-//             slot.starting_time >= leave.date_start &&
-//             slot.starting_time <= leave.date_end
-//         )
-//     );
-
-//     res.json({ availableSlots });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Couldn't fetch the slots" });
-//   }
-// });
-
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
   console.log(email);
@@ -1643,5 +1602,38 @@ app.put("/modify-doctor", async (req, res) => {
     res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 });
+
+app.post('/emerApp', async(req,res)=>{
+  const {name, email, phone, dateTime, reason, docId} = req.body
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  })
+  if(user){
+    const app = await prisma.appointments.create({
+      data:{
+        user_id: user.id,
+        doctor_id: Number(docId),
+        dateTime: new Date(dateTime),
+        reason: reason
+      }
+    })
+    res.json(app)
+  }else{
+    const app = await prisma.emergencyApp.create({
+      data:{
+        name: name,
+        email: email,
+        phone: phone,
+        dateTime: new Date(dateTime),
+        reason: reason,
+        doctor_id: Number(docId)
+      }
+    })
+    console.log(app)
+    res.json(app)
+  }
+})
 
 server.listen(3000, () => console.log("Server running on port 3000"));
