@@ -66,7 +66,7 @@ export const checkAuth = async (userType) => {
         "<Please Change>",
         "<Please Change>",
       ]);
-      localStorage.setItem("availability", ["<Please add>"]);
+      localStorage.setItem("slot", ["<Please add>"]);
       localStorage.setItem("user_type", userType);
     } else {
       localStorage.setItem("userid", res2["admin"]["id"]);

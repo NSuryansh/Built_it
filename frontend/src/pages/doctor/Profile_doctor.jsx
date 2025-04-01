@@ -59,7 +59,7 @@ const DoctorProfile = () => {
     const certification = localStorage.getItem("certification").split(",");
     const education = localStorage.getItem("education").split(",");
     // const availability = localStorage.getItem("availability").split(",");
-    console.log(localStorage.getItem("availability"));
+    console.log(localStorage.getItem("slot"));
     // console.log(JSON.parse(localStorage.getItem("availability")));
     // const email = localStorage.getItem("user_email");
     setProfile({
@@ -121,7 +121,7 @@ const DoctorProfile = () => {
     localStorage.setItem("city", editedProfile.city);
     localStorage.setItem("certification", editedProfile.certifications);
     localStorage.setItem("education", editedProfile.education);
-    localStorage.setItem("availability", editedProfile.availability);
+    localStorage.setItem("slot", editedProfile.availability);
     setProfile(editedProfile);
     setIsEditing(false);
   };
@@ -130,6 +130,7 @@ const DoctorProfile = () => {
     setEditedProfile(profile);
     setIsEditing(false);
   };
+  
   return (
     <div>
       <DoctorNavbar />
