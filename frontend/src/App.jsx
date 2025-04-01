@@ -54,7 +54,7 @@ export default function App() {
     // console.log("Push Subscription:", JSON.stringify(subscription));
 
     // saveSubscription(subscription)
-    const res = await fetch("http://localhost:3000/save-subscription", {
+    const res = await fetch("https://built-it-xjiq.onrender.com/save-subscription", {
       method: "POST",
       body: JSON.stringify(subscription),
       headers: { "Content-Type": "application/json" },

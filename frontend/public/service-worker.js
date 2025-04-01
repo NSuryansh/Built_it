@@ -9,13 +9,13 @@ self.addEventListener("push", (event) => {
   });
 });
 
-const saveSubscription = async(subscription)=>{
-  await fetch("http://localhost:5000/subscribe", {
-      method: "POST",
-      body: JSON.stringify(subscription),
-      headers: { "Content-Type": "application/json" },
-    })
-}
+// const saveSubscription = async(subscription)=>{
+//   await fetch("https://built-it-xjiq.onrender.com/save-subscribe", {
+//       method: "POST",
+//       body: JSON.stringify(subscription),
+//       headers: { "Content-Type": "application/json" },
+//     })
+// }
 const subscribeToPush = async () => {
   const registration = await navigator.serviceWorker.ready;
   const subscription = await registration.pushManager.subscribe({
