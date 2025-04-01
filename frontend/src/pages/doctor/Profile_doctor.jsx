@@ -11,6 +11,8 @@ import {
   Edit2,
   Save,
   X,
+  Calendar,
+  Plus,
 } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import Footer from "../../components/Footer";
@@ -31,13 +33,7 @@ const DoctorProfile = () => {
     specialization: "<Please change>",
     experience: "<Please change>",
     education: ["<Please change>", "<Please change>", "<Please change>"],
-    availability: {
-      monday: "<Please change>",
-      tuesday: "<Please change>",
-      wednesday: "<Please change>",
-      thursday: "<Please change>",
-      friday: "<Please change>",
-    },
+    availability: ["<Please add>"],
     certifications: ["<Please change>", "<Please change>", "<Please change>"],
   });
   const navigate = useNavigate();
@@ -62,8 +58,9 @@ const DoctorProfile = () => {
     const city = localStorage.getItem("city");
     const certification = localStorage.getItem("certification").split(",");
     const education = localStorage.getItem("education").split(",");
-    const availability = localStorage.getItem("availability");
-    console.log(availability);
+    // const availability = localStorage.getItem("availability").split(",");
+    console.log(localStorage.getItem("availability"));
+    // console.log(JSON.parse(localStorage.getItem("availability")));
     // const email = localStorage.getItem("user_email");
     setProfile({
       ...profile,
@@ -94,6 +91,13 @@ const DoctorProfile = () => {
     console.log(profile);
   }, []);
 
+  const handleAddSlot = () => {
+    setEditedProfile({
+      ...editedProfile,
+      availability: [...editedProfile.availability, ""],
+    });
+  };
+
   const handleClosePopup = () => {
     navigate("/doctor/login");
   };
@@ -117,6 +121,7 @@ const DoctorProfile = () => {
     localStorage.setItem("city", editedProfile.city);
     localStorage.setItem("certification", editedProfile.certifications);
     localStorage.setItem("education", editedProfile.education);
+    localStorage.setItem("availability", editedProfile.availability);
     setProfile(editedProfile);
     setIsEditing(false);
   };
@@ -391,6 +396,60 @@ const DoctorProfile = () => {
                     ))}
                   </div>
                 </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Availability
+              </h3>
+              <div className="space-y-4">
+                {isEditing ? (
+                  <div className="space-y-2">
+                    {editedProfile.availability.map((slot, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <Clock className="h-5 w-5 text-gray-400" />
+                        <input
+                          type="time"
+                          value={slot}
+                          onChange={(e) => {
+                            const newAvailability = [
+                              ...editedProfile.availability,
+                            ];
+                            newAvailability[index] = e.target.value;
+                            setEditedProfile({
+                              ...editedProfile,
+                              availability: newAvailability,
+                            });
+                          }}
+                          className="bg-gray-50 border border-gray-300 rounded-lg px-2 py-1 text-sm"
+                        />
+                        {index === editedProfile.availability.length - 1 && (
+                          <button
+                            onClick={handleAddSlot}
+                            className="inline-flex items-center px-2 py-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            Add Slot
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : profile.availability.length !== 0 ? (
+                  <div className="">
+                    <div className="flex flex-wrap gap-2">
+                      {profile.availability.map((slot, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-3 py-1 bg-white rounded-full text-sm text-gray-600 border border-blue-100"
+                        >
+                          <Clock className="h-4 w-4 text-blue-500 mr-2" />
+                          {slot}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : (<div className="text-gray-400">No slots added</div>)}
+              </div>
+            </div>
               </div>
             </div>
           </div>
