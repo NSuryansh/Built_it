@@ -22,8 +22,8 @@ export default defineConfig({
         name: "Vitality",
         short_name: "Vitality"
       },
-      registerType: 'autoUpdate',
-      injectRegister: 'auto',
+      // registerType: 'autoUpdate',
+      // injectRegister: 'auto',
       // strategies: 'injectManifest',
       // srcDir: 'public',
       // filename: 'sw.js',
