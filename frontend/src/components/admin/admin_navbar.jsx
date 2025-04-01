@@ -32,7 +32,6 @@ const AdminNavbar = () => {
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
           setShowDetails(false);
-          setIsOpen(false);
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -43,9 +42,7 @@ const AdminNavbar = () => {
   };
 
   const wrapperRef = useRef(null);
-  const hamburgerRef = useRef(null);
   useOutsideAlerter(wrapperRef);
-  useOutsideAlerter(hamburgerRef);
 
   return (
     <nav className="bg-transperent">
@@ -67,7 +64,6 @@ const AdminNavbar = () => {
             </button>
             {isOpen && (
               <div
-                ref={hamburgerRef}
                 className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4"
               >
                 <ul>

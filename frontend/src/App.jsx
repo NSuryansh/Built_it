@@ -46,6 +46,7 @@ export default function App() {
   const subscribeToPush = async () => {
     // console.log(SERVER_KEY);
     // console.log(import.meta.env);
+    console.log(convertedVapidKey)
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
@@ -54,13 +55,15 @@ export default function App() {
     // console.log("Push Subscription:", JSON.stringify(subscription));
 
     // saveSubscription(subscription)
-    const res = await fetch("http://localhost:3000/save-subscription", {
+    const res = await fetch("https://built-it-xjiq.onrender.com/save-subscription", {
       method: "POST",
       body: JSON.stringify(subscription),
       headers: { "Content-Type": "application/json" },
     });
 
     const resp = await res.json();
+
+    console.log(resp)
     // console.log(resp);
 
     // const res2 = await fetch("http://localhost:3000/send-notification", {

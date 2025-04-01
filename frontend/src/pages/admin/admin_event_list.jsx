@@ -125,14 +125,14 @@ const EventsList = () => {
     <div className="flex flex-col">
       <AdminNavbar />
       <ToastContainer />
-      <div className="space-y-6 md:min-w-5xl max-w-7xl mx-auto mb-4">
-        <div className="flex justify-between items-center">
+      <div className="space-y-6 md:min-w-5xl max-w-7xl p-4 md:p-6 mx-auto mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-center">
           <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">
             Events List
           </h1>
           <Link
             to="/admin/add_event"
-            className="flex items-center gap-2 bg-[var(--custom-primary-green-600)] text-[var(--custom-white)] px-4 py-2 rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors"
+            className="flex mt-2 md:mt-0 items-center gap-2 bg-[var(--custom-primary-green-600)] text-[var(--custom-white)] px-4 py-2 rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors"
           >
             <Calendar size={20} />
             Add New Event
