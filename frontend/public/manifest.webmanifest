@@ -1,1 +1,17 @@
-{"name":"Vitality","short_name":"Vitality","start_url":"/","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","lang":"en","scope":"/","icons":[{"src":"https://res.cloudinary.com/dt7a9meug/image/upload/v1743195011/final-image_yopbua.png","sizes":"144x144","type":"image/png"}]}
+{
+    "name": "Vitality",
+    "short_name": "Vitality",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "lang": "en",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "https://res.cloudinary.com/dt7a9meug/image/upload/v1743195011/final-image_yopbua.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ]
+}
