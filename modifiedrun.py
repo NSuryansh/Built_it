@@ -215,14 +215,14 @@ def chat_handler():
 @app.route('/analyze', methods=['POST'])
 def analyze_user():
     data_id = request.get_json()
-    user_id = data_id.get('user_id')
+    user_id = int(data_id.get('user_id'))
     print(user_id, "userof")
     try:
         # Load and filter CSV data
         data = pd.read_csv('tmp/memory.csv')
-        # Compare user_id as string instead of converting to int
-        user_data = data[data['user_id'] == user_id]
-        print(user_data)
+        print(data, "dara")
+        user_data = data[data['user_id'] == userid]
+        print(user_data, "AEEE HALLLLLo")
         if user_data.empty:
             return jsonify({"error": "User not found"}), 404
             
