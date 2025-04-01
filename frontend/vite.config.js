@@ -24,9 +24,9 @@ export default defineConfig({
       },
       registerType: 'autoUpdate',
       injectRegister: 'auto',
-      strategies: 'injectManifest',
-      srcDir: 'src',
-      filename: 'service-worker.js',
+      // strategies: 'injectManifest',
+      srcDir: 'public',
+      filename: 'sw.js',
     })
   ],
 })
