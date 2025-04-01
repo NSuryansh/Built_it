@@ -140,7 +140,7 @@ const Calendar = ({ onDateSelect }) => {
                       : ""
                   }
                   ${
-                    !isToday && !isPastEvent
+                    !isToday && !isPastEvent && !isFutureEvent
                       ? "hover:bg-gray-100"
                       : ""
                   }
@@ -148,7 +148,7 @@ const Calendar = ({ onDateSelect }) => {
                     isToday && !isPastEvent
                       ? "ring-2 ring-black-50 ring-offset-2 font-bold" : ""
                   }
-                  ${isSameDay(dayItem, selectedDate) ? "ring-2 ring-black" : ""}
+                  ${isSameDay(dayItem, selectedDate) && !isToday ? "ring-2 ring-blue-600" : ""}
                 `}
                 onClick={() => {
                   setSelectedDate(dayItem);
