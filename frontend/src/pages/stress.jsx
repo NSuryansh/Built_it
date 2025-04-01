@@ -1,8 +1,7 @@
-import React from "react";
-import { Bell, User, ExternalLink } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Bell, User, ExternalLink, BookOpen, Clock, Building, Brain, Youtube, ChevronRight } from "lucide-react";
 import VideoSection from "../components/videosection";
 import Navbar from "../components/Navbar";
-import { useState, useEffect } from "react";
 import Footer from "../components/Footer";
 import { checkAuth } from "../utils/profile";
 import SessionExpired from "../components/SessionExpired";
@@ -16,7 +15,8 @@ const articles = [
     description: "Learn about the different types of stress and effective strategies to manage them in your daily life.",
     url: "https://www.nimh.nih.gov/health/publications/so-stressed-out-fact-sheet",
     readTime: "5 min read",
-    source: "National Institute of Mental Health"
+    source: "National Institute of Mental Health",
+    icon: Brain
   },
   {
     id: 2,
@@ -24,7 +24,8 @@ const articles = [
     description: "Explore the biological mechanisms of stress and its impact on mental well-being.",
     url: "https://www.health.harvard.edu/staying-healthy/understanding-the-stress-response",
     readTime: "8 min read",
-    source: "Harvard Health"
+    source: "Harvard Health",
+    icon: BookOpen
   },
   {
     id: 3,
@@ -32,7 +33,8 @@ const articles = [
     description: "Discover practical mindfulness exercises that can help reduce stress and anxiety.",
     url: "https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/mindfulness-exercises/art-20046356",
     readTime: "6 min read",
-    source: "Mayo Clinic"
+    source: "Mayo Clinic",
+    icon: Brain
   },
   {
     id: 4,
@@ -40,13 +42,52 @@ const articles = [
     description: "Tips and strategies for managing stress in the workplace and maintaining work-life balance.",
     url: "https://www.apa.org/topics/healthy-workplaces/work-stress",
     readTime: "7 min read",
-    source: "American Psychological Association"
+    source: "American Psychological Association",
+    icon: Building
+  }
+];
+
+const videoSections = [
+  {
+    title: "Guided Meditation",
+    description: "Follow along with guided meditations that focus on relaxation, mindfulness, and stress reduction.",
+    videos: [
+      "https://www.youtube.com/embed/FuuXHJB74iU",
+      "https://www.youtube.com/embed/ZToicYcHIOU",
+      "https://www.youtube.com/embed/a2pZOIzbp7Q",
+      "https://www.youtube.com/embed/-2zdUXve6fQ",
+      "https://www.youtube.com/embed/0gz1WjL4sW0",
+    ]
+  },
+  {
+    title: "Stretching Exercises",
+    description: "Simple full-body stretches that help relieve muscle tension and promote relaxation.",
+    videos: [
+      "https://www.youtube.com/embed/ferw4VhbN54",
+      "https://www.youtube.com/embed/mj2RGYpknzA",
+      "https://www.youtube.com/embed/_OoEYEhNAlY",
+      "https://www.youtube.com/embed/y87vSUoIMGU",
+      "https://www.youtube.com/embed/DZ7hrD0Z_3o",
+    ]
+  },
+  {
+    title: "Dance Workouts",
+    description: "Fun, energetic dance routines to release tension and boost mood.",
+    videos: [
+      "https://www.youtube.com/embed/x7JYxuzwtQc",
+      "https://www.youtube.com/embed/XTH5saFBDqA",
+      "https://www.youtube.com/embed/Cw-Wt4xKD2s",
+      "https://www.youtube.com/embed/v3SGmJPDNVw",
+      "https://www.youtube.com/embed/Btyw98t0Ef4",
+    ]
   }
 ];
 
 const Stress = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [activeSection, setActiveSection] = useState(0);
   const navigate = useNavigate();
+
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("user");
@@ -59,114 +100,103 @@ const Stress = () => {
     navigate("/login");
   };
 
-  if(isAuthenticated === null){
+  if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} /> 
-        <p>Loading...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
   }
 
-  if(!isAuthenticated){
+  if (!isAuthenticated) {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
   return (
-    <div className="min-h-screen bg-[var(--custom-orange-100)]" style={{}}>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
       <Navbar />
+      
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-red-600 to-orange-500 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative z-10">
+            <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
+              Your Mental Wellness Journey
+            </h1>
+            <p className="text-xl text-center text-red-100 max-w-3xl mx-auto">
+              Discover resources, techniques, and exercises to help manage stress and improve your mental well-being
+            </p>
+          </div>
+          <div className="absolute inset-0 opacity-20 bg-pattern"></div>
+        </div>
+      </div>
+
       {/* Main Content */}
-      <div className="pt-10 px-4 max-w-7xl mx-auto space-y-8 mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
         {/* Articles Section */}
-        <section className="bg-white/90 backdrop-blur-sm rounded-lg p-6">
-          <h2 className="text-3xl font-semibold text-red-500 mb-6 text-center">
-            Mental Health Resources
+        <section className="bg-white rounded-2xl shadow-xl p-8 mb-12 transform transition-all duration-500 hover:shadow-2xl">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+            Expert Resources
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {articles.map((article) => (
-              <a
-                key={article.id}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-              >
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-semibold text-gray-800 flex-1">
-                      {article.title}
-                    </h3>
-                    <ExternalLink className="h-5 w-5 text-gray-400 flex-shrink-0 ml-2" />
+            {articles.map((article) => {
+              const Icon = article.icon;
+              return (
+                <a
+                  key={article.id}
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block bg-gradient-to-br from-white to-orange-50 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  <div className="p-6">
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="p-3 rounded-lg bg-gradient-to-br from-amber-100 to-orange-500 text-white">
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-red-500 transition-colors duration-300">
+                          {article.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-2">{article.description}</p>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-red-500 transform group-hover:translate-x-1 transition-all duration-300" />
+                    </div>
+                    <div className="flex items-center justify-between text-sm border-t border-gray-100 pt-4 mt-4">
+                      <span className="flex items-center text-red-500">
+                        <Building className="w-4 h-4 mr-2" />
+                        {article.source}
+                      </span>
+                      <span className="flex items-center text-gray-500">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {article.readTime}
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">{article.description}</p>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-red-500">{article.source}</span>
-                    <span className="text-gray-500">{article.readTime}</span>
-                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Video Sections */}
+        <div className="space-y-12 mb-16">
+          {videoSections.map((section, index) => (
+            <section key={index} className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-amber-100 to-orange-500 text-white">
+                  <Youtube className="w-6 h-6" />
                 </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* Guided Meditation Section */}
-        <section className="bg-white/90 backdrop-blur-sm rounded-lg p-6">
-          <h2 className="text-3xl font-semibold text-red-500 mb-4 text-center">
-            Stress Relief Exercises
-          </h2>
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-1">Guided Meditation</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Follow along with guided meditations that focus on relaxation,
-              mindfulness, and stress reduction.
-            </p>
-            <VideoSection
-              videos={[
-                "https://www.youtube.com/embed/FuuXHJB74iU",
-                "https://www.youtube.com/embed/ZToicYcHIOU",
-                "https://www.youtube.com/embed/a2pZOIzbp7Q",
-                "https://www.youtube.com/embed/-2zdUXve6fQ",
-                "https://www.youtube.com/embed/0gz1WjL4sW0",
-              ]}
-            />
-          </div>
-        </section>
-
-        {/* Stretching Section */}
-        <section className="bg-white/90 backdrop-blur-sm rounded-lg p-6">
-          <h3 className="text-lg font-medium mb-1">Stretching</h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Simple full-body stretches that help relieve muscle tension and
-            promote relaxation.
-          </p>
-          <VideoSection
-            videos={[
-              "https://www.youtube.com/embed/ferw4VhbN54",
-              "https://www.youtube.com/embed/mj2RGYpknzA",
-              "https://www.youtube.com/embed/_OoEYEhNAlY",
-              "https://www.youtube.com/embed/y87vSUoIMGU",
-              "https://www.youtube.com/embed/DZ7hrD0Z_3o",
-            ]}
-          />
-        </section>
-
-        {/* Dance Section */}
-        <section className="bg-white/90 backdrop-blur-sm rounded-lg p-6">
-          <h3 className="text-lg font-medium mb-1">Dance Workouts</h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Fun, energetic dance routines (like Zumba or freestyle dance) to
-            release tension and boost mood.
-          </p>
-          <VideoSection
-            videos={[
-              "https://www.youtube.com/embed/x7JYxuzwtQc",
-              "https://www.youtube.com/embed/XTH5saFBDqA",
-              "https://www.youtube.com/embed/Cw-Wt4xKD2s",
-              "https://www.youtube.com/embed/v3SGmJPDNVw",
-              "https://www.youtube.com/embed/Btyw98t0Ef4",
-            ]}
-          />
-        </section>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{section.title}</h2>
+                  <p className="text-gray-600 mt-1">{section.description}</p>
+                </div>
+              </div>
+              <VideoSection videos={section.videos} />
+            </section>
+          ))}
+        </div>
       </div>
       <Footer color="orange" />
     </div>

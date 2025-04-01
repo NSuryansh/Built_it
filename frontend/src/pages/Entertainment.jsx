@@ -271,120 +271,120 @@ import Navbar from "../components/Navbar";
 const movies = [
   {
     title: "The Greatest Showman",
-    image: "https://m.media-amazon.com/images/I/71xBLRBYOiL.AC_SY679.jpg",
-    link: "https://www.google.com/search?q=inside+out+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcSPXPXxyragqONMUM_E90S5RV1nJXYN2iSmAOjIT-Bm3olOUKzz&psig=AOvVaw1LbjDma2xrSjuPXBveQjpH&ust=1743622100158000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNibvNDIt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=the greatest showman",
     category: "Feel Good"
   },
   {
     title: "Little Miss Sunshine ",
-    image: "https://m.media-amazon.com/images/I/71xBLRBYOiL.AC_SY679.jpg",
-    link: "https://www.google.com/search?q=inside+out+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRZ0cUJ-yvCKNvYnq0dEBwi3jQEh9SpPgbW9lvSrTjspwQUwKd6&psig=AOvVaw1iyHLqSqJg6-MjyV6BBW2f&ust=1743622143323000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKDshOXIt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Little Miss Sunshine",
     category: "Feel Good" 
   },
   {
     title: "Mamma Mia!  ",
-    image: "https://m.media-amazon.com/images/I/81cJ8sO7HPL.AC_SY679.jpg",
-    link: "https://www.google.com/search?q=inside+out+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcT2C2oIprBEh1UL7mDlkX69bINcsjLVurRT6d6ziII-RK1i0c6h&psig=AOvVaw2WcbQDGti5eS33QU9IRqtT&ust=1743622222968000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCMDi84rJt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Mamma Mia!",
     category: "Feel Good"
   },
   {
     title: "Zindagi Na Milegi Dobara ",
-    image: "https://m.media-amazon.com/images/I/71xBLRBYOiL.AC_SY679.jpg",
-    link: "https://www.google.com/search?q=inside+out+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQqOb7SYCekBWHrdqpplOSANdbjx-tff4WH6_-wxTtFY9viR4UU&psig=AOvVaw3K8gtszh7bOUl84w47NBPn&ust=1743622279123000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPDC0aXJt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Zindagi NA MIleegi Dobara",
     category: "Feel Good" 
   },
   {
     title: "Yeh Jawaani Hai Deewani  ",
-    image: "https://m.media-amazon.com/images/I/71xBLRBYOiL.AC_SY679.jpg",
-    link: "https://www.google.com/search?q=inside+out+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQhI92ZPIrEyAsuKs0MPVUnuhyH8boKCLcM1xtXKOP8gTNkEz5i&psig=AOvVaw3vQanzmdLjA5OwOC1Ca0BL&ust=1743622472167000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPjx3oHKt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Yeh Jawaani Hai Deewani",
     category: "Feel Good" 
   },
   {
     title: "The Secret Life of Walter Mitty",
-    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
-    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQOUyXlSiN6ER7Ru5qksGEOq09ij1zxHIN1UmIill7BRR2gp3OV&psig=AOvVaw0suTAC0-eZ3HreOfPNpKja&ust=1743622536831000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKiHyaDKt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=The Secret Life of Walter Mitty",
     category: "Adventure"
   },
   {
     title: "Interstellar",
-    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
-    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcT9oW0XQlu1lo1G_49M-YwGzKR6rUg-CtflZj07HfbT8d2GwKWg&psig=AOvVaw2-bh0ZcKIiaSDU6U-a475D&ust=1743622701784000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLiGne_Kt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Interstellar",
     category: "Adventure"
   },
   {
     title: "Mad Max: Fury Road",
-    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
-    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQm-wNVkJz1g27KBqQY4giMITNnOakqStQDLx6XNQA5etEXzckT&psig=AOvVaw1wZ4p2fn-TNbmOA9lJmRKE&ust=1743622736831000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPiU-v_Kt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Mad Max: Fury Roade",
     category: "Adventure"
   },
   {
     title: "The Revenant",
-    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
-    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQXUTGibEd0yESfOn4U6b9KqwYjLUKVI3QoCv36puzHfPvtZLMU&psig=AOvVaw00ysGsnwdU3j9yJZJDN6uG&ust=1743622767512000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCOjPyY7Lt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=The Revenant",
     category: "Adventure"
   },
   {
     title: "Life of Pi",
-    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
-    link: "https://www.google.com/search?q=the+secret+life+of+walter+mitty+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTxY-iBSLovlEzyVflK9ur7UCsECFY40t-m-FZ2QkO7UteUBayf&psig=AOvVaw2AzDKp7pnfoxX4arNVIqJO&ust=1743622807250000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLifz6HLt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Life of Pi",
     category: "Adventure"
   },
   {
     title: "Big Hero 6",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRjABLCIhD9tqx3443sAxBnjZW2MCnvhEZs9X-JF6pljOxaoi3G&psig=AOvVaw3DMX2sCgx1HYdLC6SIQlHH&ust=1743622893895000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNjn7crLt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Big Hero 6",
     category: "Animation"
   },
   {
     title: "Spider-Man: Into the Spider-Verse ",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcR7lwIPrJJySz-YBguA6CZYb5uGnHy2iAZEi0ZI3MtOGufwHLIx&psig=AOvVaw2cfAuZOR0TK3Km8xC8gdgu&ust=1743622972105000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPi7lPDLt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Spider-Man: Into the Spider-Verse ",
     category: "Animation"
   }, {
     title: "How to Train Your Dragon",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcT6gPz8jlQ5K8HFPmBpA7XH3-7qYaV2qemFp7eb8ev8ZBcEl6FV&psig=AOvVaw0toypwF7-7sEvcmsnHdh-P&ust=1743623031766000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCMituJHMt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=How to Train Your Dragon",
     category: "Animation"
   },
    {
     title: "Inside Out",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcR7IE8YJaJlh3CW-KYU745oE2WzjyvRgKwNyAwe73di_U0uuD5Q&psig=AOvVaw0trUTvDDbiBWSxWrMa3Ipj&ust=1743623079199000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPCcn6PMt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Inside Out",
     category: "Animation"
   }, {
     title: "Frozen",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRtOzQ7EBgKQEtfGoCrVqTgNqCgvrvvqZiDGMwIzr9Zpl1YmGEt&psig=AOvVaw3lOrpg7hbRFTGBuMEHH2Z7&ust=1743623105969000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCOjj_a_Mt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=frozen",
     category: "Animation"
   },
   {
     title: "21 Jump Street",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTlrEwuDXX2EcLMc6YST6aaFlxwYwFgaxAK27b7DzRrR_EHLUGD&psig=AOvVaw1z8f5kzbGxAlzVpqfXv2DV&ust=1743623139508000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPCJ-L_Mt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=21 Jump Street",
     category: "Comedy"
   },
   {
     title: "We’re the Millers",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRDwBz-7x7VrGa9MHvPMeZCHP1cY9CxBN4zL5NgpqfMxsZu5tCj&psig=AOvVaw324E-91iVxALztBljqOJ2F&ust=1743623181751000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPCBktTMt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=We’re the Millers",
     category: "Comedy"
   },
   {
     title: "Welcome",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcSARsq9fR-_zG3B4Bq14Qp6T3tcNdugwMDOmM3Xoxj-eeCnkQJ6&psig=AOvVaw299LSSqofw8hsHWEvySigx&ust=1743623219796000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLCvsufMt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=welcome",
     category: "Comedy"
   },
   {
     title: "Fukrey ",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTXJeqIhusFyya5ajeJKCQx_VlYdO9uNnvPecG3mAQrwM-3wkVu&psig=AOvVaw0HyaFpbJNkRa8RIhKJAFwr&ust=1743623253006000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCIjmhfbMt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=fukrey",
     category: "Comedy"
   },
   {
     title: "3 Idiots",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQV7sONOx4fl1xq9CbdWUmcTamWwzrPMzqKhZOGHh-V0zHpn0Ly&psig=AOvVaw33r6eCS_FiZLD0RMFjCoQT&ust=1743623378523000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKCssrLNt4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=3idiots",
     category: "Comedy"
   },
   {
@@ -695,8 +695,8 @@ const music = [
 const games = [
   {
     title: "Assassin's Creed Odyssey",
-    image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
-    link: "https://www.google.com/search?q=journey+game",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTkMAVonLz7u2_Uu4c0OjG2dxcss4B_lN6bd0uUHnjJKxBAR_Ja&psig=AOvVaw1DLpkrQYXab06HZLE5EH0O&ust=1743621153756000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCJDsk43Ft4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Assassin's Creed Odyssey",
     category: "Adventure"
   },
   {
@@ -737,7 +737,7 @@ const games = [
   },
   {
     title: "Stardew Valley",
-    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTYjodiC5iI8_dj-2HEzV0cABYfC06q4zc3M_KIdqLiOsZjemmw&psig=AOvVaw3cofua_hilVSGjSiAHP3vy&ust=1743621089512000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKjvlu_Et4wDFQAAAAAdAAAAABAE",
     link: "https://www.google.com/search?q=stardew+valley+game",
     category: "Simulation"
   },
@@ -762,6 +762,28 @@ const games = [
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
     link: "https://www.google.com/search?q=stardew+valley+game",
     category: "Puzzle"
+  },
+  {
+    title: "Dragon Age: Inquisition",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "RPG"
+  },
+  {
+    title: "The Witcher 3: Wild Hunt",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "RPG"
+  },{
+    title: "Baldur’s Gate 3",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "RPG"
+  },{
+    title: "Cyberpunk 2077",
+    image: "https://tse1.mm.bing.net/th?id=OIP.a9hHlwAnsq2_YmXiXiwv7AHaLG&pid=Api",
+    link: "https://www.google.com/search?q=stardew+valley+game",
+    category: "RPG"
   },
 ];
 
