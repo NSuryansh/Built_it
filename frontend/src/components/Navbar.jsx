@@ -124,7 +124,7 @@ const Navbar = () => {
                 setShowNotifications(false);
                 toggleMenu();
               }}
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-2 rounded-full hover:bg-orange-300"
             >
               {isOpen ? (
                 <AiOutlineClose size={24} />
