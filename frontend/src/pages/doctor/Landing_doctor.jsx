@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import DoctorCalendar from "../../components/DoctorCalendar";
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
@@ -138,6 +139,7 @@ const DoctorLanding = () => {
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <DoctorCalendar />
             {/* Appointments Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex justify-between items-center mb-6">
@@ -179,44 +181,44 @@ const DoctorLanding = () => {
               </div>
             </div>
 
-            {/* Events Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Upcoming Events
-                </h2>
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
-                  View All <ChevronRight className="h-4 w-4 ml-1" />
-                </button>
-              </div>
+          </div>
+          {/* Events Section */}
+          <div className="bg-white rounded-xl mt-6 shadow-sm p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">
+                Upcoming Events
+              </h2>
+              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                View All <ChevronRight className="h-4 w-4 ml-1" />
+              </button>
+            </div>
 
-              <div className="space-y-4">
-                {events.map((event) => (
-                  <div
-                    key={event.id}
-                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        {event.title}
-                      </h3>
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
-                        {event.type}
-                      </span>
+            <div className="space-y-4">
+              {events.map((event) => (
+                <div
+                  key={event.id}
+                  className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-medium text-gray-900">
+                      {event.title}
+                    </h3>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
+                      {event.type}
+                    </span>
+                  </div>
+                  <div className="flex flex-col md:flex-col lg:flex-row sm:flex-row space-y-2 lg:space-y-0 sm:space-y-0 md:space-y-2 items-center text-sm text-gray-500">
+                    <div className="flex">
+                      <Calendar className="h-4 w-4 mr-1" />
+                      <span>{event.date}</span>
                     </div>
-                    <div className="flex flex-col md:flex-col lg:flex-row sm:flex-row space-y-2 lg:space-y-0 sm:space-y-0 md:space-y-2 items-center text-sm text-gray-500">
-                      <div className="flex">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        <span>{event.date}</span>
-                      </div>
-                      <div className="flex">
-                        <MapPin className="h-4 w-4 ml-4 mr-1" />
-                        <span>{event.location}</span>
-                      </div>
+                    <div className="flex">
+                      <MapPin className="h-4 w-4 ml-4 mr-1" />
+                      <span>{event.location}</span>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
