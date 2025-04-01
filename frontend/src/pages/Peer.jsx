@@ -208,21 +208,14 @@ const Peer = () => {
     };
   }, [aesKey, isAuthenticated]);
 
-  // Scroll to bottom helper
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
-  // Effect to scroll to the bottom whenever showMessages change:
-  useEffect(() => {
-    scrollToBottom();
-  }, [showMessages]);
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [showMessages]);
 
-  // Submit message and update showMessages
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
-      // Update local state for sent message
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: message, senderId: userId },
