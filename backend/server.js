@@ -935,7 +935,7 @@ app.get("/currentdocappt", async (req, res) => {
 });
 
 app.get("/pastdocappt", async (req, res) => {
-  const doctorId = req.query["doctorId"];
+  const doctorId = Number(req.query["doctorId"]);
   // Get today's date range (start and end of today)
   if (!doctorId) {
     return res.status(400).json({ message: "Doctor ID is required" });
@@ -944,13 +944,19 @@ app.get("/pastdocappt", async (req, res) => {
     const doctor = await prisma.doctor.findUnique({
       where: { id: doctorId },
     });
+    
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
+    console.log("HH")
     const appt = await prisma.pastAppointments.findMany({
       where: { doc_id: doctorId },
-    }); // Fetch all appts
-    res.json(appt); // Send the appts as a JSON response
+      include: {
+        user: true
+      },
+    });
+  
+    res.json(appt); 
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Error fetching past appointments" });
