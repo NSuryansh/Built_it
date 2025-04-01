@@ -16,14 +16,14 @@ import { useSearchParams } from "react-router-dom";
 
 const Peer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [aesKey, setAesKey] = useState();
+  const [aesKey, setAesKey] = useState(null);
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState("");
   const [showMessages, setShowMessages] = useState([]);
   const [recId, setRecid] = useState(0);
   const [showChatList, setShowChatList] = useState(true);
-  const [messagesApi, setMessagesApi] = useState();
+  const [messagesApi, setMessagesApi] = useState(null);
   const [reloader, setReloader] = useState(true);
   const navigate = useNavigate();
   const socketRef = useRef(null);
