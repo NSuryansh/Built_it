@@ -11,7 +11,7 @@ const ProgressPage = ({ isLandingPage }) => {
         const response = await fetch("http://localhost:3000/scores-bot", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: 1 }),
+          body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
         });
 
         if (!response.ok) {
