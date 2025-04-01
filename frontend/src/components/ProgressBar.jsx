@@ -1,12 +1,33 @@
 import React from "react";
 
 const ProgressBar = ({ label, value }) => {
+  if (value > 10) {
+    return (
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-lg font-medium text-[var(--mp-custom-gray-600)]">
+            {label}
+          </span>
+          <span className="text-lg font-medium text-[var(--mp-custom-gray-600)]">
+            Insufficient Data
+          </span>
+        </div>
+      </div>
+    );
+  }
 
-  const getBarColor = (value) => {
-    if (value <= 2.5) return "#EF4444"; 
-    if (value <= 5) return "#EAB308";  
+  const getBarColor = (label, value) => {
+    if(label === "Stress"){
+    if (value <= 2.5) return "#EF4444";
+    if (value <= 5) return "#EAB308";   
     if (value <= 7.5) return "#3B82F6"; 
-    return "#22C55E";                  
+    return "#22C55E";                
+    }else{
+      if (value <= 2.5) return "#22C55E";
+    if (value <= 5) return "#3B82F6";   
+    if (value <= 7.5) return "#EAB308"; 
+    return "#EF4444";   
+    }
   };
 
   return (
