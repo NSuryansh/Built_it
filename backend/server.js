@@ -46,7 +46,11 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173","https://built-it.vercel.app"], // Change this to your frontend URL in production
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
+}));
 const io = new Server(server, {
   cors: { origin: "https://built-it-xjiq.onrender.com", methods: ["GET", "POST"], credentials: true },
   transports: ["websocket", "polling"],
@@ -1422,6 +1426,8 @@ app.get("/available-slots", async (req, res) => {
       return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes();
     });
 
+    console.log(bookedSlots)
+
     const leavePeriods = doctorLeaves.map((leave) => ({
       start: new Date(leave.date_start).getTime(),
       end: new Date(leave.date_end).getTime(),
@@ -1451,7 +1457,7 @@ app.get("/available-slots", async (req, res) => {
         (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end
       );
     });
-
+    console.log(availableSlots)
     res.json({ availableSlots });
   } catch (error) {
     console.error(error);
@@ -1459,46 +1465,19 @@ app.get("/available-slots", async (req, res) => {
   }
 });
 
-// app.get("/available-slots", async (req, res) => {
-//   const { docId } = req.query;
-//   const doctor_id = Number(docId)
-//   try {
-//     const bookedSlots = await prisma.appointments.findMany({
-//       where: { doctor_id },
-//       select: { dateTime: true },
-//     });
-
-//     const doctorLeaves = await prisma.doctorLeave.findMany({
-//       where: { doctor_id },
-//       select: { date_start: true, date_end: true },
-//     });
-
-//     let availableSlots = await prisma.slots.findMany({
-//       where: { doctor_id },
-//     });
-
-//     availableSlots = availableSlots.filter(
-//       (slot) =>
-//         !bookedSlots.some(
-//           (b) => b.dateTime.getTime() === slot.starting_time.getTime()
-//         )
-//     );
-
-//     availableSlots = availableSlots.filter(
-//       (slot) =>
-//         !doctorLeaves.some(
-//           (leave) =>
-//             slot.starting_time >= leave.date_start &&
-//             slot.starting_time <= leave.date_end
-//         )
-//     );
-
-//     res.json({ availableSlots });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Couldn't fetch the slots" });
-//   }
-// });
+app.get('/check-user', async(req,res)=>{
+  const {username} = req.query
+  const user = await prisma.user.findUnique({
+    where: {
+      username: username
+    }
+  })
+  if(user){
+    res.json({message: "Username already exists!"})
+  }else{
+    res.json({message: "No such username"})
+  }
+})
 
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
@@ -1581,12 +1560,6 @@ app.post("/scores-bot", async (req, res) => {
   }
 });
 
-server.listen(3000, () => console.log("Server running on port 3000"));
-
-// app.listen(port, () => {
-//   console.log(`Server running on port ${port}`);
-// });
-
 app.put("/modify-doctor", async (req, res) => {
   try {
     const { id, name, email, mobile, desc } = req.body;
@@ -1645,3 +1618,38 @@ app.put("/modify-doctor", async (req, res) => {
     res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 });
+
+app.post('/emerApp', async(req,res)=>{
+  const {name, email, phone, dateTime, reason, docId} = req.body
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  })
+  if(user){
+    const app = await prisma.appointments.create({
+      data:{
+        user_id: user.id,
+        doctor_id: Number(docId),
+        dateTime: new Date(dateTime),
+        reason: reason
+      }
+    })
+    res.json(app)
+  }else{
+    const app = await prisma.emergencyApp.create({
+      data:{
+        name: name,
+        email: email,
+        phone: phone,
+        dateTime: new Date(dateTime),
+        reason: reason,
+        doctor_id: Number(docId)
+      }
+    })
+    console.log(app)
+    res.json(app)
+  }
+})
+
+server.listen(3000, () => console.log("Server running on port 3000"));

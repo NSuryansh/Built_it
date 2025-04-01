@@ -9,6 +9,7 @@ import {
   User,
   Calendar,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const BookingFormStep = ({
   formData,
@@ -18,6 +19,37 @@ const BookingFormStep = ({
   selectedDoctor,
   isAuthenticated,
 }) => {
+  const [slots, setAvailableSlots] = useState([]);
+  const [date, setSelectedDate] = useState("");
+  const [time, setSelectedTime] = useState("");
+  const fetchAvailableSlots = async (date) => {
+    try {
+      const doctorId = selectedDoctor.id;
+      const response = await fetch(
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+      );
+      const data = await response.json();
+      console.log(data);
+      setAvailableSlots(data.availableSlots);
+    } catch (error) {
+      console.error("Error fetching available slots:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(slots);
+  }, [slots]);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setSelectedTime("");
+    fetchAvailableSlots(date);
+  };
+
+  const handleTimeChange = (event) => {
+    setSelectedTime(event.target.value);
+  };
+
   return (
     <div className="bg-gradient-to-b from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
@@ -98,25 +130,6 @@ const BookingFormStep = ({
             />
           </div>
 
-          {/* <div className="group">
-            <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
-              <Calendar className="w-4 h-4" />
-              <Clock className="w-4 h-4" />
-              Preferred Date
-            </label>
-            <input
-              type="datetime-local"
-              name="date"
-              value={formData.date}
-              onChange={(e) => {
-                handleChange(e);
-                console.log(formData.date);
-              }}
-              className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none"
-              required
-            />
-          </div> */}
-
           <div className="group space-y-4">
             <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium">
               <Calendar className="w-4 h-4" />
@@ -132,13 +145,15 @@ const BookingFormStep = ({
                   value={formData.date.split("T")[0]}
                   onChange={(e) => {
                     const newDate = e.target.value;
-                    const currentTime = formData.date.split("T")[1] || "09:00";
+                    const currentTime = formData.date.split("T")[2] || "09:00";
                     handleChange({
                       target: {
                         name: "date",
                         value: `${newDate}T${currentTime}`,
                       },
                     });
+                    handleDateChange(newDate);
+                    fetchAvailableSlots(newDate);
                   }}
                   className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-white"
                   required
@@ -165,31 +180,26 @@ const BookingFormStep = ({
               <div>
                 <select
                   name="time"
-                  value={formData.date.split("T")[1] || "09:00"}
+                  value={time}
                   onChange={(e) => {
-                    const currentDate =
-                      formData.date.split("T")[0] ||
-                      new Date().toISOString().split("T")[0];
+                    const currentDate = formData.date.split("T")[0];
                     handleChange({
                       target: {
                         name: "date",
-                        value: `${currentDate}T${e.target.value}`,
+                        value: `${currentDate}T${e.target.value.split("T")[1]}`,
                       },
                     });
+                    handleTimeChange(e);
                   }}
                   className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-white"
-                  required
                 >
                   <option value="">Select Time</option>
-                  {[...Array(9)].map((_, index) => {
-                    const hour = index + 9; // Starting from 9 AM
-                    const time = `${hour.toString().padStart(2, "0")}:00`;
-                    return (
-                      <option key={time} value={time}>
-                        {hour > 12 ? `${hour - 12}:00 PM` : `${hour}:00 AM`}
+                  {Array.isArray(slots) &&
+                    slots.map((slot) => (
+                      <option key={slot.id} value={slot.starting_time}>
+                        {slot.starting_time.split("T")[1].slice(0, 5)}
                       </option>
-                    );
-                  })}
+                    ))}
                 </select>
               </div>
             </div>

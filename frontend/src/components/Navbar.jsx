@@ -47,7 +47,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     if (userType === "user") {
-      res.clearCookie("refreshToken")
+      // res.clearCookie("refreshToken")
       navigate("/login");
     } else if (userType === "doc") {
       navigate("/doctor/login");
@@ -124,7 +124,7 @@ const Navbar = () => {
                 setShowNotifications(false);
                 toggleMenu();
               }}
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-2 rounded-full hover:bg-orange-300"
             >
               {isOpen ? (
                 <AiOutlineClose size={24} />
@@ -231,7 +231,7 @@ const Navbar = () => {
                         </div>
 
                         <div className="text-sm text-[var(--custom-orange-800)]">
-                          <p>Alt Phone Number</p>
+                          <p>Emergency Contact Number</p>
                           <p className="font-medium">{altPhoneNumber}</p>
                         </div>
                       </div>

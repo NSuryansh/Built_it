@@ -7,6 +7,7 @@ import SessionExpired from "../../components/SessionExpired"; // Ensure this exi
 import Footer from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
@@ -143,9 +144,9 @@ const DoctorLanding = () => {
                 <h2 className="text-xl font-semibold text-gray-900">
                   Upcoming Appointments
                 </h2>
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                <Link to='/doctor/appointments' className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
                   View All <ChevronRight className="h-4 w-4 ml-1" />
-                </button>
+                </Link>
               </div>
 
               <div className="space-y-4">
