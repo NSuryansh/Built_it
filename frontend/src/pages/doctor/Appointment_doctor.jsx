@@ -486,7 +486,7 @@ const DoctorAppointment = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="UG" fill="#048A81" name="UG Appointments" />
+                  <Bar dataKey="UG" fill="#155DFC" name="UG Appointments" />
                   <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
                   <Bar dataKey="PhD" fill="#FB8500" name="PhD Appointments" />
                 </BarChart>
