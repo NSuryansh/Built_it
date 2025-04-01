@@ -46,21 +46,24 @@ export default function App() {
   const subscribeToPush = async () => {
     // console.log(SERVER_KEY);
     // console.log(import.meta.env);
-    const registration = await navigator.serviceWorker.ready;
-    const subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: convertedVapidKey,
-    });
+    // console.log(convertedVapidKey)
+    // const registration = await navigator.serviceWorker.ready;
+    // const subscription = await registration.pushManager.subscribe({
+    //   userVisibleOnly: true,
+    //   applicationServerKey: convertedVapidKey,
+    // });
     // console.log("Push Subscription:", JSON.stringify(subscription));
 
     // saveSubscription(subscription)
-    const res = await fetch("http://localhost:3000/save-subscription", {
-      method: "POST",
-      body: JSON.stringify(subscription),
-      headers: { "Content-Type": "application/json" },
-    });
+    // const res = await fetch("https://built-it-xjiq.onrender.com/save-subscription", {
+    //   method: "POST",
+    //   body: JSON.stringify(subscription),
+    //   headers: { "Content-Type": "application/json" },
+    // });
 
-    const resp = await res.json();
+    // const resp = await res.json();
+
+    // console.log(resp)
     // console.log(resp);
 
     // const res2 = await fetch("http://localhost:3000/send-notification", {
@@ -75,24 +78,24 @@ export default function App() {
     // return subscription;
   };
 
-  const requestNotificationPermission = async () => {
-    if (
-      Notification.permission !== "granted" &&
-      Notification.permission !== "denied"
-    ) {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        // console.log("Notification permission granted.");
-      } else {
-        // console.log("Notification permission denied.");
-      }
-    }
-    subscribeToPush();
-  };
+  // const requestNotificationPermission = async () => {
+  //   if (
+  //     Notification.permission !== "granted" &&
+  //     Notification.permission !== "denied"
+  //   ) {
+  //     const permission = await Notification.requestPermission();
+  //     if (permission === "granted") {
+  //       // console.log("Notification permission granted.");
+  //     } else {
+  //       // console.log("Notification permission denied.");
+  //     }
+  //   }
+  //   subscribeToPush();
+  // };
 
-  useEffect(() => {
-    requestNotificationPermission();
-  }, []);
+  // useEffect(() => {
+  //   requestNotificationPermission();
+  // }, []);
 
   return (
     <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>

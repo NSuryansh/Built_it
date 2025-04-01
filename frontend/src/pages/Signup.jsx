@@ -250,6 +250,39 @@ const SignUp = () => {
       setFormData({ ...formData, rollNo: roll });
     }
 
+    try {
+      const response = await fetch(
+        `http://localhost:3000/check-user?username=${formData.username}`
+      );
+      const data = await response.json();
+      if (data.message === "Username already exists!") {
+        setError(data.message);
+        toast(data.message, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
+        return;
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      toast(error.toString(), {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
+    }
+
     // Example condition for academic program
     if (lowerCaseEmail.startsWith("phd")) {
       setAcadProg("PHD");

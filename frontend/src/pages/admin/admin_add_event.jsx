@@ -82,15 +82,15 @@ const AddEvent = () => {
   }
 
   return (
-    <div className="bg-[var(--custom-primary-green-50)]">
+    <div className="bg-[var(--custom-primary-green-50)] min-h-screen">
       <AdminNavbar />
       <ToastContainer />
-      <div className="space-y-6 py-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center">
+      <div className="space-y-6 px-2 py-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center">
         <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-[-20px]">
           Add New Event
         </h1>
 
-        <div className="bg-white p-6 min-w-2xl rounded-xl shadow-lg max-w-2xl">
+        <div className="bg-white p-6 w-full rounded-xl shadow-lg max-w-2xl">
           {error && <p className="text-red-600 mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">

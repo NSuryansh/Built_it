@@ -28,23 +28,22 @@ const Peer = () => {
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
-  const messagesEndRef = useRef(null); // Ref for scrolling to bottom
+  const messagesEndRef = useRef(null);
 
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
 
-  // Get search params once, without state updates in the render body.
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
+  
   useEffect(() => {
     if (newChatId) {
       setRecid(newChatId);
     }
   }, [newChatId]);
-  // Process new chat if provided in URL params.
+
   useEffect(() => {
-    // console.log("New chat params:", newChatId, newChatUsername);
     if (newChatId && newChatUsername) {
       const existingIndex = chats.findIndex(
         (chat) => String(chat.id) === String(newChatId)
@@ -69,7 +68,6 @@ const Peer = () => {
     }
   }, [newChatId, newChatUsername, chats]);
 
-  // Filter out the current user from contacts
   const filteredChats = chats.filter(
     (chat) => String(chat.id) !== String(userId)
   );
@@ -92,9 +90,7 @@ const Peer = () => {
         messages: [],
       }));
 
-      // Merge new chat if not already included
       setChats((prevChats) => {
-        // Convert both IDs to string for a consistent comparison
         const merged = [...updatedChats];
         prevChats.forEach((chat) => {
           if (!merged.find((c) => String(c.id) === String(chat.id))) {
@@ -132,7 +128,6 @@ const Peer = () => {
     }
   }, [selectedChat]);
 
-  // Authentication check
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("user");
@@ -141,10 +136,9 @@ const Peer = () => {
     verifyAuth();
   }, []);
 
-  // Initialize WebSocket connection
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it-xjiq.onrender.com/",{
+    socketRef.current = io("https://built-it-xjiq.onrender.com/", {
       transports: ["websocket"]
     })
     socketRef.current.on("connect", () => {
@@ -158,7 +152,6 @@ const Peer = () => {
     };
   }, [userId]);
 
-  // Generate AES key
   useEffect(() => {
     async function fetchKey() {
       const key = generateAESKey();
@@ -167,7 +160,6 @@ const Peer = () => {
     fetchKey();
   }, []);
 
-  // Handle receiving messages and update showMessages
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
@@ -191,11 +183,9 @@ const Peer = () => {
       );
       console.log("Decrypted message:", decrypted);
 
-      // Avoid duplicate messages
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
-      // Append the received message to showMessages
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId },
@@ -208,21 +198,13 @@ const Peer = () => {
     };
   }, [aesKey, isAuthenticated]);
 
-  // Scroll to bottom helper
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  // Effect to scroll to the bottom whenever showMessages change:
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
 
-  // Submit message and update showMessages
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
-      // Update local state for sent message
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: message, senderId: userId },
@@ -239,11 +221,8 @@ const Peer = () => {
       });
       setMessage("");
     }
-    // Removed reloader toggle to prevent overriding sent message
-    // setReloader((prev) => !prev);
   };
 
-  // Fetch messages from API and initialize showMessages
   async function fetchMessages(userId, recipientId) {
     try {
       console.log(recipientId, "AAAAALLLLLEE");
@@ -264,11 +243,9 @@ const Peer = () => {
           ),
         }))
       );
-      // console.log(decrypted_api_messages);
 
       setMessagesApi(decrypted_api_messages);
 
-      // Set both messagesApi and showMessages to display the full conversation
       const filteredMessages = decrypted_api_messages.filter((msg) => {
         return (
           (msg.senderId === userId && msg.recipientId === recipientId) ||
@@ -298,7 +275,6 @@ const Peer = () => {
     console.log("Current showMessages", showMessages);
   }, [showMessages]);
 
-  // Re-fetch messages when chat selection changes
   useEffect(() => {
     if (userId && filteredChats.length > 0) {
       console.log("hello")
@@ -306,12 +282,10 @@ const Peer = () => {
     }
   }, [selectedChat, userId, reloader]);
 
-  // Handle session timeout
   const handleClosePopup = () => {
     navigate("/login");
   };
 
-  // Render based on authentication status
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
@@ -343,7 +317,8 @@ const Peer = () => {
     <div className="flex flex-col h-screen bg-[var(--mp-custom-white)]">
       <Navbar />
       <ToastContainer />
-      <div className="md:flex h-full hidden">
+      {/* Desktop Layout */}
+      <div className="md:flex h-[calc(100vh-64px)] hidden">
         {filteredChats.length > 0 ? (
           <div className="md:w-4/12 lg:w-3/12">
             <ChatList
@@ -358,7 +333,7 @@ const Peer = () => {
             You have no chats
           </div>
         )}
-        <div className="flex-1 h-full justify-between flex flex-col">
+        <div className="flex flex-col h-full flex-1">
           <div className="p-4 flex justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
             <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
               {filteredChats[selectedChat]?.name || "Select a chat"}
@@ -374,17 +349,20 @@ const Peer = () => {
             ))}
             <div ref={messagesEndRef} />
           </div>
-          <ChatInput
-            message={message}
-            setMessage={setMessage}
-            handleSubmit={handleSubmit}
-          />
+          <div className="flex-none border-t border-[var(--mp-custom-gray-200)]">
+            <ChatInput
+              message={message}
+              setMessage={setMessage}
+              handleSubmit={handleSubmit}
+            />
+          </div>
         </div>
       </div>
-      <div className="md:hidden h-full">
-        {showChatList === true ? (
+      {/* Mobile Layout */}
+      <div className="md:hidden h-[calc(100vh-64px)]">
+        {showChatList ? (
           filteredChats.length > 0 ? (
-            <div>
+            <div className="h-full">
               <ChatList
                 names={filteredChats.map((chat) => chat.name)}
                 selectedChat={selectedChat}
@@ -397,18 +375,13 @@ const Peer = () => {
               You have no chats
             </div>
           )
-        ) : null}
-        {showChatList === false ? (
-          <div className="flex-1 h-full justify-between flex flex-col">
+        ) : (
+          <div className="flex flex-col h-full">
             <div className="p-4 flex w-full justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
               <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
                 {filteredChats[selectedChat]?.name || "Select a chat"}
               </h2>
-              <button
-                onClick={() => {
-                  setShowChatList(true);
-                }}
-              >
+              <button onClick={() => setShowChatList(true)}>
                 <AiOutlineCloseCircle />
               </button>
             </div>
@@ -422,13 +395,15 @@ const Peer = () => {
               ))}
               <div ref={messagesEndRef} />
             </div>
-            <ChatInput
-              message={message}
-              setMessage={setMessage}
-              handleSubmit={handleSubmit}
-            />
+            <div className="flex-none border-t border-[var(--mp-custom-gray-200)]">
+              <ChatInput
+                message={message}
+                setMessage={setMessage}
+                handleSubmit={handleSubmit}
+              />
+            </div>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );

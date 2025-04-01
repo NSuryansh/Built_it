@@ -19,8 +19,7 @@ const ProgressPage = ({ isLandingPage }) => {
         }
 
         const data = await response.json();
-
-        // Set scores using the keys received from the backend.
+        
         setScores({
           mental_health_score: data.mental_health_score || 0,
           stress_score: data.stress_score || 0,

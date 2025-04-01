@@ -5,16 +5,20 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
 import Footer from "../../components/Footer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { Link } from "react-router-dom";
+
 import DoctorCalendar from "../../components/DoctorCalendar";
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  
+
+
   const navigate = useNavigate();
+
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
@@ -23,6 +27,7 @@ const DoctorLanding = () => {
     verifyAuth();
   }, []);
 
+  // Fetch upcoming appointments
   useEffect(() => {
     const docId = localStorage.getItem("userid");
     console.log(docId);
@@ -59,11 +64,6 @@ const DoctorLanding = () => {
         toast("Error while fetching data", {
           position: "bottom-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
           className: "custom-toast",
         });
       }
@@ -72,7 +72,7 @@ const DoctorLanding = () => {
     fetchAppointments();
   }, [isAuthenticated]);
 
-  // Fetch Events
+  // Fetch events
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -102,11 +102,6 @@ const DoctorLanding = () => {
         toast("Error while fetching data", {
           position: "bottom-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
           className: "custom-toast",
         });
       }
@@ -114,6 +109,9 @@ const DoctorLanding = () => {
 
     fetchEvents();
   }, []);
+
+  // Fetch past appointments for bar graph (segregation)
+
 
   if (isAuthenticated === null) {
     return (
@@ -123,6 +121,7 @@ const DoctorLanding = () => {
       </div>
     );
   }
+
   const handleClosePopup = () => {
     navigate("/doctor/login");
   };
@@ -131,12 +130,12 @@ const DoctorLanding = () => {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
+ 
   return (
     <div className="min-h-screen flex flex-col">
       <DoctorNavbar />
       <ToastContainer />
       <div className="h-full bg-gray-50">
-        {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <DoctorCalendar />
@@ -193,34 +192,37 @@ const DoctorLanding = () => {
               </button>
             </div>
 
-            <div className="space-y-4">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-medium text-gray-900">
-                      {event.title}
-                    </h3>
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
-                      {event.type}
-                    </span>
-                  </div>
-                  <div className="flex flex-col md:flex-col lg:flex-row sm:flex-row space-y-2 lg:space-y-0 sm:space-y-0 md:space-y-2 items-center text-sm text-gray-500">
-                    <div className="flex">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      <span>{event.date}</span>
+              <div className="space-y-4">
+                {events.map((event) => (
+                  <div
+                    key={event.id}
+                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        {event.title}
+                      </h3>
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
+                        {event.type}
+                      </span>
                     </div>
-                    <div className="flex">
-                      <MapPin className="h-4 w-4 ml-4 mr-1" />
-                      <span>{event.location}</span>
+                    <div className="flex flex-col md:flex-col lg:flex-row sm:flex-row space-y-2 lg:space-y-0 sm:space-y-0 md:space-y-2 items-center text-sm text-gray-500">
+                      <div className="flex">
+                        <Calendar className="h-4 w-4 mr-1" />
+                        <span>{event.date}</span>
+                      </div>
+                      <div className="flex">
+                        <MapPin className="h-4 w-4 ml-4 mr-1" />
+                        <span>{event.location}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+            
             </div>
           </div>
+
+          
         </div>
       </div>
       <Footer color={"blue"} />
