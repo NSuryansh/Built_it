@@ -1,11 +1,12 @@
 import React from "react";
 
 const ProgressBar = ({ label, value }) => {
+
   const getBarColor = (value) => {
-    if (value <= 25) return "#EF4444"; // red
-    if (value <= 50) return "#EAB308"; // yellow
-    if (value <= 75) return "#3B82F6"; // blue
-    return "#22C55E"; // green
+    if (value <= 2.5) return "#EF4444"; 
+    if (value <= 5) return "#EAB308";  
+    if (value <= 7.5) return "#3B82F6"; 
+    return "#22C55E";                  
   };
 
   return (
@@ -15,14 +16,14 @@ const ProgressBar = ({ label, value }) => {
           {label}
         </span>
         <span className="text-lg font-medium text-[var(--mp-custom-gray-600)]">
-          {value}
+          {value} / 10
         </span>
       </div>
       <div className="relative h-2 bg-[var(--mp-custom-gray-200)] rounded-lg overflow-hidden">
         <div
           className="absolute top-0 left-0 h-full transition-all duration-1000 ease-out rounded-lg"
           style={{
-            width: `${value}%`,
+            width: `${value * 10}%`,
             backgroundColor: getBarColor(value),
             boxShadow: `0 0 10px ${getBarColor(value)}`,
           }}
