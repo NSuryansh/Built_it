@@ -103,7 +103,7 @@ const DoctorAppointment = () => {
 
     const fetchPastAppointments = async () => {
       try {
-        const response = await fetch(`http://built-it-xjiq.onrender.com/pastdocappt?doctorId=${docId}`);
+        const response = await fetch(`https://built-it-xjiq.onrender.com/pastdocappt?doctorId=${docId}`);
         const data = await response.json();
         console.log(data, "DATA JKL")
         if (response.ok) {
