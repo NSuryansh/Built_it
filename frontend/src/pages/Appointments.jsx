@@ -11,7 +11,7 @@ const UserAppointments = () => {
 
   async function getPrevApp() {
     const res = await fetch(
-      `http://localhost:3000/pastuserappt?userId=${user_id}`
+      `https://built-it-xjiq.onrender.com/pastuserappt?userId=${user_id}`
     );
     const resp = await res.json();
     console.log(resp);
@@ -20,7 +20,7 @@ const UserAppointments = () => {
 
   async function getCurrApp() {
     const res = await fetch(
-      `http://localhost:3000/currentuserappt?userId=${user_id}`
+      `https://built-it-xjiq.onrender.com/currentuserappt?userId=${user_id}`
     );
     const resp = await res.json();
     console.log(resp);

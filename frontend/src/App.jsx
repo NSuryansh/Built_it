@@ -66,10 +66,10 @@ export default function App() {
     console.log(resp)
     // console.log(resp);
 
-    // const res2 = await fetch("http://localhost:3000/send-notification", {
+    // const res2 = await fetch("https:/built-it-xjiq.onrender.com/send-notification", {
     //   method: "POST",
     //   body: JSON.stringify({
-    //     message:"HI"
+    //     message:"HI
     //   }),
     //   headers:{"Content-type":"Application/json"}
     // });
