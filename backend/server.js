@@ -1384,7 +1384,7 @@ app.post("/node-chat", async (req, res) => {
     console.log("HELOE");
     const { user_id, message } = req.body;
 
-    const response = await axios.post("https://localhost:5000/chatWithBot", {
+    const response = await axios.post("http://localhost:5000/chatWithBot", {
       user_id,
       message,
     });
