@@ -541,151 +541,151 @@ const music = [
   {
     title: "Weightless - Marconi Union",
     image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/track/6kkwzB6hXLIONkEk9JciA6",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX3Ogo9pFvBkY?utm_source",
     category: "Ambient"
   },
   {
-    title: "Harold Budd & Brian Eno",
+    title: "Cenotes",
     image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX3Ogo9pFvBkY?utm_source",
     category: "Ambient"
   },
   {
-    title: "Tangerine Dream",
+    title: "Distant Traveller",
     image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX3Ogo9pFvBkY?utm_source",
     category: "Ambient"
   },
   {
-    title: "Solar Fields – Blue Moon Station ",
+    title: "Entirely",
     image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX3Ogo9pFvBkY?utm_source",
     category: "Ambient"
   },
   {
-    title: "Gas – Pop",
+    title: "Ceres",
     image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX3Ogo9pFvBkY?utm_source",
     category: "Ambient"
   },
   {
-    title: "Brian Eno",
+    title: "Enigma",
     image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u?utm_source",
     category: "Meditation"
   },
   {
-    title: "Max Richter – Dream 3",
+    title: "Frid",
     image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u?utm_source",
     category: "Meditation"
   },
   {
-    title: "Liquid Mind",
+    title: "Pages",
     image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u?utm_source",
     category: "Meditation"
   },
   {
-    title: "Snatam Kaur – Ong Namo",
+    title: "Euphorbia",
     image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u?utm_source",
     category: "Meditation"
   },
   {
-    title: "Steven Halpern – Deep Alpha",
+    title: "Night Winds",
     image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u?utm_source",
     category: "Meditation"
   },
   {
-    title: "Gentle Rainfall ",
+    title: "Sleep Waves 1 ",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/48sGg4EhRHdrPdurnSoUBH?utm_source",
     category: "Nature"
   },
   {
-    title: "Thunderstorm ",
+    title: "Rain tree",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/48sGg4EhRHdrPdurnSoUBH?utm_source8",
     category: "Nature"
   },
   {
-    title: "Waves Crashing on Shore",
+    title: "Delicate Woodland With Bird Song",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/48sGg4EhRHdrPdurnSoUBH?utm_source",
     category: "Nature"
   },
   {
-    title: "Waterfall",
+    title: "Ocean Waves",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/48sGg4EhRHdrPdurnSoUBH?utm_source",
     category: "Nature"
   },
   {
-    title: "Raga Shankarabharanam",
+    title: "Blue Lagoon",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/48sGg4EhRHdrPdurnSoUBH?utm_source",
     category: "Nature"
   },
   {
-    title: "Raga Bhairav",
+    title: "Dhun In Raga Bhairavi",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/4JtowPifE700fO0oqyMFSD?utm_source",
     category: "Classical"
   },
   {
-    title: "Rainforest Stream ",
+    title: "Madhoushi",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/4JtowPifE700fO0oqyMFSD?utm_source",
     category: "Classical"
   },
   {
-    title: "Pyotr Ilyich Tchaikovsky – Swan Lake",
+    title: "Thillana",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/4JtowPifE700fO0oqyMFSD?utm_source",
     category: "Classical"
   },
   {
-    title: "Johann Sebastian Bach – Air on the G String",
+    title: "The Well Tempered Claiver",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0?utm_source",
     category: "Classical"
   },
   {
-    title: "Ludwig van Beethoven – Symphony No. 9 ",
+    title: "Cello Suite NO.1 ",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0?utm_source",
     category: "Classical"
   },
   {
-    title: "Chillhop Essentials ",
+    title: "Blues ",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWWQRwui0ExPn?utm_source",
     category: "Lo-fi"
   },
   {
-    title: "Study Beats ",
+    title: "Sundown",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWWQRwui0ExPn?utm_source",
     category: "Lo-fi"
   },
   {
-    title: "Idealism – Both of Us",
+    title: "YU",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWWQRwui0ExPn?utm_source",
     category: "Lo-fi"
   },
   {
-    title: "Joey Pecoraro – 5AM ",
+    title: "STHLM Air",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWWQRwui0ExPn?utm_source",
     category: "Lo-fi"
   },
   {
-    title: "Jinsang – Solitude ",
+    title: "Unchained ",
     image: "https://images.unsplash.com/photo-1500829243541-74b677fecc30?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8",
+    spotifyLink: "https://open.spotify.com/playlist/37i9dQZF1DWWQRwui0ExPn?utm_source",
     category: "Lo-fi"
   },
 ];
