@@ -476,7 +476,7 @@ const DoctorAppointment = () => {
           {/* Past Appointments Segregation Graph */}
           <div className="w-full mt-10 bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Past Appointments Segregation (Last 1, 3, 6, & 12 Months)
+              Past Appointments 
             </h2>
             <div className="h-96 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -486,7 +486,7 @@ const DoctorAppointment = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="UG" fill="#155DFC" name="UG Appointments" />
+                  <Bar dataKey="UG" fill="#155DFC" name="UG Appointments"/>
                   <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
                   <Bar dataKey="PhD" fill="#FB8500" name="PhD Appointments" />
                 </BarChart>
