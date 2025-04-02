@@ -60,12 +60,17 @@ model Doctor {
   desc     String?
   img      String?
   id       Int                @id @default(autoincrement())
+  address  String?
+  city     String?
+  experience String?
   docApp   Appointments[]
   pastApp  PastAppointments[]
   request  Requests[]
   slot     Slots[]
   leave    DoctorLeave[]
   emerApp  EmergencyApp[]
+  education DocEducation[]
+  certificaition DocCertification[]
 
   // bookings Booked[]
   @@map("doctor")
@@ -230,4 +235,18 @@ model EmergencyApp {
   reason    String
   doctor_id Int
   doctor    Doctor   @relation(fields: [doctor_id], references: [id])
+}
+
+model DocEducation {
+  id        Int      @id @default(autoincrement())
+  doctor_id Int
+  doctor    Doctor   @relation(fields: [doctor_id], references: [id])
+  education String
+}
+
+model DocCertification{
+  id Int @id @default(autoincrement())
+  doctor_id Int
+  doctor Doctor @relation(fields: [doctor_id], references: [id])
+  certification String
 }
