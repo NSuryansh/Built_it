@@ -36,7 +36,7 @@ const Peer = () => {
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
-  
+
   useEffect(() => {
     if (newChatId) {
       setRecid(newChatId);
@@ -139,8 +139,8 @@ const Peer = () => {
   useEffect(() => {
     if (!userId) return;
     socketRef.current = io("https://built-it-xjiq.onrender.com/", {
-      transports: ["websocket"]
-    })
+      transports: ["websocket"],
+    });
     socketRef.current.on("connect", () => {
       console.log("Connected to WebSocket server");
       socketRef.current.emit("register", { userId });
@@ -277,7 +277,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (userId && filteredChats.length > 0) {
-      console.log("hello")
+      console.log("hello");
       fetchMessages(userId, filteredChats[selectedChat]?.id);
     }
   }, [selectedChat, userId, reloader]);
@@ -288,9 +288,9 @@ const Peer = () => {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
         <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
   }

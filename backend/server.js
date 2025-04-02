@@ -49,7 +49,13 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-app.use(cors())
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://built-it.vercel.app"], // Change this to your frontend URL in production
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
 
 const io = new Server(server, {
   cors: {
