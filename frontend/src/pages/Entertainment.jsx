@@ -263,10 +263,13 @@ function Entertainment() {
 
 export default Entertainment;*/
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Music, Book, Gamepad2, Film, ChevronDown, ChevronUp } from 'lucide-react';
 import Navbar from "../components/Navbar";
-
+import { useNavigate } from 'react-router-dom';
+import { checkAuth } from '../utils/profile';
+import PacmanLoader from "react-spinners/PacmanLoader";
+import SessionExpired from '../components/SessionExpired';
 
 const movies = [
   {
@@ -793,6 +796,33 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Top Picks');
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  const handleClosePopup = () => {
+    navigate("/login");
+  };
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   const getFilteredItems = () => {
     if (selectedCategory === 'Top Picks') {

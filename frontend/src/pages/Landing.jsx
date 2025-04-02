@@ -12,16 +12,19 @@ const Landing = () => {
   useEffect(() => {
     const verifyAuth = async () => {
       const userAuthStatus = await checkAuth("user");
+      console.log(userAuthStatus);
       if (userAuthStatus) {
         setIsAuthenticated(userAuthStatus);
         navigate("/dashboard");
       } else {
         const docAuthStatus = await checkAuth("doc");
+        console.log(docAuthStatus);
         if (docAuthStatus) {
           setIsAuthenticated(docAuthStatus);
           navigate("/doctor/landing");
         } else {
           const adminAuthStatus = await checkAuth("admin");
+          console.log(adminAuthStatus);
           if (adminAuthStatus) {
             setIsAuthenticated(adminAuthStatus);
             navigate("/admin/dashboard");
@@ -132,7 +135,7 @@ const Landing = () => {
                 </Link>
               </div>
               <img
-                src="/assets/qr-code.svg"
+                src="/assests/qr-code.svg"
                 className="w-[250px] mt-16 md:mt-0"
                 alt="qr-code"
               />
