@@ -1147,7 +1147,7 @@ app.post("/forgotPassword", async (req, res) => {
       },
     });
     console.log(tokengen);
-    const resetLink = `http://localhost:5173/reset-password?token=${token}`;
+    const resetLink = `https://built-it-1.onrender.com//reset-password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(user.email, subject, message);
@@ -1208,7 +1208,7 @@ app.post("/forgotDoctorPassword", async (req, res) => {
       },
     });
     console.log(tokengen);
-    const resetLink = `http://localhost:5173/doctor/reset_password?token=${token}`;
+    const resetLink = `https://built-it-1.onrender.com//doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(doctor.email, subject, message);
@@ -1269,7 +1269,7 @@ app.post("/forgotAdminPassword", async (req, res) => {
       },
     });
     console.log(tokengen);
-    const resetLink = `http://localhost:5173/admin/reset_password?token=${token}`;
+    const resetLink = `https://built-it-1.onrender.com/admin/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(admin.email, subject, message);
@@ -1378,7 +1378,7 @@ app.post("/node-chat", async (req, res) => {
     console.log("HELOE");
     const { user_id, message } = req.body;
 
-    const response = await axios.post("https://built-it-python.onrender.com:5000/chatWithBot", {
+    const response = await axios.post("https://localhost:5000/chatWithBot", {
       user_id,
       message,
     });
@@ -1558,7 +1558,7 @@ app.post("/scores-bot", async (req, res) => {
   try {
     const { user_id } = req.body;
 
-    const response = await axios.post("https://built-it-python.onrender.com/analyze", {
+    const response = await axios.post("http://localhost:5000/analyze", {
       user_id,
     });
 
