@@ -1,8 +1,8 @@
-window.serviceWorkerRegistration = null;
+window.ServiceWorkerRegistration = null;
 
 async function startPWA() {
   try {
-    window.serviceWorkerRegistration = await navigator.serviceWorker.register("/sw.js");
+    window.ServiceWorkerRegistration = await navigator.serviceWorker.register("/sw.js");
   } catch(registrationError) {
     console.log("SW registration failed: ", registrationError);
   }
@@ -23,8 +23,8 @@ async function fixWithBigHammer() {
     window.localStorage.removeItem("usedBigHammer");
     return;
   }
-  if (window.serviceWorkerRegistration) {
-    const unregistered = await serviceWorkerRegistration.unregister();
+  if (window.ServiceWorkerRegistration) {
+    const unregistered = await ServiceWorkerRegistration.unregister();
     console.log("SW unregistered");
   }
 
