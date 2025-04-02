@@ -23,54 +23,54 @@ const DoctorCalendar = ({ onDateSelect }) => {
   const [futureEvents, setFutureEvents] = useState([]); // List for future event dates
   const navigate = useNavigate();
 
-    useEffect(() => {
-      const docId = localStorage.getItem("userid");
-      console.log(docId);
-      if (!docId) return;
-  
-      const fetchAppointments = async () => {
-        try {
-          const response = await fetch(
-            `https://built-it-xjiq.onrender.com/currentdocappt?doctorId=${docId}`
-          );
-          const data = await response.json();
-  
-          const formattedAppointments = data.map((appt) => {
-            const dateObj = new Date(appt.dateTime);
-            return {
-              id: appt.id,
-              patientName: `User ${appt.user_id}`,
-              time: dateObj.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              }),
-              date: dateObj.toLocaleDateString(undefined, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }),
-              type: appt.reason,
-            };
-          });
-  
-          setAppointments(formattedAppointments);
-        } catch (error) {
-          console.error("Error fetching appointments", error);
-          toast("Error while fetching data", {
-            position: "bottom-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            className: "custom-toast",
-          });
-        }
-      };
-  
-      fetchAppointments();
-    }, [isAuthenticated]);
+  useEffect(() => {
+    const docId = localStorage.getItem("userid");
+    console.log(docId);
+    if (!docId) return;
+
+    const fetchAppointments = async () => {
+      try {
+        const response = await fetch(
+          `https://built-it-xjiq.onrender.com/currentdocappt?doctorId=${docId}`
+        );
+        const data = await response.json();
+
+        const formattedAppointments = data.map((appt) => {
+          const dateObj = new Date(appt.dateTime);
+          return {
+            id: appt.id,
+            patientName: `User ${appt.user_id}`,
+            time: dateObj.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            date: dateObj.toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+            type: appt.reason,
+          };
+        });
+
+        setAppointments(formattedAppointments);
+      } catch (error) {
+        console.error("Error fetching appointments", error);
+        toast("Error while fetching data", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
+      }
+    };
+
+    fetchAppointments();
+  }, [isAuthenticated]);
 
   const sendLink = (rollNo) => {
     // console.log(currentMonth);
@@ -80,12 +80,11 @@ const DoctorCalendar = ({ onDateSelect }) => {
       return "https://academic.iiti.ac.in/Document/2024-25_Academic%20Calendar_Updated%20-%2010-6-2024.pdf"; // Acad calender for others
     }
   };
-  
+
   // Example usage
   const rollNo = "240001049"; // Example roll number
   const linkAcadCalender = sendLink(rollNo);
   // console.log("Send this link:", linkToSend);
-  
 
   // Fetch past events
   useEffect(() => {
@@ -129,112 +128,86 @@ const DoctorCalendar = ({ onDateSelect }) => {
   const todayString = format(new Date(), "yyyy-MM-dd");
 
   return (
-    <div className="flex items-center justify-center p-2 md:p-4">
-      <div className="p-2 md:p-6 bg-white rounded-xl shadow-lg max-w-md w-full">
-        <div className="flex justify-between items-center mb-6">
+    <div className="bg-white max-w-md rounded-xl shadow-sm p-6">
+      {/* Header with month navigation */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <h2 className="text-xl font-semibold text-gray-900">Calendar</h2>
+        </div>
+        <div className="flex items-center space-x-2">
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
-            className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+            <ChevronLeft className="w-5 h-5 text-gray-600" />
           </button>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <span className="text-sm font-medium text-gray-900">
             {format(currentMonth, "MMMM yyyy")}
-          </h2>
+          </span>
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, 30))}
-            className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <ChevronRight className="w-5 h-5 text-gray-700" />
+            <ChevronRight className="w-5 h-5 text-gray-600" />
           </button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-7 gap-4 mb-4">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayLabel) => (
-            <div
-              key={dayLabel}
-              className="font-medium text-gray-500 text-center"
-            >
-              {dayLabel}
+      {/* Calendar grid */}
+      <div className="space-y-4">
+        {/* Weekday headers */}
+        <div className="grid grid-cols-7 text-center">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div key={day} className="text-xs font-medium text-gray-500">
+              {day}
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-2">
+        {/* Calendar days */}
+        <div className="grid grid-cols-7 gap-1">
           {days.map((dayItem, index) => {
             const dayString = format(dayItem, "yyyy-MM-dd");
             const isToday = dayString === todayString;
             const isPastEvent = pastEvents.includes(dayString);
             const isFutureEvent = futureEvents.includes(dayString);
+            const isSelected = isSameDay(dayItem, selectedDate);
 
             return (
               <button
                 key={index}
+                onClick={() => setSelectedDate(dayItem)}
                 className={`
-                  relative p-2 rounded-lg aspect-square flex items-center justify-center
-                  transition-all duration-200 text-sm font-medium
-                  ${
-                    isSameMonth(dayItem, currentMonth)
-                      ? "text-gray-900"
-                      : "text-gray-400"
-                  }
-                  ${
-                    isPastEvent && !isToday
-                    ? "bg-red-500 text-white hover:bg-red-600"
-                    : isFutureEvent && !isToday
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : ""
-                  }
-                  ${
-                    isToday && isPastEvent
-                      ? "ring-2 ring-black text-white bg-blue-500 hover:bg-blue-600 ring-offset-2 font-bold"
-                      : ""
-                  }
-                  ${
-                    !isToday && !isPastEvent && !isFutureEvent
-                      ? "hover:bg-gray-100"
-                      : ""
-                  }
-                  ${
-                    isToday && !isPastEvent
-                      ? "ring-2 ring-black-50 ring-offset-2 font-bold" : ""
-                  }
-                  ${isSameDay(dayItem, selectedDate) && !isToday ? "ring-2 ring-blue-600" : ""}
+                  relative aspect-square p-1 flex items-center justify-center
+                  text-sm font-medium rounded-md transition-all duration-200
+                  ${!isSameMonth(dayItem, currentMonth) ? "text-gray-400" : "text-gray-900"}
+                  ${isToday ? "ring-2 ring-blue-500 ring-offset-1 font-bold" : ""}
+                  ${isSelected && !isToday ? "ring-2 ring-blue-400" : ""}
+                  ${isPastEvent ? "bg-rose-500 text-white hover:bg-rose-600" : ""}
+                  ${isFutureEvent ? "bg-blue-500 text-white hover:bg-blue-600" : ""}
+                  ${!isPastEvent && !isFutureEvent ? "hover:bg-gray-100" : ""}
                 `}
-                onClick={() => {
-                  setSelectedDate(dayItem);
-                  if (isPastEvent || isFutureEvent) {
-                    navigate("/doctor/appointments");
-                  }
-                  onDateSelect && onDateSelect(dayItem);
-                }}
               >
                 {format(dayItem, "d")}
                 {(isPastEvent || isFutureEvent) && (
-                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white" />
+                  <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-white" />
                 )}
               </button>
             );
           })}
         </div>
+      </div>
 
-        <div className="mt-6 flex gap-4 justify-center text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <span className="text-gray-600">Past Appointments</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-            <span className="text-gray-600">Future Appointments</span>
-          </div>
+      {/* Legend */}
+      <div className="flex items-center justify-center space-x-6 pt-4 mt-4 border-t border-gray-100">
+        <div className="flex items-center space-x-2">
+          <span className="w-3 h-3 bg-rose-500 rounded-full"></span>
+          <span className="text-xs text-gray-600">Past Appointments</span>
         </div>
-
-        {/* <a href={linkAcadCalender} target="_blank">
-          <div className="flex gap-2 w-[100%] justify-center mx-auto mt-3 items-center">
-            <Link size={15}/>
-            <div className="text-sm text-gray-600">Academic Calender</div>
-          </div>
-        </a> */}
+        <div className="flex items-center space-x-2">
+          <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+          <span className="text-xs text-gray-600">Upcoming Appointments</span>
+        </div>
       </div>
     </div>
   );
