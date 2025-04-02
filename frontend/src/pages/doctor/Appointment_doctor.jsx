@@ -75,11 +75,6 @@ const DoctorAppointment = () => {
       const resp = await res2.json();
       var date = new Date();
       var userTimezoneOffset = date.getTimezoneOffset() * 60000;
-      for (var i = 0; i < resp.length; i++) {
-        resp[i].dateTime = new Date(
-          new Date(resp[i].dateTime).getTime() + userTimezoneOffset
-        );
-      }
       for (var i = 0; i < resp2.length; i++) {
         resp2[i].dateTime = new Date(
           new Date(resp2[i].dateTime).getTime() + userTimezoneOffset

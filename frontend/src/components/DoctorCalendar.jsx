@@ -13,6 +13,7 @@ import {
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const DoctorCalendar = ({ onDateSelect }) => {
   const [appointments, setAppointments] = useState([]);
@@ -31,7 +32,7 @@ const DoctorCalendar = ({ onDateSelect }) => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          `https://built-it-xjiq.onrender.com/reqApp?docId=${docId}`
+          `https://built-it-xjiq.onrender.com/pastdocappt?doctorId=${docId}`
         );
         const response = await fetch(
           `https://built-it-xjiq.onrender.com/currentdocappt?doctorId=${docId}`
@@ -62,7 +63,7 @@ const DoctorCalendar = ({ onDateSelect }) => {
           )
         );
         const formattedPrevAppointments = data2.map((appt) => {
-          const dateObj = new Date(appt.dateTime);
+          const dateObj = new Date(appt.createdAt);
           return {
             id: appt.id,
             patientName: `User ${appt.user_id}`,
@@ -163,7 +164,12 @@ const DoctorCalendar = ({ onDateSelect }) => {
             return (
               <button
                 key={index}
-                onClick={() => setSelectedDate(dayItem)}
+                onClick={() => {
+                  setSelectedDate(dayItem);
+                  if (isPastAppointment || isFutureAppointment) {
+                    navigate("/doctor/appointments");
+                  }
+                }}
                 className={`
                   relative aspect-square p-1 flex items-center justify-center
                   text-sm font-medium rounded-md transition-all duration-200
