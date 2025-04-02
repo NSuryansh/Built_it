@@ -63,7 +63,7 @@ export default function App() {
 
     const resp = await res.json();
 
-    // console.log(resp)
+    console.log(resp)
     // console.log(resp);
 
     // const res2 = await fetch("http://localhost:3000/send-notification", {
