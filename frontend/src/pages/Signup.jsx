@@ -42,9 +42,9 @@ const SignUp = () => {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
         <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
   }
@@ -55,11 +55,14 @@ const SignUp = () => {
 
   async function sendOTP() {
     try {
-      const response = await fetch("https://built-it-xjiq.onrender.com/otpGenerate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: formData.email }),
-      });
+      const response = await fetch(
+        "https://built-it-xjiq.onrender.com/otpGenerate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: formData.email }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
@@ -77,14 +80,17 @@ const SignUp = () => {
 
   async function verifyOTP() {
     try {
-      const response = await fetch("https://built-it-xjiq.onrender.com/otpcheck", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          otp: otp,
-          email: formData.email,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it-xjiq.onrender.com/otpcheck",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            otp: otp,
+            email: formData.email,
+          }),
+        }
+      );
       console.log(response);
       const res = await response.json();
       if (response.ok) {
@@ -333,21 +339,24 @@ const SignUp = () => {
 
       const { username, email, mobile, password, altNo, department, rollNo } =
         formData;
-      const response = await fetch("https://built-it-xjiq.onrender.com/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          mobile: mobile,
-          password: password,
-          altNo: altNo,
-          publicKey: publicKeyPEM,
-          department: department,
-          acadProg: acadProg,
-          rollNo: rollNo,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it-xjiq.onrender.com/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            mobile: mobile,
+            password: password,
+            altNo: altNo,
+            publicKey: publicKeyPEM,
+            department: department,
+            acadProg: acadProg,
+            rollNo: rollNo,
+          }),
+        }
+      );
       const data = await response.json();
       console.log("Signup successful:", data);
       toast("Signup successful", {

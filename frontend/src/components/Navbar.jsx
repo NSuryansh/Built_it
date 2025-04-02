@@ -110,7 +110,7 @@ const Navbar = () => {
         location === "/events"
           ? "bg-transparent"
           : "bg-[var(--custom-orange-100)]"
-      }`}
+      } z-20`}
     >
       <ToastContainer />
       <div className="px-4 lg:px-8 py-3">

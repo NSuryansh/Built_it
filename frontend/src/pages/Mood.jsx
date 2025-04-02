@@ -53,14 +53,17 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://built-it-xjiq.onrender.com/node-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: localStorage.getItem("userid"),
-          message,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it-xjiq.onrender.com/node-chat",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: localStorage.getItem("userid"),
+            message,
+          }),
+        }
+      );
 
       // if (!response.ok) {
       //   throw new Error(`HTTP error! status: ${response.status}`);
@@ -102,9 +105,9 @@ export default function Mood() {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
         <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
   }

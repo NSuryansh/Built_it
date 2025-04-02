@@ -29,12 +29,11 @@ const Calendar = ({ onDateSelect }) => {
       return "https://academic.iiti.ac.in/Document/2024-25_Academic%20Calendar_Updated%20-%2010-6-2024.pdf"; // Acad calender for others
     }
   };
-  
+
   // Example usage
   const rollNo = "240001049"; // Example roll number
   const linkAcadCalender = sendLink(rollNo);
   // console.log("Send this link:", linkToSend);
-  
 
   // Fetch past events
   useEffect(() => {
@@ -129,10 +128,10 @@ const Calendar = ({ onDateSelect }) => {
                   }
                   ${
                     isPastEvent && !isToday
-                    ? "bg-red-500 text-white hover:bg-red-600"
-                    : isFutureEvent && !isToday
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : ""
+                      ? "bg-red-500 text-white hover:bg-red-600"
+                      : isFutureEvent && !isToday
+                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      : ""
                   }
                   ${
                     isToday && isPastEvent
@@ -146,9 +145,14 @@ const Calendar = ({ onDateSelect }) => {
                   }
                   ${
                     isToday && !isPastEvent
-                      ? "ring-2 ring-black-50 ring-offset-2 font-bold" : ""
+                      ? "ring-2 ring-black-50 ring-offset-2 font-bold"
+                      : ""
                   }
-                  ${isSameDay(dayItem, selectedDate) && !isToday ? "ring-2 ring-blue-600" : ""}
+                  ${
+                    isSameDay(dayItem, selectedDate) && !isToday
+                      ? "ring-2 ring-blue-600"
+                      : ""
+                  }
                 `}
                 onClick={() => {
                   setSelectedDate(dayItem);
@@ -180,8 +184,8 @@ const Calendar = ({ onDateSelect }) => {
 
         <a href={linkAcadCalender} target="_blank">
           <div className="flex gap-2 w-[100%] justify-center mx-auto mt-3 items-center">
-            <Link size={15}/>
-            <div className="text-sm text-gray-600">Academic Calender</div>
+            <Link size={15} />
+            <div className="text-sm text-gray-600">Academic Calendar</div>
           </div>
         </a>
       </div>

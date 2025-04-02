@@ -27,9 +27,9 @@ const Landing_user = () => {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
         <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
   }
