@@ -769,7 +769,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -945,7 +945,7 @@ app.get("/pastdocappt", async (req, res) => {
     const doctor = await prisma.doctor.findUnique({
       where: { id: doctorId },
     });
-    
+
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
@@ -956,8 +956,8 @@ app.get("/pastdocappt", async (req, res) => {
         user: true
       },
     });
-  
-    res.json(appt); 
+
+    res.json(appt);
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Error fetching past appointments" });
@@ -1576,32 +1576,36 @@ app.post("/scores-bot", async (req, res) => {
   }
 });
 
-app.put("/modify-doctor", async (req, res) => {
+app.put("/modifyDoc", async (req, res) => {
   try {
-    const { id, name, email, mobile, desc } = req.body;
+    const { id, name, email, mobile, desc, address, city, experenice } = req.body;
 
     console.log(req.body);
 
     const doctorId = parseInt(id, 10);
     if (isNaN(doctorId) || doctorId <= 0) {
       return res.status(400).json({ error: "Invalid doctor ID" });
-    }
+    }  
 
     const orConditions = [];
     if (name) orConditions.push({ name });
     if (mobile) orConditions.push({ mobile });
     if (email) orConditions.push({ email });
+    if (desc) orConditions.push({ desc });
+    if (address) orConditions.push({ address });
+    if (city) orConditions.push({ city });
+    if (experenice) orConditions.push({ experenice });
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
-          where: { OR: orConditions },
-        })
+        where: { OR: orConditions },
+      })
       : null;
 
     if (existingDoctor && existingDoctor.id !== doctorId) {
       return res
         .status(400)
-        .json({ error: "Name, mobile, or email is already in use" });
+        .json({ error: "The updated field is already in use" });
     }
 
     const updatedData = {};
@@ -1609,6 +1613,10 @@ app.put("/modify-doctor", async (req, res) => {
     if (mobile?.trim()) updatedData.mobile = mobile;
     if (email?.trim()) updatedData.email = email;
     if (desc?.trim()) updatedData.desc = desc;
+    if (address?.trim()) updatedData.address = address;
+    if (city?.trim()) updatedData.city = city;
+    if (experenice?.trim()) updatedData.experenice = experenice;
+
 
     if (Object.keys(updatedData).length === 0) {
       return res
@@ -1694,3 +1702,4 @@ app.post("/add-slot", async (req, res) => {
     res.json({ message: "Internal Server Error" });
   }
 });
+
