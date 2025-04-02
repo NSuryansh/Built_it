@@ -63,7 +63,7 @@ export default function App() {
 
     const resp = await res.json();
 
-    // console.log(resp)
+    console.log(resp)
     // console.log(resp);
 
     // const res2 = await fetch("https:/built-it-xjiq.onrender.com/send-notification", {
