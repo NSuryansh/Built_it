@@ -392,28 +392,23 @@ const movies = [
   },
   {
     title: "Manchester by the Sea",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRZLuEiplcmrl-b-LV8K3RfiN_ba4W4GyPJPIy8ZDfifsQGuRjm&psig=AOvVaw3zcQB2sHkxLwfxBljmYsDd&ust=1743636033422000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNDkscT8t4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Manchester by the Seae",
     category: "Drama"
   },{
     title: "Nomadland ",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcSXwR4tM2AiA1IaiNhHURaANWN37kC0EcwQdusCLkVTChvqhZ9E&psig=AOvVaw3dwnYLxFy4jwOKD6h9RL2H&ust=1743636163710000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCJDpsYL9t4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Nomadland ",
     category: "Drama"
   },{
     title: "The Whale",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
-    category: "Drama"
-  },{
-    title: "Slumdog Millionaire",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn1.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcR1y3_ErQPDoju0td51KZZSrBwSZQJ-c9bAY5X7yMGwWQ4DUAXU&psig=AOvVaw1Ounj7SGt78ntMOwqdaab3&ust=1743636191298000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCOiYt4_9t4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=The Whale",
     category: "Drama"
   },{
     title: "The Revenant",
-    image: "https://images.unsplash.com/photo-1597002973885-8c90683fa6e0?w=500&q=80",
-    link: "https://www.google.com/search?q=big+hero+6+movie",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQXUTGibEd0yESfOn4U6b9KqwYjLUKVI3QoCv36puzHfPvtZLMU&psig=AOvVaw2HfX0ORb2_hsHADBuFyPoO&ust=1743636246163000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNiwxKn9t4wDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=The Revenant",
     category: "Drama"
   },
 ];
@@ -422,122 +417,122 @@ const books = [
   {
     title: "The Happiness of Pursuit",
     image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    link: "https://www.google.com/search?q=The Happiness of Pursuit",
     category: "Self Help"
   },
   {
     title: "Atomic Habits",
     image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    link: "https://www.google.com/search?q=Atomic Habits",
     category: "Self Help"
   },
   {
     title: "The 7 Habits of Highly Effective People ",
     image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    link: "https://www.google.com/search?q=The 7 Habits of Highly Effective People",
     category: "Self Help"
   },
   {
     title: "The Power of Now",
     image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    link: "https://www.google.com/search?q=The Power of Now",
     category: "Self Help"
   },
   {
     title: "The 5 AM Club",
     image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+happiness+of+pursuit+book",
+    link: "https://www.google.com/search?q=The 5 AM Club",
     category: "Self Help"
   },
   
   {
     title: "The Power of Now",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=The Power of Now",
     category: "Mindfulness"
   },
   {
     title: "Wherever You Go, There You Are",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=Wherever You Go, There You Are",
     category: "Mindfulness"
   },
   {
     title: "Peace Is Every Step",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=Peace Is Every Step",
     category: "Mindfulness"
   },
   {
     title: "10% Happier",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=10% Happier",
     category: "Mindfulness"
   },
   {
     title: "The Art of Living",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=The Art of Living",
     category: "Mindfulness"
   },
   {
     title: "To Kill a Mockingbird",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=To Kill a Mockingbird",
     category: "Fiction"
   },
   {
     title: "The Great Gatsby",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=The Great Gatsby",
     category: "Fiction"
   },
   {
     title: "The Book Thief",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=The Book Thief",
     category: "Fiction"
   },
   {
     title: "A Man Called Ove",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=A Man Called Ove",
     category: "Fiction"
   },
   {
     title: "The Night Circus",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=The Night Circus",
     category: "Fiction"
   },
   {
     title: "Steve Jobs",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=Steve Jobs",
     category: "Non-Fiction"
   },
   {
     title: "The Diary of a Young Girl",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=The Diary of a Young Girl",
     category: "Non-Fiction"
   },
   {
     title: "The Power of Habit",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=The Power of Habit",
     category: "Non-Fiction"
   },
   {
     title: "The Psychology of Money",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=The Psychology of Money",
     category: "Non-Fiction"
   },
   {
     title: "Educated",
-    image: "https://images.unsplash.com/photo-1544716280-aa053eb39c7c?w=500&q=80",
-    link: "https://www.google.com/search?q=the+power+of+now+book",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80",
+    link: "https://www.google.com/search?q=Educated",
     category: "Non-Fiction"
   },
 ];
@@ -546,7 +541,7 @@ const music = [
   {
     title: "Weightless - Marconi Union",
     image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80",
-    spotifyLink: "https://open.spotify.com/track/1ZqHjApl3pfzwjweTfveWl",
+    spotifyLink: "https://open.spotify.com/track/6kkwzB6hXLIONkEk9JciA6",
     category: "Ambient"
   },
   {
@@ -698,94 +693,94 @@ const music = [
 const games = [
   {
     title: "Assassin's Creed Odyssey",
-    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn3.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTkMAVonLz7u2_Uu4c0OjG2dxcss4B_lN6bd0uUHnjJKxBAR_Ja&psig=AOvVaw1DLpkrQYXab06HZLE5EH0O&ust=1743621153756000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCJDsk43Ft4wDFQAAAAAdAAAAABAE",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRBe7hJQiFUeusCs_QW5K3j7luoiFB1VkCveHHVass4Hd2mm1iy&psig=AOvVaw1riynJMtoI--gR7Prrrf7o&ust=1743638231763000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCOD5sdyEuIwDFQAAAAAdAAAAABAE",
     link: "https://www.google.com/search?q=Assassin's Creed Odyssey",
     category: "Adventure"
   },
   {
     title: "Tomb Raider ",
-    image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
-    link: "https://www.google.com/search?q=journey+game",
+    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTomb_Raider_%2528film%2529&psig=AOvVaw2FHxGhY28A2Ddgkhsml57A&ust=1743638378604000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNiB9KKFuIwDFQAAAAAdAAAAABAE",
+    link: "https://www.google.com/search?q=Tomb Raider",
     category: "Adventure"
   },
   {
     title: "The Legend of Zelda: Breath of the Wild",
     image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
-    link: "https://www.google.com/search?q=journey+game",
+    link: "https://www.google.com/search?q=The Legend of Zelda: Breath of the Wild",
     category: "Adventure"
   },
   {
     title: "Red Dead Redemption 2",
     image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80",
-    link: "https://www.google.com/search?q=journey+game",
+    link: "https://www.google.com/search?q=Red Dead Redemption 2",
     category: "Adventure"
   },
   {
     title: "Planet Coaster",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Planet Coaster",
     category: "Simulation"
   },
   {
     title: "My Time at Portia",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=My Time at Portiae",
     category: "Simulation"
   },
   {
     title: "The Sims Series",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=The Sims Series",
     category: "Simulation"
   },
   {
     title: "Stardew Valley",
     image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTYjodiC5iI8_dj-2HEzV0cABYfC06q4zc3M_KIdqLiOsZjemmw&psig=AOvVaw3cofua_hilVSGjSiAHP3vy&ust=1743621089512000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKjvlu_Et4wDFQAAAAAdAAAAABAE",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Stardew Valley",
     category: "Simulation"
   },
   {
     title: "Candy Crush Saga",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Candy Crush Saga",
     category: "Puzzle"
   },
   {
     title: "Monument Valley",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Monument Valley",
     category: "Puzzle"
   },{
     title: "Sudoku",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Sudoku",
     category: "Puzzle"
   },{
     title: "Tetris",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Tetris",
     category: "Puzzle"
   },
   {
     title: "Dragon Age: Inquisition",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Dragon Age: Inquisition",
     category: "RPG"
   },
   {
     title: "The Witcher 3: Wild Hunt",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=The Witcher 3: Wild Hunt",
     category: "RPG"
   },{
     title: "Baldur’s Gate 3",
     image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Baldur’s Gate 3",
     category: "RPG"
   },{
     title: "Cyberpunk 2077",
     image: "https://tse1.mm.bing.net/th?id=OIP.a9hHlwAnsq2_YmXiXiwv7AHaLG&pid=Api",
-    link: "https://www.google.com/search?q=stardew+valley+game",
+    link: "https://www.google.com/search?q=Cyberpunk 2077",
     category: "RPG"
   },
 ];

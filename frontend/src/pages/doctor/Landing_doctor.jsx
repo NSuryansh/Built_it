@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
-import { Calendar, MapPin, User, ChevronRight } from "lucide-react";
+import { CalendarIcon, MapPin, User, ChevronRight } from "lucide-react";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
@@ -14,8 +14,6 @@ const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  
-
 
   const navigate = useNavigate();
 
@@ -112,7 +110,6 @@ const DoctorLanding = () => {
 
   // Fetch past appointments for bar graph (segregation)
 
-
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
@@ -130,31 +127,31 @@ const DoctorLanding = () => {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
- 
   return (
     <div className="min-h-screen flex flex-col">
       <DoctorNavbar />
-      <ToastContainer />
       <div className="h-full bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex justify-center md:w-xl items-center">
             <DoctorCalendar />
+            </div>
             {/* Appointments Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white rounded-xl w-full shadow-sm p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">
                   Upcoming Appointments
                 </h2>
-                <Link to='/doctor/appointments' className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
                   View All <ChevronRight className="h-4 w-4 ml-1" />
-                </Link>
+                </button>
               </div>
 
               <div className="space-y-4">
                 {appointments.map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="flex flex-col justify-between sm:flex-row items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex flex-col sm:flex-row items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                       <User className="h-6 w-6 text-blue-600" />
@@ -179,10 +176,10 @@ const DoctorLanding = () => {
                 ))}
               </div>
             </div>
-
           </div>
+
           {/* Events Section */}
-          <div className="bg-white rounded-xl mt-6 shadow-sm p-6">
+          <div className="bg-white rounded-xl mt-10 shadow-sm p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900">
                 Upcoming Events
@@ -192,39 +189,37 @@ const DoctorLanding = () => {
               </button>
             </div>
 
-              <div className="space-y-4">
-                {events.map((event) => (
-                  <div
-                    key={event.id}
-                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        {event.title}
-                      </h3>
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
-                        {event.type}
-                      </span>
+            <div className="space-y-4">
+              {events.map((event) => (
+                <div
+                  key={event.id}
+                  className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-medium text-gray-900">
+                      {event.title}
+                    </h3>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
+                      {event.type}
+                    </span>
+                  </div>
+                  <div className="flex flex-col md:flex-col lg:flex-row sm:flex-row space-y-2 lg:space-y-0 sm:space-y-0 md:space-y-2 items-center text-sm text-gray-500">
+                    <div className="flex items-center">
+                      <CalendarIcon className="h-4 w-4 mr-1" />
+                      <span>{event.date}</span>
                     </div>
-                    <div className="flex flex-col md:flex-col lg:flex-row sm:flex-row space-y-2 lg:space-y-0 sm:space-y-0 md:space-y-2 items-center text-sm text-gray-500">
-                      <div className="flex">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        <span>{event.date}</span>
-                      </div>
-                      <div className="flex">
-                        <MapPin className="h-4 w-4 ml-4 mr-1" />
-                        <span>{event.location}</span>
-                      </div>
+                    <div className="flex items-center">
+                      <MapPin className="h-4 w-4 ml-4 mr-1" />
+                      <span>{event.location}</span>
                     </div>
                   </div>
-                ))}
-            
+                </div>
+              ))}
             </div>
           </div>
-
-          
         </div>
       </div>
+
       <Footer color={"blue"} />
     </div>
   );
