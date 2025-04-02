@@ -19,8 +19,8 @@ const DoctorCalendar = ({ onDateSelect }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
-  const [pastEvents, setPastEvents] = useState([]); // List for past event dates
-  const [futureEvents, setFutureEvents] = useState([]); // List for future event dates
+  const [pastAppointments, setPastAppointments] = useState([]); // List for past event dates
+  const [futureAppointments, setFutureAppointments] = useState([]); // List for future event dates
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,10 +30,14 @@ const DoctorCalendar = ({ onDateSelect }) => {
 
     const fetchAppointments = async () => {
       try {
+        const res = await fetch(
+          `https://built-it-xjiq.onrender.com/reqApp?docId=${docId}`
+        );
         const response = await fetch(
           `https://built-it-xjiq.onrender.com/currentdocappt?doctorId=${docId}`
         );
         const data = await response.json();
+        const data2 = await res.json();
 
         const formattedAppointments = data.map((appt) => {
           const dateObj = new Date(appt.dateTime);
@@ -52,7 +56,33 @@ const DoctorCalendar = ({ onDateSelect }) => {
             type: appt.reason,
           };
         });
-
+        setFutureAppointments(
+          formattedAppointments.map((appointment) =>
+            format(new Date(appointment.date), "yyyy-MM-dd")
+          )
+        );
+        const formattedPrevAppointments = data2.map((appt) => {
+          const dateObj = new Date(appt.dateTime);
+          return {
+            id: appt.id,
+            patientName: `User ${appt.user_id}`,
+            time: dateObj.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            date: dateObj.toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+            type: appt.reason,
+          };
+        });
+        setPastAppointments(
+          formattedPrevAppointments.map((appointment) =>
+            format(new Date(appointment.date), "yyyy-MM-dd")
+          )
+        );
         setAppointments(formattedAppointments);
       } catch (error) {
         console.error("Error fetching appointments", error);
@@ -71,49 +101,6 @@ const DoctorCalendar = ({ onDateSelect }) => {
 
     fetchAppointments();
   }, [isAuthenticated]);
-
-  const sendLink = (rollNo) => {
-    // console.log(currentMonth);
-    if (rollNo.startsWith("24")) {
-      return "https://academic.iiti.ac.in/New_student/2024-25_Academic%20Calendar_2024%20BTech%20batch%20-%20Copy.pdf"; // Acad calender for fy
-    } else {
-      return "https://academic.iiti.ac.in/Document/2024-25_Academic%20Calendar_Updated%20-%2010-6-2024.pdf"; // Acad calender for others
-    }
-  };
-
-  // Example usage
-  const rollNo = "240001049"; // Example roll number
-  const linkAcadCalender = sendLink(rollNo);
-  // console.log("Send this link:", linkToSend);
-
-  // Fetch past events
-  useEffect(() => {
-    axios
-      .get("https://built-it-xjiq.onrender.com/getPastEvents")
-      .then((response) => {
-        setPastEvents(
-          response.data.map((event) =>
-            format(new Date(event.dateTime), "yyyy-MM-dd")
-          )
-        );
-      })
-      .catch((error) => console.error("Error fetching past events:", error));
-  }, []);
-
-  // Fetch future events
-  useEffect(() => {
-    axios
-      .get("https://built-it-xjiq.onrender.com/events")
-      .then((response) => {
-        setFutureEvents(
-          response.data.map((event) =>
-            format(new Date(event.dateTime), "yyyy-MM-dd")
-          )
-        );
-        console.log(futureEvents);
-      })
-      .catch((error) => console.error("Error fetching future events:", error));
-  }, []);
 
   const startDate = startOfWeek(startOfMonth(currentMonth));
   const endDate = endOfWeek(endOfMonth(currentMonth));
@@ -169,8 +156,8 @@ const DoctorCalendar = ({ onDateSelect }) => {
           {days.map((dayItem, index) => {
             const dayString = format(dayItem, "yyyy-MM-dd");
             const isToday = dayString === todayString;
-            const isPastEvent = pastEvents.includes(dayString);
-            const isFutureEvent = futureEvents.includes(dayString);
+            const isPastAppointment = pastAppointments.includes(dayString);
+            const isFutureAppointment = futureAppointments.includes(dayString);
             const isSelected = isSameDay(dayItem, selectedDate);
 
             return (
@@ -180,16 +167,36 @@ const DoctorCalendar = ({ onDateSelect }) => {
                 className={`
                   relative aspect-square p-1 flex items-center justify-center
                   text-sm font-medium rounded-md transition-all duration-200
-                  ${!isSameMonth(dayItem, currentMonth) ? "text-gray-400" : "text-gray-900"}
-                  ${isToday ? "ring-2 ring-blue-500 ring-offset-1 font-bold" : ""}
+                  ${
+                    !isSameMonth(dayItem, currentMonth)
+                      ? "text-gray-400"
+                      : "text-gray-900"
+                  }
+                  ${
+                    isToday
+                      ? "ring-2 ring-blue-500 ring-offset-1 font-bold"
+                      : ""
+                  }
                   ${isSelected && !isToday ? "ring-2 ring-blue-400" : ""}
-                  ${isPastEvent ? "bg-rose-500 text-white hover:bg-rose-600" : ""}
-                  ${isFutureEvent ? "bg-blue-500 text-white hover:bg-blue-600" : ""}
-                  ${!isPastEvent && !isFutureEvent ? "hover:bg-gray-100" : ""}
+                  ${
+                    isPastAppointment
+                      ? "bg-rose-500 text-white hover:bg-rose-600"
+                      : ""
+                  }
+                  ${
+                    isFutureAppointment
+                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      : ""
+                  }
+                  ${
+                    !isPastAppointment && !isFutureAppointment
+                      ? "hover:bg-gray-100"
+                      : ""
+                  }
                 `}
               >
                 {format(dayItem, "d")}
-                {(isPastEvent || isFutureEvent) && (
+                {(isPastAppointment || isFutureAppointment) && (
                   <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-white" />
                 )}
               </button>
