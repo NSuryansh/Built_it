@@ -1,3 +1,5 @@
+import { BookOpen, Brain, Building } from "lucide-react";
+
 export const movies = [
   {
     title: "The Greatest Showman",
