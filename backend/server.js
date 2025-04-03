@@ -1399,7 +1399,7 @@ app.post("/node-chat", async (req, res) => {
     console.log("HELOE");
     const { user_id, message } = req.body;
 
-    const response = await axios.post("http://localhost:5000/chatWithBot", {
+    const response = await axios.post("http://127.0.0.1:5000/chatWithBot", {
       user_id,
       message,
     });
@@ -1579,7 +1579,7 @@ app.post("/scores-bot", async (req, res) => {
   try {
     const { user_id } = req.body;
 
-    const response = await axios.post("http://localhost:5000/analyze", {
+    const response = await axios.post("http://127.0.0.1:5000/analyze", {
       user_id,
     });
 
