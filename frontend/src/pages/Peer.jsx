@@ -76,7 +76,7 @@ const Peer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `https://built-it-xjiq.onrender.com/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
 
@@ -130,7 +130,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it-xjiq.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -219,7 +219,7 @@ const Peer = () => {
     try {
       console.log(recipientId, "AAAAALLLLLEE");
       const response = await fetch(
-        `https://built-it-xjiq.onrender.com/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       console.log(messages);

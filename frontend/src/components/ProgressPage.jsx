@@ -8,14 +8,11 @@ const ProgressPage = ({ isLandingPage }) => {
   useEffect(() => {
     const fetchScores = async () => {
       try {
-        const response = await fetch(
-          "https://built-it-xjiq.onrender.com/scores-bot",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
-          }
-        );
+        const response = await fetch("http://localhost:3000/scores-bot", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

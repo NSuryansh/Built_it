@@ -43,17 +43,14 @@ const AdminLogin = () => {
       return;
     }
     setError("");
-    const response = await fetch(
-      "https://built-it-xjiq.onrender.com/adminLogin",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/adminLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
     const res = await response.json();
 
     if (res["message"] === "Login successful") {
@@ -78,16 +75,13 @@ const AdminLogin = () => {
       toast("Please enter an email", { position: "bottom-right" });
       return;
     }
-    const response = await fetch(
-      "https://built-it-xjiq.onrender.com/forgotAdminPassword",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/forgotAdminPassword", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
     const res = await response.json();
     toast(res.message, { position: "bottom-right" });
     setShowForgotModal(false);

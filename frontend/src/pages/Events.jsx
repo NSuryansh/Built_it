@@ -49,13 +49,13 @@ function Events() {
   }
 
   async function getCurrEvents() {
-    const res = await fetch("https://built-it-xjiq.onrender.com/events");
+    const res = await fetch("http://localhost:3000/events");
     const resp = await res.json();
     setcurrentEvents(resp);
   }
 
   async function getPastEvents() {
-    const res = await fetch("https://built-it-xjiq.onrender.com/getPastEvents");
+    const res = await fetch("http://localhost:3000/getPastEvents");
     const resp = await res.json();
     setpastEvents(resp);
   }

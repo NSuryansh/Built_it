@@ -9,9 +9,7 @@ const NotificationPanel = () => {
   // Fetch users from API
   const getUsers = async () => {
     try {
-      const response = await fetch(
-        "https://built-it-xjiq.onrender.com/getUsers"
-      ); // Adjust endpoint if needed
+      const response = await fetch("http://localhost:3000/getUsers"); // Adjust endpoint if needed
       if (!response.ok) throw new Error("Failed to fetch users");
       const data = await response.json();
       setNotifications(data);

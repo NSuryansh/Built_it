@@ -608,6 +608,9 @@ app.post("/requests", async (req, res) => {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
+    const date = new Date(dateTime);
+    console.log(date);
+    return;
     // Create appointment
     const appointment = await prisma.requests.create({
       data: {

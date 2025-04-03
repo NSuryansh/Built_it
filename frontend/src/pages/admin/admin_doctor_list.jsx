@@ -21,17 +21,17 @@ const DoctorsList = () => {
 
   useEffect(() => {
     const fetchDoctors = async () => {
-      const res = await fetch("https://built-it-xjiq.onrender.com/getdoctors");
+      const res = await fetch("http://localhost:3000/getdoctors");
       const resp = await res.json();
       setDoc(resp);
     };
 
     fetchDoctors();
   }, []);
-  
+
   const handleDelete = async (doctorId) => {
     try {
-      const res = await fetch("https://built-it-xjiq.onrender.com/deletedoc", {
+      const res = await fetch("http://localhost:3000/deletedoc", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

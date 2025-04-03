@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import CustomToast from "../../components/CustomToast";
 
 const AdminDashboard = () => {
   const [appointmentsUG, setAppointmentsUG] = useState({});
@@ -23,7 +33,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch("https://built-it-xjiq.onrender.com/pastApp");
+        const response = await fetch("http://localhost:3000/pastApp");
         const data = await response.json();
         if (response.ok) {
           const result = {};
@@ -35,7 +45,7 @@ const AdminDashboard = () => {
             }
             result[docName][branch] += 1;
           });
-          
+
           const ugAppointments = {};
           const pgAppointments = {};
           const phdAppointments = {};
@@ -54,14 +64,7 @@ const AdminDashboard = () => {
         }
       } catch (error) {
         console.error("Error fetching appointments: ", error);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        CustomToast("Error while fetching data");
       }
     };
     fetchAppointments();
