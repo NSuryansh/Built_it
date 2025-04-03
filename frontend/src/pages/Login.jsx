@@ -52,11 +52,9 @@ const Login = () => {
         password: password,
       }),
     });
-    console.log(response);
     const res = await response.json();
 
     if (res["message"] === "Login successful") {
-      console.log(res["message"]);
       localStorage.setItem("token", res["token"]);
       navigate("/dashboard");
     } else {
@@ -65,7 +63,6 @@ const Login = () => {
   };
 
   const handleForgotPassword = async () => {
-    // console.log(email, "AEEE HALLLLO")
     if (!email) {
       CustomToast("Please enter an email");
       return;

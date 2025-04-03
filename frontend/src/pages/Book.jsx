@@ -114,7 +114,6 @@ const Book = () => {
         }),
       });
       const respData = await res.json();
-      console.log(respData);
       // alert("Booking Confirmed!");
       CustomToast("Appointment Requested");
       setStep(1);

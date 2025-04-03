@@ -85,12 +85,7 @@ const DoctorAppointment = () => {
   }, [fixed]);
 
   useEffect(() => {
-    console.log(appointments);
-  }, [appointments]);
-
-  useEffect(() => {
     const docId = localStorage.getItem("userid");
-    console.log(docId, "DOCJ");
     if (!docId) return;
 
     const fetchPastAppointments = async () => {
@@ -99,7 +94,6 @@ const DoctorAppointment = () => {
           `https://built-it-xjiq.onrender.com/pastdocappt?doctorId=${docId}`
         );
         const data = await response.json();
-        console.log(data, "DATA JKL");
         if (response.ok) {
           const periods = {
             "Last 1 Month": { UG: 0, PG: 0, PhD: 0 },
@@ -153,7 +147,6 @@ const DoctorAppointment = () => {
   }));
 
   const acceptApp = async (appointment) => {
-    console.log(appointment);
     const res = await fetch("https://built-it-xjiq.onrender.com/book", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -167,7 +160,6 @@ const DoctorAppointment = () => {
     });
 
     const resp = await res.json();
-    console.log(resp);
     const docName = localStorage.getItem("username");
 
     var params = {
@@ -189,7 +181,6 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    console.log(note);
     const res = await fetch("https://built-it-xjiq.onrender.com/deleteApp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -202,12 +193,10 @@ const DoctorAppointment = () => {
     });
     const resp = await res.json();
     setFixed(!fixed);
-    console.log(resp);
   };
 
   const emailParams = async (appointment, time) => {
     const docName = localStorage.getItem("username");
-    console.log(appointment);
     var params = {
       id: appointment["id"],
       username: appointment["user"]["username"],
@@ -224,7 +213,6 @@ const DoctorAppointment = () => {
       }),
     });
     const resp = await res.json();
-    console.log(resp);
     setFixed(!fixed);
     emailjs
       .send("service_coucldi", "template_b96adyb", params, "5rqHkmhJJfAxWBFNo")
@@ -244,24 +232,12 @@ const DoctorAppointment = () => {
   const handleDateSelect = (date, appointmentId) => {
     setSelectedDate(date);
     if (date) {
-      console.log(`Rescheduling appointment ${appointmentId} to ${date}`);
-      toast("Booking Rescheduled", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Booking Rescheduled");
       setSelectedAppointment(null);
     }
   };
 
   const handleReschedule = async (appointment) => {
-    console.log("in reschedule");
-    console.log(appointment);
     const appointmentId = appointment.id;
     setSelectedAppointment(
       appointmentId === selectedAppointment ? null : appointmentId

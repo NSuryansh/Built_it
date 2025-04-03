@@ -18,11 +18,9 @@ const DoctorLogin = () => {
 
   useEffect(() => {
     const verifyAuth = async () => {
-      console.log("HIHI");
       const docAuthStatus = await checkAuth("doc");
       if (docAuthStatus) {
         setIsAuthenticated(docAuthStatus);
-        console.log(docAuthStatus);
         navigate("/doctor/landing");
       } else {
         setIsAuthenticated(false);
@@ -58,11 +56,9 @@ const DoctorLogin = () => {
         }),
       }
     );
-    console.log(response);
     const res = await response.json();
 
     if (res["message"] == "Login successful") {
-      console.log(res["message"]);
       localStorage.setItem("token", res["token"]);
       navigate("/doctor/landing");
     } else {
@@ -71,7 +67,6 @@ const DoctorLogin = () => {
   };
 
   const handleForgotPassword = async () => {
-    // console.log(email, "AEEE HALLLLO")
     if (!email) {
       CustomToast("Please enter an email");
       return;

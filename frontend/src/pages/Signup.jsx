@@ -91,7 +91,6 @@ const SignUp = () => {
           }),
         }
       );
-      console.log(response);
       const res = await response.json();
       if (response.ok) {
         if (res.message === "Email verified") {
@@ -243,7 +242,6 @@ const SignUp = () => {
   async function handleOTPVerification() {
     setError("");
     const otpValid = await verifyOTP();
-    console.log(otpValid);
     if (!otpValid) return;
     try {
       const { publicKey, privateKey } = await generateKeyPair();
@@ -272,7 +270,6 @@ const SignUp = () => {
         }
       );
       const data = await response.json();
-      console.log("Signup successful:", data);
       CustomToast("Signup successful");
       navigate("/login");
     } catch (error) {

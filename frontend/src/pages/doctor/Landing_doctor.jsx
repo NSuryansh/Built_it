@@ -29,7 +29,6 @@ const DoctorLanding = () => {
   // Fetch upcoming appointments
   useEffect(() => {
     const docId = localStorage.getItem("userid");
-    console.log(docId);
     if (!docId) return;
 
     const fetchAppointments = async () => {

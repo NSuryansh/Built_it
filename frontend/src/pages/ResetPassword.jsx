@@ -40,7 +40,6 @@ const ResetPassword = () => {
       }
     );
     const res = await response.json();
-    console.log(res.message);
     CustomToast("Password updated successfully!");
     setTimeout(() => {
       navigate("/login");

@@ -22,7 +22,6 @@ const Calendar = ({ onDateSelect }) => {
   const navigate = useNavigate();
 
   const sendLink = (rollNo) => {
-    // console.log(currentMonth);
     if (rollNo.startsWith("24")) {
       return "https://academic.iiti.ac.in/New_student/2024-25_Academic%20Calendar_2024%20BTech%20batch%20-%20Copy.pdf"; // Acad calender for fy
     } else {
@@ -33,7 +32,6 @@ const Calendar = ({ onDateSelect }) => {
   // Example usage
   const rollNo = "240001049"; // Example roll number
   const linkAcadCalender = sendLink(rollNo);
-  // console.log("Send this link:", linkToSend);
 
   // Fetch past events
   useEffect(() => {
@@ -59,7 +57,6 @@ const Calendar = ({ onDateSelect }) => {
             format(new Date(event.dateTime), "yyyy-MM-dd")
           )
         );
-        console.log(futureEvents);
       })
       .catch((error) => console.error("Error fetching future events:", error));
   }, []);

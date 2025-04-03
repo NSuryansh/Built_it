@@ -46,7 +46,6 @@ const UserAppointments = () => {
       `https://built-it-xjiq.onrender.com/pastuserappt?userId=${user_id}`
     );
     const resp = await res.json();
-    console.log(resp);
     setpreviousAppointments(resp);
   }
 
@@ -55,7 +54,6 @@ const UserAppointments = () => {
       `https://built-it-xjiq.onrender.com/currentuserappt?userId=${user_id}`
     );
     const resp = await res.json();
-    console.log(resp);
     setupcomingAppointments(resp);
   }
 

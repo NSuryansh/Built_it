@@ -71,7 +71,6 @@ export default function Mood() {
       // }
 
       const data = await response.json();
-      console.log(data);
       // Handle both structured and unstructured responses
       const botMessage =
         data.response?.text ||

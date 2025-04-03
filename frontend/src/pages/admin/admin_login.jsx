@@ -54,11 +54,9 @@ const AdminLogin = () => {
         }),
       }
     );
-    console.log(response);
     const res = await response.json();
 
     if (res["message"] === "Login successful") {
-      console.log(res["message"]);
       localStorage.setItem("token", res["token"]);
       navigate("/admin/dashboard");
     } else {
@@ -76,7 +74,6 @@ const AdminLogin = () => {
   };
 
   const handleForgotPassword = async () => {
-    // console.log(email, "AEEE HALLLLO")
     if (!email) {
       toast("Please enter an email", { position: "bottom-right" });
       return;

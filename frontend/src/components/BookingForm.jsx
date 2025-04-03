@@ -29,16 +29,11 @@ const BookingFormStep = ({
         `https://built-it-xjiq.onrender.com/available-slots?date=${date}&docId=${doctorId}`
       );
       const data = await response.json();
-      console.log(data);
       setAvailableSlots(data.availableSlots);
     } catch (error) {
       console.error("Error fetching available slots:", error);
     }
   };
-
-  useEffect(() => {
-    console.log(slots);
-  }, [slots]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);

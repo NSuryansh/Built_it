@@ -28,11 +28,7 @@ const DoctorsList = () => {
 
     fetchDoctors();
   }, []);
-
-  useEffect(() => {
-    console.log(doctors);
-  }, [doctors]);
-
+  
   const handleDelete = async (doctorId) => {
     try {
       const res = await fetch("https://built-it-xjiq.onrender.com/deletedoc", {

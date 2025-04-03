@@ -25,7 +25,6 @@ const DoctorCalendar = ({ onDateSelect }) => {
 
   useEffect(() => {
     const docId = localStorage.getItem("userid");
-    console.log(docId);
     if (!docId) return;
 
     const fetchAppointments = async () => {

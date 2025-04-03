@@ -53,7 +53,6 @@ const AddDoctor = () => {
       navigate("/admin/doctor_list");
     } catch (e) {
       CustomToast("Some error occured");
-      console.log(e);
     }
     // Handle form submission
   };

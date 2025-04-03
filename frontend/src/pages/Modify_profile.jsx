@@ -21,7 +21,6 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   const onSave = async (dataToSend) => {
     try {
-      console.log(dataToSend);
       const response = await fetch(
         "https://built-it-xjiq.onrender.com/modifyUser",
         {
@@ -36,10 +35,8 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
       const result = await response.json();
 
       if (response.ok) {
-        console.log("User details updated successfully!");
         CustomToast("User details updated successfully!");
       } else {
-        console.log(`Error: ${result.error}`);
         CustomToast("Error while updating details");
       }
     } catch (error) {

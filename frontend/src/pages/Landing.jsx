@@ -12,19 +12,16 @@ const Landing = () => {
   useEffect(() => {
     const verifyAuth = async () => {
       const userAuthStatus = await checkAuth("user");
-      console.log(userAuthStatus);
       if (userAuthStatus) {
         setIsAuthenticated(userAuthStatus);
         navigate("/dashboard");
       } else {
         const docAuthStatus = await checkAuth("doc");
-        console.log(docAuthStatus);
         if (docAuthStatus) {
           setIsAuthenticated(docAuthStatus);
           navigate("/doctor/landing");
         } else {
           const adminAuthStatus = await checkAuth("admin");
-          console.log(adminAuthStatus);
           if (adminAuthStatus) {
             setIsAuthenticated(adminAuthStatus);
             navigate("/admin/dashboard");

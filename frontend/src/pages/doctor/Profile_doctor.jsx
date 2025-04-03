@@ -61,7 +61,6 @@ const DoctorProfile = () => {
     const certification = localStorage.getItem("certification").split(",");
     const education = localStorage.getItem("education").split(",");
     const availability = localStorage.getItem("slot").split(",");
-    console.log(localStorage.getItem("slot"));
     setProfile({
       ...profile,
       name: username,
@@ -88,7 +87,6 @@ const DoctorProfile = () => {
       education: education,
       availability: availability,
     });
-    console.log(profile);
   }, []);
 
   useEffect(() => {

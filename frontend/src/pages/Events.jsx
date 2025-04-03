@@ -31,14 +31,6 @@ function Events() {
     getPastEvents();
   }, []);
 
-  useEffect(() => {
-    console.log(currentEvents);
-  }, [currentEvents]);
-
-  useEffect(() => {
-    console.log(pastEvents);
-  }, [pastEvents]);
-
   const handleClosePopup = () => {
     navigate("/login");
   };
