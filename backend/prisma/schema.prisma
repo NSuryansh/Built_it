@@ -10,7 +10,6 @@ datasource db {
 enum Gender {
   MALE @map("Male")
   FEMALE @map("Female")
-  NON_BINARY @map("Non-Binary")
   OTHER @map("Other")
 }
 
