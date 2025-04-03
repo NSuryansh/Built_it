@@ -180,7 +180,7 @@ app.get("/getUsers", async (req, res) => {
 
 app.put("/modifyUser", async (req, res) => {
   try {
-    const { id, username, email, mobile, alt_mobile } = req.body;
+    const { id, username, email, mobile, alt_mobile, gender } = req.body;
 
     console.log(req.body);
 
@@ -196,6 +196,11 @@ app.put("/modifyUser", async (req, res) => {
       if (existingUsername && existingUsername.id !== Number(id)) {
         return res.status(400).json({ error: "Username is already in use" });
       }
+    }
+
+    const validGenders = ["MALE", "FEMALE", "OTHER"];
+    if (gender && !validGenders.includes(gender)) {
+      return res.status(400).json({ error: "Invalid gender value" });
     }
 
     if (mobile) {
@@ -221,6 +226,7 @@ app.put("/modifyUser", async (req, res) => {
       ...(mobile && { mobile }),
       ...(email && { email }),
       ...(alt_mobile && { alt_mobile }),
+      ...(gender && { gender }),
     };
 
     // Ensure at least one field is being updated
@@ -250,7 +256,7 @@ app.post("/login", async (req, res) => {
 
   const user = await prisma.user.findUnique({ where: { username: username } });
   if (!user) {
-    return res.status(401).json({ message: "User doesn't exists" });
+    return res.status(401).json({ message: "User doesn't exist" });
   }
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
@@ -266,6 +272,8 @@ app.post("/login", async (req, res) => {
 
   res.json({ message: "Login successful", token });
 });
+
+
 app.get("/profile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
