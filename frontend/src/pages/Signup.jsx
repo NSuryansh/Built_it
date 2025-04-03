@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import CustomToast from "../components/CustomToast";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -66,15 +67,14 @@ const SignUp = () => {
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
-        toast("OTP sent successfully", {
-          position: "bottom-right",
-          autoClose: 3000,
-        });
+        CustomToast("OTP sent successfully");
       } else {
         setError(data.message || "Failed to send OTP");
+        CustomToast("Failed to send OTP");
       }
     } catch (err) {
       setError("Failed to send OTP");
+      CustomToast("Failed to send OTP");
     }
   }
 
@@ -102,10 +102,12 @@ const SignUp = () => {
       } else {
         console.error("Error sending OTP: ", error);
         setError(data.message || "Failed to send OTP");
+        CustomToast("Failed to send OTP");
       }
     } catch (error) {
       console.error("Error sending OTP: ", error);
       setError("Failed to send OTP");
+      CustomToast("Failed to send OTP");
     }
   }
 
@@ -153,89 +155,37 @@ const SignUp = () => {
       formData.confirmPassword === ""
     ) {
       setError("Please fill the fields");
-      toast("Please fill the fields", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Please fill the fields");
       return;
     }
     if (formData.mobile === formData.altNo) {
       setError("Phone number and Emergency contact number cannot be the same");
-      toast("Phone number and Emergency contact number cannot be the same", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast(
+        "Phone number and Emergency contact number cannot be the same"
+      );
       return;
     }
 
     if (formData.mobile.length !== 10) {
       setError("Enter a valid phone number");
-      toast("Enter a valid phone number", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Enter a valid phone number");
       return;
     }
 
     if (formData.altNo.length !== 10) {
       setError("Enter a valid emergency contact number");
-      toast("Enter a valid emergency contact number", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Enter a valid emergency contact number");
       return;
     }
 
     if (formData.password.length < 8) {
       setError("Password must be atleast 8 characters long");
-      toast("Password must be atleast 8 characters long", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Password must be atleast 8 characters long");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      toast("Passwords do not match", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Passwords do not match");
       return;
     }
 
@@ -244,16 +194,7 @@ const SignUp = () => {
 
     if (domain != "iiti.ac.in") {
       setError("Please sign up with your institute email id");
-      toast("Please sign up with your institute email id", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Please sign up with your institute email id");
       return;
     }
 
@@ -266,16 +207,7 @@ const SignUp = () => {
       } else if (numfound === true) {
         setError("Please enter a valid email address");
         setFormData({ ...formData, rollNo: "" });
-        toast("Please enter a valid email address", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
+        CustomToast("Please enter a valid email address");
         return;
       }
       setFormData({ ...formData, rollNo: roll });
@@ -288,30 +220,12 @@ const SignUp = () => {
       const data = await response.json();
       if (data.message === "Username already exists!") {
         setError(data.message);
-        toast(data.message, {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
+        CustomToast(data.message);
         return;
       }
     } catch (error) {
       console.error("Signup error:", error);
-      toast(error.toString(), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast(error.toString());
     }
 
     // Example condition for academic program
@@ -359,17 +273,11 @@ const SignUp = () => {
       );
       const data = await response.json();
       console.log("Signup successful:", data);
-      toast("Signup successful", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
+      CustomToast("Signup successful");
       navigate("/login");
     } catch (error) {
       console.error("Signup error:", error);
-      toast(error.toString(), {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
+      CustomToast(error.toString());
     }
   }
 

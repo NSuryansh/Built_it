@@ -2,9 +2,10 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, Eye, EyeOff } from "lucide-react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import CustomToast from "../../components/CustomToast";
 
 const DoctorLogin = () => {
   const [email, setEmail] = useState("");
@@ -65,23 +66,14 @@ const DoctorLogin = () => {
       localStorage.setItem("token", res["token"]);
       navigate("/doctor/landing");
     } else {
-      toast(res["message"], {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast(res["message"]);
     }
   };
 
   const handleForgotPassword = async () => {
     // console.log(email, "AEEE HALLLLO")
     if (!email) {
-      toast("Please enter an email", { position: "bottom-right" });
+      CustomToast("Please enter an email");
       return;
     }
     const response = await fetch(
@@ -95,7 +87,7 @@ const DoctorLogin = () => {
       }
     );
     const res = await response.json();
-    toast(res.message, { position: "bottom-right" });
+    CustomToast(res.message);
     setShowForgotModal(false);
   };
 

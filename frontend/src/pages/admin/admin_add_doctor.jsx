@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import CustomToast from "../../components/CustomToast";
+import { ToastContainer } from "react-toastify";
 
 const AddDoctor = () => {
   const navigate = useNavigate();
@@ -47,10 +49,10 @@ const AddDoctor = () => {
         }),
       });
       const resp = await res.json();
-      console.log(resp);
-      console.log("Form submitted");
+      CustomToast("Doctor Added");
       navigate("/admin/doctor_list");
     } catch (e) {
+      CustomToast("Some error occured");
       console.log(e);
     }
     // Handle form submission
@@ -72,6 +74,7 @@ const AddDoctor = () => {
   return (
     <div className="bg-[var(--custom-primary-green-50)]">
       <AdminNavbar />
+      <ToastContainer />
       <div className="space-y-6 mb-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center min-h-screen ">
         <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-6">
           Add New Doctor

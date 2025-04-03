@@ -10,9 +10,10 @@ import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
+import CustomToast from "../components/CustomToast";
 
 const Peer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -101,16 +102,7 @@ const Peer = () => {
       });
     } catch (error) {
       console.error("Error fetching contacts:", error);
-      toast("Error while fetching data", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Error while fetching data");
       return [];
     }
   }
@@ -257,16 +249,7 @@ const Peer = () => {
       setShowMessages(filteredMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
-      toast("Error while fetching data", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Error while fetching data");
       return [];
     }
   }

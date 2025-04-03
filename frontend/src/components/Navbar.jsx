@@ -4,7 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import NotificationPanel from "./NotifficationPanel";
 import { checkAuth } from "../utils/profile";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import CustomToast from "./CustomToast";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -58,16 +59,7 @@ const Navbar = () => {
 
   const handleBellClick = () => {
     if (!isAuthenticated) {
-      toast("Please login first!", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Please login first!");
       return;
     }
     setShowNotifications(!showNotifications);
@@ -115,9 +107,7 @@ const Navbar = () => {
       <ToastContainer />
       <div className="px-4 lg:px-8 py-3">
         <div className="flex items-center justify-between">
-          <div
-            className="lg:hidden transition-all flex items-center z-2"
-          >
+          <div className="lg:hidden transition-all flex items-center z-2">
             <button
               onClick={() => {
                 setShowDetails(false);

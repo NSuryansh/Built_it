@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProgressBar from "./ProgressBar";
-import { toast } from "react-toastify"; // Ensure toast is imported if you're using it
+import CustomToast from "./CustomToast";
 
 const ProgressPage = ({ isLandingPage }) => {
   const [scores, setScores] = useState({});
@@ -8,18 +8,21 @@ const ProgressPage = ({ isLandingPage }) => {
   useEffect(() => {
     const fetchScores = async () => {
       try {
-        const response = await fetch("https://built-it-xjiq.onrender.com/scores-bot", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
-        });
+        const response = await fetch(
+          "https://built-it-xjiq.onrender.com/scores-bot",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        
+
         setScores({
           mental_health_score: data.mental_health_score || 0,
           stress_score: data.stress_score || 0,
@@ -28,16 +31,7 @@ const ProgressPage = ({ isLandingPage }) => {
         });
       } catch (error) {
         console.error("Error in fetching scores: ", error.message);
-        toast("Error while processing your message", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
+        CustomToast("Error while processing your message");
       }
     };
 
@@ -47,7 +41,7 @@ const ProgressPage = ({ isLandingPage }) => {
   const calculateHappinessScore = () => {
     const scoreValues = Object.values(scores);
     if (scoreValues.length === 0) return 0;
-    const filteredScores = scoreValues.filter(score => score !== 11);
+    const filteredScores = scoreValues.filter((score) => score !== 11);
     const total = filteredScores.reduce((sum, value) => sum + value, 0);
     return Math.round(total / filteredScores.length);
   };

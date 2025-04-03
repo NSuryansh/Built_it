@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { KeyRound, Eye, EyeOff } from "lucide-react";
+import CustomToast from "../../components/CustomToast";
 
 const AdminResetPassword = () => {
   const [formData, setFormData] = useState({
@@ -40,16 +40,7 @@ const AdminResetPassword = () => {
     );
     const res = await response.json();
     console.log(res.message);
-    toast("Password updated successfully!", {
-      position: "bottom-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      className: "custom-toast",
-    });
+    CustomToast("Password updated successfully!");
     setTimeout(() => {
       navigate("/admin/login");
     }, 2000);

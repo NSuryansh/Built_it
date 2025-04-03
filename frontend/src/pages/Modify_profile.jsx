@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import CustomToast from "../components/CustomToast";
+import { ToastContainer } from "react-toastify";
 
 const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   const navigate = useNavigate();
@@ -35,11 +37,14 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
       if (response.ok) {
         console.log("User details updated successfully!");
+        CustomToast("User details updated successfully!");
       } else {
         console.log(`Error: ${result.error}`);
+        CustomToast("Error while updating details");
       }
     } catch (error) {
       console.error("Error updating user:", error);
+      CustomToast("Error while updating details");
     }
   };
 
@@ -56,6 +61,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   return (
     <div>
       <Navbar />
+      <ToastContainer />
       <div className="min-h-screen bg-[var(--custom-orange-100)] py-12">
         <div className="max-w-md mx-auto bg-[var(--custom-white)] rounded-xl shadow-lg overflow-hidden">
           <div className="px-6 py-8">

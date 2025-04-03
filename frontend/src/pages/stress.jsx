@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Bell, User, ExternalLink, BookOpen, Clock, Building, Brain, Youtube, ChevronRight } from "lucide-react";
+import { Clock, Building, Youtube, ChevronRight } from "lucide-react";
 import VideoSection from "../components/videosection";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -7,81 +7,7 @@ import { checkAuth } from "../utils/profile";
 import SessionExpired from "../components/SessionExpired";
 import { useNavigate } from "react-router-dom";
 import PacmanLoader from "react-spinners/PacmanLoader";
-
-const articles = [
-  {
-    id: 1,
-    title: "Understanding and Managing Stress",
-    description: "Learn about the different types of stress and effective strategies to manage them in your daily life.",
-    url: "https://www.nimh.nih.gov/health/publications/so-stressed-out-fact-sheet",
-    readTime: "5 min read",
-    source: "National Institute of Mental Health",
-    icon: Brain
-  },
-  {
-    id: 2,
-    title: "The Science Behind Stress and Mental Health",
-    description: "Explore the biological mechanisms of stress and its impact on mental well-being.",
-    url: "https://www.health.harvard.edu/staying-healthy/understanding-the-stress-response",
-    readTime: "8 min read",
-    source: "Harvard Health",
-    icon: BookOpen
-  },
-  {
-    id: 3,
-    title: "Mindfulness Techniques for Stress Relief",
-    description: "Discover practical mindfulness exercises that can help reduce stress and anxiety.",
-    url: "https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/mindfulness-exercises/art-20046356",
-    readTime: "6 min read",
-    source: "Mayo Clinic",
-    icon: Brain
-  },
-  {
-    id: 4,
-    title: "Work-Related Stress Management",
-    description: "Tips and strategies for managing stress in the workplace and maintaining work-life balance.",
-    url: "https://www.apa.org/topics/healthy-workplaces/work-stress",
-    readTime: "7 min read",
-    source: "American Psychological Association",
-    icon: Building
-  }
-];
-
-const videoSections = [
-  {
-    title: "Guided Meditation",
-    description: "Follow along with guided meditations that focus on relaxation, mindfulness, and stress reduction.",
-    videos: [
-      "https://www.youtube.com/embed/FuuXHJB74iU",
-      "https://www.youtube.com/embed/ZToicYcHIOU",
-      "https://www.youtube.com/embed/a2pZOIzbp7Q",
-      "https://www.youtube.com/embed/-2zdUXve6fQ",
-      "https://www.youtube.com/embed/0gz1WjL4sW0",
-    ]
-  },
-  {
-    title: "Stretching Exercises",
-    description: "Simple full-body stretches that help relieve muscle tension and promote relaxation.",
-    videos: [
-      "https://www.youtube.com/embed/ferw4VhbN54",
-      "https://www.youtube.com/embed/mj2RGYpknzA",
-      "https://www.youtube.com/embed/_OoEYEhNAlY",
-      "https://www.youtube.com/embed/y87vSUoIMGU",
-      "https://www.youtube.com/embed/DZ7hrD0Z_3o",
-    ]
-  },
-  {
-    title: "Dance Workouts",
-    description: "Fun, energetic dance routines to release tension and boost mood.",
-    videos: [
-      "https://www.youtube.com/embed/x7JYxuzwtQc",
-      "https://www.youtube.com/embed/XTH5saFBDqA",
-      "https://www.youtube.com/embed/Cw-Wt4xKD2s",
-      "https://www.youtube.com/embed/v3SGmJPDNVw",
-      "https://www.youtube.com/embed/Btyw98t0Ef4",
-    ]
-  }
-];
+import { articles, videoSections } from "../utils/data";
 
 const Stress = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -116,7 +42,7 @@ const Stress = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
       <Navbar />
-      
+
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-amber-400 to-orange-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -125,7 +51,8 @@ const Stress = () => {
               Your Mental Wellness Journey
             </h1>
             <p className="text-xl text-center text-red-100 max-w-3xl mx-auto">
-              Discover resources, techniques, and exercises to help manage stress and improve your mental well-being
+              Discover resources, techniques, and exercises to help manage
+              stress and improve your mental well-being
             </p>
           </div>
           <div className="absolute inset-0 opacity-20 bg-pattern"></div>
@@ -159,7 +86,9 @@ const Stress = () => {
                         <h3 className="text-xl font-semibold text-gray-900 group-hover:text-red-500 transition-colors duration-300">
                           {article.title}
                         </h3>
-                        <p className="text-sm text-gray-600 mt-2">{article.description}</p>
+                        <p className="text-sm text-gray-600 mt-2">
+                          {article.description}
+                        </p>
                       </div>
                       <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-red-500 transform group-hover:translate-x-1 transition-all duration-300" />
                     </div>
@@ -183,13 +112,18 @@ const Stress = () => {
         {/* Video Sections */}
         <div className="space-y-12 mb-16">
           {videoSections.map((section, index) => (
-            <section key={index} className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:shadow-2xl">
+            <section
+              key={index}
+              className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:shadow-2xl"
+            >
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-3 rounded-lg bg-gradient-to-br from-amber-100 to-orange-500 text-white">
                   <Youtube className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">{section.title}</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {section.title}
+                  </h2>
                   <p className="text-gray-600 mt-1">{section.description}</p>
                 </div>
               </div>

@@ -6,9 +6,10 @@ import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired"; // Ensure this exists
 import Footer from "../../components/Footer";
 import { useNavigate, Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import DoctorCalendar from "../../components/DoctorCalendar";
+import CustomToast from "../../components/CustomToast";
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
@@ -59,11 +60,7 @@ const DoctorLanding = () => {
         setAppointments(formattedAppointments);
       } catch (error) {
         console.error("Error fetching appointments", error);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          className: "custom-toast",
-        });
+        CustomToast("Error while fetching data");
       }
     };
 
@@ -97,11 +94,7 @@ const DoctorLanding = () => {
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events", error);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          className: "custom-toast",
-        });
+        CustomToast("Error while fetching data");
       }
     };
 
@@ -130,11 +123,12 @@ const DoctorLanding = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <DoctorNavbar />
+      <ToastContainer />
       <div className="h-full bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex justify-center md:w-xl items-center">
-            <DoctorCalendar />
+              <DoctorCalendar />
             </div>
             {/* Appointments Section */}
             <div className="bg-white rounded-xl w-full shadow-sm p-6">

@@ -7,7 +7,8 @@ import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import CustomToast from "../components/CustomToast";
 
 export default function Mood() {
   const [message, setMessage] = useState("");
@@ -81,16 +82,7 @@ export default function Mood() {
       setChats([...newChats, { self: "False", message: botMessage }]);
     } catch (error) {
       console.error("Request failed:", error);
-      toast("Error while processing your message", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Error while processing your message");
       setChats([
         ...newChats,
         {

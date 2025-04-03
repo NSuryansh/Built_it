@@ -11,16 +11,18 @@ import {
   Edit2,
   Save,
   X,
-  Calendar,
   Plus,
 } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import Footer from "../../components/Footer";
-
+import { format } from "date-fns";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
+import { TimeChange } from "../../components/Time_Change";
+import CustomToast from "../../components/CustomToast";
+import { ToastContainer } from "react-toastify";
 
 const DoctorProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -89,6 +91,36 @@ const DoctorProfile = () => {
     console.log(profile);
   }, []);
 
+  useEffect(() => {
+    const date = format(new Date(), "yyyy-MM-dd");
+    const fetchAvailableSlots = async (date) => {
+      try {
+        const doctorId = localStorage.getItem("userid");
+        const response = await fetch(
+          `https://built-it-xjiq.onrender.com/available-slots?date=${date}&docId=${doctorId}`
+        );
+        const data = await response.json();
+        const slots = [];
+        data.availableSlots.map((slot) => {
+          slots.push(
+            format(
+              TimeChange(new Date(slot.starting_time).getTime()),
+              "hh:mm a"
+            )
+          );
+        });
+        setProfile({
+          ...profile,
+          availability: slots,
+        });
+      } catch (error) {
+        console.error("Error fetching available slots:", error);
+        CustomToast("Error fetching available slots");
+      }
+    };
+    fetchAvailableSlots(date);
+  }, []);
+
   const handleAddSlot = () => {
     setEditedProfile({
       ...editedProfile,
@@ -128,10 +160,11 @@ const DoctorProfile = () => {
     setEditedProfile(profile);
     setIsEditing(false);
   };
-  
+
   return (
     <div>
       <DoctorNavbar />
+      <ToastContainer />
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6 flex justify-between items-center">
           <div>
@@ -395,60 +428,66 @@ const DoctorProfile = () => {
                     ))}
                   </div>
                 </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Availability
-              </h3>
-              <div className="space-y-4">
-                {isEditing ? (
-                  <div className="space-y-2">
-                    {editedProfile.availability.map((slot, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <Clock className="h-5 w-5 text-gray-400" />
-                        <input
-                          type="time"
-                          value={slot}
-                          onChange={(e) => {
-                            const newAvailability = [
-                              ...editedProfile.availability,
-                            ];
-                            newAvailability[index] = e.target.value;
-                            setEditedProfile({
-                              ...editedProfile,
-                              availability: newAvailability,
-                            });
-                          }}
-                          className="bg-gray-50 border border-gray-300 rounded-lg px-2 py-1 text-sm"
-                        />
-                        {index === editedProfile.availability.length - 1 && (
-                          <button
-                            onClick={handleAddSlot}
-                            className="inline-flex items-center px-2 py-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Availability
+                  </h3>
+                  <div className="space-y-4">
+                    {isEditing ? (
+                      <div className="space-y-2">
+                        {editedProfile.availability.map((slot, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center space-x-2"
                           >
-                            <Plus className="h-4 w-4 mr-1" />
-                            Add Slot
-                          </button>
-                        )}
+                            <Clock className="h-5 w-5 text-gray-400" />
+                            <input
+                              type="time"
+                              value={slot}
+                              onChange={(e) => {
+                                const newAvailability = [
+                                  ...editedProfile.availability,
+                                ];
+                                newAvailability[index] = e.target.value;
+                                setEditedProfile({
+                                  ...editedProfile,
+                                  availability: newAvailability,
+                                });
+                              }}
+                              className="bg-gray-50 border border-gray-300 rounded-lg px-2 py-1 text-sm"
+                            />
+                            {index ===
+                              editedProfile.availability.length - 1 && (
+                              <button
+                                onClick={handleAddSlot}
+                                className="inline-flex items-center px-2 py-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                              >
+                                <Plus className="h-4 w-4 mr-1" />
+                                Add Slot
+                              </button>
+                            )}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : profile.availability.length !== 0 ? (
+                      <div className="">
+                        <div className="flex flex-wrap gap-2">
+                          {profile.availability.map((slot, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-3 py-1 bg-white rounded-full text-sm text-gray-600 border border-blue-100"
+                            >
+                              <Clock className="h-4 w-4 text-blue-500 mr-2" />
+                              {slot}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-gray-400">No slots added</div>
+                    )}
                   </div>
-                ) : profile.availability.length !== 0 ? (
-                  <div className="">
-                    <div className="flex flex-wrap gap-2">
-                      {profile.availability.map((slot, index) => (
-                        <span
-                          key={index}
-                          className="inline-flex items-center px-3 py-1 bg-white rounded-full text-sm text-gray-600 border border-blue-100"
-                        >
-                          <Clock className="h-4 w-4 text-blue-500 mr-2" />
-                          {slot}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ) : (<div className="text-gray-400">No slots added</div>)}
-              </div>
-            </div>
+                </div>
               </div>
             </div>
           </div>

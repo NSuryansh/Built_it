@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-const CustomToast = ({ text }) => {
+const CustomToast = (text) => {
   return toast(text, {
     position: "bottom-right",
     autoClose: 3000,

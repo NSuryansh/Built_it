@@ -1,13 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { User, Calendar, CalendarClock, History, Clock, FileText } from "lucide-react";
+import {
+  User,
+  Calendar,
+  CalendarClock,
+  History,
+  Clock,
+  FileText,
+} from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { format } from "date-fns";
+import { checkAuth } from "../utils/profile";
+import SessionExpired from "../components/SessionExpired";
 
 const UserAppointments = () => {
   const [previousAppointments, setpreviousAppointments] = useState([]);
   const [upcomingAppointments, setupcomingAppointments] = useState([]);
   const user_id = localStorage.getItem("userid");
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  // Verify authentication
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
 
   async function getPrevApp() {
     const res = await fetch(

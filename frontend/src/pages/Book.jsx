@@ -4,9 +4,10 @@ import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Footer from "../components/Footer";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import DoctorSelectionStep from "../components/DoctorSelection";
 import BookingFormStep from "../components/BookingForm";
+import CustomToast from "../components/CustomToast";
 
 const Book = () => {
   // step 1: select a doctor; step 2: booking form
@@ -45,11 +46,7 @@ const Book = () => {
         setDoctors(data);
       } catch (err) {
         console.error("Error fetching doctors:", err);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          className: "custom-toast",
-        });
+        CustomToast("Error while fetching data");
       }
     };
     fetchDoctors();
@@ -84,16 +81,7 @@ const Book = () => {
     const [address, domain] = lowerCaseEmail.split("@");
 
     if (domain != "iiti.ac.in") {
-      toast("Please book with your institute email id", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Please book with your institute email id");
       return;
     }
 
@@ -102,16 +90,7 @@ const Book = () => {
       if (address[i] >= "0" && address[i] <= "9") {
         numfound = true;
       } else if (numfound === true) {
-        toast("Please enter a valid email address", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
+        CustomToast("Please enter a valid email address");
         return;
       }
     }
@@ -137,11 +116,7 @@ const Book = () => {
       const respData = await res.json();
       console.log(respData);
       // alert("Booking Confirmed!");
-      toast("Appointment Requested", {
-        position: "bottom-right",
-        autoClose: 3000,
-        className: "custom-toast",
-      });
+      CustomToast("Appointment Requested");
       setStep(1);
       setSelectedDoctor(null);
       setFormData({
@@ -153,11 +128,7 @@ const Book = () => {
       });
     } catch (err) {
       console.error("Error submitting booking request:", err);
-      toast("Error while booking appointment", {
-        position: "bottom-right",
-        autoClose: 3000,
-        className: "custom-toast",
-      });
+      CustomToast("Error while booking appointment");
     }
   };
 

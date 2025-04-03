@@ -10,7 +10,6 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
-import { toast } from "react-toastify";
 import {
   BarChart,
   Bar,
@@ -19,8 +18,10 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend
+  Legend,
 } from "recharts";
+import { TimeChange } from "../../components/Time_Change";
+import CustomToast from "../../components/CustomToast";
 
 const DoctorAppointment = () => {
   const [fixed, setFixed] = useState(false);
@@ -73,12 +74,8 @@ const DoctorAppointment = () => {
       );
       const resp2 = await res.json();
       const resp = await res2.json();
-      var date = new Date();
-      var userTimezoneOffset = date.getTimezoneOffset() * 60000;
       for (var i = 0; i < resp2.length; i++) {
-        resp2[i].dateTime = new Date(
-          new Date(resp2[i].dateTime).getTime() + userTimezoneOffset
-        );
+        resp2[i].dateTime = TimeChange(new Date(resp2[i].dateTime).getTime());
       }
       setapp(resp2);
       setcurr(resp);
@@ -93,14 +90,16 @@ const DoctorAppointment = () => {
 
   useEffect(() => {
     const docId = localStorage.getItem("userid");
-    console.log(docId, "DOCJ")
+    console.log(docId, "DOCJ");
     if (!docId) return;
 
     const fetchPastAppointments = async () => {
       try {
-        const response = await fetch(`https://built-it-xjiq.onrender.com/pastdocappt?doctorId=${docId}`);
+        const response = await fetch(
+          `https://built-it-xjiq.onrender.com/pastdocappt?doctorId=${docId}`
+        );
         const data = await response.json();
-        console.log(data, "DATA JKL")
+        console.log(data, "DATA JKL");
         if (response.ok) {
           const periods = {
             "Last 1 Month": { UG: 0, PG: 0, PhD: 0 },
@@ -140,10 +139,7 @@ const DoctorAppointment = () => {
         }
       } catch (error) {
         console.error("Error fetching past appointments: ", error);
-        toast("Error while fetching past appointments", {
-          position: "bottom-right",
-          autoClose: 3000,
-        });
+        CustomToast("Error while fetching past appointments");
       }
     };
     fetchPastAppointments();
@@ -155,7 +151,6 @@ const DoctorAppointment = () => {
     PG: timePeriodData[period].PG || 0,
     PhD: timePeriodData[period].PhD || 0,
   }));
-
 
   const acceptApp = async (appointment) => {
     console.log(appointment);
@@ -465,13 +460,11 @@ const DoctorAppointment = () => {
                 </div>
               </div>
             </div>
-
-
           </div>
           {/* Past Appointments Segregation Graph */}
           <div className="w-full mt-10 bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Past Appointments 
+              Past Appointments
             </h2>
             <div className="h-96 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -481,7 +474,7 @@ const DoctorAppointment = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="UG" fill="#155DFC" name="UG Appointments"/>
+                  <Bar dataKey="UG" fill="#155DFC" name="UG Appointments" />
                   <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
                   <Bar dataKey="PhD" fill="#FB8500" name="PhD Appointments" />
                 </BarChart>

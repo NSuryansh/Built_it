@@ -11,9 +11,8 @@ import {
   isSameDay,
 } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import CustomToast from "./CustomToast";
 
 const DoctorCalendar = ({ onDateSelect }) => {
   const [appointments, setAppointments] = useState([]);
@@ -87,16 +86,7 @@ const DoctorCalendar = ({ onDateSelect }) => {
         setAppointments(formattedAppointments);
       } catch (error) {
         console.error("Error fetching appointments", error);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
+        CustomToast("Error while fetching data");
       }
     };
 

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { KeyRound, Eye, EyeOff } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import CustomToast from "../components/CustomToast";
 
 const ResetPassword = () => {
   const [formData, setFormData] = useState({
@@ -40,16 +41,7 @@ const ResetPassword = () => {
     );
     const res = await response.json();
     console.log(res.message);
-    toast("Password updated successfully!", {
-      position: "bottom-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      className: "custom-toast",
-    });
+    CustomToast("Password updated successfully!");
     setTimeout(() => {
       navigate("/login");
     }, 2000);

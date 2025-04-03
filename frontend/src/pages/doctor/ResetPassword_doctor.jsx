@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { KeyRound, Eye, EyeOff } from "lucide-react";
-import { toast } from "react-toastify";
+import CustomToast from "../../components/CustomToast";
 
 const DoctorResetPassword = () => {
   const [formData, setFormData] = useState({
@@ -40,16 +40,7 @@ const DoctorResetPassword = () => {
     );
     const res = await response.json();
     console.log(res.message);
-    toast("Password updated successfully!", {
-      position: "bottom-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      className: "custom-toast",
-    });
+    CustomToast("Password updated successfully!");
     setTimeout(() => {
       navigate("/doctor/login");
     }, 2000);
