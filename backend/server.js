@@ -143,6 +143,7 @@ app.post("/signup", async (req, res) => {
   const department = req.body["department"];
   const acadProg = req.body["acadProg"];
   const rollNo = Number(req.body["rollNo"]);
+  const gender = req.body["gender"];
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -158,6 +159,7 @@ app.post("/signup", async (req, res) => {
         rollNo: rollNo,
         acadProg: acadProg,
         department: department,
+        gender: gender,
       },
     });
     res.status(201).json({ message: "User added" });
@@ -769,7 +771,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => { });
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -949,11 +951,11 @@ app.get("/pastdocappt", async (req, res) => {
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
-    console.log("HH")
+    console.log("HH");
     const appt = await prisma.pastAppointments.findMany({
       where: { doc_id: doctorId },
       include: {
-        user: true
+        user: true,
       },
     });
 
@@ -1578,14 +1580,15 @@ app.post("/scores-bot", async (req, res) => {
 
 app.put("/modifyDoc", async (req, res) => {
   try {
-    const { id, name, email, mobile, desc, address, city, experenice } = req.body;
+    const { id, name, email, mobile, desc, address, city, experenice } =
+      req.body;
 
     console.log(req.body);
 
     const doctorId = parseInt(id, 10);
     if (isNaN(doctorId) || doctorId <= 0) {
       return res.status(400).json({ error: "Invalid doctor ID" });
-    }  
+    }
 
     const orConditions = [];
     if (name) orConditions.push({ name });
@@ -1598,8 +1601,8 @@ app.put("/modifyDoc", async (req, res) => {
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
-        where: { OR: orConditions },
-      })
+          where: { OR: orConditions },
+        })
       : null;
 
     if (existingDoctor && existingDoctor.id !== doctorId) {
@@ -1616,7 +1619,6 @@ app.put("/modifyDoc", async (req, res) => {
     if (address?.trim()) updatedData.address = address;
     if (city?.trim()) updatedData.city = city;
     if (experenice?.trim()) updatedData.experenice = experenice;
-
 
     if (Object.keys(updatedData).length === 0) {
       return res
@@ -1702,4 +1704,3 @@ app.post("/add-slot", async (req, res) => {
     res.json({ message: "Internal Server Error" });
   }
 });
-
