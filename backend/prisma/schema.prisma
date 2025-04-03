@@ -7,6 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  MALE @map("Male")
+  FEMALE @map("Female")
+  NON_BINARY @map("Non-Binary")
+  OTHER @map("Other")
+}
+
 model User {
   id               Int                  @id @default(autoincrement())
   username         String               @unique
@@ -18,6 +25,7 @@ model User {
   rollNo           Int                  @unique
   department       String
   acadProg         String
+  gender           Gender
   receivedMessages Message[]            @relation("ReceivedMessages")
   sentMessages     Message[]            @relation("SentMessages")
   appointment      Appointments[]
