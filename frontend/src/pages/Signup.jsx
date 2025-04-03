@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
-import CustomToast from "../components/CustomToast";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ const SignUp = () => {
   const [acadProg, setAcadProg] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
-  const [otpRight, setOtpRight] = useState(""); // corrected spelling
+  const [otpRight, setOtpRight] = useState("");
 
   const [formData, setFormData] = useState({
     username: "",
@@ -25,6 +24,7 @@ const SignUp = () => {
     rollNo: "",
     password: "",
     confirmPassword: "",
+    gender: "",
   });
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
@@ -67,14 +67,15 @@ const SignUp = () => {
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
-        CustomToast("OTP sent successfully");
+        toast("OTP sent successfully", {
+          position: "bottom-right",
+          autoClose: 3000,
+        });
       } else {
         setError(data.message || "Failed to send OTP");
-        CustomToast("Failed to send OTP");
       }
     } catch (err) {
       setError("Failed to send OTP");
-      CustomToast("Failed to send OTP");
     }
   }
 
@@ -91,7 +92,9 @@ const SignUp = () => {
           }),
         }
       );
+      console.log(response);
       const res = await response.json();
+      console.log(res);
       if (response.ok) {
         if (res.message === "Email verified") {
           return true;
@@ -99,16 +102,17 @@ const SignUp = () => {
           return false;
         }
       } else {
-        console.error("Error sending OTP: ", error);
-        setError(data.message || "Failed to send OTP");
-        CustomToast("Failed to send OTP");
+        console.error("Error sending OTP: ", res.message);
+        setError(res.message || "Failed to send OTP");
+        return false;
       }
     } catch (error) {
       console.error("Error sending OTP: ", error);
       setError("Failed to send OTP");
-      CustomToast("Failed to send OTP");
+      return false;
     }
   }
+  
 
   async function generateKeyPair() {
     const keyPair = await window.crypto.subtle.generateKey(
@@ -154,37 +158,89 @@ const SignUp = () => {
       formData.confirmPassword === ""
     ) {
       setError("Please fill the fields");
-      CustomToast("Please fill the fields");
+      toast("Please fill the fields", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
     if (formData.mobile === formData.altNo) {
       setError("Phone number and Emergency contact number cannot be the same");
-      CustomToast(
-        "Phone number and Emergency contact number cannot be the same"
-      );
+      toast("Phone number and Emergency contact number cannot be the same", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
 
     if (formData.mobile.length !== 10) {
       setError("Enter a valid phone number");
-      CustomToast("Enter a valid phone number");
+      toast("Enter a valid phone number", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
 
     if (formData.altNo.length !== 10) {
       setError("Enter a valid emergency contact number");
-      CustomToast("Enter a valid emergency contact number");
+      toast("Enter a valid emergency contact number", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
 
     if (formData.password.length < 8) {
       setError("Password must be atleast 8 characters long");
-      CustomToast("Password must be atleast 8 characters long");
+      toast("Password must be atleast 8 characters long", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      CustomToast("Passwords do not match");
+      toast("Passwords do not match", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
 
@@ -193,7 +249,16 @@ const SignUp = () => {
 
     if (domain != "iiti.ac.in") {
       setError("Please sign up with your institute email id");
-      CustomToast("Please sign up with your institute email id");
+      toast("Please sign up with your institute email id", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
       return;
     }
 
@@ -206,7 +271,16 @@ const SignUp = () => {
       } else if (numfound === true) {
         setError("Please enter a valid email address");
         setFormData({ ...formData, rollNo: "" });
-        CustomToast("Please enter a valid email address");
+        toast("Please enter a valid email address", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
         return;
       }
       setFormData({ ...formData, rollNo: roll });
@@ -219,12 +293,30 @@ const SignUp = () => {
       const data = await response.json();
       if (data.message === "Username already exists!") {
         setError(data.message);
-        CustomToast(data.message);
+        toast(data.message, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "custom-toast",
+        });
         return;
       }
     } catch (error) {
       console.error("Signup error:", error);
-      CustomToast(error.toString());
+      toast(error.toString(), {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        className: "custom-toast",
+      });
     }
 
     // Example condition for academic program
@@ -242,42 +334,55 @@ const SignUp = () => {
   async function handleOTPVerification() {
     setError("");
     const otpValid = await verifyOTP();
+    console.log(otpValid);
     if (!otpValid) return;
     try {
       const { publicKey, privateKey } = await generateKeyPair();
       const publicKeyPEM = await exportKeyToPEM(publicKey);
       const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
       localStorage.setItem("privateKey", privateKeyPEM);
-
-      const { username, email, mobile, password, altNo, department, rollNo } =
-        formData;
-      const response = await fetch(
-        "https://built-it-xjiq.onrender.com/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username: username,
-            email: email,
-            mobile: mobile,
-            password: password,
-            altNo: altNo,
-            publicKey: publicKeyPEM,
-            department: department,
-            acadProg: acadProg,
-            rollNo: rollNo,
-          }),
-        }
-      );
+  
+      const {
+        username,
+        email,
+        mobile,
+        password,
+        altNo,
+        department,
+        rollNo,
+        gender, 
+      } = formData;
+      const response = await fetch("https://built-it-xjiq.onrender.com/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          mobile: mobile,
+          password: password,
+          altNo: altNo,
+          publicKey: publicKeyPEM,
+          department: department,
+          acadProg: acadProg,
+          rollNo: rollNo,
+          gender: gender, 
+        }),
+      });
       const data = await response.json();
-      CustomToast("Signup successful");
+      console.log("Signup successful:", data);
+      toast("Signup successful", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
       navigate("/login");
     } catch (error) {
       console.error("Signup error:", error);
-      CustomToast(error.toString());
+      toast(error.toString(), {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
     }
   }
-
   return (
     <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">
       <ToastContainer />
@@ -414,6 +519,28 @@ const SignUp = () => {
                   placeholder="Emergency Contact Number"
                   required
                 />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="gender"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
+                >
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent bg-white"
+                  required
+                >
+                  <option value="">Select gender</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                  <option value="OTHER">Others</option>
+                </select>
               </div>
 
               <div>
