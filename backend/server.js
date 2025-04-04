@@ -1788,10 +1788,10 @@ app.post("/referrals", async (req, res) => {
   try {
     const newReferral = await prisma.referrals.create({
       data: {
-        user_id: user_id,
-        doctor_id: doctor_id,
-        referred_by: referred_by,
-        reason: reason,
+        user_id,
+        doctor_id,
+        referred_by,
+        reason,
       },
     });
 
