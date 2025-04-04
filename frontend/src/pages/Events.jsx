@@ -71,7 +71,7 @@ function Events() {
     </tr>
   );
 
-  const EventCard = ({ event }) => (
+  const EventCard = ({ event, isPast = false }) => (
     <div className="bg-white rounded-lg shadow-md p-4 mb-4">
       <h3 className="font-semibold text-gray-900 mb-2">{event.title}</h3>
       <div className="space-y-2 text-sm">
@@ -83,7 +83,16 @@ function Events() {
           <MapPin className="h-4 w-4 mr-2" />
           {event.venue}
         </div>
-        <p className="text-gray-600 mt-2">{event.description}</p>
+        {!isPast && <p className="text-gray-600 mt-2">{event.description}</p>}
+        {isPast && event.content && (
+          <button
+            onClick={() => window.open(event.content.url, "_blank")}
+            className="flex items-center mt-2 text-orange-600 hover:text-orange-700"
+          >
+            <Download className="h-4 w-4 mr-1" />
+            Download {event.content.type.toUpperCase()}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -163,10 +172,10 @@ function Events() {
                       Date
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Details
+                      Venue
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Venue
+                      Content
                     </th>
                   </tr>
                 </thead>
@@ -180,11 +189,25 @@ function Events() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {event.description}
-                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {event.venue}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {event.content ? (
+                            <button
+                              onClick={() =>
+                                window.open(event.content.url, "_blank")
+                              }
+                              className="flex items-center text-orange-600 hover:text-orange-700"
+                            >
+                              <Download className="h-4 w-4 mr-1" />
+                              Download {event.content.type.toUpperCase()}
+                            </button>
+                          ) : (
+                            <span className="text-gray-400 italic">
+                              No content available
+                            </span>
+                          )}
                         </td>
                       </tr>
                     ))
@@ -229,7 +252,7 @@ function Events() {
             <div className="space-y-4">
               {pastEvents.length > 0 ? (
                 pastEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} isPast={true} />
                 ))
               ) : (
                 <div className="bg-white rounded-lg shadow-md p-4 text-center text-gray-500 italic">

@@ -16,8 +16,8 @@ import SessionExpired from "../components/SessionExpired";
 const UserAppointments = () => {
   const [previousAppointments, setpreviousAppointments] = useState([]);
   const [upcomingAppointments, setupcomingAppointments] = useState([]);
-  const user_id = localStorage.getItem("userid");
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const user_id = localStorage.getItem("userid");
 
   // Verify authentication
   useEffect(() => {
@@ -28,6 +28,27 @@ const UserAppointments = () => {
     verifyAuth();
   }, []);
 
+  async function getPrevApp() {
+    const res = await fetch(
+      `http://localhost:3000/pastuserappt?userId=${user_id}`
+    );
+    const resp = await res.json();
+    setpreviousAppointments(resp);
+  }
+  
+  async function getCurrApp() {
+    const res = await fetch(
+      `http://localhost:3000/currentuserappt?userId=${user_id}`
+    );
+    const resp = await res.json();
+    setupcomingAppointments(resp);
+  }
+  
+  useEffect(() => {
+    getPrevApp();
+    getCurrApp();
+  }, []);
+  
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
@@ -40,27 +61,6 @@ const UserAppointments = () => {
   if (!isAuthenticated) {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
-
-  async function getPrevApp() {
-    const res = await fetch(
-      `http://localhost:3000/pastuserappt?userId=${user_id}`
-    );
-    const resp = await res.json();
-    setpreviousAppointments(resp);
-  }
-
-  async function getCurrApp() {
-    const res = await fetch(
-      `http://localhost:3000/currentuserappt?userId=${user_id}`
-    );
-    const resp = await res.json();
-    setupcomingAppointments(resp);
-  }
-
-  useEffect(() => {
-    getPrevApp();
-    getCurrApp();
-  }, []);
 
   const NoAppointmentsMessage = ({ message }) => (
     <div className="flex flex-col items-center justify-center py-8">
