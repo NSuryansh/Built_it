@@ -84,17 +84,27 @@ io.on("connection", (socket) => {
     users.set(userId, socket.id);
     console.log(userId);
   });
+  socket.on('joinRoom', ({userId, doctorId})=>{
+    const room = `chat_${userId}_${doctorId}`
+    socket.join(room)
+    console.log(`Socket id ${socket.id} joined room ${room}`)
+  })
   socket.on(
     "sendMessage",
     async ({
-      senderId,
-      recipientId,
+      userId, doctorId, sender,
       encryptedText,
       iv,
       encryptedAESKey,
       authTag,
     }) => {
       try {
+        var senderId
+        if(sender=="Doctor"){
+          senderId = doctorId
+        }else{
+          senderId = userId
+        }
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -103,6 +113,7 @@ io.on("connection", (socket) => {
             iv: iv,
             encryptedAESKey,
             authTag,
+            senderType: sender,
           },
         });
         console.log(senderId, "message sent to", recipientId);
