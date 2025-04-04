@@ -141,6 +141,7 @@ model Appointments {
   doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   isDoctor   Boolean  @default(false)
+  stars Int?
   @@map("appointments")
 }
 
@@ -153,6 +154,7 @@ model PastAppointments {
   doc       Doctor?  @relation(fields: [doc_id], references: [id])
   user      User?    @relation(fields: [user_id], references: [id])
   isDoctor   Boolean  @default(false)
+  stars Int?
   @@map("pastApp")
 }
 
