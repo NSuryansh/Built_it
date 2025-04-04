@@ -1361,16 +1361,33 @@ app.post("/resetAdminPassword", async (req, res) => {
 
 app.post("/save-subscription", async (req, res) => {
   try {
-    const { endpoint, keys } = req.body;
-    // console.log(req.body);
-    // Check if the subscription already exists
+    const { userid, subscription } = req.body;
+    if (!userid || !subscription) {
+      return res.status(400).json({ error: "Missing userId or subscription" });
+    }
+
+    const { endpoint, keys } = subscription;
+
+    // Check if the subscription already exists for the user
     const existingSub = await prisma.subscription.findUnique({
-      where: { endpoint },
+      where: { userId: userid },
     });
-    // console.log(existingSub);
-    if (!existingSub) {
+
+    if (existingSub) {
+      // Update the existing subscription
+      await prisma.subscription.update({
+        where: { userId: userid },
+        data: {
+          endpoint,
+          authKey: keys.auth,
+          p256dhKey: keys.p256dh,
+        },
+      });
+    } else {
+      // Create a new subscription
       await prisma.subscription.create({
         data: {
+          userId: userid,
           endpoint,
           authKey: keys.auth,
           p256dhKey: keys.p256dh,
@@ -1381,45 +1398,49 @@ app.post("/save-subscription", async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error("Error saving subscription:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error saving subscription" });
+    res.status(500).json({ error: "Error saving subscription" });
   }
 });
 
 app.post("/send-notification", async (req, res) => {
   try {
-    const subscriptions = await prisma.subscription.findMany();
-    const message = req.body["message"];
-    const notificationPayload = JSON.stringify({
-      title: "New Alert!",
-      body: message,
-      url: "http://localhost:5173",
+    const { userid, message } = req.body;
+    if (!userid || !message) {
+      return res.status(400).json({ error: "Missing userId or message" });
+    }
+
+    // Fetch the subscription from the database
+    const subscription = await prisma.subscription.findUnique({
+      where: { userId: userid },
     });
 
-    subscriptions.forEach((sub) => {
-      webpush
-        .sendNotification(
-          {
-            endpoint: sub.endpoint,
-            keys: {
-              auth: sub.authKey,
-              p256dh: sub.p256dhKey,
-            },
-          },
-          notificationPayload
-        )
-        .catch(console.error);
+    if (!subscription) {
+      return res.status(404).json({ error: "User subscription not found" });
+    }
+
+    const payload = JSON.stringify({
+      title: "New Message",
+      body: message,
     });
+
+    await webpush.sendNotification(
+      {
+        endpoint: subscription.endpoint,
+        keys: {
+          auth: subscription.authKey,
+          p256dh: subscription.p256dhKey,
+        },
+      },
+      payload
+    );
 
     res.json({ success: true });
   } catch (error) {
-    console.error("Error sending notification:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error sending notification" });
+    console.error("Push error:", error);
+    res.status(500).json({ error: "Failed to send push notification" });
   }
 });
+
 
 app.post("/node-chat", async (req, res) => {
   try {
@@ -1870,8 +1891,61 @@ app.post("/request-to-user", async (req, res) => {
     });
 
     res.json({
-      message: "Appointment request added successfully",
+      message: "Appointment requested successfully",
       appointment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/accept-booking-by-user", async (req, res) => {
+  const userId = req.body["userId"];
+  const doctorId = req.body["doctorId"];
+  const dateTime = req.body["dateTime"];
+  const date = new Date();
+  const newDate = new Date(dateTime);
+  var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+  const some = new Date(newDate.getTime() - userTimezoneOffset);
+  const reason = req.body["reason"];
+  const appId = req.body["id"];
+  // console.log(req.body);
+  try {
+    // Check if user exists
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if doctor exists
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    const result = await prisma.$transaction(async (prisma) => {
+      // Create appointment
+      const appointment = await prisma.appointments.create({
+        data: {
+          user_id: userId,
+          doctor_id: doctorId,
+          dateTime: some,
+          reason: reason,
+          isDoctor: true,
+        },
+      });
+
+      //Remove from requests table
+      const reqDel = await prisma.requests.delete({
+        where: { id: parseInt(appId) },
+      });
+      // console.log(reqDel);
+      return { appointment, reqDel };
+    });
+    res.json({
+      message: "Appointment accepted and booked with student successfully",
+      result,
     });
   } catch (error) {
     console.error(error);
