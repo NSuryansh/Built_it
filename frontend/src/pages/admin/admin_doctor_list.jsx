@@ -5,7 +5,7 @@ import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
 
 const DoctorsList = () => {
