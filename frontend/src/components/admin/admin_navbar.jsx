@@ -12,6 +12,7 @@ const AdminNavbar = () => {
     { name: "Dashboard", link: "/admin/dashboard" },
     { name: "Doctors", link: "/admin/doctor_list" },
     { name: "Events", link: "/admin/event_list" },
+    { name: "Appointments", link: "/admin/appointments" },
   ];
   const navigate = useNavigate();
   const userType = localStorage.getItem("user_type");

@@ -27,6 +27,7 @@ import ResetPassword from "./pages/ResetPassword";
 import DoctorResetPassword from "./pages/doctor/ResetPassword_doctor";
 import AdminResetPassword from "./pages/admin/admin_reset_password";
 import { useEffect } from "react";
+import AdminAppointments from "./pages/admin/admin_appointments";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -130,6 +131,7 @@ export default function App() {
         <Route path="/admin/event_list" element={<EventsList />} />
         <Route path="/admin/add_event" element={<AddEvent />} />
         <Route path="/admin/add_doctor" element={<AddDoctor />} />
+        <Route path="/admin/appointments" element={<AdminAppointments />} />
       </Routes>
     </div>
   );

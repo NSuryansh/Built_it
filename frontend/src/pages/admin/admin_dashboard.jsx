@@ -87,10 +87,10 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-[var(--custom-primary-green-50)]">
       <AdminNavbar />
       <ToastContainer />
-      <div className="space-y-4 max-w-7xl md:min-w-5xl mx-auto mb-5">
+      <div className="space-y-4 max-w-7xl md:min-w-5xl mt-10 mx-auto mb-5">
         <h1 className="text-3xl font-bold text-center md:text-left text-[var(--custom-primary-green-900)]">
           Dashboard Overview
         </h1>

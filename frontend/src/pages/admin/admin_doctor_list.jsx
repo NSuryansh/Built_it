@@ -6,6 +6,7 @@ import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer, toast } from "react-toastify";
+import CustomToast from "../../components/CustomToast";
 
 const DoctorsList = () => {
   const [doctors, setDoc] = useState([]);
@@ -45,16 +46,7 @@ const DoctorsList = () => {
       );
     } catch (error) {
       console.error("Error deleting doctor:", error);
-      toast("Error while fetching data", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Error while fetching data");
     }
   };
 
@@ -72,7 +64,7 @@ const DoctorsList = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col bg-[var(--custom-primary-green-50)] min-h-screen">
       <AdminNavbar />
       <ToastContainer />
       <div className="space-y-6 md:min-w-5xl max-w-7xl p-2 sm:p-4 mx-auto mb-auto">

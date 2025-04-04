@@ -7,6 +7,7 @@ import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer, toast } from "react-toastify";
+import CustomToast from "../../components/CustomToast";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
@@ -28,29 +29,11 @@ const EventsList = () => {
         );
       } else {
         console.error("Failed to delete the event");
-        toast("Failed to delete the event", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
+        CustomToast("Failed to delete the event");
       }
     } catch (error) {
       console.error("Error deleting event:", error);
-      toast("Failed to delete the event", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Failed to delete the event");
     }
   };
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -87,16 +70,7 @@ const EventsList = () => {
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events", error);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "custom-toast",
-        });
+        CustomToast("Error while fetching events");
       }
     };
 
@@ -117,7 +91,7 @@ const EventsList = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex bg-[var(--custom-primary-green-50)] flex-col min-h-screen">
       <AdminNavbar />
       <ToastContainer />
       <div className="space-y-6 md:min-w-5xl max-w-7xl p-4 md:p-6 mx-auto mb-4">
@@ -177,6 +151,7 @@ const EventsList = () => {
           ))}
         </div>
       </div>
+      <div className="mt-auto"></div>
       <Footer color={"green"} />
     </div>
   );
