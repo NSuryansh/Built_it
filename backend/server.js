@@ -84,11 +84,11 @@ io.on("connection", (socket) => {
     users.set(userId, socket.id);
     // console.log(userId);
   });
-  socket.on('joinRoom', ({userId, doctorId})=>{
-    const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join('_')}`;
-    socket.join(room)
-    console.log(`Socket id ${socket.id} joined room ${room}`)
-  })
+  socket.on("joinRoom", ({ userId, doctorId }) => {
+    const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
+    socket.join(room);
+    console.log(`Socket id ${socket.id} joined room ${room}`);
+  });
   socket.on(
     "sendMessage",
     async ({
@@ -120,22 +120,23 @@ io.on("connection", (socket) => {
             senderType: sender,
           },
         });
-        const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join('_')}`;
+        const room = `chat_${[userId, doctorId]
+          .sort((a, b) => a - b)
+          .join("_")}`;
         // console.log(senderId, "message sent to", recipientId);
-        
-          // console.log(users.get(recipientId));
-          io.to(room).emit("receiveMessage", {
-            id: message.id,
-            senderId,
-            encryptedText,
-            iv,
-            encryptedAESKey,
-            authTag,
-            senderType
-          });
-          // console.log("Message sent");
-        }
-       catch (error) {
+
+        // console.log(users.get(recipientId));
+        io.to(room).emit("receiveMessage", {
+          id: message.id,
+          senderId,
+          encryptedText,
+          iv,
+          encryptedAESKey,
+          authTag,
+          senderType,
+        });
+        // console.log("Message sent");
+      } catch (error) {
         console.error("Error sending message:", error);
       }
     }
@@ -1834,6 +1835,47 @@ app.get("/get-referrals", async (req, res) => {
       message: "Failed to fetch referrals",
       error: error.message,
     });
+  }
+});
+
+app.post("/request-to-user", async (req, res) => {
+  const userId = Number(req.body["userId"]);
+  const doctorId = Number(req.body["doctorId"]);
+  const dateTime = req.body["dateTime"];
+  const reason = req.body["reason"];
+
+  try {
+    // Check if user exists
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if doctor exists
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    const date = new Date(dateTime);
+    // Create appointment
+    const appointment = await prisma.requests.create({
+      data: {
+        user_id: userId,
+        doctor_id: doctorId,
+        dateTime: new Date(dateTime),
+        reason: reason,
+        forDoctor: false,
+      },
+    });
+
+    res.json({
+      message: "Appointment request added successfully",
+      appointment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({ message: "Internal Server Error" });
   }
 });
 
