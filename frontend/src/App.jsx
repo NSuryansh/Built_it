@@ -44,40 +44,43 @@ export default function App() {
 
   const convertedVapidKey = urlBase64ToUint8Array(SERVER_KEY);
 
-  const subscribeToPush = async () => {
-    console.log(SERVER_KEY);
-    console.log(import.meta.env);
-    console.log(convertedVapidKey);
+  const subscribeToPush = async (userid) => {
+    // await requestNotificationPermission();
+  
     const registration = await navigator.serviceWorker.ready;
+  
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: convertedVapidKey,
+      applicationServerKey: convertedVapidKey, // your VAPID key here
     });
-    console.log("Push Subscription:", JSON.stringify(subscription));
-
-    // saveSubscription(subscription)
+  
+    console.log("Push Subscription:", subscription);
+  
+    // Attach user info with subscription
+    const body = {
+      userid: userid,
+      subscription: subscription,
+    };
+  
     const res = await fetch("http://localhost:3000/save-subscription", {
       method: "POST",
-      body: JSON.stringify(subscription),
+      body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" },
     });
-
-    const resp = await res.json();
-
-    console.log(resp);
-    // console.log(resp);
-
-    // const res2 = await fetch("https:/built-it-xjiq.onrender.com/send-notification", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     message:"HI
-    //   }),
-    //   headers:{"Content-type":"Application/json"}
-    // });
-    // const data = await res2.json();
-    // console.log("Notification Response:", data);
+  
+    const response = await res.json();
+    console.log("Subscription saved:", response);
+  
     // return subscription;
   };
+
+  useEffect(() => {
+    const userid = localStorage.getItem("userid");
+    if (userid) {
+      subscribeToPush(userid);
+    }
+  }, []);
+  
 
   const requestNotificationPermission = async () => {
     if (

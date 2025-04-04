@@ -54,6 +54,13 @@ const Login = () => {
     });
     const res = await response.json();
 
+    // const data = await res.json();
+    if (res.success) {
+      localStorage.setItem("userid", res.user.id);
+
+      subscribeToPush(res.user.id);
+    }
+
     if (res["message"] === "Login successful") {
       localStorage.setItem("token", res["token"]);
       navigate("/dashboard");

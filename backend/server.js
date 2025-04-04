@@ -185,7 +185,7 @@ app.put("/modifyUser", async (req, res) => {
   try {
     const { id, username, email, mobile, alt_mobile, gender } = req.body;
 
-    console.log(req.body);
+    // console.log(req.body);
 
     if (!id) {
       return res.status(400).json({ error: "User ID is required" });
@@ -253,7 +253,7 @@ app.put("/modifyUser", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const username = req.body["username"];
   const password = req.body["password"];
 
@@ -280,7 +280,7 @@ app.post("/login", async (req, res) => {
 app.get("/profile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    console.log(token);
+    // console.log(token);
     return res.status(401).json({ message: "Unauthorized", token });
   }
   try {
@@ -288,7 +288,7 @@ app.get("/profile", async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { username: decoded.username },
     });
-    console.log(user);
+    // console.log(user);
     res.json(JSON.parse(JSON.stringify({ user: user, message: "User found" })));
   } catch (e) {
     console.log(e);
@@ -315,8 +315,8 @@ app.get("/profile", async (req, res) => {
 app.get("/chatContacts", async (req, res) => {
   try {
     const userId = req.query["userId"];
-    console.log(req.query["userId"]);
-    console.log(userId);
+    // console.log(req.query["userId"]);
+    // console.log(userId);
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }
@@ -365,8 +365,8 @@ app.get("/chatContacts", async (req, res) => {
 app.get("/messages", async (req, res) => {
   try {
     const { userId, recId } = req.query;
-    console.log(userId);
-    console.log(recId);
+    // console.log(userId);
+    // console.log(recId);
     const messages = await prisma.message.findMany({
       where: {
         OR: [
@@ -559,7 +559,7 @@ app.post("/book", async (req, res) => {
   const dateTime = req.body["dateTime"];
   const reason = req.body["reason"];
   const appId = req.body["id"];
-  console.log(req.body);
+  // console.log(req.body);
   try {
     // Check if user exists
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -1335,16 +1335,33 @@ app.post("/resetAdminPassword", async (req, res) => {
 
 app.post("/save-subscription", async (req, res) => {
   try {
-    const { endpoint, keys } = req.body;
-    console.log(req.body);
-    // Check if the subscription already exists
+    const { userid, subscription } = req.body;
+    if (!userid || !subscription) {
+      return res.status(400).json({ error: "Missing userId or subscription" });
+    }
+
+    const { endpoint, keys } = subscription;
+
+    // Check if the subscription already exists for the user
     const existingSub = await prisma.subscription.findUnique({
-      where: { endpoint },
+      where: { userId: userid },
     });
-    console.log(existingSub);
-    if (!existingSub) {
+
+    if (existingSub) {
+      // Update the existing subscription
+      await prisma.subscription.update({
+        where: { userId: userid },
+        data: {
+          endpoint,
+          authKey: keys.auth,
+          p256dhKey: keys.p256dh,
+        },
+      });
+    } else {
+      // Create a new subscription
       await prisma.subscription.create({
         data: {
+          userId: userid,
           endpoint,
           authKey: keys.auth,
           p256dhKey: keys.p256dh,
@@ -1355,45 +1372,49 @@ app.post("/save-subscription", async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error("Error saving subscription:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error saving subscription" });
+    res.status(500).json({ error: "Error saving subscription" });
   }
 });
 
 app.post("/send-notification", async (req, res) => {
   try {
-    const subscriptions = await prisma.subscription.findMany();
-    const message = req.body["message"];
-    const notificationPayload = JSON.stringify({
-      title: "New Alert!",
-      body: message,
-      url: "http://localhost:5173",
+    const { userid, message } = req.body;
+    if (!userid || !message) {
+      return res.status(400).json({ error: "Missing userId or message" });
+    }
+
+    // Fetch the subscription from the database
+    const subscription = await prisma.subscription.findUnique({
+      where: { userId: userid },
     });
 
-    subscriptions.forEach((sub) => {
-      webpush
-        .sendNotification(
-          {
-            endpoint: sub.endpoint,
-            keys: {
-              auth: sub.authKey,
-              p256dh: sub.p256dhKey,
-            },
-          },
-          notificationPayload
-        )
-        .catch(console.error);
+    if (!subscription) {
+      return res.status(404).json({ error: "User subscription not found" });
+    }
+
+    const payload = JSON.stringify({
+      title: "New Message",
+      body: message,
     });
+
+    await webpush.sendNotification(
+      {
+        endpoint: subscription.endpoint,
+        keys: {
+          auth: subscription.authKey,
+          p256dh: subscription.p256dhKey,
+        },
+      },
+      payload
+    );
 
     res.json({ success: true });
   } catch (error) {
-    console.error("Error sending notification:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error sending notification" });
+    console.error("Push error:", error);
+    res.status(500).json({ error: "Failed to send push notification" });
   }
 });
+
 
 app.post("/node-chat", async (req, res) => {
   try {
