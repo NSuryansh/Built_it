@@ -84,17 +84,27 @@ io.on("connection", (socket) => {
     users.set(userId, socket.id);
     // console.log(userId);
   });
+  socket.on('joinRoom', ({userId, doctorId})=>{
+    const room = `chat_${userId}_${doctorId}`
+    socket.join(room)
+    console.log(`Socket id ${socket.id} joined room ${room}`)
+  })
   socket.on(
     "sendMessage",
     async ({
-      senderId,
-      recipientId,
+      userId, doctorId, sender,
       encryptedText,
       iv,
       encryptedAESKey,
       authTag,
     }) => {
       try {
+        var senderId
+        if(sender=="Doctor"){
+          senderId = doctorId
+        }else{
+          senderId = userId
+        }
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -103,6 +113,7 @@ io.on("connection", (socket) => {
             iv: iv,
             encryptedAESKey,
             authTag,
+            senderType: sender,
           },
         });
         // console.log(senderId, "message sent to", recipientId);
@@ -1759,6 +1770,36 @@ app.post("/add-slot", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/referrals", async (req, res) => {
+  const { user_id, doctor_id, referred_by, reason } = req.body;
+
+  if (!user_id || !doctor_id || !referred_by || !reason) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const newReferral = await prisma.referrals.create({
+      data: {
+        user_id: user_id,
+        doctor_id: doctor_id,
+        referred_by: referred_by,
+        reason: reason,
+      },
+    });
+
+    res.status(201).json({
+      message: "Referral added successfully",
+      referral: newReferral,
+    });
+  } catch (error) {
+    console.error("Error adding referral:", error);
+    res.status(500).json({
+      message: "Failed to add referral",
+      error: error.message,
+    });
   }
 });
 
