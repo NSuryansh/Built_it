@@ -161,338 +161,283 @@ const DoctorProfile = () => {
 
   return (
     <div>
-      <DoctorNavbar />
-      <ToastContainer />
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Doctor Profile</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Manage your professional information
-            </p>
-          </div>
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Edit2 className="h-4 w-4 mr-2" />
-              Edit Profile
-            </button>
-          ) : (
-            <div className="flex space-x-3">
-              <button
-                onClick={handleSave}
-                className="flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                Save Changes
-              </button>
-              <button
-                onClick={handleCancel}
-                className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                <X className="h-4 w-4 mr-2" />
-                Cancel
-              </button>
-            </div>
-          )}
+    <DoctorNavbar />
+    <ToastContainer position="top-right" />
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-900">Doctor Profile</h1>
+          <p className="mt-1 text-sm text-gray-500">Manage your professional information</p>
         </div>
-
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="p-6">
-            <div className="flex items-center space-x-6 mb-8">
-              <div className="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center">
-                <User className="h-12 w-12 text-blue-600" />
-              </div>
-              <div>
+        {!isEditing ? (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow transition"
+          >
+            <Edit2 className="h-4 w-4 mr-2" />
+            Edit Profile
+          </button>
+        ) : (
+          <div className="flex space-x-3">
+            <button
+              onClick={handleSave}
+              className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl shadow transition"
+            >
+              <Save className="h-4 w-4 mr-2" />
+              Save Changes
+            </button>
+            <button
+              onClick={handleCancel}
+              className="flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-xl shadow transition"
+            >
+              <X className="h-4 w-4 mr-2" />
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
+  
+      {/* Profile Card */}
+      <div className={`bg-white rounded-2xl shadow-lg p-6 transition-all ${isEditing ? 'border-2 border-blue-100' : ''}`}>
+        <div className="flex items-center space-x-6 mb-8">
+          <div className="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center shadow-inner">
+            <User className="h-12 w-12 text-blue-600" />
+          </div>
+          <div>
+            {isEditing ? (
+              <input
+                type="text"
+                disabled
+                value={editedProfile.name}
+                onChange={(e) =>
+                  setEditedProfile({ ...editedProfile, name: e.target.value })
+                }
+                className="text-2xl font-bold text-gray-900 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 cursor-not-allowed"
+              />
+            ) : (
+              <h2 className="text-2xl font-bold text-gray-900">{profile.name}</h2>
+            )}
+            <p className="text-lg text-gray-500">{profile.specialization}</p>
+          </div>
+        </div>
+  
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Contact Info */}
+          <div className="bg-gray-50 p-6 rounded-xl shadow-sm space-y-4">
+            <div className="flex items-center text-blue-600 font-semibold text-lg">
+              <Mail className="h-5 w-5 mr-2" />
+              Contact Information
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <Mail className="h-5 w-5 text-gray-400 mr-3" />
                 {isEditing ? (
                   <input
-                    type="text"
+                    type="email"
                     disabled
-                    value={editedProfile.name}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        name: e.target.value,
-                      })
-                    }
-                    className="text-2xl cursor-not-allowed font-bold text-gray-900 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
+                    value={editedProfile.email}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, email: e.target.value })}
+                    className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 cursor-not-allowed"
                   />
                 ) : (
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {profile.name}
-                  </h2>
+                  <span className="text-gray-700">{profile.email}</span>
                 )}
-                <p className="text-lg text-gray-600">
-                  {profile.specialization}
-                </p>
+              </div>
+              <div className="flex items-center">
+                <Phone className="h-5 w-5 text-gray-400 mr-3" />
+                {isEditing ? (
+                  <input
+                    type="tel"
+                    disabled
+                    value={editedProfile.phone}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
+                    className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 cursor-not-allowed"
+                  />
+                ) : (
+                  <span className="text-gray-700">{profile.phone}</span>
+                )}
+              </div>
+              <div className="flex items-start">
+                <MapPin className="h-5 w-5 text-gray-400 mr-3 mt-1" />
+                {isEditing ? (
+                  <div className="flex-1 space-y-2">
+                    <input
+                      type="text"
+                      value={editedProfile.address}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, address: e.target.value })}
+                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2"
+                      placeholder="Street Address"
+                    />
+                    <input
+                      type="text"
+                      value={editedProfile.city}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, city: e.target.value })}
+                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2"
+                      placeholder="City, State ZIP"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-gray-700">{profile.address}</p>
+                    <p className="text-gray-700">{profile.city}</p>
+                  </div>
+                )}
               </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Contact Information
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <Mail className="h-5 w-5 text-gray-400 mr-3" />
-                      {isEditing ? (
-                        <input
-                          type="email"
-                          disabled
-                          value={editedProfile.email}
-                          onChange={(e) =>
-                            setEditedProfile({
-                              ...editedProfile,
-                              email: e.target.value,
-                            })
-                          }
-                          className="flex-1 cursor-not-allowed bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
-                        />
-                      ) : (
-                        <span className="text-gray-600">{profile.email}</span>
-                      )}
-                    </div>
-                    <div className="flex items-center">
-                      <Phone className="h-5 w-5 text-gray-400 mr-3" />
-                      {isEditing ? (
-                        <input
-                          type="tel"
-                          disabled
-                          value={editedProfile.phone}
-                          onChange={(e) =>
-                            setEditedProfile({
-                              ...editedProfile,
-                              phone: e.target.value,
-                            })
-                          }
-                          className="flex-1 cursor-not-allowed bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
-                        />
-                      ) : (
-                        <span className="text-gray-600">{profile.phone}</span>
-                      )}
-                    </div>
-                    <div className="flex items-start">
-                      <MapPin className="h-5 w-5 text-gray-400 mr-3 mt-1" />
-                      {isEditing ? (
-                        <div className="flex-1 space-y-2">
-                          <input
-                            type="text"
-                            value={editedProfile.address}
-                            onChange={(e) =>
-                              setEditedProfile({
-                                ...editedProfile,
-                                address: e.target.value,
-                              })
-                            }
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
-                            placeholder="Street Address"
-                          />
-                          <input
-                            type="text"
-                            value={editedProfile.city}
-                            onChange={(e) =>
-                              setEditedProfile({
-                                ...editedProfile,
-                                city: e.target.value,
-                              })
-                            }
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
-                            placeholder="City, State ZIP"
-                          />
-                        </div>
-                      ) : (
-                        <div>
-                          <p className="text-gray-600">{profile.address}</p>
-                          <p className="text-gray-600">{profile.city}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+          </div>
+  
+          {/* Professional Info */}
+          <div className="bg-gray-50 p-6 rounded-xl shadow-sm space-y-6">
+            <div>
+              <div className="flex items-center text-blue-600 font-semibold text-lg mb-2">
+                <Building className="h-5 w-5 mr-2" />
+                Professional Information
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <Building className="h-5 w-5 text-gray-400 mr-3" />
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      disabled
+                      value={editedProfile.specialization}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, specialization: e.target.value })}
+                      className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 cursor-not-allowed"
+                    />
+                  ) : (
+                    <span className="text-gray-700">{profile.specialization}</span>
+                  )}
                 </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Education
-                  </h3>
-                  <div className="space-y-3">
-                    {profile.education.map((edu, index) => (
-                      <div key={index} className="flex items-start">
-                        <GraduationCap className="h-5 w-5 text-gray-400 mr-3 mt-1" />
-                        {isEditing ? (
-                          <input
-                            type="text"
-                            value={editedProfile.education[index]}
-                            onChange={(e) => {
-                              const newEducation = [...editedProfile.education];
-                              newEducation[index] = e.target.value;
-                              setEditedProfile({
-                                ...editedProfile,
-                                education: newEducation,
-                              });
-                            }}
-                            className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
-                          />
-                        ) : (
-                          <span className="text-gray-600">{edu}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                <div className="flex items-center">
+                  <Clock className="h-5 w-5 text-gray-400 mr-3" />
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editedProfile.experience}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, experience: e.target.value })}
+                      className="flex-1 bg-white border border-gray-300 rounded-lg px-3 py-2"
+                    />
+                  ) : (
+                    <span className="text-gray-700">{profile.experience} of Experience</span>
+                  )}
                 </div>
               </div>
-
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Professional Information
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <Building className="h-5 w-5 text-gray-400 mr-3" />
-                      {isEditing ? (
+            </div>
+  
+            {/* Availability */}
+            <div>
+              <div className="flex items-center text-blue-600 font-semibold text-lg mb-2">
+                <Clock className="h-5 w-5 mr-2" />
+                Availability
+              </div>
+              <div className="space-y-3">
+                {isEditing ? (
+                  <div className="space-y-2">
+                    {editedProfile.availability.map((slot, index) => (
+                      <div key={index} className="flex items-center space-x-2">
                         <input
-                          type="text"
-                          disabled
-                          value={editedProfile.specialization}
-                          onChange={(e) =>
-                            setEditedProfile({
-                              ...editedProfile,
-                              specialization: e.target.value,
-                            })
-                          }
-                          className="flex-1 cursor-not-allowed bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
+                          type="time"
+                          value={slot}
+                          onChange={(e) => {
+                            const newAvailability = [...editedProfile.availability];
+                            newAvailability[index] = e.target.value;
+                            setEditedProfile({ ...editedProfile, availability: newAvailability });
+                          }}
+                          className="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm w-40"
                         />
-                      ) : (
-                        <span className="text-gray-600">
-                          {profile.specialization}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-5 w-5 text-gray-400 mr-3" />
-                      {isEditing ? (
-                        <input
-                          type="text"
-                          value={editedProfile.experience}
-                          onChange={(e) =>
-                            setEditedProfile({
-                              ...editedProfile,
-                              experience: e.target.value,
-                            })
-                          }
-                          className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
-                        />
-                      ) : (
-                        <span className="text-gray-600">
-                          {profile.experience} of Experience
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Certifications
-                  </h3>
-                  <div className="space-y-3">
-                    {profile.certifications.map((cert, index) => (
-                      <div key={index} className="flex items-start">
-                        <Award className="h-5 w-5 text-gray-400 mr-3 mt-1" />
-                        {isEditing ? (
-                          <input
-                            type="text"
-                            value={editedProfile.certifications[index]}
-                            onChange={(e) => {
-                              const newCertifications = [
-                                ...editedProfile.certifications,
-                              ];
-                              newCertifications[index] = e.target.value;
-                              setEditedProfile({
-                                ...editedProfile,
-                                certifications: newCertifications,
-                              });
-                            }}
-                            className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2"
-                          />
-                        ) : (
-                          <span className="text-gray-600">{cert}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Availability
-                  </h3>
-                  <div className="space-y-4">
-                    {isEditing ? (
-                      <div className="space-y-2">
-                        {editedProfile.availability.map((slot, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center space-x-2"
+                        {index === editedProfile.availability.length - 1 && (
+                          <button
+                            onClick={handleAddSlot}
+                            className="text-blue-600 hover:text-blue-800 text-sm"
                           >
-                            <Clock className="h-5 w-5 text-gray-400" />
-                            <input
-                              type="time"
-                              value={slot}
-                              onChange={(e) => {
-                                const newAvailability = [
-                                  ...editedProfile.availability,
-                                ];
-                                newAvailability[index] = e.target.value;
-                                setEditedProfile({
-                                  ...editedProfile,
-                                  availability: newAvailability,
-                                });
-                              }}
-                              className="bg-gray-50 border border-gray-300 rounded-lg px-2 py-1 text-sm"
-                            />
-                            {index ===
-                              editedProfile.availability.length - 1 && (
-                              <button
-                                onClick={handleAddSlot}
-                                className="inline-flex items-center px-2 py-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
-                              >
-                                <Plus className="h-4 w-4 mr-1" />
-                                Add Slot
-                              </button>
-                            )}
-                          </div>
-                        ))}
+                            <Plus className="h-4 w-4 mr-1 inline" /> Add Slot
+                          </button>
+                        )}
                       </div>
-                    ) : profile.availability.length !== 0 ? (
-                      <div className="">
-                        <div className="flex flex-wrap gap-2">
-                          {profile.availability.map((slot, index) => (
-                            <span
-                              key={index}
-                              className="inline-flex items-center px-3 py-1 bg-white rounded-full text-sm text-gray-600 border border-blue-100"
-                            >
-                              <Clock className="h-4 w-4 text-blue-500 mr-2" />
-                              {slot}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-gray-400">No slots added</div>
-                    )}
+                    ))}
                   </div>
-                </div>
+                ) : profile.availability.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {profile.availability.map((slot, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 bg-white rounded-full text-sm text-gray-700 border border-blue-100 shadow-sm"
+                      >
+                        <Clock className="h-4 w-4 text-blue-500 mr-2" />
+                        {slot}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-gray-400">No slots added</div>
+                )}
               </div>
+            </div>
+          </div>
+  
+          {/* Education */}
+          <div className="bg-gray-50 p-6 rounded-xl shadow-sm space-y-4">
+            <div className="flex items-center text-blue-600 font-semibold text-lg">
+              <GraduationCap className="h-5 w-5 mr-2" />
+              Education
+            </div>
+            <div className="space-y-3">
+              {profile.education.map((edu, index) => (
+                <div key={index} className="flex items-start">
+                  <GraduationCap className="h-5 w-5 text-gray-400 mr-3 mt-1" />
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editedProfile.education[index]}
+                      onChange={(e) => {
+                        const newEducation = [...editedProfile.education];
+                        newEducation[index] = e.target.value;
+                        setEditedProfile({ ...editedProfile, education: newEducation });
+                      }}
+                      className="flex-1 bg-white border border-gray-300 rounded-lg px-3 py-2"
+                    />
+                  ) : (
+                    <span className="text-gray-700">{edu}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+  
+          {/* Certifications */}
+          <div className="bg-gray-50 p-6 rounded-xl shadow-sm space-y-4">
+            <div className="flex items-center text-blue-600 font-semibold text-lg">
+              <Award className="h-5 w-5 mr-2" />
+              Certifications
+            </div>
+            <div className="space-y-3">
+              {profile.certifications.map((cert, index) => (
+                <div key={index} className="flex items-start">
+                  <Award className="h-5 w-5 text-gray-400 mr-3 mt-1" />
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editedProfile.certifications[index]}
+                      onChange={(e) => {
+                        const newCertifications = [...editedProfile.certifications];
+                        newCertifications[index] = e.target.value;
+                        setEditedProfile({ ...editedProfile, certifications: newCertifications });
+                      }}
+                      className="flex-1 bg-white border border-gray-300 rounded-lg px-3 py-2"
+                    />
+                  ) : (
+                    <span className="text-gray-700">{cert}</span>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
-      <Footer color={"blue"} />
     </div>
+    <Footer color="blue" />
+  </div>
   );
 };
 
