@@ -45,17 +45,14 @@ const DoctorLogin = () => {
       return;
     }
     setError("");
-    const response = await fetch(
-      "https://built-it-xjiq.onrender.com/docLogin",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/docLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
     const res = await response.json();
 
     if (res["message"] == "Login successful") {
@@ -71,16 +68,13 @@ const DoctorLogin = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch(
-      "https://built-it-xjiq.onrender.com/forgotDoctorPassword",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/forgotDoctorPassword", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);

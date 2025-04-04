@@ -34,7 +34,7 @@ const DoctorLanding = () => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch(
-          `https://built-it-xjiq.onrender.com/currentdocappt?doctorId=${docId}`
+          `http://localhost:3000/currentdocappt?doctorId=${docId}`
         );
         const data = await response.json();
 
@@ -70,9 +70,7 @@ const DoctorLanding = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(
-          "https://built-it-xjiq.onrender.com/events"
-        );
+        const response = await fetch("http://localhost:3000/events");
         const data = await response.json();
 
         const formattedEvents = data.map((event) => {

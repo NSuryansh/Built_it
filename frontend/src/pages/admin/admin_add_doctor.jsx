@@ -35,7 +35,7 @@ const AddDoctor = () => {
     const { name, email, mobile, password, regId, desc } = formData;
 
     try {
-      const res = await fetch("https://built-it-xjiq.onrender.com/addDoc", {
+      const res = await fetch("http://localhost:3000/addDoc", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

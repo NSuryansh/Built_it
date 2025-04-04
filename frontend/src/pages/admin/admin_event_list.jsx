@@ -14,16 +14,13 @@ const EventsList = () => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
-      const response = await fetch(
-        `https://built-it-xjiq.onrender.com/events`,
-        {
-          method: "POST",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({
-            id: id,
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:3000/events`, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          id: id,
+        }),
+      });
 
       if (response.ok) {
         setEvents((prevEvents) =>
@@ -69,9 +66,7 @@ const EventsList = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(
-          "https://built-it-xjiq.onrender.com/events"
-        );
+        const response = await fetch("http://localhost:3000/events");
         const data = await response.json();
 
         const formattedEvents = data.map((event) => {

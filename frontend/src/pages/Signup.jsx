@@ -56,14 +56,11 @@ const SignUp = () => {
 
   async function sendOTP() {
     try {
-      const response = await fetch(
-        "https://built-it-xjiq.onrender.com/otpGenerate",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: formData.email }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/otpGenerate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+      });
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
@@ -81,17 +78,14 @@ const SignUp = () => {
 
   async function verifyOTP() {
     try {
-      const response = await fetch(
-        "https://built-it-xjiq.onrender.com/otpcheck",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            otp: otp,
-            email: formData.email,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/otpcheck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          otp: otp,
+          email: formData.email,
+        }),
+      });
       console.log(response);
       const res = await response.json();
       console.log(res);
@@ -112,7 +106,6 @@ const SignUp = () => {
       return false;
     }
   }
-  
 
   async function generateKeyPair() {
     const keyPair = await window.crypto.subtle.generateKey(
@@ -288,7 +281,7 @@ const SignUp = () => {
 
     try {
       const response = await fetch(
-        `https://built-it-xjiq.onrender.com/check-user?username=${formData.username}`
+        `http://localhost:3000/check-user?username=${formData.username}`
       );
       const data = await response.json();
       if (data.message === "Username already exists!") {
@@ -341,7 +334,7 @@ const SignUp = () => {
       const publicKeyPEM = await exportKeyToPEM(publicKey);
       const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
       localStorage.setItem("privateKey", privateKeyPEM);
-  
+
       const {
         username,
         email,
@@ -350,9 +343,9 @@ const SignUp = () => {
         altNo,
         department,
         rollNo,
-        gender, 
+        gender,
       } = formData;
-      const response = await fetch("https://built-it-xjiq.onrender.com/signup", {
+      const response = await fetch("http://localhost:3000/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -365,7 +358,7 @@ const SignUp = () => {
           department: department,
           acadProg: acadProg,
           rollNo: rollNo,
-          gender: gender, 
+          gender: gender,
         }),
       });
       const data = await response.json();

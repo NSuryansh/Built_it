@@ -45,9 +45,7 @@ const AdminDoctorProfile = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch(
-          "https://built-it-xjiq.onrender.com/getdoctors"
-        );
+        const res = await fetch("http://localhost:3000/getdoctors");
         const data = await res.json();
         setDoctors(data);
       } catch (err) {
@@ -68,7 +66,7 @@ const AdminDoctorProfile = () => {
       <ToastContainer />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Link
-          to='/admin/doctor_list'
+          to="/admin/doctor_list"
           className="mb-6 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
         >
           <ArrowLeft className="w-4 h-4" />

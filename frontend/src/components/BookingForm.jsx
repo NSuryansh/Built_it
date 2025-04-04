@@ -26,7 +26,7 @@ const BookingFormStep = ({
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `https://built-it-xjiq.onrender.com/available-slots?date=${date}&docId=${doctorId}`
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);

@@ -54,17 +54,14 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://built-it-xjiq.onrender.com/node-chat",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: localStorage.getItem("userid"),
-            message,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/node-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: localStorage.getItem("userid"),
+          message,
+        }),
+      });
 
       // if (!response.ok) {
       //   throw new Error(`HTTP error! status: ${response.status}`);

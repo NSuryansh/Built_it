@@ -44,7 +44,7 @@ const EventsDisplay = () => {
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch("https://built-it-xjiq.onrender.com/events");
+      const res = await fetch("http://localhost:3000/events");
       const resp = await res.json();
       setEvents(resp);
     };

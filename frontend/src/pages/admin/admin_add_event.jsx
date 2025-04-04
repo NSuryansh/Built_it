@@ -31,19 +31,16 @@ const AddEvent = () => {
     const dateTime = new Date(`${date}T${time}`);
 
     try {
-      const response = await fetch(
-        "https://built-it-xjiq.onrender.com/addEvent",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: title,
-            description: description,
-            dateTime: dateTime,
-            venue: location,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/addEvent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title,
+          description: description,
+          dateTime: dateTime,
+          venue: location,
+        }),
+      });
 
       const data = await response.json();
 

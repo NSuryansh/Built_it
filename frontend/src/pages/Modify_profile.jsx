@@ -21,16 +21,13 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   const onSave = async (dataToSend) => {
     try {
-      const response = await fetch(
-        "https://built-it-xjiq.onrender.com/modifyUser",
-        {
-          method: "PUT", // Use PUT to modify user details
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataToSend),
-        }
-      );
+      const response = await fetch("http://localhost:3000/modifyUser", {
+        method: "PUT", // Use PUT to modify user details
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
 
       const result = await response.json();
 
