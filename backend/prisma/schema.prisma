@@ -128,7 +128,7 @@ model Events {
   description String?
   dateTime    DateTime
   venue       String
-
+  url         String?
   @@map("events")
 }
 
