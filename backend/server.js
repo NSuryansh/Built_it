@@ -1370,13 +1370,13 @@ app.post("/save-subscription", async (req, res) => {
 
     // Check if the subscription already exists for the user
     const existingSub = await prisma.subscription.findUnique({
-      where: { userId: userid },
+      where: { userId: Number(userid) },
     });
 
     if (existingSub) {
       // Update the existing subscription
       await prisma.subscription.update({
-        where: { userId: userid },
+        where: { userId: Number(userid) },
         data: {
           endpoint,
           authKey: keys.auth,
@@ -1387,7 +1387,7 @@ app.post("/save-subscription", async (req, res) => {
       // Create a new subscription
       await prisma.subscription.create({
         data: {
-          userId: userid,
+          userId: Number(userid),
           endpoint,
           authKey: keys.auth,
           p256dhKey: keys.p256dh,
