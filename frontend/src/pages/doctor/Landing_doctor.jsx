@@ -7,6 +7,7 @@ import SessionExpired from "../../components/SessionExpired"; // Ensure this exi
 import Footer from "../../components/Footer";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { format } from "date-fns";
 
 import DoctorCalendar from "../../components/DoctorCalendar";
 import CustomToast from "../../components/CustomToast";
@@ -130,10 +131,10 @@ const DoctorLanding = () => {
           {/* Header Section */}
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-blue-800">
-              Welcome, Dr. "........"
+              Welcome, Dr. {localStorage.getItem('username')}
             </h1>
             <p className="text-gray-600 mt-1">
-              Your schedule for {new Date().toLocaleDateString()}
+              Your schedule for {format(new Date(), 'dd MMM yyyy')}
             </p>
           </div>
   
