@@ -202,7 +202,7 @@ export default function Mood() {
                 className={`p-3 rounded-full transition-colors ${
                   isRecording 
                     ? 'bg-red-500 hover:bg-red-600 text-white' 
-                    : 'bg-blue-500 hover:bg-blue-600 text-white'
+                    : 'bg-pink-500 hover:bg-pink-600 text-white'
                 }`}
                 title={isRecording ? "Stop Recording" : "Start Recording"}
               >
