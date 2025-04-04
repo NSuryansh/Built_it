@@ -20,7 +20,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { TimeChange } from "../../components/Time_Change";
+import { TimeChange, TimeReduce } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
 
 const DoctorAppointment = () => {
@@ -74,6 +74,9 @@ const DoctorAppointment = () => {
       const resp = await res2.json();
       for (var i = 0; i < resp2.length; i++) {
         resp2[i].dateTime = TimeChange(new Date(resp2[i].dateTime).getTime());
+      }
+      for (var i = 0; i < resp.length; i++) {
+        resp[i].dateTime = TimeChange(new Date(resp[i].dateTime).getTime());
       }
       setapp(resp2);
       setcurr(resp);
@@ -145,6 +148,7 @@ const DoctorAppointment = () => {
   }));
 
   const acceptApp = async (appointment) => {
+    appointment.dateTime = new Date(appointment.dateTime);
     const res = await fetch("http://localhost:3000/book", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

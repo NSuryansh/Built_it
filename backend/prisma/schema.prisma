@@ -115,6 +115,7 @@ model Message {
   recipientId     Int
   encryptedAESKey String
   authTag         String
+  senderType      String
   recipient       User     @relation("ReceivedMessages", fields: [recipientId], references: [id])
   sender          User     @relation("SentMessages", fields: [senderId], references: [id])
 }
@@ -149,7 +150,7 @@ model PastAppointments {
   createdAt DateTime
   doc       Doctor?  @relation(fields: [doc_id], references: [id])
   user      User?    @relation(fields: [user_id], references: [id])
-
+  isDoctor   Boolean  @default(false)
   @@map("pastApp")
 }
 
@@ -161,7 +162,7 @@ model Requests {
   reason    String?
   doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
+  forDoctor Boolean @default(true)
   @@map("requests")
 }
 

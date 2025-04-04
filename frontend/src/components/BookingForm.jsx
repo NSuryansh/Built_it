@@ -10,6 +10,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { format } from "date-fns";
 
 const BookingFormStep = ({
   formData,
@@ -157,11 +158,8 @@ const BookingFormStep = ({
                   {[...Array(14)].map((_, index) => {
                     const date = new Date();
                     date.setDate(date.getDate() + index);
-                    const formattedDate = date.toISOString().split("T")[0];
-                    const displayDate = date.toLocaleDateString("en-IN", {
-                      month: "short",
-                      day: "numeric",
-                    });
+                    const formattedDate = format(date, 'yyyy-MM-dd');
+                    const displayDate = format(date, 'd MMM');
                     return (
                       <option key={formattedDate} value={formattedDate}>
                         {displayDate}
