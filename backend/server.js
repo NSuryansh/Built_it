@@ -92,20 +92,22 @@ io.on("connection", (socket) => {
   socket.on(
     "sendMessage",
     async ({
-      userId, doctorId, sender,
+      userId,
+      doctorId,
+      sender,
       encryptedText,
       iv,
       encryptedAESKey,
       authTag,
     }) => {
       try {
-        var senderId, recipientId
-        if(sender=="Doctor"){
-          senderId = doctorId
-          recipientId = userId
-        }else{
-          senderId = userId
-          recipientId = doctorId
+        var senderId, recipientId;
+        if (sender == "Doctor") {
+          senderId = doctorId;
+          recipientId = userId;
+        } else {
+          senderId = userId;
+          recipientId = doctorId;
         }
         const message = await prisma.message.create({
           data: {
@@ -382,8 +384,16 @@ app.get("/messages", async (req, res) => {
     const messages = await prisma.message.findMany({
       where: {
         OR: [
-          { senderId: parseInt(userId), recipientId: parseInt(recId), senderType: userType },
-          { senderId: parseInt(recId), recipientId: parseInt(userId), senderType: recType },
+          {
+            senderId: parseInt(userId),
+            recipientId: parseInt(recId),
+            senderType: userType,
+          },
+          {
+            senderId: parseInt(recId),
+            recipientId: parseInt(userId),
+            senderType: recType,
+          },
         ],
       },
       orderBy: { createdAt: "asc" },
@@ -1803,6 +1813,25 @@ app.post("/referrals", async (req, res) => {
     console.error("Error adding referral:", error);
     res.status(500).json({
       message: "Failed to add referral",
+      error: error.message,
+    });
+  }
+});
+
+app.get("/get-referrals", async (req, res) => {
+  const { doctor_id } = req.body;
+  try {
+    const data = await prisma.referrals.findMany({
+      where: { doctor_id: doctor_id },
+    });
+    res.status(200).json({
+      message: "All referrals displayed succesfully",
+      referrals: data,
+    });
+  } catch (error) {
+    console.error("Error fetching referrals: ", error);
+    res.status(500).json({
+      message: "Failed to fetch referrals",
       error: error.message,
     });
   }
