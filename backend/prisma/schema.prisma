@@ -231,14 +231,14 @@ model Chatbot {
 }
 
 model Subscription {
-  id        String   @id @default(uuid())
-  endpoint  String   @unique
+  id        String    @id @default(uuid())
+  endpoint  String    @unique
   authKey   String
   p256dhKey String
-  createdAt DateTime @default(now())
-  userId    Int?
+  createdAt DateTime  @default(now())
+  userId    Int?      @unique
   user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  doctorId Int?
+  doctorId  Int?      @unique
   doctor    Doctor?   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 }
 
