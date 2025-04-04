@@ -33,6 +33,7 @@ model User {
   notif            Notifications[]      @relation("User")
   pastApp          PastAppointments[]
   request          Requests[]
+  referral         Referrals[]
   resetTokens      PasswordResetToken[]
   chatbot          Chatbot[]
 
@@ -74,6 +75,7 @@ model Doctor {
   pastApp  PastAppointments[]
   request  Requests[]
   slot     Slots[]
+  referral Referrals[]
   leave    DoctorLeave[]
   emerApp  EmergencyApp[]
   education DocEducation[]
@@ -113,6 +115,7 @@ model Message {
   recipientId     Int
   encryptedAESKey String
   authTag         String
+  senderType      String
   recipient       User     @relation("ReceivedMessages", fields: [recipientId], references: [id])
   sender          User     @relation("SentMessages", fields: [senderId], references: [id])
 }
@@ -256,4 +259,16 @@ model DocCertification{
   doctor_id Int
   doctor Doctor @relation(fields: [doctor_id], references: [id])
   certification String
+}
+
+model Referrals {
+  @@map("referrals")
+  id      Int      @id @default(autoincrement())
+  user_id Int
+  user    User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  doctor_id Int
+  doctor Doctor @relation(fields: [doctor_id], references: [id])
+  referred_by String
+  reason String
+
 }

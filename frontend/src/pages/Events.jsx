@@ -8,7 +8,7 @@ import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { useNavigate } from "react-router-dom";
 
-function Events() {
+const Events = () => {
   const [currentEvents, setcurrentEvents] = useState([]);
   const [pastEvents, setpastEvents] = useState([]);
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ function Events() {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-[var(--custom-orange-50)] to-red-50">
         <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
@@ -87,7 +87,7 @@ function Events() {
         {isPast && event.content && (
           <button
             onClick={() => window.open(event.content.url, "_blank")}
-            className="flex items-center mt-2 text-orange-600 hover:text-orange-700"
+            className="flex items-center mt-2 text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)]"
           >
             <Download className="h-4 w-4 mr-1" />
             Download {event.content.type.toUpperCase()}
@@ -98,14 +98,14 @@ function Events() {
   );
 
   return (
-    <div className="min-h-screen bg-orange-100">
+    <div className="min-h-screen bg-[var(--custom-orange-100)]">
       <Navbar />
 
-      <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <main className="pt-10 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="hidden lg:block space-y-8">
           <section>
             <div className="flex items-center mb-4">
-              <CalendarCheck className="h-6 w-6 text-orange-500 mr-2" />
+              <CalendarCheck className="h-6 w-6 text-[var(--custom-orange-500)] mr-2" />
               <h2 className="text-2xl font-semibold text-gray-800">
                 Upcoming Events
               </h2>
@@ -198,7 +198,7 @@ function Events() {
                               onClick={() =>
                                 window.open(event.content.url, "_blank")
                               }
-                              className="flex items-center text-orange-600 hover:text-orange-700"
+                              className="flex items-center text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)]"
                             >
                               <Download className="h-4 w-4 mr-1" />
                               Download {event.content.type.toUpperCase()}
@@ -224,7 +224,7 @@ function Events() {
         <div className="lg:hidden space-y-8">
           <section>
             <div className="flex items-center mb-4">
-              <CalendarCheck className="h-6 w-6 text-orange-500 mr-2" />
+              <CalendarCheck className="h-6 w-6 text-[var(--custom-orange-500)] mr-2" />
               <h2 className="text-xl font-semibold text-gray-800">
                 Upcoming Events
               </h2>
