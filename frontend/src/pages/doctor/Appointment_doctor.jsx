@@ -20,7 +20,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { TimeChange } from "../../components/Time_Change";
+import { TimeChange, TimeReduce } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
 
 const DoctorAppointment = () => {
@@ -74,6 +74,9 @@ const DoctorAppointment = () => {
       const resp = await res2.json();
       for (var i = 0; i < resp2.length; i++) {
         resp2[i].dateTime = TimeChange(new Date(resp2[i].dateTime).getTime());
+      }
+      for (var i = 0; i < resp.length; i++) {
+        resp[i].dateTime = TimeChange(new Date(resp[i].dateTime).getTime());
       }
       setapp(resp2);
       setcurr(resp);
@@ -145,6 +148,7 @@ const DoctorAppointment = () => {
   }));
 
   const acceptApp = async (appointment) => {
+    appointment.dateTime = new Date(appointment.dateTime);
     const res = await fetch("http://localhost:3000/book", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -260,200 +264,232 @@ const DoctorAppointment = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-teal-50 font-sans antialiased">
       <DoctorNavbar />
-      <div className="min-h-screen bg-gray-100">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Current Appointments */}
-            <div>
-              <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-16 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Current Appointments */}
+          <div className="space-y-10">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-500 to-teal-400 drop-shadow-lg">
                   Current Appointments
                 </h1>
-                <p className="mt-1 text-sm text-gray-500">
-                  Manage your upcoming appointments
+                <p className="mt-3 text-lg text-gray-600 tracking-wide font-light">
+                  Seamlessly manage your upcoming appointments
                 </p>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="grid grid-cols-1 divide-y divide-gray-200">
-                  {curr.map((appointment) => (
-                    <div
-                      key={appointment.id}
-                      className="p-6 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex flex-col sm:flex-row items-center justify-center md:items-start space-x-6">
-                        <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-                          <User className="h-6 w-6 text-blue-600" />
-                        </div>
-
-                        <div className="flex-1">
-                          <div className="mt-4 grid grid-cols-1 gap-4">
-                            <div className="space-y-3">
-                              <div className="flex items-center text-sm text-gray-500">
-                                <CircleUser className="h-4 w-4 mr-2" />
-                                {appointment.user.username}
-                              </div>
-                              <div className="flex items-center text-sm text-gray-500">
-                                <Clock className="h-4 w-4 mr-2" />
-                                {format(
-                                  appointment.dateTime,
-                                  "dd-MMM-yyyy h:mm a"
-                                )}
-                              </div>
-                              <div className="flex items-center text-sm text-gray-500">
-                                <Phone className="h-4 w-4 mr-2" />
-                                {appointment.user.mobile}
-                              </div>
-                              <div className="flex items-start text-sm text-gray-500">
-                                <FileText className="h-4 w-4 mr-2 mt-1" />
-                                <span>{appointment.reason}</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-4 flex items-center space-x-3">
-                            {completedNotes[appointment.id] !== undefined ? (
-                              <button
-                                onClick={() => {
-                                  deleteApp(appointment);
-                                }}
-                                className="px-4 py-2 bg-red-50 text-blue-700 text-sm font-medium rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
-                              >
-                                Done
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => handleMarkAsDone(appointment.id)}
-                                className="px-4 py-2 bg-red-50 text-blue-700 text-sm font-medium rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
-                              >
-                                Mark as Done
-                              </button>
-                            )}
-                          </div>
-                          {completedNotes[appointment.id] !== undefined && (
-                            <div className="mt-4">
-                              <input
-                                type="text"
-                                placeholder="Enter completion notes..."
-                                className="w-full p-2 border border-gray-300 rounded-lg"
-                                value={note}
-                                onChange={handleNoteChange}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
 
-            {/* Incoming Requests */}
-            <div>
-              <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Incoming Requests
-                </h1>
-                <p className="mt-1 text-sm text-gray-500">
-                  Review and accept new appointment requests
-                </p>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="grid grid-cols-1 divide-y divide-gray-200">
-                  {appointments.map((appointment) => (
-                    <div
-                      key={appointment.id}
-                      className="p-6 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex flex-col sm:flex-row items-center justify-center sm:items-start space-x-6">
-                        <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
-                          <User className="h-6 w-6 text-amber-600" />
+            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-indigo-100/50 overflow-hidden">
+              {curr.map((appointment) => (
+                <div
+                  key={appointment.id}
+                  className="p-8 border-b border-indigo-100/50 hover:bg-gradient-to-r from-indigo-50/50 to-teal-50/50 transition-all duration-500"
+                >
+                  <div className="flex items-start space-x-7">
+                    <div className="h-16 w-16 rounded-full bg-gradient-to-br from-indigo-200 to-teal-300 flex items-center justify-center shadow-lg shrink-0">
+                      <User className="h-8 w-8 text-indigo-700" />
+                    </div>
+                    <div className="flex-1 space-y-6">
+                      <div className="space-y-4">
+                        <div className="flex items-center text-lg text-gray-800">
+                          <CircleUser className="h-6 w-6 mr-4 text-indigo-600" />
+                          <span className="font-semibold tracking-tight">{appointment.user.username}</span>
                         </div>
-
-                        <div className="flex-1">
-                          <div className="mt-4 grid grid-cols-1 gap-4">
-                            <div className="space-y-3">
-                              <div className="flex items-center text-sm text-gray-500">
-                                <CircleUser className="h-4 w-4 mr-2" />
-                                {appointment.user.username}
-                              </div>
-                              <div className="flex items-center text-sm text-gray-500">
-                                <Clock className="h-4 w-4 mr-2" />
-                                {format(
-                                  appointment.dateTime,
-                                  "dd-MMM-yyyy h:mm a"
-                                )}
-                              </div>
-                              <div className="flex items-center text-sm text-gray-500">
-                                <Phone className="h-4 w-4 mr-2" />
-                                {appointment.user.mobile}
-                              </div>
-                              <div className="flex items-start text-sm text-gray-500">
-                                <FileText className="h-4 w-4 mr-2 mt-1" />
-                                <span>{appointment.reason}</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-4 flex space-x-3">
-                            <button
-                              onClick={() => {
-                                acceptApp(appointment);
-                              }}
-                              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                            >
-                              Accept
-                            </button>
-                            <button
-                              onClick={() => handleReschedule(appointment)}
-                              className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-                            >
-                              Reschedule
-                            </button>
-                          </div>
-                          {selectedAppointment === appointment.id && (
-                            <div className="mt-4 bg-white w-fit rounded-lg border border-gray-200 p-4">
-                              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                                Select Date and Time
-                              </h2>
-                              <DateTimePicker
-                                selected={selectedDate}
-                                onSelect={setSelectedDate}
-                              />
-                              {selectedDate && <button></button>}
-                            </div>
-                          )}
+                        <div className="flex items-center text-lg text-gray-800">
+                          <Clock className="h-6 w-6 mr-4 text-indigo-600" />
+                          {format(appointment.dateTime, "dd-MMM-yyyy h:mm a")}
+                        </div>
+                        <div className="flex items-center text-lg text-gray-800">
+                          <Phone className="h-6 w-6 mr-4 text-indigo-600" />
+                          {appointment.user.mobile}
+                        </div>
+                        <div className="flex items-start text-lg text-gray-800">
+                          <FileText className="h-6 w-6 mr-4 mt-1 text-indigo-600" />
+                          <span>{appointment.reason}</span>
                         </div>
                       </div>
+                      <div className="flex items-center space-x-5">
+                        {completedNotes[appointment.id] !== undefined ? (
+                          <button
+                            onClick={() => deleteApp(appointment)}
+                            className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-rose-600 text-white text-base font-semibold rounded-full shadow-lg hover:from-red-600 hover:to-rose-700 transform hover:scale-105 transition-all duration-300"
+                          >
+                            Done
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleMarkAsDone(appointment.id)}
+                            className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-teal-500 text-white text-base font-semibold rounded-full shadow-lg hover:from-indigo-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-300"
+                          >
+                            Mark as Done
+                          </button>
+                        )}
+                      </div>
+                      {completedNotes[appointment.id] !== undefined && (
+                        <div className="mt-6">
+                          <input
+                            type="text"
+                            placeholder="Enter completion notes..."
+                            className="w-full p-4 bg-white/50 backdrop-blur-sm border border-indigo-200/50 rounded-xl focus:ring-2 focus:ring-teal-300 focus:border-teal-400 transition-all duration-300 text-gray-800 placeholder-gray-500"
+                            value={note}
+                            onChange={handleNoteChange}
+                          />
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
-          {/* Past Appointments Segregation Graph */}
-          <div className="w-full mt-10 bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Past Appointments
-            </h2>
-            <div className="h-96 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={histogramData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="UG" fill="#155DFC" name="UG Appointments" />
-                  <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
-                  <Bar dataKey="PhD" fill="#FB8500" name="PhD Appointments" />
-                </BarChart>
-              </ResponsiveContainer>
+
+          {/* Incoming Requests */}
+          <div className="space-y-10">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-400 to-rose-400 drop-shadow-lg">
+                  Incoming Requests
+                </h1>
+                <p className="mt-3 text-lg text-gray-600 tracking-wide font-light">
+                  Review and accept new appointment requests with ease
+                </p>
+              </div>
             </div>
+
+            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-amber-100/50 overflow-hidden">
+              {appointments.map((appointment) => (
+                <div
+                  key={appointment.id}
+                  className="p-8 border-b border-amber-100/50 hover:bg-gradient-to-r from-amber-50/50 to-rose-50/50 transition-all duration-500"
+                >
+                  <div className="flex items-start space-x-7">
+                    <div className="h-16 w-16 rounded-full bg-gradient-to-br from-amber-200 to-rose-300 flex items-center justify-center shadow-lg shrink-0">
+                      <User className="h-8 w-8 text-amber-700" />
+                    </div>
+                    <div className="flex-1 space-y-6">
+                      <div className="space-y-4">
+                        <div className="flex items-center text-lg text-gray-800">
+                          <CircleUser className="h-6 w-6 mr-4 text-amber-600" />
+                          <span className="font-semibold tracking-tight">{appointment.user.username}</span>
+                        </div>
+                        <div className="flex items-center text-lg text-gray-800">
+                          <Clock className="h-6 w-6 mr-4 text-amber-600" />
+                          {format(appointment.dateTime, "dd-MMM-yyyy h:mm a")}
+                        </div>
+                        <div className="flex items-center text-lg text-gray-800">
+                          <Phone className="h-6 w-6 mr-4 text-amber-600" />
+                          {appointment.user.mobile}
+                        </div>
+                        <div className="flex items-start text-lg text-gray-800">
+                          <FileText className="h-6 w-6 mr-4 mt-1 text-amber-600" />
+                          <span>{appointment.reason}</span>
+                        </div>
+                      </div>
+                      <div className="flex space-x-5">
+                        <button
+                          onClick={() => acceptApp(appointment)}
+                          className="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-base font-semibold rounded-full shadow-lg hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-300"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() => handleReschedule(appointment)}
+                          className="px-6 py-2.5 bg-gradient-to-r from-gray-200/80 to-gray-300/80 text-gray-800 text-base font-semibold rounded-full shadow-lg hover:from-gray-300/80 hover:to-gray-400/80 transform hover:scale-105 transition-all duration-300"
+                        >
+                          Reschedule
+                        </button>
+                      </div>
+                      {selectedAppointment === appointment.id && (
+                        <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-amber-200/50">
+                          <h2 className="text-xl font-semibold mb-4 bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500">
+                            Select Date and Time
+                          </h2>
+                          <DateTimePicker
+                            selected={selectedDate}
+                            onSelect={setSelectedDate}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Past Appointments Segregation Graph */}
+        <div className="mt-20 bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-10 border border-purple-100/50">
+          <h2 className="text-4xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 drop-shadow-lg mb-8">
+            Past Appointments
+          </h2>
+          <div className="h-96 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={histogramData}>
+                <CartesianGrid strokeDasharray="5 5" stroke="#e5e7eb/50" />
+                <XAxis
+                  dataKey="name"
+                  stroke="#6b7280"
+                  fontSize={16}
+                  tickLine={false}
+                  axisLine={{ stroke: "#d1d5db/50" }}
+                />
+                <YAxis
+                  stroke="#6b7280"
+                  fontSize={16}
+                  tickLine={false}
+                  axisLine={{ stroke: "#d1d5db/50" }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    borderRadius: "12px",
+                    boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
+                    border: "1px solid rgba(229, 231, 235, 0.5)",
+                    backdropFilter: "blur(8px)",
+                  }}
+                  labelStyle={{ color: "#1f2937", fontWeight: "600" }}
+                />
+                <Legend wrapperStyle={{ paddingTop: "30px", fontSize: "16px", color: "#4b5563" }} />
+                <Bar
+                  dataKey="UG"
+                  fill="url(#gradUG)"
+                  name="UG Appointments"
+                  radius={[8, 8, 0, 0]}
+                  barSize={50}
+                />
+                <Bar
+                  dataKey="PG"
+                  fill="url(#gradPG)"
+                  name="PG Appointments"
+                  radius={[8, 8, 0, 0]}
+                  barSize={50}
+                />
+                <Bar
+                  dataKey="PhD"
+                  fill="url(#gradPhD)"
+                  name="PhD Appointments"
+                  radius={[8, 8, 0, 0]}
+                  barSize={50}
+                />
+                <defs>
+                  <linearGradient id="gradUG" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#155DFC" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#60A5FA" stopOpacity={0.7} />
+                  </linearGradient>
+                  <linearGradient id="gradPG" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#FFB703" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#FCD34D" stopOpacity={0.7} />
+                  </linearGradient>
+                  <linearGradient id="gradPhD" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#FB8500" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#FDBA74" stopOpacity={0.7} />
+                  </linearGradient>
+                </defs>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>

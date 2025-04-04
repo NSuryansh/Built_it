@@ -27,7 +27,7 @@ const DoctorLogin = () => {
       }
     };
     verifyAuth();
-  }, []);
+  }, [navigate]);
 
   if (isAuthenticated === null) {
     return (
@@ -39,6 +39,7 @@ const DoctorLogin = () => {
   }
 
   const handlelogin = async (e) => {
+    // If this was triggered by a keydown, we want to prevent the default form submission behavior.
     e.preventDefault();
     if (email === "" || password === "") {
       setError("Please fill the fields");
@@ -55,7 +56,7 @@ const DoctorLogin = () => {
     });
     const res = await response.json();
 
-    if (res["message"] == "Login successful") {
+    if (res["message"] === "Login successful") {
       localStorage.setItem("token", res["token"]);
       navigate("/doctor/landing");
     } else {
@@ -78,6 +79,12 @@ const DoctorLogin = () => {
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
+  };
+
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter") {
+      handlelogin(e);
+    }
   };
 
   return (
@@ -111,6 +118,7 @@ const DoctorLogin = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={handleEnterKey}
                   className="mt-1 w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="doctor@example.com"
                   required
@@ -130,6 +138,7 @@ const DoctorLogin = () => {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleEnterKey}
                     className="mt-1 w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="••••••••"
                     required
@@ -143,6 +152,7 @@ const DoctorLogin = () => {
                   </button>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setShowForgotModal(true)}
                   className="mt-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
                 >
@@ -152,6 +162,7 @@ const DoctorLogin = () => {
             </div>
 
             <button
+              onKeyDown={handleEnterKey}
               type="submit"
               className="w-full py-3 px-4 bg-blue-600 text-[var(--custom-white)] rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
@@ -188,7 +199,9 @@ const DoctorLogin = () => {
               <h3 className="text-xl font-bold text-blue-900 mb-4">
                 Reset Password
               </h3>
-              <p className="mb-4 text-sm">Please enter your email address:</p>
+              <p className="mb-4 text-sm">
+                Please enter your email address:
+              </p>
               <input
                 type="email"
                 value={email}
