@@ -79,10 +79,10 @@ async function uploadImage(path) {
 
 const users = new Map();
 io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
+  // console.log(`User connected: ${socket.id}`);
   socket.on("register", ({ userId }) => {
     users.set(userId, socket.id);
-    console.log(userId);
+    // console.log(userId);
   });
   socket.on('joinRoom', ({userId, doctorId})=>{
     const room = `chat_${userId}_${doctorId}`
@@ -118,9 +118,9 @@ io.on("connection", (socket) => {
             senderType: sender,
           },
         });
-        console.log(senderId, "message sent to", recipientId);
+        // console.log(senderId, "message sent to", recipientId);
         if (users.has(recipientId)) {
-          console.log(users.get(recipientId));
+          // console.log(users.get(recipientId));
           io.to(users.get(recipientId)).emit("receiveMessage", {
             senderId,
             encryptedText,
@@ -128,7 +128,7 @@ io.on("connection", (socket) => {
             encryptedAESKey,
             authTag,
           });
-          console.log("Message sent");
+          // console.log("Message sent");
         }
       } catch (error) {
         console.error("Error sending message:", error);
@@ -136,7 +136,7 @@ io.on("connection", (socket) => {
     }
   );
   socket.on("disconnect", () => {
-    console.log(`User disconnected: ${socket.id}`);
+    // console.log(`User disconnected: ${socket.id}`);
     for (const [userId, socketId] of users.entries()) {
       if (socketId === socket.id) {
         users.delete(userId);
@@ -195,7 +195,7 @@ app.put("/modifyUser", async (req, res) => {
   try {
     const { id, username, email, mobile, alt_mobile, gender } = req.body;
 
-    console.log(req.body);
+    // console.log(req.body);
 
     if (!id) {
       return res.status(400).json({ error: "User ID is required" });
@@ -205,7 +205,7 @@ app.put("/modifyUser", async (req, res) => {
       const existingUsername = await prisma.user.findUnique({
         where: { username },
       });
-      console.log(existingUsername);
+      // console.log(existingUsername);
       if (existingUsername && existingUsername.id !== Number(id)) {
         return res.status(400).json({ error: "Username is already in use" });
       }
@@ -263,7 +263,7 @@ app.put("/modifyUser", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const username = req.body["username"];
   const password = req.body["password"];
 
@@ -289,7 +289,7 @@ app.post("/login", async (req, res) => {
 app.get("/profile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    console.log(token);
+    // console.log(token);
     return res.status(401).json({ message: "Unauthorized", token });
   }
   try {
@@ -297,10 +297,10 @@ app.get("/profile", async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { username: decoded.username },
     });
-    console.log(user);
+    // console.log(user);
     res.json(JSON.parse(JSON.stringify({ user: user, message: "User found" })));
   } catch (e) {
-    console.log(e);
+    // console.log(e);
   }
 });
 
@@ -324,8 +324,8 @@ app.get("/profile", async (req, res) => {
 app.get("/chatContacts", async (req, res) => {
   try {
     const userId = req.query["userId"];
-    console.log(req.query["userId"]);
-    console.log(userId);
+    // console.log(req.query["userId"]);
+    // console.log(userId);
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }
@@ -385,7 +385,7 @@ app.get("/messages", async (req, res) => {
       },
       orderBy: { createdAt: "asc" },
     });
-    console.log(messages);
+    // console.log(messages);
     res.json(messages);
   } catch (e) {
     console.log(e);
@@ -394,7 +394,7 @@ app.get("/messages", async (req, res) => {
 
 app.post("/reschedule", async (req, res) => {
   const id = req.body["appId"];
-  console.log(id);
+  // console.log(id);
   try {
     const reschedule = await prisma.requests.delete({ where: { id: id } });
     res.json(reschedule);
@@ -419,7 +419,7 @@ app.post("/reschedule", async (req, res) => {
 
 app.get("/getPastEvents", async (req, res) => {
   try {
-    console.log("hello");
+    // console.log("hello");
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -431,7 +431,7 @@ app.get("/getPastEvents", async (req, res) => {
         },
       },
     });
-    console.log(events);
+    // console.log(events);
     res.json(events);
   } catch (e) {
     res.json(e);
@@ -566,9 +566,13 @@ app.post("/book", async (req, res) => {
   const userId = req.body["userId"];
   const doctorId = req.body["doctorId"];
   const dateTime = req.body["dateTime"];
+  const date = new Date();
+  const newDate = new Date(dateTime);
+  var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+  const some = new Date(newDate.getTime() - userTimezoneOffset);
   const reason = req.body["reason"];
   const appId = req.body["id"];
-  console.log(req.body);
+  // console.log(req.body);
   try {
     // Check if user exists
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -588,7 +592,7 @@ app.post("/book", async (req, res) => {
         data: {
           user_id: userId,
           doctor_id: doctorId,
-          dateTime: new Date(dateTime),
+          dateTime: some,
           reason: reason,
         },
       });
@@ -597,7 +601,7 @@ app.post("/book", async (req, res) => {
       const reqDel = await prisma.requests.delete({
         where: { id: parseInt(appId) },
       });
-      console.log(reqDel);
+      // console.log(reqDel);
       return { appointment, reqDel };
     });
     res.json({ message: "Appointment booked successfully", result });
@@ -627,8 +631,6 @@ app.post("/requests", async (req, res) => {
     }
 
     const date = new Date(dateTime);
-    console.log(date);
-    return;
     // Create appointment
     const appointment = await prisma.requests.create({
       data: {
@@ -661,7 +663,7 @@ app.get("/getdoctors", async (req, res) => {
 });
 
 app.post("/docLogin", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const email = req.body["email"];
   const password = req.body["password"];
 
@@ -685,7 +687,7 @@ app.post("/docLogin", async (req, res) => {
 });
 
 app.post("/adminLogin", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const emailId = req.body["email"];
   const password = req.body["password"];
 
@@ -722,13 +724,14 @@ app.get("/reqApp", async (req, res) => {
       },
     },
   });
+  // console.log(appt);
   res.json(appt);
 });
 
 app.get("/docProfile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    console.log(token);
+    // console.log(token);
     return res.status(401).json({ message: "Unauthorized", token });
   }
   try {
@@ -736,7 +739,7 @@ app.get("/docProfile", async (req, res) => {
     const doctor = await prisma.doctor.findUnique({
       where: { email: decoded.email },
     });
-    console.log(doctor);
+    // console.log(doctor);
     res.json(
       JSON.parse(JSON.stringify({ doctor: doctor, message: "Doctor found" }))
     );
@@ -748,7 +751,7 @@ app.get("/docProfile", async (req, res) => {
 app.get("/adminProfile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    console.log(token);
+    // console.log(token);
     return res.status(401).json({ message: "Unauthorized", token });
   }
   try {
@@ -756,7 +759,7 @@ app.get("/adminProfile", async (req, res) => {
     const admin = await prisma.admin.findUnique({
       where: { email: decoded.email },
     });
-    console.log(admin);
+    // console.log(admin);
     res.json({ admin: admin, message: "Admin found" });
   } catch (e) {
     console.log(e);
@@ -855,15 +858,15 @@ app.post("/deleteApp", async (req, res) => {
   const user_id = Number(req.body["userId"]);
   const note = req.body["note"];
   const dateTime = new Date();
-  console.log(note);
+  // console.log(note);
   try {
     const deletedApp = await prisma.appointments.delete({
       where: {
         id: appId,
       },
     });
-    console.log(deletedApp);
-    console.log(dateTime);
+    // console.log(deletedApp);
+    // console.log(dateTime);
     try {
       const pastApp = await prisma.pastAppointments.create({
         data: {
@@ -873,7 +876,7 @@ app.post("/deleteApp", async (req, res) => {
           createdAt: dateTime,
         },
       });
-      console.log(pastApp);
+      // console.log(pastApp);
       res.json({ message: "Appointment done" });
     } catch (e) {
       res.json(e);
@@ -974,7 +977,7 @@ app.get("/pastdocappt", async (req, res) => {
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
-    console.log("HH");
+    // console.log("HH");
     const appt = await prisma.pastAppointments.findMany({
       where: { doc_id: doctorId },
       include: {
@@ -991,7 +994,7 @@ app.get("/pastdocappt", async (req, res) => {
 
 app.get("/pastuserappt", async (req, res) => {
   const userId = Number(req.query["userId"]);
-  console.log(userId);
+  // console.log(userId);
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
   }
@@ -1008,7 +1011,7 @@ app.get("/pastuserappt", async (req, res) => {
         doc: true,
       },
     }); // Fetch all appts
-    console.log(appt);
+    // console.log(appt);
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
     console.error(e);
@@ -1059,7 +1062,7 @@ app.get("/pastApp", async (req, res) => {
         doc: true,
       },
     });
-    console.log(pastApp);
+    // console.log(pastApp);
     res.json(pastApp);
   } catch (e) {
     console.log(e);
@@ -1151,7 +1154,7 @@ async function sendEmail(to, subject, text) {
       subject,
       text,
     });
-    console.log("Email sent:", info.messageId);
+    // console.log("Email sent:", info.messageId);
   } catch (error) {
     console.error("Error sending email:", error);
   }
@@ -1164,7 +1167,7 @@ app.post("/forgotPassword", async (req, res) => {
         email: email,
       },
     });
-    console.log(user);
+    // console.log(user);
     if (!user) {
       res.json({ message: "No user found with this email" });
     }
@@ -1177,7 +1180,7 @@ app.post("/forgotPassword", async (req, res) => {
         userId: user.id,
       },
     });
-    console.log(tokengen);
+    // console.log(tokengen);
     const resetLink = `https://built-it-1.onrender.com//reset-password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
@@ -1228,7 +1231,7 @@ app.post("/forgotDoctorPassword", async (req, res) => {
         email: email,
       },
     });
-    console.log(doctor);
+    // console.log(doctor);
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const tokengen = await prisma.passwordResetToken.create({
@@ -1238,7 +1241,7 @@ app.post("/forgotDoctorPassword", async (req, res) => {
         userId: doctor.id,
       },
     });
-    console.log(tokengen);
+    // console.log(tokengen);
     const resetLink = `https://built-it-1.onrender.com//doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
@@ -1289,7 +1292,7 @@ app.post("/forgotAdminPassword", async (req, res) => {
         email: email,
       },
     });
-    console.log(admin);
+    // console.log(admin);
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const tokengen = await prisma.passwordResetToken.create({
@@ -1299,7 +1302,7 @@ app.post("/forgotAdminPassword", async (req, res) => {
         userId: admin.id,
       },
     });
-    console.log(tokengen);
+    // console.log(tokengen);
     const resetLink = `https://built-it-1.onrender.com/admin/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
@@ -1345,12 +1348,12 @@ app.post("/resetAdminPassword", async (req, res) => {
 app.post("/save-subscription", async (req, res) => {
   try {
     const { endpoint, keys } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     // Check if the subscription already exists
     const existingSub = await prisma.subscription.findUnique({
       where: { endpoint },
     });
-    console.log(existingSub);
+    // console.log(existingSub);
     if (!existingSub) {
       await prisma.subscription.create({
         data: {
@@ -1406,14 +1409,14 @@ app.post("/send-notification", async (req, res) => {
 
 app.post("/node-chat", async (req, res) => {
   try {
-    console.log("HELOE");
+    // console.log("HELOE");
     const { user_id, message } = req.body;
 
     const response = await axios.post("http://127.0.0.1:5000/chatWithBot", {
       user_id,
       message,
     });
-    console.log(response.data);
+    // console.log(response.data);
 
     res.json(response.data);
   } catch (error) {
@@ -1467,7 +1470,7 @@ app.get("/available-slots", async (req, res) => {
       return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes();
     });
 
-    console.log(bookedSlots);
+    // console.log(bookedSlots);
 
     const leavePeriods = doctorLeaves.map((leave) => ({
       start: new Date(leave.date_start).getTime(),
@@ -1498,7 +1501,7 @@ app.get("/available-slots", async (req, res) => {
         (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end
       );
     });
-    console.log(availableSlots);
+    // console.log(availableSlots);
     res.json({ availableSlots });
   } catch (error) {
     console.error(error);
@@ -1522,12 +1525,12 @@ app.get("/check-user", async (req, res) => {
 
 app.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
-  console.log(email);
+  // console.log(email);
   try {
     const otp = Math.trunc(100000 + Math.random() * 900000);
-    console.log(otp);
+    // console.log(otp);
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    console.log(expiresAt);
+    // console.log(expiresAt);
 
     const otpgen = await prisma.otpVerification.create({
       data: {
@@ -1537,7 +1540,7 @@ app.post("/otpGenerate", async (req, res) => {
       },
     });
 
-    console.log(otpgen);
+    // console.log(otpgen);
     const subject = "OTP Verification";
     const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
     sendEmail(email, subject, message);
@@ -1552,7 +1555,7 @@ app.post("/otpGenerate", async (req, res) => {
 app.post("/otpcheck", async (req, res) => {
   const otp = req.body["otp"];
   const email = req.body["email"];
-  console.log(otp, "OTP");
+  // console.log(otp, "OTP");
 
   try {
     const otpRecord = await prisma.otpVerification.findFirstOrThrow({
@@ -1564,8 +1567,8 @@ app.post("/otpcheck", async (req, res) => {
         expiresAt: "desc",
       },
     });
-    console.log(otpRecord);
-    console.log(email, "JKSFJK");
+    // console.log(otpRecord);
+    // console.log(email, "JKSFJK");
 
     if (!otpRecord) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -1593,7 +1596,7 @@ app.post("/scores-bot", async (req, res) => {
       user_id,
     });
 
-    console.log(response.data.json);
+    // console.log(response.data.json);
     res.json(response.data);
   } catch (error) {
     console.error("Error calling the Flas API: ", error.message);
@@ -1606,7 +1609,7 @@ app.put("/modifyDoc", async (req, res) => {
     const { id, name, email, mobile, desc, address, city, experenice } =
       req.body;
 
-    console.log(req.body);
+    // console.log(req.body);
 
     const doctorId = parseInt(id, 10);
     if (isNaN(doctorId) || doctorId <= 0) {
@@ -1696,7 +1699,7 @@ app.post("/emerApp", async (req, res) => {
         doctor_id: Number(docId),
       },
     });
-    console.log(app);
+    // console.log(app);
     res.json(app);
   }
 });
@@ -1750,7 +1753,7 @@ app.get("/all-appointments", async (req, res) => {
 app.post("/add-slot", async (req, res) => {
   const doctorId = req.body["doctorId"];
   const startTime = req.body["startTime"];
-  console.log(req.body);
+  // console.log(req.body);
   try {
     // Check if doctor exists
     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
