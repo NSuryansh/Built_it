@@ -1891,8 +1891,61 @@ app.post("/request-to-user", async (req, res) => {
     });
 
     res.json({
-      message: "Appointment request added successfully",
+      message: "Appointment requested successfully",
       appointment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/accept-booking-by-user", async (req, res) => {
+  const userId = req.body["userId"];
+  const doctorId = req.body["doctorId"];
+  const dateTime = req.body["dateTime"];
+  const date = new Date();
+  const newDate = new Date(dateTime);
+  var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+  const some = new Date(newDate.getTime() - userTimezoneOffset);
+  const reason = req.body["reason"];
+  const appId = req.body["id"];
+  // console.log(req.body);
+  try {
+    // Check if user exists
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if doctor exists
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    const result = await prisma.$transaction(async (prisma) => {
+      // Create appointment
+      const appointment = await prisma.appointments.create({
+        data: {
+          user_id: userId,
+          doctor_id: doctorId,
+          dateTime: some,
+          reason: reason,
+          isDoctor: true,
+        },
+      });
+
+      //Remove from requests table
+      const reqDel = await prisma.requests.delete({
+        where: { id: parseInt(appId) },
+      });
+      // console.log(reqDel);
+      return { appointment, reqDel };
+    });
+    res.json({
+      message: "Appointment accepted and booked with student successfully",
+      result,
     });
   } catch (error) {
     console.error(error);
