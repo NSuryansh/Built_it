@@ -84,11 +84,11 @@ io.on("connection", (socket) => {
     users.set(userId, socket.id);
     // console.log(userId);
   });
-  socket.on("joinRoom", ({ userId, doctorId }) => {
-    const room = `chat_${userId}_${doctorId}`;
-    socket.join(room);
-    console.log(`Socket id ${socket.id} joined room ${room}`);
-  });
+  socket.on('joinRoom', ({userId, doctorId})=>{
+    const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join('_')}`;
+    socket.join(room)
+    console.log(`Socket id ${socket.id} joined room ${room}`)
+  })
   socket.on(
     "sendMessage",
     async ({
@@ -120,19 +120,22 @@ io.on("connection", (socket) => {
             senderType: sender,
           },
         });
+        const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join('_')}`;
         // console.log(senderId, "message sent to", recipientId);
-        if (users.has(recipientId)) {
+        
           // console.log(users.get(recipientId));
-          io.to(users.get(recipientId)).emit("receiveMessage", {
+          io.to(room).emit("receiveMessage", {
+            id: message.id,
             senderId,
             encryptedText,
             iv,
             encryptedAESKey,
             authTag,
+            senderType
           });
           // console.log("Message sent");
         }
-      } catch (error) {
+       catch (error) {
         console.error("Error sending message:", error);
       }
     }
