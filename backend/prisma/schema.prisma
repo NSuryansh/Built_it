@@ -261,6 +261,7 @@ model DocCertification{
 }
 
 model Referrals {
+  @@map("referrals")
   id      Int      @id @default(autoincrement())
   user_id Int
   user    User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
