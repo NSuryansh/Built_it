@@ -9,6 +9,7 @@ import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../components/CustomToast";
+import { Mic, MicOff } from "lucide-react";
 
 export default function Mood() {
   const [message, setMessage] = useState("");
@@ -22,7 +23,7 @@ export default function Mood() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [audioBlob, setAudioBlob] = useState(null); // State to store recorded audio
+  const [audioBlob, setAudioBlob] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
@@ -107,7 +108,6 @@ export default function Mood() {
 
   const startRecording = async () => {
     try {
-
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       let chunks = [];
@@ -187,21 +187,33 @@ export default function Mood() {
             )}
             <div className="h-1" ref={messagesEndRef} />
           </div>
-          <div className="p-4 border-t border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)] flex items-center">
-            <ChatInput
-              message={message}
-              setMessage={setMessage}
-              handleSubmit={handleSubmit}
-            />
-            {/* Audio recording button */}
-            <button
-              type="button"
-              onClick={isRecording ? stopRecording : startRecording}
-              className="ml-2 p-2 bg-blue-500 text-white rounded"
-            >
-              {isRecording ? "Stop Recording" : "Start Recording"}
-            </button>
-          </div>
+          {/* <div className="p-4 "> */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1">
+                <ChatInput
+                  message={message}
+                  setMessage={setMessage}
+                  handleSubmit={handleSubmit}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={isRecording ? stopRecording : startRecording}
+                className={`p-3 rounded-full transition-colors ${
+                  isRecording 
+                    ? 'bg-red-500 hover:bg-red-600 text-white' 
+                    : 'bg-pink-500 hover:bg-pink-600 text-white'
+                }`}
+                title={isRecording ? "Stop Recording" : "Start Recording"}
+              >
+                {isRecording ? (
+                  <MicOff className="h-5 w-5" />
+                ) : (
+                  <Mic className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+          {/* </div> */}
         </div>
       </div>
     </div>
