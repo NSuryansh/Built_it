@@ -135,7 +135,7 @@ model Appointments {
   reason    String?
   doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
+  isDoctor   Boolean  @default(false)
   @@map("appointments")
 }
 
