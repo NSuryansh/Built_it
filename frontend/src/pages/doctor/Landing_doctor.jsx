@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 
 import DoctorCalendar from "../../components/DoctorCalendar";
 import CustomToast from "../../components/CustomToast";
+import { TimeChange } from "../../components/Time_Change";
 
 const DoctorLanding = () => {
   const [appointments, setAppointments] = useState([]);
@@ -39,15 +40,17 @@ const DoctorLanding = () => {
         const data = await response.json();
 
         const formattedAppointments = data.map((appt) => {
+          console.log(appt)
           const dateObj = new Date(appt.dateTime);
+          const newDate = TimeChange(dateObj.getTime());
           return {
             id: appt.id,
-            patientName: `User ${appt.user_id}`,
-            time: dateObj.toLocaleTimeString([], {
+            patientName: `${appt.user.username}`,
+            time: newDate.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             }),
-            date: dateObj.toLocaleDateString(undefined, {
+            date: newDate.toLocaleDateString(undefined, {
               year: "numeric",
               month: "long",
               day: "numeric",
