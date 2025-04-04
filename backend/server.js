@@ -1364,8 +1364,8 @@ app.post("/resetAdminPassword", async (req, res) => {
 app.post("/save-subscription", async (req, res) => {
   try {
     const { userid, subscription } = req.body;
-    console.log(userid)
-    console.log(subscription)
+    console.log(userid);
+    console.log(subscription);
     if (!userid || !subscription) {
       return res.status(400).json({ error: "Missing userId or subscription" });
     }
@@ -1954,6 +1954,26 @@ app.post("/accept-booking-by-user", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/rating", async (req, res) => {
+  const stars = req.body["stars"];
+  const appId = req.body["id"];
+  try {
+    const updatedApp = await prisma.appointments.update({
+      where: { id: appId },
+      data: {
+        stars: stars,
+      },
+    });
+    res.json({
+      message: "Stars Added",
+      updatedApp,
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({ message: "Error adding stars" });
   }
 });
 
