@@ -147,8 +147,6 @@ app.post("/signup", async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  
-
   try {
     const user = await prisma.user.create({
       data: {
@@ -179,7 +177,6 @@ app.get("/getUsers", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 app.put("/modifyUser", async (req, res) => {
   try {
@@ -275,7 +272,6 @@ app.post("/login", async (req, res) => {
 
   res.json({ message: "Login successful", token });
 });
-
 
 app.get("/profile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -1692,7 +1688,51 @@ app.post("/emerApp", async (req, res) => {
   }
 });
 
-server.listen(3000, () => console.log("Server running on port 3000"));
+app.get("/all-appointments", async (req, res) => {
+  try {
+    // Fetch upcoming/current appointments with related doctor and user
+    const appts = await prisma.appointments.findMany({
+      include: {
+        doctor: {
+          select: {
+            name: true,
+            desc: true,
+          },
+        },
+        user: {
+          select: {
+            username: true,
+            email: true,
+            rollNo: true,
+            department: true,
+            acadProg: true,
+            gender: true,
+          },
+        },
+      },
+    });
+
+    // Fetch past appointments with related doctor and user
+    const pastApp = await prisma.pastAppointments.findMany({
+      include: {
+        doc: true,
+        user: true,
+      },
+    });
+
+    res.status(200).json({
+      message: "Fetched all appointment data",
+      appts,
+      pastApp,
+    });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).json({
+      message: "Failed to fetch appointment data",
+      error: error.message,
+    });
+  }
+});
 
 app.post("/add-slot", async (req, res) => {
   const doctorId = req.body["doctorId"];
@@ -1718,3 +1758,5 @@ app.post("/add-slot", async (req, res) => {
     res.json({ message: "Internal Server Error" });
   }
 });
+
+server.listen(3000, () => console.log("Server running on port 3000"));
