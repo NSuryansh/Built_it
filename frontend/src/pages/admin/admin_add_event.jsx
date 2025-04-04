@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import CustomToast from "../../components/CustomToast";
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -52,16 +53,7 @@ const AddEvent = () => {
       }
     } catch (err) {
       console.error("Error adding event:", err);
-      toast("Internal error while adding event", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast("Internal error while adding event");
       setError("Internal error while adding event");
     }
   };
