@@ -10,6 +10,15 @@ import SessionExpired from "../components/SessionExpired";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../components/CustomToast";
 
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition;
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+}
+
 export default function Mood() {
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([
@@ -21,6 +30,7 @@ export default function Mood() {
   ]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
 
@@ -91,6 +101,37 @@ export default function Mood() {
     }
   };
 
+  const startListening = () => {
+    if (recognition) {
+      recognition.start();
+      setIsListening(true);
+    }
+  };
+
+  const stopListening = () => {
+    if (recognition) {
+      recognition.stop();
+      setIsListening(false);
+    }
+  };
+
+  useEffect(() => {
+    if (recognition) {
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setMessage(transcript);
+      };
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error", event.error);
+        CustomToast("Error capturing audio input");
+        setIsListening(false);
+      };
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
+
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
@@ -138,11 +179,20 @@ export default function Mood() {
             )}
             <div className="h-1" ref={messagesEndRef} />
           </div>
+          <div className="p-4 border-t border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)] flex items-center">
           <ChatInput
             message={message}
             setMessage={setMessage}
             handleSubmit={handleSubmit}
           />
+          <button
+              type="button"
+              onClick={isListening ? stopListening : startListening}
+              className="ml-2 p-2 bg-blue-500 text-white rounded"
+            >
+              {isListening ? "Stop Listening" : "Start Listening"}
+            </button>
+            </div>
         </div>
       </div>
     </div>

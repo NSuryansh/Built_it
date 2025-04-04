@@ -103,7 +103,7 @@ const UserAppointments = () => {
                           </h3>
                           <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            {appointment.createdAt}
+                            {format(appointment.createdAt, 'dd-MMM-yyyy hh:mm a')}
                           </p>
                         </div>
                       </div>
