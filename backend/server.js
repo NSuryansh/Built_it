@@ -786,6 +786,7 @@ app.post("/addEvent", async (req, res) => {
     const description = req.body["description"];
     const dateTime = req.body["dateTime"];
     const venue = req.body["venue"];
+    const url = req.body["url"];
 
     // Validate required fields
     if (!title || !dateTime || !venue) {
@@ -801,6 +802,7 @@ app.post("/addEvent", async (req, res) => {
         description: description,
         dateTime: new Date(dateTime), // Ensure it's a valid Date object
         venue: venue,
+        url: url,
       },
     });
 
@@ -1370,13 +1372,13 @@ app.post("/save-subscription", async (req, res) => {
 
     // Check if the subscription already exists for the user
     const existingSub = await prisma.subscription.findUnique({
-      where: { userId: userid },
+      where: { userId: Number(userid) },
     });
 
     if (existingSub) {
       // Update the existing subscription
       await prisma.subscription.update({
-        where: { userId: userid },
+        where: { userId: Number(userid) },
         data: {
           endpoint,
           authKey: keys.auth,
@@ -1387,7 +1389,7 @@ app.post("/save-subscription", async (req, res) => {
       // Create a new subscription
       await prisma.subscription.create({
         data: {
-          userId: userid,
+          userId: Number(userid),
           endpoint,
           authKey: keys.auth,
           p256dhKey: keys.p256dh,
@@ -1440,7 +1442,6 @@ app.post("/send-notification", async (req, res) => {
     res.status(500).json({ error: "Failed to send push notification" });
   }
 });
-
 
 app.post("/node-chat", async (req, res) => {
   try {

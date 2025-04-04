@@ -10,15 +10,6 @@ import SessionExpired from "../components/SessionExpired";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../components/CustomToast";
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition;
-if (SpeechRecognition) {
-  recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
-}
-
 export default function Mood() {
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([
@@ -30,9 +21,11 @@ export default function Mood() {
   ]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const navigate = useNavigate();
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null); // State to store recorded audio
+  const [mediaRecorder, setMediaRecorder] = useState(null);
   const messagesEndRef = useRef(null);
+  const navigate = useNavigate();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -73,12 +66,7 @@ export default function Mood() {
         }),
       });
 
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! status: ${response.status}`);
-      // }
-
       const data = await response.json();
-      // Handle both structured and unstructured responses
       const botMessage =
         data.response?.text ||
         (typeof data.response === "string"
@@ -101,36 +89,56 @@ export default function Mood() {
     }
   };
 
-  const startListening = () => {
-    if (recognition) {
-      recognition.start();
-      setIsListening(true);
-    }
-  };
-
-  const stopListening = () => {
-    if (recognition) {
-      recognition.stop();
-      setIsListening(false);
-    }
-  };
-
   useEffect(() => {
-    if (recognition) {
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setMessage(transcript);
-      };
-      recognition.onerror = (event) => {
-        console.error("Speech recognition error", event.error);
-        CustomToast("Error capturing audio input");
-        setIsListening(false);
-      };
-      recognition.onend = () => {
-        setIsListening(false);
+    if (audioBlob) {
+      const audioURL = URL.createObjectURL(audioBlob);
+      console.log("Audio blob available:", audioBlob);
+      
+      const audio = new Audio(audioURL);
+      audio.play().catch(error => {
+        console.error("Error playing audio:", error);
+      });
+      console.log("Audio URL:", audioURL);
+      return () => {
+        URL.revokeObjectURL(audioURL);
       };
     }
-  }, []);
+  }, [audioBlob]);
+
+  const startRecording = async () => {
+    try {
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      let chunks = [];
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/wav" });
+        setAudioBlob(blob);
+        chunks = [];
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error starting recording:", error);
+      CustomToast("Error starting audio recording");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setIsRecording(false);
+    }
+  };
 
   if (isAuthenticated === null) {
     return (
@@ -180,19 +188,20 @@ export default function Mood() {
             <div className="h-1" ref={messagesEndRef} />
           </div>
           <div className="p-4 border-t border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)] flex items-center">
-          <ChatInput
-            message={message}
-            setMessage={setMessage}
-            handleSubmit={handleSubmit}
-          />
-          <button
+            <ChatInput
+              message={message}
+              setMessage={setMessage}
+              handleSubmit={handleSubmit}
+            />
+            {/* Audio recording button */}
+            <button
               type="button"
-              onClick={isListening ? stopListening : startListening}
+              onClick={isRecording ? stopRecording : startRecording}
               className="ml-2 p-2 bg-blue-500 text-white rounded"
             >
-              {isListening ? "Stop Listening" : "Start Listening"}
+              {isRecording ? "Stop Recording" : "Start Recording"}
             </button>
-            </div>
+          </div>
         </div>
       </div>
     </div>

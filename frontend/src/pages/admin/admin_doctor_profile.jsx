@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import CustomToast from "../../components/CustomToast";
 
 const AdminDoctorProfile = () => {
   const doctor = {
@@ -50,11 +51,7 @@ const AdminDoctorProfile = () => {
         setDoctors(data);
       } catch (err) {
         console.error("Error fetching doctors:", err);
-        toast("Error while fetching data", {
-          position: "bottom-right",
-          autoClose: 3000,
-          className: "custom-toast",
-        });
+        CustomToast("Error while fetching data");
       }
     };
     fetchDoctors();
