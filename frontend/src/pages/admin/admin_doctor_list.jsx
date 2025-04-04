@@ -64,110 +64,112 @@ const DoctorsList = () => {
   }
 
   return (
-    <div className="flex flex-col bg-[var(--custom-primary-green-50)] min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100">
       <AdminNavbar />
       <ToastContainer />
-      <div className="space-y-6 md:min-w-5xl max-w-7xl p-2 sm:p-4 mx-auto mb-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-center">
-          <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">
-            Doctors List
-          </h1>
+  
+      <div className="w-full max-w-7xl mx-auto p-6 space-y-10">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+          <div>
+            <h1 className="text-4xl font-extrabold text-green-900">Doctors Directory</h1>
+            <p className="text-md text-green-700">Effortlessly manage registered doctors</p>
+          </div>
           <Link
             to="/admin/add_doctor"
-            className="flex mt-2 sm:mt-0 items-center gap-2 bg-[var(--custom-primary-green-600)] text-[var(--custom-white)] px-4 py-2 rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition-transform transform hover:scale-105"
           >
             <UserPlus size={20} />
-            Add New Doctor
+            Add Doctor
           </Link>
         </div>
-
-        <div className="bg-[var(--custom-white)] hidden sm:block rounded-xl shadow-lg overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-[var(--custom-primary-green-100)]">
+  
+        {/* Table View for Desktop */}
+        <div className="hidden sm:block bg-white rounded-3xl shadow-xl overflow-hidden border border-green-100 animate-fade-in-up">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-green-100 text-green-900 font-semibold">
               <tr>
-                <th className="px-6 py-4  text-left text-[var(--custom-primary-green-900)]">
-                  Name
-                </th>
-                <th className="px-6 py-4  text-left text-[var(--custom-primary-green-900)]">
-                  Specialty
-                </th>
-                <th className="px-6 py-4  text-left text-[var(--custom-primary-green-900)]">
-                  Email
-                </th>
-                <th className="px-6 py-4  text-left text-[var(--custom-primary-green-900)]">
-                  Actions
-                </th>
-                <th className="px-6 py-4  text-left text-[var(--custom-primary-green-900)]"></th>
+                <th className="px-6 py-5">Name</th>
+                <th className="px-6 py-5">Specialty</th>
+                <th className="px-6 py-5">Email</th>
+                <th className="px-6 py-5 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--custom-primary-green-100)]">
+            <tbody className="divide-y divide-green-50">
               {doctors.map((doctor) => (
                 <tr
                   key={doctor.id}
-                  className="hover:bg-[var(--custom-primary-green-50)]"
+                  className="hover:bg-green-50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-4 ">{doctor.name}</td>
-                  <td className="px-6 py-4 ">{doctor.desc}</td>
-                  <td className="px-6 py-4 ">{doctor.email}</td>
-                  <td className="px-6 py-4 ">
-                    <button
-                      onClick={() => handleDelete(doctor.id)}
-                      className="text-red-600 flex justify-center items-center hover:text-red-800 transition-colors"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  </td>
-                  <td className="px-6 py-4 ">
-                    <Link
-                      className="font-bold"
-                      to={`/admin/doctor_profile?id=${doctor.id}`}
-                    >
-                      View
-                    </Link>
+                  <td className="px-6 py-4 font-medium text-gray-800">{doctor.name}</td>
+                  <td className="px-6 py-4 text-gray-600">{doctor.desc}</td>
+                  <td className="px-6 py-4 text-gray-600">{doctor.email}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-center gap-5">
+                      <button
+                        onClick={() => handleDelete(doctor.id)}
+                        className="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50"
+                        title="Delete Doctor"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                      <Link
+                        to={`/admin/doctor_profile?id=${doctor.id}`}
+                        className="text-green-700 font-semibold hover:text-green-900 transition-colors underline"
+                        title="View Profile"
+                      >
+                        View
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div className="sm:hidden space-y-4">
+  
+        {/* Mobile Card View */}
+        <div className="sm:hidden space-y-6">
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
-              className="bg-white rounded-lg shadow-md p-4 space-y-3"
+              className="backdrop-blur-sm bg-white/80 border border-green-100 rounded-2xl shadow-lg p-5 space-y-4 animate-fade-in-up"
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-semibold text-lg">{doctor.name}</h3>
-                  <p className="text-gray-600">{doctor.desc}</p>
+                  <h3 className="text-xl font-bold text-green-900">{doctor.name}</h3>
+                  <p className="text-sm text-green-700">{doctor.desc}</p>
                 </div>
-                <div className="flex space-x-3">
+                <div className="flex gap-3">
                   <button
                     onClick={() => handleDelete(doctor.id)}
-                    className="text-red-600 hover:text-red-800 transition-colors"
+                    className="text-red-600 hover:text-red-700 transition-colors"
+                    title="Delete"
                   >
                     <Trash2 size={20} />
                   </button>
                   <Link
-                    className="font-bold text-blue-600 hover:text-blue-800"
                     to={`/admin/doctor_profile?id=${doctor.id}`}
+                    className="text-green-700 font-semibold hover:text-green-900"
+                    title="View"
                   >
                     View
                   </Link>
                 </div>
               </div>
-              <div className="pt-2 border-t border-gray-100">
-                <p className="text-gray-600 text-sm">
-                  <span className="font-medium">Email:</span> {doctor.email}
-                </p>
+              <div className="pt-3 border-t border-green-100 text-sm text-gray-600">
+                <span className="font-medium">Email:</span> {doctor.email}
               </div>
             </div>
           ))}
         </div>
       </div>
-      <Footer color={"green"} />
+  
+      <Footer color="green" />
     </div>
   );
+  
+  
 };
 
 export default DoctorsList;

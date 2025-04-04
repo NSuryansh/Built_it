@@ -141,6 +141,7 @@ model Appointments {
   doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   isDoctor   Boolean  @default(false)
+  stars Int?
   @@map("appointments")
 }
 
@@ -153,6 +154,7 @@ model PastAppointments {
   doc       Doctor?  @relation(fields: [doc_id], references: [id])
   user      User?    @relation(fields: [user_id], references: [id])
   isDoctor   Boolean  @default(false)
+  stars Int?
   @@map("pastApp")
 }
 
@@ -231,14 +233,14 @@ model Chatbot {
 }
 
 model Subscription {
-  id        String   @id @default(uuid())
-  endpoint  String   @unique
+  id        String    @id @default(uuid())
+  endpoint  String    @unique
   authKey   String
   p256dhKey String
-  createdAt DateTime @default(now())
-  userId    Int?
+  createdAt DateTime  @default(now())
+  userId    Int?      @unique
   user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  doctorId Int?
+  doctorId  Int?      @unique
   doctor    Doctor?   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 }
 

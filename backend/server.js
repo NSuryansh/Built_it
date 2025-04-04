@@ -1364,23 +1364,26 @@ app.post("/resetAdminPassword", async (req, res) => {
 app.post("/save-subscription", async (req, res) => {
   try {
     const { userid, subscription } = req.body;
+    console.log(userid)
+    console.log(subscription)
     if (!userid || !subscription) {
       return res.status(400).json({ error: "Missing userId or subscription" });
     }
 
     const { endpoint, keys } = subscription;
-
+    // console.log(endpoint)
     // Check if the subscription already exists for the user
     const existingSub = await prisma.subscription.findUnique({
       where: { userId: Number(userid) },
     });
+    // console.log(existingSub)
 
     if (existingSub) {
       // Update the existing subscription
       await prisma.subscription.update({
         where: { userId: Number(userid) },
         data: {
-          endpoint,
+          endpoint: endpoint,
           authKey: keys.auth,
           p256dhKey: keys.p256dh,
         },
@@ -1390,7 +1393,7 @@ app.post("/save-subscription", async (req, res) => {
       await prisma.subscription.create({
         data: {
           userId: Number(userid),
-          endpoint,
+          endpoint: endpoint,
           authKey: keys.auth,
           p256dhKey: keys.p256dh,
         },
