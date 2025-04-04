@@ -99,11 +99,13 @@ io.on("connection", (socket) => {
       authTag,
     }) => {
       try {
-        var senderId
+        var senderId, recipientId
         if(sender=="Doctor"){
           senderId = doctorId
+          recipientId = userId
         }else{
           senderId = userId
+          recipientId = doctorId
         }
         const message = await prisma.message.create({
           data: {
@@ -371,14 +373,14 @@ app.get("/chatContacts", async (req, res) => {
 
 app.get("/messages", async (req, res) => {
   try {
-    const { userId, recId } = req.query;
+    const { userId, recId, userType, recType } = req.query;
     console.log(userId);
     console.log(recId);
     const messages = await prisma.message.findMany({
       where: {
         OR: [
-          { senderId: parseInt(userId), recipientId: parseInt(recId) },
-          { senderId: parseInt(recId), recipientId: parseInt(userId) },
+          { senderId: parseInt(userId), recipientId: parseInt(recId), senderType: userType },
+          { senderId: parseInt(recId), recipientId: parseInt(userId), senderType: recType },
         ],
       },
       orderBy: { createdAt: "asc" },
