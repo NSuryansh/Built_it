@@ -786,6 +786,7 @@ app.post("/addEvent", async (req, res) => {
     const description = req.body["description"];
     const dateTime = req.body["dateTime"];
     const venue = req.body["venue"];
+    const url = req.body["url"];
 
     // Validate required fields
     if (!title || !dateTime || !venue) {
@@ -801,6 +802,7 @@ app.post("/addEvent", async (req, res) => {
         description: description,
         dateTime: new Date(dateTime), // Ensure it's a valid Date object
         venue: venue,
+        url: url,
       },
     });
 
@@ -1440,7 +1442,6 @@ app.post("/send-notification", async (req, res) => {
     res.status(500).json({ error: "Failed to send push notification" });
   }
 });
-
 
 app.post("/node-chat", async (req, res) => {
   try {

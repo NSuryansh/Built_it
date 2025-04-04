@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, Eye, EyeOff } from "lucide-react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import CustomToast from "../../components/CustomToast";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -57,22 +58,13 @@ const AdminLogin = () => {
       localStorage.setItem("token", res["token"]);
       navigate("/admin/dashboard");
     } else {
-      toast(res["message"], {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        className: "custom-toast",
-      });
+      CustomToast(res["message"]);
     }
   };
 
   const handleForgotPassword = async () => {
     if (!email) {
-      toast("Please enter an email", { position: "bottom-right" });
+      CustomToast("Please enter an email");
       return;
     }
     const response = await fetch("http://localhost:3000/forgotAdminPassword", {
@@ -83,7 +75,7 @@ const AdminLogin = () => {
       }),
     });
     const res = await response.json();
-    toast(res.message, { position: "bottom-right" });
+    CustomToast(res.message);
     setShowForgotModal(false);
   };
 
