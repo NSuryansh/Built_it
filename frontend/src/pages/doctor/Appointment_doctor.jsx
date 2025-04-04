@@ -403,7 +403,7 @@ const DoctorAppointment = () => {
                       </div>
                       {selectedAppointment === appointment.id && (
                         <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-amber-200/50">
-                          <h2 className="text-xl font-semibold text-gray-800 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-rose-500">
+                          <h2 className="text-xl font-semibold mb-4 bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500">
                             Select Date and Time
                           </h2>
                           <DateTimePicker
