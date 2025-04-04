@@ -115,6 +115,7 @@ model Message {
   recipientId     Int
   encryptedAESKey String
   authTag         String
+  senderType      String
   recipient       User     @relation("ReceivedMessages", fields: [recipientId], references: [id])
   sender          User     @relation("SentMessages", fields: [senderId], references: [id])
 }
