@@ -1759,4 +1759,34 @@ app.post("/add-slot", async (req, res) => {
   }
 });
 
+app.post("/referrals", async (req, res) => {
+  const { user_id, doctor_id, referred_by, reason } = req.body;
+
+  if (!user_id || !doctor_id || !referred_by || !reason) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const newReferral = await prisma.referrals.create({
+      data: {
+        user_id: user_id,
+        doctor_id: doctor_id,
+        referred_by: referred_by,
+        reason: reason,
+      },
+    });
+
+    res.status(201).json({
+      message: "Referral added successfully",
+      referral: newReferral,
+    });
+  } catch (error) {
+    console.error("Error adding referral:", error);
+    res.status(500).json({
+      message: "Failed to add referral",
+      error: error.message,
+    });
+  }
+});
+
 server.listen(3000, () => console.log("Server running on port 3000"));
