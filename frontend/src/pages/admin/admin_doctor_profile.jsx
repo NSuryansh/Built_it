@@ -58,105 +58,111 @@ const AdminDoctorProfile = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <AdminNavbar />
       <ToastContainer />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <Link
           to="/admin/doctor_list"
-          className="mb-6 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
+          className="mb-12 inline-flex items-center gap-3 px-6 py-3 text-base font-semibold text-white bg-teal-600 rounded-full hover:bg-teal-700 hover:shadow-lg transform hover:scale-105 transition-all duration-300 shadow-md"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back
+          <ArrowLeft className="w-5 h-5" />
+          Back to List
         </Link>
-
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-12">
-            <div className="flex items-center space-x-8">
-              <img
-                src={doctor.image}
-                alt={doctor.name}
-                className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
-              />
+  
+        <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-purple-200">
+          {/* Header Section */}
+          <div className="bg-teal-600 px-8 py-14 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.2),transparent)]"></div>
+            <div className="flex items-center space-x-8 relative z-10">
+              <div className="relative group">
+                <img
+                  src={doctor.image}
+                  alt={doctor.name}
+                  className="w-40 h-40 rounded-full border-4 border-amber-300 object-cover shadow-xl group-hover:scale-110 transition-transform duration-500 ease-out"
+                />
+                <div className="absolute inset-0 rounded-full bg-coral-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </div>
               <div className="text-white">
-                <h1 className="text-3xl font-bold">{doctor.name}</h1>
-                <p className="text-blue-100 text-lg">{doctor.field}</p>
+                <h1 className="text-5xl font-extrabold tracking-tight drop-shadow-lg">{doctor.name}</h1>
+                <p className="text-amber-200 text-2xl font-medium mt-3 italic">{doctor.field}</p>
               </div>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-500" />
+  
+          {/* Content Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 p-12 bg-gray-50/50">
+            {/* Left Column */}
+            <div className="space-y-10">
+              <h2 className="text-3xl font-bold text-teal-600 flex items-center gap-4 bg-purple-100/50 p-3 rounded-lg shadow-sm">
+                <User className="w-7 h-7 text-coral-500" />
                 Contact Information
               </h2>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3 text-gray-600">
-                  <Mail className="w-5 h-5 text-blue-500" />
-                  <span>{doctor.contact.email}</span>
+              <div className="bg-white p-6 rounded-2xl shadow-lg border border-purple-100 space-y-6 transform hover:-translate-y-1 transition-transform duration-300">
+                <div className="flex items-center space-x-4 text-gray-800 hover:text-coral-500 transition-colors duration-200">
+                  <Mail className="w-6 h-6 text-coral-500" />
+                  <span className="text-lg font-medium">{doctor.contact.email}</span>
                 </div>
-                <div className="flex items-center space-x-3 text-gray-600">
-                  <Phone className="w-5 h-5 text-blue-500" />
-                  <span>{doctor.contact.phone}</span>
+                <div className="flex items-center space-x-4 text-gray-800 hover:text-coral-500 transition-colors duration-200">
+                  <Phone className="w-6 h-6 text-coral-500" />
+                  <span className="text-lg font-medium">{doctor.contact.phone}</span>
                 </div>
-                <div className="flex items-center space-x-3 text-gray-600">
-                  <MapPin className="w-5 h-5 text-blue-500" />
-                  <span>{doctor.contact.address}</span>
+                <div className="flex items-center space-x-4 text-gray-800 hover:text-coral-500 transition-colors duration-200">
+                  <MapPin className="w-6 h-6 text-coral-500" />
+                  <span className="text-lg font-medium">{doctor.contact.address}</span>
                 </div>
               </div>
-
-              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2 pt-6">
-                <GraduationCap className="w-5 h-5 text-blue-500" />
+  
+              <h2 className="text-3xl font-bold text-teal-600 flex items-center gap-4 bg-purple-100/50 p-3 rounded-lg shadow-sm">
+                <GraduationCap className="w-7 h-7 text-coral-500" />
                 Educational Qualification
               </h2>
-              <ul className="space-y-2">
+              <ul className="space-y-5">
                 {doctor.education.map((edu, index) => (
                   <li
                     key={index}
-                    className="flex items-center space-x-3 text-gray-600"
+                    className="flex items-center space-x-4 text-gray-800 bg-white p-4 rounded-xl shadow-md hover:shadow-xl hover:bg-amber-50 transition-all duration-300"
                   >
-                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>{edu}</span>
+                    <span className="w-3 h-3 bg-coral-500 rounded-full"></span>
+                    <span className="text-lg">{edu}</span>
                   </li>
                 ))}
               </ul>
             </div>
-
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-blue-500" />
+  
+            {/* Right Column */}
+            <div className="space-y-10">
+              <h2 className="text-3xl font-bold text-teal-600 flex items-center gap-4 bg-purple-100/50 p-3 rounded-lg shadow-sm">
+                <Briefcase className="w-7 h-7 text-coral-500" />
                 Professional Information
               </h2>
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-700">
-                  Work Experience
-                </h3>
-                <ul className="space-y-2">
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-gray-800 bg-amber-100/50 p-2 rounded-lg">Work Experience</h3>
+                <ul className="space-y-5">
                   {doctor.experience.map((exp, index) => (
                     <li
                       key={index}
-                      className="flex items-center space-x-3 text-gray-600"
+                      className="flex items-center space-x-4 text-gray-800 bg-white p-4 rounded-xl shadow-md hover:shadow-xl hover:bg-amber-50 transition-all duration-300"
                     >
-                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                      <span>{exp}</span>
+                      <span className="w-3 h-3 bg-coral-500 rounded-full"></span>
+                      <span className="text-lg">{exp}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-
-              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2 pt-6">
-                <Certificate className="w-5 h-5 text-blue-500" />
+  
+              <h2 className="text-3xl font-bold text-teal-600 flex items-center gap-4 bg-purple-100/50 p-3 rounded-lg shadow-sm">
+                <Certificate className="w-7 h-7 text-coral-500" />
                 Certifications
               </h2>
-              <ul className="space-y-2">
+              <ul className="space-y-5">
                 {doctor.certifications.map((cert, index) => (
                   <li
                     key={index}
-                    className="flex items-center space-x-3 text-gray-600"
+                    className="flex items-center space-x-4 text-gray-800 bg-white p-4 rounded-xl shadow-md hover:shadow-xl hover:bg-amber-50 transition-all duration-300"
                   >
-                    <Award className="w-5 h-5 text-blue-500" />
-                    <span>{cert}</span>
+                    <Award className="w-6 h-6 text-coral-500" />
+                    <span className="text-lg">{cert}</span>
                   </li>
                 ))}
               </ul>
