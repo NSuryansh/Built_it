@@ -1366,6 +1366,7 @@ app.post("/resetAdminPassword", async (req, res) => {
 
 app.post("/save-subscription", async (req, res) => {
   try {
+    console.log("HELLLLLOOOOOOO")
     const { userid, subscription, userType } = req.body;
     console.log(userid);
     console.log(subscription);
@@ -1376,25 +1377,23 @@ app.post("/save-subscription", async (req, res) => {
     console.log(userType, " userType");
 
     const { endpoint, keys } = subscription;
-    // console.log(endpoint)
-    // Check if the subscription already exists for the user
     if (userType == "user") {
-      const existingSub = await prisma.subscription.findUnique({
-        where: { userId: Number(userid) },
-      });
-      // console.log(existingSub)
+      // const existingSub = await prisma.subscription.findMany({
+      //   where: { userId: Number(userid)
+      //    },
+      // });
+      console.log("ECISTIING subscription")
       try {
-        if (existingSub) {
-          // Update the existing subscription
-          await prisma.subscription.update({
-            where: { userId: Number(userid) },
-            data: {
-              endpoint: endpoint,
-              authKey: keys.auth,
-              p256dhKey: keys.p256dh,
-            },
-          });
-        } else {
+        // if (existingSub) {
+        //   await prisma.subscription.updateMany({
+        //     where: { userId: Number(userid)} ,
+        //     data: {
+        //       endpoint: endpoint,
+        //       authKey: keys.auth,
+        //       p256dhKey: keys.p256dh,
+        //     },
+        //   });
+        // } else {
           // Create a new subscription
           await prisma.subscription.create({
             data: {
@@ -1404,7 +1403,7 @@ app.post("/save-subscription", async (req, res) => {
               p256dhKey: keys.p256dh,
             },
           });
-        }
+        // }
       } catch (e) {
         console.log(e);
         res.json(e);
@@ -1451,11 +1450,11 @@ app.post("/send-notification", async (req, res) => {
     // Fetch the subscription from the database
     var subscription;
     if (userType == "user") {
-      subscription = await prisma.subscription.findFirst({
+      subscription = await prisma.subscription.findMany({
         where: { userId: userid },
       });
     } else if (userType == "doc") {
-      subscription = await prisma.subscription.findFirst({
+      subscription = await prisma.subscription.findMany({
         where: {
           doctorId: userid,
         },
@@ -1472,17 +1471,23 @@ app.post("/send-notification", async (req, res) => {
       title: "New Message",
       body: message,
     });
-
-    await webpush.sendNotification(
-      {
-        endpoint: subscription.endpoint,
-        keys: {
-          auth: subscription.authKey,
-          p256dh: subscription.p256dhKey,
-        },
-      },
-      payload
-    );
+    for (const sub of subscription) {
+      try {
+        await webpush.sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: {
+              auth: sub.authKey,
+              p256dh: sub.p256dhKey,
+            },
+          },
+          payload
+        );
+      } catch (err) {
+        console.error("Failed to send to one subscription:", err);
+        // Optionally remove from DB if err.statusCode === 410 (expired)
+      }
+    }
 
     res.json({ success: true });
   } catch (error) {
