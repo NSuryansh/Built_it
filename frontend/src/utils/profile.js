@@ -53,20 +53,9 @@ export const checkAuth = async (userType) => {
       localStorage.setItem("user_email", res2["doctor"]["email"]);
       localStorage.setItem("reg_id", res2["doctor"]["reg_id"]);
       localStorage.setItem("desc", res2["doctor"]["desc"] || "<Please Change>");
-      localStorage.setItem("address", "<Please Change>");
-      localStorage.setItem("city", "<Please Change>");
-      localStorage.setItem("experience", "<Please Change>");
-      localStorage.setItem("education", [
-        "<Please Change>",
-        "<Please Change>",
-        "<Please Change>",
-      ]);
-      localStorage.setItem("certification", [
-        "<Please Change>",
-        "<Please Change>",
-        "<Please Change>",
-      ]);
-      localStorage.setItem("slot", ["<Please add>"]);
+      localStorage.setItem("address", res2["doctor"]["address"] || "<Please Change>");
+      localStorage.setItem("city", res2["doctor"]["city"] || "<Please Change>");
+      localStorage.setItem("experience", res2["doctor"]["experience"] || "<Please Change>");
       localStorage.setItem("user_type", userType);
     } else {
       localStorage.setItem("userid", res2["admin"]["id"]);
