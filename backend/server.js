@@ -1,5 +1,5 @@
 import express from "express";
-import bcrypt from "bcryptjs";
+import bcrypt, { compareSync } from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
@@ -813,7 +813,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1000,7 +1000,7 @@ app.get("/pastdocappt", async (req, res) => {
         user: true,
       },
     });
-
+    console.log(appt);
     res.json(appt);
   } catch (e) {
     console.error(e);
@@ -1363,44 +1363,76 @@ app.post("/resetAdminPassword", async (req, res) => {
 
 app.post("/save-subscription", async (req, res) => {
   try {
-    const { userid, subscription } = req.body;
+    const { userid, subscription, userType } = req.body;
     console.log(userid);
     console.log(subscription);
     if (!userid || !subscription) {
       return res.status(400).json({ error: "Missing userId or subscription" });
     }
 
+    console.log(userType, " userType")
+
     const { endpoint, keys } = subscription;
     // console.log(endpoint)
     // Check if the subscription already exists for the user
-    const existingSub = await prisma.subscription.findUnique({
-      where: { userId: Number(userid) },
-    });
-    // console.log(existingSub)
-
-    if (existingSub) {
-      // Update the existing subscription
-      await prisma.subscription.update({
+    if (userType == "user") {
+      const existingSub = await prisma.subscription.findUnique({
         where: { userId: Number(userid) },
-        data: {
-          endpoint: endpoint,
-          authKey: keys.auth,
-          p256dhKey: keys.p256dh,
-        },
       });
-    } else {
-      // Create a new subscription
-      await prisma.subscription.create({
-        data: {
-          userId: Number(userid),
-          endpoint: endpoint,
-          authKey: keys.auth,
-          p256dhKey: keys.p256dh,
-        },
-      });
-    }
+      // console.log(existingSub)
+      try {
+        if (existingSub) {
+          // Update the existing subscription
+          await prisma.subscription.update({
+            where: { userId: Number(userid) },
+            data: {
+              endpoint: endpoint,
+              authKey: keys.auth,
+              p256dhKey: keys.p256dh,
+            },
+          });
+        } else {
+          // Create a new subscription
+          await prisma.subscription.create({
+            data: {
+              userId: Number(userid),
+              endpoint: endpoint,
+              authKey: keys.auth,
+              p256dhKey: keys.p256dh,
+            },
+          });
+        }
+      } catch (e) {
+        console.log(e)
+        res.json(e)
+      }
+    } else if (userType == "doc") {
+      try {
+        await prisma.subscription.upsert({
+          where: {
+            doctorId: Number(userid)
+          },
+          update: {
+            endpoint: endpoint,
+            authKey: keys.auth,
+            p256dhKey: keys.p256dh
+          },
+          create: {
+            data: {
+              doctorId: userid,
+              endpoint: endpoint,
+              authKey: keys.auth,
+              p256dhKey: keys.p256dh,
+            }
+          },
+        })
+        res.json({ success: true });
+      }catch (e) {
+        console.log(e)
+        res.json(e)
+      }
 
-    res.json({ success: true });
+    }
   } catch (error) {
     console.error("Error saving subscription:", error);
     res.status(500).json({ error: "Error saving subscription" });
@@ -1409,15 +1441,26 @@ app.post("/save-subscription", async (req, res) => {
 
 app.post("/send-notification", async (req, res) => {
   try {
-    const { userid, message } = req.body;
+    const { userid, message, userType } = req.body;
     if (!userid || !message) {
       return res.status(400).json({ error: "Missing userId or message" });
     }
 
     // Fetch the subscription from the database
-    const subscription = await prisma.subscription.findUnique({
-      where: { userId: userid },
-    });
+    var subscription;
+    if (userType == "user") {
+      subscription = await prisma.subscription.findFirst({
+        where: { userId: userid },
+      });
+    } else if (userType == "doc") {
+      subscription = await prisma.subscription.findFirst({
+        where: {
+          doctorId: userid
+        }
+      })
+    }
+
+    console.log(subscription)
 
     if (!subscription) {
       return res.status(404).json({ error: "User subscription not found" });
@@ -1666,8 +1709,8 @@ app.put("/modifyDoc", async (req, res) => {
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
-          where: { OR: orConditions },
-        })
+        where: { OR: orConditions },
+      })
       : null;
 
     if (existingDoctor && existingDoctor.id !== doctorId) {
