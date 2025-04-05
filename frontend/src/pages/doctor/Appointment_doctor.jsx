@@ -95,6 +95,7 @@ const DoctorAppointment = () => {
           `http://localhost:3000/pastdocappt?doctorId=${docId}`
         );
         const data = await response.json();
+        console.log(data, "DATAJA")
         if (response.ok) {
           const periods = {
             "Last 1 Month": { UG: 0, PG: 0, PhD: 0 },
@@ -106,12 +107,15 @@ const DoctorAppointment = () => {
           const now = new Date();
 
           data.forEach((app) => {
+            console.log(app, "HPPP")
+            // console.log(acadProg, "ACAD PROF")
             const apptDate = new Date(app.createdAt);
             const diffTime = now - apptDate;
             const diffDays = diffTime / (1000 * 3600 * 24);
             const branch = app.user.acadProg;
+            
 
-            if (diffDays <= 30) {
+            if (diffDays <= 30) { 
               periods["Last 1 Month"][branch] += 1;
               periods["Last 3 Months"][branch] += 1;
               periods["Last 6 Months"][branch] += 1;
