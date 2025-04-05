@@ -1450,11 +1450,11 @@ app.post("/send-notification", async (req, res) => {
     // Fetch the subscription from the database
     var subscription;
     if (userType == "user") {
-      subscription = await prisma.subscription.findFirst({
+      subscription = await prisma.subscription.findMany({
         where: { userId: userid },
       });
     } else if (userType == "doc") {
-      subscription = await prisma.subscription.findFirst({
+      subscription = await prisma.subscription.findMany({
         where: {
           doctorId: userid,
         },
@@ -1471,18 +1471,23 @@ app.post("/send-notification", async (req, res) => {
       title: "New Message",
       body: message,
     });
-
-    await webpush.sendNotification(
-      {
-        endpoint: subscription.endpoint,
-        keys: {
-          auth: subscription.authKey,
-          p256dh: subscription.p256dhKey,
-        },
-      },
-      payload
-      
-    );
+    for (const sub of subscription) {
+      try {
+        await webpush.sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: {
+              auth: sub.authKey,
+              p256dh: sub.p256dhKey,
+            },
+          },
+          payload
+        );
+      } catch (err) {
+        console.error("Failed to send to one subscription:", err);
+        // Optionally remove from DB if err.statusCode === 410 (expired)
+      }
+    }
 
     res.json({ success: true });
   } catch (error) {
