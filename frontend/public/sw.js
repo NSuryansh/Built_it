@@ -3,10 +3,13 @@ if (!self.define) { let e, s = {}; const i = (i, n) => (i = new URL(i + ".js", n
 self.addEventListener("push", (event) => {
   console.log(event)
   const data = event.data.json();
-  self.registration.showNotification(data.title, {
-    body: data.body,
-    icon: "../assets/final-image.png",
-  });
+  // self.registration.showNotification(data.title, {
+  //   body: data.body,
+  //   icon: "../assets/final-image.png",
+  // });
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
 
 const saveSubscription = async (subscription) => {
