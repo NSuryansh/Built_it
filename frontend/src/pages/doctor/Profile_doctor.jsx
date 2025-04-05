@@ -51,13 +51,6 @@ const DoctorProfile = () => {
   }, []);
 
   useEffect(() => {
-    const username = localStorage.getItem("username");
-    const email = localStorage.getItem("user_email");
-    const phone = localStorage.getItem("user_mobile");
-    const desc = localStorage.getItem("desc");
-    const experience = localStorage.getItem("experience");
-    const address = localStorage.getItem("address");
-    const city = localStorage.getItem("city");
     const date = format(new Date(), "yyyy-MM-dd");
     const fetchData = async (date) => {
       try {
@@ -71,7 +64,7 @@ const DoctorProfile = () => {
         const data = await response.json();
         const data2 = await response2.json();
         const slots = [];
-        console.log(data);
+        console.log(data.doctor.desc);
         data2.availableSlots.map((slot) => {
           slots.push(
             format(
@@ -80,29 +73,36 @@ const DoctorProfile = () => {
             )
           );
         });
-        profile.availability = slots;
+        const certifications = [];
+        data.certifications.map((certification) => {
+          certifications.push(certification.certification);
+        });
+        const education = [];
+        data.education.map((education) => {
+          certifications.push(education.education);
+        });
         setProfile({
-          name: username,
-          email: email,
-          phone: phone,
-          specialization: desc,
-          experience: experience,
-          address: address,
-          city: city,
-          certifications: data.certifications && profile.certifications,
-          education: data.education && profile.education,
+          name: data.doctor.name,
+          email: data.doctor.email,
+          phone: data.doctor.mobile,
+          specialization: data.doctor.desc,
+          experience: data.doctor.experience,
+          address: data.doctor.address,
+          city: data.doctor.city,
+          certifications: certifications && profile.certifications,
+          education: education && profile.education,
           availability: slots,
         });
         setEditedProfile({
-          name: username,
-          email: email,
-          phone: phone,
-          specialization: desc,
-          experience: experience,
-          address: address,
-          city: city,
-          certifications: data.certifications && profile.certifications,
-          education: data.education && profile.education,
+          name: data.doctor.name,
+          email: data.doctor.email,
+          phone: data.doctor.mobile,
+          specialization: data.doctor.desc,
+          experience: data.doctor.experience,
+          address: data.doctor.address,
+          city: data.doctor.city,
+          certifications: certifications && profile.certifications,
+          education: education && profile.education,
           availability: slots,
         });
       } catch (error) {
