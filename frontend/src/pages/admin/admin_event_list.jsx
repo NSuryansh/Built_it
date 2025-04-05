@@ -1,18 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Calendar, Trash2, Search, MapPin, Tag, ChevronRight, Clock } from "lucide-react";
+import { Calendar, Trash2, Search, MapPin, ChevronRight, Clock, Filter, CalendarDays } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
+import { subDays, isWithinInterval, startOfToday } from 'date-fns';
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("");
+  const [dateFilter, setDateFilter] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
@@ -61,7 +64,8 @@ const EventsList = () => {
           return {
             id: event.id,
             title: event.title,
-            date: date.toLocaleDateString(undefined, {
+            date: date,
+            formattedDate: date.toLocaleDateString(undefined, {
               year: "numeric",
               month: "long",
               day: "numeric",
@@ -81,12 +85,40 @@ const EventsList = () => {
     fetchEvents();
   }, []);
 
+  const getFilteredEventsByDate = (events, filter) => {
+    const today = startOfToday();
+    let startDate;
+
+    switch (filter) {
+      case "7days":
+        startDate = subDays(today, 7);
+        break;
+      case "15days":
+        startDate = subDays(today, 15);
+        break;
+      case "30days":
+        startDate = subDays(today, 30);
+        break;
+      default:
+        return events;
+    }
+
+    return events.filter(event => 
+      isWithinInterval(new Date(event.date), {
+        start: startDate,
+        end: today
+      })
+    );
+  };
+
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          event.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedType === "" || event.type === selectedType;
     return matchesSearch && matchesType;
   });
+
+  const dateFilteredEvents = getFilteredEventsByDate(filteredEvents, dateFilter);
 
   if (isAuthenticated === null) {
     return (
@@ -127,33 +159,97 @@ const EventsList = () => {
         </div>
 
         {/* Search and Filter Section */}
-        <div className="bg-white p-4 rounded-2xl shadow-md mb-8">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
+        <div className="bg-white rounded-2xl shadow-md mb-8 overflow-hidden">
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <Filter className="w-5 h-5 text-emerald-600" />
+                Filters
+              </h2>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="text-emerald-600 hover:text-emerald-700 font-medium text-sm"
+              >
+                {showFilters ? 'Hide Filters' : 'Show Filters'}
+              </button>
+            </div>
+            
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
                 placeholder="Search events..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
               />
             </div>
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"
-            >
-              <option value="">All Types</option>
-              <option value="Session/Conference">Session/Conference</option>
-              <option value="Meeting">Meeting</option>
-            </select>
+          </div>
+          
+          {showFilters && (
+            <div className="p-6 bg-gray-50 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-emerald-600" />
+                    Event Type
+                  </label>
+                  <select
+                    value={selectedType}
+                    onChange={(e) => setSelectedType(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"
+                  >
+                    <option value="">All Types</option>
+                    <option value="Session/Conference">Session/Conference</option>
+                    <option value="Meeting">Meeting</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                    <CalendarDays className="w-4 h-4 text-emerald-600" />
+                    Time Period
+                  </label>
+                  <select
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"
+                  >
+                    <option value="all">All Time</option>
+                    <option value="7days">Last 7 Days</option>
+                    <option value="15days">Last 15 Days</option>
+                    <option value="30days">Last 30 Days</option>
+                    
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Events Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <h3 className="text-gray-500 text-sm font-medium">Total Events</h3>
+            <p className="text-3xl font-bold text-emerald-600 mt-2">{dateFilteredEvents.length}</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <h3 className="text-gray-500 text-sm font-medium">Conferences</h3>
+            <p className="text-3xl font-bold text-emerald-600 mt-2">
+              {dateFilteredEvents.filter(e => e.type === 'Session/Conference').length}
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <h3 className="text-gray-500 text-sm font-medium">Meetings</h3>
+            <p className="text-3xl font-bold text-emerald-600 mt-2">
+              {dateFilteredEvents.filter(e => e.type === 'Meeting').length}
+            </p>
           </div>
         </div>
 
         {/* Events Grid */}
         <div className="grid gap-6 mb-10">
-          {filteredEvents.map((event) => (
+          {dateFilteredEvents.map((event) => (
             <div
               key={event.id}
               className="group bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
@@ -188,7 +284,7 @@ const EventsList = () => {
                   <Clock className="w-5 h-5 text-emerald-500" />
                   <div>
                     <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-medium text-gray-900">{event.date}</p>
+                    <p className="font-medium text-gray-900">{event.formattedDate}</p>
                   </div>
                 </div>
                 

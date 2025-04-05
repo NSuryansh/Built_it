@@ -45,6 +45,9 @@ const AddDoctor = () => {
           password: password,
           reg_id: regId,
           desc: desc,
+          address: '<Please Change>',
+          city: '<Please Change>',
+          experience: '<Please Change>',
           img: "",
         }),
       });
