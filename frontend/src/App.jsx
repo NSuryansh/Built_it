@@ -68,31 +68,31 @@ export default function App() {
       userType: userType
     };
 
+    console.log(userType, "usetruegfua")
     
     
-  
     const res = await fetch("http://localhost:3000/save-subscription", {
       method: "POST",
-      body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
     });
-  
+    console.log("RESSSSSSSSSSSSSS: ", res)
     const response = await res.json();
     console.log("Subscription saved:", response);
   
     // return subscription;
   };
 
-  useEffect(() => {
-    const userid = localStorage.getItem("userid");
-    const userType = localStorage.getItem("userType")
-    if (userid) {
-      subscribeToPush(userid, userType);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const userid = localStorage.getItem("userid");
+  //   const userType = localStorage.getItem("userType")
+  //   if (userid) {
+  //     subscribeToPush(userid, userType);
+  //   }
+  // }, []);
   
 
-  const requestNotificationPermission = async () => {
+  const requestNotificationPermission = async (userid, userType) => {
     if (
       Notification.permission !== "granted" &&
       Notification.permission !== "denied"
@@ -104,13 +104,16 @@ export default function App() {
         console.log("Notification permission denied.");
       }
     }
-    subscribeToPush();
+    subscribeToPush(userid, userType);
   };
 
   useEffect(() => {
+    setTimeout(() => {
     const userid = localStorage.getItem("userid");
-    const userType = localStorage.getItem("userType")
-    requestNotificationPermission();
+    const userType = localStorage.getItem("user_type")
+    console.log(userType, "USER type")
+    requestNotificationPermission(userid, userType);
+  }, 4000)
   }, [type]);
 
   return (

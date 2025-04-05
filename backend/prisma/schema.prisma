@@ -36,7 +36,7 @@ model User {
   referral         Referrals[]
   resetTokens      PasswordResetToken[]
   chatbot          Chatbot[]
-  subsc            Subscription[]
+  // subsc            Subscription[]
 
   @@map("user")
 }
@@ -81,7 +81,7 @@ model Doctor {
   emerApp  EmergencyApp[]
   education DocEducation[]
   certificaition DocCertification[]
-  subsc Subscription[]
+  // subsc Subscription[]
 
   // bookings Booked[]
   @@map("doctor")
@@ -238,10 +238,10 @@ model Subscription {
   authKey   String
   p256dhKey String
   createdAt DateTime  @default(now())
-  userId    Int?      @unique
-  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  doctorId  Int?      @unique
-  doctor    Doctor?   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  userId    Int?      
+  // user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doctorId  Int?     
+  // doctor    Doctor?   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 }
 
 model EmergencyApp {
