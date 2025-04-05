@@ -1727,10 +1727,11 @@ app.post("/scores-bot", async (req, res) => {
 
 app.put("/modifyDoc", async (req, res) => {
   try {
-    const { id, address, city, experience } = req.query;
+    const { id, address, city, experience, educ, certifi } = req.query;
     const doc_id = Number(id);
     console.log(req.query);
-
+    const certifications = certifi.split(',')
+    const education = educ.split(',')
     const doctorId = parseInt(doc_id, 10);
     if (isNaN(doctorId) || doctorId <= 0) {
       return res.status(400).json({ error: "Invalid doctor ID" });
@@ -1770,6 +1771,32 @@ app.put("/modifyDoc", async (req, res) => {
         data: updatedData,
       });
 
+      const certificate = await prisma.docCertification.deleteMany({
+        where:{
+          doctor_id: doc_id
+        }
+      })
+      for(const certif of certifications){
+        await prisma.docCertification.create({
+          data: {
+            doctor_id: doc_id,
+            certification: certif
+          }
+        })
+      }
+      const edu = await prisma.docEducation.deleteMany({
+        where:{
+          doctor_id: doc_id
+        }
+      })
+      for(const educ of education){
+        await prisma.docEducation.create({
+          data: {
+            doctor_id: doc_id,
+            education: educ
+          }
+        })
+      }
       res.json({ message: "Doctor updated successfully", updatedDoctor });
     } catch (error) {
       if (error.code === "P2025") {
