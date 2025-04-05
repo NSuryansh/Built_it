@@ -151,13 +151,23 @@ const DoctorProfile = () => {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
-  const handleSave = () => {
-    localStorage.setItem("experience", editedProfile.experience);
-    localStorage.setItem("address", editedProfile.address);
-    localStorage.setItem("city", editedProfile.city);
-    localStorage.setItem("certification", editedProfile.certifications);
-    localStorage.setItem("education", editedProfile.education);
-    localStorage.setItem("slot", editedProfile.availability);
+  const handleSave = async () => {
+    try {
+      const doctorId = localStorage.getItem("userid");
+      console.log(doctorId);
+      const response = await fetch(
+        `http://localhost:3000/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}`,
+        {
+          method: "PUT", // Use PUT to modify user details
+        }
+      );
+      const data = response.json();
+      console.log(data);
+      CustomToast("Profile updated successfully");
+    } catch (e) {
+      console.log(e);
+      CustomToast("Error updating profile");
+    }
     setProfile(editedProfile);
     setIsEditing(false);
   };
