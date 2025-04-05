@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Calendar, Trash2 } from "lucide-react";
+import { Calendar, Trash2, Search, MapPin, Tag, ChevronRight, Clock } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
@@ -11,6 +11,9 @@ import CustomToast from "../../components/CustomToast";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
 
@@ -36,6 +39,7 @@ const EventsList = () => {
       CustomToast("Failed to delete the event");
     }
   };
+  
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
@@ -77,11 +81,18 @@ const EventsList = () => {
     fetchEvents();
   }, []);
 
+  const filteredEvents = events.filter(event => {
+    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         event.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = selectedType === "" || event.type === selectedType;
+    return matchesSearch && matchesType;
+  });
+
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#048a81" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+        <PacmanLoader color="#047857" size={30} />
+        <p className="mt-4 text-emerald-800 font-medium">Loading your dashboard...</p>
       </div>
     );
   }
@@ -91,68 +102,122 @@ const EventsList = () => {
   }
 
   return (
-    <div className="flex bg-[var(--custom-primary-green-50)] flex-col min-h-screen">
+    <div className="flex bg-gradient-to-br from-emerald-50 to-teal-50 flex-col min-h-screen">
       <AdminNavbar />
       <ToastContainer />
-      <div className="space-y-6 md:min-w-5xl max-w-7xl p-4 md:p-6 mx-auto mb-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)]">
-            Events List
-          </h1>
+      
+      <div className="max-w-7xl w-full p-4 md:p-8 mx-auto">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-emerald-900 mb-2">
+              Events Dashboard
+            </h1>
+            <p className="text-emerald-600">Manage and track your upcoming events</p>
+          </div>
+          
           <Link
             to="/admin/add_event"
-            className="flex mt-2 md:mt-0 items-center gap-2 bg-[var(--custom-primary-green-600)] text-[var(--custom-white)] px-4 py-2 rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors"
+            className="group flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-full hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-emerald-200 mt-4 md:mt-0"
           >
-            <Calendar size={20} />
-            Add New Event
+            <Calendar className="w-5 h-5" />
+            <span>Create Event</span>
+            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
+        {/* Search and Filter Section */}
+        <div className="bg-white p-4 rounded-2xl shadow-md mb-8">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search events..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+              />
+            </div>
+            <select
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="px-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"
+            >
+              <option value="">All Types</option>
+              <option value="Session/Conference">Session/Conference</option>
+              <option value="Meeting">Meeting</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Events Grid */}
         <div className="grid gap-6 mb-10">
-          {events.map((event) => (
+          {filteredEvents.map((event) => (
             <div
               key={event.id}
-              className="bg-[var(--custom-white)] p-6 rounded-xl shadow-lg"
+              className="group bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
             >
               <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-xl font-semibold text-[var(--custom-primary-green-900)]">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      event.type === 'Session/Conference' 
+                        ? 'bg-emerald-100 text-emerald-700' 
+                        : 'bg-blue-100 text-blue-700'
+                    }`}>
+                      {event.type}
+                    </span>
+                  </div>
+                  
+                  <h2 className="text-xl font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">
                     {event.title}
                   </h2>
-                  <p className="text-[var(--custom-primary-green-600)] mt-1">
-                    {new Date(event.date).toLocaleDateString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
                 </div>
+                
                 <button
                   onClick={() => handleDelete(event.id)}
-                  className="text-red-600 hover:text-red-800 transition-colors"
+                  className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-300"
                 >
                   <Trash2 size={20} />
                 </button>
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-[var(--custom-primary-green-600)]">
-                    Location
-                  </p>
-                  <p className="font-medium">{event.location}</p>
+
+              <div className="mt-6 grid grid-cols-2 gap-6">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-emerald-500" />
+                  <div>
+                    <p className="text-sm text-gray-500">Date</p>
+                    <p className="font-medium text-gray-900">{event.date}</p>
+                  </div>
                 </div>
-                {/* <div>
-                  <p className="text-sm text-[var(--custom-primary-green-600)]">Expected Attendees</p>
-                  <p className="font-medium">{event.attendees}</p>
-                </div> */}
+                
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-emerald-500" />
+                  <div>
+                    <p className="text-sm text-gray-500">Location</p>
+                    <p className="font-medium text-gray-900">{event.location}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+                <Link
+                  to={`/admin/events/${event.id}`}
+                  className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1 group"
+                >
+                  View Details
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </div>
           ))}
         </div>
       </div>
-      <div className="mt-auto"></div>
-      <Footer color={"green"} />
+
+      <div className="mt-auto">
+        <Footer color="green" />
+      </div>
     </div>
   );
 };
