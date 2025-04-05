@@ -1363,6 +1363,7 @@ app.post("/resetAdminPassword", async (req, res) => {
 
 app.post("/save-subscription", async (req, res) => {
   try {
+    console.log("HELLLLLOOOOOOO")
     const { userid, subscription, userType } = req.body;
     console.log(userid);
     console.log(subscription);
@@ -1373,25 +1374,23 @@ app.post("/save-subscription", async (req, res) => {
     console.log(userType, " userType")
 
     const { endpoint, keys } = subscription;
-    // console.log(endpoint)
-    // Check if the subscription already exists for the user
     if (userType == "user") {
-      const existingSub = await prisma.subscription.findUnique({
-        where: { userId: Number(userid) },
-      });
-      // console.log(existingSub)
+      // const existingSub = await prisma.subscription.findMany({
+      //   where: { userId: Number(userid)
+      //    },
+      // });
+      console.log("ECISTIING subscription")
       try {
-        if (existingSub) {
-          // Update the existing subscription
-          await prisma.subscription.update({
-            where: { userId: Number(userid) },
-            data: {
-              endpoint: endpoint,
-              authKey: keys.auth,
-              p256dhKey: keys.p256dh,
-            },
-          });
-        } else {
+        // if (existingSub) {
+        //   await prisma.subscription.updateMany({
+        //     where: { userId: Number(userid)} ,
+        //     data: {
+        //       endpoint: endpoint,
+        //       authKey: keys.auth,
+        //       p256dhKey: keys.p256dh,
+        //     },
+        //   });
+        // } else {
           // Create a new subscription
           await prisma.subscription.create({
             data: {
@@ -1401,7 +1400,7 @@ app.post("/save-subscription", async (req, res) => {
               p256dhKey: keys.p256dh,
             },
           });
-        }
+        // }
       } catch (e) {
         console.log(e)
         res.json(e)
@@ -1480,6 +1479,7 @@ app.post("/send-notification", async (req, res) => {
         },
       },
       payload
+      
     );
 
     res.json({ success: true });
