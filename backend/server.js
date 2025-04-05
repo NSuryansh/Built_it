@@ -813,7 +813,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => { });
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1370,7 +1370,7 @@ app.post("/save-subscription", async (req, res) => {
       return res.status(400).json({ error: "Missing userId or subscription" });
     }
 
-    console.log(userType, " userType")
+    console.log(userType, " userType");
 
     const { endpoint, keys } = subscription;
     // console.log(endpoint)
@@ -1403,19 +1403,19 @@ app.post("/save-subscription", async (req, res) => {
           });
         }
       } catch (e) {
-        console.log(e)
-        res.json(e)
+        console.log(e);
+        res.json(e);
       }
     } else if (userType == "doc") {
       try {
         await prisma.subscription.upsert({
           where: {
-            doctorId: Number(userid)
+            doctorId: Number(userid),
           },
           update: {
             endpoint: endpoint,
             authKey: keys.auth,
-            p256dhKey: keys.p256dh
+            p256dhKey: keys.p256dh,
           },
           create: {
             data: {
@@ -1423,15 +1423,14 @@ app.post("/save-subscription", async (req, res) => {
               endpoint: endpoint,
               authKey: keys.auth,
               p256dhKey: keys.p256dh,
-            }
+            },
           },
-        })
+        });
         res.json({ success: true });
-      }catch (e) {
-        console.log(e)
-        res.json(e)
+      } catch (e) {
+        console.log(e);
+        res.json(e);
       }
-
     }
   } catch (error) {
     console.error("Error saving subscription:", error);
@@ -1455,12 +1454,12 @@ app.post("/send-notification", async (req, res) => {
     } else if (userType == "doc") {
       subscription = await prisma.subscription.findFirst({
         where: {
-          doctorId: userid
-        }
-      })
+          doctorId: userid,
+        },
+      });
     }
 
-    console.log(subscription)
+    console.log(subscription);
 
     if (!subscription) {
       return res.status(404).json({ error: "User subscription not found" });
@@ -1591,6 +1590,33 @@ app.get("/available-slots", async (req, res) => {
   }
 });
 
+app.get("/getDoc", async (req, res) => {
+  const { docId } = req.query;
+  const doctor_id = Number(docId);
+
+  try {
+    const certifications = await prisma.docCertification.findMany({
+      where: {
+        doctor_id: doctor_id,
+      },
+    });
+    console.log(certifications);
+    const education = await prisma.docEducation.findMany({
+      where: {
+        doctor_id: doctor_id,
+      },
+    });
+    console.log(education);
+    res.json({
+      certifications: certifications,
+      education: education,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Couldn't fetch data" });
+  }
+});
+
 app.get("/check-user", async (req, res) => {
   const { username } = req.query;
   const user = await prisma.user.findUnique({
@@ -1709,8 +1735,8 @@ app.put("/modifyDoc", async (req, res) => {
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
-        where: { OR: orConditions },
-      })
+          where: { OR: orConditions },
+        })
       : null;
 
     if (existingDoctor && existingDoctor.id !== doctorId) {

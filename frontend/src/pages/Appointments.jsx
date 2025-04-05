@@ -73,8 +73,65 @@ const UserAppointments = () => {
     <div className="min-h-screen bg-[var(--custom-orange-100)]">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Previous Appointments Section */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
+        <div className="bg-white rounded-xl shadow-lg mb-8 p-6 border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <CalendarClock className="w-5 h-5 text-gray-600" />
+              Upcoming Appointments
+            </h2>
+            <span className="px-3 py-1 bg-[var(--custom-orange-50)] text-[var(--custom-orange-600)] rounded-full text-sm font-medium">
+              {upcomingAppointments.length} Scheduled
+            </span>
+          </div>
+          <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
+            {upcomingAppointments.length > 0 ? (
+              <div className="space-y-4">
+                {upcomingAppointments.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="bg-[var(--custom-orange-50)] rounded-lg p-4 transition-all duration-200 hover:bg-[var(--custom-orange-100)]"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-[var(--custom-white)] p-2 rounded-full shadow-sm">
+                          <User className="h-6 w-6 text-[var(--custom-orange-600)]" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-800">
+                            {appointment.doctor.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {appointment.reason}
+                          </p>
+                          <p className="text-sm text-[var(--custom-orange-600)] mt-2 flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {format(
+                              appointment.dateTime,
+                              "dd-MMM-yyyy hh:mm a"
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button className="text-[var(--custom-orange-500)] hover:text-[var(--custom-orange-700)] transition-colors">
+                          <FileText className="w-5 h-5" />
+                        </button>
+                        <button className="text-[var(--custom-orange-500)] hover:text-[var(--custom-orange-700)] transition-colors">
+                          <Calendar className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <NoAppointmentsMessage message="No upcoming appointments scheduled" />
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
               <History className="w-5 h-5 text-gray-600" />
@@ -119,66 +176,6 @@ const UserAppointments = () => {
             ) : (
               <div className="text-center py-8">
                 <NoAppointmentsMessage message="No previous appointments found" />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Upcoming Appointments Section */}
-        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <CalendarClock className="w-5 h-5 text-gray-600" />
-              Upcoming Appointments
-            </h2>
-            <span className="px-3 py-1 bg-orange-50 text-orange-600 rounded-full text-sm font-medium">
-              {upcomingAppointments.length} Scheduled
-            </span>
-          </div>
-          <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
-            {upcomingAppointments.length > 0 ? (
-              <div className="space-y-4">
-                {upcomingAppointments.map((appointment) => (
-                  <div
-                    key={appointment.id}
-                    className="bg-orange-50 rounded-lg p-4 transition-all duration-200 hover:bg-orange-100"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="bg-white p-2 rounded-full shadow-sm">
-                          <User className="h-6 w-6 text-orange-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-gray-800">
-                            {appointment.doctor.name}
-                          </h3>
-                          <p className="text-sm text-gray-600 mt-1">
-                            {appointment.reason}
-                          </p>
-                          <p className="text-sm text-orange-600 mt-2 flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {format(
-                              appointment.dateTime,
-                              "dd-MMM-yyyy hh:mm a"
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button className="text-orange-500 hover:text-orange-700 transition-colors">
-                          <FileText className="w-5 h-5" />
-                        </button>
-                        <button className="text-orange-500 hover:text-orange-700 transition-colors">
-                          <Calendar className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <NoAppointmentsMessage message="No upcoming appointments scheduled" />
               </div>
             )}
           </div>
