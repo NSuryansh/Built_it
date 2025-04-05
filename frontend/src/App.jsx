@@ -26,11 +26,13 @@ import ModifyProfile from "./pages/Modify_profile";
 import ResetPassword from "./pages/ResetPassword";
 import DoctorResetPassword from "./pages/doctor/ResetPassword_doctor";
 import AdminResetPassword from "./pages/admin/admin_reset_password";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AdminAppointments from "./pages/admin/admin_appointments";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
+
+  const [type, setType] = useState(null)
 
   const urlBase64ToUint8Array = (base64String) => {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -42,9 +44,12 @@ export default function App() {
     return new Uint8Array([...rawData].map((char) => char.charCodeAt(0)));
   };
 
+  useEffect(() => {
+    setType(localStorage.getItem("userType"))
+  },[])
   const convertedVapidKey = urlBase64ToUint8Array(SERVER_KEY);
 
-  const subscribeToPush = async (userid) => {
+  const subscribeToPush = async (userid, userType) => {
     // await requestNotificationPermission();
   
     const registration = await navigator.serviceWorker.ready;
@@ -60,7 +65,11 @@ export default function App() {
     const body = {
       userid: userid,
       subscription: subscription,
+      userType: userType
     };
+
+    
+    
   
     const res = await fetch("http://localhost:3000/save-subscription", {
       method: "POST",
@@ -76,8 +85,9 @@ export default function App() {
 
   useEffect(() => {
     const userid = localStorage.getItem("userid");
+    const userType = localStorage.getItem("userType")
     if (userid) {
-      subscribeToPush(userid);
+      subscribeToPush(userid, userType);
     }
   }, []);
   
@@ -98,8 +108,10 @@ export default function App() {
   };
 
   useEffect(() => {
+    const userid = localStorage.getItem("userid");
+    const userType = localStorage.getItem("userType")
     requestNotificationPermission();
-  }, []);
+  }, [type]);
 
   return (
     <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>
