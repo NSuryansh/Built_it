@@ -64,23 +64,28 @@ const DoctorProfile = () => {
         const data = await response.json();
         const data2 = await response2.json();
         const slots = [];
-        console.log(data.doctor.desc);
         data2.availableSlots.map((slot) => {
           slots.push(
             format(
               TimeChange(new Date(slot.starting_time).getTime()),
-              "hh:mm a"
+              "H:mm"
             )
           );
         });
-        const certifications = [];
+        let certifications = [];
         data.certifications.map((certification) => {
           certifications.push(certification.certification);
         });
-        const education = [];
+        if (certifications.length === 0) {
+          certifications = ["<Add>"];
+        }
+        let education = [];
         data.education.map((education) => {
-          certifications.push(education.education);
+          education.push(education.education);
         });
+        if (education.length === 0) {
+          education = ["<Add>"];
+        }
         setProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -89,8 +94,8 @@ const DoctorProfile = () => {
           experience: data.doctor.experience,
           address: data.doctor.address,
           city: data.doctor.city,
-          certifications: certifications && profile.certifications,
-          education: education && profile.education,
+          certifications: certifications,
+          education: education,
           availability: slots,
         });
         setEditedProfile({
@@ -101,8 +106,8 @@ const DoctorProfile = () => {
           experience: data.doctor.experience,
           address: data.doctor.address,
           city: data.doctor.city,
-          certifications: certifications && profile.certifications,
-          education: education && profile.education,
+          certifications: certifications,
+          education: education,
           availability: slots,
         });
       } catch (error) {
@@ -158,7 +163,7 @@ const DoctorProfile = () => {
       const response = await fetch(
         `http://localhost:3000/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}`,
         {
-          method: "PUT", // Use PUT to modify user details
+          method: "PUT",
         }
       );
       const data = response.json();
@@ -170,6 +175,7 @@ const DoctorProfile = () => {
     }
     setProfile(editedProfile);
     setIsEditing(false);
+    console.log(editedProfile);
   };
 
   const handleCancel = () => {
@@ -409,6 +415,7 @@ const DoctorProfile = () => {
                                 ...editedProfile.availability,
                               ];
                               newAvailability[index] = e.target.value;
+                              console.log(typeof(newAvailability[index]));
                               setEditedProfile({
                                 ...editedProfile,
                                 availability: newAvailability,
