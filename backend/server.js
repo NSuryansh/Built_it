@@ -553,7 +553,7 @@ app.post("/addLeave", async (req, res) => {
 });
 
 app.post("/addDoc", async (req, res) => {
-  const { name, mobile, email, password, reg_id, desc, img } = req.body;
+  const { name, mobile, email, password, reg_id, desc, address, city, experenice, img } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   // const imgUrl = uploadImage(img)
   try {
@@ -564,6 +564,9 @@ app.post("/addDoc", async (req, res) => {
         mobile: mobile,
         password: hashedPassword,
         reg_id: reg_id,
+        address: address,
+        city: city,
+        experience: experenice,
         desc: desc,
         img: img,
       },
@@ -1595,19 +1598,23 @@ app.get("/getDoc", async (req, res) => {
   const doctor_id = Number(docId);
 
   try {
+    const doctor = await prisma.doctor.findUnique({
+      where: {
+        id: doctor_id,
+      },
+    });
     const certifications = await prisma.docCertification.findMany({
       where: {
         doctor_id: doctor_id,
       },
     });
-    console.log(certifications);
     const education = await prisma.docEducation.findMany({
       where: {
         doctor_id: doctor_id,
       },
     });
-    console.log(education);
     res.json({
+      doctor: doctor,
       certifications: certifications,
       education: education,
     });
