@@ -26,6 +26,7 @@ const Peer = () => {
   const [showChatList, setShowChatList] = useState(true);
   const [messagesApi, setMessagesApi] = useState(null);
   const [reloader, setReloader] = useState(true);
+  const [docList, setDocList] = useState([]);
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
@@ -69,9 +70,21 @@ const Peer = () => {
     }
   }, [newChatId, newChatUsername, chats]);
 
-  const filteredChats = chats.filter(
-    (chat) => String(chat.id) !== String(userId)
-  );
+  useEffect(() => {
+    const fetchDocotors = async () => {
+      try {
+        console.log("HAAALLLLO");
+        const response = await fetch("http://localhost:3000/getdoctors");
+        if (!response.ok) throw new Error("Failed to fetch users");
+        const data = await response.json();
+        console.log(data, "Fetched doctors");
+        setDocList(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchDocotors();
+  }, []);
 
   async function fetchContacts(userId) {
     try {
@@ -113,12 +126,13 @@ const Peer = () => {
     }
   }, [isAuthenticated, userId]);
 
+  // Update the recipient id from the selected doctor in docList
   useEffect(() => {
-    if (filteredChats.length > 0) {
-      console.log(filteredChats);
-      setRecid(filteredChats[selectedChat].id);
+    if (docList.length > 0 && selectedChat !== null) {
+      console.log("Selected doctor:", docList[selectedChat]);
+      setRecid(docList[selectedChat].id);
     }
-  }, [selectedChat]);
+  }, [selectedChat, docList]);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -217,7 +231,7 @@ const Peer = () => {
 
   async function fetchMessages(userId, recipientId) {
     try {
-      console.log(recipientId, "AAAAALLLLLEE");
+      console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
         `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
@@ -258,12 +272,13 @@ const Peer = () => {
     console.log("Current showMessages", showMessages);
   }, [showMessages]);
 
+  // Fetch messages using the selected doctor's id from docList
   useEffect(() => {
-    if (userId && filteredChats.length > 0) {
-      console.log("hello");
-      fetchMessages(userId, filteredChats[selectedChat]?.id);
+    if (userId && docList.length > 0 && selectedChat !== null) {
+      console.log("Fetching messages for selected doctor");
+      fetchMessages(userId, docList[selectedChat]?.id);
     }
-  }, [selectedChat, userId, reloader]);
+  }, [selectedChat, userId, reloader, docList]);
 
   const handleClosePopup = () => {
     navigate("/login");
@@ -302,10 +317,10 @@ const Peer = () => {
       <ToastContainer />
       {/* Desktop Layout */}
       <div className="md:flex h-[calc(100vh-64px)] hidden">
-        {filteredChats.length > 0 ? (
+        {docList.length > 0 ? (
           <div className="md:w-4/12 lg:w-3/12">
             <ChatList
-              names={filteredChats.map((chat) => chat.name)}
+              names={docList.map((doctor) => doctor.name)}
               selectedChat={selectedChat}
               setSelectedChat={setSelectedChat}
               setShowChatList={setShowChatList}
@@ -319,7 +334,7 @@ const Peer = () => {
         <div className="flex flex-col h-full flex-1">
           <div className="p-4 flex justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
             <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-              {filteredChats[selectedChat]?.name || "Select a chat"}
+              {docList[selectedChat]?.name || "Select a chat"}
             </h2>
           </div>
           <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
@@ -344,10 +359,10 @@ const Peer = () => {
       {/* Mobile Layout */}
       <div className="md:hidden h-[calc(100vh-64px)]">
         {showChatList ? (
-          filteredChats.length > 0 ? (
+          docList.length > 0 ? (
             <div className="h-full">
               <ChatList
-                names={filteredChats.map((chat) => chat.name)}
+                names={docList.map((doctor) => doctor.name)}
                 selectedChat={selectedChat}
                 setSelectedChat={setSelectedChat}
                 setShowChatList={setShowChatList}
@@ -362,7 +377,7 @@ const Peer = () => {
           <div className="flex flex-col h-full">
             <div className="p-4 flex w-full justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
               <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-                {filteredChats[selectedChat]?.name || "Select a chat"}
+                {docList[selectedChat]?.name || "Select a chat"}
               </h2>
               <button onClick={() => setShowChatList(true)}>
                 <AiOutlineCloseCircle />

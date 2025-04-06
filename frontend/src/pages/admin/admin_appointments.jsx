@@ -217,7 +217,7 @@ const AdminAppointments = () => {
                 className="px-6 py-5 hover:bg-blue-50/50 transition-all duration-200"
               >
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="w-1/3">
                     <p className="font-medium text-gray-900 text-lg">
                       {appointment.patientName}
                     </p>
@@ -225,7 +225,7 @@ const AdminAppointments = () => {
                       {doctors.find((d) => d.id === appointment.doctorId)?.name}
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="w-1/3 text-center">
                     <p className="text-sm font-medium text-gray-900">
                       {appointment.date}
                     </p>
@@ -233,6 +233,7 @@ const AdminAppointments = () => {
                       {appointment.time}
                     </p>
                   </div>
+                  <div className="w-1/3 flex justify-end">
                   <span
                     className={`px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border transition-colors duration-200 ${
                       appointment.status === "Confirmed"
@@ -244,6 +245,7 @@ const AdminAppointments = () => {
                   >
                     {appointment.status}
                   </span>
+                  </div>
                 </div>
               </div>
             ))}
