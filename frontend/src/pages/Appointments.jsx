@@ -8,6 +8,7 @@ import {
   History,
   Clock,
   FileText,
+  CheckCircle
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
