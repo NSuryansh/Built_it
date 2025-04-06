@@ -114,7 +114,7 @@ const Events = () => {
         </div>
         <div className="bg-white rounded-xl shadow-lg p-6 overflow-x-auto border border-[var(--custom-orange-100)]">
           <table className="min-w-full">
-            <thead className="bg-[var(--custom-orange-50)] sticky top-0 z-10">
+            <thead className="bg-[var(--custom-orange-50)] sticky top-0">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                   Event
@@ -172,7 +172,7 @@ const Events = () => {
         </div>
         <div className="bg-white rounded-xl shadow-lg p-6 overflow-x-auto border border-[var(--custom-orange-100)]">
           <table className="min-w-full">
-            <thead className="bg-[var(--custom-orange-50)] sticky top-0 z-10">
+            <thead className="bg-[var(--custom-orange-50)] sticky top-0">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                   Event

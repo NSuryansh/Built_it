@@ -18,7 +18,7 @@ import Footer from "../../components/Footer";
 import { format } from "date-fns";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
 import { TimeChange } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
@@ -185,7 +185,6 @@ const DoctorProfile = () => {
       <DoctorNavbar />
       <ToastContainer />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        {/* Header */}
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-extrabold text-gray-900">
@@ -229,28 +228,42 @@ const DoctorProfile = () => {
             isEditing ? "border-2 border-blue-100" : ""
           }`}
         >
-          <div className="flex items-center space-x-6 mb-8">
-            <div className="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center shadow-inner">
-              <User className="h-12 w-12 text-blue-600" />
+          <div className="w-full flex justify-between flex-col md:flex-row">
+            <div className="flex items-center space-x-6 mb-8">
+              <div className="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center shadow-inner">
+                <User className="h-12 w-12 text-blue-600" />
+              </div>
+              <div>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    disabled
+                    value={editedProfile.name}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        name: e.target.value,
+                      })
+                    }
+                    className="text-2xl font-bold text-gray-900 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 cursor-not-allowed"
+                  />
+                ) : (
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {profile.name}
+                  </h2>
+                )}
+                <p className="text-lg text-gray-500">
+                  {profile.specialization}
+                </p>
+              </div>
             </div>
-            <div>
-              {isEditing ? (
-                <input
-                  type="text"
-                  disabled
-                  value={editedProfile.name}
-                  onChange={(e) =>
-                    setEditedProfile({ ...editedProfile, name: e.target.value })
-                  }
-                  className="text-2xl font-bold text-gray-900 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 cursor-not-allowed"
-                />
-              ) : (
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {profile.name}
-                </h2>
-              )}
-              <p className="text-lg text-gray-500">{profile.specialization}</p>
-            </div>
+            <Link
+              to="/doctor/leave"
+              className="flex self-end md:self-center items-center h-fit w-fit mb-4 md:mb-0 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow transition"
+            >
+              <Edit2 className="h-4 w-4 mr-2" />
+              Take Leave
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -559,6 +572,7 @@ const DoctorProfile = () => {
           </div>
         </div>
       </div>
+      <Footer color="blue" />
     </div>
   );
 };

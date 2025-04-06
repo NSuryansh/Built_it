@@ -7,10 +7,14 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
+import DeletePopup from "../../components/admin/DeletePopup";
 
 const DoctorsList = () => {
   const [doctors, setDoc] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+
+  const [docId, setDocId] = useState(null)
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -44,17 +48,33 @@ const DoctorsList = () => {
       setDoc((prevDoctors) =>
         prevDoctors.filter((doctor) => doctor.id !== doctorId)
       );
+      setDeletePopupOpen(false)
     } catch (error) {
       console.error("Error deleting doctor:", error);
       CustomToast("Error while fetching data");
     }
   };
 
+  const handleDeletePopup = (doctorId, isOpen) => {
+    if(isOpen==true){
+    setDeletePopupOpen(true);
+    setDocId(doctorId);
+    }else{
+      setDeletePopupOpen(false)
+    }
+  }
+
+  const handleClosePopup = () => {
+    navigate("/admin/login");
+  };
+
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#048a81" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+        <PacmanLoader color="#047857" size={30} />
+        <p className="mt-4 text-emerald-800 font-medium">
+          Loading your dashboard...
+        </p>
       </div>
     );
   }
@@ -67,13 +87,17 @@ const DoctorsList = () => {
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100">
       <AdminNavbar />
       <ToastContainer />
-  
+
       <div className="w-full max-w-7xl mx-auto p-6 space-y-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
           <div>
-            <h1 className="text-4xl font-extrabold text-green-900">Doctors Directory</h1>
-            <p className="text-md text-green-700">Effortlessly manage registered doctors</p>
+            <h1 className="text-4xl font-extrabold text-green-900">
+              Doctors Directory
+            </h1>
+            <p className="text-md text-green-700">
+              Effortlessly manage registered doctors
+            </p>
           </div>
           <Link
             to="/admin/add_doctor"
@@ -83,7 +107,7 @@ const DoctorsList = () => {
             Add Doctor
           </Link>
         </div>
-  
+
         {/* Table View for Desktop */}
         <div className="hidden sm:block bg-white rounded-3xl shadow-xl overflow-hidden border border-green-100 animate-fade-in-up">
           <table className="w-full text-sm text-left">
@@ -96,18 +120,21 @@ const DoctorsList = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-green-50">
-              {doctors.map((doctor) => (
+            {doctors.map((doctor) => (
                 <tr
                   key={doctor.id}
                   className="hover:bg-green-50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-4 font-medium text-gray-800">{doctor.name}</td>
+                  <td className="px-6 py-4 font-medium text-gray-800">
+                    {doctor.name}
+                  </td>
                   <td className="px-6 py-4 text-gray-600">{doctor.desc}</td>
                   <td className="px-6 py-4 text-gray-600">{doctor.email}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-5">
                       <button
-                        onClick={() => handleDelete(doctor.id)}
+                        // onClick={() => handleDelete(doctor.id)}
+                        onClick={()=> handleDeletePopup(doctor.id, true)}
                         className="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50"
                         title="Delete Doctor"
                       >
@@ -123,11 +150,12 @@ const DoctorsList = () => {
                     </div>
                   </td>
                 </tr>
+                
               ))}
             </tbody>
           </table>
         </div>
-  
+
         {/* Mobile Card View */}
         <div className="sm:hidden space-y-6">
           {doctors.map((doctor) => (
@@ -137,12 +165,14 @@ const DoctorsList = () => {
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-xl font-bold text-green-900">{doctor.name}</h3>
+                  <h3 className="text-xl font-bold text-green-900">
+                    {doctor.name}
+                  </h3>
                   <p className="text-sm text-green-700">{doctor.desc}</p>
                 </div>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => handleDelete(doctor.id)}
+                    onClick={() => handleDelete(doctor.id, true)}
                     className="text-red-600 hover:text-red-700 transition-colors"
                     title="Delete"
                   >
@@ -164,12 +194,12 @@ const DoctorsList = () => {
           ))}
         </div>
       </div>
-  
+      {deletePopupOpen && <DeletePopup docId={docId} handleDeletePopup={handleDeletePopup} handleDelete={handleDelete}/>}
+
+      <div className="mt-auto"></div>
       <Footer color="green" />
     </div>
   );
-  
-  
 };
 
 export default DoctorsList;

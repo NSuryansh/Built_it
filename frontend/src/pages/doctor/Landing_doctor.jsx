@@ -156,9 +156,9 @@ const DoctorLanding = () => {
                   <h2 className="text-lg font-semibold text-gray-900">
                     Upcoming Appointments
                   </h2>
-                  <button className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+                  <Link to='/doctor/appointments' className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
                     View All <ChevronRight className="h-4 w-4 ml-1" />
-                  </button>
+                  </Link>
                 </div>
   
                 <div className="space-y-3">
@@ -199,9 +199,9 @@ const DoctorLanding = () => {
                   <h2 className="text-lg font-semibold text-gray-900">
                     Upcoming Events
                   </h2>
-                  <button className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+                  {/* <button className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
                     View All <ChevronRight className="h-4 w-4 ml-1" />
-                  </button>
+                  </button> */}
                 </div>
   
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
