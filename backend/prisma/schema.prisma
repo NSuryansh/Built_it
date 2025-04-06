@@ -25,8 +25,8 @@ model User {
   department       String
   acadProg         String
   gender           Gender
-  receivedMessages Message[]            @relation("ReceivedMessages")
-  sentMessages     Message[]            @relation("SentMessages")
+  // receivedMessages Message[]            @relation("ReceivedMessages")
+  // sentMessages     Message[]            @relation("SentMessages")
   appointment      Appointments[]
   feelings         feelings?
   invite           Notifications[]      @relation("ChatInvite")
@@ -118,8 +118,8 @@ model Message {
   encryptedAESKey String
   authTag         String
   senderType      String
-  recipient       User     @relation("ReceivedMessages", fields: [recipientId], references: [id])
-  sender          User     @relation("SentMessages", fields: [senderId], references: [id])
+  // recipient       User     @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  // sender          User     @relation("SentMessages", fields: [senderId], references: [id])
 }
 
 model Events {
