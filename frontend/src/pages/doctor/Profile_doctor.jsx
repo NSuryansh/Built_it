@@ -559,6 +559,7 @@ const DoctorProfile = () => {
           </div>
         </div>
       </div>
+      <Footer color="blue" />
     </div>
   );
 };

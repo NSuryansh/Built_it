@@ -280,7 +280,7 @@ const DoctorAppointment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-teal-50 font-sans antialiased">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-teal-50">
       <DoctorNavbar />
       <div className="container mx-auto px-4 sm:px-8 lg:px-16 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
