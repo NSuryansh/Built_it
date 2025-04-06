@@ -12,6 +12,7 @@ import DoctorLogin from "./pages/doctor/Login_doctor";
 import DoctorLeave from "./pages/doctor/Leave_doctor";
 import DoctorLanding from "./pages/doctor/Landing_doctor";
 import DoctorAppointment from "./pages/doctor/Appointment_doctor";
+import DoctorPeer from "./pages/doctor/Peer_doctor";
 import DoctorProfile from "./pages/doctor/Profile_doctor";
 import AdminDashboard from "./pages/admin/admin_dashboard";
 import AdminLogin from "./pages/admin/admin_login";
@@ -140,6 +141,7 @@ export default function App() {
         <Route path="/doctor/landing" element={<DoctorLanding />} />
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/doctor/appointments" element={<DoctorAppointment />} />
+        <Route path="/doctor/peer" element={<DoctorPeer />} />
         <Route path="/doctor/leave" element={<DoctorLeave />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/reset_password" element={<AdminResetPassword />} />
