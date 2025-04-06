@@ -93,21 +93,24 @@ io.on("connection", (socket) => {
     async ({
       userId,
       doctorId,
-      sender,
+      senderType,
       encryptedText,
       iv,
       encryptedAESKey,
       authTag,
     }) => {
       try {
+        // console.log(doctorId,'doc')
         var senderId, recipientId;
-        if (sender == "doc") {
+        if (senderType === "doc") {
           senderId = doctorId;
           recipientId = userId;
-        } else if(sender=="user") {
+        } else if(senderType==="user") {
           senderId = userId;
           recipientId = doctorId;
         }
+        console.log(senderId)
+        console.log(recipientId)
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -116,13 +119,13 @@ io.on("connection", (socket) => {
             iv: iv,
             encryptedAESKey,
             authTag,
-            senderType: sender,
+            senderType: senderType,
           },
         });
         const room = `chat_${[userId, doctorId]
           .sort((a, b) => a - b)
           .join("_")}`;
-        // console.log(senderId, "message sent to", recipientId);
+        console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
         io.to(room).emit("receiveMessage", {
@@ -523,13 +526,23 @@ app.post("/addSlot", async (req, res) => {
 
 app.post("/addLeave", async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
-  const startTime = Date(req.body["startTime"]);
-  const endTime = Date(req.body["endTime"]);
+  const startDate = req.body["startDate"];
+  const startTime = req.body["startTime"];
+  const endDate = req.body["endDate"];
+  const endTime = req.body["endTime"];
+
+  const start = new Date(
+    new Date(startDate).getTime() + new Date(startTime).getTime()
+  );
+  const end = new Date(
+    new Date(endDate).getTime() + new Date(endTime).getTime()
+  );
+
   const leave = await prisma.doctorLeave.create({
     data: {
       doctor_id: doc_id,
-      date_start: startTime,
-      date_end: endTime,
+      date_start: start,
+      date_end: end,
     },
   });
 
@@ -1869,16 +1882,7 @@ app.get("/all-appointments", async (req, res) => {
     const appts = await prisma.appointments.findMany({
       include: {
         doctor: true,
-        user: {
-          select: {
-            username: true,
-            email: true,
-            rollNo: true,
-            department: true,
-            acadProg: true,
-            gender: true,
-          },
-        },
+        user: true,
       },
     });
 
@@ -1930,10 +1934,23 @@ app.post("/add-slot", async (req, res) => {
 });
 
 app.post("/referrals", async (req, res) => {
-  const { user_id, doctor_id, referred_by, reason } = req.body;
+  const { roll_no, doctor_id, referred_by, reason } = req.body;
 
-  if (!user_id || !doctor_id || !referred_by || !reason) {
+  if (!roll_no || !doctor_id || !referred_by || !reason) {
     return res.status(400).json({ message: "All fields are required" });
+  }
+
+  // Step 1: Find user by roll number
+  const user = await prisma.user.findUnique({
+    where: {
+      rollNo: roll_no, // make sure rollNo matches the field in your Prisma schema
+    },
+  });
+
+  if (!user) {
+    return res
+      .status(404)
+      .json({ message: "User with given roll number not found" });
   }
 
   try {
