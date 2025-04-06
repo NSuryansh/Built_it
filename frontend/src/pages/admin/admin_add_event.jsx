@@ -100,7 +100,7 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="title"
-                className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-green-900 flex items-center gap-2"
               >
                 <Calendar size={16} className="text-green-600" />
                 Event Title
@@ -120,7 +120,7 @@ const AddEvent = () => {
               <div className="space-y-3">
                 <label
                   htmlFor="date"
-                  className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                  className="text-sm font-medium text-green-900 flex items-center gap-2"
                 >
                   <Clock size={16} className="text-green-600" />
                   Date
@@ -138,7 +138,7 @@ const AddEvent = () => {
               <div className="space-y-3">
                 <label
                   htmlFor="time"
-                  className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                  className="text-sm font-medium text-green-900 flex items-center gap-2"
                 >
                   <Clock size={16} className="text-green-600" />
                   Time
@@ -157,7 +157,7 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="location"
-                className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-green-900 flex items-center gap-2"
               >
                 <MapPin size={16} className="text-green-600" />
                 Location
@@ -176,7 +176,7 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="description"
-                className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-green-900 flex items-center gap-2"
               >
                 <FileText size={16} className="text-green-600" />
                 Description
