@@ -9,11 +9,11 @@ const NotificationPanel = () => {
   // Fetch users from API
   const getUsers = async () => {
     try {
-      const response = await fetch("http://localhost:3000/getUsers"); // Adjust endpoint if needed
+      const response = await fetch("http://localhost:3000/getdoctors");
       if (!response.ok) throw new Error("Failed to fetch users");
       const data = await response.json();
       console.log(data, "hello")
-      const filteredData = data.filter((user) => user.username !== localStorage.getItem("username"));
+      const filteredData = data.filter((user) => user.name !== localStorage.getItem("username"));
       setNotifications(filteredData);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -44,7 +44,7 @@ const NotificationPanel = () => {
                 <p className="text-sm text-gray-600">
                   Do you want to chat with
                 </p>
-                <p className="font-semibold text-gray-900">{notif.username}?</p>
+                <p className="font-semibold text-gray-900">{notif.name}?</p>
               </div>
               <div className="flex gap-2">
                 <button
