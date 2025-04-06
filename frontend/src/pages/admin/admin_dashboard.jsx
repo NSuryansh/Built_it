@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
+import { 
+  BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, 
+  CartesianGrid, Tooltip, ResponsiveContainer, Legend 
 } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
@@ -24,6 +15,8 @@ const AdminDashboard = () => {
   const [appointmentsPG, setAppointmentsPG] = useState({});
   const [appointmentsPHD, setAppointmentsPHD] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  // New state: if true, show pie charts; if false, show bar graph.
+  const [isPie, setIsPie] = useState(true);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -73,7 +66,7 @@ const AdminDashboard = () => {
     fetchAppointments();
   }, []);
 
-  // Data for the BarChart
+  // Data for the aggregated BarChart
   const histogramData = Object.keys(appointmentsUG).map((doc) => ({
     name: doc,
     UG: appointmentsUG[doc] || 0,
@@ -81,17 +74,13 @@ const AdminDashboard = () => {
     PHD: appointmentsPHD[doc] || 0,
   }));
 
-  // Data for the PieChart, aggregating total appointments per doctor
-  const pieChartData = Object.keys(appointmentsUG).map((doc) => ({
-    name: doc,
-    value:
-      (appointmentsUG[doc] || 0) +
-      (appointmentsPG[doc] || 0) +
-      (appointmentsPHD[doc] || 0),
-  }));
-
-  // Colors for the pie slices
+  // Colors for the charts
   const COLORS = ["#048A81", "#FFB703", "#FB8500", "#6A4C93", "#2A9D8F", "#E76F51"];
+
+  // Handler for graph type change via dropdown.
+  const handleGraphTypeChange = (e) => {
+    setIsPie(e.target.value === "pie");
+  };
 
   if (isAuthenticated === null) {
     return (
@@ -111,56 +100,86 @@ const AdminDashboard = () => {
           Dashboard Overview
         </h1>
 
-        {/* Bar Chart for Appointments per Doctor */}
-        <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-            Appointments per Doctor
-          </h2>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={histogramData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="UG" fill="#048A81" name="UG Appointments" />
-                <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
-                <Bar dataKey="PHD" fill="#FB8500" name="PhD Appointments" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        {/* Dropdown to choose graph type */}
+        <div className="flex justify-end">
+          <select 
+            onChange={handleGraphTypeChange}
+            value={isPie ? "pie" : "bar"}
+            className="px-4 py-2 border border-purple-200 rounded-lg bg-white/50 backdrop-blur-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          >
+            <option value="pie">Pie Charts</option>
+            <option value="bar">Bar Graph</option>
+          </select>
         </div>
 
-        {/* Pie Chart for Total Appointments per Doctor */}
-        <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg mt-8">
-          <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-            Total Appointments per Doctor
-          </h2>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieChartData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={120}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
-                >
-                  {pieChartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+        {/* Conditional Rendering based on graph type */}
+        {isPie ? (
+          // Render multiple Pie Charts for each doctor.
+          <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg mt-8">
+            <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
+              Appointments Breakdown by Doctor
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {Object.keys(appointmentsUG).map((doc) => {
+                // Data for each doctor's pie chart
+                const pieData = [
+                  { name: "UG", value: appointmentsUG[doc] || 0 },
+                  { name: "PG", value: appointmentsPG[doc] || 0 },
+                  { name: "PHD", value: appointmentsPHD[doc] || 0 },
+                ];
+                return (
+                  <div key={doc} className="flex flex-col items-center">
+                    <h3 className="text-lg font-semibold mb-2 text-[var(--custom-primary-green-900)]">
+                      Dr. {doc}
+                    </h3>
+                    <ResponsiveContainer width="100%" height={250}>
+                      <PieChart>
+                        <Pie
+                          data={pieData}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                          label={({ name, percent }) =>
+                            `${name} ${(percent * 100).toFixed(0)}%`
+                          }
+                        >
+                          {pieData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        ) : (
+          // Render a single aggregated Bar Chart.
+          <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg mt-8">
+            <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
+              Appointments per Doctor
+            </h2>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={histogramData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="UG" fill="#048A81" name="UG Appointments" />
+                  <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
+                  <Bar dataKey="PHD" fill="#FB8500" name="PhD Appointments" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
       </div>
       <Footer color={"green"} />
     </div>
