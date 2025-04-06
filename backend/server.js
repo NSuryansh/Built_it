@@ -1349,9 +1349,9 @@ app.post("/resetAdminPassword", async (req, res) => {
 });
 
 app.post("/setRating", async (req, res) => {
-  const { stars, id } = req.body;
-  stars = Number(stars);
-  id = Number(id);
+  const stars = req.body["stars"]
+  const id = req.body["id"]
+  
   try {
     const response = await prisma.pastAppointments.update({
       where: {
