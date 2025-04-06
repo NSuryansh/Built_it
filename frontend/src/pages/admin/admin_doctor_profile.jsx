@@ -8,6 +8,7 @@ import {
   Briefcase,
   GraduationCap,
   ArrowLeft,
+  Clock,
   AlignCenterVertical as Certificate,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
@@ -27,11 +28,7 @@ const AdminDoctorProfile = () => {
       phone: "+1 (555) 123-4567",
       address: "123 Medical Center Drive, New York, NY 10001",
     },
-    experience: [
-      "10+ years of specialized cardiac care",
-      "Former Chief of Cardiology at NYC Heart Center",
-      "Published researcher in cardiovascular medicine",
-    ],
+    experience: "",
 
     education: [
       "M.D. from Johns Hopkins School of Medicine",
@@ -59,12 +56,12 @@ const AdminDoctorProfile = () => {
         if (certifications.length === 0) {
           certifications = ["None"];
         }
-        let education = [];
+        let educations = [];
         data.education.map((education) => {
-          education.push(education.education);
+          educations.push(education.education);
         });
-        if (education.length === 0) {
-          education = ["None"];
+        if (educations.length === 0) {
+          educations = ["None"];
         }
         setDoctor({
           ...doctor,
@@ -74,9 +71,13 @@ const AdminDoctorProfile = () => {
             phone: data.doctor.mobile,
             address: data.doctor.address + " " + data.doctor.city,
           },
+          experience:
+            data.doctor.experience.split(" ")[0] != "<Please"
+              ? data.doctor.experience.split(" ")[0]
+              : "",
           field: data.doctor.desc,
           certifications: certifications,
-          education: education,
+          education: educations,
         });
       } catch (e) {
         console.error(e);
@@ -126,7 +127,7 @@ const AdminDoctorProfile = () => {
           </div>
 
           {/* Content Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-[50px] gap-x-[30px] p-[60px] bg-gray-50/50 rounded-b-[2rem]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[50px] gap-x-[30px] p-[60px] bg-gray-50/50 rounded-b-[2rem]">
             {/* Left Column */}
             <div className="space-y-[40px]">
               {/* Contact Information */}
@@ -178,21 +179,35 @@ const AdminDoctorProfile = () => {
                 Professional Information
               </h2>
               {/* Work Experience */}
-              <div className="space-y-[20px]">
-                <h3 className="text-xl font-semibold text-gray-800 bg-yellow-100/50 p-[10px] rounded-lg">
-                  Work Experience
-                </h3>
-                <ul className="space-y-[20px]">
-                  {doctor.experience.map((exp, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center space-x-[15px] text-gray-800 bg-white/70 backdrop-blur-md p-[20px] rounded-xl shadow-md hover:shadow-xl hover:bg-yellow-50 transition-all duration-[300ms]"
-                    >
-                      <span className="w-[10px] h-[10px] bg-coral-500 rounded-full"></span>
-                      <span className="text-lg">{exp}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="bg-white/60 backdrop-blur-md p-[30px] rounded-xl shadow-lg border border-purple-100 transform hover:-translate-y-[5px] transition-transform duration-[300ms]">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-bold text-gray-800">
+                      Years of Experience
+                    </h3>
+                    <p className="text-gray-600">
+                      Professional Medical Practice
+                    </p>
+                  </div>
+                  <div className="relative w-32 h-32 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-teal-100 rounded-full"></div>
+                    <div className="relative z-10 text-center">
+                      <span className="block text-4xl font-bold text-teal-600">
+                        {doctor.experience}
+                      </span>
+                      <span className="text-sm text-gray-600">Years</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <div className="flex items-center space-x-3 text-gray-600">
+                    <Clock className="w-5 h-5 text-teal-500" />
+                    <span>
+                      Practicing since{" "}
+                      {new Date().getFullYear() - parseInt(doctor.experience)}{" "}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Certifications */}
