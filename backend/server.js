@@ -93,7 +93,7 @@ io.on("connection", (socket) => {
     async ({
       userId,
       doctorId,
-      sender,
+      senderType,
       encryptedText,
       iv,
       encryptedAESKey,
@@ -101,10 +101,10 @@ io.on("connection", (socket) => {
     }) => {
       try {
         var senderId, recipientId;
-        if (sender == "doc") {
+        if (senderType === "doc") {
           senderId = doctorId;
           recipientId = userId;
-        } else if(sender=="user") {
+        } else if(senderType==="user") {
           senderId = userId;
           recipientId = doctorId;
         }
@@ -116,13 +116,13 @@ io.on("connection", (socket) => {
             iv: iv,
             encryptedAESKey,
             authTag,
-            senderType: sender,
+            senderType: senderType,
           },
         });
         const room = `chat_${[userId, doctorId]
           .sort((a, b) => a - b)
           .join("_")}`;
-        // console.log(senderId, "message sent to", recipientId);
+        console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
         io.to(room).emit("receiveMessage", {
