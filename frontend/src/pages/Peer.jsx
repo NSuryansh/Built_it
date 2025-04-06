@@ -181,6 +181,7 @@ const Peer = () => {
         encryptedText,
         iv,
         encryptedAESKey,
+        senderType,
       });
       const decrypted = await decryptMessage(
         encryptedText,
