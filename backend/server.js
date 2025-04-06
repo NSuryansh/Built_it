@@ -160,9 +160,8 @@ app.post("/signup", async (req, res) => {
   const pubKey = req.body["publicKey"];
   const department = req.body["department"];
   const acadProg = req.body["acadProg"];
-  const rollNo = Number(req.body["rollNo"]);
+  const rollNo = req.body["rollNo"]
   const gender = req.body["gender"];
-
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
@@ -448,6 +447,25 @@ app.get("/events", async (req, res) => {
   }
 });
 
+app.put("/uploadURL", async (req, res) => {
+  const { id, url } = req.query;
+  const event_id = Number(id);
+  try {
+    const response = await prisma.events.update({
+      where: {
+        id: event_id,
+      },
+      data: {
+        url: url,
+      },
+    });
+    res.json({ message: "Successful" });
+  } catch (e) {
+    console.error(e);
+    res.status(0).json({ message: "Error uploading url" });
+  }
+});
+
 app.put("/updateUser", async (req, res) => {
   try {
     const { userId, username, mobile, email, alt_mobile } = req.body;
@@ -576,7 +594,6 @@ app.post("/book", async (req, res) => {
     }
 
     const result = await prisma.$transaction(async (prisma) => {
-
       const appointment = await prisma.appointments.create({
         data: {
           user_id: userId,
@@ -783,7 +800,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => { });
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1333,7 +1350,7 @@ app.post("/resetAdminPassword", async (req, res) => {
 
 app.post("/save-subscription", async (req, res) => {
   try {
-    console.log("HELLLLLOOOOOOO")
+    console.log("HELLLLLOOOOOOO");
     const { userid, subscription, userType } = req.body;
     // console.log(userid);
     // console.log(subscription);
@@ -1349,7 +1366,7 @@ app.post("/save-subscription", async (req, res) => {
       //   where: { userId: Number(userid)
       //    },
       // });
-      console.log("ECISTIING subscription")
+      console.log("ECISTIING subscription");
       try {
         // if (existingSub) {
         //   await prisma.subscription.updateMany({
@@ -1555,31 +1572,31 @@ app.get("/available-slots", async (req, res) => {
   }
 });
 
-app.put('/modifySlots', async (req, res) => {
-  const { slotsArray, doctorId } = req.query
-  console.log(slotsArray)
-  const slots = slotsArray.split(',')
-  console.log(doctorId)
+app.put("/modifySlots", async (req, res) => {
+  const { slotsArray, doctorId } = req.query;
+  console.log(slotsArray);
+  const slots = slotsArray.split(",");
+  console.log(doctorId);
   try {
     const delSlots = await prisma.slots.deleteMany({
       where: {
-        doctor_id: Number(doctorId)
-      }
-    })
+        doctor_id: Number(doctorId),
+      },
+    });
     for (const slot of slots) {
       const newSlots = await prisma.slots.create({
         data: {
           doctor_id: Number(doctorId),
-          starting_time: new Date(slot)
-        }
-      })
+          starting_time: new Date(slot),
+        },
+      });
     }
-    res.json({message: "Doctor slots updated successfully"})
-  }catch(e){
-    console.log(e)
-    res.json(e)
+    res.json({ message: "Doctor slots updated successfully" });
+  } catch (e) {
+    console.log(e);
+    res.json(e);
   }
-})
+});
 
 app.get("/getDoc", async (req, res) => {
   const { docId } = req.query;
@@ -1712,8 +1729,8 @@ app.put("/modifyDoc", async (req, res) => {
     const { id, address, city, experience, educ, certifi } = req.query;
     const doc_id = Number(id);
     console.log(req.query);
-    const certifications = certifi.split(',')
-    const education = educ.split(',')
+    const certifications = certifi.split(",");
+    const education = educ.split(",");
     const doctorId = parseInt(doc_id, 10);
     if (isNaN(doctorId) || doctorId <= 0) {
       return res.status(400).json({ error: "Invalid doctor ID" });
@@ -1726,8 +1743,8 @@ app.put("/modifyDoc", async (req, res) => {
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
-        where: { OR: orConditions },
-      })
+          where: { OR: orConditions },
+        })
       : null;
 
     if (existingDoctor && existingDoctor.id !== doctorId) {
@@ -1755,29 +1772,29 @@ app.put("/modifyDoc", async (req, res) => {
 
       const certificate = await prisma.docCertification.deleteMany({
         where: {
-          doctor_id: doc_id
-        }
-      })
+          doctor_id: doc_id,
+        },
+      });
       for (const certif of certifications) {
         await prisma.docCertification.create({
           data: {
             doctor_id: doc_id,
-            certification: certif
-          }
-        })
+            certification: certif,
+          },
+        });
       }
       const edu = await prisma.docEducation.deleteMany({
         where: {
-          doctor_id: doc_id
-        }
-      })
+          doctor_id: doc_id,
+        },
+      });
       for (const educ of education) {
         await prisma.docEducation.create({
           data: {
             doctor_id: doc_id,
-            education: educ
-          }
-        })
+            education: educ,
+          },
+        });
       }
       res.json({ message: "Doctor updated successfully", updatedDoctor });
     } catch (error) {
