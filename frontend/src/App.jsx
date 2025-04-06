@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import { Route, Routes } from "react-router-dom";
 import DoctorLogin from "./pages/doctor/Login_doctor";
+import DoctorLeave from "./pages/doctor/Leave_doctor";
 import DoctorLanding from "./pages/doctor/Landing_doctor";
 import DoctorAppointment from "./pages/doctor/Appointment_doctor";
 import DoctorProfile from "./pages/doctor/Profile_doctor";
@@ -32,7 +33,7 @@ import AdminAppointments from "./pages/admin/admin_appointments";
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
 
-  const [type, setType] = useState(null)
+  const [type, setType] = useState(null);
 
   const urlBase64ToUint8Array = (base64String) => {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -45,41 +46,40 @@ export default function App() {
   };
 
   useEffect(() => {
-    setType(localStorage.getItem("userType"))
-  },[])
+    setType(localStorage.getItem("userType"));
+  }, []);
   const convertedVapidKey = urlBase64ToUint8Array(SERVER_KEY);
 
   const subscribeToPush = async (userid, userType) => {
     // await requestNotificationPermission();
-  
+
     const registration = await navigator.serviceWorker.ready;
-  
+
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: convertedVapidKey, // your VAPID key here
     });
-  
+
     console.log("Push Subscription:", subscription);
-  
+
     // Attach user info with subscription
     const body = {
       userid: userid,
       subscription: subscription,
-      userType: userType
+      userType: userType,
     };
 
-    console.log(userType, "usetruegfua")
-    
-    
+    console.log(userType, "usetruegfua");
+
     const res = await fetch("http://localhost:3000/save-subscription", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
-    console.log("RESSSSSSSSSSSSSS: ", res)
+    console.log("RESSSSSSSSSSSSSS: ", res);
     const response = await res.json();
     console.log("Subscription saved:", response);
-  
+
     // return subscription;
   };
 
@@ -90,7 +90,6 @@ export default function App() {
   //     subscribeToPush(userid, userType);
   //   }
   // }, []);
-  
 
   const requestNotificationPermission = async (userid, userType) => {
     if (
@@ -109,11 +108,11 @@ export default function App() {
 
   useEffect(() => {
     setTimeout(() => {
-    const userid = localStorage.getItem("userid");
-    const userType = localStorage.getItem("user_type")
-    console.log(userType, "USER type")
-    requestNotificationPermission(userid, userType);
-  }, 4000)
+      const userid = localStorage.getItem("userid");
+      const userType = localStorage.getItem("user_type");
+      console.log(userType, "USER type");
+      requestNotificationPermission(userid, userType);
+    }, 4000);
   }, [type]);
 
   return (
@@ -141,6 +140,7 @@ export default function App() {
         <Route path="/doctor/landing" element={<DoctorLanding />} />
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/doctor/appointments" element={<DoctorAppointment />} />
+        <Route path="/doctor/leave" element={<DoctorLeave />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/reset_password" element={<AdminResetPassword />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />

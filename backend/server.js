@@ -104,7 +104,7 @@ io.on("connection", (socket) => {
         if (sender == "doc") {
           senderId = doctorId;
           recipientId = userId;
-        } else if(sender=="user") {
+        } else if (sender == "user") {
           senderId = userId;
           recipientId = doctorId;
         }
@@ -160,7 +160,7 @@ app.post("/signup", async (req, res) => {
   const pubKey = req.body["publicKey"];
   const department = req.body["department"];
   const acadProg = req.body["acadProg"];
-  const rollNo = req.body["rollNo"]
+  const rollNo = req.body["rollNo"];
   const gender = req.body["gender"];
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -1349,17 +1349,17 @@ app.post("/resetAdminPassword", async (req, res) => {
 });
 
 app.post("/setRating", async (req, res) => {
-  const stars = req.body["stars"]
-  const id = req.body["id"]
-  
+  const stars = req.body["stars"];
+  const id = req.body["id"];
+
   try {
     const response = await prisma.pastAppointments.update({
       where: {
         id: id,
       },
-      data:{
+      data: {
         stars: stars,
-      }
+      },
     });
 
     res.json({ message: "Rating updated successfully" });
@@ -1868,22 +1868,8 @@ app.get("/all-appointments", async (req, res) => {
     // Fetch upcoming/current appointments with related doctor and user
     const appts = await prisma.appointments.findMany({
       include: {
-        doctor: {
-          select: {
-            name: true,
-            desc: true,
-          },
-        },
-        user: {
-          select: {
-            username: true,
-            email: true,
-            rollNo: true,
-            department: true,
-            acadProg: true,
-            gender: true,
-          },
-        },
+        doctor: true,
+        user: true
       },
     });
 
@@ -1935,10 +1921,23 @@ app.post("/add-slot", async (req, res) => {
 });
 
 app.post("/referrals", async (req, res) => {
-  const { user_id, doctor_id, referred_by, reason } = req.body;
+  const { roll_no, doctor_id, referred_by, reason } = req.body;
 
-  if (!user_id || !doctor_id || !referred_by || !reason) {
+  if (!roll_no || !doctor_id || !referred_by || !reason) {
     return res.status(400).json({ message: "All fields are required" });
+  }
+
+  // Step 1: Find user by roll number
+  const user = await prisma.user.findUnique({
+    where: {
+      rollNo: roll_no, // make sure rollNo matches the field in your Prisma schema
+    },
+  });
+
+  if (!user) {
+    return res
+      .status(404)
+      .json({ message: "User with given roll number not found" });
   }
 
   try {
