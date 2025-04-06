@@ -74,22 +74,25 @@ const AddDoctor = () => {
   }
 
   return (
-    <div className="bg-[var(--custom-primary-green-50)]">
-      <AdminNavbar />
-      <ToastContainer />
-      <div className="space-y-6 mb-10 w-full bg-[var(--custom-primary-green-50)] mx-auto flex flex-col justify-center items-center min-h-screen ">
-        <h1 className="text-3xl font-bold text-[var(--custom-primary-green-900)] mt-6">
-          Add New Doctor
-        </h1>
+    <div className="bg-[var(--custom-primary-green-50)] min-h-screen flex flex-col">
+  <AdminNavbar />
+  <ToastContainer />
+  
+  <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
+    <div className="w-full max-w-2xl">
+      <h1 className="text-2xl sm:text-3xl font-bold text-[var(--custom-primary-green-900)] mb-8 text-center">
+        Add New Doctor
+      </h1>
 
-        <div className="bg-white p-6 min-w-2xl rounded-xl shadow-lg max-w-2xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label
                 htmlFor="name"
                 className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
               >
-                Full Name
+                Full Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -97,7 +100,8 @@ const AddDoctor = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
+                placeholder="Enter doctor's full name"
+                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent transition-all duration-200"
                 required
               />
             </div>
@@ -107,7 +111,7 @@ const AddDoctor = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
               >
-                Email
+                Email <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
@@ -115,17 +119,20 @@ const AddDoctor = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
+                placeholder="doctor@example.com"
+                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent transition-all duration-200"
                 required
               />
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label
-                htmlFor="phone"
+                htmlFor="mobile"
                 className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
               >
-                Phone Number
+                Phone Number <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
@@ -133,16 +140,18 @@ const AddDoctor = () => {
                 name="mobile"
                 value={formData.mobile}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
+                placeholder="+1 (555) 123-4567"
+                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent transition-all duration-200"
                 required
               />
             </div>
+
             <div className="space-y-2">
               <label
                 htmlFor="regId"
                 className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
               >
-                Registration ID
+                Registration ID <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -150,64 +159,80 @@ const AddDoctor = () => {
                 name="regId"
                 value={formData.regId}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
+                placeholder="Enter registration ID"
+                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent transition-all duration-200"
                 required
               />
             </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="desc"
-                className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
-              >
-                Description
-              </label>
-              <input
-                type="text"
-                id="desc"
-                name="desc"
-                value={formData.desc}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
-              >
-                Password
-              </label>
+          </div>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="desc"
+              className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
+            >
+              Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              id="desc"
+              name="desc"
+              value={formData.desc}
+              onChange={handleChange}
+              placeholder="Enter doctor's specialization and details"
+              rows="3"
+              className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent transition-all duration-200 resize-y"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-[var(--custom-primary-green-900)]"
+            >
+              Password <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
               <input
                 type="password"
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent"
+                placeholder="Enter a strong password"
+                className="w-full px-4 py-2 border border-[var(--custom-primary-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:border-transparent transition-all duration-200"
                 required
               />
-            </div>
-
-            <div className="flex gap-4">
-              <button
-                type="submit"
-                className="px-6 py-2 bg-[var(--custom-primary-green-600)] text-white rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors"
-              >
-                Add Doctor
-              </button>
-              <button
+              {/* Optional: Add password visibility toggle */}
+              {/* <button
                 type="button"
-                // onClick={() => navigate('/admin/doctor_list')}
-                className="px-6 py-2 bg-[var(--custom-primary-green-100)] text-[var(--custom-primary-green-900)] rounded-lg hover:bg-[var(--custom-primary-green-200)] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-primary-green-600)]"
               >
-                Cancel
-              </button>
+                Show
+              </button> */}
             </div>
-          </form>
-        </div>
+          </div>
+
+          <div className="flex justify-end gap-4 pt-2">
+            <button
+              type="button"
+              onClick={() => navigate('/admin/doctor_list')}
+              className="px-6 py-2 bg-[var(--custom-primary-green-100)] text-[var(--custom-primary-green-900)] rounded-lg hover:bg-[var(--custom-primary-green-200)] transition-colors duration-200 font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-[var(--custom-primary-green-600)] text-white rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors duration-200 font-medium"
+            >
+              Add Doctor
+            </button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
+</div>
   );
 };
 
