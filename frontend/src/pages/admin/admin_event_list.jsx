@@ -55,7 +55,17 @@ const EventsList = () => {
     }
   };
 
-  const handleLinkSubmit = (eventId) => {
+  const handleLinkSubmit = async (eventId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/uploadURL?id=${eventId}&url=${newLink}`,
+        { method: "PUT" }
+      );
+      CustomToast("URL uploaded successfully");
+    } catch (e) {
+      console.error(e.message);
+      CustomToast(e.message);
+    }
     setEvents(
       events.map((event) =>
         event.id === eventId ? { ...event, link: newLink } : event
@@ -63,7 +73,6 @@ const EventsList = () => {
     );
     setEditingLinkId(null);
     setNewLink("");
-    CustomToast("Document link updated successfully", "success");
   };
 
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -97,6 +106,7 @@ const EventsList = () => {
             }),
             location: event.venue,
             type: event.description ? "Session/Conference" : "Meeting",
+            link: event.url,
           };
         });
 
@@ -113,6 +123,7 @@ const EventsList = () => {
             }),
             location: data2[i].venue,
             type: data2[i].description ? "Session/Conference" : "Meeting",
+            link: data2[i].url,
           });
         }
 
