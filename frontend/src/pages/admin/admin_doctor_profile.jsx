@@ -10,6 +10,8 @@ import {
   ArrowLeft,
   Clock,
   AlignCenterVertical as Certificate,
+  FileText,
+  X,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { Link, useLocation } from "react-router-dom";
@@ -18,6 +20,13 @@ import CustomToast from "../../components/CustomToast";
 
 const AdminDoctorProfile = () => {
   const search = useLocation().search;
+  const [showReferralForm, setShowReferralForm] = useState(false);
+  const [referralData, setReferralData] = useState({
+    rollNo: "",
+    referredBy: "",
+    reason: "",
+  });
+
   const [doctor, setDoctor] = useState({
     name: "Dr. Sarah Johnson",
     field: "Cardiologist",
@@ -29,7 +38,6 @@ const AdminDoctorProfile = () => {
       address: "123 Medical Center Drive, New York, NY 10001",
     },
     experience: "",
-
     education: [
       "M.D. from Johns Hopkins School of Medicine",
       "Cardiology Fellowship at Mayo Clinic",
@@ -86,6 +94,15 @@ const AdminDoctorProfile = () => {
     };
     fetchData();
   }, []);
+
+  const handleReferralSubmit = (e) => {
+    e.preventDefault();
+    // Here you would typically handle the form submission
+    console.log("Referral submitted:", referralData);
+    setShowReferralForm(false);
+    setReferralData({ rollNo: "", referredBy: "", reason: "" });
+    CustomToast("Referral submitted successfully");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300">
@@ -185,9 +202,7 @@ const AdminDoctorProfile = () => {
                     <h3 className="text-2xl font-bold text-gray-800">
                       Years of Experience
                     </h3>
-                    <p className="text-gray-600">
-                      Professional Medical Practice
-                    </p>
+                    <p className="text-gray-600">Professional Medical Practice</p>
                   </div>
                   <div className="relative w-32 h-32 flex items-center justify-center">
                     <div className="absolute inset-0 bg-teal-100 rounded-full"></div>
@@ -227,6 +242,82 @@ const AdminDoctorProfile = () => {
                 ))}
               </ul>
             </div>
+          </div>
+
+          {/* Referral Section */}
+          <div className="p-[60px] pt-0">
+            <button
+              onClick={() => setShowReferralForm(!showReferralForm)}
+              className="w-full bg-gradient-to-r from-teal-500 to-teal-700 text-white py-4 px-8 rounded-xl font-semibold text-lg flex items-center justify-center gap-3 hover:from-teal-600 hover:to-teal-800 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              <FileText className="w-6 h-6" />
+              {showReferralForm ? "Close Referral Form" : "Create Referral"}
+            </button>
+
+            {showReferralForm && (
+              <div className="mt-8 bg-white/80 backdrop-blur-md p-8 rounded-xl shadow-lg border border-teal-200">
+                <form onSubmit={handleReferralSubmit} className="space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-2">
+                        Roll No.
+                      </label>
+                      <input
+                        type="text"
+                        value={referralData.rollNo}
+                        onChange={(e) =>
+                          setReferralData({
+                            ...referralData,
+                            rollNo: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-2">
+                        Referred By
+                      </label>
+                      <input
+                        type="text"
+                        value={referralData.referredBy}
+                        onChange={(e) =>
+                          setReferralData({
+                            ...referralData,
+                            referredBy: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-2">
+                        Reason
+                      </label>
+                      <textarea
+                        value={referralData.reason}
+                        onChange={(e) =>
+                          setReferralData({
+                            ...referralData,
+                            reason: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent h-32 resize-none"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-teal-500 to-teal-700 text-white py-3 px-6 rounded-lg font-semibold hover:from-teal-600 hover:to-teal-800 transition-all duration-300 shadow-md hover:shadow-lg"
+                  >
+                    Done
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </main>
