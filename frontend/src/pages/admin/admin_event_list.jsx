@@ -1,14 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Calendar, Trash2, Search, MapPin, ChevronRight, Clock, Filter, CalendarDays } from "lucide-react";
+import {
+  Calendar,
+  Trash2,
+  Search,
+  MapPin,
+  ChevronRight,
+  Clock,
+  Filter,
+  CalendarDays,
+  Link as LinkIcon,
+} from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
-import { subDays, isWithinInterval, startOfToday } from 'date-fns';
+import { subDays, isWithinInterval, startOfToday } from "date-fns";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
@@ -16,6 +26,8 @@ const EventsList = () => {
   const [selectedType, setSelectedType] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [editingLinkId, setEditingLinkId] = useState(null);
+  const [newLink, setNewLink] = useState("");
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
@@ -42,7 +54,27 @@ const EventsList = () => {
       CustomToast("Failed to delete the event");
     }
   };
-  
+
+  const handleLinkSubmit = async (eventId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/uploadURL?id=${eventId}&url=${newLink}`,
+        { method: "PUT" }
+      );
+      CustomToast("URL uploaded successfully");
+    } catch (e) {
+      console.error(e.message);
+      CustomToast(e.message);
+    }
+    setEvents(
+      events.map((event) =>
+        event.id === eventId ? { ...event, link: newLink } : event
+      )
+    );
+    setEditingLinkId(null);
+    setNewLink("");
+  };
+
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
@@ -57,7 +89,9 @@ const EventsList = () => {
     const fetchEvents = async () => {
       try {
         const response = await fetch("http://localhost:3000/events");
+        const response2 = await fetch("http://localhost:3000/getPastEvents");
         const data = await response.json();
+        const data2 = await response2.json();
 
         const formattedEvents = data.map((event) => {
           const date = new Date(event.dateTime);
@@ -72,8 +106,26 @@ const EventsList = () => {
             }),
             location: event.venue,
             type: event.description ? "Session/Conference" : "Meeting",
+            link: event.url,
           };
         });
+
+        for (let i = 0; i < data2.length; i++) {
+          const date = new Date(data2[i].dateTime);
+          formattedEvents.push({
+            id: data2[i].id,
+            title: data2[i].title,
+            date: date,
+            formattedDate: date.toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+            location: data2[i].venue,
+            type: data2[i].description ? "Session/Conference" : "Meeting",
+            link: data2[i].url,
+          });
+        }
 
         setEvents(formattedEvents);
       } catch (error) {
@@ -103,28 +155,38 @@ const EventsList = () => {
         return events;
     }
 
-    return events.filter(event => 
+    return events.filter((event) =>
       isWithinInterval(new Date(event.date), {
         start: startDate,
-        end: today
+        end: today,
       })
     );
   };
 
-  const filteredEvents = events.filter(event => {
-    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         event.location.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredEvents = events.filter((event) => {
+    const matchesSearch =
+      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedType === "" || event.type === selectedType;
     return matchesSearch && matchesType;
   });
 
-  const dateFilteredEvents = getFilteredEventsByDate(filteredEvents, dateFilter);
+  const dateFilteredEvents = getFilteredEventsByDate(
+    filteredEvents,
+    dateFilter
+  );
+
+  const isEventPast = (eventDate) => {
+    return new Date(eventDate) < new Date();
+  };
 
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <PacmanLoader color="#047857" size={30} />
-        <p className="mt-4 text-emerald-800 font-medium">Loading your dashboard...</p>
+        <p className="mt-4 text-emerald-800 font-medium">
+          Loading your dashboard...
+        </p>
       </div>
     );
   }
@@ -137,7 +199,7 @@ const EventsList = () => {
     <div className="flex bg-gradient-to-br from-emerald-50 to-teal-50 flex-col min-h-screen">
       <AdminNavbar />
       <ToastContainer />
-      
+
       <div className="max-w-7xl w-full p-4 md:p-8 mx-auto">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
@@ -145,9 +207,11 @@ const EventsList = () => {
             <h1 className="text-4xl font-bold text-emerald-900 mb-2">
               Events Dashboard
             </h1>
-            <p className="text-emerald-600">Manage and track your upcoming events</p>
+            <p className="text-emerald-600">
+              Manage and track your upcoming events
+            </p>
           </div>
-          
+
           <Link
             to="/admin/add_event"
             className="group flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-full hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-emerald-200 mt-4 md:mt-0"
@@ -170,10 +234,10 @@ const EventsList = () => {
                 onClick={() => setShowFilters(!showFilters)}
                 className="text-emerald-600 hover:text-emerald-700 font-medium text-sm"
               >
-                {showFilters ? 'Hide Filters' : 'Show Filters'}
+                {showFilters ? "Hide Filters" : "Show Filters"}
               </button>
             </div>
-            
+
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -185,12 +249,12 @@ const EventsList = () => {
               />
             </div>
           </div>
-          
+
           {showFilters && (
             <div className="p-6 bg-gray-50 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-emerald-600" />
                     Event Type
                   </label>
@@ -200,13 +264,15 @@ const EventsList = () => {
                     className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"
                   >
                     <option value="">All Types</option>
-                    <option value="Session/Conference">Session/Conference</option>
+                    <option value="Session/Conference">
+                      Session/Conference
+                    </option>
                     <option value="Meeting">Meeting</option>
                   </select>
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                     <CalendarDays className="w-4 h-4 text-emerald-600" />
                     Time Period
                   </label>
@@ -219,7 +285,6 @@ const EventsList = () => {
                     <option value="7days">Last 7 Days</option>
                     <option value="15days">Last 15 Days</option>
                     <option value="30days">Last 30 Days</option>
-                    
                   </select>
                 </div>
               </div>
@@ -231,18 +296,24 @@ const EventsList = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white p-6 rounded-2xl shadow-md">
             <h3 className="text-gray-500 text-sm font-medium">Total Events</h3>
-            <p className="text-3xl font-bold text-emerald-600 mt-2">{dateFilteredEvents.length}</p>
+            <p className="text-3xl font-bold text-emerald-600 mt-2">
+              {dateFilteredEvents.length}
+            </p>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-md">
             <h3 className="text-gray-500 text-sm font-medium">Conferences</h3>
             <p className="text-3xl font-bold text-emerald-600 mt-2">
-              {dateFilteredEvents.filter(e => e.type === 'Session/Conference').length}
+              {
+                dateFilteredEvents.filter(
+                  (e) => e.type === "Session/Conference"
+                ).length
+              }
             </p>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-md">
             <h3 className="text-gray-500 text-sm font-medium">Meetings</h3>
             <p className="text-3xl font-bold text-emerald-600 mt-2">
-              {dateFilteredEvents.filter(e => e.type === 'Meeting').length}
+              {dateFilteredEvents.filter((e) => e.type === "Meeting").length}
             </p>
           </div>
         </div>
@@ -257,26 +328,30 @@ const EventsList = () => {
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      event.type === 'Session/Conference' 
-                        ? 'bg-emerald-100 text-emerald-700' 
-                        : 'bg-blue-100 text-blue-700'
-                    }`}>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        event.type === "Session/Conference"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-blue-100 text-blue-700"
+                      }`}
+                    >
                       {event.type}
                     </span>
                   </div>
-                  
+
                   <h2 className="text-xl font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">
                     {event.title}
                   </h2>
                 </div>
-                
-                <button
-                  onClick={() => handleDelete(event.id)}
-                  className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-300"
-                >
-                  <Trash2 size={20} />
-                </button>
+
+                {!isEventPast(event.date) ? (
+                  <button
+                    onClick={() => handleDelete(event.id)}
+                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-300"
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                ) : null}
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-6">
@@ -284,27 +359,90 @@ const EventsList = () => {
                   <Clock className="w-5 h-5 text-emerald-500" />
                   <div>
                     <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-medium text-gray-900">{event.formattedDate}</p>
+                    <p className="font-medium text-gray-900">
+                      {event.formattedDate}
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-emerald-500" />
                   <div>
                     <p className="text-sm text-gray-500">Location</p>
-                    <p className="font-medium text-gray-900">{event.location}</p>
+                    <p className="font-medium text-gray-900">
+                      {event.location}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
-                <Link
-                  to={`/admin/events/${event.id}`}
-                  className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1 group"
-                >
-                  View Details
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+              {/* Document Link Section */}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <LinkIcon className="w-4 h-4 text-emerald-500" />
+                  <span className="text-sm text-gray-500">Event Document</span>
+                </div>
+
+                {editingLinkId === event.id ? (
+                  <div className="flex gap-2 mt-2">
+                    <input
+                      type="text"
+                      value={newLink}
+                      onChange={(e) => setNewLink(e.target.value)}
+                      placeholder="Enter document/drive link"
+                      className="flex-1 text-sm border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 outline-none"
+                    />
+                    <button
+                      onClick={() => handleLinkSubmit(event.id)}
+                      className="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors text-sm"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingLinkId(null);
+                        setNewLink("");
+                      }}
+                      className="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors text-sm"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    {event.link ? (
+                      <>
+                        <a
+                          href={event.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                        >
+                          View Document
+                        </a>
+                        <button
+                          onClick={() => {
+                            setEditingLinkId(event.id);
+                            setNewLink(event.link);
+                          }}
+                          className="text-gray-400 hover:text-gray-600 text-sm"
+                        >
+                          (Edit)
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setEditingLinkId(event.id);
+                          setNewLink("");
+                        }}
+                        className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                      >
+                        + Add Document Link
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           ))}

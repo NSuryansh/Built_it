@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "user" ALTER COLUMN "rollNo" SET DATA TYPE TEXT;

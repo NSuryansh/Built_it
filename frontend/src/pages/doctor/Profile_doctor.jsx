@@ -64,23 +64,25 @@ const DoctorProfile = () => {
         const data = await response.json();
         const data2 = await response2.json();
         const slots = [];
-        console.log(data.doctor.desc);
         data2.availableSlots.map((slot) => {
           slots.push(
-            format(
-              TimeChange(new Date(slot.starting_time).getTime()),
-              "hh:mm a"
-            )
+            format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
           );
         });
-        const certifications = [];
+        let certifications = [];
         data.certifications.map((certification) => {
           certifications.push(certification.certification);
         });
-        const education = [];
+        if (certifications.length === 0) {
+          certifications = ["<Add>"];
+        }
+        let educations = [];
         data.education.map((education) => {
-          certifications.push(education.education);
+          educations.push(education.education);
         });
+        if (educations.length === 0) {
+          educations = ["<Add>"];
+        }
         setProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -89,8 +91,8 @@ const DoctorProfile = () => {
           experience: data.doctor.experience,
           address: data.doctor.address,
           city: data.doctor.city,
-          certifications: certifications && profile.certifications,
-          education: education && profile.education,
+          certifications: certifications,
+          education: educations,
           availability: slots,
         });
         setEditedProfile({
@@ -101,8 +103,8 @@ const DoctorProfile = () => {
           experience: data.doctor.experience,
           address: data.doctor.address,
           city: data.doctor.city,
-          certifications: certifications && profile.certifications,
-          education: education && profile.education,
+          certifications: certifications,
+          education: educations,
           availability: slots,
         });
       } catch (error) {
@@ -151,15 +153,26 @@ const DoctorProfile = () => {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
-  const handleSave = () => {
-    localStorage.setItem("experience", editedProfile.experience);
-    localStorage.setItem("address", editedProfile.address);
-    localStorage.setItem("city", editedProfile.city);
-    localStorage.setItem("certification", editedProfile.certifications);
-    localStorage.setItem("education", editedProfile.education);
-    localStorage.setItem("slot", editedProfile.availability);
+  const handleSave = async () => {
+    try {
+      const doctorId = localStorage.getItem("userid");
+      console.log(doctorId);
+      const response = await fetch(
+        `http://localhost:3000/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}`,
+        {
+          method: "PUT",
+        }
+      );
+      const data = response.json();
+      console.log(data);
+      CustomToast("Profile updated successfully");
+    } catch (e) {
+      console.log(e);
+      CustomToast("Error updating profile");
+    }
     setProfile(editedProfile);
     setIsEditing(false);
+    console.log(editedProfile);
   };
 
   const handleCancel = () => {
@@ -399,6 +412,7 @@ const DoctorProfile = () => {
                                 ...editedProfile.availability,
                               ];
                               newAvailability[index] = e.target.value;
+                              console.log(typeof newAvailability[index]);
                               setEditedProfile({
                                 ...editedProfile,
                                 availability: newAvailability,

@@ -9,7 +9,6 @@ import { createServer } from "http";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-// import emailjs from "@emailjs/browser";
 import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
@@ -87,7 +86,7 @@ io.on("connection", (socket) => {
   socket.on("joinRoom", ({ userId, doctorId }) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
     socket.join(room);
-    console.log(`Socket id ${socket.id} joined room ${room}`);
+    // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
   socket.on(
     "sendMessage",
@@ -161,9 +160,8 @@ app.post("/signup", async (req, res) => {
   const pubKey = req.body["publicKey"];
   const department = req.body["department"];
   const acadProg = req.body["acadProg"];
-  const rollNo = Number(req.body["rollNo"]);
+  const rollNo = req.body["rollNo"]
   const gender = req.body["gender"];
-
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
@@ -330,15 +328,12 @@ app.get("/profile", async (req, res) => {
 app.get("/chatContacts", async (req, res) => {
   try {
     const userId = req.query["userId"];
-    // console.log(req.query["userId"]);
-    // console.log(userId);
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }
 
     const id = parseInt(userId);
 
-    // Fetch all distinct users the given user has chatted with
     const chatPartners = await prisma.message.findMany({
       where: {
         OR: [{ senderId: id }, { recipientId: id }],
@@ -350,14 +345,12 @@ app.get("/chatContacts", async (req, res) => {
       distinct: ["senderId", "recipientId"],
     });
 
-    // Extract unique user IDs excluding the current user
     const uniqueUserIds = new Set();
     chatPartners.forEach((chat) => {
       if (chat.senderId !== id) uniqueUserIds.add(chat.senderId);
       if (chat.recipientId !== id) uniqueUserIds.add(chat.recipientId);
     });
 
-    // Fetch usernames of these users
     const users = await prisma.user.findMany({
       where: {
         id: { in: Array.from(uniqueUserIds) },
@@ -380,8 +373,8 @@ app.get("/chatContacts", async (req, res) => {
 app.get("/messages", async (req, res) => {
   try {
     const { userId, recId, userType, recType } = req.query;
-    console.log(userId);
-    console.log(recId);
+    // console.log(userId);
+    // console.log(recId);
     const messages = await prisma.message.findMany({
       where: {
         OR: [
@@ -417,20 +410,6 @@ app.post("/reschedule", async (req, res) => {
   }
 });
 
-// app.get("/getPastApp", async (req, res) => {
-//   const { docId } = req.query;
-//   try {
-//     const app = await prisma.pastAppointments.findMany({
-//       where: {
-//         doc_id: Number(docId),
-//       },
-//     });
-//     res.json(app);
-//   } catch (e) {
-//     res.json(e);
-//   }
-// });
-
 app.get("/getPastEvents", async (req, res) => {
   try {
     // console.log("hello");
@@ -452,18 +431,6 @@ app.get("/getPastEvents", async (req, res) => {
   }
 });
 
-// app.get('/public-key/:userId', async (req, res) => {
-//     const { userId } = req.params;
-
-//     const user = await prisma.user.findUnique({ where: { id: userId }, select: { publicKey: true } });
-
-//     if (!user) {
-//         return res.status(404).json({ message: "User not found" });
-//     }
-
-//     res.json({ publicKey: user.publicKey });
-// });
-
 app.get("/events", async (req, res) => {
   try {
     const events = await prisma.events.findMany({
@@ -472,11 +439,30 @@ app.get("/events", async (req, res) => {
           gte: new Date(),
         },
       },
-    }); // Fetch all events
-    res.json(events); // Send the events as a JSON response
+    });
+    res.json(events);
   } catch (e) {
     console.error(e);
     res.status(0).json({ message: "Error fetching events" });
+  }
+});
+
+app.put("/uploadURL", async (req, res) => {
+  const { id, url } = req.query;
+  const event_id = Number(id);
+  try {
+    const response = await prisma.events.update({
+      where: {
+        id: event_id,
+      },
+      data: {
+        url: url,
+      },
+    });
+    res.json({ message: "Successful" });
+  } catch (e) {
+    console.error(e);
+    res.status(0).json({ message: "Error uploading url" });
   }
 });
 
@@ -484,7 +470,6 @@ app.put("/updateUser", async (req, res) => {
   try {
     const { userId, username, mobile, email, alt_mobile } = req.body;
 
-    // Validate required fields
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
@@ -496,7 +481,6 @@ app.put("/updateUser", async (req, res) => {
       ...(alt_mobile && { alt_mobile }),
     };
 
-    // Update the user details in Prisma
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: updatedData,
@@ -553,7 +537,18 @@ app.post("/addLeave", async (req, res) => {
 });
 
 app.post("/addDoc", async (req, res) => {
-  const { name, mobile, email, password, reg_id, desc, address, city, experenice, img } = req.body;
+  const {
+    name,
+    mobile,
+    email,
+    password,
+    reg_id,
+    desc,
+    address,
+    city,
+    experenice,
+    img,
+  } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   // const imgUrl = uploadImage(img)
   try {
@@ -571,8 +566,6 @@ app.post("/addDoc", async (req, res) => {
         img: img,
       },
     });
-    // const resp = await doc.json()
-    // console.log(resp)
     res.json({ message: "doc added", doc: doc });
   } catch (e) {
     res.json({ error: e });
@@ -589,22 +582,18 @@ app.post("/book", async (req, res) => {
   const some = new Date(newDate.getTime() - userTimezoneOffset);
   const reason = req.body["reason"];
   const appId = req.body["id"];
-  // console.log(req.body);
   try {
-    // Check if user exists
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if doctor exists
     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
     const result = await prisma.$transaction(async (prisma) => {
-      // Create appointment
       const appointment = await prisma.appointments.create({
         data: {
           user_id: userId,
@@ -614,11 +603,10 @@ app.post("/book", async (req, res) => {
         },
       });
 
-      //Remove from requests table
       const reqDel = await prisma.requests.delete({
         where: { id: parseInt(appId) },
       });
-      // console.log(reqDel);
+
       return { appointment, reqDel };
     });
     res.json({ message: "Appointment booked successfully", result });
@@ -635,20 +623,17 @@ app.post("/requests", async (req, res) => {
   const reason = req.body["reason"];
 
   try {
-    // Check if user exists
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if doctor exists
     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
     const date = new Date(dateTime);
-    // Create appointment
     const appointment = await prisma.requests.create({
       data: {
         user_id: userId,
@@ -668,11 +653,10 @@ app.post("/requests", async (req, res) => {
   }
 });
 
-//GET REQUEST FOR DOCTOR LIST
 app.get("/getdoctors", async (req, res) => {
   try {
-    const docs = await prisma.doctor.findMany(); // Fetch all docs
-    res.json(docs); // Send the docs as a JSON response
+    const docs = await prisma.doctor.findMany();
+    res.json(docs);
   } catch (e) {
     console.error(e);
     res.status(0).json({ message: "Error fetching doctors" });
@@ -1003,7 +987,7 @@ app.get("/pastdocappt", async (req, res) => {
         user: true,
       },
     });
-    console.log(appt);
+    // console.log(appt);
     res.json(appt);
   } catch (e) {
     console.error(e);
@@ -1387,15 +1371,15 @@ app.post("/setRating", async (req, res) => {
 
 app.post("/save-subscription", async (req, res) => {
   try {
-    console.log("HELLLLLOOOOOOO")
+    console.log("HELLLLLOOOOOOO");
     const { userid, subscription, userType } = req.body;
-    console.log(userid);
-    console.log(subscription);
+    // console.log(userid);
+    // console.log(subscription);
     if (!userid || !subscription) {
       return res.status(400).json({ error: "Missing userId or subscription" });
     }
 
-    console.log(userType, " userType");
+    // console.log(userType, " userType");
 
     const { endpoint, keys } = subscription;
     if (userType == "user") {
@@ -1403,7 +1387,7 @@ app.post("/save-subscription", async (req, res) => {
       //   where: { userId: Number(userid)
       //    },
       // });
-      console.log("ECISTIING subscription")
+      console.log("ECISTIING subscription");
       try {
         // if (existingSub) {
         //   await prisma.subscription.updateMany({
@@ -1415,15 +1399,15 @@ app.post("/save-subscription", async (req, res) => {
         //     },
         //   });
         // } else {
-          // Create a new subscription
-          await prisma.subscription.create({
-            data: {
-              userId: Number(userid),
-              endpoint: endpoint,
-              authKey: keys.auth,
-              p256dhKey: keys.p256dh,
-            },
-          });
+        // Create a new subscription
+        await prisma.subscription.create({
+          data: {
+            userId: Number(userid),
+            endpoint: endpoint,
+            authKey: keys.auth,
+            p256dhKey: keys.p256dh,
+          },
+        });
         // }
       } catch (e) {
         console.log(e);
@@ -1431,22 +1415,12 @@ app.post("/save-subscription", async (req, res) => {
       }
     } else if (userType == "doc") {
       try {
-        await prisma.subscription.upsert({
-          where: {
+        await prisma.subscription.create({
+          data: {
             doctorId: Number(userid),
-          },
-          update: {
             endpoint: endpoint,
             authKey: keys.auth,
             p256dhKey: keys.p256dh,
-          },
-          create: {
-            data: {
-              doctorId: userid,
-              endpoint: endpoint,
-              authKey: keys.auth,
-              p256dhKey: keys.p256dh,
-            },
           },
         });
         res.json({ success: true });
@@ -1471,18 +1445,18 @@ app.post("/send-notification", async (req, res) => {
     // Fetch the subscription from the database
     var subscription;
     if (userType == "user") {
-      subscription = await prisma.subscription.findFirst({
+      subscription = await prisma.subscription.findMany({
         where: { userId: userid },
       });
     } else if (userType == "doc") {
-      subscription = await prisma.subscription.findFirst({
+      subscription = await prisma.subscription.findMany({
         where: {
           doctorId: userid,
         },
       });
     }
 
-    console.log(subscription);
+    // console.log(subscription);
 
     if (!subscription) {
       return res.status(404).json({ error: "User subscription not found" });
@@ -1492,18 +1466,23 @@ app.post("/send-notification", async (req, res) => {
       title: "New Message",
       body: message,
     });
-
-    await webpush.sendNotification(
-      {
-        endpoint: subscription.endpoint,
-        keys: {
-          auth: subscription.authKey,
-          p256dh: subscription.p256dhKey,
-        },
-      },
-      payload
-      
-    );
+    for (const sub of subscription) {
+      try {
+        await webpush.sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: {
+              auth: sub.authKey,
+              p256dh: sub.p256dhKey,
+            },
+          },
+          payload
+        );
+      } catch (err) {
+        console.error("Failed to send to one subscription:", err);
+        // Optionally remove from DB if err.statusCode === 410 (expired)
+      }
+    }
 
     res.json({ success: true });
   } catch (error) {
@@ -1611,6 +1590,32 @@ app.get("/available-slots", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Couldn't fetch the slots" });
+  }
+});
+
+app.put("/modifySlots", async (req, res) => {
+  const { slotsArray, doctorId } = req.query;
+  console.log(slotsArray);
+  const slots = slotsArray.split(",");
+  console.log(doctorId);
+  try {
+    const delSlots = await prisma.slots.deleteMany({
+      where: {
+        doctor_id: Number(doctorId),
+      },
+    });
+    for (const slot of slots) {
+      const newSlots = await prisma.slots.create({
+        data: {
+          doctor_id: Number(doctorId),
+          starting_time: new Date(slot),
+        },
+      });
+    }
+    res.json({ message: "Doctor slots updated successfully" });
+  } catch (e) {
+    console.log(e);
+    res.json(e);
   }
 });
 
@@ -1742,24 +1747,20 @@ app.post("/scores-bot", async (req, res) => {
 
 app.put("/modifyDoc", async (req, res) => {
   try {
-    const { id, name, email, mobile, desc, address, city, experenice } =
-      req.body;
-
-    // console.log(req.body);
-
-    const doctorId = parseInt(id, 10);
+    const { id, address, city, experience, educ, certifi } = req.query;
+    const doc_id = Number(id);
+    console.log(req.query);
+    const certifications = certifi.split(",");
+    const education = educ.split(",");
+    const doctorId = parseInt(doc_id, 10);
     if (isNaN(doctorId) || doctorId <= 0) {
       return res.status(400).json({ error: "Invalid doctor ID" });
     }
 
     const orConditions = [];
-    if (name) orConditions.push({ name });
-    if (mobile) orConditions.push({ mobile });
-    if (email) orConditions.push({ email });
-    if (desc) orConditions.push({ desc });
     if (address) orConditions.push({ address });
     if (city) orConditions.push({ city });
-    if (experenice) orConditions.push({ experenice });
+    if (experience) orConditions.push({ experience });
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
@@ -1774,13 +1775,9 @@ app.put("/modifyDoc", async (req, res) => {
     }
 
     const updatedData = {};
-    if (name?.trim()) updatedData.name = name;
-    if (mobile?.trim()) updatedData.mobile = mobile;
-    if (email?.trim()) updatedData.email = email;
-    if (desc?.trim()) updatedData.desc = desc;
     if (address?.trim()) updatedData.address = address;
     if (city?.trim()) updatedData.city = city;
-    if (experenice?.trim()) updatedData.experenice = experenice;
+    if (experience?.trim()) updatedData.experience = experience;
 
     if (Object.keys(updatedData).length === 0) {
       return res
@@ -1794,6 +1791,32 @@ app.put("/modifyDoc", async (req, res) => {
         data: updatedData,
       });
 
+      const certificate = await prisma.docCertification.deleteMany({
+        where: {
+          doctor_id: doc_id,
+        },
+      });
+      for (const certif of certifications) {
+        await prisma.docCertification.create({
+          data: {
+            doctor_id: doc_id,
+            certification: certif,
+          },
+        });
+      }
+      const edu = await prisma.docEducation.deleteMany({
+        where: {
+          doctor_id: doc_id,
+        },
+      });
+      for (const educ of education) {
+        await prisma.docEducation.create({
+          data: {
+            doctor_id: doc_id,
+            education: educ,
+          },
+        });
+      }
       res.json({ message: "Doctor updated successfully", updatedDoctor });
     } catch (error) {
       if (error.code === "P2025") {
