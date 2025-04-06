@@ -474,7 +474,7 @@ const DoctorAppointment = () => {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 {Object.keys(timePeriodData).map((period) => (
-                  <div key={period} className="h-86 w-[260px]">
+                  <div key={period} className="h-86 w-[340px]">
                     <h3 className="text-xl font-semibold text-gray-700 mb-4">{period}</h3>
                     <ResponsiveContainer>
                       <PieChart>
