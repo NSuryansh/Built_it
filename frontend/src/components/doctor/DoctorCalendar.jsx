@@ -12,7 +12,7 @@ import {
 } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import CustomToast from "./CustomToast";
+import CustomToast from "../CustomToast";
 
 const DoctorCalendar = ({ onDateSelect }) => {
   const [appointments, setAppointments] = useState([]);
@@ -107,10 +107,10 @@ const DoctorCalendar = ({ onDateSelect }) => {
   return (
     <div className="bg-white max-w-md rounded-xl shadow-sm p-6">
       {/* Header with month navigation */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center">
-          <h2 className="text-xl font-semibold text-gray-900">Calendar</h2>
-        </div>
+      <div className="flex items-center justify-center mb-6">
+        {/* <div className="flex items-center"> */}
+          {/* <h2 className="text-xl font-semibold text-gray-900">Calendar</h2> */}
+        {/* </div> */}
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
@@ -169,10 +169,10 @@ const DoctorCalendar = ({ onDateSelect }) => {
                   }
                   ${
                     isToday
-                      ? "ring-2 ring-blue-500 ring-offset-1 font-bold"
+                      ? "ring-2 ring-black ring-offset-1 font-bold"
                       : ""
                   }
-                  ${isSelected && !isToday ? "ring-2 ring-blue-400" : ""}
+                  ${isSelected && !isToday ? "ring-2 ring-blue-500" : ""}
                   ${
                     isPastAppointment
                       ? "bg-rose-500 text-white hover:bg-rose-600"
@@ -204,11 +204,11 @@ const DoctorCalendar = ({ onDateSelect }) => {
       <div className="flex items-center justify-center space-x-6 pt-4 mt-4 border-t border-gray-100">
         <div className="flex items-center space-x-2">
           <span className="w-3 h-3 bg-rose-500 rounded-full"></span>
-          <span className="text-xs text-gray-600">Past Appointments</span>
+          <span className="text-xs text-gray-600">Past Appts</span>
         </div>
         <div className="flex items-center space-x-2">
           <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-          <span className="text-xs text-gray-600">Upcoming Appointments</span>
+          <span className="text-xs text-gray-600">Upcoming Appts</span>
         </div>
       </div>
     </div>
