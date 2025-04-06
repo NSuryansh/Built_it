@@ -77,11 +77,31 @@ const UserAppointments = () => {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
-  const submitRating = (e, id) => {
-    e.preventDefault();
+  // Only handles submitting data, not the event
+  const submitRating = async (appointmentId, ratingValue) => {
+    try {
+      const res = await fetch("http://localhost:3000/setRating", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: appointmentId,
+          stars: ratingValue,
+        }),
+      });
 
+      if (res.ok) {
+        setSubmittedRatings((prev) => ({
+          ...prev,
+          [appointmentId]: true,
+        }));
+      } else {
+        console.error("Failed to submit rating");
+      }
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+    }
+  };
 
-  }
 
   const NoAppointmentsMessage = ({ message }) => (
     <div className="flex flex-col items-center justify-center py-8">
@@ -191,12 +211,13 @@ const UserAppointments = () => {
                             onSubmit={(e) => {
                               e.preventDefault();
                               // submitRating(appointment.id, ratingValues[appointment.id]);
-                              console.log(ratings[appointment.id]);
+                              console.log(ratings[appointment.id] || 3);
+                              submitRating(appointment.id, ratings[appointment.id] || 3);
                             }}
                             className="flex flex-col ml-13 mt-2 sm:ml-0 sm:mt-0 w-30">
                             <Rating
                               name={`rating-${appointment.id}`}
-                              value={ratings[appointment.id] || 2.5}
+                              value={ratings[appointment.id] || 3}
                               // precision={0.5}
                               onChange={(event, newValue) => {
                                 console.log(newValue)
@@ -223,12 +244,6 @@ const UserAppointments = () => {
                         ) : (
                           <span className="text-green-600 font-medium text-sm">Rating submitted!</span>
                         )}
-                        {/* const res = await fetch(:,
-method: "POST",
-cintent: application/json,
-bosy{JSON.stringify{
-  hjaskd
-}}: "") */}
                       </>
                     </div>
                   </div>
