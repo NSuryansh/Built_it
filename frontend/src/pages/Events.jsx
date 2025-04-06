@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { CalendarCheck, CalendarX, Clock, MapPin } from "lucide-react";
+import { CalendarCheck, CalendarX, Clock, MapPin, Download } from "lucide-react";
 import Footer from "../components/Footer";
 import { format } from "date-fns";
 import SessionExpired from "../components/SessionExpired";
@@ -57,6 +57,7 @@ const Events = () => {
   async function getPastEvents() {
     const res = await fetch("http://localhost:3000/getPastEvents");
     const resp = await res.json();
+    console.log(resp);
     setpastEvents(resp);
   }
 
@@ -98,174 +99,221 @@ const Events = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--custom-orange-100)]">
-      <Navbar />
+    <div className="min-h-screen bg-[var(--custom-orange-50)]">
+  <Navbar />
 
-      <main className="pt-10 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="hidden lg:block space-y-8">
-          <section>
-            <div className="flex items-center mb-4">
-              <CalendarCheck className="h-6 w-6 text-[var(--custom-orange-500)] mr-2" />
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Upcoming Events
-              </h2>
-            </div>
-            <div className="bg-white rounded-lg shadow-md p-4 overflow-auto">
-              <table className="min-w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Event
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Details
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Venue
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {currentEvents.length > 0 ? (
-                    currentEvents.map((event) => (
-                      <tr key={event.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {event.title}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {event.description}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {event.venue}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <NoEventsMessage message="No upcoming events scheduled" />
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section>
-            <div className="flex items-center mb-4">
-              <CalendarX className="h-6 w-6 text-gray-600 mr-2" />
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Past Events
-              </h2>
-            </div>
-            <div className="bg-white rounded-lg shadow-md p-4 overflow-auto">
-              <table className="min-w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Event
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Venue
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Content
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {pastEvents.length > 0 ? (
-                    pastEvents.map((event) => (
-                      <tr key={event.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {event.title}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {event.venue}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {event.content ? (
-                            <button
-                              onClick={() =>
-                                window.open(event.content.url, "_blank")
-                              }
-                              className="flex items-center text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)]"
-                            >
-                              <Download className="h-4 w-4 mr-1" />
-                              Download {event.content.type.toUpperCase()}
-                            </button>
-                          ) : (
-                            <span className="text-gray-400 italic">
-                              No content available
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <NoEventsMessage message="No past events to display" />
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </section>
+  <main className="pt-12 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    {/* Desktop View */}
+    <div className="hidden lg:block space-y-10">
+      <section>
+        <div className="flex items-center mb-6">
+          <CalendarCheck className="h-7 w-7 text-[var(--custom-orange-600)] mr-3" />
+          <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">
+            Upcoming Events
+          </h2>
         </div>
-
-        {/* Mobile View - Only visible on smaller than md screens */}
-        <div className="lg:hidden space-y-8">
-          <section>
-            <div className="flex items-center mb-4">
-              <CalendarCheck className="h-6 w-6 text-[var(--custom-orange-500)] mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">
-                Upcoming Events
-              </h2>
-            </div>
-            <div className="space-y-4">
+        <div className="bg-white rounded-xl shadow-lg p-6 overflow-x-auto border border-[var(--custom-orange-100)]">
+          <table className="min-w-full">
+            <thead className="bg-[var(--custom-orange-50)] sticky top-0 z-10">
+              <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Event
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Details
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Venue
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--custom-orange-100)]">
               {currentEvents.length > 0 ? (
                 currentEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <tr
+                    key={event.id}
+                    className="hover:bg-[var(--custom-orange-50)] transition-colors duration-200"
+                  >
+                    <td className="px-6 py-5 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {event.title}
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
+                      {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
+                    </td>
+                    <td className="px-6 py-5 text-sm text-gray-600 max-w-xs truncate">
+                      {event.description}
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
+                      {event.venue}
+                    </td>
+                  </tr>
                 ))
               ) : (
-                <div className="bg-white rounded-lg shadow-md p-4 text-center text-gray-500 italic">
-                  No upcoming events scheduled
-                </div>
+                <tr>
+                  <td colSpan="4" className="px-6 py-5 text-center text-gray-500 italic">
+                    No upcoming events scheduled
+                  </td>
+                </tr>
               )}
-            </div>
-          </section>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-          <section>
-            <div className="flex items-center mb-4">
-              <CalendarX className="h-6 w-6 text-gray-600 mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">
-                Past Events
-              </h2>
-            </div>
-            <div className="space-y-4">
+      <section>
+        <div className="flex items-center mb-6">
+          <CalendarX className="h-7 w-7 text-gray-600 mr-3" />
+          <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">
+            Past Events
+          </h2>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-6 overflow-x-auto border border-[var(--custom-orange-100)]">
+          <table className="min-w-full">
+            <thead className="bg-[var(--custom-orange-50)] sticky top-0 z-10">
+              <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Event
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Venue
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Content
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--custom-orange-100)]">
               {pastEvents.length > 0 ? (
                 pastEvents.map((event) => (
-                  <EventCard key={event.id} event={event} isPast={true} />
+                  <tr
+                    key={event.id}
+                    className="hover:bg-[var(--custom-orange-50)] transition-colors duration-200"
+                  >
+                    <td className="px-6 py-5 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {event.title}
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
+                      {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
+                      {event.venue}
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap text-sm">
+                      {event.url ? (
+                        <button
+                          onClick={() => window.open(event.url, "_blank")}
+                          className="inline-flex items-center px-3 py-1.5 bg-[var(--custom-orange-600)] text-white rounded-md hover:bg-[var(--custom-orange-700)] transition-colors duration-200 text-sm font-medium"
+                        >
+                          <Download className="h-4 w-4 mr-1" />
+                          Download
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 italic">Not available</span>
+                      )}
+                    </td>
+                  </tr>
                 ))
               ) : (
-                <div className="bg-white rounded-lg shadow-md p-4 text-center text-gray-500 italic">
-                  No past events to display
-                </div>
+                <tr>
+                  <td colSpan="4" className="px-6 py-5 text-center text-gray-500 italic">
+                    No past events to display
+                  </td>
+                </tr>
               )}
-            </div>
-          </section>
+            </tbody>
+          </table>
         </div>
-      </main>
-      <Footer color={"orange"} />
+      </section>
     </div>
+
+    {/* Mobile View */}
+    <div className="lg:hidden space-y-10">
+      <section>
+        <div className="flex items-center mb-5">
+          <CalendarCheck className="h-6 w-6 text-[var(--custom-orange-600)] mr-2" />
+          <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">
+            Upcoming Events
+          </h2>
+        </div>
+        <div className="space-y-5">
+          {currentEvents.length > 0 ? (
+            currentEvents.map((event) => (
+              <div
+                key={event.id}
+                className="bg-white rounded-xl shadow-md p-5 border border-[var(--custom-orange-100)] hover:shadow-lg transition-shadow duration-300"
+              >
+                <h3 className="text-lg font-medium text-gray-900">{event.title}</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
+                </p>
+                <p className="text-sm text-gray-600 mt-2">{event.description}</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  <span className="font-medium">Venue:</span> {event.venue}
+                </p>
+              </div>
+            ))
+          ) : (
+            <div className="bg-white rounded-xl shadow-md p-5 text-center text-gray-500 italic border border-[var(--custom-orange-100)]">
+              No upcoming events scheduled
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section>
+        <div className="flex items-center mb-5">
+          <CalendarX className="h-6 w-6 text-gray-600 mr-2" />
+          <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">
+            Past Events
+          </h2>
+        </div>
+        <div className="space-y-5">
+          {pastEvents.length > 0 ? (
+            pastEvents.map((event) => (
+              <div
+                key={event.id}
+                className="bg-white rounded-xl shadow-md p-5 border border-[var(--custom-orange-100)] hover:shadow-lg transition-shadow duration-300"
+              >
+                <h3 className="text-lg font-medium text-gray-900">{event.title}</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  <span className="font-medium">Venue:</span> {event.venue}
+                </p>
+                <div className="mt-3">
+                  {event.url ? (
+                    <button
+                      onClick={() => window.open(event.url, "_blank")}
+                      className="inline-flex items-center px-3 py-1.5 bg-[var(--custom-orange-600)] text-white rounded-md hover:bg-[var(--custom-orange-700)] transition-colors duration-200 text-sm font-medium"
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      Download
+                    </button>
+                  ) : (
+                    <span className="text-gray-400 italic text-sm">Not available</span>
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="bg-white rounded-xl shadow-md p-5 text-center text-gray-500 italic border border-[var(--custom-orange-100)]">
+              No past events to display
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  </main>
+  <Footer color={"orange"} />
+</div>
   );
-}
+};
 
 export default Events;

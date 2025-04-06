@@ -67,7 +67,7 @@ const SignUp = () => {
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
-        CustomToast("OTP sent successfully");
+        CustomToast("OTP sent successfully. Kindly check spam folder as well");
       } else {
         setError(data.message || "Failed to send OTP");
       }

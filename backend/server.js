@@ -987,7 +987,7 @@ app.get("/pastdocappt", async (req, res) => {
         user: true,
       },
     });
-    // console.log(appt);
+    console.log(appt);
     res.json(appt);
   } catch (e) {
     console.error(e);
