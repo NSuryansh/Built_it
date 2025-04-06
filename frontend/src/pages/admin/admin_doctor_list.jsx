@@ -119,7 +119,7 @@ const DoctorsList = () => {
 
       <div className="w-full max-w-7xl mx-auto p-6 space-y-10">
         {/* Header with Enhanced Styling */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-green-600 to-emerald-600 rounded-3xl shadow-2xl p-8 mb-12">
+        <div className="relative overflow-hidden bg-gradient-to-r from-green-400 to-emerald-500 rounded-3xl shadow-2xl p-8 mb-12">
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
           <div className="relative z-10 flex flex-col sm:flex-row justify-between items-center gap-6">
             <div className="text-center sm:text-left">
