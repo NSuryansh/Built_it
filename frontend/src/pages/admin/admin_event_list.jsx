@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Calendar, Trash2, Search, MapPin, ChevronRight, Clock, Filter, CalendarDays } from "lucide-react";
+import { Calendar, Trash2, Search, MapPin, ChevronRight, Clock, Filter, CalendarDays, Link as LinkIcon } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import PacmanLoader from "react-spinners/PacmanLoader";
@@ -16,6 +16,8 @@ const EventsList = () => {
   const [selectedType, setSelectedType] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [editingLinkId, setEditingLinkId] = useState(null);
+  const [newLink, setNewLink] = useState("");
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
@@ -41,6 +43,17 @@ const EventsList = () => {
       console.error("Error deleting event:", error);
       CustomToast("Failed to delete the event");
     }
+  };
+
+  const handleLinkSubmit = (eventId) => {
+    setEvents(events.map(event => 
+      event.id === eventId 
+        ? { ...event, link: newLink }
+        : event
+    ));
+    setEditingLinkId(null);
+    setNewLink("");
+    CustomToast("Document link updated successfully", "success");
   };
   
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -72,6 +85,7 @@ const EventsList = () => {
             }),
             location: event.venue,
             type: event.description ? "Session/Conference" : "Meeting",
+            link: event.link || "", // Add link property
           };
         });
 
@@ -219,7 +233,6 @@ const EventsList = () => {
                     <option value="7days">Last 7 Days</option>
                     <option value="15days">Last 15 Days</option>
                     <option value="30days">Last 30 Days</option>
-                    
                   </select>
                 </div>
               </div>
@@ -297,7 +310,76 @@ const EventsList = () => {
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+              {/* Document Link Section */}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <LinkIcon className="w-4 h-4 text-emerald-500" />
+                  <span className="text-sm text-gray-500">Event Document</span>
+                </div>
+                
+                {editingLinkId === event.id ? (
+                  <div className="flex gap-2 mt-2">
+                    <input
+                      type="text"
+                      value={newLink}
+                      onChange={(e) => setNewLink(e.target.value)}
+                      placeholder="Enter document/drive link"
+                      className="flex-1 text-sm border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 outline-none"
+                    />
+                    <button
+                      onClick={() => handleLinkSubmit(event.id)}
+                      className="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors text-sm"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingLinkId(null);
+                        setNewLink("");
+                      }}
+                      className="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors text-sm"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    {event.link ? (
+                      <>
+                        <a 
+                          href={event.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                        >
+                          View Document
+                        </a>
+                        <button
+                          onClick={() => {
+                            setEditingLinkId(event.id);
+                            setNewLink(event.link);
+                          }}
+                          className="text-gray-400 hover:text-gray-600 text-sm"
+                        >
+                          (Edit)
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setEditingLinkId(event.id);
+                          setNewLink("");
+                        }}
+                        className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                      >
+                        + Add Document Link
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-gray-100 flex justify-end">
                 <Link
                   to={`/admin/events/${event.id}`}
                   className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1 group"
