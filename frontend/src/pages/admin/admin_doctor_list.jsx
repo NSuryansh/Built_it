@@ -7,10 +7,14 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
+import DeletePopup from "../../components/admin/DeletePopup";
 
 const DoctorsList = () => {
   const [doctors, setDoc] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+
+  const [docId, setDocId] = useState(null)
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -44,14 +48,24 @@ const DoctorsList = () => {
       setDoc((prevDoctors) =>
         prevDoctors.filter((doctor) => doctor.id !== doctorId)
       );
+      setDeletePopupOpen(false)
     } catch (error) {
       console.error("Error deleting doctor:", error);
       CustomToast("Error while fetching data");
     }
   };
 
+  const handleDeletePopup = (doctorId, isOpen) => {
+    if(isOpen==true){
+    setDeletePopupOpen(true);
+    setDocId(doctorId);
+    }else{
+      setDeletePopupOpen(false)
+    }
+  }
+
   const handleClosePopup = () => {
-    navigate("/doctor/login");
+    navigate("/admin/login");
   };
 
   if (isAuthenticated === null) {
@@ -106,7 +120,7 @@ const DoctorsList = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-green-50">
-              {doctors.map((doctor) => (
+            {doctors.map((doctor) => (
                 <tr
                   key={doctor.id}
                   className="hover:bg-green-50 transition-colors duration-150"
@@ -119,7 +133,8 @@ const DoctorsList = () => {
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-5">
                       <button
-                        onClick={() => handleDelete(doctor.id)}
+                        // onClick={() => handleDelete(doctor.id)}
+                        onClick={()=> handleDeletePopup(doctor.id, true)}
                         className="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50"
                         title="Delete Doctor"
                       >
@@ -135,6 +150,7 @@ const DoctorsList = () => {
                     </div>
                   </td>
                 </tr>
+                
               ))}
             </tbody>
           </table>
@@ -156,7 +172,7 @@ const DoctorsList = () => {
                 </div>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => handleDelete(doctor.id)}
+                    onClick={() => handleDelete(doctor.id, true)}
                     className="text-red-600 hover:text-red-700 transition-colors"
                     title="Delete"
                   >
@@ -178,6 +194,8 @@ const DoctorsList = () => {
           ))}
         </div>
       </div>
+      {deletePopupOpen && <DeletePopup docId={docId} handleDeletePopup={handleDeletePopup} handleDelete={handleDelete}/>}
+
       <div className="mt-auto"></div>
       <Footer color="green" />
     </div>
