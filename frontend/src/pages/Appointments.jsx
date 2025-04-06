@@ -33,19 +33,27 @@ const UserAppointments = () => {
   }, []);
 
   async function getPrevApp() {
-    const res = await fetch(
-      `http://localhost:3000/pastuserappt?userId=${user_id}`
-    );
-    const resp = await res.json();
-    setpreviousAppointments(resp);
+    try {
+      const res = await fetch(`http://localhost:3000/pastuserappt?userId=${user_id}`);
+      const resp = await res.json();
+      setpreviousAppointments(resp);
+      console.log(resp);
+    } catch (error) {
+      console.error(error);
+    }
+
   }
 
   async function getCurrApp() {
-    const res = await fetch(
-      `http://localhost:3000/currentuserappt?userId=${user_id}`
-    );
-    const resp = await res.json();
-    setupcomingAppointments(resp);
+    try {
+      const res = await fetch(
+        `http://localhost:3000/currentuserappt?userId=${user_id}`
+      );
+      const resp = await res.json();
+      setupcomingAppointments(resp);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   useEffect(() => {
@@ -53,31 +61,8 @@ const UserAppointments = () => {
     getCurrApp();
   }, []);
 
-  // const handleRatingSubmit = async (e, appointmentId) => {
-  //   e.preventDefault();
-  //   const rating = ratings[appointmentId] ?? 2.5;
-  //   const user_id = localStorage.getItem("userid");
-  
-  //   try {
-  //     const res = await fetch("http://localhost:3000/api/submit-rating", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ user_id, appointmentId, rating }),
-  //     });
-  
-  //     if (res.ok) {
-  //       setSubmittedRatings((prev) => ({ ...prev, [appointmentId]: true }));
-  //       console.log(`Submitted rating ${rating} for appointment ${appointmentId}`);
-  //     } else {
-  //       console.error("Failed to submit rating");
-  //     }
-  //   } catch (err) {
-  //     console.error("Error:", err);
-  //   }
-  // };
-  
+
+
 
   if (isAuthenticated === null) {
     return (
@@ -92,6 +77,11 @@ const UserAppointments = () => {
     return <SessionExpired handleClosePopup={handleClosePopup} />;
   }
 
+  const submitRating = (e, id) => {
+    e.preventDefault();
+
+
+  }
 
   const NoAppointmentsMessage = ({ message }) => (
     <div className="flex flex-col items-center justify-center py-8">
@@ -196,31 +186,49 @@ const UserAppointments = () => {
                         </div>
                       </div>
                       <>
-                      {!submittedRatings[appointment.id] ? (
-                        <form className="flex flex-col ml-13 mt-2 sm:ml-0 sm:mt-0 w-30">
-                          <Rating
-                            name={`rating-${appointment.id}`}
-                            value={ratings[appointment.id] || 2.5}
-                            // defaultValue={2.5}
-                            precision={0.5}
-                            onChange={(event, newValue) => {
-                              setRatings(prev => ({
-                                ...prev,
-                                [appointment.id]: newValue,
-                              }));
+                        {!appointment.stars ? (
+                          <form
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              // submitRating(appointment.id, ratingValues[appointment.id]);
+                              console.log(ratings[appointment.id]);
                             }}
-                          />
-                          <button
-                            type="submit"
-                            className=" text-orange-700 w-16 sm:w-full px-2 py-1 rounded hover:text-orange-900 text-sm"
-                          >
-                            Submit
-                          </button>
-                        </form>
-                      )  : (
-                        <span className="text-green-600 font-medium text-sm">Rating submitted!</span>
-                      )}
-
+                            className="flex flex-col ml-13 mt-2 sm:ml-0 sm:mt-0 w-30">
+                            <Rating
+                              name={`rating-${appointment.id}`}
+                              value={ratings[appointment.id] || 2.5}
+                              // precision={0.5}
+                              onChange={(event, newValue) => {
+                                console.log(newValue)
+                                setRatings(prev => ({
+                                  ...prev,
+                                  [appointment.id]: newValue,
+                                }));
+                              }}
+                            />
+                            <button
+                              type="submit"
+                              // onClick={}
+                              // onClick={(event) => {
+                              //   event.preventDefault();
+                              //   setSubmittedRatings({
+                              //     [appointment.id]: true
+                              //   })
+                              // }}
+                              className=" text-orange-700 w-16 sm:w-full px-2 py-1 rounded hover:text-orange-900 text-sm"
+                            >
+                              Submit
+                            </button>
+                          </form>
+                        ) : (
+                          <span className="text-green-600 font-medium text-sm">Rating submitted!</span>
+                        )}
+                        {/* const res = await fetch(:,
+method: "POST",
+cintent: application/json,
+bosy{JSON.stringify{
+  hjaskd
+}}: "") */}
                       </>
                     </div>
                   </div>

@@ -1030,7 +1030,7 @@ app.get("/pastuserappt", async (req, res) => {
         doc: true,
       },
     }); // Fetch all appts
-    // console.log(appt);
+    console.log(appt);
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
     console.error(e);
@@ -1360,6 +1360,27 @@ app.post("/resetAdminPassword", async (req, res) => {
     res.json({ message: "Password updated successfully" });
   } catch (error) {
     console.error("Error in resetPassword endpoint:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/setRating", async (req, res) => {
+  const { stars, id } = req.body;
+  stars = Number(stars);
+  id = Number(id);
+  try {
+    const response = await prisma.pastAppointments.update({
+      where: {
+        id: id,
+      },
+      data:{
+        stars: stars,
+      }
+    });
+
+    res.json({ message: "Rating updated successfully" });
+  } catch (error) {
+    console.error("Error in rating update:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
