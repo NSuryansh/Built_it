@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { CalendarCheck, CalendarX, Clock, MapPin } from "lucide-react";
+import { CalendarCheck, CalendarX, Clock, MapPin, Download } from "lucide-react";
 import Footer from "../components/Footer";
 import { format } from "date-fns";
 import SessionExpired from "../components/SessionExpired";
@@ -57,6 +57,7 @@ const Events = () => {
   async function getPastEvents() {
     const res = await fetch("http://localhost:3000/getPastEvents");
     const resp = await res.json();
+    console.log(resp);
     setpastEvents(resp);
   }
 
@@ -193,15 +194,15 @@ const Events = () => {
                           {event.venue}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {event.content ? (
+                          {event.url ? (
                             <button
                               onClick={() =>
-                                window.open(event.content.url, "_blank")
+                                window.open(event.url, "_blank")
                               }
                               className="flex items-center text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)]"
                             >
                               <Download className="h-4 w-4 mr-1" />
-                              Download {event.content.type.toUpperCase()}
+                              Download
                             </button>
                           ) : (
                             <span className="text-gray-400 italic">
@@ -266,6 +267,6 @@ const Events = () => {
       <Footer color={"orange"} />
     </div>
   );
-}
+};
 
 export default Events;
