@@ -34,6 +34,7 @@ const DoctorAppointment = () => {
   const [appointments, setapp] = useState([]);
   const [curr, setcurr] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isBar, setIsBar] = useState(true);
   const [timePeriodData, setTimePeriodData] = useState({
     "Last 1 Month": { UG: 0, PG: 0, PhD: 0 },
     "Last 3 Months": { UG: 0, PG: 0, PhD: 0 },
@@ -43,7 +44,6 @@ const DoctorAppointment = () => {
   const [note, setNote] = useState("");
   const navigate = useNavigate();
 
-  // Convert timePeriodData to array format for charts
   const histogramData = Object.keys(timePeriodData).map((period) => ({
     name: period,
     UG: timePeriodData[period].UG || 0,
@@ -51,12 +51,15 @@ const DoctorAppointment = () => {
     PhD: timePeriodData[period].PhD || 0
   }));
 
-  // Create pie data for each time period
   const getPieData = (period) => [
     { name: 'UG', value: timePeriodData[period].UG || 0 },
     { name: 'PG', value: timePeriodData[period].PG || 0 },
     { name: 'PhD', value: timePeriodData[period].PhD || 0 }
   ];
+
+  const handleGraphTypeChange = (e) => {
+    setIsBar(e.target.value === "bar");
+  };
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -278,7 +281,6 @@ const DoctorAppointment = () => {
       <DoctorNavbar />
       <div className="container mx-auto px-4 sm:px-8 lg:px-16 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Current Appointments */}
           <div className="space-y-10">
             <div className="flex items-center justify-between">
               <div>
@@ -355,7 +357,6 @@ const DoctorAppointment = () => {
             </div>
           </div>
 
-          {/* Incoming Requests */}
           <div className="space-y-10">
             <div className="flex items-center justify-between">
               <div>
@@ -430,143 +431,72 @@ const DoctorAppointment = () => {
           </div>
         </div>
 
-        {/* Past Appointments Visualization */}
-        <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Bar Chart */}
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-10 border border-purple-100/50">
-            <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 drop-shadow-lg mb-8">
-              Appointments by Time Period
-            </h2>
-            <div className="h-96 w-full">
-              <ResponsiveContainer>
-                <BarChart data={histogramData}>
-                  <CartesianGrid strokeDasharray="5 5" stroke="#e5e7eb/50" />
-                  <XAxis dataKey="name" stroke="#6b7280" fontSize={14} />
-                  <YAxis stroke="#6b7280" fontSize={14} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="UG" fill={COLORS[0]} radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="PG" fill={COLORS[1]} radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="PhD" fill={COLORS[2]} radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+        <div className="mt-20">
+          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-10 border border-purple-100/50 mb-8">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 drop-shadow-lg">
+                Past Appointments Analysis
+              </h2>
+              <select 
+                onChange={handleGraphTypeChange}
+                value={isBar ? "bar" : "pie"}
+                className="px-4 py-2 border border-purple-200 rounded-lg bg-white/50 backdrop-blur-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
+              >
+                <option value="bar">Bar Graph</option>
+                <option value="pie">Pie Charts</option>
+              </select>
             </div>
-          </div>
 
-          {/* Last 1 Month Pie Chart */}
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-10 border border-purple-100/50">
-            <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 drop-shadow-lg mb-8">
-              Last 1 Month Distribution
-            </h2>
-            <div className="h-96 w-full">
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={getPieData("Last 1 Month")}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={120}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {getPieData("Last 1 Month").map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Last 3 Months Pie Chart */}
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-10 border border-purple-100/50">
-            <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 drop-shadow-lg mb-8">
-              Last 3 Months Distribution
-            </h2>
-            <div className="h-96 w-full">
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={getPieData("Last 3 Months")}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={120}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {getPieData("Last 3 Months").map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Last 6 Months Pie Chart */}
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-10 border border-purple-100/50">
-            <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 drop-shadow-lg mb-8">
-              Last 6 Months Distribution
-            </h2>
-            <div className="h-96 w-full">
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={getPieData("Last 6 Months")}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={120}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {getPieData("Last 6 Months").map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Last 12 Months Pie Chart */}
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-10 border border-purple-100/50">
-            <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 drop-shadow-lg mb-8">
-              Last 12 Months Distribution
-            </h2>
-            <div className="h-96 w-full">
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={getPieData("Last 12 Months")}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={120}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {getPieData("Last 12 Months").map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+            {isBar ? (
+              <div className="h-96 w-full">
+                <ResponsiveContainer>
+                  <BarChart data={histogramData}>
+                    <CartesianGrid strokeDasharray="5 5" stroke="#e5e7eb/50" />
+                    <XAxis dataKey="name" stroke="#6b7280" fontSize={14} />
+                    <YAxis stroke="#6b7280" fontSize={14} />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(229, 231, 235, 0.5)",
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="UG" fill={COLORS[0]} radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="PG" fill={COLORS[1]} radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="PhD" fill={COLORS[2]} radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                {Object.keys(timePeriodData).map((period) => (
+                  <div key={period} className="h-86 w-[260px]">
+                    <h3 className="text-xl font-semibold text-gray-700 mb-4">{period}</h3>
+                    <ResponsiveContainer>
+                      <PieChart>
+                        <Pie
+                          data={getPieData(period)}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          outerRadius={120}
+                          fill="#8884d8"
+                          dataKey="value"
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {getPieData(period).map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
