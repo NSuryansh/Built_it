@@ -41,7 +41,7 @@ const AdminDashboard = () => {
             const branch = app.user.acadProg;
             const docName = app.doc.name.split(" ")[0];
             if (!result[docName]) {
-              result[docName] = { UG: 0, PG: 0, PhD: 0 };
+              result[docName] = { UG: 0, PG: 0, PHD: 0 };
             }
             result[docName][branch] += 1;
           });
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
           Object.entries(result).forEach(([doc, counts]) => {
             ugAppointments[doc] = counts.UG;
             pgAppointments[doc] = counts.PG;
-            phdAppointments[doc] = counts.PhD;
+            phdAppointments[doc] = counts.PHD;
           });
 
           setAppointmentsUG(ugAppointments);
@@ -74,7 +74,7 @@ const AdminDashboard = () => {
     name: doc,
     UG: appointmentsUG[doc] || 0,
     PG: appointmentsPG[doc] || 0,
-    PhD: appointmentsPHD[doc] || 0,
+    PHD: appointmentsPHD[doc] || 0,
   }));
 
   if (isAuthenticated === null) {
@@ -109,7 +109,7 @@ const AdminDashboard = () => {
                 <Legend />
                 <Bar dataKey="UG" fill="#048A81" name="UG Appointments" />
                 <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
-                <Bar dataKey="PhD" fill="#FB8500" name="PhD Appointments" />
+                <Bar dataKey="PHD" fill="#FB8500" name="PhD] Appointments" />
               </BarChart>
             </ResponsiveContainer>
           </div>
