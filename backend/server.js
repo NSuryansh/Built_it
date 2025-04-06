@@ -87,7 +87,7 @@ io.on("connection", (socket) => {
   socket.on("joinRoom", ({ userId, doctorId }) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
     socket.join(room);
-    console.log(`Socket id ${socket.id} joined room ${room}`);
+    // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
   socket.on(
     "sendMessage",
@@ -380,8 +380,8 @@ app.get("/chatContacts", async (req, res) => {
 app.get("/messages", async (req, res) => {
   try {
     const { userId, recId, userType, recType } = req.query;
-    console.log(userId);
-    console.log(recId);
+    // console.log(userId);
+    // console.log(recId);
     const messages = await prisma.message.findMany({
       where: {
         OR: [
@@ -553,7 +553,18 @@ app.post("/addLeave", async (req, res) => {
 });
 
 app.post("/addDoc", async (req, res) => {
-  const { name, mobile, email, password, reg_id, desc, address, city, experenice, img } = req.body;
+  const {
+    name,
+    mobile,
+    email,
+    password,
+    reg_id,
+    desc,
+    address,
+    city,
+    experenice,
+    img,
+  } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   // const imgUrl = uploadImage(img)
   try {
@@ -1003,7 +1014,7 @@ app.get("/pastdocappt", async (req, res) => {
         user: true,
       },
     });
-    console.log(appt);
+    // console.log(appt);
     res.json(appt);
   } catch (e) {
     console.error(e);
@@ -1368,13 +1379,13 @@ app.post("/save-subscription", async (req, res) => {
   try {
     console.log("HELLLLLOOOOOOO")
     const { userid, subscription, userType } = req.body;
-    console.log(userid);
-    console.log(subscription);
+    // console.log(userid);
+    // console.log(subscription);
     if (!userid || !subscription) {
       return res.status(400).json({ error: "Missing userId or subscription" });
     }
 
-    console.log(userType, " userType");
+    // console.log(userType, " userType");
 
     const { endpoint, keys } = subscription;
     if (userType == "user") {
@@ -1410,23 +1421,13 @@ app.post("/save-subscription", async (req, res) => {
       }
     } else if (userType == "doc") {
       try {
-        await prisma.subscription.upsert({
-          where: {
-            doctorId: Number(userid),
-          },
-          update: {
-            endpoint: endpoint,
-            authKey: keys.auth,
-            p256dhKey: keys.p256dh,
-          },
-          create: {
+        await prisma.subscription.create({
             data: {
-              doctorId: userid,
+              doctorId: Number(userid),
               endpoint: endpoint,
               authKey: keys.auth,
               p256dhKey: keys.p256dh,
             },
-          },
         });
         res.json({ success: true });
       } catch (e) {
@@ -1461,7 +1462,7 @@ app.post("/send-notification", async (req, res) => {
       });
     }
 
-    console.log(subscription);
+    // console.log(subscription);
 
     if (!subscription) {
       return res.status(404).json({ error: "User subscription not found" });
@@ -1726,24 +1727,20 @@ app.post("/scores-bot", async (req, res) => {
 
 app.put("/modifyDoc", async (req, res) => {
   try {
-    const { id, name, email, mobile, desc, address, city, experenice } =
-      req.body;
-
-    // console.log(req.body);
-
-    const doctorId = parseInt(id, 10);
+    const { id, address, city, experience, educ, certifi } = req.query;
+    const doc_id = Number(id);
+    console.log(req.query);
+    const certifications = certifi.split(',')
+    const education = educ.split(',')
+    const doctorId = parseInt(doc_id, 10);
     if (isNaN(doctorId) || doctorId <= 0) {
       return res.status(400).json({ error: "Invalid doctor ID" });
     }
 
     const orConditions = [];
-    if (name) orConditions.push({ name });
-    if (mobile) orConditions.push({ mobile });
-    if (email) orConditions.push({ email });
-    if (desc) orConditions.push({ desc });
     if (address) orConditions.push({ address });
     if (city) orConditions.push({ city });
-    if (experenice) orConditions.push({ experenice });
+    if (experience) orConditions.push({ experience });
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
@@ -1758,13 +1755,9 @@ app.put("/modifyDoc", async (req, res) => {
     }
 
     const updatedData = {};
-    if (name?.trim()) updatedData.name = name;
-    if (mobile?.trim()) updatedData.mobile = mobile;
-    if (email?.trim()) updatedData.email = email;
-    if (desc?.trim()) updatedData.desc = desc;
     if (address?.trim()) updatedData.address = address;
     if (city?.trim()) updatedData.city = city;
-    if (experenice?.trim()) updatedData.experenice = experenice;
+    if (experience?.trim()) updatedData.experience = experience;
 
     if (Object.keys(updatedData).length === 0) {
       return res
@@ -1778,6 +1771,32 @@ app.put("/modifyDoc", async (req, res) => {
         data: updatedData,
       });
 
+      const certificate = await prisma.docCertification.deleteMany({
+        where:{
+          doctor_id: doc_id
+        }
+      })
+      for(const certif of certifications){
+        await prisma.docCertification.create({
+          data: {
+            doctor_id: doc_id,
+            certification: certif
+          }
+        })
+      }
+      const edu = await prisma.docEducation.deleteMany({
+        where:{
+          doctor_id: doc_id
+        }
+      })
+      for(const educ of education){
+        await prisma.docEducation.create({
+          data: {
+            doctor_id: doc_id,
+            education: educ
+          }
+        })
+      }
       res.json({ message: "Doctor updated successfully", updatedDoctor });
     } catch (error) {
       if (error.code === "P2025") {
