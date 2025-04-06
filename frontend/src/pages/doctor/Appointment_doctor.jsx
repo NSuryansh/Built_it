@@ -86,8 +86,8 @@ const DoctorAppointment = () => {
       for (let i = 0; i < resp.length; i++) {
         resp[i].dateTime = TimeChange(new Date(resp[i].dateTime).getTime());
       }
-      setapp(resp2);
-      setcurr(resp);
+      setapp(resp);
+      setcurr(resp2);
     };
 
     fetchData();
