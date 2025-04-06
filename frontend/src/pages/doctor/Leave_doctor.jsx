@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, Clock, CalendarDays, ArrowLeft } from "lucide-react";
+import { ToastContainer } from "react-toastify";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
+import { checkAuth } from "../../utils/profile";
+import { useNavigate } from "react-router-dom";
 
 const DoctorLeave = () => {
   const [leaveType, setLeaveType] = useState(null);
@@ -7,15 +11,32 @@ const DoctorLeave = () => {
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [selectedSlot, setSelectedSlot] = useState("");
   const [reason, setReason] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate();
+  const [name, setname] = useState(localStorage.getItem("username"));
+  const [desc, setDesc] = useState(localStorage.getItem("desc"));
+  const docId = localStorage.getItem("userid");
+  const [slots, setSlots] = useState([]);
 
-  // Mock data for available slots
-  const availableSlots = [
-    { id: "1", time: "09:00 AM - 10:00 AM" },
-    { id: "2", time: "10:00 AM - 11:00 AM" },
-    { id: "3", time: "11:00 AM - 12:00 PM" },
-    { id: "4", time: "02:00 PM - 03:00 PM" },
-    { id: "5", time: "03:00 PM - 04:00 PM" },
-  ];
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("doc");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  const fetchAvailableSlots = async (date) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/available-slots?date=${date}&docId=${docId}`
+      );
+      const data = await response.json();
+      setSlots(data.availableSlots);
+    } catch (error) {
+      console.error("Error fetching available slots:", error);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,8 +59,10 @@ const DoctorLeave = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto p-6">
+    <div className="min-h-screen bg-blue-50 flex flex-col">
+      <DoctorNavbar />
+      <ToastContainer />
+      <div className="max-w-4xl my-auto w-full mx-auto p-6">
         <div className="bg-white rounded-xl shadow-lg p-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-blue-900">
@@ -53,9 +76,9 @@ const DoctorLeave = () => {
               />
               <div className="ml-4">
                 <h2 className="text-xl font-semibold text-blue-800">
-                  Dr. Sarah Johnson
+                  Dr. {name}
                 </h2>
-                <p className="text-blue-600">Cardiologist</p>
+                <p className="text-blue-600">{desc}</p>
               </div>
             </div>
           </div>
@@ -95,7 +118,7 @@ const DoctorLeave = () => {
                         required
                       >
                         <option value="">Choose a slot</option>
-                        {availableSlots.map((slot) => (
+                        {slots.map((slot) => (
                           <option key={slot.id} value={slot.id}>
                             {slot.time}
                           </option>

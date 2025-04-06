@@ -131,7 +131,9 @@ const AdminAppointments = () => {
           <div className="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-blue-100 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 font-medium">Total Appointments</p>
+                <p className="text-sm text-gray-600 font-medium">
+                  Total Appointments
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {filteredAppointments.length}
                 </p>
@@ -142,8 +144,12 @@ const AdminAppointments = () => {
           <div className="bg-gradient-to-br from-white to-green-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-green-100 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 font-medium">Total Doctors</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{doctors.length}</p>
+                <p className="text-sm text-gray-600 font-medium">
+                  Total Doctors
+                </p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">
+                  {doctors.length}
+                </p>
               </div>
               <Users className="h-10 w-10 text-green-600 animate-pulse" />
             </div>
@@ -151,7 +157,9 @@ const AdminAppointments = () => {
           <div className="bg-gradient-to-br from-white to-purple-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-purple-100 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 font-medium">Today's Appointments</p>
+                <p className="text-sm text-gray-600 font-medium">
+                  Today's Appointments
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {
                     filteredAppointments.filter(
@@ -167,7 +175,9 @@ const AdminAppointments = () => {
 
         {/* Graph */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-12 border border-gray-100">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Appointments Overview</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            Appointments Overview
+          </h2>
           <div className="h-[400px] bg-gradient-to-br from-blue-50 to-gray-50 rounded-xl p-4 shadow-inner">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={filteredGraphData}>
@@ -176,11 +186,11 @@ const AdminAppointments = () => {
                 <YAxis stroke="#6b7280" fontSize={14} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'white',
-                    borderRadius: '10px',
-                    border: 'none',
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-                    padding: '10px',
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                    border: "none",
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                    padding: "10px",
                   }}
                 />
                 <Area
@@ -204,7 +214,9 @@ const AdminAppointments = () => {
         {/* Appointments List */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
           <div className="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-blue-50">
-            <h2 className="text-2xl font-semibold text-gray-900">Recent Appointments</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Recent Appointments
+            </h2>
           </div>
           <div className="divide-y divide-gray-100">
             {filteredAppointments.map((appointment) => (
@@ -213,16 +225,23 @@ const AdminAppointments = () => {
                 className="px-6 py-5 hover:bg-blue-50/50 transition-all duration-200"
               >
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900 text-lg">{appointment.patientName}</p>
+                  <div className="w-1/3">
+                    <p className="font-medium text-gray-900 text-lg">
+                      {appointment.patientName}
+                    </p>
                     <p className="text-sm text-gray-600 mt-1">
                       {doctors.find((d) => d.id === appointment.doctorId)?.name}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">{appointment.date}</p>
-                    <p className="text-sm text-gray-600 mt-1">{appointment.time}</p>
+                  <div className="w-1/3 text-center">
+                    <p className="text-sm font-medium text-gray-900">
+                      {appointment.date}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {appointment.time}
+                    </p>
                   </div>
+                  <div className="w-1/3 flex justify-end">
                   <span
                     className={`px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border transition-colors duration-200 ${
                       appointment.status === "Confirmed"
@@ -234,6 +253,7 @@ const AdminAppointments = () => {
                   >
                     {appointment.status}
                   </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -241,7 +261,7 @@ const AdminAppointments = () => {
         </div>
       </main>
     </div>
-);
+  );
 };
 
 export default AdminAppointments;
