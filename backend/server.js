@@ -1869,16 +1869,7 @@ app.get("/all-appointments", async (req, res) => {
     const appts = await prisma.appointments.findMany({
       include: {
         doctor: true,
-        user: {
-          select: {
-            username: true,
-            email: true,
-            rollNo: true,
-            department: true,
-            acadProg: true,
-            gender: true,
-          },
-        },
+        user: true
       },
     });
 
@@ -1930,10 +1921,23 @@ app.post("/add-slot", async (req, res) => {
 });
 
 app.post("/referrals", async (req, res) => {
-  const { user_id, doctor_id, referred_by, reason } = req.body;
+  const { roll_no, doctor_id, referred_by, reason } = req.body;
 
-  if (!user_id || !doctor_id || !referred_by || !reason) {
+  if (!roll_no || !doctor_id || !referred_by || !reason) {
     return res.status(400).json({ message: "All fields are required" });
+  }
+
+  // Step 1: Find user by roll number
+  const user = await prisma.user.findUnique({
+    where: {
+      rollNo: roll_no, // make sure rollNo matches the field in your Prisma schema
+    },
+  });
+
+  if (!user) {
+    return res
+      .status(404)
+      .json({ message: "User with given roll number not found" });
   }
 
   try {
