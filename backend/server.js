@@ -9,7 +9,6 @@ import { createServer } from "http";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-// import emailjs from "@emailjs/browser";
 import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
@@ -330,15 +329,12 @@ app.get("/profile", async (req, res) => {
 app.get("/chatContacts", async (req, res) => {
   try {
     const userId = req.query["userId"];
-    // console.log(req.query["userId"]);
-    // console.log(userId);
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }
 
     const id = parseInt(userId);
 
-    // Fetch all distinct users the given user has chatted with
     const chatPartners = await prisma.message.findMany({
       where: {
         OR: [{ senderId: id }, { recipientId: id }],
@@ -350,14 +346,12 @@ app.get("/chatContacts", async (req, res) => {
       distinct: ["senderId", "recipientId"],
     });
 
-    // Extract unique user IDs excluding the current user
     const uniqueUserIds = new Set();
     chatPartners.forEach((chat) => {
       if (chat.senderId !== id) uniqueUserIds.add(chat.senderId);
       if (chat.recipientId !== id) uniqueUserIds.add(chat.recipientId);
     });
 
-    // Fetch usernames of these users
     const users = await prisma.user.findMany({
       where: {
         id: { in: Array.from(uniqueUserIds) },
@@ -417,20 +411,6 @@ app.post("/reschedule", async (req, res) => {
   }
 });
 
-// app.get("/getPastApp", async (req, res) => {
-//   const { docId } = req.query;
-//   try {
-//     const app = await prisma.pastAppointments.findMany({
-//       where: {
-//         doc_id: Number(docId),
-//       },
-//     });
-//     res.json(app);
-//   } catch (e) {
-//     res.json(e);
-//   }
-// });
-
 app.get("/getPastEvents", async (req, res) => {
   try {
     // console.log("hello");
@@ -452,18 +432,6 @@ app.get("/getPastEvents", async (req, res) => {
   }
 });
 
-// app.get('/public-key/:userId', async (req, res) => {
-//     const { userId } = req.params;
-
-//     const user = await prisma.user.findUnique({ where: { id: userId }, select: { publicKey: true } });
-
-//     if (!user) {
-//         return res.status(404).json({ message: "User not found" });
-//     }
-
-//     res.json({ publicKey: user.publicKey });
-// });
-
 app.get("/events", async (req, res) => {
   try {
     const events = await prisma.events.findMany({
@@ -472,8 +440,8 @@ app.get("/events", async (req, res) => {
           gte: new Date(),
         },
       },
-    }); // Fetch all events
-    res.json(events); // Send the events as a JSON response
+    });
+    res.json(events);
   } catch (e) {
     console.error(e);
     res.status(0).json({ message: "Error fetching events" });
@@ -484,7 +452,6 @@ app.put("/updateUser", async (req, res) => {
   try {
     const { userId, username, mobile, email, alt_mobile } = req.body;
 
-    // Validate required fields
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
@@ -496,7 +463,6 @@ app.put("/updateUser", async (req, res) => {
       ...(alt_mobile && { alt_mobile }),
     };
 
-    // Update the user details in Prisma
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: updatedData,
@@ -582,8 +548,6 @@ app.post("/addDoc", async (req, res) => {
         img: img,
       },
     });
-    // const resp = await doc.json()
-    // console.log(resp)
     res.json({ message: "doc added", doc: doc });
   } catch (e) {
     res.json({ error: e });
@@ -600,22 +564,19 @@ app.post("/book", async (req, res) => {
   const some = new Date(newDate.getTime() - userTimezoneOffset);
   const reason = req.body["reason"];
   const appId = req.body["id"];
-  // console.log(req.body);
   try {
-    // Check if user exists
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if doctor exists
     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
     const result = await prisma.$transaction(async (prisma) => {
-      // Create appointment
+
       const appointment = await prisma.appointments.create({
         data: {
           user_id: userId,
@@ -625,11 +586,10 @@ app.post("/book", async (req, res) => {
         },
       });
 
-      //Remove from requests table
       const reqDel = await prisma.requests.delete({
         where: { id: parseInt(appId) },
       });
-      // console.log(reqDel);
+
       return { appointment, reqDel };
     });
     res.json({ message: "Appointment booked successfully", result });
@@ -646,20 +606,17 @@ app.post("/requests", async (req, res) => {
   const reason = req.body["reason"];
 
   try {
-    // Check if user exists
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if doctor exists
     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
     const date = new Date(dateTime);
-    // Create appointment
     const appointment = await prisma.requests.create({
       data: {
         user_id: userId,
@@ -679,11 +636,10 @@ app.post("/requests", async (req, res) => {
   }
 });
 
-//GET REQUEST FOR DOCTOR LIST
 app.get("/getdoctors", async (req, res) => {
   try {
-    const docs = await prisma.doctor.findMany(); // Fetch all docs
-    res.json(docs); // Send the docs as a JSON response
+    const docs = await prisma.doctor.findMany();
+    res.json(docs);
   } catch (e) {
     console.error(e);
     res.status(0).json({ message: "Error fetching doctors" });
@@ -827,7 +783,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1405,15 +1361,15 @@ app.post("/save-subscription", async (req, res) => {
         //     },
         //   });
         // } else {
-          // Create a new subscription
-          await prisma.subscription.create({
-            data: {
-              userId: Number(userid),
-              endpoint: endpoint,
-              authKey: keys.auth,
-              p256dhKey: keys.p256dh,
-            },
-          });
+        // Create a new subscription
+        await prisma.subscription.create({
+          data: {
+            userId: Number(userid),
+            endpoint: endpoint,
+            authKey: keys.auth,
+            p256dhKey: keys.p256dh,
+          },
+        });
         // }
       } catch (e) {
         console.log(e);
@@ -1422,12 +1378,12 @@ app.post("/save-subscription", async (req, res) => {
     } else if (userType == "doc") {
       try {
         await prisma.subscription.create({
-            data: {
-              doctorId: Number(userid),
-              endpoint: endpoint,
-              authKey: keys.auth,
-              p256dhKey: keys.p256dh,
-            },
+          data: {
+            doctorId: Number(userid),
+            endpoint: endpoint,
+            authKey: keys.auth,
+            p256dhKey: keys.p256dh,
+          },
         });
         res.json({ success: true });
       } catch (e) {
@@ -1599,6 +1555,32 @@ app.get("/available-slots", async (req, res) => {
   }
 });
 
+app.put('/modifySlots', async (req, res) => {
+  const { slotsArray, doctorId } = req.query
+  console.log(slotsArray)
+  const slots = slotsArray.split(',')
+  console.log(doctorId)
+  try {
+    const delSlots = await prisma.slots.deleteMany({
+      where: {
+        doctor_id: Number(doctorId)
+      }
+    })
+    for (const slot of slots) {
+      const newSlots = await prisma.slots.create({
+        data: {
+          doctor_id: Number(doctorId),
+          starting_time: new Date(slot)
+        }
+      })
+    }
+    res.json({message: "Doctor slots updated successfully"})
+  }catch(e){
+    console.log(e)
+    res.json(e)
+  }
+})
+
 app.get("/getDoc", async (req, res) => {
   const { docId } = req.query;
   const doctor_id = Number(docId);
@@ -1744,8 +1726,8 @@ app.put("/modifyDoc", async (req, res) => {
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
-          where: { OR: orConditions },
-        })
+        where: { OR: orConditions },
+      })
       : null;
 
     if (existingDoctor && existingDoctor.id !== doctorId) {
@@ -1772,11 +1754,11 @@ app.put("/modifyDoc", async (req, res) => {
       });
 
       const certificate = await prisma.docCertification.deleteMany({
-        where:{
+        where: {
           doctor_id: doc_id
         }
       })
-      for(const certif of certifications){
+      for (const certif of certifications) {
         await prisma.docCertification.create({
           data: {
             doctor_id: doc_id,
@@ -1785,11 +1767,11 @@ app.put("/modifyDoc", async (req, res) => {
         })
       }
       const edu = await prisma.docEducation.deleteMany({
-        where:{
+        where: {
           doctor_id: doc_id
         }
       })
-      for(const educ of education){
+      for (const educ of education) {
         await prisma.docEducation.create({
           data: {
             doctor_id: doc_id,
