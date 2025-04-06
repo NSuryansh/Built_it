@@ -100,6 +100,7 @@ io.on("connection", (socket) => {
       authTag,
     }) => {
       try {
+        // console.log(doctorId,'doc')
         var senderId, recipientId;
         if (senderType === "doc") {
           senderId = doctorId;
@@ -108,6 +109,8 @@ io.on("connection", (socket) => {
           senderId = userId;
           recipientId = doctorId;
         }
+        console.log(senderId)
+        console.log(recipientId)
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
