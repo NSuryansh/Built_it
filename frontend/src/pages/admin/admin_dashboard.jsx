@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { 
-  BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, 
-  CartesianGrid, Tooltip, ResponsiveContainer, Legend 
+import {
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
 } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
@@ -75,7 +84,14 @@ const AdminDashboard = () => {
   }));
 
   // Colors for the charts
-  const COLORS = ["#048A81", "#FFB703", "#FB8500", "#6A4C93", "#2A9D8F", "#E76F51"];
+  const COLORS = [
+    "#048A81",
+    "#FFB703",
+    "#FB8500",
+    "#6A4C93",
+    "#2A9D8F",
+    "#E76F51",
+  ];
 
   // Handler for graph type change via dropdown.
   const handleGraphTypeChange = (e) => {
@@ -84,9 +100,11 @@ const AdminDashboard = () => {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#048a81" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+        <PacmanLoader color="#047857" size={30} />
+        <p className="mt-4 text-emerald-800 font-medium">
+          Loading your dashboard...
+        </p>
       </div>
     );
   }
@@ -102,7 +120,7 @@ const AdminDashboard = () => {
 
         {/* Dropdown to choose graph type */}
         <div className="flex justify-end">
-          <select 
+          <select
             onChange={handleGraphTypeChange}
             value={isPie ? "pie" : "bar"}
             className="px-4 py-2 border border-purple-200 rounded-lg bg-white/50 backdrop-blur-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
@@ -146,7 +164,10 @@ const AdminDashboard = () => {
                           }
                         >
                           {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
                           ))}
                         </Pie>
                         <Tooltip />

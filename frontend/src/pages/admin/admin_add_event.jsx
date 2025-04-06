@@ -5,7 +5,15 @@ import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
-import { Calendar, Clock, MapPin, FileText, Plus, X, AlertCircle } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  FileText,
+  Plus,
+  X,
+  AlertCircle,
+} from "lucide-react";
 const AddEvent = () => {
   const navigate = useNavigate();
 
@@ -59,9 +67,11 @@ const AddEvent = () => {
   };
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#048a81" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+        <PacmanLoader color="#047857" size={30} />
+        <p className="mt-4 text-emerald-800 font-medium">
+          Loading your dashboard...
+        </p>
       </div>
     );
   }
@@ -203,7 +213,7 @@ const AddEvent = () => {
         </div>
       </div>
     </div>
-);
+  );
 };
 
 export default AddEvent;
