@@ -160,9 +160,8 @@ app.post("/signup", async (req, res) => {
   const pubKey = req.body["publicKey"];
   const department = req.body["department"];
   const acadProg = req.body["acadProg"];
-  const rollNo = Number(req.body["rollNo"]);
+  const rollNo = req.body["rollNo"]
   const gender = req.body["gender"];
-
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {

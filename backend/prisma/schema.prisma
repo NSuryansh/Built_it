@@ -21,7 +21,7 @@ model User {
   password         String
   alt_mobile       String
   publicKey        String
-  rollNo           Int                  @unique
+  rollNo           String                  @unique
   department       String
   acadProg         String
   gender           Gender
