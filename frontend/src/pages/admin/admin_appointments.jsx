@@ -11,63 +11,55 @@ import {
 } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 
-// Mock data
-const doctors = [
-  { id: 1, name: "Dr. Sarah Wilson" },
-  { id: 2, name: "Dr. James Smith" },
-  { id: 3, name: "Dr. Emily Brown" },
-];
+const fetchDoctors = async () => {
+  const res = await fetch(`http://localhost:3000/getdoctors`, {
+    method: "GET",
+  });
+  const data = await res.json();
+  const formattedData = data.map((doc) => {
+    return { id: doc.id, name: doc.name };
+  });
+  return formattedData;
+};
 
-const appointments = [
-  {
-    id: 1,
-    doctorId: 1,
-    patientName: "John Doe",
-    date: "2024-03-20",
-    time: "09:00 AM",
-    status: "Confirmed",
-  },
-  {
-    id: 2,
-    doctorId: 2,
-    patientName: "Jane Smith",
-    date: "2024-03-20",
-    time: "10:00 AM",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    doctorId: 3,
-    patientName: "Mike Johnson",
-    date: "2024-03-20",
-    time: "11:00 AM",
-    status: "Confirmed",
-  },
-  {
-    id: 4,
-    doctorId: 1,
-    patientName: "Sarah Davis",
-    date: "2024-03-21",
-    time: "09:30 AM",
-    status: "Confirmed",
-  },
-  {
-    id: 5,
-    doctorId: 2,
-    patientName: "Tom Wilson",
-    date: "2024-03-21",
-    time: "02:00 PM",
-    status: "Cancelled",
-  },
-  {
-    id: 6,
-    doctorId: 3,
-    patientName: "Emma Brown",
-    date: "2024-03-22",
-    time: "11:30 AM",
-    status: "Confirmed",
-  },
-];
+const fetchAppointments = async () => {
+  const res = await fetch(`http://localhost:3000/all-appointments`, {
+    method: "GET",
+  });
+  const data = await res.json();
+  const formattedCurData = data.appts.map((appt) => {
+    return {
+      id: appt.id,
+      doctorId: appt.doctor_id,
+      patientName: appt.user.username,
+      time: new Date(appt.dateTime).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      date: new Date(appt.dateTime).toISOString().split("T")[0],
+      status: "Pending",
+    };
+  });
+  const formattedPastData = data.pastApp.map((appt) => {
+    return {
+      id: appt.id,
+      doctorId: appt.doc_id,
+      patientName: appt.user.username,
+      time: new Date(appt.createdAt).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      date: new Date(appt.createdAt).toISOString().split("T")[0],
+      status: "Done",
+    };
+  });
+
+  return [...formattedCurData, ...formattedPastData];
+};
+
+const doctors = await fetchDoctors();
+
+const appointments = await fetchAppointments();
 
 const graphData = [
   { date: "03/20", appointments: 3 },

@@ -54,126 +54,130 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   return (
     <div>
-      <Navbar />
-      <ToastContainer />
-      <div className="min-h-screen bg-[var(--custom-orange-100)] py-12">
-        <div className="max-w-md mx-auto bg-[var(--custom-white)] rounded-xl shadow-lg overflow-hidden">
-          <div className="px-6 py-8">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-[var(--custom-orange-900)]">
-                Modify Profile
-              </h2>
-              <p className="mt-2 text-sm text-[var(--custom-orange-700)]">
-                Update your profile information
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
-                >
-                  Username
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  placeholder={localStorage.getItem("username")}
-                  value={formData.username}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      username: e.target.value,
-                    }))
-                  }
-                  className="mt-1 block w-full rounded-md border border-[var(--custom-orange-200)] px-3 py-2 text-[var(--custom-orange-900)] placeholder-[var(--custom-orange-400)] focus:border-[var(--custom-orange-500 )]focus:outline-none focus:ring-1 focus:ring-[var(--custom-orange-500)]"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder={localStorage.getItem("user_email")}
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, email: e.target.value }))
-                  }
-                  className="mt-1 block w-full rounded-md border border-[var(--custom-orange-200)] px-3 py-2 text-[var(--custom-orange-900)] placeholder-[var(--custom-orange-400)] focus:border-[var(--custom-orange-500)] focus:outline-none focus:ring-1 focus:ring-[var(--custom-orange-500)]"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="mobile"
-                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
-                >
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="mobile"
-                  placeholder={localStorage.getItem("user_mobile")}
-                  value={formData.mobile}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      mobile: e.target.value,
-                    }))
-                  }
-                  className="mt-1 block w-full rounded-md border border-[var(--custom-orange-200)] px-3 py-2 text-[var(--custom-orange-900)] placeholder-[var(--custom-orange-400)] focus:border-[var(--custom-orange-500)] focus:outline-none focus:ring-1 focus:ring-[var(--custom-orange-500)]"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="alt_mobile"
-                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
-                >
-                  Emergency Contact Number
-                </label>
-                <input
-                  type="tel"
-                  id="alt_mobile"
-                  placeholder={localStorage.getItem("user_alt_mobile")}
-                  value={formData.alt_mobile}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      alt_mobile: e.target.value,
-                    }))
-                  }
-                  className="mt-1 block w-full rounded-md border border-[var(--custom-orange-200)] px-3 py-2 text-[var(--custom-orange-900)] placeholder-[var(--custom-orange-400)] focus:border-[var(--custom-orange-500)] focus:outline-none focus:ring-1 focus:ring-[var(--custom-orange-500)]"
-                />
-              </div>
-
-              <div className="flex gap-4 pt-4">
-                <button
-                  type="submit"
-                  className="flex-1 bg-[var(--custom-orange-600)] text-[var(--custom-white)] rounded-lg px-4 py-2 text-sm font-medium hover:bg-[var(--custom-orange-500)] transition-colors"
-                >
-                  Save Changes
-                </button>
-                <button
-                  type="button"
-                  onClick={onCancel}
-                  className="flex-1 bg-[var(--custom-white)] text-[var(--custom-orange-700)] rounded-lg px-4 py-2 text-sm font-medium border border-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-50)] transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+    <Navbar />
+    <ToastContainer />
+    <div className="min-h-screen bg-[var(--custom-orange-50)] py-16 flex items-center justify-center">
+      <div className="max-w-2xl mx-auto bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl border border-[var(--custom-orange-100)] overflow-hidden">
+        <div className="px-10 py-12">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-extrabold text-[var(--custom-orange-900)] tracking-tight">
+              Modify Profile
+            </h2>
+            <p className="mt-3 text-base text-[var(--custom-orange-600)]">
+              Update your profile information
+            </p>
           </div>
+  
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Username Field */}
+            <div className="relative">
+              <span className="absolute inset-0 flex items-center px-5 text-[var(--custom-orange-400)] opacity-50 pointer-events-none truncate peer-focus:opacity-0 transition-opacity duration-300">
+                {localStorage.getItem("username") || "Your username"}
+              </span>
+              <input
+                type="text"
+                id="username"
+                className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, username: e.target.value }))
+                }
+              />
+              <label
+                htmlFor="username"
+                className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-white)] bg-opacity-90 px-2"
+              >
+                Username
+              </label>
+            </div>
+  
+            {/* Email Field */}
+            <div className="relative">
+              <span className="absolute inset-0 flex items-center px-5 text-[var(--custom-orange-400)] opacity-50 pointer-events-none truncate peer-focus:opacity-0 transition-opacity duration-300">
+                {localStorage.getItem("user_email") || "Your email"}
+              </span>
+              <input
+                type="email"
+                id="email"
+                className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                }
+              />
+              <label
+                htmlFor="email"
+                className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-white)] bg-opacity-90 px-2"
+              >
+                Email
+              </label>
+            </div>
+  
+            {/* Phone Number Field */}
+            <div className="relative">
+              <span className="absolute inset-0 flex items-center px-5 text-[var(--custom-orange-400)] opacity-50 pointer-events-none truncate peer-focus:opacity-0 transition-opacity duration-300">
+                {localStorage.getItem("user_mobile") || "Your phone number"}
+              </span>
+              <input
+                type="tel"
+                id="mobile"
+                className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                value={formData.mobile}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, mobile: e.target.value }))
+                }
+              />
+              <label
+                htmlFor="mobile"
+                className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-white)] bg-opacity-90 px-2"
+              >
+                Phone Number
+              </label>
+            </div>
+  
+            {/* Emergency Contact Number Field */}
+            <div className="relative">
+              <span className="absolute inset-0 flex items-center px-5 text-[var(--custom-orange-400)] opacity-50 pointer-events-none truncate peer-focus:opacity-0 transition-opacity duration-300">
+                {localStorage.getItem("user_alt_mobile") || "Your emergency contact"}
+              </span>
+              <input
+                type="tel"
+                id="alt_mobile"
+                className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                value={formData.alt_mobile}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, alt_mobile: e.target.value }))
+                }
+              />
+              <label
+                htmlFor="alt_mobile"
+                className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-white)] bg-opacity-90 px-2"
+              >
+                Emergency Contact Number
+              </label>
+            </div>
+  
+            {/* Buttons */}
+            <div className="flex gap-6 pt-6">
+              <button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-[var(--custom-orange-500)] to-[var(--custom-orange-600)] text-[var(--custom-white)] rounded-xl px-8 py-4 text-base font-semibold hover:from-[var(--custom-orange-600)] hover:to-[var(--custom-orange-700)] hover:shadow-lg transition-all duration-300 shadow-md"
+              >
+                Save Changes
+              </button>
+              <button
+                type="button"
+                onClick={onCancel}
+                className="flex-1 bg-[var(--custom-white)] text-[var(--custom-orange-700)] rounded-xl px-8 py-4 text-base font-semibold border border-[var(--custom-orange-300)] hover:bg-[var(--custom-orange-50)] hover:shadow-md transition-all duration-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
   );
 };
 

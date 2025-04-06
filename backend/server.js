@@ -160,7 +160,7 @@ app.post("/signup", async (req, res) => {
   const pubKey = req.body["publicKey"];
   const department = req.body["department"];
   const acadProg = req.body["acadProg"];
-  const rollNo = req.body["rollNo"]
+  const rollNo = req.body["rollNo"];
   const gender = req.body["gender"];
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -1349,17 +1349,17 @@ app.post("/resetAdminPassword", async (req, res) => {
 });
 
 app.post("/setRating", async (req, res) => {
-  const stars = req.body["stars"]
-  const id = req.body["id"]
-  
+  const stars = req.body["stars"];
+  const id = req.body["id"];
+
   try {
     const response = await prisma.pastAppointments.update({
       where: {
         id: id,
       },
-      data:{
+      data: {
         stars: stars,
-      }
+      },
     });
 
     res.json({ message: "Rating updated successfully" });
@@ -1868,12 +1868,7 @@ app.get("/all-appointments", async (req, res) => {
     // Fetch upcoming/current appointments with related doctor and user
     const appts = await prisma.appointments.findMany({
       include: {
-        doctor: {
-          select: {
-            name: true,
-            desc: true,
-          },
-        },
+        doctor: true,
         user: {
           select: {
             username: true,
