@@ -105,12 +105,12 @@ io.on("connection", (socket) => {
         if (senderType === "doc") {
           senderId = doctorId;
           recipientId = userId;
-        } else if(senderType==="user") {
+        } else if (senderType === "user") {
           senderId = userId;
           recipientId = doctorId;
         }
-        console.log(senderId)
-        console.log(recipientId)
+        console.log(senderId);
+        console.log(recipientId);
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -1952,6 +1952,8 @@ app.post("/referrals", async (req, res) => {
       .status(404)
       .json({ message: "User with given roll number not found" });
   }
+
+  const user_id = user.id;
 
   try {
     const newReferral = await prisma.referrals.create({
