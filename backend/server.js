@@ -1869,16 +1869,7 @@ app.get("/all-appointments", async (req, res) => {
     const appts = await prisma.appointments.findMany({
       include: {
         doctor: true,
-        user: {
-          select: {
-            username: true,
-            email: true,
-            rollNo: true,
-            department: true,
-            acadProg: true,
-            gender: true,
-          },
-        },
+        user: true
       },
     });
 
