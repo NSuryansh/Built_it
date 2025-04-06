@@ -66,10 +66,7 @@ const DoctorProfile = () => {
         const slots = [];
         data2.availableSlots.map((slot) => {
           slots.push(
-            format(
-              TimeChange(new Date(slot.starting_time).getTime()),
-              "H:mm"
-            )
+            format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
           );
         });
         let certifications = [];
@@ -79,12 +76,12 @@ const DoctorProfile = () => {
         if (certifications.length === 0) {
           certifications = ["<Add>"];
         }
-        let education = [];
+        let educations = [];
         data.education.map((education) => {
-          education.push(education.education);
+          educations.push(education.education);
         });
-        if (education.length === 0) {
-          education = ["<Add>"];
+        if (educations.length === 0) {
+          educations = ["<Add>"];
         }
         setProfile({
           name: data.doctor.name,
@@ -95,7 +92,7 @@ const DoctorProfile = () => {
           address: data.doctor.address,
           city: data.doctor.city,
           certifications: certifications,
-          education: education,
+          education: educations,
           availability: slots,
         });
         setEditedProfile({
@@ -107,7 +104,7 @@ const DoctorProfile = () => {
           address: data.doctor.address,
           city: data.doctor.city,
           certifications: certifications,
-          education: education,
+          education: educations,
           availability: slots,
         });
       } catch (error) {
@@ -161,7 +158,7 @@ const DoctorProfile = () => {
       const doctorId = localStorage.getItem("userid");
       console.log(doctorId);
       const response = await fetch(
-        `http://localhost:3000/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}`,
+        `http://localhost:3000/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}`,
         {
           method: "PUT",
         }
@@ -415,7 +412,7 @@ const DoctorProfile = () => {
                                 ...editedProfile.availability,
                               ];
                               newAvailability[index] = e.target.value;
-                              console.log(typeof(newAvailability[index]));
+                              console.log(typeof newAvailability[index]);
                               setEditedProfile({
                                 ...editedProfile,
                                 availability: newAvailability,
