@@ -59,7 +59,7 @@ const UserAppointments = () => {
   useEffect(() => {
     getPrevApp();
     getCurrApp();
-  }, []);
+  }, [submittedRatings]);
 
 
 
