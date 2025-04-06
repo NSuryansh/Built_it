@@ -12,7 +12,7 @@ import {
 } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import CustomToast from "./CustomToast";
+import CustomToast from "../CustomToast";
 
 const DoctorCalendar = ({ onDateSelect }) => {
   const [appointments, setAppointments] = useState([]);
