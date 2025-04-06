@@ -35,11 +35,12 @@ const DoctorAppointment = () => {
   const [curr, setcurr] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isBar, setIsBar] = useState(true);
+  // Updated keys to use "PhD" for consistency
   const [timePeriodData, setTimePeriodData] = useState({
-    "Last 1 Month": { UG: 0, PG: 0, P: 0 },
-    "Last 3 Months": { UG: 0, PG: 0, P: 0 },
-    "Last 6 Months": { UG: 0, PG: 0, P: 0 },
-    "Last 12 Months": { UG: 0, PG: 0, P: 0 }
+    "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
+    "Last 3 Months": { UG: 0, PG: 0, PHD: 0 },
+    "Last 6 Months": { UG: 0, PG: 0, PHD: 0 },
+    "Last 12 Months": { UG: 0, PG: 0, PHD: 0 }
   });
   const [note, setNote] = useState("");
   const navigate = useNavigate();
@@ -48,13 +49,13 @@ const DoctorAppointment = () => {
     name: period,
     UG: timePeriodData[period].UG || 0,
     PG: timePeriodData[period].PG || 0,
-    PhD: timePeriodData[period].P || 0
+    PHD: timePeriodData[period].PHD || 0
   }));
 
   const getPieData = (period) => [
     { name: 'UG', value: timePeriodData[period].UG || 0 },
     { name: 'PG', value: timePeriodData[period].PG || 0 },
-    { name: 'PhD', value: timePeriodData[period].P || 0 }
+    { name: 'PHD', value: timePeriodData[period].PHD || 0 }
   ];
 
   const handleGraphTypeChange = (e) => {
@@ -104,11 +105,12 @@ const DoctorAppointment = () => {
         );
         const data = await response.json();
         if (response.ok) {
+          // Use "PhD" as the key here
           const periods = {
-            "Last 1 Month": { UG: 0, PG: 0, P: 0 },
-            "Last 3 Months": { UG: 0, PG: 0, P: 0 },
-            "Last 6 Months": { UG: 0, PG: 0, P: 0 },
-            "Last 12 Months": { UG: 0, PG: 0, P: 0 }
+            "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
+            "Last 3 Months": { UG: 0, PG: 0, PHD: 0 },
+            "Last 6 Months": { UG: 0, PG: 0, PHD: 0 },
+            "Last 12 Months": { UG: 0, PG: 0, PHD: 0 }
           };
 
           const now = new Date();
@@ -118,7 +120,7 @@ const DoctorAppointment = () => {
             const diffTime = now - apptDate;
             const diffDays = diffTime / (1000 * 3600 * 24);
             const branch = app.user.acadProg;
-            console.log(app)
+            console.log(app);
 
             if (diffDays <= 30) {
               periods["Last 1 Month"][branch] += 1;
@@ -465,7 +467,7 @@ const DoctorAppointment = () => {
                     <Legend />
                     <Bar dataKey="UG" fill={COLORS[0]} radius={[8, 8, 0, 0]} />
                     <Bar dataKey="PG" fill={COLORS[1]} radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="PhD" fill={COLORS[2]} radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="PHD" fill={COLORS[2]} radius={[8, 8, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
