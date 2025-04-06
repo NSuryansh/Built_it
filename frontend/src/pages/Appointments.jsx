@@ -242,7 +242,7 @@ const UserAppointments = () => {
                             </button>
                           </form>
                         ) : (
-                          <span className="text-green-600 font-medium text-sm">Rating submitted!</span>
+                          <span className="text-green-600 w-32 ml-14 mt-2 sm:ml-0 sm:mt-0 font-medium text-sm">Rating submitted!</span>
                         )}
                       </>
                     </div>

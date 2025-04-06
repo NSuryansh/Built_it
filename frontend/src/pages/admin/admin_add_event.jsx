@@ -5,7 +5,15 @@ import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
-import { Calendar, Clock, MapPin, FileText, Plus, X, AlertCircle } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  FileText,
+  Plus,
+  X,
+  AlertCircle,
+} from "lucide-react";
 const AddEvent = () => {
   const navigate = useNavigate();
 
@@ -57,11 +65,18 @@ const AddEvent = () => {
       setError("Internal error while adding event");
     }
   };
+
+  const handleClosePopup = () => {
+    navigate("/doctor/login");
+  };
+
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#048a81" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+        <PacmanLoader color="#047857" size={30} />
+        <p className="mt-4 text-emerald-800 font-medium">
+          Loading your dashboard...
+        </p>
       </div>
     );
   }
@@ -90,7 +105,7 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="title"
-                className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-green-900 flex items-center gap-2"
               >
                 <Calendar size={16} className="text-green-600" />
                 Event Title
@@ -110,7 +125,7 @@ const AddEvent = () => {
               <div className="space-y-3">
                 <label
                   htmlFor="date"
-                  className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                  className="text-sm font-medium text-green-900 flex items-center gap-2"
                 >
                   <Clock size={16} className="text-green-600" />
                   Date
@@ -128,7 +143,7 @@ const AddEvent = () => {
               <div className="space-y-3">
                 <label
                   htmlFor="time"
-                  className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                  className="text-sm font-medium text-green-900 flex items-center gap-2"
                 >
                   <Clock size={16} className="text-green-600" />
                   Time
@@ -147,7 +162,7 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="location"
-                className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-green-900 flex items-center gap-2"
               >
                 <MapPin size={16} className="text-green-600" />
                 Location
@@ -166,7 +181,7 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="description"
-                className="block text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-green-900 flex items-center gap-2"
               >
                 <FileText size={16} className="text-green-600" />
                 Description
@@ -203,7 +218,7 @@ const AddEvent = () => {
         </div>
       </div>
     </div>
-);
+  );
 };
 
 export default AddEvent;

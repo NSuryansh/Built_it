@@ -101,10 +101,10 @@ io.on("connection", (socket) => {
     }) => {
       try {
         var senderId, recipientId;
-        if (sender == "Doctor") {
+        if (sender == "doc") {
           senderId = doctorId;
           recipientId = userId;
-        } else {
+        } else if(sender=="user") {
           senderId = userId;
           recipientId = doctorId;
         }
