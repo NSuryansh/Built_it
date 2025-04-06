@@ -65,6 +65,11 @@ const AddEvent = () => {
       setError("Internal error while adding event");
     }
   };
+
+  const handleClosePopup = () => {
+    navigate("/doctor/login");
+  };
+
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
