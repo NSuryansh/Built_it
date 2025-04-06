@@ -93,21 +93,24 @@ io.on("connection", (socket) => {
     async ({
       userId,
       doctorId,
-      sender,
+      senderType,
       encryptedText,
       iv,
       encryptedAESKey,
       authTag,
     }) => {
       try {
+        // console.log(doctorId,'doc')
         var senderId, recipientId;
-        if (sender == "doc") {
+        if (senderType === "doc") {
           senderId = doctorId;
           recipientId = userId;
-        } else if (sender == "user") {
+        } else if(senderType==="user") {
           senderId = userId;
           recipientId = doctorId;
         }
+        console.log(senderId)
+        console.log(recipientId)
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -116,13 +119,13 @@ io.on("connection", (socket) => {
             iv: iv,
             encryptedAESKey,
             authTag,
-            senderType: sender,
+            senderType: senderType,
           },
         });
         const room = `chat_${[userId, doctorId]
           .sort((a, b) => a - b)
           .join("_")}`;
-        // console.log(senderId, "message sent to", recipientId);
+        console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
         io.to(room).emit("receiveMessage", {
@@ -523,13 +526,23 @@ app.post("/addSlot", async (req, res) => {
 
 app.post("/addLeave", async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
-  const startTime = Date(req.body["startTime"]);
-  const endTime = Date(req.body["endTime"]);
+  const startDate = req.body["startDate"];
+  const startTime = req.body["startTime"];
+  const endDate = req.body["endDate"];
+  const endTime = req.body["endTime"];
+
+  const start = new Date(
+    new Date(startDate).getTime() + new Date(startTime).getTime()
+  );
+  const end = new Date(
+    new Date(endDate).getTime() + new Date(endTime).getTime()
+  );
+
   const leave = await prisma.doctorLeave.create({
     data: {
       doctor_id: doc_id,
-      date_start: startTime,
-      date_end: endTime,
+      date_start: start,
+      date_end: end,
     },
   });
 
@@ -1869,7 +1882,7 @@ app.get("/all-appointments", async (req, res) => {
     const appts = await prisma.appointments.findMany({
       include: {
         doctor: true,
-        user: true
+        user: true,
       },
     });
 
