@@ -176,6 +176,7 @@ const Peer = () => {
       encryptedText,
       iv,
       encryptedAESKey,
+      userType,
     }) => {
       const decrypted = await decryptMessage(
         encryptedText,
@@ -188,7 +189,7 @@ const Peer = () => {
 
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId },
+        { decryptedText: decrypted, senderId, userType},
       ]);
     };
 
@@ -240,6 +241,7 @@ const Peer = () => {
             msg["iv"],
             msg["encryptedAESKey"]
           ),
+          senderType: msg["senderType"]
         }))
       );
 
@@ -371,7 +373,7 @@ const Peer = () => {
                   <ChatMessage
                     key={index}
                     message={msg.decryptedText}
-                    isSent={msg.senderId === userId}
+                    isSent={msg.userType === "user"}
                     className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
                       msg.senderId === userId
                         ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
@@ -462,7 +464,7 @@ const Peer = () => {
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}
-                  isSent={msg.senderId === userId}
+                  isSent={msg.userType === "user"}
                   className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
                     msg.senderId === userId
                       ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
