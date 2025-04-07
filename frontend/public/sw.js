@@ -7,17 +7,23 @@ self.addEventListener("push", (event) => {
   //   body: data.body,
   //   icon: "../assets/final-image.png",
   // });
+  console.log(data)
   event.waitUntil(
-    self.registration.showNotification(title, options)
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "../assets/final-image.png"
+    })
   );
 });
 
 const saveSubscription = async (subscription) => {
-  await fetch("http://localhost:5000/subscribe", {
+  const res = await fetch("http://localhost:5000/subscribe", {
     method: "POST",
     body: JSON.stringify(subscription),
     headers: { "Content-Type": "application/json" },
   })
+  const data = await res.json()
+  console.log(data)
 }
 const subscribeToPush = async () => {
   const registration = await navigator.serviceWorker.ready;
