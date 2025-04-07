@@ -13,6 +13,7 @@ from agno.storage.agent.sqlite import SqliteAgentStorage
 from dotenv import load_dotenv
 import os
 import csv
+from agno.models.google import Gemini 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
@@ -67,13 +68,13 @@ def create_mental_agent(user_id: str, session_id: str = None) -> Agent:
         name="Helper",
         user_id=user_id,
         session_id=session_id,
-        model=Groq(id="llama-3.3-70b-versatile"),
+        model=Gemini(id="gemini-2.0-flash-exp", api_key=api_key),
         memory=AgentMemory(
             create_user_memories=True,
             update_user_memories_after_run=True,
-            classifier=MemoryClassifier(model=Groq(id="llama-3.3-70b-versatile")),
-            summarizer=MemorySummarizer(model=Groq(id="llama-3.3-70b-versatile")),
-            manager=MemoryManager(model=Groq(id="llama-3.3-70b-versatile"), user_id=user_id),
+            classifier=MemoryClassifier(model=Gemini(id="gemini-2.0-flash-exp", api_key=api_key)),
+            summarizer=MemorySummarizer(model=Gemini(id="gemini-2.0-flash-exp", api_key=api_key)),
+            manager=MemoryManager(model=Gemini(id="gemini-2.0-flash-exp", api_key=api_key), user_id=user_id),
         ),
         storage=agent_storage,
         instructions=["You are a helpful mental health assistant for engineering students. Keep your responses concise and to the point." 
