@@ -105,12 +105,12 @@ io.on("connection", (socket) => {
         if (senderType === "doc") {
           senderId = doctorId;
           recipientId = userId;
-        } else if(senderType==="user") {
+        } else if (senderType === "user") {
           senderId = userId;
           recipientId = doctorId;
         }
-        console.log(senderId)
-        console.log(recipientId)
+        console.log(senderId);
+        console.log(recipientId);
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -526,17 +526,8 @@ app.post("/addSlot", async (req, res) => {
 
 app.post("/addLeave", async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
-  const startDate = req.body["startDate"];
-  const startTime = req.body["startTime"];
-  const endDate = req.body["endDate"];
-  const endTime = req.body["endTime"];
-
-  const start = new Date(
-    new Date(startDate).getTime() + new Date(startTime).getTime()
-  );
-  const end = new Date(
-    new Date(endDate).getTime() + new Date(endTime).getTime()
-  );
+  const start = req.body["start"];
+  const end = req.body["end"];
 
   const leave = await prisma.doctorLeave.create({
     data: {
@@ -1364,6 +1355,7 @@ app.post("/resetAdminPassword", async (req, res) => {
 app.post("/setRating", async (req, res) => {
   const stars = req.body["stars"];
   const id = req.body["id"];
+  const docId = req.body["doctorId"]
 
   try {
     const response = await prisma.pastAppointments.update({
@@ -1374,6 +1366,28 @@ app.post("/setRating", async (req, res) => {
         stars: stars,
       },
     });
+
+    const setRating = await prisma.pastAppointments.aggregate({
+      _avg:{
+        stars: true,
+      },
+      where:{
+        doc_id: docId
+      }
+    })
+
+    const updateRating = await prisma.doctor.update({
+      where:{
+        id: docId
+      },
+      data:{
+        avgRating: setRating._avg.stars
+      }
+    })
+
+    console.log(updateRating)
+
+    console.log(setRating)
 
     res.json({ message: "Rating updated successfully" });
   } catch (error) {
@@ -1953,11 +1967,13 @@ app.post("/referrals", async (req, res) => {
       .json({ message: "User with given roll number not found" });
   }
 
+  const user_id = user.id;
+  const docId = Number(doctor_id)
   try {
     const newReferral = await prisma.referrals.create({
       data: {
         user_id,
-        doctor_id,
+        docId,
         referred_by,
         reason,
       },
