@@ -167,6 +167,7 @@ const DoctorPeer = () => {
       encryptedText,
       iv,
       encryptedAESKey,
+      senderType,
     }) => {
       // console.log("Message received:", {
       //   senderId,
@@ -184,10 +185,10 @@ const DoctorPeer = () => {
 
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-
+      // console.log(senderType, "sendertpy:")
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId },
+        { decryptedText: decrypted, senderId, senderType },
       ]);
     };
 
@@ -196,6 +197,10 @@ const DoctorPeer = () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
   }, [aesKey, isAuthenticated]);
+
+  useEffect(()=>{
+    console.log(showMessages, "SHOWINNGGNGNNGN");
+  }, [showMessages])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -206,7 +211,7 @@ const DoctorPeer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId },
+        { decryptedText: message, senderId: userId, senderType: localStorage.getItem("user_type")},
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
