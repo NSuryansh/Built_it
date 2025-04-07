@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Check } from "lucide-react";
+import { CircleAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const DoctorNotificationPanel = () => {
@@ -54,7 +54,7 @@ const DoctorNotificationPanel = () => {
     return (
         <div className="absolute top-14 right-5 w-80 bg-white shadow-xl border rounded-lg p-4 z-50">
             <h2 className="text-sm font-semibold text-gray-800 mb-2">
-                Notifications
+                Care Alerts
             </h2>
             <div className="space-y-3 max-h-80 overflow-auto">
                 {notifications.length > 0 ? (
@@ -64,17 +64,17 @@ const DoctorNotificationPanel = () => {
                             className="flex justify-between items-center p-3 bg-gray-50 rounded-lg shadow-sm"
                         >
                             <div>
-                                <p className="font-semibold text-gray-900">{notif.username}</p>
+                                <p className="font-semibold text-gray-900 text-md">{notif.username}</p>
                                 <p className="text-sm text-gray-600">
-                                    needs consultation
+                                    flagged for potential support.
                                 </p>
                             </div>
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => handleAccept(notif)}
-                                    className="text-green-600 hover:bg-green-100 p-2 rounded-full transition"
+                                    className="text-red-600 hover:bg-red-100 p-2 rounded-full transition"
                                 >
-                                    <Check size={20} />
+                                    <CircleAlert size={26} />
                                 </button>
                             </div>
                         </div>
