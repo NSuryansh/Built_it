@@ -292,13 +292,13 @@ const DoctorAppointment = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p>Loadin your dashboard...</p>
+        <p className="mt-4 text-gray-600">Loading your dashboard...</p>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="blue" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="blue" />;
   }
 
   return (
@@ -353,14 +353,14 @@ const DoctorAppointment = () => {
                         {completedNotes[appointment.id] !== undefined ? (
                           <button
                             onClick={() => deleteApp(appointment)}
-                            className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-rose-600 text-white text-base font-semibold rounded-full shadow-lg hover:from-red-600 hover:to-rose-700 transform hover:scale-105 transition-all duration-300"
+                            className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-rose-600 text-white  font-semibold rounded-full shadow-lg hover:from-red-600 hover:to-rose-700 transform hover:scale-105 transition-all duration-300"
                           >
                             Done
                           </button>
                         ) : (
                           <button
                             onClick={() => handleMarkAsDone(appointment.id)}
-                            className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-teal-500 text-white text-base font-semibold rounded-full shadow-lg hover:from-indigo-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-300"
+                            className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-teal-500 text-white  font-semibold rounded-full shadow-lg hover:from-indigo-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-300"
                           >
                             Mark as Done
                           </button>
@@ -430,13 +430,13 @@ const DoctorAppointment = () => {
                       <div className="flex space-x-5">
                         <button
                           onClick={() => acceptApp(appointment)}
-                          className="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-base font-semibold rounded-full shadow-lg hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-300"
+                          className="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white  font-semibold rounded-full shadow-lg hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-300"
                         >
                           Accept
                         </button>
                         <button
                           onClick={() => handleReschedule(appointment)}
-                          className="px-6 py-2.5 bg-gradient-to-r from-gray-200/80 to-gray-300/80 text-gray-800 text-base font-semibold rounded-full shadow-lg hover:from-gray-300/80 hover:to-gray-400/80 transform hover:scale-105 transition-all duration-300"
+                          className="px-6 py-2.5 bg-gradient-to-r from-gray-200/80 to-gray-300/80 text-gray-800  font-semibold rounded-full shadow-lg hover:from-gray-300/80 hover:to-gray-400/80 transform hover:scale-105 transition-all duration-300"
                         >
                           Reschedule
                         </button>
