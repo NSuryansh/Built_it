@@ -110,9 +110,9 @@ const DoctorPeer = () => {
     const getContacts = async() => {
       if (isAuthenticated && userId) {
         const user = await fetchContacts(userId)
-        console.log(user, "AHAHAHAH")
+        // console.log(user, "AHAHAHAH")
         setUserList(user);
-        console.log(userList, "halooooooooooooooooooooooooooooooooooooooooo")
+        // console.log(userList, "halooooooooooooooooooooooooooooooooooooooooo")
       }
     }
     getContacts()
