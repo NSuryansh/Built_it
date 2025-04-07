@@ -288,10 +288,10 @@ const Peer = () => {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-        <PacmanLoader color="#4F46E5" radius={6} height={20} width={5} />
-        <p className="mt-4 text-gray-600 font-medium">Loading your conversations...</p>
-      </div>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
+      <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+      <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
+    </div>
     );
   }
 
