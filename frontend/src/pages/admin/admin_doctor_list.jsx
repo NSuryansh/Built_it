@@ -29,6 +29,7 @@ const DoctorsList = () => {
   const [docId, setDocId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [fetched, setfetched] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -40,10 +41,16 @@ const DoctorsList = () => {
 
   useEffect(() => {
     const fetchDoctors = async () => {
-      const res = await fetch("http://localhost:3000/getdoctors");
-      const resp = await res.json();
-      setDoc(resp);
-      console.log(resp);
+      try {
+        const res = await fetch("http://localhost:3000/getdoctors");
+        const resp = await res.json();
+        setDoc(resp);
+        setfetched(true);
+      } catch (e) {
+        console.error(e);
+        CustomToast("Error fetching doctors");
+        setfetched(false);
+      }
     };
 
     fetchDoctors();
@@ -97,7 +104,7 @@ const DoctorsList = () => {
       doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || fetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <div className="relative">
@@ -200,7 +207,9 @@ const DoctorsList = () => {
                         <Stethoscope size={20} className="text-green-700" />
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-900">{doctor.name}</div>
+                        <div className="font-semibold text-gray-900">
+                          {doctor.name}
+                        </div>
                         {/* <div className="text-xs text-gray-500">ID: {doctor.id}</div> */}
                       </div>
                     </div>

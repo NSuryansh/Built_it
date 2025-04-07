@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { MessageSquare, Search, Send, Menu, X, UserCircle2 } from 'lucide-react';
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
@@ -11,7 +12,6 @@ import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import { ToastContainer } from "react-toastify";
-import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
 import CustomToast from "../components/CustomToast";
 
@@ -27,6 +27,7 @@ const Peer = () => {
   const [messagesApi, setMessagesApi] = useState(null);
   const [reloader, setReloader] = useState(true);
   const [docList, setDocList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
@@ -39,6 +40,11 @@ const Peer = () => {
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
 
+  // Filter doctors based on search query
+  const filteredDoctors = docList.filter(doctor => 
+    doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   useEffect(() => {
     if (newChatId) {
       setRecid(newChatId);
@@ -50,7 +56,6 @@ const Peer = () => {
       const existingIndex = chats.findIndex(
         (chat) => String(chat.id) === String(newChatId)
       );
-      console.log(existingIndex, "existing chat index");
       if (existingIndex !== -1) {
         setSelectedChat(existingIndex);
         setRecid(chats[existingIndex].id);
@@ -73,11 +78,9 @@ const Peer = () => {
   useEffect(() => {
     const fetchDocotors = async () => {
       try {
-        console.log("HAAALLLLO");
         const response = await fetch("http://localhost:3000/getdoctors");
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
-        console.log(data, "Fetched doctors");
         setDocList(data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -126,10 +129,8 @@ const Peer = () => {
     }
   }, [isAuthenticated, userId]);
 
-  // Update the recipient id from the selected doctor in docList
   useEffect(() => {
     if (docList.length > 0 && selectedChat !== null) {
-      console.log("Selected doctor:", docList[selectedChat]);
       setRecid(docList[selectedChat].id);
     }
   }, [selectedChat, docList]);
@@ -175,27 +176,20 @@ const Peer = () => {
       encryptedText,
       iv,
       encryptedAESKey,
+      userType,
     }) => {
-      console.log("Message received:", {
-        senderId,
-        encryptedText,
-        iv,
-        encryptedAESKey,
-        senderType,
-      });
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
         encryptedAESKey
       );
-      console.log("Decrypted message:", decrypted);
 
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId },
+        { decryptedText: decrypted, senderId, userType},
       ]);
     };
 
@@ -214,15 +208,14 @@ const Peer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId },
+        { decryptedText: message, senderId: userId, userType: "user"},
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
-      // console.log(recId, userId)
       socketRef.current.emit("sendMessage", {
         userId: userId,
         doctorId: recId,
-        senderType: localStorage.getItem("user_type"),
+        senderType: "user",
         encryptedText,
         iv,
         encryptedAESKey: aesKey,
@@ -234,12 +227,10 @@ const Peer = () => {
 
   async function fetchMessages(userId, recipientId) {
     try {
-      console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
         `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
-      console.log(messages);
       const decrypted_api_messages = await Promise.all(
         messages.map(async (msg) => ({
           senderId: msg["senderId"],
@@ -250,18 +241,17 @@ const Peer = () => {
             msg["iv"],
             msg["encryptedAESKey"]
           ),
+          senderType: msg["senderType"]
         }))
       );
 
       setMessagesApi(decrypted_api_messages);
-
       const filteredMessages = decrypted_api_messages.filter((msg) => {
         return (
           (msg.senderId === userId && msg.recipientId === recipientId) ||
           (msg.senderId === recipientId && msg.recipientId === userId)
         );
       });
-      console.log(filteredMessages);
 
       setShowMessages(filteredMessages);
     } catch (error) {
@@ -272,42 +262,45 @@ const Peer = () => {
   }
 
   useEffect(() => {
-    console.log("Current showMessages", showMessages);
-  }, [showMessages]);
-
-  // Fetch messages using the selected doctor's id from docList
-  useEffect(() => {
     if (userId && docList.length > 0 && selectedChat !== null) {
-      console.log("Fetching messages for selected doctor");
       fetchMessages(userId, docList[selectedChat]?.id);
     }
   }, [selectedChat, userId, reloader, docList]);
 
+  // useEffect(() => {
+  //   console.log(showMessages, "HAHAHAHAHHAHAHAHAH")
+  // }, [showMessages])
   const handleClosePopup = () => {
     navigate("/login");
   };
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+        <PacmanLoader color="#4F46E5" radius={6} height={20} width={5} />
+        <p className="mt-4 text-gray-600 font-medium">Loading your conversations...</p>
       </div>
     );
   }
+
   if (!isAuthenticated) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-xl font-semibold text-red-600">
-            Session Timeout
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+        <div className="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full mx-4">
+          <div className="mb-6">
+            <MessageSquare className="w-12 h-12 text-indigo-600 mx-auto" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Session Expired
           </h2>
-          <p className="mt-2">Your session has expired. Please log in again.</p>
+          <p className="text-gray-600 mb-6">
+            Your session has timed out for security reasons. Please log in again to continue.
+          </p>
           <button
             onClick={handleClosePopup}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer"
+            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors duration-200"
           >
-            Go to Login
+            Return to Login
           </button>
         </div>
       </div>
@@ -315,92 +308,180 @@ const Peer = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[var(--mp-custom-white)]">
-      <Navbar />
+    <div className="flex flex-col h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900">
+      <Navbar /> {/* Assume this is a light, minimal navbar */}
       <ToastContainer />
+  
       {/* Desktop Layout */}
       <div className="md:flex h-[calc(100vh-64px)] hidden">
-        {docList.length > 0 ? (
-          <div className="md:w-4/12 lg:w-3/12">
-            <ChatList
-              names={docList.map((doctor) => doctor.name)}
-              selectedChat={selectedChat}
-              setSelectedChat={setSelectedChat}
-              setShowChatList={setShowChatList}
-            />
-          </div>
-        ) : (
-          <div className="md:w-4/12 lg:w-3/12 h-full flex justify-center items-center">
-            You have no chats
-          </div>
-        )}
-        <div className="flex flex-col h-full flex-1">
-          <div className="p-4 flex justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
-            <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-              {docList[selectedChat]?.name || "Select a chat"}
-            </h2>
-          </div>
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
-            {showMessages.map((msg, index) => (
-              <ChatMessage
-                key={index}
-                message={msg.decryptedText}
-                isSent={msg.senderId === userId}
-              />
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-          <div className="flex-none border-t border-[var(--mp-custom-gray-200)]">
-            <ChatInput
-              message={message}
-              setMessage={setMessage}
-              handleSubmit={handleSubmit}
-            />
-          </div>
+        {/* Sidebar (Doctor List) */}
+        <div className="md:w-4/12 lg:w-3/12 bg-white border-r border-gray-200 flex flex-col transition-all duration-300">
+          {docList.length > 0 ? (
+            <>
+              <div className="p-4 border-b border-gray-200">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search doctors..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                  />
+                  <Search className="absolute left-3 top-3 h-5 w-5 text-sky-500" />
+                </div>
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <ChatList
+                  names={filteredDoctors.map((doctor) => doctor.name)}
+                  selectedChat={selectedChat}
+                  setSelectedChat={setSelectedChat}
+                  setShowChatList={setShowChatList}
+                  className="space-y-2 p-4"
+                />
+              </div>
+            </>
+          ) : (
+            <div className="text-center p-6 flex flex-col items-center justify-center h-full">
+              <UserCircle2 className="w-16 h-16 text-sky-500 mb-4 animate-pulse" />
+              <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">No Conversations Yet</h3>
+              <p className="text-gray-600 mt-2">Start chatting with a doctor to begin your consultation.</p>
+            </div>
+          )}
+        </div>
+  
+        {/* Chat Area */}
+        <div className="flex flex-col h-full flex-1 bg-gradient-to-b from-gray-50 to-white">
+          {selectedChat !== null ? (
+            <>
+              <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <UserCircle2 className="w-12 h-12 text-sky-500" />
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
+                      {docList[selectedChat]?.name}
+                    </h2>
+                   
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedChat(null)} // Closes chat on desktop
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                >
+                  <X className="w-6 h-6 text-gray-500" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {showMessages.map((msg, index) => (
+                  <ChatMessage
+                    key={index}
+                    message={msg.decryptedText}
+                    isSent={msg.senderType === "user"}
+                    className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                      msg.senderId === userId
+                        ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
+                  />
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+              <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
+                <ChatInput
+                  message={message}
+                  setMessage={setMessage}
+                  handleSubmit={handleSubmit}
+                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center p-6">
+                <MessageSquare className="w-16 h-16 text-sky-500 mx-auto mb-4 animate-bounce" />
+                <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">Select a Conversation</h3>
+                <p className="text-gray-600 mt-2">Choose a doctor to start chatting.</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+  
       {/* Mobile Layout */}
       <div className="md:hidden h-[calc(100vh-64px)]">
         {showChatList ? (
-          docList.length > 0 ? (
-            <div className="h-full">
-              <ChatList
-                names={docList.map((doctor) => doctor.name)}
-                selectedChat={selectedChat}
-                setSelectedChat={setSelectedChat}
-                setShowChatList={setShowChatList}
-              />
-            </div>
-          ) : (
-            <div className="w-full h-full flex justify-center items-center">
-              You have no chats
-            </div>
-          )
+          <div className="h-full bg-white">
+            {docList.length > 0 ? (
+              <>
+                <div className="p-4 border-b border-gray-200">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search doctors..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                    />
+                    <Search className="absolute left-3 top-3 h-5 w-5 text-sky-500" />
+                  </div>
+                </div>
+                <ChatList
+                  names={filteredDoctors.map((doctor) => doctor.name)}
+                  selectedChat={selectedChat}
+                  setSelectedChat={setSelectedChat}
+                  setShowChatList={setShowChatList}
+                  className="space-y-2 p-4"
+                />
+              </>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center p-6">
+                  <UserCircle2 className="w-16 h-16 text-sky-500 mb-4 animate-pulse" />
+                  <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">No Conversations Yet</h3>
+                  <p className="text-gray-600 mt-2">Start chatting with a doctor to begin your consultation.</p>
+                </div>
+              </div>
+            )}
+          </div>
         ) : (
-          <div className="flex flex-col h-full">
-            <div className="p-4 flex w-full justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
-              <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-                {docList[selectedChat]?.name || "Select a chat"}
-              </h2>
-              <button onClick={() => setShowChatList(true)}>
-                <AiOutlineCloseCircle />
+          <div className="flex flex-col h-full bg-gradient-to-b from-gray-50 to-white">
+            <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
+              <div className="flex items-center space-x-3">
+                <UserCircle2 className="w-12 h-12 text-sky-500" />
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
+                    {docList[selectedChat]?.name}
+                  </h2>
+                  
+                </div>
+              </div>
+              <button
+                onClick={() => setShowChatList(true)} // Closes chat on mobile
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+              >
+                <X className="w-6 h-6 text-gray-500" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {showMessages.map((msg, index) => (
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}
-                  isSent={msg.senderId === userId}
+                  isSent={msg.senderType === "user"}
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                    msg.senderId === userId
+                      ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
                 />
               ))}
               <div ref={messagesEndRef} />
             </div>
-            <div className="flex-none border-t border-[var(--mp-custom-gray-200)]">
+            <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
               <ChatInput
                 message={message}
                 setMessage={setMessage}
                 handleSubmit={handleSubmit}
+                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
               />
             </div>
           </div>
