@@ -19,6 +19,8 @@ const Calendar = ({ onDateSelect }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [pastEvents, setPastEvents] = useState([]); // List for past event dates
   const [futureEvents, setFutureEvents] = useState([]); // List for future event dates
+  const rollNo = localStorage.getItem.user_rollNo;
+  console.log(rollNo);
   const navigate = useNavigate();
 
   const sendLink = (rollNo) => {
@@ -30,7 +32,7 @@ const Calendar = ({ onDateSelect }) => {
   };
 
   // Example usage
-  const rollNo = "240001049"; // Example roll number
+  // const rollNo = "240001049"; // Example roll number
   const linkAcadCalender = sendLink(rollNo);
 
   // Fetch past events
