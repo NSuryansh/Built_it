@@ -1518,13 +1518,27 @@ app.post("/save-subscription", async (req, res) => {
       }
     } else if (userType == "doc") {
       try {
-        await prisma.subscription.create({
-          data: {
+        const subs = await prisma.subscription.upsert({
+          where:{
+            // OR: [
+            //   {
+                // userId: Number(userid),
+                endpoint: endpoint
+            //   }
+            // ]
+          },
+          update: {
             doctorId: Number(userid),
             endpoint: endpoint,
             authKey: keys.auth,
             p256dhKey: keys.p256dh,
           },
+          create: {
+            doctorId: Number(userid),
+            endpoint: endpoint,
+            authKey: keys.auth,
+            p256dhKey: keys.p256dh,
+          }
         });
         res.json({ success: true });
       } catch (e) {
