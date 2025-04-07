@@ -526,17 +526,8 @@ app.post("/addSlot", async (req, res) => {
 
 app.post("/addLeave", async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
-  const startDate = req.body["startDate"];
-  const startTime = req.body["startTime"];
-  const endDate = req.body["endDate"];
-  const endTime = req.body["endTime"];
-
-  const start = new Date(
-    new Date(startDate).getTime() + new Date(startTime).getTime()
-  );
-  const end = new Date(
-    new Date(endDate).getTime() + new Date(endTime).getTime()
-  );
+  const start = req.body["start"];
+  const end = req.body["end"];
 
   const leave = await prisma.doctorLeave.create({
     data: {
