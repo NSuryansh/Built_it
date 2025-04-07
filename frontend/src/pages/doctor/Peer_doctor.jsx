@@ -29,6 +29,7 @@ const DoctorPeer = () => {
   const [messagesApi, setMessagesApi] = useState(null);
   const [reloader, setReloader] = useState(true);
   const [userList, setUserList] = useState([{}]);
+  const [unread, setUnread] = useState([]);
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
@@ -210,15 +211,22 @@ const DoctorPeer = () => {
 
     const pendingReads = async() => {
       console.log("HAL")
+      try{
       const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
       const data = await res.json();
+      setUnread(data);
+      }catch (error) {
+        console.log(error);
+      }
       console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     }
 
     pendingReads();
   }, [selectedChat, recId])
 
-  
+  useEffect(() => {
+    
+  },[unread])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
