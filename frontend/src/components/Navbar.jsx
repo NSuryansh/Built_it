@@ -99,6 +99,7 @@ const Navbar = () => {
         location === "/mood" ||
         location === "/movies" ||
         location === "/entertainment" ||
+        location === "/dashboard" ||
         location === "/appointments" ||
         location === "/events"
           ? "bg-transparent"
