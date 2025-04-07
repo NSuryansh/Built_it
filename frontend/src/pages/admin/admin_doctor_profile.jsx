@@ -104,6 +104,12 @@ const AdminDoctorProfile = () => {
     };
     fetchData();
   }, []);
+  
+  const handleClosePopup = () => {
+    navigate("/admin/login"
+      
+    );
+  };
 
   const handleReferralSubmit = (e) => {
     e.preventDefault();

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import SessionExpired from "../../components/SessionExpired";
 import CustomToast from "../../components/CustomToast";
 import { ToastContainer } from "react-toastify";
 
@@ -60,6 +61,12 @@ const AddDoctor = () => {
     // Handle form submission
   };
 
+  const handleClosePopup = () => {
+    navigate("/admin/login"
+      
+    );
+  };
+
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
@@ -72,7 +79,7 @@ const AddDoctor = () => {
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="green" />;
   }
 
   return (
