@@ -415,7 +415,7 @@ app.get('/countUnseen', async (req, res) => {
         read: false
       },
       _count: {
-        _all: false
+        _all: true
       }
     })
     res.json(unreadCount)
@@ -427,7 +427,7 @@ app.get('/countUnseen', async (req, res) => {
         read: false
       },
       _count: {
-        _all: false
+        _all: true
       }
     })
     console.log(unreadCount)
