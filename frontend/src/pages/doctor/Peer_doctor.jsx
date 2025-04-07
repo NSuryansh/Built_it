@@ -136,7 +136,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     const verifyAuth = async () => {
-      const authStatus = await checkAuth("user");
+      const authStatus = await checkAuth("doc");
       setIsAuthenticated(authStatus);
     };
     verifyAuth();
