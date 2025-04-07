@@ -61,33 +61,86 @@ const doctors = await fetchDoctors();
 
 const appointments = await fetchAppointments();
 
+function getWeekDates() {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust if today is Sunday
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + mondayOffset);
+
+  const weekDates = [];
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+
+    weekDates.push(date);
+  }
+
+  return weekDates;
+}
+
+const weekDates = getWeekDates();
+
+const formattedWeekDates = weekDates.map((date) => {
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  return `${dd}/${mm}`;
+});
+
+// Util: safely formats a Date object to dd/mm
+function formatDate(d) {
+  if (!(d instanceof Date)) {
+    d = new Date(d); // Convert string to Date if needed
+  }
+
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  return `${dd}/${mm}`;
+}
+
+// Function: get appointments count for each day of the current week
+const appWeek = (weekDates, appointments) => {
+  return weekDates.map((date) => {
+    const formatted = formatDate(date);
+
+    const count = appointments.filter((appt) => {
+      return formatDate(appt.date) === formatted;
+    }).length;
+
+    return {
+      date: formatted,
+      appointments: count,
+    };
+  });
+};
+
+const appByDate = appWeek(weekDates, appointments);
+
 const graphData = [
-  { date: "03/20", appointments: 3 },
-  { date: "03/21", appointments: 2 },
-  { date: "03/22", appointments: 1 },
-  { date: "03/23", appointments: 4 },
-  { date: "03/24", appointments: 2 },
-  { date: "03/25", appointments: 3 },
-  { date: "03/26", appointments: 5 },
+  { date: formattedWeekDates[0], appointments: appByDate[0].appointments },
+  { date: formattedWeekDates[1], appointments: appByDate[1].appointments },
+  { date: formattedWeekDates[2], appointments: appByDate[2].appointments },
+  { date: formattedWeekDates[3], appointments: appByDate[3].appointments },
+  { date: formattedWeekDates[4], appointments: appByDate[4].appointments },
+  { date: formattedWeekDates[5], appointments: appByDate[5].appointments },
+  { date: formattedWeekDates[6], appointments: appByDate[6].appointments },
 ];
 
 const AdminAppointments = () => {
   const [selectedDoctor, setSelectedDoctor] = useState("all");
 
+  // Filtered appointment list
   const filteredAppointments = useMemo(() => {
     return selectedDoctor === "all"
       ? appointments
       : appointments.filter((app) => app.doctorId === selectedDoctor);
   }, [selectedDoctor]);
 
+  // Appointments grouped by week date
   const filteredGraphData = useMemo(() => {
-    if (selectedDoctor === "all") return graphData;
-
-    return graphData.map((data) => ({
-      ...data,
-      appointments: Math.floor(data.appointments * 0.4), // Simulate filtered data
-    }));
-  }, [selectedDoctor]);
+    return appWeek(weekDates, filteredAppointments);
+  }, [filteredAppointments]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
@@ -130,7 +183,7 @@ const AdminAppointments = () => {
                   {filteredAppointments.length}
                 </p>
               </div>
-              <Calendar className="h-10 w-10 text-blue-600 animate-bounce" />
+              <Calendar className="h-10 w-10 text-blue-600" />
             </div>
           </div>
           <div className="bg-gradient-to-br from-white to-green-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-green-100 transform hover:-translate-y-1">
@@ -155,7 +208,7 @@ const AdminAppointments = () => {
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {
                     filteredAppointments.filter(
-                      (app) => app.date === "2024-03-20"
+                      (app) => formatDate(app.date) === formatDate(new Date())
                     ).length
                   }
                 </p>
@@ -234,17 +287,17 @@ const AdminAppointments = () => {
                     </p>
                   </div>
                   <div className="w-1/3 flex justify-end">
-                  <span
-                    className={`px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border transition-colors duration-200 ${
-                      appointment.status === "Confirmed"
-                        ? "bg-green-100 text-green-800 border-green-200 hover:bg-green-200"
-                        : appointment.status === "Pending"
-                        ? "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200"
-                        : "bg-red-100 text-red-800 border-red-200 hover:bg-red-200"
-                    }`}
-                  >
-                    {appointment.status}
-                  </span>
+                    <span
+                      className={`px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border transition-colors duration-200 ${
+                        appointment.status === "Confirmed"
+                          ? "bg-green-100 text-green-800 border-green-200 hover:bg-green-200"
+                          : appointment.status === "Pending"
+                          ? "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200"
+                          : "bg-red-100 text-red-800 border-red-200 hover:bg-red-200"
+                      }`}
+                    >
+                      {appointment.status}
+                    </span>
                   </div>
                 </div>
               </div>
