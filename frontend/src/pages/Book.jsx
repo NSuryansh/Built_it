@@ -128,6 +128,7 @@ const Book = () => {
       CustomToast("Error while booking appointment");
     }
   };
+  
 
   if (isAuthenticated === null) {
     return (
@@ -137,6 +138,7 @@ const Book = () => {
       </div>
     );
   }
+  
 
   return (
     <div className="min-h-screen bg-[var(--custom-orange-100)] flex flex-col">

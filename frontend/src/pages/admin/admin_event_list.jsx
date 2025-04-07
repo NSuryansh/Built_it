@@ -20,6 +20,7 @@ import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
 import { subDays, isWithinInterval, startOfToday } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import SessionExpired from "../../components/SessionExpired";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
@@ -201,7 +202,7 @@ const EventsList = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
   }
 
   return (
@@ -393,7 +394,7 @@ const EventsList = () => {
                 </div>
 
                 {editingLinkId === event.id ? (
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex flex-col sm:flex-row gap-2 mt-2">
                     <input
                       type="text"
                       value={newLink}
@@ -401,21 +402,23 @@ const EventsList = () => {
                       placeholder="Enter document/drive link"
                       className="flex-1 text-sm border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 outline-none"
                     />
-                    <button
-                      onClick={() => handleLinkSubmit(event.id)}
-                      className="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors text-sm"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingLinkId(null);
-                        setNewLink("");
-                      }}
-                      className="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors text-sm"
-                    >
-                      Cancel
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleLinkSubmit(event.id)}
+                        className="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors text-sm"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => {
+                          setEditingLinkId(null);
+                          setNewLink("");
+                        }}
+                        className="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors text-sm"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">

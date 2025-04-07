@@ -5,6 +5,7 @@ import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
+import SessionExpired from "../../components/SessionExpired";
 import {
   Calendar,
   Clock,
@@ -80,16 +81,17 @@ const AddEvent = () => {
       </div>
     );
   }
+  
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
   }
 
   return (
     <div className="bg-gradient-to-b from-green-50 to-white min-h-screen">
       <AdminNavbar />
       <ToastContainer />
-      <div className="space-y-10 px-4 sm:px-6 lg:px-8 py-16 w-full mx-auto flex flex-col justify-center items-center">
+      <div className="space-y-10 px-4 sm:px-6 lg:px-8 py-6 w-full mx-auto flex flex-col justify-center items-center">
         <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-900 to-green-600 tracking-tight">
           Add New Event
         </h1>

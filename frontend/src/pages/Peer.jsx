@@ -1,11 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
-import { MessageSquare, Search, Send, Menu, X, UserCircle2 } from 'lucide-react';
+import {
+  MessageSquare,
+  Search,
+  X,
+  UserCircle2,
+  User,
+} from "lucide-react";
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { decryptMessage } from "../utils/decryptMessage";
+import SessionExpired from "../components/SessionExpired";
 import { generateAESKey } from "../utils/aeskey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
@@ -41,7 +48,7 @@ const Peer = () => {
   const newChatUsername = searchParams.get("username");
 
   // Filter doctors based on search query
-  const filteredDoctors = docList.filter(doctor => 
+  const filteredDoctors = docList.filter((doctor) =>
     doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -189,7 +196,7 @@ const Peer = () => {
 
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId, userType},
+        { decryptedText: decrypted, senderId, userType },
       ]);
     };
 
@@ -208,7 +215,7 @@ const Peer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId, senderType: "user"},
+        { decryptedText: message, senderId: userId, senderType: "user" },
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
@@ -224,6 +231,17 @@ const Peer = () => {
       setMessage("");
     }
   };
+
+  useEffect(() => {
+    if (selectedChat && recId != 0) {
+      console.log("HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:P");
+      socketRef.current.emit("markAsRead", {
+        userId: userId,
+        doctorId: recId,
+        senderType: "user",
+      });
+    }
+  }, [selectedChat, recId]);
 
   async function fetchMessages(userId, recipientId) {
     try {
@@ -241,7 +259,7 @@ const Peer = () => {
             msg["iv"],
             msg["encryptedAESKey"]
           ),
-          senderType: msg["senderType"]
+          senderType: msg["senderType"],
         }))
       );
 
@@ -268,42 +286,24 @@ const Peer = () => {
   }, [selectedChat, userId, reloader, docList]);
 
   useEffect(() => {
-    console.log(showMessages, "HAHAHAHAHHAHAHAHAH")
-  }, [showMessages])
+    console.log(showMessages, "HAHAHAHAHHAHAHAHAH");
+  }, [showMessages]);
   const handleClosePopup = () => {
     navigate("/login");
   };
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-        <PacmanLoader color="#4F46E5" radius={6} height={20} width={5} />
-        <p className="mt-4 text-gray-600 font-medium">Loading your conversations...</p>
-      </div>
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
+      <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+      <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
+    </div>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full mx-4">
-          <div className="mb-6">
-            <MessageSquare className="w-12 h-12 text-indigo-600 mx-auto" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Session Expired
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Your session has timed out for security reasons. Please log in again to continue.
-          </p>
-          <button
-            onClick={handleClosePopup}
-            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors duration-200"
-          >
-            Return to Login
-          </button>
-        </div>
-      </div>
+      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
     );
   }
 
@@ -311,7 +311,6 @@ const Peer = () => {
     <div className="flex flex-col h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900">
       <Navbar /> {/* Assume this is a light, minimal navbar */}
       <ToastContainer />
-  
       {/* Desktop Layout */}
       <div className="md:flex h-[calc(100vh-64px)] hidden">
         {/* Sidebar (Doctor List) */}
@@ -325,9 +324,9 @@ const Peer = () => {
                     placeholder="Search doctors..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
                   />
-                  <Search className="absolute left-3 top-3 h-5 w-5 text-sky-500" />
+                  <Search className="absolute left-3 top-3 h-5 w-5 text-orange-500" />
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto">
@@ -342,25 +341,28 @@ const Peer = () => {
             </>
           ) : (
             <div className="text-center p-6 flex flex-col items-center justify-center h-full">
-              <UserCircle2 className="w-16 h-16 text-sky-500 mb-4 animate-pulse" />
-              <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">No Conversations Yet</h3>
-              <p className="text-gray-600 mt-2">Start chatting with a doctor to begin your consultation.</p>
+              <UserCircle2 className="w-16 h-16 text-orange-500 mb-4 animate-pulse" />
+              <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">
+                No Conversations Yet
+              </h3>
+              <p className="text-gray-600 mt-2">
+                Start chatting with a doctor to begin your consultation.
+              </p>
             </div>
           )}
         </div>
-  
+
         {/* Chat Area */}
         <div className="flex flex-col h-full flex-1 bg-gradient-to-b from-gray-50 to-white">
           {selectedChat !== null ? (
             <>
               <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
                 <div className="flex items-center space-x-3">
-                  <UserCircle2 className="w-12 h-12 text-sky-500" />
+                  <User className="w-8 h-8 text-orange-500" />
                   <div>
                     <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
                       {docList[selectedChat]?.name}
                     </h2>
-                   
                   </div>
                 </div>
                 <button
@@ -378,7 +380,7 @@ const Peer = () => {
                     isSent={msg.senderType === "user"}
                     className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
                       msg.senderId === userId
-                        ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
+                        ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                         : "bg-gray-100 text-gray-800"
                     }`}
                   />
@@ -390,22 +392,25 @@ const Peer = () => {
                   message={message}
                   setMessage={setMessage}
                   handleSubmit={handleSubmit}
-                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
                 />
               </div>
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center p-6">
-                <MessageSquare className="w-16 h-16 text-sky-500 mx-auto mb-4 animate-bounce" />
-                <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">Select a Conversation</h3>
-                <p className="text-gray-600 mt-2">Choose a doctor to start chatting.</p>
+                <MessageSquare className="w-16 h-16 text-orange-500 mx-auto mb-4 animate-bounce" />
+                <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">
+                  Select a Conversation
+                </h3>
+                <p className="text-gray-600 mt-2">
+                  Choose a doctor to start chatting.
+                </p>
               </div>
             </div>
           )}
         </div>
       </div>
-  
       {/* Mobile Layout */}
       <div className="md:hidden h-[calc(100vh-64px)]">
         {showChatList ? (
@@ -419,9 +424,9 @@ const Peer = () => {
                       placeholder="Search doctors..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
                     />
-                    <Search className="absolute left-3 top-3 h-5 w-5 text-sky-500" />
+                    <Search className="absolute left-3 top-3 h-5 w-5 text-orange-500" />
                   </div>
                 </div>
                 <ChatList
@@ -435,9 +440,13 @@ const Peer = () => {
             ) : (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center p-6">
-                  <UserCircle2 className="w-16 h-16 text-sky-500 mb-4 animate-pulse" />
-                  <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">No Conversations Yet</h3>
-                  <p className="text-gray-600 mt-2">Start chatting with a doctor to begin your consultation.</p>
+                  <UserCircle2 className="w-16 h-16 text-orange-500 mb-4 animate-pulse" />
+                  <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">
+                    No Conversations Yet
+                  </h3>
+                  <p className="text-gray-600 mt-2">
+                    Start chatting with a doctor to begin your consultation.
+                  </p>
                 </div>
               </div>
             )}
@@ -446,12 +455,11 @@ const Peer = () => {
           <div className="flex flex-col h-full bg-gradient-to-b from-gray-50 to-white">
             <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
               <div className="flex items-center space-x-3">
-                <UserCircle2 className="w-12 h-12 text-sky-500" />
+                <User className="w-8 h-8 text-orange-500" />
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
                     {docList[selectedChat]?.name}
                   </h2>
-                  
                 </div>
               </div>
               <button
@@ -469,7 +477,7 @@ const Peer = () => {
                   isSent={msg.senderType === "user"}
                   className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
                     msg.senderId === userId
-                      ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
+                      ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
                   }`}
                 />
@@ -481,7 +489,7 @@ const Peer = () => {
                 message={message}
                 setMessage={setMessage}
                 handleSubmit={handleSubmit}
-                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
               />
             </div>
           </div>

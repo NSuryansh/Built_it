@@ -36,7 +36,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
   }
 
   const getFilteredItems = () => {

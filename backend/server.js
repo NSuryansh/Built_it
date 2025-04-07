@@ -89,9 +89,10 @@ io.on("connection", (socket) => {
     socket.join(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
-  socket.on("markAsRead", async ({ userId, doctorId, sender }) => {
+  socket.on("markAsRead", async ({ userId, doctorId, senderType }) => {
+    console.log(userId, " ", doctorId, " ", senderType)
     try {
-      if (sender == "user") {
+      if (senderType === "user") {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "doc",
@@ -99,17 +100,21 @@ io.on("connection", (socket) => {
             senderId: doctorId,
           },
           data: {
-            read: true,
-          },
-        });
-      } else if (sender == "doc") {
+            read: true
+          }
+        })
+        // console.log(result,"HHHHHHHHHHHHHHHHHHHHHHHHHh")
+      } else if (senderType === "doc") {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "user",
             senderId: userId,
-            recipientId: doctorId,
+            recipientId: doctorId
           },
-        });
+          data: {
+            read: true
+          }
+        })
       }
     } catch (e) {
       console.log(e);
@@ -136,8 +141,8 @@ io.on("connection", (socket) => {
           senderId = userId;
           recipientId = doctorId;
         }
-        console.log(senderId);
-        console.log(recipientId);
+        // console.log(senderId);
+        // console.log(recipientId);
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -152,7 +157,7 @@ io.on("connection", (socket) => {
         const room = `chat_${[userId, doctorId]
           .sort((a, b) => a - b)
           .join("_")}`;
-        console.log(senderId, "message sent to", recipientId);
+        // console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
         io.to(room).emit("receiveMessage", {
@@ -401,37 +406,41 @@ app.get("/chatContacts", async (req, res) => {
   }
 });
 
-app.get("/countUnseen", async (req, res) => {
-  const userId = Number(req.body["userId"]);
+app.get('/countUnseen', async (req, res) => {
+  const {userId, senderType} = req.query
   // const doctorId = Number(req.body['doctorId'])
-  const sender = req.body["senderType"];
-
-  if (sender == "user") {
+  // const sender = req.body['senderType']
+  console.log(userId, senderType)
+  if (senderType == "user") {
     const unreadCount = await prisma.message.groupBy({
       by: ["senderId"],
       where: {
-        recipientId: userId,
-        read: false,
+        recipientId: Number(userId),
+        senderType: "doc",
+        read: false
       },
       _count: {
-        _all: false,
-      },
-    });
-    res.json(unreadCount);
-  } else if (sender == "doc") {
+        _all: true
+      }
+    })
+    // console.log(unreadCount, "HALLLO")
+    res.json(unreadCount)
+  } else if (senderType == "doc") {
     const unreadCount = await prisma.message.groupBy({
       by: ["senderId"],
       where: {
-        recipientId: userId,
+        recipientId: Number(userId),
         read: false,
+        senderType: "user"
       },
       _count: {
-        _all: false,
-      },
-    });
-    console.log(unreadCount);
+        _all: true
+      }
+    })
+    // console.log(unreadCount)
+    res.json(unreadCount)
   }
-});
+})
 
 app.get("/messages", async (req, res) => {
   try {
@@ -1051,7 +1060,7 @@ app.get("/pastdocappt", async (req, res) => {
         user: true,
       },
     });
-    console.log(appt);
+    // console.log(appt);
     res.json(appt);
   } catch (e) {
     console.error(e);
@@ -1078,7 +1087,7 @@ app.get("/pastuserappt", async (req, res) => {
         doc: true,
       },
     }); // Fetch all appts
-    console.log(appt);
+    // console.log(appt);
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
     console.error(e);
@@ -1463,9 +1472,9 @@ app.post("/setRating", async (req, res) => {
       },
     });
 
-    console.log(updateRating);
+    // console.log(updateRating)
 
-    console.log(setRating);
+    // console.log(setRating)
 
     res.json({ message: "Rating updated successfully" });
   } catch (error) {
@@ -1476,7 +1485,7 @@ app.post("/setRating", async (req, res) => {
 
 app.post("/save-subscription", async (req, res) => {
   try {
-    console.log("HELLLLLOOOOOOO");
+    // console.log("HELLLLLOOOOOOO");
     const { userid, subscription, userType } = req.body;
     // console.log(userid);
     // console.log(subscription);
@@ -1492,7 +1501,7 @@ app.post("/save-subscription", async (req, res) => {
       //   where: { userId: Number(userid)
       //    },
       // });
-      console.log("ECISTIING subscription");
+      // console.log("ECISTIING subscription");
       try {
         // if (existingSub) {
         //   await prisma.subscription.updateMany({
@@ -1527,7 +1536,7 @@ app.post("/save-subscription", async (req, res) => {
             p256dhKey: keys.p256dh,
           },
         });
-        console.log(subs);
+        // console.log(subs)
         // }
       } catch (e) {
         console.log(e);
@@ -1729,9 +1738,9 @@ app.get("/available-slots", async (req, res) => {
 
 app.put("/modifySlots", async (req, res) => {
   const { slotsArray, doctorId } = req.query;
-  console.log(slotsArray);
+  // console.log(slotsArray);
   const slots = slotsArray.split(",");
-  console.log(doctorId);
+  // console.log(doctorId);
   try {
     const delSlots = await prisma.slots.deleteMany({
       where: {
@@ -1883,7 +1892,7 @@ app.put("/modifyDoc", async (req, res) => {
   try {
     const { id, address, city, experience, educ, certifi } = req.query;
     const doc_id = Number(id);
-    console.log(req.query);
+    // console.log(req.query);
     const certifications = certifi.split(",");
     const education = educ.split(",");
     const doctorId = parseInt(doc_id, 10);
