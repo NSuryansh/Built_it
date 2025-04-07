@@ -206,6 +206,14 @@ const DoctorPeer = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
 
+  useEffect(() => {
+    if (userId && userList.length > 0 && selectedChat !== null) {
+      // console.log("Fetching messages for selected doctor");
+      // console.log(userList, "HALLLLLLLLLLLLLLO")
+      fetchMessages(userId, userList[selectedChat]?.id);
+    }
+  }, [selectedChat, userId, reloader, userList]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
@@ -270,13 +278,7 @@ const DoctorPeer = () => {
   }
 
   // Fetch messages using the selected doctor's id from userList
-  useEffect(() => {
-    if (userId && userList.length > 0 && selectedChat !== null) {
-      // console.log("Fetching messages for selected doctor");
-      // console.log(userList, "HALLLLLLLLLLLLLLO")
-      fetchMessages(userId, userList[selectedChat]?.id);
-    }
-  }, [selectedChat, userId, reloader, userList]);
+
 
   const handleClosePopup = () => {
     navigate("/doctor/login");
