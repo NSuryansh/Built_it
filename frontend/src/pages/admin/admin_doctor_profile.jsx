@@ -12,11 +12,15 @@ import {
   AlignCenterVertical as Certificate,
   FileText,
   X,
+  StarIcon,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { Link, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
+import { checkAuth } from "../../utils/profile";
+import SessionExpired from "../../components/SessionExpired";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const AdminDoctorProfile = () => {
   const search = useLocation().search;
@@ -26,29 +30,31 @@ const AdminDoctorProfile = () => {
     referredBy: "",
     reason: "",
   });
-
+  const [fetched, setfetched] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [doctor, setDoctor] = useState({
-    name: "Dr. Sarah Johnson",
-    field: "Cardiologist",
+    name: "",
+    field: "",
     image:
       "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300&h=300",
     contact: {
-      email: "dr.sarah@example.com",
-      phone: "+1 (555) 123-4567",
-      address: "123 Medical Center Drive, New York, NY 10001",
+      email: "",
+      phone: "",
+      address: "",
     },
     experience: "",
-    education: [
-      "M.D. from Johns Hopkins School of Medicine",
-      "Cardiology Fellowship at Mayo Clinic",
-      "Board Certified in Internal Medicine and Cardiology",
-    ],
-    certifications: [
-      "American Board of Internal Medicine",
-      "American College of Cardiology Fellow",
-    ],
+    education: [],
+    certifications: [],
     avgRating: 0,
   });
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,7 +87,7 @@ const AdminDoctorProfile = () => {
             address: data.doctor.address + " " + data.doctor.city,
           },
           experience:
-            data.doctor.experience.split(" ")[0] != "<Please"
+            data.doctor.experience != null
               ? data.doctor.experience.split(" ")[0]
               : "",
           field: data.doctor.desc,
@@ -89,9 +95,11 @@ const AdminDoctorProfile = () => {
           education: educations,
           avgRating: data.doctor.avgRating,
         });
+        setfetched(true);
       } catch (e) {
         console.error(e);
         CustomToast("Error fetching doctor details");
+        setfetched(false);
       }
     };
     fetchData();
@@ -130,6 +138,24 @@ const AdminDoctorProfile = () => {
     }
   };
 
+  if (isAuthenticated === null || fetched === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+        <div className="relative">
+          <PacmanLoader color="#047857" size={30} />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-200/20 to-transparent animate-pulse"></div>
+        </div>
+        <p className="mt-4 text-emerald-800 font-medium animate-pulse">
+          Loading your dashboard...
+        </p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300">
       <AdminNavbar />
@@ -149,7 +175,7 @@ const AdminDoctorProfile = () => {
           {/* Header Section */}
           <div className="bg-gradient-to-br from-teal-600 via-teal-500 to-teal-400 px-8 py-14 relative overflow-hidden rounded-t-3xl">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.2),transparent)]"></div>
-            <div className="flex items-center space-x-8 relative z-10">
+            <div className="flex flex-col sm:flex-row items-center space-x-8 relative">
               <div className="relative group">
                 <img
                   src={doctor.image}
@@ -160,21 +186,28 @@ const AdminDoctorProfile = () => {
               </div>
               <div className="text-white space-y-3">
                 <h1 className="text-[3rem] font-extrabold tracking-tight drop-shadow-lg">
-                  {doctor.name}
+                  {doctor.name.toUpperCase()}
                 </h1>
-                <p className="text-yellow-200 text-xl font-medium italic">
-                  {`${doctor.field} (${doctor.avgRating}⭐)`}
-                </p>
+                <div className="flex">
+                  <p className="text-yellow-200 text-xl font-medium italic">
+                    {`${doctor.field} (${doctor.avgRating}`}
+                  </p>
+                  <p>&nbsp;&nbsp;</p>
+                  <StarIcon fill="#ff7700" className="text-[#ff7700]" />
+                  <p className="text-yellow-200 text-xl font-medium italic">
+                    )
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Content Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[50px] gap-x-[30px] p-[60px] bg-gray-50/50 rounded-b-[2rem]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[50px] gap-x-[30px] p-4 sm:p-[60px] bg-gray-50/50 rounded-b-[2rem]">
             {/* Left Column */}
             <div className="space-y-[40px]">
               {/* Contact Information */}
-              <h2 className="text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
+              <h2 className="text-[1.5rem] sm:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
                 <User className="w-[30px] h-[30px] text-coral-500 animate-pulse" />
                 Contact Information
               </h2>
@@ -197,7 +230,7 @@ const AdminDoctorProfile = () => {
               </div>
 
               {/* Educational Qualification */}
-              <h2 className="text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
+              <h2 className="text-[1.5rem] sm:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
                 <GraduationCap className="w-[30px] h-[30px] text-coral-500" />
                 Educational Qualification
               </h2>
@@ -217,13 +250,13 @@ const AdminDoctorProfile = () => {
             {/* Right Column */}
             <div className="space-y-[40px]">
               {/* Professional Information */}
-              <h2 className="text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
+              <h2 className="text-[1.5rem] sm:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
                 <Briefcase className="w-[30px] h-[30px] text-coral-500 animate-spin-slow" />
                 Professional Information
               </h2>
               {/* Work Experience */}
               <div className="bg-white/60 backdrop-blur-md p-[30px] rounded-xl shadow-lg border border-purple-100 transform hover:-translate-y-[5px] transition-transform duration-[300ms]">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-center justify-between">
                   <div className="space-y-2">
                     <h3 className="text-2xl font-bold text-gray-800">
                       Years of Experience
@@ -232,9 +265,9 @@ const AdminDoctorProfile = () => {
                       Professional Medical Practice
                     </p>
                   </div>
-                  <div className="relative w-32 h-32 flex items-center justify-center">
+                  <div className="relative mt-4 sm:mt-0 w-32 h-32 flex items-center justify-center">
                     <div className="absolute inset-0 bg-teal-100 rounded-full"></div>
-                    <div className="relative z-10 text-center">
+                    <div className="relative  text-center">
                       <span className="block text-4xl font-bold text-teal-600">
                         {doctor.experience}
                       </span>
@@ -254,7 +287,7 @@ const AdminDoctorProfile = () => {
               </div>
 
               {/* Certifications */}
-              <h2 className="text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
+              <h2 className="text-[1.5rem] sm:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
                 <Certificate className="w-[30px] h-[30px] text-coral-500 animate-pulse" />
                 Certifications
               </h2>
@@ -360,7 +393,7 @@ const AdminDoctorProfile = () => {
                     type="submit"
                     className="relative w-full bg-gradient-to-r from-teal-500 to-teal-700 text-white py-3 px-6 rounded-lg font-semibold text-base overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-teal-600 hover:to-teal-800 group"
                   >
-                    <span className="relative z-10">Done</span>
+                    <span className="relative ">Done</span>
                     <div className="absolute inset-0 bg-teal-600 opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-lg"></div>
                   </button>
                 </form>

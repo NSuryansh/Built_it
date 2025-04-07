@@ -14,6 +14,8 @@ import { ToastContainer } from "react-toastify";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
 import CustomToast from "../../components/CustomToast";
+import SessionExpired from "../../components/SessionExpired";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorPeer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -275,39 +277,25 @@ const DoctorPeer = () => {
   }, [selectedChat, userId, reloader, userList]);
 
   const handleClosePopup = () => {
-    navigate("/login");
+    navigate("/doctor/login");
   };
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
-      </div>
-    );
-  }
-  if (!isAuthenticated) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-xl font-semibold text-red-600">
-            Session Timeout
-          </h2>
-          <p className="mt-2">Your session has expired. Please log in again.</p>
-          <button
-            onClick={handleClosePopup}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer"
-          >
-            Go to Login
-          </button>
-        </div>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <p>Loading...</p>
       </div>
     );
   }
 
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
+
   return (
     <div className="flex flex-col h-screen bg-[var(--mp-custom-white)]">
-      <Navbar />
+      <DoctorNavbar />
       <ToastContainer />
       {/* Desktop Layout */}
       <div className="md:flex h-[calc(100vh-64px)] hidden">
@@ -346,6 +334,7 @@ const DoctorPeer = () => {
               message={message}
               setMessage={setMessage}
               handleSubmit={handleSubmit}
+              isDoc={true}
             />
           </div>
         </div>

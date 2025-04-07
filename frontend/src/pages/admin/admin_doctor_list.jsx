@@ -12,6 +12,7 @@ import {
   MapPin,
   Calendar,
   Star,
+  StarIcon,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
@@ -28,6 +29,7 @@ const DoctorsList = () => {
   const [docId, setDocId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [fetched, setfetched] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -39,9 +41,16 @@ const DoctorsList = () => {
 
   useEffect(() => {
     const fetchDoctors = async () => {
-      const res = await fetch("http://localhost:3000/getdoctors");
-      const resp = await res.json();
-      setDoc(resp);
+      try {
+        const res = await fetch("http://localhost:3000/getdoctors");
+        const resp = await res.json();
+        setDoc(resp);
+        setfetched(true);
+      } catch (e) {
+        console.error(e);
+        CustomToast("Error fetching doctors");
+        setfetched(false);
+      }
     };
 
     fetchDoctors();
@@ -95,7 +104,7 @@ const DoctorsList = () => {
       doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || fetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <div className="relative">
@@ -120,9 +129,9 @@ const DoctorsList = () => {
 
       <div className="w-full max-w-7xl mx-auto p-6 space-y-10">
         {/* Header with Enhanced Styling */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-green-400 to-emerald-500 rounded-3xl shadow-2xl p-8 mb-12">
+        <div className="relative overflow-hidden bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-3xl shadow-2xl p-8 mb-12">
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
-          <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="relative flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
               <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">
                 Doctors Directory
@@ -201,16 +210,22 @@ const DoctorsList = () => {
                         <div className="font-semibold text-gray-900">
                           {doctor.name}
                         </div>
-                        <div className="text-xs text-gray-500">
-                          ID: {doctor.id}
-                        </div>
+                        {/* <div className="text-xs text-gray-500">ID: {doctor.id}</div> */}
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
-                      {`${doctor.avgRating}⭐`}
-                    </span>
+                    <div className="flex">
+                      <span className="px-3 py-1 rounded-full text-sm font-medium text-green-700">
+                        {doctor.avgRating}
+                      </span>
+                      <div>
+                        <StarIcon
+                          fill="#ff7700"
+                          className="text-[var(--custom-primary-orange)]"
+                        />
+                      </div>
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-gray-600">{doctor.email}</td>
                   <td className="px-6 py-4">
@@ -256,9 +271,17 @@ const DoctorsList = () => {
                     <h3 className="text-xl font-bold text-gray-900">
                       {doctor.name}
                     </h3>
-                    <span className="inline-block mt-1 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
-                      {doctor.desc}
-                    </span>
+                    <div className="flex">
+                      <span className="px-3 py-1 rounded-full text-sm font-medium text-green-700">
+                        {doctor.avgRating}
+                      </span>
+                      <div>
+                        <StarIcon
+                          fill="#ff7700"
+                          className="text-[var(--custom-primary-orange)]"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
