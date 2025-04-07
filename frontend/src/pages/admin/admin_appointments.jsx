@@ -10,6 +10,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
+import Footer from "../../components/Footer";
+import { format } from "date-fns";
 
 const fetchDoctors = async () => {
   const res = await fetch(`http://localhost:3000/getdoctors`, {
@@ -145,9 +147,9 @@ const AdminAppointments = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
       <AdminNavbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-12 py-6">
         <div className="flex flex-col md:flex-row items-center justify-between mb-10">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 flex items-center gap-4">
+          <h1 className="text-3xl md:text-4xl text-center font-extrabold text-gray-900 flex items-center gap-4">
             <Calendar className="h-10 w-10 text-blue-600 animate-pulse" />
             Appointments Dashboard
           </h1>
@@ -170,7 +172,7 @@ const AdminAppointments = () => {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-6 mb-6">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div className="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-blue-100 transform hover:-translate-y-1">
@@ -269,8 +271,8 @@ const AdminAppointments = () => {
                 key={appointment.id}
                 className="px-6 py-5 hover:bg-blue-50/50 transition-all duration-200"
               >
-                <div className="flex items-center justify-between">
-                  <div className="w-1/3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                  <div className="w-full sm:w-1/3">
                     <p className="font-medium text-gray-900 text-lg">
                       {appointment.patientName}
                     </p>
@@ -278,26 +280,28 @@ const AdminAppointments = () => {
                       {doctors.find((d) => d.id === appointment.doctorId)?.name}
                     </p>
                   </div>
-                  <div className="w-1/3 text-center">
-                    <p className="text-sm font-medium text-gray-900">
-                      {appointment.date}
-                    </p>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {appointment.time}
-                    </p>
-                  </div>
-                  <div className="w-1/3 flex justify-end">
-                    <span
-                      className={`px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border transition-colors duration-200 ${
-                        appointment.status === "Confirmed"
-                          ? "bg-green-100 text-green-800 border-green-200 hover:bg-green-200"
-                          : appointment.status === "Pending"
-                          ? "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200"
-                          : "bg-red-100 text-red-800 border-red-200 hover:bg-red-200"
-                      }`}
-                    >
-                      {appointment.status}
-                    </span>
+                  <div className="mt-3 sm:mt-0 w-full sm:w-2/3 flex items-center">
+                    <div className="w-1/2 sm:text-center">
+                      <p className="text-sm font-medium text-gray-900">
+                        {format(new Date(appointment.date), "dd MMM")}
+                      </p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {appointment.time}
+                      </p>
+                    </div>
+                    <div className="w-1/2 flex h-fit justify-end">
+                      <span
+                        className={`px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border transition-colors duration-200 ${
+                          appointment.status === "Confirmed"
+                            ? "bg-green-100 text-green-800 border-green-200 hover:bg-green-200"
+                            : appointment.status === "Pending"
+                            ? "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200"
+                            : "bg-red-100 text-red-800 border-red-200 hover:bg-red-200"
+                        }`}
+                      >
+                        {appointment.status}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -305,6 +309,7 @@ const AdminAppointments = () => {
           </div>
         </div>
       </main>
+      <Footer color="green" />
     </div>
   );
 };
