@@ -167,6 +167,7 @@ const DoctorPeer = () => {
       encryptedText,
       iv,
       encryptedAESKey,
+      senderType,
     }) => {
       // console.log("Message received:", {
       //   senderId,
@@ -184,10 +185,10 @@ const DoctorPeer = () => {
 
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-
+      // console.log(senderType, "sendertpy:")
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId },
+        { decryptedText: decrypted, senderId, senderType },
       ]);
     };
 
@@ -197,16 +198,28 @@ const DoctorPeer = () => {
     };
   }, [aesKey, isAuthenticated]);
 
+  useEffect(()=>{
+    console.log(showMessages, "SHOWINNGGNGNNGN");
+  }, [showMessages])
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
+
+  useEffect(() => {
+    if (userId && userList.length > 0 && selectedChat !== null) {
+      // console.log("Fetching messages for selected doctor");
+      // console.log(userList, "HALLLLLLLLLLLLLLO")
+      fetchMessages(userId, userList[selectedChat]?.id);
+    }
+  }, [selectedChat, userId, reloader, userList]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId },
+        { decryptedText: message, senderId: userId, senderType: localStorage.getItem("user_type")},
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
@@ -242,6 +255,7 @@ const DoctorPeer = () => {
             msg["iv"],
             msg["encryptedAESKey"]
           ),
+          senderType: msg["senderType"],
         }))
       );
 
@@ -263,18 +277,8 @@ const DoctorPeer = () => {
     }
   }
 
-  useEffect(() => {
-    // console.log("Current showMessages", showMessages);
-  }, [showMessages]);
-
   // Fetch messages using the selected doctor's id from userList
-  useEffect(() => {
-    if (userId && userList.length > 0 && selectedChat !== null) {
-      // console.log("Fetching messages for selected doctor");
-      // console.log(userList, "HALLLLLLLLLLLLLLO")
-      fetchMessages(userId, userList[selectedChat]?.id);
-    }
-  }, [selectedChat, userId, reloader, userList]);
+
 
   const handleClosePopup = () => {
     navigate("/doctor/login");
@@ -324,7 +328,7 @@ const DoctorPeer = () => {
               <ChatMessage
                 key={index}
                 message={msg.decryptedText}
-                isSent={msg.senderId === userId}
+                isSent={msg.senderType === "doc"}
               />
             ))}
             <div ref={messagesEndRef} />
@@ -371,7 +375,7 @@ const DoctorPeer = () => {
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}
-                  isSent={msg.senderId === userId}
+                  isSent={msg.senderType === "doc"}
                 />
               ))}
               <div ref={messagesEndRef} />
