@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Rating from "@mui/material/Rating";
 import { Button } from "@mui/material";
+
 import {
   User,
   Calendar,
@@ -73,7 +74,7 @@ const UserAppointments = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
   }
 
   // Only handles submitting data, not the event
