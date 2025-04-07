@@ -75,8 +75,8 @@ const Calendar = ({ onDateSelect }) => {
   const todayString = format(new Date(), "yyyy-MM-dd");
 
   return (
-    <div className="flex items-center justify-center p-2 md:p-4">
-      <div className="p-2 md:p-6 bg-white rounded-xl shadow-lg max-w-md w-full">
+    <div className="flex items-center justify-center">
+      <div className="p-4 sm:p-8 md:p-4 lg:p-6 bg-white rounded-xl shadow-lg max-w-md w-full">
         <div className="flex justify-between items-center mb-6">
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, -30))}

@@ -48,7 +48,7 @@ const ProgressPage = ({ isLandingPage }) => {
       <div
         className={
           isLandingPage
-            ? "p-4 bg-[var(--custom-white)]"
+            ? "rounded-2xl p-4 sm:p-8 md:p-4 bg-[var(--custom-white)]"
             : "p-4 bg-[var(--mp-custom-peach)]"
         }
       >
@@ -63,7 +63,7 @@ const ProgressPage = ({ isLandingPage }) => {
         </h2>
       </div>
 
-      <div className="p-8 flex justify-center items-center w-full">
+      <div className="p-8 pt-2 flex justify-center items-center w-full">
         <div className="max-w-2xl w-full">
           <ProgressBar
             label="Mental Health"
