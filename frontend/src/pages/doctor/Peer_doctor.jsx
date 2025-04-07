@@ -34,7 +34,7 @@ const DoctorPeer = () => {
   const lastMessageRef = useRef("");
   const messagesEndRef = useRef(null);
 
-  const userId = parseInt(localStorage.getItem("userid"))
+  const userId = parseInt(localStorage.getItem("userid"));
   const username = localStorage.getItem("username");
 
   const [searchParams] = useSearchParams();
@@ -88,7 +88,7 @@ const DoctorPeer = () => {
         id: contact.id,
         messages: [],
       }));
-      let merged = []
+      let merged = [];
       setChats((prevChats) => {
         merged = [...updatedChats];
         prevChats.forEach((chat) => {
@@ -97,7 +97,7 @@ const DoctorPeer = () => {
           }
         });
       });
-      console.log(merged)
+      console.log(merged);
       return merged;
     } catch (error) {
       console.error("Error fetching contacts:", error);
@@ -107,22 +107,22 @@ const DoctorPeer = () => {
   }
 
   useEffect(() => {
-    const getContacts = async() => {
+    const getContacts = async () => {
       if (isAuthenticated && userId) {
-        const user = await fetchContacts(userId)
+        const user = await fetchContacts(userId);
         // console.log(user, "AHAHAHAH")
         setUserList(user);
         // console.log(userList, "halooooooooooooooooooooooooooooooooooooooooo")
       }
-    }
-    getContacts()
+    };
+    getContacts();
   }, [isAuthenticated, userId]);
 
   // Update the recipient id from the selected doctor in userList
   useEffect(() => {
     if (userList.length > 0 && selectedChat !== null) {
       console.log("Selected doctor:", userList[selectedChat]);
-      setRecid(userList[selectedChat].id);
+      setRecid(userList[selectedChat].userId);
     }
   }, [selectedChat, userList]);
 
@@ -198,9 +198,9 @@ const DoctorPeer = () => {
     };
   }, [aesKey, isAuthenticated]);
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(showMessages, "SHOWINNGGNGNNGN");
-  }, [showMessages])
+  }, [showMessages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -219,14 +219,18 @@ const DoctorPeer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId, senderType: localStorage.getItem("user_type")},
+        {
+          decryptedText: message,
+          senderId: userId,
+          senderType: localStorage.getItem("user_type"),
+        },
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
       // console.log(recId, userId)
       socketRef.current.emit("sendMessage", {
-        userId: userId,
-        doctorId: recId,
+        userId: recId,
+        doctorId: userId,
         senderType: localStorage.getItem("user_type"),
         encryptedText,
         iv,
@@ -279,7 +283,6 @@ const DoctorPeer = () => {
 
   // Fetch messages using the selected doctor's id from userList
 
-
   const handleClosePopup = () => {
     navigate("/doctor/login");
   };
@@ -288,7 +291,7 @@ const DoctorPeer = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+        <p>Loadin your dashboard...</p>
       </div>
     );
   }

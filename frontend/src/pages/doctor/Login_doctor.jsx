@@ -33,7 +33,7 @@ const DoctorLogin = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+        <p>Loadin your dashboard...</p>
       </div>
     );
   }
@@ -199,9 +199,7 @@ const DoctorLogin = () => {
               <h3 className="text-xl font-bold text-blue-900 mb-4">
                 Reset Password
               </h3>
-              <p className="mb-4 text-sm">
-                Please enter your email address:
-              </p>
+              <p className="mb-4 text-sm">Please enter your email address:</p>
               <input
                 type="email"
                 value={email}
