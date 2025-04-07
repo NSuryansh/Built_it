@@ -108,7 +108,7 @@ const DoctorLanding = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+        <p>Loadin your dashboard...</p>
       </div>
     );
   }
@@ -125,19 +125,19 @@ const DoctorLanding = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50">
       <DoctorNavbar className="shadow-sm" />
       <ToastContainer position="top-right" />
-      
+
       <div className="flex-1 px-4 sm:px-6 lg:px-8 py-6">
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-blue-800">
-              Welcome, Dr. {localStorage.getItem('username')}
+              Welcome, Dr. {localStorage.getItem("username")}
             </h1>
             <p className="text-gray-600 mt-1">
-              Your schedule for {format(new Date(), 'dd MMM yyyy')}
+              Your schedule for {format(new Date(), "dd MMM yyyy")}
             </p>
           </div>
-  
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Calendar Card */}
             <div className="lg:col-span-1">
@@ -148,7 +148,7 @@ const DoctorLanding = () => {
                 <DoctorCalendar className="w-full" />
               </div>
             </div>
-  
+
             {/* Appointments Card */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
@@ -156,11 +156,14 @@ const DoctorLanding = () => {
                   <h2 className="text-lg font-semibold text-gray-900">
                     Upcoming Appointments
                   </h2>
-                  <Link to='/doctor/appointments' className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+                  <Link
+                    to="/doctor/appointments"
+                    className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
                     View All <ChevronRight className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
-  
+
                 <div className="space-y-3">
                   {appointments.map((appointment) => (
                     <div
@@ -191,7 +194,7 @@ const DoctorLanding = () => {
                 </div>
               </div>
             </div>
-  
+
             {/* Events Card */}
             <div className="lg:col-span-3">
               <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
@@ -203,7 +206,7 @@ const DoctorLanding = () => {
                     View All <ChevronRight className="h-4 w-4 ml-1" />
                   </button> */}
                 </div>
-  
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {events.map((event) => (
                     <div
@@ -236,10 +239,10 @@ const DoctorLanding = () => {
           </div>
         </div>
       </div>
-  
+
       <Footer color={"blue"} className="mt-8" />
     </div>
-  )
+  );
 };
 
 export default DoctorLanding;
