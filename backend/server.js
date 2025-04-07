@@ -408,7 +408,7 @@ app.get("/chatContacts", async (req, res) => {
 });
 
 app.get('/countUnseen', async (req, res) => {
-  const userId = Number(req.body['userId'])
+  const {userId} = req.query
   // const doctorId = Number(req.body['doctorId'])
   const sender = req.body['senderType']
 
@@ -416,7 +416,7 @@ app.get('/countUnseen', async (req, res) => {
     const unreadCount = await prisma.message.groupBy({
       by: ['senderId'],
       where: {
-        recipientId: userId,
+        recipientId: Number(userId),
         read: false
       },
       _count: {
@@ -428,7 +428,7 @@ app.get('/countUnseen', async (req, res) => {
     const unreadCount = await prisma.message.groupBy({
       by: ['senderId'],
       where: {
-        recipientId: userId,
+        recipientId: Number(userId),
         read: false
       },
       _count: {
