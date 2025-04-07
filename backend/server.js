@@ -1488,14 +1488,29 @@ app.post("/save-subscription", async (req, res) => {
         //   });
         // } else {
         // Create a new subscription
-        await prisma.subscription.create({
-          data: {
+        const subs = await prisma.subscription.upsert({
+          where:{
+            // OR: [
+            //   {
+                // userId: Number(userid),
+                endpoint: endpoint
+            //   }
+            // ]
+          },
+          update: {
             userId: Number(userid),
             endpoint: endpoint,
             authKey: keys.auth,
             p256dhKey: keys.p256dh,
           },
+          create: {
+            userId: Number(userid),
+            endpoint: endpoint,
+            authKey: keys.auth,
+            p256dhKey: keys.p256dh,
+          }
         });
+        console.log(subs)
         // }
       } catch (e) {
         console.log(e);

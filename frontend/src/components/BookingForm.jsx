@@ -46,6 +46,27 @@ const BookingFormStep = ({
     setSelectedTime(event.target.value);
   };
 
+  //to get notifs for incoming requests
+  const sendNotif = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/send-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userid: selectedDoctor.id,
+          message: `You have a new incoming appointment request!`,
+          userType: "doc",
+        }),
+      });
+
+      if (!res.ok) {
+        console.error("Failed to send notification");
+      }
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  };
+
   return (
     <div className="bg-gradient-to-b from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
@@ -158,8 +179,8 @@ const BookingFormStep = ({
                   {[...Array(14)].map((_, index) => {
                     const date = new Date();
                     date.setDate(date.getDate() + index);
-                    const formattedDate = format(date, 'yyyy-MM-dd');
-                    const displayDate = format(date, 'd MMM');
+                    const formattedDate = format(date, "yyyy-MM-dd");
+                    const displayDate = format(date, "d MMM");
                     return (
                       <option key={formattedDate} value={formattedDate}>
                         {displayDate}
@@ -224,6 +245,9 @@ const BookingFormStep = ({
           </button>
 
           <button
+            onClick={() => {
+              sendNotif();
+            }}
             type="submit"
             className="flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-[var(--custom-orange-500)] text-white font-semibold hover:bg-[var(--custom-orange-600)] transform hover:scale-[1.02] transition-all duration-200"
           >
