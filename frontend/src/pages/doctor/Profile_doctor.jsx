@@ -12,6 +12,7 @@ import {
   Save,
   X,
   Plus,
+  BriefcaseBusiness,
 } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import Footer from "../../components/Footer";
@@ -261,7 +262,7 @@ const DoctorProfile = () => {
               to="/doctor/leave"
               className="flex self-end md:self-center items-center h-fit w-fit mb-4 md:mb-0 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow transition"
             >
-              <Edit2 className="h-4 w-4 mr-2" />
+              <BriefcaseBusiness className="h-4 w-4 mr-2" />
               Take Leave
             </Link>
           </div>

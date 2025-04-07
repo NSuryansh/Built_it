@@ -9,7 +9,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { format } from "date-fns";
 
-import DoctorCalendar from "../../components/DoctorCalendar";
+import DoctorCalendar from "../../components/doctor/DoctorCalendar";
 import CustomToast from "../../components/CustomToast";
 import { TimeChange } from "../../components/Time_Change";
 

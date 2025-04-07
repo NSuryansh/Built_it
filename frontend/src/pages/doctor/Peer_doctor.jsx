@@ -1,21 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
-import ChatList from "../components/ChatList";
-import ChatMessage from "../components/ChatMessage";
-import ChatInput from "../components/ChatInput";
+import ChatList from "../../components/ChatList";
+import ChatMessage from "../../components/ChatMessage";
+import ChatInput from "../../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import { decryptMessage } from "../utils/decryptMessage";
-import { generateAESKey } from "../utils/aeskey";
-import { encryptMessage } from "../utils/encryptMessage";
-import { checkAuth } from "../utils/profile";
+import { decryptMessage } from "../../utils/decryptMessage";
+import { generateAESKey } from "../../utils/aeskey";
+import { encryptMessage } from "../../utils/encryptMessage";
+import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import { ToastContainer } from "react-toastify";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
-import CustomToast from "../components/CustomToast";
+import CustomToast from "../../components/CustomToast";
 
-const Peer = () => {
+const DoctorPeer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [aesKey, setAesKey] = useState(null);
   const [chats, setChats] = useState([]);
@@ -410,4 +410,4 @@ const Peer = () => {
   );
 };
 
-export default Peer;
+export default DoctorPeer;

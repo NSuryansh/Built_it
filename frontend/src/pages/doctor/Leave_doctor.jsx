@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
+import CustomToast from "../../components/CustomToast";
 
 const DoctorLeave = () => {
   const [leaveType, setLeaveType] = useState(null);
@@ -27,11 +28,13 @@ const DoctorLeave = () => {
   }, []);
 
   const fetchAvailableSlots = async (date) => {
+    console.log(date);
     try {
       const response = await fetch(
         `http://localhost:3000/available-slots?date=${date}&docId=${docId}`
       );
       const data = await response.json();
+      console.log(data);
       setSlots(data.availableSlots);
     } catch (error) {
       console.error("Error fetching available slots:", error);
@@ -40,7 +43,6 @@ const DoctorLeave = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
     console.log({
       leaveType,
       selectedDate,
@@ -48,6 +50,32 @@ const DoctorLeave = () => {
       selectedSlot,
       reason,
     });
+    if (leaveType === "slot") {
+      const setLeave = async () => {
+        try {
+          const response = await fetch(`http://localhost:3000/addLeave`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              doc_id: docId,
+              startDate: selectedDate,
+              startTime: selectedSlot,
+              endDate: selectedDate,
+              endTime: selectedSlot,
+            }),
+          });
+          console.log(response.json());
+          CustomToast("Leave added successfully");
+          navigate("/doctor/profile");
+        } catch (e) {
+          console.error(e);
+          CustomToast("Error taking leave");
+        }
+      };
+      setLeave();
+    }
   };
 
   const handleGoBack = () => {
@@ -102,7 +130,10 @@ const DoctorLeave = () => {
                       <input
                         type="date"
                         value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
+                        onChange={(e) => {
+                          setSelectedDate(e.target.value);
+                          fetchAvailableSlots(e.target.value);
+                        }}
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required
                       />
@@ -113,14 +144,16 @@ const DoctorLeave = () => {
                       </label>
                       <select
                         value={selectedSlot}
-                        onChange={(e) => setSelectedSlot(e.target.value)}
+                        onChange={(e) => {
+                          setSelectedSlot(e.target.value);
+                        }}
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required
                       >
                         <option value="">Choose a slot</option>
                         {slots.map((slot) => (
-                          <option key={slot.id} value={slot.id}>
-                            {slot.time}
+                          <option key={slot.id} value={slot.starting_time}>
+                            {slot.starting_time.split("T")[1].slice(0, 5)}
                           </option>
                         ))}
                       </select>
