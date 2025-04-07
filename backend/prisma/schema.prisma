@@ -108,6 +108,7 @@ model Message {
   encryptedAESKey String
   authTag         String
   senderType      String
+  read            Boolean @default(false)
 }
 
 model Events {

@@ -12,6 +12,7 @@ import nodemailer from "nodemailer";
 import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
+import { send } from "@emailjs/browser";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -88,6 +89,33 @@ io.on("connection", (socket) => {
     socket.join(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
+  socket.on("markAsRead", async ({ userId, doctorId, sender }) => {
+    try {
+      if (sender == "user") {
+        const result = await prisma.message.updateMany({
+          where: {
+            senderType: "doc",
+            recipientId: userId,
+            senderId: doctorId
+          },
+          data: {
+            read: true
+          }
+        })
+      } else if (sender == "doc") {
+        const result = await prisma.message.updateMany({
+          where: {
+            senderType: "user",
+            senderId: userId,
+            recipientId: doctorId
+          }
+        })
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+  })
   socket.on(
     "sendMessage",
     async ({
@@ -143,6 +171,7 @@ io.on("connection", (socket) => {
       }
     }
   );
+
   socket.on("disconnect", () => {
     // console.log(`User disconnected: ${socket.id}`);
     for (const [userId, socketId] of users.entries()) {
@@ -372,6 +401,38 @@ app.get("/chatContacts", async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 });
+
+app.get('/countUnseen', async (req, res) => {
+  const userId = Number(req.body['userId'])
+  // const doctorId = Number(req.body['doctorId'])
+  const sender = req.body['senderType']
+
+  if (sender == "user") {
+    const unreadCount = await prisma.message.groupBy({
+      by: ['senderId'],
+      where: {
+        recipientId: userId,
+        read: false
+      },
+      _count: {
+        _all: false
+      }
+    })
+    res.json(unreadCount)
+  } else if (sender == "doc") {
+    const unreadCount = await prisma.message.groupBy({
+      by: ['senderId'],
+      where: {
+        recipientId: userId,
+        read: false
+      },
+      _count: {
+        _all: false
+      }
+    })
+    console.log(unreadCount)
+  }
+})
 
 app.get("/messages", async (req, res) => {
   try {
@@ -804,7 +865,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1368,19 +1429,19 @@ app.post("/setRating", async (req, res) => {
     });
 
     const setRating = await prisma.pastAppointments.aggregate({
-      _avg:{
+      _avg: {
         stars: true,
       },
-      where:{
+      where: {
         doc_id: docId
       }
     })
 
     const updateRating = await prisma.doctor.update({
-      where:{
+      where: {
         id: docId
       },
-      data:{
+      data: {
         avgRating: setRating._avg.stars
       }
     })
@@ -1791,8 +1852,8 @@ app.put("/modifyDoc", async (req, res) => {
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
-          where: { OR: orConditions },
-        })
+        where: { OR: orConditions },
+      })
       : null;
 
     if (existingDoctor && existingDoctor.id !== doctorId) {
