@@ -411,31 +411,35 @@ app.get('/countUnseen', async (req, res) => {
   const {userId, senderType} = req.query
   // const doctorId = Number(req.body['doctorId'])
   // const sender = req.body['senderType']
-
+  console.log(userId, senderType)
   if (senderType == "user") {
     const unreadCount = await prisma.message.groupBy({
       by: ['senderId'],
       where: {
         recipientId: Number(userId),
+        senderType: "doc",
         read: false
       },
       _count: {
         _all: true
       }
     })
+    // console.log(unreadCount, "HALLLO")
     res.json(unreadCount)
   } else if (senderType == "doc") {
     const unreadCount = await prisma.message.groupBy({
       by: ['senderId'],
       where: {
         recipientId: Number(userId),
-        read: false
+        read: false,
+        senderType: "user"
       },
       _count: {
         _all: true
       }
     })
-    console.log(unreadCount)
+    // console.log(unreadCount)
+    res.json(unreadCount)
   }
 })
 

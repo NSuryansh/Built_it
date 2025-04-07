@@ -2,10 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   MessageSquare,
   Search,
-  Send,
-  Menu,
   X,
   UserCircle2,
+  User,
 } from "lucide-react";
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
@@ -359,7 +358,7 @@ const Peer = () => {
             <>
               <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
                 <div className="flex items-center space-x-3">
-                  <UserCircle2 className="w-12 h-12 text-orange-500" />
+                  <User className="w-8 h-8 text-orange-500" />
                   <div>
                     <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
                       {docList[selectedChat]?.name}
@@ -456,7 +455,7 @@ const Peer = () => {
           <div className="flex flex-col h-full bg-gradient-to-b from-gray-50 to-white">
             <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
               <div className="flex items-center space-x-3">
-                <UserCircle2 className="w-12 h-12 text-orange-500" />
+                <User className="w-8 h-8 text-orange-500" />
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
                     {docList[selectedChat]?.name}
