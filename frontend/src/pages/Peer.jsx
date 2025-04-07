@@ -208,7 +208,7 @@ const Peer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId, userType: "user"},
+        { decryptedText: message, senderId: userId, senderType: "user"},
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
@@ -267,9 +267,9 @@ const Peer = () => {
     }
   }, [selectedChat, userId, reloader, docList]);
 
-  // useEffect(() => {
-  //   console.log(showMessages, "HAHAHAHAHHAHAHAHAH")
-  // }, [showMessages])
+  useEffect(() => {
+    console.log(showMessages, "HAHAHAHAHHAHAHAHAH")
+  }, [showMessages])
   const handleClosePopup = () => {
     navigate("/login");
   };
