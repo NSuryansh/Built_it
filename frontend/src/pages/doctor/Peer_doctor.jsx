@@ -122,7 +122,7 @@ const DoctorPeer = () => {
   useEffect(() => {
     if (userList.length > 0 && selectedChat !== null) {
       console.log("Selected doctor:", userList[selectedChat]);
-      setRecid(userList[selectedChat].userId);
+      setRecid(userList[selectedChat].id);
     }
   }, [selectedChat, userList]);
 
@@ -162,30 +162,14 @@ const DoctorPeer = () => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
 
-    const handleReceiveMessage = async ({
-      senderId,
-      encryptedText,
-      iv,
-      encryptedAESKey,
-      senderType,
-    }) => {
-      // console.log("Message received:", {
-      //   senderId,
-      //   encryptedText,
-      //   iv,
-      //   encryptedAESKey,
-      //   senderType,
-      // });
+    const handleReceiveMessage = async ({senderId, encryptedText, iv, encryptedAESKey, senderType}) => {
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
         encryptedAESKey
       );
-      // console.log("Decrypted message:", decrypted);
-
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-      // console.log(senderType, "sendertpy:")
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
@@ -213,6 +197,17 @@ const DoctorPeer = () => {
       fetchMessages(userId, userList[selectedChat]?.id);
     }
   }, [selectedChat, userId, reloader, userList]);
+
+  useEffect(() => {
+    console.log(recId, "selectd", userId," ")
+    if(selectedChat!==null && recId!==0){
+      socketRef.current.emit("markAsRead",{
+        userId: recId,
+        doctorId: userId,
+        senderType: "doc"
+      });
+    }
+  }, [selectedChat, recId])
 
   const handleSubmit = async (e) => {
     e.preventDefault();

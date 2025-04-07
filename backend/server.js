@@ -89,9 +89,10 @@ io.on("connection", (socket) => {
     socket.join(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
-  socket.on("markAsRead", async ({ userId, doctorId, sender }) => {
+  socket.on("markAsRead", async ({ userId, doctorId, senderType }) => {
+    console.log(userId, " ", doctorId, " ", senderType)
     try {
-      if (sender == "user") {
+      if (senderType === "user") {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "doc",
@@ -102,12 +103,16 @@ io.on("connection", (socket) => {
             read: true
           }
         })
-      } else if (sender == "doc") {
+        console.log(result,"HHHHHHHHHHHHHHHHHHHHHHHHHh")
+      } else if (senderType === "doc") {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "user",
             senderId: userId,
             recipientId: doctorId
+          },
+          data: {
+            read: true
           }
         })
       }
