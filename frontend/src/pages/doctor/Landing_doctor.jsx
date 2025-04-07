@@ -41,7 +41,7 @@ const DoctorLanding = () => {
         const data = await response.json();
 
         const formattedAppointments = data.map((appt) => {
-          console.log(appt)
+          // console.log(appt)
           const dateObj = new Date(appt.dateTime);
           const newDate = TimeChange(dateObj.getTime());
           return {
