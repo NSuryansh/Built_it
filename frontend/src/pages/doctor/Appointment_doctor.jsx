@@ -292,7 +292,7 @@ const DoctorAppointment = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p>Loading...</p>
+        <p>Loadin your dashboard...</p>
       </div>
     );
   }
