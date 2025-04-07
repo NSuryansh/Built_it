@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { 
-  Trash2, 
-  UserPlus, 
-  Search, 
-  Filter, 
+import {
+  Trash2,
+  UserPlus,
+  Search,
+  Filter,
   RefreshCw,
   Stethoscope,
   Mail,
   Phone,
   MapPin,
   Calendar,
-  Star
+  Star,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
@@ -88,10 +88,11 @@ const DoctorsList = () => {
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
-  const filteredDoctors = doctors.filter((doctor) =>
-    doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    doctor.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredDoctors = doctors.filter(
+    (doctor) =>
+      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doctor.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (isAuthenticated === null) {
@@ -155,7 +156,10 @@ const DoctorsList = () => {
         <div className="bg-white rounded-2xl shadow-lg p-4 mb-8">
           <div className="flex flex-col sm:flex-row gap-4 items-center">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
               <input
                 type="text"
                 placeholder="Search by name, specialty, or email..."
@@ -177,7 +181,7 @@ const DoctorsList = () => {
             <thead className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-900 font-semibold">
               <tr>
                 <th className="px-6 py-5">Name</th>
-                <th className="px-6 py-5">Specialty</th>
+                <th className="px-6 py-5">Rating</th>
                 <th className="px-6 py-5">Email</th>
                 <th className="px-6 py-5 text-center">Actions</th>
               </tr>
@@ -194,14 +198,18 @@ const DoctorsList = () => {
                         <Stethoscope size={20} className="text-green-700" />
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-900">{doctor.name}</div>
-                        <div className="text-xs text-gray-500">ID: {doctor.id}</div>
+                        <div className="font-semibold text-gray-900">
+                          {doctor.name}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          ID: {doctor.id}
+                        </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
-                      {doctor.desc}
+                      {`${doctor.avgRating}⭐`}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-gray-600">{doctor.email}</td>
@@ -245,7 +253,9 @@ const DoctorsList = () => {
                     <Stethoscope size={24} className="text-green-700" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">{doctor.name}</h3>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {doctor.name}
+                    </h3>
                     <span className="inline-block mt-1 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
                       {doctor.desc}
                     </span>
@@ -260,7 +270,7 @@ const DoctorsList = () => {
                   </button>
                 </div>
               </div>
-              
+
               <div className="space-y-2 pt-4 border-t border-green-100">
                 <div className="flex items-center gap-2 text-gray-600">
                   <Mail size={16} className="text-green-600" />
