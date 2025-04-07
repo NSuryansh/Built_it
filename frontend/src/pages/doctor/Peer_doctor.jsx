@@ -14,6 +14,8 @@ import { ToastContainer } from "react-toastify";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
 import CustomToast from "../../components/CustomToast";
+import SessionExpired from "../../components/SessionExpired";
+import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const DoctorPeer = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -26,13 +28,13 @@ const DoctorPeer = () => {
   const [showChatList, setShowChatList] = useState(true);
   const [messagesApi, setMessagesApi] = useState(null);
   const [reloader, setReloader] = useState(true);
-  const [docList, setDocList] = useState([]);
+  const [userList, setUserList] = useState([{}]);
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
   const messagesEndRef = useRef(null);
 
-  const userId = parseInt(localStorage.getItem("userid"), 10);
+  const userId = parseInt(localStorage.getItem("userid"))
   const username = localStorage.getItem("username");
 
   const [searchParams] = useSearchParams();
@@ -76,7 +78,6 @@ const DoctorPeer = () => {
         `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
-      
       if (!contacts || !Array.isArray(contacts)) {
         console.warn("No contacts received.");
         return;
@@ -87,16 +88,17 @@ const DoctorPeer = () => {
         id: contact.id,
         messages: [],
       }));
-
+      let merged = []
       setChats((prevChats) => {
-        const merged = [...updatedChats];
+        merged = [...updatedChats];
         prevChats.forEach((chat) => {
           if (!merged.find((c) => String(c.id) === String(chat.id))) {
             merged.push(chat);
           }
         });
-        return merged;
       });
+      console.log(merged)
+      return merged;
     } catch (error) {
       console.error("Error fetching contacts:", error);
       CustomToast("Error while fetching data");
@@ -105,18 +107,24 @@ const DoctorPeer = () => {
   }
 
   useEffect(() => {
-    if (isAuthenticated && userId) {
-      fetchContacts(userId);
+    const getContacts = async() => {
+      if (isAuthenticated && userId) {
+        const user = await fetchContacts(userId)
+        // console.log(user, "AHAHAHAH")
+        setUserList(user);
+        // console.log(userList, "halooooooooooooooooooooooooooooooooooooooooo")
+      }
     }
+    getContacts()
   }, [isAuthenticated, userId]);
 
-  // Update the recipient id from the selected doctor in docList
+  // Update the recipient id from the selected doctor in userList
   useEffect(() => {
-    if (docList.length > 0 && selectedChat !== null) {
-      console.log("Selected doctor:", docList[selectedChat]);
-      setRecid(docList[selectedChat].id);
+    if (userList.length > 0 && selectedChat !== null) {
+      console.log("Selected doctor:", userList[selectedChat]);
+      setRecid(userList[selectedChat].id);
     }
-  }, [selectedChat, docList]);
+  }, [selectedChat, userList]);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -259,56 +267,42 @@ const DoctorPeer = () => {
     // console.log("Current showMessages", showMessages);
   }, [showMessages]);
 
-  // Fetch messages using the selected doctor's id from docList
+  // Fetch messages using the selected doctor's id from userList
   useEffect(() => {
-    if (userId && docList.length > 0 && selectedChat !== null) {
+    if (userId && userList.length > 0 && selectedChat !== null) {
       // console.log("Fetching messages for selected doctor");
-      // console.log(docList, "HALLLLLLLLLLLLLLO")
-      fetchMessages(userId, docList[selectedChat]?.id);
+      // console.log(userList, "HALLLLLLLLLLLLLLO")
+      fetchMessages(userId, userList[selectedChat]?.id);
     }
-  }, [selectedChat, userId, reloader, docList]);
+  }, [selectedChat, userId, reloader, userList]);
 
   const handleClosePopup = () => {
-    navigate("/login");
+    navigate("/doctor/login");
   };
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
-      </div>
-    );
-  }
-  if (!isAuthenticated) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-xl font-semibold text-red-600">
-            Session Timeout
-          </h2>
-          <p className="mt-2">Your session has expired. Please log in again.</p>
-          <button
-            onClick={handleClosePopup}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer"
-          >
-            Go to Login
-          </button>
-        </div>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <p>Loading...</p>
       </div>
     );
   }
 
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} />;
+  }
+
   return (
     <div className="flex flex-col h-screen bg-[var(--mp-custom-white)]">
-      <Navbar />
+      <DoctorNavbar />
       <ToastContainer />
       {/* Desktop Layout */}
       <div className="md:flex h-[calc(100vh-64px)] hidden">
-        {docList.length > 0 ? (
+        {userList.length > 0 ? (
           <div className="md:w-4/12 lg:w-3/12">
             <ChatList
-              names={docList.map((doctor) => doctor.name)}
+              names={userList.map((doctor) => doctor.name)}
               selectedChat={selectedChat}
               setSelectedChat={setSelectedChat}
               setShowChatList={setShowChatList}
@@ -322,7 +316,7 @@ const DoctorPeer = () => {
         <div className="flex flex-col h-full flex-1">
           <div className="p-4 flex justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
             <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-              {docList[selectedChat]?.name || "Select a chat"}
+              {userList[selectedChat]?.name || "Select a chat"}
             </h2>
           </div>
           <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
@@ -340,6 +334,7 @@ const DoctorPeer = () => {
               message={message}
               setMessage={setMessage}
               handleSubmit={handleSubmit}
+              isDoc={true}
             />
           </div>
         </div>
@@ -347,10 +342,10 @@ const DoctorPeer = () => {
       {/* Mobile Layout */}
       <div className="md:hidden h-[calc(100vh-64px)]">
         {showChatList ? (
-          docList.length > 0 ? (
+          userList.length > 0 ? (
             <div className="h-full">
               <ChatList
-                names={docList.map((doctor) => doctor.name)}
+                names={userList.map((doctor) => doctor.name)}
                 selectedChat={selectedChat}
                 setSelectedChat={setSelectedChat}
                 setShowChatList={setShowChatList}
@@ -365,7 +360,7 @@ const DoctorPeer = () => {
           <div className="flex flex-col h-full">
             <div className="p-4 flex w-full justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
               <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-                {docList[selectedChat]?.name || "Select a chat"}
+                {userList[selectedChat]?.name || "Select a chat"}
               </h2>
               <button onClick={() => setShowChatList(true)}>
                 <AiOutlineCloseCircle />
