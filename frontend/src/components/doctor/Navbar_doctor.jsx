@@ -3,11 +3,13 @@ import { Bell, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import DoctorNotificationPanel from "./DoctorNotificationPanel";
 
 const DoctorNavbar = () => {
   const location = useLocation().pathname;
   const [isOpen, setIsOpen] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const links = [
     { name: "Home", link: "/doctor/landing" },
     { name: "Appointments", link: "/doctor/appointments" },
@@ -22,6 +24,14 @@ const DoctorNavbar = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleBellClick = () => {
+    // if (!isAuthenticated) {
+    //   CustomToast("Please login first!");
+    //   return;
+    // }
+    setShowNotifications(!showNotifications);
   };
 
   const handleLogout = () => {
@@ -74,11 +84,10 @@ const DoctorNavbar = () => {
                     >
                       <button
                         onClick={() => navigate(item.link)}
-                        className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                          location == item.link
+                        className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${location == item.link
                             ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                             : ""
-                        }`}
+                          }`}
                       >
                         {item.name}
                       </button>
@@ -103,20 +112,30 @@ const DoctorNavbar = () => {
               <button
                 key={i}
                 onClick={() => navigate(item.link)}
-                className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
-                  location == item.link
+                className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${location == item.link
                     ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                     : ""
-                }`}
+                  }`}
               >
                 {item.name}
               </button>
             ))}
           </div>
           <div ref={wrapperRef} className="flex items-center space-x-4">
-            <button className="cursor-pointer">
+            <button 
+              id="bell-icon"
+              className="cursor-pointer"
+              onClick={() => {
+                setShowDetails(false);
+                setIsOpen(false);
+                handleBellClick();
+              }}
+
+            >
               <Bell className="w-5 h-5" />
             </button>
+            {showNotifications && <DoctorNotificationPanel/>}
+
             {userType ? (
               <>
                 <button
@@ -128,11 +147,11 @@ const DoctorNavbar = () => {
                 >
                   <User className="w-5 h-5" />
                 </button>
+                
 
                 <div
-                  className={`user-details drop-shadow-xs absolute border-2 border-blue-700 rounded-lg top-12 right-5 list-none z-1 ${
-                    showDetails ? "opacity-100 visible" : "opacity-0 invisible"
-                  }`}
+                  className={`user-details drop-shadow-xs absolute border-2 border-blue-700 rounded-lg top-12 right-5 list-none z-1 ${showDetails ? "opacity-100 visible" : "opacity-0 invisible"
+                    }`}
                 >
                   <div className="w-64 bg-blue-100 rounded-lg shadow-lg p-6">
                     <div className="space-y-4">
