@@ -162,7 +162,13 @@ const DoctorPeer = () => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
 
-    const handleReceiveMessage = async ({senderId, encryptedText, iv, encryptedAESKey, senderType}) => {
+    const handleReceiveMessage = async ({
+      senderId,
+      encryptedText,
+      iv,
+      encryptedAESKey,
+      senderType,
+    }) => {
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
@@ -199,26 +205,28 @@ const DoctorPeer = () => {
   }, [selectedChat, userId, reloader, userList]);
 
   useEffect(() => {
-    console.log(recId, "selectd", userId," ")
-    if(selectedChat!==null && recId!==0){
-      socketRef.current.emit("markAsRead",{
+    console.log(recId, "selectd", userId, " ");
+    if (selectedChat !== null && recId !== 0) {
+      socketRef.current.emit("markAsRead", {
         userId: recId,
         doctorId: userId,
-        senderType: "doc"
+        senderType: "doc",
       });
     }
 
-    const pendingReads = async() => {
-      console.log("HAL")
-      const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+    const pendingReads = async () => {
+      console.log("HAL");
+      const res = await fetch(
+        `http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem(
+          "user_type"
+        )}`
+      );
       const data = await res.json();
       console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    }
+    };
 
     pendingReads();
-  }, [selectedChat, recId])
-
-  
+  }, [selectedChat, recId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -297,13 +305,13 @@ const DoctorPeer = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p>Loadin your dashboard...</p>
+        <p className="mt-4 text-gray-600">Loading your dashboard...</p>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="blue" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="blue" />;
   }
 
   return (

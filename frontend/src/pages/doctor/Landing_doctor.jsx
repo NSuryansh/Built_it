@@ -108,7 +108,7 @@ const DoctorLanding = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p>Loadin your dashboard...</p>
+        <p className="mt-4 text-gray-600">Loading your dashboard...</p>
       </div>
     );
   }
@@ -118,7 +118,7 @@ const DoctorLanding = () => {
   };
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="blue" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="blue" />;
   }
 
   return (
@@ -174,7 +174,7 @@ const DoctorLanding = () => {
                         <User className="h-6 w-6 text-blue-600" />
                       </div>
                       <div className="ml-4 flex-1 min-w-0">
-                        <h3 className="text-base font-medium text-gray-900 truncate">
+                        <h3 className=" font-medium text-gray-900 truncate">
                           {appointment.patientName}
                         </h3>
                         <p className="text-sm text-gray-600">
@@ -214,7 +214,7 @@ const DoctorLanding = () => {
                       className="p-4 bg-white border border-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer"
                     >
                       <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-base font-medium text-gray-900 truncate">
+                        <h3 className=" font-medium text-gray-900 truncate">
                           {event.title}
                         </h3>
                         <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">

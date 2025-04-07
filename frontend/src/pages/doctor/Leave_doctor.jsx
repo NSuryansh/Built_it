@@ -109,13 +109,13 @@ const DoctorLeave = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p>Loadin your dashboard...</p>
+        <p className="mt-4 text-gray-600">Loading your dashboard...</p>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="blue" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="blue" />;
   }
 
   return (
