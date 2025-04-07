@@ -207,7 +207,18 @@ const DoctorPeer = () => {
         senderType: "doc"
       });
     }
+
+    const pendingReads = async() => {
+      console.log("HAL")
+      const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+      const data = await res.json();
+      console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    }
+
+    pendingReads();
   }, [selectedChat, recId])
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -292,7 +303,7 @@ const DoctorPeer = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="blue" />);
   }
 
   return (

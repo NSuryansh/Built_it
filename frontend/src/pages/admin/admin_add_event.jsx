@@ -5,6 +5,7 @@ import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
+import SessionExpired from "../../components/SessionExpired";
 import {
   Calendar,
   Clock,
@@ -80,9 +81,10 @@ const AddEvent = () => {
       </div>
     );
   }
+  
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
   }
 
   return (

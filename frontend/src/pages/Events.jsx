@@ -45,7 +45,7 @@ const Events = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
   }
 
   async function getCurrEvents() {

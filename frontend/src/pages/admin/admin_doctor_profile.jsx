@@ -104,6 +104,12 @@ const AdminDoctorProfile = () => {
     };
     fetchData();
   }, []);
+  
+  const handleClosePopup = () => {
+    navigate("/admin/login"
+      
+    );
+  };
 
   const handleReferralSubmit = (e) => {
     e.preventDefault();
@@ -153,7 +159,7 @@ const AdminDoctorProfile = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
   }
 
   return (

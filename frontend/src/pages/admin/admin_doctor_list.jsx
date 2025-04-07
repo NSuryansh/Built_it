@@ -119,7 +119,7 @@ const DoctorsList = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
   }
 
   return (
