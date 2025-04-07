@@ -225,6 +225,17 @@ const Peer = () => {
     }
   };
 
+    useEffect(() => {
+      if(selectedChat &&  recId!=0){
+        console.log("HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:P")
+        socketRef.current.emit("markAsRead",{
+          userId: userId,
+          doctorId: recId,
+          senderType: "user"
+        });
+      }
+    }, [selectedChat, recId])
+
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
