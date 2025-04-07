@@ -6,6 +6,7 @@ import ChatInput from "../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { decryptMessage } from "../utils/decryptMessage";
+import SessionExpired from "../components/SessionExpired";
 import { generateAESKey } from "../utils/aeskey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
@@ -284,27 +285,7 @@ const Peer = () => {
   }
 
   if (!isAuthenticated) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-full mx-4">
-          <div className="mb-6">
-            <MessageSquare className="w-12 h-12 text-indigo-600 mx-auto" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Session Expired
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Your session has timed out for security reasons. Please log in again to continue.
-          </p>
-          <button
-            onClick={handleClosePopup}
-            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors duration-200"
-          >
-            Return to Login
-          </button>
-        </div>
-      </div>
-    );
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
   }
 
   return (

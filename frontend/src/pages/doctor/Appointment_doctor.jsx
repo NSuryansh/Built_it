@@ -298,7 +298,7 @@ const DoctorAppointment = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="blue" />);
   }
 
   return (

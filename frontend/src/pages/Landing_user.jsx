@@ -35,7 +35,7 @@ const Landing_user = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
   }
 
   return (

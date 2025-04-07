@@ -154,7 +154,7 @@ const DoctorProfile = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="blue" />);
   }
 
   const handleSave = async () => {

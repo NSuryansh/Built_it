@@ -150,7 +150,7 @@ export default function Mood() {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} />;
+    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
   }
 
   return (
