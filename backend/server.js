@@ -1351,6 +1351,7 @@ app.post("/resetAdminPassword", async (req, res) => {
 app.post("/setRating", async (req, res) => {
   const stars = req.body["stars"];
   const id = req.body["id"];
+  const docId = req.body["doctorId"]
 
   try {
     const response = await prisma.pastAppointments.update({
@@ -1361,6 +1362,28 @@ app.post("/setRating", async (req, res) => {
         stars: stars,
       },
     });
+
+    const setRating = await prisma.pastAppointments.aggregate({
+      _avg:{
+        stars: true,
+      },
+      where:{
+        doc_id: docId
+      }
+    })
+
+    const updateRating = await prisma.doctor.update({
+      where:{
+        id: docId
+      },
+      data:{
+        avgRating: setRating._avg.stars
+      }
+    })
+
+    console.log(updateRating)
+
+    console.log(setRating)
 
     res.json({ message: "Rating updated successfully" });
   } catch (error) {
