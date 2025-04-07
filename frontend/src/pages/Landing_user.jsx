@@ -39,22 +39,32 @@ const Landing_user = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Navbar - Assuming it's a separate component */}
       <Navbar />
-      <div className="flex h-full flex-col lg:flex-row gap-4 p-3 md:p-6 bg-[var(--custom-orange-100)] min-h-screen">
-        <div className="w-full lg:min-h-[85vh] h-fit lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-2 md:p-4">
+  
+      {/* Main Content */}
+      <div className="flex flex-col lg:flex-row gap-6 p-4 md:p-8 lg:p-10 bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen">
+        {/* Calendar Section */}
+        <div className="w-full lg:w-1/3 h-fit lg:min-h-[85vh] bg-white rounded-3xl shadow-xl p-4 md:p-6 transform hover:scale-[1.02] transition-all duration-300">
+          <div className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">Calendar</div>
           <Calendar />
         </div>
-
-        <div className="lg:min-h-[85vh] w-full h-fit lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
+  
+        {/* Progress Section */}
+        <div className="w-full lg:w-1/3 h-fit lg:min-h-[85vh] bg-white rounded-3xl shadow-xl p-4 md:p-6 overflow-y-auto transform hover:scale-[1.02] transition-all duration-300">
+          <div className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">Your Progress</div>
           <ProgressPage isLandingPage={true} />
         </div>
-
-        <div className="lg:min-h-[85vh] h-fit w-full lg:w-1/3 bg-[var(--custom-white)] rounded-2xl shadow-lg p-4 overflow-y-auto">
+  
+        {/* Events Section */}
+        <div className="w-full lg:w-1/3 h-fit lg:min-h-[85vh] bg-white rounded-3xl shadow-xl p-4 md:p-6 overflow-y-auto transform hover:scale-[1.02] transition-all duration-300">
+          <div className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">Upcoming Events</div>
           <EventsDisplay />
         </div>
       </div>
-
+  
+      {/* Footer */}
       <Footer color={"orange"} />
     </div>
   );
