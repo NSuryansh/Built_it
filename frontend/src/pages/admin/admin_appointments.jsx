@@ -146,8 +146,8 @@ const AdminAppointments = () => {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
       <AdminNavbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-between mb-10">
-          <h1 className="text-4xl font-extrabold text-gray-900 flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-10">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 flex items-center gap-4">
             <Calendar className="h-10 w-10 text-blue-600 animate-pulse" />
             Appointments Dashboard
           </h1>
@@ -223,7 +223,7 @@ const AdminAppointments = () => {
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">
             Appointments Overview
           </h2>
-          <div className="h-[400px] bg-gradient-to-br from-blue-50 to-gray-50 rounded-xl p-4 shadow-inner">
+          <div className="h-[400px] bg-gradient-to-br from-blue-50 to-gray-50 rounded-xl md:p-4 shadow-inner">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={filteredGraphData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
