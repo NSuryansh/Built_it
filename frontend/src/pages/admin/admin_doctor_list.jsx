@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { 
-  Trash2, 
-  UserPlus, 
-  Search, 
-  Filter, 
+import {
+  Trash2,
+  UserPlus,
+  Search,
+  Filter,
   RefreshCw,
   Stethoscope,
   Mail,
   Phone,
   MapPin,
   Calendar,
-  Star
+  Star,
+  StarIcon,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
@@ -42,6 +43,7 @@ const DoctorsList = () => {
       const res = await fetch("http://localhost:3000/getdoctors");
       const resp = await res.json();
       setDoc(resp);
+      console.log(resp);
     };
 
     fetchDoctors();
@@ -88,10 +90,11 @@ const DoctorsList = () => {
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
-  const filteredDoctors = doctors.filter((doctor) =>
-    doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    doctor.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredDoctors = doctors.filter(
+    (doctor) =>
+      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doctor.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (isAuthenticated === null) {
@@ -119,11 +122,11 @@ const DoctorsList = () => {
 
       <div className="w-full max-w-7xl mx-auto p-6 space-y-10">
         {/* Header with Enhanced Styling */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-green-400 to-emerald-500 rounded-3xl shadow-2xl p-8 mb-12">
+        <div className="relative overflow-hidden bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-3xl shadow-2xl p-8 mb-12">
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
-          <div className="relative z-10 flex flex-col sm:flex-row justify-between items-center gap-6">
-            <div className="text-center sm:text-left">
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">
+          <div className="relative flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">
                 Doctors Directory
               </h1>
               <p className="text-green-100 text-lg">
@@ -153,9 +156,12 @@ const DoctorsList = () => {
 
         {/* Search and Filter Bar */}
         <div className="bg-white rounded-2xl shadow-lg p-4 mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
               <input
                 type="text"
                 placeholder="Search by name, specialty, or email..."
@@ -172,12 +178,12 @@ const DoctorsList = () => {
         </div>
 
         {/* Enhanced Table View for Desktop */}
-        <div className="hidden sm:block overflow-hidden bg-white rounded-3xl shadow-xl border border-green-100 animate-fade-in-up">
+        <div className="hidden md:block overflow-hidden bg-white rounded-3xl shadow-xl border border-green-100 animate-fade-in-up">
           <table className="w-full text-sm text-left">
             <thead className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-900 font-semibold">
               <tr>
                 <th className="px-6 py-5">Name</th>
-                <th className="px-6 py-5">Specialty</th>
+                <th className="px-6 py-5">Rating</th>
                 <th className="px-6 py-5">Email</th>
                 <th className="px-6 py-5 text-center">Actions</th>
               </tr>
@@ -200,9 +206,17 @@ const DoctorsList = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
-                      {doctor.desc}
-                    </span>
+                    <div className="flex">
+                      <span className="px-3 py-1 rounded-full text-sm font-medium text-green-700">
+                        {doctor.avgRating}
+                      </span>
+                      <div>
+                        <StarIcon
+                          fill="#ff7700"
+                          className="text-[var(--custom-primary-orange)]"
+                        />
+                      </div>
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-gray-600">{doctor.email}</td>
                   <td className="px-6 py-4">
@@ -233,7 +247,7 @@ const DoctorsList = () => {
         </div>
 
         {/* Enhanced Mobile Card View */}
-        <div className="sm:hidden space-y-6">
+        <div className="md:hidden space-y-6">
           {filteredDoctors.map((doctor) => (
             <div
               key={doctor.id}
@@ -245,10 +259,20 @@ const DoctorsList = () => {
                     <Stethoscope size={24} className="text-green-700" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">{doctor.name}</h3>
-                    <span className="inline-block mt-1 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
-                      {doctor.desc}
-                    </span>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {doctor.name}
+                    </h3>
+                    <div className="flex">
+                      <span className="px-3 py-1 rounded-full text-sm font-medium text-green-700">
+                        {doctor.avgRating}
+                      </span>
+                      <div>
+                        <StarIcon
+                          fill="#ff7700"
+                          className="text-[var(--custom-primary-orange)]"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -260,7 +284,7 @@ const DoctorsList = () => {
                   </button>
                 </div>
               </div>
-              
+
               <div className="space-y-2 pt-4 border-t border-green-100">
                 <div className="flex items-center gap-2 text-gray-600">
                   <Mail size={16} className="text-green-600" />

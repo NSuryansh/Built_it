@@ -12,6 +12,7 @@ import {
   AlignCenterVertical as Certificate,
   FileText,
   X,
+  StarIcon,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { Link, useLocation } from "react-router-dom";
@@ -47,6 +48,7 @@ const AdminDoctorProfile = () => {
       "American Board of Internal Medicine",
       "American College of Cardiology Fellow",
     ],
+    avgRating: 0,
   });
 
   useEffect(() => {
@@ -86,6 +88,7 @@ const AdminDoctorProfile = () => {
           field: data.doctor.desc,
           certifications: certifications,
           education: educations,
+          avgRating: data.doctor.avgRating,
         });
       } catch (e) {
         console.error(e);
@@ -160,9 +163,16 @@ const AdminDoctorProfile = () => {
                 <h1 className="text-[3rem] font-extrabold tracking-tight drop-shadow-lg">
                   {doctor.name}
                 </h1>
-                <p className="text-yellow-200 text-xl font-medium italic">
-                  {doctor.field}
-                </p>
+                <div className="flex">
+                  <p className="text-yellow-200 text-xl font-medium italic">
+                    {`${doctor.field} (${doctor.avgRating}`}
+                  </p>
+                  <p>&nbsp;&nbsp;</p>
+                  <StarIcon fill="#ff7700" className="text-[#ff7700]" />
+                  <p className="text-yellow-200 text-xl font-medium italic">
+                    )
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -196,7 +206,7 @@ const AdminDoctorProfile = () => {
 
               {/* Educational Qualification */}
               <h2 className="text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
-                <GraduationCap className="w-[30px] h-[30px] text-coral-500 animate-bounce" />
+                <GraduationCap className="w-[30px] h-[30px] text-coral-500" />
                 Educational Qualification
               </h2>
               <ul className="space-y-[20px]">

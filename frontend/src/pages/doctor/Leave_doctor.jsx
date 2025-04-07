@@ -92,6 +92,7 @@ const DoctorLeave = () => {
         console.log(response.json());
         navigate("/doctor/profile");
         CustomToast("Leave added successfully");
+        // try {}
       } catch (e) {
         console.error(e);
         CustomToast("Error taking leave");
