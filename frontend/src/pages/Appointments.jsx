@@ -115,12 +115,12 @@ const UserAppointments = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Upcoming Appointments */}
         <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl mb-10 p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
               <CalendarClock className="w-6 h-6 text-[var(--custom-orange-600)]" />
               Upcoming Appointments
             </h2>
-            <span className="px-4 py-1 bg-gradient-to-r from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] text-[var(--custom-orange-700)] rounded-full text-sm font-semibold shadow-sm">
+            <span className="px-4 py-1 mt-4 sm:mt-0 bg-gradient-to-r from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] text-[var(--custom-orange-700)] rounded-full text-sm font-semibold shadow-sm">
               {upcomingAppointments.length} Scheduled
             </span>
           </div>
@@ -175,12 +175,12 @@ const UserAppointments = () => {
 
         {/* Previous Appointments */}
         <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
               <History className="w-6 h-6 text-[var(--custom-orange-600)]" />
               Previous Appointments
             </h2>
-            <span className="px-4 py-1 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-full text-sm font-semibold shadow-sm">
+            <span className="px-4 py-1 mt-4 sm:mt-0 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-full text-sm font-semibold shadow-sm">
               {previousAppointments.length} Total
             </span>
           </div>
