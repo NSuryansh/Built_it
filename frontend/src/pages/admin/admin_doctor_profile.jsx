@@ -12,6 +12,7 @@ import {
   AlignCenterVertical as Certificate,
   FileText,
   X,
+  StarIcon,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import { Link, useLocation } from "react-router-dom";
@@ -162,9 +163,16 @@ const AdminDoctorProfile = () => {
                 <h1 className="text-[3rem] font-extrabold tracking-tight drop-shadow-lg">
                   {doctor.name}
                 </h1>
-                <p className="text-yellow-200 text-xl font-medium italic">
-                  {`${doctor.field} (${doctor.avgRating}⭐)`}
-                </p>
+                <div className="flex">
+                  <p className="text-yellow-200 text-xl font-medium italic">
+                    {`${doctor.field} (${doctor.avgRating}`}
+                  </p>
+                  <p>&nbsp;&nbsp;</p>
+                  <StarIcon fill="#ff7700" className="text-[#ff7700]" />
+                  <p className="text-yellow-200 text-xl font-medium italic">
+                    )
+                  </p>
+                </div>
               </div>
             </div>
           </div>

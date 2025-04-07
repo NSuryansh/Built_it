@@ -19,8 +19,10 @@ const Calendar = ({ onDateSelect }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [pastEvents, setPastEvents] = useState([]); // List for past event dates
   const [futureEvents, setFutureEvents] = useState([]); // List for future event dates
+  const rollNo = localStorage.getItem("user_rollNo")
   const navigate = useNavigate();
-
+  // console.log("hi");
+  // console.log(rollNo);
   const sendLink = (rollNo) => {
     if (rollNo.startsWith("24")) {
       return "https://academic.iiti.ac.in/New_student/2024-25_Academic%20Calendar_2024%20BTech%20batch%20-%20Copy.pdf"; // Acad calender for fy
@@ -28,9 +30,7 @@ const Calendar = ({ onDateSelect }) => {
       return "https://academic.iiti.ac.in/Document/2024-25_Academic%20Calendar_Updated%20-%2010-6-2024.pdf"; // Acad calender for others
     }
   };
-
-  // Example usage
-  const rollNo = "240001049"; // Example roll number
+  
   const linkAcadCalender = sendLink(rollNo);
 
   // Fetch past events
@@ -57,6 +57,7 @@ const Calendar = ({ onDateSelect }) => {
             format(new Date(event.dateTime), "yyyy-MM-dd")
           )
         );
+
       })
       .catch((error) => console.error("Error fetching future events:", error));
   }, []);
