@@ -129,21 +129,21 @@ const DoctorsList = () => {
 
       <div className="w-full max-w-7xl mx-auto p-6 space-y-10">
         {/* Header with Enhanced Styling */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-3xl shadow-2xl p-8 mb-12">
+        <div className="relative overflow-hidden bg-gradient-to-r from-white to-emerald-100 rounded-3xl shadow-2xl p-8 mb-12">
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
           <div className="relative flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
-              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-green-700 mb-2 tracking-tight">
                 Doctors Directory
               </h1>
-              <p className="text-green-100 text-lg">
+              <p className="text-emerald-700 text-lg">
                 Managing {doctors.length} Healthcare Professionals
               </p>
             </div>
             <div className="flex gap-4">
               <button
                 onClick={handleRefresh}
-                className={`p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-300 text-white ${
+                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${
                   isRefreshing ? "animate-spin" : ""
                 }`}
                 title="Refresh List"
@@ -152,7 +152,7 @@ const DoctorsList = () => {
               </button>
               <Link
                 to="/admin/add_doctor"
-                className="inline-flex items-center gap-2 bg-white text-green-700 font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-green-50"
+                className="inline-flex items-center gap-2 bg-white text-green-700 font-semibold px-6 py-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-102 hover:bg-white/80"
               >
                 <UserPlus size={20} />
                 Add Doctor
@@ -216,7 +216,7 @@ const DoctorsList = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex">
-                      <span className="px-3 py-1 rounded-full text-sm font-medium text-green-700">
+                      <span className="px-1 py-1 rounded-full text-sm font-medium text-green-700">
                         {doctor.avgRating}
                       </span>
                       <div>

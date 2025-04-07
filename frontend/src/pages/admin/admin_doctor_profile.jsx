@@ -192,8 +192,8 @@ const AdminDoctorProfile = () => {
                   <p className="text-yellow-200 text-xl font-medium italic">
                     {`${doctor.field} (${doctor.avgRating}`}
                   </p>
-                  <p>&nbsp;&nbsp;</p>
-                  <StarIcon fill="#ff7700" className="text-[#ff7700]" />
+                  <p>&nbsp;</p>
+                  <StarIcon fill="#FFF085" className="text-[#FFF085]" />
                   <p className="text-yellow-200 text-xl font-medium italic">
                     )
                   </p>

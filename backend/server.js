@@ -89,9 +89,10 @@ io.on("connection", (socket) => {
     socket.join(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
-  socket.on("markAsRead", async ({ userId, doctorId, sender }) => {
+  socket.on("markAsRead", async ({ userId, doctorId, senderType }) => {
+    console.log(userId, " ", doctorId, " ", senderType)
     try {
-      if (sender == "user") {
+      if (senderType === "user") {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "doc",
@@ -102,12 +103,16 @@ io.on("connection", (socket) => {
             read: true
           }
         })
-      } else if (sender == "doc") {
+        console.log(result,"HHHHHHHHHHHHHHHHHHHHHHHHHh")
+      } else if (senderType === "doc") {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "user",
             senderId: userId,
             recipientId: doctorId
+          },
+          data: {
+            read: true
           }
         })
       }
@@ -403,31 +408,31 @@ app.get("/chatContacts", async (req, res) => {
 });
 
 app.get('/countUnseen', async (req, res) => {
-  const userId = Number(req.body['userId'])
+  const {userId, senderType} = req.query
   // const doctorId = Number(req.body['doctorId'])
-  const sender = req.body['senderType']
+  // const sender = req.body['senderType']
 
-  if (sender == "user") {
+  if (senderType == "user") {
     const unreadCount = await prisma.message.groupBy({
       by: ['senderId'],
       where: {
-        recipientId: userId,
+        recipientId: Number(userId),
         read: false
       },
       _count: {
-        _all: false
+        _all: true
       }
     })
     res.json(unreadCount)
-  } else if (sender == "doc") {
+  } else if (senderType == "doc") {
     const unreadCount = await prisma.message.groupBy({
       by: ['senderId'],
       where: {
-        recipientId: userId,
+        recipientId: Number(userId),
         read: false
       },
       _count: {
-        _all: false
+        _all: true
       }
     })
     console.log(unreadCount)

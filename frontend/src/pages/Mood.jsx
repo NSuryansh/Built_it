@@ -106,6 +106,32 @@ export default function Mood() {
     }
   }, [audioBlob]);
 
+  const sendAudioToServer = async (blob) => {
+    const formData = new FormData();
+    formData.append("audio", blob, "audio.wav");
+  
+    try {
+      const response = await fetch("http://localhost:5000/emotion", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
+      
+      const result = await response.json();
+      console.log("Audio sent successfully:", result);
+      console.log("Emotion result:", result);
+      CustomToast(`Detected Emotion: ${result.emotion}`);
+    } catch (error) {
+      console.error("Error sending audio:", error);
+      CustomToast("Failed to analyze emotion");
+    }
+  };
+  
+  
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -115,12 +141,14 @@ export default function Mood() {
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           chunks.push(event.data);
+          
         }
       };
 
       recorder.onstop = () => {
         const blob = new Blob(chunks, { type: "audio/wav" });
         setAudioBlob(blob);
+        sendAudioToServer(blob);  // <-- Add this
         chunks = [];
       };
 

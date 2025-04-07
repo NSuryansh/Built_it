@@ -209,7 +209,7 @@ const Peer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId, userType: "user"},
+        { decryptedText: message, senderId: userId, senderType: "user"},
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
@@ -225,6 +225,17 @@ const Peer = () => {
       setMessage("");
     }
   };
+
+    useEffect(() => {
+      if(selectedChat &&  recId!=0){
+        console.log("HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:P")
+        socketRef.current.emit("markAsRead",{
+          userId: userId,
+          doctorId: recId,
+          senderType: "user"
+        });
+      }
+    }, [selectedChat, recId])
 
   async function fetchMessages(userId, recipientId) {
     try {
@@ -268,9 +279,9 @@ const Peer = () => {
     }
   }, [selectedChat, userId, reloader, docList]);
 
-  // useEffect(() => {
-  //   console.log(showMessages, "HAHAHAHAHHAHAHAHAH")
-  // }, [showMessages])
+  useEffect(() => {
+    console.log(showMessages, "HAHAHAHAHHAHAHAHAH")
+  }, [showMessages])
   const handleClosePopup = () => {
     navigate("/login");
   };
