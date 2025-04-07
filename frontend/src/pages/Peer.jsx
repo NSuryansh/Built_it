@@ -304,13 +304,14 @@ const Peer = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      <Navbar />
+    <div className="flex flex-col h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900">
+      <Navbar /> {/* Assume this is a light, minimal navbar */}
       <ToastContainer />
-      
+  
       {/* Desktop Layout */}
       <div className="md:flex h-[calc(100vh-64px)] hidden">
-        <div className={`md:w-4/12 lg:w-3/12 bg-white border-r border-gray-200 flex flex-col ${docList.length === 0 ? 'items-center justify-center' : ''}`}>
+        {/* Sidebar (Doctor List) */}
+        <div className="md:w-4/12 lg:w-3/12 bg-white border-r border-gray-200 flex flex-col transition-all duration-300">
           {docList.length > 0 ? (
             <>
               <div className="p-4 border-b border-gray-200">
@@ -320,9 +321,9 @@ const Peer = () => {
                     placeholder="Search doctors..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
                   />
-                  <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                  <Search className="absolute left-3 top-3 h-5 w-5 text-sky-500" />
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto">
@@ -331,62 +332,76 @@ const Peer = () => {
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
+                  className="space-y-2 p-4"
                 />
               </div>
             </>
           ) : (
-            <div className="text-center p-6">
-              <UserCircle2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Conversations Yet</h3>
-              <p className="text-gray-500">Start chatting with a doctor to begin your consultation.</p>
+            <div className="text-center p-6 flex flex-col items-center justify-center h-full">
+              <UserCircle2 className="w-16 h-16 text-sky-500 mb-4 animate-pulse" />
+              <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">No Conversations Yet</h3>
+              <p className="text-gray-600 mt-2">Start chatting with a doctor to begin your consultation.</p>
             </div>
           )}
         </div>
-        
-        <div className="flex flex-col h-full flex-1 bg-white">
+  
+        {/* Chat Area */}
+        <div className="flex flex-col h-full flex-1 bg-gradient-to-b from-gray-50 to-white">
           {selectedChat !== null ? (
             <>
-              <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white">
+              <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
                 <div className="flex items-center space-x-3">
-                  <UserCircle2 className="w-10 h-10 text-gray-400" />
+                  <UserCircle2 className="w-12 h-12 text-sky-500" />
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
+                    <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
                       {docList[selectedChat]?.name}
                     </h2>
-                    <p className="text-sm text-gray-500"></p>
+                   
                   </div>
                 </div>
+                <button
+                  onClick={() => setSelectedChat(null)} // Closes chat on desktop
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                >
+                  <X className="w-6 h-6 text-gray-500" />
+                </button>
               </div>
-              <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {showMessages.map((msg, index) => (
                   <ChatMessage
                     key={index}
                     message={msg.decryptedText}
                     isSent={msg.senderId === userId}
+                    className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                      msg.senderId === userId
+                        ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
                   />
                 ))}
                 <div ref={messagesEndRef} />
               </div>
-              <div className="border-t border-gray-200 p-4 bg-white">
+              <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
                 <ChatInput
                   message={message}
                   setMessage={setMessage}
                   handleSubmit={handleSubmit}
+                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
                 />
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center bg-gray-50">
-              <div className="text-center">
-                <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Conversation</h3>
-                <p className="text-gray-500">Choose a doctor from the list to start chatting</p>
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center p-6">
+                <MessageSquare className="w-16 h-16 text-sky-500 mx-auto mb-4 animate-bounce" />
+                <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">Select a Conversation</h3>
+                <p className="text-gray-600 mt-2">Choose a doctor to start chatting.</p>
               </div>
             </div>
           )}
         </div>
       </div>
-
+  
       {/* Mobile Layout */}
       <div className="md:hidden h-[calc(100vh-64px)]">
         {showChatList ? (
@@ -400,9 +415,9 @@ const Peer = () => {
                       placeholder="Search doctors..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
                     />
-                    <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                    <Search className="absolute left-3 top-3 h-5 w-5 text-sky-500" />
                   </div>
                 </div>
                 <ChatList
@@ -410,52 +425,59 @@ const Peer = () => {
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
+                  className="space-y-2 p-4"
                 />
               </>
             ) : (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center p-6">
-                  <UserCircle2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Conversations Yet</h3>
-                  <p className="text-gray-500">Start chatting with a doctor to begin your consultation.</p>
+                  <UserCircle2 className="w-16 h-16 text-sky-500 mb-4 animate-pulse" />
+                  <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">No Conversations Yet</h3>
+                  <p className="text-gray-600 mt-2">Start chatting with a doctor to begin your consultation.</p>
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <div className="flex flex-col h-full bg-white">
-            <div className="p-4 flex items-center justify-between border-b border-gray-200">
+          <div className="flex flex-col h-full bg-gradient-to-b from-gray-50 to-white">
+            <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
               <div className="flex items-center space-x-3">
-                <UserCircle2 className="w-10 h-10 text-gray-400" />
+                <UserCircle2 className="w-12 h-12 text-sky-500" />
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
+                  <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
                     {docList[selectedChat]?.name}
                   </h2>
-                  <p className="text-sm text-gray-500"></p>
+                  
                 </div>
               </div>
               <button
-                onClick={() => setShowChatList(true)}
+                onClick={() => setShowChatList(true)} // Closes chat on mobile
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
               >
                 <X className="w-6 h-6 text-gray-500" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {showMessages.map((msg, index) => (
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderId === userId}
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                    msg.senderId === userId
+                      ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
                 />
               ))}
               <div ref={messagesEndRef} />
             </div>
-            <div className="border-t border-gray-200 p-4 bg-white">
+            <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
               <ChatInput
                 message={message}
                 setMessage={setMessage}
                 handleSubmit={handleSubmit}
+                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
               />
             </div>
           </div>
