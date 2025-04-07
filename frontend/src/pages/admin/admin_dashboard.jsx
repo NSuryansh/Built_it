@@ -134,9 +134,15 @@ const AdminDashboard = () => {
         {isPie ? (
           // Render multiple Pie Charts for each doctor.
           <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg mt-8">
-            <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-              Appointments Breakdown by Doctor
-            </h2>
+            <div className="flex flex-row flex-wrap justify-between">
+              <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
+                Appointments Breakdown by Doctor
+              </h2>
+              <select name="" id="" className="mb-4">
+                <option value="Acad Program">Academic Program</option>
+                <option value="Gender Ratio">Gender Ratio</option>
+              </select>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {Object.keys(appointmentsUG).map((doc) => {
                 // Data for each doctor's pie chart
