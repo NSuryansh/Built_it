@@ -28,6 +28,11 @@ from flask_cors import CORS
 import pandas as pd
 import os
 import collections
+import torch
+from transformers import AutoProcessor, AutoModelForAudioClassification,AutoFeatureExtractor
+import librosa
+import numpy as np
+
 collections.Iterable = collections.abc.Iterable
 
 load_dotenv()
@@ -238,6 +243,30 @@ def analyze_user():
         return jsonify({"error": "Data file missing"}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+def classify_emotion(audio_path):
+    processor = AutoFeatureExtractor.from_pretrained("ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition")
+    model = AutoModelForAudioClassification.from_pretrained("ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition")
+    
+    waveform, sample_rate = librosa.load(audio_path, sr=16000)
+    
+    inputs = processor(waveform, sampling_rate=sample_rate, return_tensors="pt", padding=True)
+    
+    with torch.no_grad():
+        outputs = model(**inputs)
+        logits = outputs.logits
+        predicted_class_id = torch.argmax(logits, dim=-1).item()
+    emotion = model.config.id2label[predicted_class_id]
+    
+    scores = torch.nn.functional.softmax(logits, dim=-1)[0].tolist()
+    results = {
+        model.config.id2label[i]: score 
+        for i, score in enumerate(scores)
+    }
+    
+    return {
+        "emotion": emotion,
+        "scores": results
+    }
 
 if __name__ == "__main__":
    app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 5000)), debug=True)
