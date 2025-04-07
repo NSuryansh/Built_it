@@ -13,6 +13,8 @@ from agno.storage.agent.sqlite import SqliteAgentStorage
 from dotenv import load_dotenv
 import os
 import csv
+from huggingface_hub import InferenceClient
+
 from agno.models.google import Gemini 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -27,6 +29,8 @@ from pydantic import BaseModel, Field
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pandas as pd
+import tempfile
+
 import os
 import collections
 import torch
@@ -40,6 +44,8 @@ load_dotenv()
 os.environ['GROQ_API_KEY'] = "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"
 load_dotenv(dotenv_path="backend/.env")
 api_key = os.getenv("GOOGLE_API_KEY")
+api_key_hf = os.getenv("HF_API_KEY")
+
 
 # Initialize databases
 agent_storage = SqliteAgentStorage(table_name="study_sessions", db_file="tmp/agents.db")
@@ -244,30 +250,53 @@ def analyze_user():
         return jsonify({"error": "Data file missing"}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-def classify_emotion(audio_path):
-    processor = AutoFeatureExtractor.from_pretrained("ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition")
-    model = AutoModelForAudioClassification.from_pretrained("ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition")
     
-    waveform, sample_rate = librosa.load(audio_path, sr=16000)
-    
-    inputs = processor(waveform, sampling_rate=sample_rate, return_tensors="pt", padding=True)
-    
-    with torch.no_grad():
-        outputs = model(**inputs)
-        logits = outputs.logits
-        predicted_class_id = torch.argmax(logits, dim=-1).item()
-    emotion = model.config.id2label[predicted_class_id]
-    
-    scores = torch.nn.functional.softmax(logits, dim=-1)[0].tolist()
-    results = {
-        model.config.id2label[i]: score 
-        for i, score in enumerate(scores)
-    }
-    
-    return {
-        "emotion": emotion,
-        "scores": results
-    }
+@app.route('/emotion', methods=['POST'])
+def classify_emotion():
+    print("EMOTION")
+    try:
+        if 'audio' not in request.files:
+            return jsonify({"error": "No audio file uploaded"}), 400
 
+        audio_file = request.files['audio']
+
+        # Save to a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
+            audio_file.save(temp_audio.name)
+            audio_path = temp_audio.name
+
+        print(audio_path, "AUDIO PATH")
+        
+        # For testing purposes, override the audio_path if needed:
+        # audio_path = "C:\\Users\\Shorya\\AppData\\Local\\Temp\\tmplgilil_u.wav"
+        
+        client = InferenceClient(
+            provider="hf-inference",
+            api_key=api_key_hf,
+        )
+
+        output = client.audio_classification(
+            audio_path, 
+            model="ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition"
+        )
+        print(output)
+        
+        # Create a list of dictionaries for each classification element
+        results = [{"label": elem.label, "score": elem.score} for elem in output]
+
+        # Find the element with the maximum score
+        max_elem = max(output, key=lambda elem: elem.score)
+        
+        # Return all the results along with the max label
+        return jsonify({
+            "results": results,
+            "max_emotion": max_elem.label
+        })
+
+    except Exception as e:
+        print("❌ Error occurred during emotion classification:")
+        return jsonify({"error": str(e)}), 500
+        
 if __name__ == "__main__":
-   app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 5000)), debug=True)
+       with app.app_context():
+        app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 5000)), debug=True)

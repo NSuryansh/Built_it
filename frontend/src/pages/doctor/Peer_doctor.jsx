@@ -229,8 +229,8 @@ const DoctorPeer = () => {
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
       // console.log(recId, userId)
       socketRef.current.emit("sendMessage", {
-        userId: userId,
-        doctorId: recId,
+        userId: recId,
+        doctorId: userId,
         senderType: localStorage.getItem("user_type"),
         encryptedText,
         iv,
