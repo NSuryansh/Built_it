@@ -1,7 +1,7 @@
 import React from "react";
 import { Send } from "lucide-react";
 
-const ChatInput = ({ message, setMessage, handleSubmit }) => {
+const ChatInput = ({ message, setMessage, handleSubmit, isDoc }) => {
   return (
     <>
       <form
@@ -16,11 +16,11 @@ const ChatInput = ({ message, setMessage, handleSubmit }) => {
               setMessage(e.target.value);
             }}
             placeholder="Type a message..."
-            className="flex-1 rounded-full border border-[var(--mp-custom-gray-200)] px-4 py-2 focus:outline-none focus:border-[var(--peer-custom-orange-500)]"
+            className={`flex-1 rounded-full border border-[var(--mp-custom-gray-200)] px-4 py-2 focus:outline-none focus:border-${isDoc ? 'blue-500' : '[var(--peer-custom-orange-500)]'}`}
           />
           <button
             type="submit"
-            className="p-2 cursor-pointer text-[var(--mp-custom-white)] bg-gradient-to-r from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] rounded-full hover:opacity-90 transition-opacity"
+            className={`p-2 cursor-pointer text-[var(--mp-custom-white)] bg-gradient-to-r from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] rounded-full hover:opacity-90 transition-opacity`}
           >
             <Send className="w-5 h-5" />
           </button>

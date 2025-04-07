@@ -42,6 +42,7 @@ const DoctorProfile = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [editedProfile, setEditedProfile] = useState(profile);
+  const [fetched, setfetched] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -108,9 +109,11 @@ const DoctorProfile = () => {
           education: educations,
           availability: slots,
         });
+        setfetched(true);
       } catch (error) {
         console.error("Error fetching data:", error);
         CustomToast("Error fetching data");
+        setfetched(false);
       }
     };
     fetchData(date);
@@ -141,7 +144,7 @@ const DoctorProfile = () => {
     navigate("/doctor/login");
   };
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || fetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
