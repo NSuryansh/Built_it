@@ -104,11 +104,9 @@ const AdminDoctorProfile = () => {
     };
     fetchData();
   }, []);
-  
+
   const handleClosePopup = () => {
-    navigate("/admin/login"
-      
-    );
+    navigate("/admin/login");
   };
 
   const handleReferralSubmit = (e) => {
@@ -159,7 +157,7 @@ const AdminDoctorProfile = () => {
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="green" />;
   }
 
   return (
@@ -170,7 +168,7 @@ const AdminDoctorProfile = () => {
         {/* Back Button */}
         <Link
           to="/admin/doctor_list"
-          className="mb-12 inline-flex items-center gap-3 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-700 rounded-full hover:bg-gradient-to-l hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
+          className="mb-12 inline-flex items-center gap-3 px-6 py-3  font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-700 rounded-full hover:bg-gradient-to-l hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to List
@@ -397,7 +395,7 @@ const AdminDoctorProfile = () => {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="relative w-full bg-gradient-to-r from-teal-500 to-teal-700 text-white py-3 px-6 rounded-lg font-semibold text-base overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-teal-600 hover:to-teal-800 group"
+                    className="relative w-full bg-gradient-to-r from-teal-500 to-teal-700 text-white py-3 px-6 rounded-lg font-semibold  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-teal-600 hover:to-teal-800 group"
                   >
                     <span className="relative ">Done</span>
                     <div className="absolute inset-0 bg-teal-600 opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-lg"></div>

@@ -50,7 +50,7 @@ const SessionExpired = ({ handleClosePopup, theme = "orange" }) => {
         </h2>
 
         {/* Message */}
-        <p className={`text-base leading-relaxed ${currentTheme.messageColor} mb-6`}>
+        <p className={` leading-relaxed ${currentTheme.messageColor} mb-6`}>
           Your session has timed out for security reasons. Please log in again to continue.
         </p>
 
