@@ -47,6 +47,7 @@ const AdminDoctorProfile = () => {
       "American Board of Internal Medicine",
       "American College of Cardiology Fellow",
     ],
+    avgRating: 0,
   });
 
   useEffect(() => {
@@ -86,6 +87,7 @@ const AdminDoctorProfile = () => {
           field: data.doctor.desc,
           certifications: certifications,
           education: educations,
+          avgRating: data.doctor.avgRating,
         });
       } catch (e) {
         console.error(e);
@@ -161,7 +163,7 @@ const AdminDoctorProfile = () => {
                   {doctor.name}
                 </h1>
                 <p className="text-yellow-200 text-xl font-medium italic">
-                  {doctor.field}
+                  {`${doctor.field} (${doctor.avgRating}⭐)`}
                 </p>
               </div>
             </div>
@@ -196,7 +198,7 @@ const AdminDoctorProfile = () => {
 
               {/* Educational Qualification */}
               <h2 className="text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
-                <GraduationCap className="w-[30px] h-[30px] text-coral-500 animate-bounce" />
+                <GraduationCap className="w-[30px] h-[30px] text-coral-500" />
                 Educational Qualification
               </h2>
               <ul className="space-y-[20px]">
