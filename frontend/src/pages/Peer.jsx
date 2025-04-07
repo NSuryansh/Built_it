@@ -208,14 +208,14 @@ const Peer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId },
+        { decryptedText: message, senderId: userId, userType: "user"},
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
       socketRef.current.emit("sendMessage", {
         userId: userId,
         doctorId: recId,
-        senderType: localStorage.getItem("user_type"),
+        senderType: "user",
         encryptedText,
         iv,
         encryptedAESKey: aesKey,
@@ -246,7 +246,6 @@ const Peer = () => {
       );
 
       setMessagesApi(decrypted_api_messages);
-
       const filteredMessages = decrypted_api_messages.filter((msg) => {
         return (
           (msg.senderId === userId && msg.recipientId === recipientId) ||
@@ -268,6 +267,9 @@ const Peer = () => {
     }
   }, [selectedChat, userId, reloader, docList]);
 
+  // useEffect(() => {
+  //   console.log(showMessages, "HAHAHAHAHHAHAHAHAH")
+  // }, [showMessages])
   const handleClosePopup = () => {
     navigate("/login");
   };
@@ -373,7 +375,7 @@ const Peer = () => {
                   <ChatMessage
                     key={index}
                     message={msg.decryptedText}
-                    isSent={msg.userType === "user"}
+                    isSent={msg.senderType === "user"}
                     className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
                       msg.senderId === userId
                         ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
@@ -464,7 +466,7 @@ const Peer = () => {
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}
-                  isSent={msg.userType === "user"}
+                  isSent={msg.senderType === "user"}
                   className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
                     msg.senderId === userId
                       ? "bg-gradient-to-r from-sky-400 to-cyan-400 ml-auto text-white"
