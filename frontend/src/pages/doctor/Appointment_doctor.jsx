@@ -20,13 +20,13 @@ import {
   Legend,
   PieChart,
   Pie,
-  Cell
+  Cell,
 } from "recharts";
 import { TimeChange } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
 
 const DoctorAppointment = () => {
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
   const [fixed, setFixed] = useState(false);
   const [completedNotes, setCompletedNotes] = useState({});
   const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -40,7 +40,7 @@ const DoctorAppointment = () => {
     "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
     "Last 3 Months": { UG: 0, PG: 0, PHD: 0 },
     "Last 6 Months": { UG: 0, PG: 0, PHD: 0 },
-    "Last 12 Months": { UG: 0, PG: 0, PHD: 0 }
+    "Last 12 Months": { UG: 0, PG: 0, PHD: 0 },
   });
   const [note, setNote] = useState("");
   const navigate = useNavigate();
@@ -49,13 +49,33 @@ const DoctorAppointment = () => {
     name: period,
     UG: timePeriodData[period].UG || 0,
     PG: timePeriodData[period].PG || 0,
-    PHD: timePeriodData[period].PHD || 0
+    PHD: timePeriodData[period].PHD || 0,
   }));
 
+  const sendNotif = async (appointment) => {
+    try {
+      const res = await fetch("http://localhost:3000/send-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userid: appointment["user_id"],
+          message: `Your appointment request has been accepted!`,
+          userType: "user",
+        }),
+      });
+
+      if (!res.ok) {
+        console.error("Failed to send notification");
+      }
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  };
+
   const getPieData = (period) => [
-    { name: 'UG', value: timePeriodData[period].UG || 0 },
-    { name: 'PG', value: timePeriodData[period].PG || 0 },
-    { name: 'PHD', value: timePeriodData[period].PHD || 0 }
+    { name: "UG", value: timePeriodData[period].UG || 0 },
+    { name: "PG", value: timePeriodData[period].PG || 0 },
+    { name: "PHD", value: timePeriodData[period].PHD || 0 },
   ];
 
   const handleGraphTypeChange = (e) => {
@@ -110,7 +130,7 @@ const DoctorAppointment = () => {
             "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
             "Last 3 Months": { UG: 0, PG: 0, PHD: 0 },
             "Last 6 Months": { UG: 0, PG: 0, PHD: 0 },
-            "Last 12 Months": { UG: 0, PG: 0, PHD: 0 }
+            "Last 12 Months": { UG: 0, PG: 0, PHD: 0 },
           };
 
           const now = new Date();
@@ -194,6 +214,8 @@ const DoctorAppointment = () => {
           console.log(error);
         }
       );
+
+    sendNotif(appointment);
     setFixed(!fixed);
   };
 
@@ -310,7 +332,9 @@ const DoctorAppointment = () => {
                       <div className="space-y-4">
                         <div className="flex items-center text-lg text-gray-800">
                           <CircleUser className="h-6 w-6 mr-4 text-indigo-600" />
-                          <span className="font-semibold tracking-tight">{appointment.user.username}</span>
+                          <span className="font-semibold tracking-tight">
+                            {appointment.user.username}
+                          </span>
                         </div>
                         <div className="flex items-center text-lg text-gray-800">
                           <Clock className="h-6 w-6 mr-4 text-indigo-600" />
@@ -386,7 +410,9 @@ const DoctorAppointment = () => {
                       <div className="space-y-4">
                         <div className="flex items-center text-lg text-gray-800">
                           <CircleUser className="h-6 w-6 mr-4 text-amber-600" />
-                          <span className="font-semibold tracking-tight">{appointment.user.username}</span>
+                          <span className="font-semibold tracking-tight">
+                            {appointment.user.username}
+                          </span>
                         </div>
                         <div className="flex items-center text-lg text-gray-800">
                           <Clock className="h-6 w-6 mr-4 text-amber-600" />
@@ -440,7 +466,7 @@ const DoctorAppointment = () => {
               <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 drop-shadow-lg">
                 Past Appointments Analysis
               </h2>
-              <select 
+              <select
                 onChange={handleGraphTypeChange}
                 value={isBar ? "bar" : "pie"}
                 className="px-4 py-2 border border-purple-200 rounded-lg bg-white/50 backdrop-blur-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
@@ -457,7 +483,7 @@ const DoctorAppointment = () => {
                     <CartesianGrid strokeDasharray="5 5" stroke="#e5e7eb/50" />
                     <XAxis dataKey="name" stroke="#6b7280" fontSize={14} />
                     <YAxis stroke="#6b7280" fontSize={14} />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{
                         backgroundColor: "rgba(255, 255, 255, 0.9)",
                         borderRadius: "8px",
@@ -475,7 +501,9 @@ const DoctorAppointment = () => {
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 {Object.keys(timePeriodData).map((period) => (
                   <div key={period} className="h-86 w-[340px]">
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">{period}</h3>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-4">
+                      {period}
+                    </h3>
                     <ResponsiveContainer>
                       <PieChart>
                         <Pie
@@ -486,10 +514,15 @@ const DoctorAppointment = () => {
                           outerRadius={120}
                           fill="#8884d8"
                           dataKey="value"
-                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          label={({ name, percent }) =>
+                            `${name} ${(percent * 100).toFixed(0)}%`
+                          }
                         >
                           {getPieData(period).map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
                           ))}
                         </Pie>
                         <Tooltip />

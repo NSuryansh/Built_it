@@ -110,9 +110,9 @@ const DoctorPeer = () => {
     const getContacts = async() => {
       if (isAuthenticated && userId) {
         const user = await fetchContacts(userId)
-        console.log(user, "AHAHAHAH")
+        // console.log(user, "AHAHAHAH")
         setUserList(user);
-        console.log(userList, "halooooooooooooooooooooooooooooooooooooooooo")
+        // console.log(userList, "halooooooooooooooooooooooooooooooooooooooooo")
       }
     }
     getContacts()
@@ -242,6 +242,7 @@ const DoctorPeer = () => {
             msg["iv"],
             msg["encryptedAESKey"]
           ),
+          senderType: msg["senderType"],
         }))
       );
 
@@ -262,10 +263,6 @@ const DoctorPeer = () => {
       return [];
     }
   }
-
-  useEffect(() => {
-    // console.log("Current showMessages", showMessages);
-  }, [showMessages]);
 
   // Fetch messages using the selected doctor's id from userList
   useEffect(() => {
@@ -324,7 +321,7 @@ const DoctorPeer = () => {
               <ChatMessage
                 key={index}
                 message={msg.decryptedText}
-                isSent={msg.senderId === userId}
+                isSent={msg.senderType === "doc"}
               />
             ))}
             <div ref={messagesEndRef} />
@@ -371,7 +368,7 @@ const DoctorPeer = () => {
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}
-                  isSent={msg.senderId === userId}
+                  isSent={msg.senderType === "doc"}
                 />
               ))}
               <div ref={messagesEndRef} />

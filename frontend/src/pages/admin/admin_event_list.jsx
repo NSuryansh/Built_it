@@ -19,6 +19,7 @@ import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
 import { subDays, isWithinInterval, startOfToday } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
@@ -28,6 +29,8 @@ const EventsList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [editingLinkId, setEditingLinkId] = useState(null);
   const [newLink, setNewLink] = useState("");
+  const [fetched, setfetched] = useState(null);
+  const navigate = useNavigate();
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
@@ -128,9 +131,11 @@ const EventsList = () => {
         }
 
         setEvents(formattedEvents);
+        setfetched(true);
       } catch (error) {
         console.error("Error fetching events", error);
         CustomToast("Error while fetching events");
+        setfetched(false);
       }
     };
 
@@ -180,7 +185,11 @@ const EventsList = () => {
     return new Date(eventDate) < new Date();
   };
 
-  if (isAuthenticated === null) {
+  const handleClosePopup = () => {
+    navigate("/admin/login");
+  };
+
+  if (isAuthenticated === null || fetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <PacmanLoader color="#047857" size={30} />
@@ -354,7 +363,7 @@ const EventsList = () => {
                 ) : null}
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-6">
+              <div className="mt-6 grid sm:grid-cols-2 gap-6">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-emerald-500" />
                   <div>
