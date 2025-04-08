@@ -89,6 +89,38 @@ io.on("connection", (socket) => {
     socket.join(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
+  socket.on("countUnseen", async({userId, senderType}) =>{
+    var unreadCount;
+    if (senderType == "user") {
+      unreadCount = await prisma.message.groupBy({
+        by: ['senderId'],
+        where: {
+          recipientId: Number(userId),
+          senderType: "doc",
+          read: false
+        },
+        _count: {
+          _all: true
+        }
+      })
+      // res.json(unreadCount)
+    } else if (senderType == "doc") {
+      unreadCount = await prisma.message.groupBy({
+        by: ['senderId'],
+        where: {
+          recipientId: Number(userId),
+          read: false,
+          senderType: "user"
+        },
+        _count: {
+          _all: true
+        }
+      })
+      // res.json(unreadCount)
+    }
+
+    socket.emit("unreadCount", unreadCount)
+  })
   socket.on("markAsRead", async ({ userId, doctorId, senderType }) => {
     console.log(userId, " ", doctorId, " ", senderType)
     try {
