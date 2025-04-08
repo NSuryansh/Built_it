@@ -331,7 +331,7 @@ const Peer = () => {
       <Navbar /> {/* Assume this is a light, minimal navbar */}
       <ToastContainer />
       {/* Desktop Layout */}
-      <div className="md:flex h-[calc(100vh-64px)] hidden">
+      <div className="md:flex h-[calc(100vh-64px)] hidden max-[333px]:overflow-hidden">
         {/* Sidebar (Doctor List) */}
         <div className="md:w-4/12 lg:w-3/12 bg-white border-r border-gray-200 flex flex-col transition-all duration-300">
           {docList.length > 0 ? (
