@@ -194,7 +194,7 @@ io.on("connection", (socket) => {
         // console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
-        io.to(room).emit("receiveMessage", {
+        socket.emit("receiveMessage", {
           id: message.id,
           senderId,
           encryptedText,

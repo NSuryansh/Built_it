@@ -35,6 +35,7 @@ const Peer = () => {
   const [reloader, setReloader] = useState(true);
   const [docList, setDocList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [unread, setUnread] = useState([]);
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
@@ -185,6 +186,7 @@ const Peer = () => {
       encryptedAESKey,
       userType,
     }) => {
+      console.log("HALLO")
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
