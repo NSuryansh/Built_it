@@ -15,6 +15,7 @@ import DoctorAppointment from "./pages/doctor/Appointment_doctor";
 import DoctorPeer from "./pages/doctor/Peer_doctor";
 import DoctorProfile from "./pages/doctor/Profile_doctor";
 import AdminDashboard from "./pages/admin/admin_dashboard";
+import User from "./pages/admin/admin_user_list";
 import AdminLogin from "./pages/admin/admin_login";
 import DoctorsList from "./pages/admin/admin_doctor_list";
 import EventsList from "./pages/admin/admin_event_list";
@@ -151,6 +152,7 @@ export default function App() {
         <Route path="/admin/event_list" element={<EventsList />} />
         <Route path="/admin/add_event" element={<AddEvent />} />
         <Route path="/admin/add_doctor" element={<AddDoctor />} />
+        <Route path="/admin/User" element={<User />} />
         <Route path="/admin/appointments" element={<AdminAppointments />} />
       </Routes>
     </div>

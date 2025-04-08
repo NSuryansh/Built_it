@@ -123,7 +123,7 @@ const DoctorsList = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100">
+    <div className={`flex flex-col min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100`}>
       <AdminNavbar />
       <ToastContainer />
 
@@ -143,9 +143,8 @@ const DoctorsList = () => {
             <div className="flex gap-4">
               <button
                 onClick={handleRefresh}
-                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${
-                  isRefreshing ? "animate-spin" : ""
-                }`}
+                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${isRefreshing ? "animate-spin" : ""
+                  }`}
                 title="Refresh List"
               >
                 <RefreshCw size={24} />
@@ -316,6 +315,7 @@ const DoctorsList = () => {
           docId={docId}
           handleDeletePopup={handleDeletePopup}
           handleDelete={handleDelete}
+          text={'Are you sure you want to remove the doctor?'}
         />
       )}
 

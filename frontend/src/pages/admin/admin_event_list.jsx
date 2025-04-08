@@ -21,6 +21,7 @@ import CustomToast from "../../components/CustomToast";
 import { subDays, isWithinInterval, startOfToday } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
+import DeletePopup from "../../components/admin/DeletePopup";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
@@ -32,9 +33,11 @@ const EventsList = () => {
   const [newLink, setNewLink] = useState("");
   const [fetched, setfetched] = useState(null);
   const navigate = useNavigate();
+  const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+  const [eventId, setEventId] = useState(null);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this event?")) return;
+    // if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
       const response = await fetch(`http://localhost:3000/events`, {
@@ -49,6 +52,8 @@ const EventsList = () => {
         setEvents((prevEvents) =>
           prevEvents.filter((event) => event.id !== id)
         );
+
+        setDeletePopupOpen(false);
       } else {
         console.error("Failed to delete the event");
         CustomToast("Failed to delete the event");
@@ -56,6 +61,15 @@ const EventsList = () => {
     } catch (error) {
       console.error("Error deleting event:", error);
       CustomToast("Failed to delete the event");
+    }
+  };
+
+  const handleDeletePopup = (eventId, isOpen) => {
+    if (isOpen == true) {
+      setDeletePopupOpen(true);
+      setEventId(eventId);
+    } else {
+      setDeletePopupOpen(false);
     }
   };
 
@@ -339,11 +353,10 @@ const EventsList = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        event.type === "Session/Conference"
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${event.type === "Session/Conference"
                           ? "bg-emerald-100 text-emerald-700"
                           : "bg-blue-100 text-blue-700"
-                      }`}
+                        }`}
                     >
                       {event.type}
                     </span>
@@ -356,7 +369,7 @@ const EventsList = () => {
 
                 {!isEventPast(event.date) ? (
                   <button
-                    onClick={() => handleDelete(event.id)}
+                    onClick={() => handleDeletePopup(event.id, true)}
                     className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-300"
                   >
                     <Trash2 size={20} />
@@ -460,6 +473,15 @@ const EventsList = () => {
           ))}
         </div>
       </div>
+
+      {deletePopupOpen && (
+        <DeletePopup
+          docId={eventId}
+          handleDeletePopup={handleDeletePopup}
+          handleDelete={handleDelete}
+          text={'Are you sure you want to remove the event?'}
+        />
+      )}
 
       <div className="mt-auto">
         <Footer color="green" />

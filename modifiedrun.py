@@ -40,8 +40,6 @@ import numpy as np
 
 collections.Iterable = collections.abc.Iterable
 
-load_dotenv()
-os.environ['GROQ_API_KEY'] = "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"
 load_dotenv(dotenv_path="backend/.env")
 api_key = os.getenv("GOOGLE_API_KEY")
 api_key_hf = os.getenv("HF_API_KEY")
@@ -259,7 +257,7 @@ def classify_emotion():
             return jsonify({"error": "No audio file uploaded"}), 400
 
         audio_file = request.files['audio']
-
+        
         # Save to a temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
             audio_file.save(temp_audio.name)
