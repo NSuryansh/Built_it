@@ -59,7 +59,7 @@ if not os.path.exists(memory_csv_file):
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True, allow_headers=["Content-Type"])
 
 def store_user_prompt(user_id: str, session_id: str, prompt: str):
     """Stores user prompts in a CSV file."""
@@ -252,48 +252,47 @@ def analyze_user():
 @app.route('/emotion', methods=['POST'])
 def classify_emotion():
     print("EMOTION")
-    try:
-        if 'audio' not in request.files:
-            return jsonify({"error": "No audio file uploaded"}), 400
 
-        audio_file = request.files['audio']
-        
-        # Save to a temporary file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
-            audio_file.save(temp_audio.name)
-            audio_path = temp_audio.name
+    if 'audio' not in request.files:
+        return jsonify({"error": "No audio file uploaded"}), 400
 
-        print(audio_path, "AUDIO PATH")
-        
-        # For testing purposes, override the audio_path if needed:
-        # audio_path = "C:\\Users\\Shorya\\AppData\\Local\\Temp\\tmplgilil_u.wav"
-        
-        client = InferenceClient(
-            provider="hf-inference",
-            api_key=api_key_hf,
-        )
+    audio_file = request.files['audio']
 
-        output = client.audio_classification(
-            audio_path, 
-            model="ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition"
-        )
-        print(output)
-        
-        # Create a list of dictionaries for each classification element
-        results = [{"label": elem.label, "score": elem.score} for elem in output]
+    # Save to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
+        audio_file.save(temp_audio.name)
+        audio_path = temp_audio.name
 
-        # Find the element with the maximum score
-        max_elem = max(output, key=lambda elem: elem.score)
-        
-        # Return all the results along with the max label
-        return jsonify({
-            "results": results,
-            "max_emotion": max_elem.label
-        })
+    print(audio_path, "AUDIO PATH")
 
-    except Exception as e:
-        print("❌ Error occurred during emotion classification:")
-        return jsonify({"error": str(e)}), 500
+    # For testing purposes, override the audio_path if needed:
+    # audio_path = "C:\\Users\\Shorya\\AppData\\Local\\Temp\\tmplgilil_u.wav"
+
+    client = InferenceClient(
+        provider="hf-inference",
+        api_key=api_key_hf,
+    )
+
+    output = client.audio_classification(
+        audio_path,
+        model="ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition"
+    )
+    print(output)
+
+    # Create a list of dictionaries for each classification element
+    results = [{"label": elem.label, "score": elem.score} for elem in output]
+
+    # Find the element with the maximum score
+    max_elem = max(output, key=lambda elem: elem.score)
+
+    # Return all the results along with the max label
+    return jsonify({
+        "results": results,
+        "max_emotion": max_elem.label
+    })
+    # except Exception as e:
+    #     print("❌ Error occurred during emotion classification:")
+    #     return jsonify({"error": str(e)}), 500
         
 if __name__ == "__main__":
        with app.app_context():
