@@ -15,7 +15,7 @@ const DoctorNavbar = () => {
     { name: "Appointments", link: "/doctor/appointments" },
     { name: "Peer", link: "/doctor/peer" },
     { name: "Profile", link: "/doctor/profile" },
-    { name: "Book", link: "/doctor/book"}
+    { name: "History", link: "/doctor/history"}
   ];
   const navigate = useNavigate();
 

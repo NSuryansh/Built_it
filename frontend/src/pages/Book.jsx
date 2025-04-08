@@ -141,30 +141,68 @@ const Book = () => {
   
 
   return (
-    <div className="min-h-screen bg-[var(--custom-orange-100)] flex flex-col">
-      <Navbar />
-      <ToastContainer />
-      <div className="h-full min-h-screen my-auto mx-2 md:mx-10 flex justify-center items-center mb-5">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 flex flex-col overflow-hidden">
+    {/* Navbar with subtle shadow */}
+    <Navbar />
+  
+    {/* Toast Container with custom styling */}
+    <ToastContainer className="z-50" toastClassName="rounded-xl shadow-lg bg-white/90 text-gray-800" />
+  
+    {/* Main Content */}
+    <div className="flex-1 flex justify-center items-center px-4 sm:px-6 md:px-10 py-12">
+      <div className="w-full max-w-full bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-8 md:p-10 border border-orange-200/50 transition-all duration-500 hover:shadow-3xl">
+        {/* Step Indicator */}
+        <div className="flex justify-center mb-8">
+          <div className="flex items-center gap-4">
+            <div className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${step === 1 ? 'bg-orange-500 scale-110' : 'bg-gray-300'}`}>
+              1
+            </div>
+            <div className="w-16 h-1 bg-gray-300 rounded-full" />
+            <div className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${step === 2 ? 'bg-orange-500 scale-110' : 'bg-gray-300'}`}>
+              2
+            </div>
+          </div>
+        </div>
+  
+        {/* Conditional Steps */}
         {step === 1 && (
-          <DoctorSelectionStep
-            doctors={doctors}
-            onSelect={handleDoctorSelect}
-          />
+          <div className="min-h-[60vh] flex items-center justify-center animate-fade-in">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Select Your Doctor / Counsellor
+              </h2>
+              <DoctorSelectionStep
+                doctors={doctors}
+                onSelect={handleDoctorSelect}
+                className="cursor-pointer"
+              />
+            </div>
+          </div>
         )}
         {step === 2 && (
-          <BookingFormStep
-            formData={formData}
-            handleChange={handleChange}
-            onSubmit={handleSubmit}
-            onBack={() => setStep(1)}
-            selectedDoctor={selectedDoctor}
-            isAuthenticated={isAuthenticated}
-          />
+          <div className="min-h-[60vh] flex items-center justify-center animate-fade-in">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Book Your Appointment
+              </h2>
+              <BookingFormStep
+                formData={formData}
+                handleChange={handleChange}
+                onSubmit={handleSubmit}
+                onBack={() => setStep(1)}
+                selectedDoctor={selectedDoctor}
+                isAuthenticated={isAuthenticated}
+              />
+            </div>
+          </div>
         )}
       </div>
-      <Footer color={"orange"} />
     </div>
-  );
+  
+    {/* Footer with matching theme */}
+    <Footer color="orange" className="bg-orange-600/90 text-white shadow-inner" />
+  </div>
+);
 };
 
 export default Book;
