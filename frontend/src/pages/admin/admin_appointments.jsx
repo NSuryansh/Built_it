@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Calendar, Users, Clock } from "lucide-react";
+import { Calendar, Users, Clock, Search, User, Stethoscope, CalendarClock, CheckCircle2, Clock3, AlertCircle } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -131,18 +131,51 @@ const graphData = [
 
 const AdminAppointments = () => {
   const [selectedDoctor, setSelectedDoctor] = useState("all");
+  const [searchUser, setSearchUser] = useState("");
+  const [searchDoctor, setSearchDoctor] = useState("");
 
-  // Filtered appointment list
+  // Filtered appointment list based on doctor selection and search terms
   const filteredAppointments = useMemo(() => {
-    return selectedDoctor === "all"
-      ? appointments
-      : appointments.filter((app) => app.doctorId === selectedDoctor);
-  }, [selectedDoctor]);
+    let filtered = appointments;
+
+    // Filter by selected doctor if not "all"
+    if (selectedDoctor !== "all") {
+      filtered = filtered.filter((app) => app.doctorId === selectedDoctor);
+    }
+
+    // Filter by user search term
+    if (searchUser.trim()) {
+      filtered = filtered.filter((app) =>
+        app.patientName.toLowerCase().includes(searchUser.toLowerCase())
+      );
+    }
+
+    // Filter by doctor search term
+    if (searchDoctor.trim()) {
+      filtered = filtered.filter((app) => {
+        const doctorName = doctors.find((d) => d.id === app.doctorId)?.name || "";
+        return doctorName.toLowerCase().includes(searchDoctor.toLowerCase());
+      });
+    }
+
+    return filtered;
+  }, [selectedDoctor, searchUser, searchDoctor]);
 
   // Appointments grouped by week date
   const filteredGraphData = useMemo(() => {
     return appWeek(weekDates, filteredAppointments);
   }, [filteredAppointments]);
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case "Confirmed":
+        return <CheckCircle2 className="h-5 w-5 text-green-600" />;
+      case "Pending":
+        return <Clock3 className="h-5 w-5 text-yellow-600" />;
+      default:
+        return <AlertCircle className="h-5 w-5 text-red-600" />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
@@ -169,6 +202,30 @@ const AdminAppointments = () => {
               </option>
             ))}
           </select>
+        </div>
+
+        {/* Search Inputs */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              type="text"
+              placeholder="Search by patient name..."
+              value={searchUser}
+              onChange={(e) => setSearchUser(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300"
+            />
+          </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              type="text"
+              placeholder="Search by doctor name..."
+              value={searchDoctor}
+              onChange={(e) => setSearchDoctor(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300"
+            />
+          </div>
         </div>
       </div>
 
@@ -269,38 +326,58 @@ const AdminAppointments = () => {
             {filteredAppointments.map((appointment) => (
               <div
                 key={appointment.id}
-                className="px-6 py-5 hover:bg-blue-50/50 transition-all duration-200"
+                className="p-6 hover:bg-blue-50/50 transition-all duration-200"
               >
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                  <div className="w-full sm:w-1/3">
-                    <p className="font-medium text-gray-900 text-lg">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  {/* Patient Info */}
+                  <div className="flex-1 bg-gradient-to-br from-blue-50/50 to-transparent p-4 rounded-xl">
+                    <div className="flex items-center gap-3 mb-3">
+                      <User className="h-5 w-5 text-blue-600" />
+                      <h3 className="font-semibold text-gray-900">Patient Details</h3>
+                    </div>
+                    <p className="text-lg font-medium text-blue-900 mb-1">
                       {appointment.patientName}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1">
+                   
+                  </div>
+
+                  {/* Doctor Info */}
+                  <div className="flex-1 bg-gradient-to-br from-green-50/50 to-transparent p-4 rounded-xl">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Stethoscope className="h-5 w-5 text-green-600" />
+                      <h3 className="font-semibold text-gray-900">Doctor Details</h3>
+                    </div>
+                    <p className="text-lg font-medium text-green-900 mb-1">
                       {doctors.find((d) => d.id === appointment.doctorId)?.name}
                     </p>
+                   
                   </div>
-                  <div className="mt-3 sm:mt-0 w-full sm:w-2/3 flex items-center">
-                    <div className="w-1/2 sm:text-center">
-                      <p className="text-sm font-medium text-gray-900">
-                        {format(new Date(appointment.date), "dd MMM")}
-                      </p>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {appointment.time}
-                      </p>
+
+                  {/* Appointment Info */}
+                  <div className="flex-1 bg-gradient-to-br from-purple-50/50 to-transparent p-4 rounded-xl">
+                    <div className="flex items-center gap-3 mb-3">
+                      <CalendarClock className="h-5 w-5 text-purple-600" />
+                      <h3 className="font-semibold text-gray-900">Appointment Details</h3>
                     </div>
-                    <div className="w-1/2 flex h-fit justify-end">
-                      <span
-                        className={`px-4 py-1.5 rounded-full text-sm font-medium shadow-sm border transition-colors duration-200 ${
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-lg font-medium text-purple-900 mb-1">
+                          {format(new Date(appointment.date), "dd MMM yyyy")}
+                        </p>
+                        <p className="text-sm text-purple-600/80">{appointment.time}</p>
+                      </div>
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white shadow-sm border border-gray-100">
+                        {getStatusIcon(appointment.status)}
+                        <span className={`text-sm font-medium ${
                           appointment.status === "Confirmed"
-                            ? "bg-green-100 text-green-800 border-green-200 hover:bg-green-200"
+                            ? "text-green-600"
                             : appointment.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200"
-                            : "bg-red-100 text-red-800 border-red-200 hover:bg-red-200"
-                        }`}
-                      >
-                        {appointment.status}
-                      </span>
+                            ? "text-yellow-600"
+                            : "text-red-600"
+                        }`}>
+                          {appointment.status}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
