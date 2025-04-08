@@ -315,7 +315,7 @@ const AdminUser = () => {
     //             <path d="M0 0 L200 200 M200 0 L0 200" strokeWidth="20" />
     //           </svg>
     //         </div>
-    //         <div className="flex items-center relative z-10">
+    //         <div className="flex items-center relative z-">
     //           <Users className="h-14 w-14 text-green-700 flex-shrink-0" />
     //           <div className="ml-6">
     //             <h1 className="text-green-700 text-3xl font-bold tracking-tight">
@@ -443,7 +443,7 @@ const AdminUser = () => {
                 <path d="M0 0 L200 200 M200 0 L0 200" strokeWidth="20" />
               </svg>
             </div>
-            <div className="flex items-center relative z-10">
+            <div className="flex items-center relative">
               <Users className="h-14 w-14 text-green-700 flex-shrink-0" />
               <div className="ml-6">
                 <h1 className="text-green-700 text-3xl font-bold tracking-tight">
