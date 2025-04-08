@@ -142,10 +142,9 @@ const User = () => {
                 />
               </div>
               <div className="flex items-center gap-4">
-                <div className="relative flex items-center gap-2">
-                  <SlidersHorizontal className="h-5 w-5 text-gray-600" />
+                <div className="relative">
                   <select
-                    className="appearance-none pl-10 pr-10 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[var(--custom-primary-green-700)] focus:border-transparent transition-all duration-200 hover:border-gray-300 cursor-pointer"
+                    className="appearance-none pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[var(--custom-primary-green-700)] focus:border-transparent transition-all duration-200 hover:border-gray-300 cursor-pointer"
                     value={filterDegree}
                     onChange={(e) => setFilterDegree(e.target.value)}
                   >
