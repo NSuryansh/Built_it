@@ -97,6 +97,7 @@ const Navbar = () => {
       className={`${
         location === "/peer" ||
         location === "/mood" ||
+        location === "/book" ||
         location === "/movies" ||
         location === "/entertainment" ||
         location === "/dashboard" ||
