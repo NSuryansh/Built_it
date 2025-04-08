@@ -164,10 +164,19 @@ const DoctorProfile = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       console.log(doctorId);
+      const formData = new FormData();
+      formData.append("id", doctorId);
+      formData.append("address", editedProfile.address);
+      formData.append("city", editedProfile.city);
+      formData.append("experience", editedProfile.experience);
+      formData.append("educ", editedProfile.education);
+      formData.append("certifi", editedProfile.certifications);
+      formData.append("image", file);
       const response = await fetch(
-        `https://built-it-backend.onrender.com/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}&image=${file}`,
+        `https://built-it-backend.onrender.com/modifyDoc`,
         {
           method: "PUT",
+          body: formData,
         }
       );
       const data = response.json();
