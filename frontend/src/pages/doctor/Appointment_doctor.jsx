@@ -100,6 +100,7 @@ const DoctorAppointment = () => {
       );
       const resp2 = await res2.json();
       const resp = await res.json();
+      // console.log(resp)
       for (let i = 0; i < resp2.length; i++) {
         resp2[i].dateTime = TimeChange(new Date(resp2[i].dateTime).getTime());
       }
