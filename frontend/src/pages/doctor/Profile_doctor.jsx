@@ -67,9 +67,10 @@ const DoctorProfile = () => {
           `https://built-it-backend.onrender.com/available-slots?date=${date}&docId=${doctorId}`
         );
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         const data2 = await response2.json();
         const slots = [];
+        console.log(slots);
         data2.availableSlots.map((slot) => {
           slots.push(
             format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
@@ -79,6 +80,9 @@ const DoctorProfile = () => {
         data.certifications.map((certification) => {
           certifications.push(certification.certification);
         });
+        if (slots.length === 0) {
+          slots.push("<Add>");
+        }
         if (certifications.length === 0) {
           certifications = ["<Add>"];
         }
@@ -101,7 +105,7 @@ const DoctorProfile = () => {
           education: educations,
           availability: slots,
         });
-        setProfileImage(data.doctor.img)
+        setProfileImage(data.doctor.img);
         setEditedProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -174,13 +178,10 @@ const DoctorProfile = () => {
       formData.append("educ", editedProfile.education);
       formData.append("certifi", editedProfile.certifications);
       formData.append("image", file);
-      const response = await fetch(
-        `http://localhost:3000/modifyDoc`,
-        {
-          method: "PUT",
-          body: formData,
-        }
-      );
+      const response = await fetch(`http://localhost:3000/modifyDoc`, {
+        method: "PUT",
+        body: formData,
+      });
       const data = await response.json();
       console.log(data);
       CustomToast("Profile updated successfully");
@@ -417,11 +418,7 @@ const DoctorProfile = () => {
                     </div>
                   ) : (
                     <div>
-                      <p
-                        className="text-gray-700 group-hover:text-blue-600 transition 
-     
-  -colors"
-                      >
+                      <p className="text-gray-700 group-hover:text-blue-600 transition-colors">
                         {profile.address}
                       </p>
                       <p className="text-gray-700 group-hover:text-blue-600 transition-colors">
