@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import CustomToast from "../components/CustomToast";
 import { ToastContainer } from "react-toastify";
+import SessionExpired from "../components/SessionExpired";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { checkAuth } from "../utils/profile";
 
 const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   const [formData, setFormData] = useState({
     username,
@@ -14,6 +18,33 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
     alt_mobile,
   });
 
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
+
+  const handleClosePopup = () => {
+    navigate("/login");
+  };
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
+    );
+  }
+
   const dataToSend = {
     id: localStorage.getItem("userid"), // Correctly assigning id
     ...formData, // Spreading formData properties
@@ -21,13 +52,16 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   const onSave = async (dataToSend) => {
     try {
-      const response = await fetch("https://built-it-backend.onrender.com/modifyUser", {
-        method: "PUT", // Use PUT to modify user details
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      const response = await fetch(
+        "https://built-it-backend.onrender.com/modifyUser",
+        {
+          method: "PUT", // Use PUT to modify user details
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
+        }
+      );
 
       const result = await response.json();
 
@@ -53,11 +87,11 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   };
 
   return (
-    <div>
+    <div className="bg-[var(--custom-orange-50)]">
       <Navbar />
       <ToastContainer />
-      <div className="min-h-screen bg-[var(--custom-orange-50)] py-16 flex items-center justify-center">
-        <div className="max-w-2xl mx-auto bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl border border-[var(--custom-orange-100)] overflow-hidden">
+      <div className="min-h-screen py-16 flex items-center justify-center">
+        <div className="max-w-2xl w-full mx-auto bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl border border-[var(--custom-orange-100)] overflow-hidden">
           <div className="px-10 py-12">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-extrabold text-[var(--custom-orange-900)] tracking-tight">
