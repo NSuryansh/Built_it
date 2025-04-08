@@ -318,7 +318,7 @@ const DoctorAppointment = () => {
               </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 overflow-hidden">
+            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 overflow-y-scroll overflow-x-hidden max-h-150">
               {curr.map((appointment) => (
                 <div
                   key={appointment.id}
@@ -396,7 +396,7 @@ const DoctorAppointment = () => {
               </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 overflow-hidden">
+            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 overflow-y-scroll overflow-x-hidden max-h-150">
               {appointments.map((appointment) => (
                 <div
                   key={appointment.id}
