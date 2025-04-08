@@ -68,7 +68,7 @@ const AddEvent = () => {
   };
 
   const handleClosePopup = () => {
-    navigate("/doctor/login");
+    navigate("/admin/login");
   };
 
   if (isAuthenticated === null) {

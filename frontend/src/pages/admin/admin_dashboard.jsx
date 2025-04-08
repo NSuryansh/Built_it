@@ -18,7 +18,9 @@ import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
-import { BarChart3, PieChart as PieChartIcon, RefreshCw } from 'lucide-react';
+import { BarChart3, PieChart as PieChartIcon, RefreshCw } from "lucide-react";
+import SessionExpired from "../../components/SessionExpired";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [appointmentsUG, setAppointmentsUG] = useState({});
@@ -27,6 +29,7 @@ const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isPie, setIsPie] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -40,7 +43,9 @@ const AdminDashboard = () => {
     const fetchAppointments = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("https://built-it-backend.onrender.com/pastApp");
+        const response = await fetch(
+          "https://built-it-backend.onrender.com/pastApp"
+        );
         const data = await response.json();
         if (response.ok) {
           const result = {};
@@ -103,7 +108,9 @@ const AdminDashboard = () => {
     const fetchAppointments = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("https://built-it-backend.onrender.com/pastApp");
+        const response = await fetch(
+          "https://built-it-backend.onrender.com/pastApp"
+        );
         const data = await response.json();
         // ... rest of your fetch logic
       } catch (error) {
@@ -126,26 +133,38 @@ const AdminDashboard = () => {
     );
   }
 
+  const handleClosePopup = () => {
+    navigate("/admin/login");
+  };
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="green" />;
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
       <AdminNavbar />
       <ToastContainer />
-      
+
       <main className="flex-grow p-6 md:p-8 max-w-7xl mx-auto w-full">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-emerald-900 mb-4 md:mb-0">
             Dashboard Overview
           </h1>
-          
+
           <div className="flex items-center gap-4">
             <button
               onClick={handleRefresh}
               className="p-2 rounded-full hover:bg-emerald-100 transition-colors"
               title="Refresh data"
             >
-              <RefreshCw className={`w-5 h-5 text-emerald-700 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-5 h-5 text-emerald-700 ${
+                  isLoading ? "animate-spin" : ""
+                }`}
+              />
             </button>
-            
+
             <div className="flex gap-4">
               <div className="relative">
                 <select
@@ -162,10 +181,8 @@ const AdminDashboard = () => {
                   <BarChart3 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
                 )}
               </div>
-              
-              <select
-                className="appearance-none bg-white px-4 py-2 rounded-lg border border-emerald-200 text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-              >
+
+              <select className="appearance-none bg-white px-4 py-2 rounded-lg border border-emerald-200 text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
                 <option value="Acad Program">Academic Program</option>
                 <option value="Gender Ratio">Gender Ratio</option>
               </select>
@@ -179,7 +196,7 @@ const AdminDashboard = () => {
               <h2 className="text-2xl font-semibold text-emerald-800 mb-6">
                 Appointments Distribution by Academic Program
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {Object.keys(appointmentsUG).map((doc) => {
                   const pieData = [
@@ -187,9 +204,12 @@ const AdminDashboard = () => {
                     { name: "PG", value: appointmentsPG[doc] || 0 },
                     { name: "PHD", value: appointmentsPHD[doc] || 0 },
                   ];
-                  
+
                   return (
-                    <div key={doc} className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl">
+                    <div
+                      key={doc}
+                      className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl"
+                    >
                       <h3 className="text-xl font-semibold mb-4 text-emerald-900 text-center">
                         Dr. {doc}
                       </h3>
@@ -228,26 +248,26 @@ const AdminDashboard = () => {
               <h2 className="text-2xl font-semibold text-emerald-800 mb-6">
                 Appointments Distribution Overview
               </h2>
-              
+
               <div className="h-[500px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={histogramData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                     <XAxis
                       dataKey="name"
-                      tick={{ fill: '#1F2937' }}
-                      axisLine={{ stroke: '#CBD5E1' }}
+                      tick={{ fill: "#1F2937" }}
+                      axisLine={{ stroke: "#CBD5E1" }}
                     />
                     <YAxis
-                      tick={{ fill: '#1F2937' }}
-                      axisLine={{ stroke: '#CBD5E1' }}
+                      tick={{ fill: "#1F2937" }}
+                      axisLine={{ stroke: "#CBD5E1" }}
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                        border: '1px solid #CBD5E1',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        backgroundColor: "rgba(255, 255, 255, 0.95)",
+                        border: "1px solid #CBD5E1",
+                        borderRadius: "8px",
+                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                       }}
                     />
                     <Legend />
@@ -276,7 +296,7 @@ const AdminDashboard = () => {
           )}
         </div>
       </main>
-      
+
       <Footer color={"green"} />
     </div>
   );

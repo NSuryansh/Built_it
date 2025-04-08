@@ -24,6 +24,10 @@ import {
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
+import { checkAuth } from "../../utils/profile";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import SessionExpired from "../../components/SessionExpired";
+import { useNavigate } from "react-router-dom";
 
 const AdminAppointments = () => {
   const [doctors, setDoctors] = useState([]);
@@ -31,6 +35,17 @@ const AdminAppointments = () => {
   const [selectedDoctor, setSelectedDoctor] = useState("all");
   const [searchUser, setSearchUser] = useState("");
   const [searchDoctor, setSearchDoctor] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [fetched, setfetched] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -46,8 +61,10 @@ const AdminAppointments = () => {
           name: doc.name,
         }));
         if (isMounted) setDoctors(formattedData);
+        setfetched(true);
       } catch (error) {
         console.error("Failed to fetch doctors:", error);
+        setfetched(false);
       }
     };
 
@@ -81,8 +98,10 @@ const AdminAppointments = () => {
         }));
         if (isMounted)
           setAppointments([...formattedCurData, ...formattedPastData]);
+        setfetched(true);
       } catch (error) {
         console.error("Failed to fetch appointments:", error);
+        setfetched(false);
       }
     };
 
@@ -191,6 +210,25 @@ const AdminAppointments = () => {
     date,
     appointments: filteredGraphData[index]?.appointments ?? 0,
   }));
+
+  const handleClosePopup = () => {
+    navigate("/admin/login");
+  };
+
+  if (isAuthenticated === null || fetched === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+        <PacmanLoader color="#047857" size={30} />
+        <p className="mt-4 text-emerald-800 font-medium">
+          Loading your dashboard...
+        </p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="green" />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
