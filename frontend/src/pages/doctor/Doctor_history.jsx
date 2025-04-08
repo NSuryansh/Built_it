@@ -175,7 +175,7 @@ const History = () => {
       </main>
   
       {showFollowupModal && (
-        <div className="fixed inset-0 bg-amber-50 bg-opacity-40 backdrop-blur-md flex items-center justify-center p-4 z-50 transition-all duration-300">
+        <div className="fixed inset-0 bg-blue-100 bg-opacity-40 backdrop-blur-md flex items-center justify-center p-4 z-50 transition-all duration-300">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform scale-95 animate-modal-in border border-gray-100">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-emerald-600">
