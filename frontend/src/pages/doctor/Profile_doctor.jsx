@@ -178,10 +178,13 @@ const DoctorProfile = () => {
       formData.append("educ", editedProfile.education);
       formData.append("certifi", editedProfile.certifications);
       formData.append("image", file);
-      const response = await fetch(`http://localhost:3000/modifyDoc`, {
-        method: "PUT",
-        body: formData,
-      });
+      const response = await fetch(
+        `https://built-it-backend.onrender.com/modifyDoc`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
       const data = await response.json();
       console.log(data);
       CustomToast("Profile updated successfully");
