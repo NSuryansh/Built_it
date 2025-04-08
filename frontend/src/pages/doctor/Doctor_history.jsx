@@ -1,15 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Calendar, Users, Clock, Search, User, Stethoscope, CalendarClock, CheckCircle2, Clock3, AlertCircle } from "lucide-react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import AdminNavbar from "../../components/admin/admin_navbar";
+import { Calendar, Users, Clock, Search, User, Stethoscope, CalendarClock, CheckCircle2, Clock3, AlertCircle, X } from "lucide-react";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
@@ -17,6 +7,16 @@ import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 
 const History = () => {
     const [app, setApp] = useState([])
+    const [showFollowupModal, setShowFollowupModal] = useState(false);
+    const [selectedAppointment, setSelectedAppointment] = useState(null);
+    const [followupDate, setFollowupDate] = useState("");
+    const [followupTime, setFollowupTime] = useState("");
+    const [searchUser, setSearchUser] = useState("");
+    const [reason, setReason] = useState("")
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const minDate = tomorrow.toISOString().split('T')[0];
 
     const getPastAppointments = async()=>{
         const docId = localStorage.getItem("userid")
@@ -24,6 +24,42 @@ const History = () => {
         const data = await response.json()
         setApp(data)
     }
+
+    const handleFollowup = async(appointment)=>{
+        setSelectedAppointment(appointment);
+        setShowFollowupModal(true);
+    }
+
+    const handleSubmitFollowup = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/request-to-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    doctorId: localStorage.getItem("userid"),
+                    userId: selectedAppointment.user.id,
+                    datetime: followupDate,
+                    reason: reason
+                }),
+            });
+
+            if (response.ok) {
+                alert('Follow-up appointment scheduled successfully!');
+                setShowFollowupModal(false);
+                setFollowupDate("");
+                setFollowupTime("");
+                setSelectedAppointment(null);
+            } else {
+                alert('Failed to schedule follow-up appointment');
+            }
+        } catch (error) {
+            console.error('Error scheduling follow-up:', error);
+            alert('Error scheduling follow-up appointment');
+        }
+    };
+
 
     useEffect(() => {
       getPastAppointments()
@@ -33,9 +69,7 @@ const History = () => {
     console.log(app)
     }, [app])
     
-  const [selectedDoctor, setSelectedDoctor] = useState("all");
-  const [searchUser, setSearchUser] = useState("");
-  const [searchDoctor, setSearchDoctor] = useState("");
+  
 
   const filteredAppointments = useMemo(() => {
     let filtered = app;
@@ -50,7 +84,7 @@ const History = () => {
     }
 
     return filtered;
-  }, [selectedDoctor, searchUser, searchDoctor]);
+  }, [ searchUser, app]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-teal-50">
@@ -136,7 +170,7 @@ const History = () => {
                         }`}>
                           {appointment.status}
                         </span> */}
-                        <button onClick={handleFollowup}>Followup</button>
+                        <button onClick={()=>handleFollowup(appointment)}>Followup</button>
                       </div>
                     </div>
                   </div>
@@ -146,6 +180,75 @@ const History = () => {
           </div>
         </div>
       </main>
+      {showFollowupModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-xl font-semibold text-gray-900">Schedule Follow-up</h3>
+                            <button
+                                onClick={() => setShowFollowupModal(false)}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                <X className="h-6 w-6" />
+                            </button>
+                        </div>
+                        
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Select Date
+                                </label>
+                                <input
+                                    type="date"
+                                    min={minDate}
+                                    value={followupDate}
+                                    onChange={(e) => setFollowupDate(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Select Time
+                                </label>
+                                <input
+                                    type="time"
+                                    value={followupTime}
+                                    onChange={(e) => setFollowupTime(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Enter reason
+                                </label>
+                                <input
+                                    type="text"
+                                    value={reason}
+                                    onChange={(e) => setReason(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button
+                                    onClick={() => setShowFollowupModal(false)}
+                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleSubmitFollowup}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                    disabled={!followupDate || !followupTime}
+                                >
+                                    Schedule Follow-up
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
       <Footer color="green" />
     </div>
   );
