@@ -228,7 +228,7 @@ const DoctorPeer = () => {
       }catch (error) {
         console.log(error);
       }
-      console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     };
 
     pendingReads();
