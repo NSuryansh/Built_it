@@ -38,7 +38,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch("http://localhost:3000/pastApp");
+        const response = await fetch("https://built-it.onrender.com/pastApp");
         const data = await response.json();
         if (response.ok) {
           const result = {};

@@ -75,7 +75,7 @@ export default function App() {
 
     console.log(userType, "usetruegfua");
 
-    const res = await fetch("http://localhost:3000/save-subscription", {
+    const res = await fetch("https://built-it.onrender.com/save-subscription", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

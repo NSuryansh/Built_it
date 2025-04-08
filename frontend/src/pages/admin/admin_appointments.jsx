@@ -14,7 +14,7 @@ import Footer from "../../components/Footer";
 import { format } from "date-fns";
 
 const fetchDoctors = async () => {
-  const res = await fetch(`http://localhost:3000/getdoctors`, {
+  const res = await fetch(`https://built-it.onrender.com/getdoctors`, {
     method: "GET",
   });
   const data = await res.json();
@@ -25,7 +25,7 @@ const fetchDoctors = async () => {
 };
 
 const fetchAppointments = async () => {
-  const res = await fetch(`http://localhost:3000/all-appointments`, {
+  const res = await fetch(`https://built-it.onrender.com/all-appointments`, {
     method: "GET",
   });
   const data = await res.json();

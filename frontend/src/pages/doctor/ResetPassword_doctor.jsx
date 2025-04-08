@@ -27,7 +27,7 @@ const DoctorResetPassword = () => {
     setError("");
     const token = searchParams.get("token");
 
-    const response = await fetch(`http://localhost:3000/resetDoctorPassword`, {
+    const response = await fetch(`https://built-it.onrender.com/resetDoctorPassword`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -20,7 +20,7 @@ const History = () => {
 
     const getPastAppointments = async()=>{
         const docId = localStorage.getItem("userid")
-        const response = await fetch(`http://localhost:3000/pastdocappt?doctorId=${docId}`)
+        const response = await fetch(`https://built-it.onrender.com/pastdocappt?doctorId=${docId}`)
         const data = await response.json()
         setApp(data)
     }
