@@ -9,7 +9,7 @@ const DoctorNotificationPanel = () => {
     // Fetch users from API
     const getUsers = async () => {
         try {
-            const response = await fetch("https://built-it.onrender.com/getFeelings");
+            const response = await fetch("http://localhost:3000/getFeelings");
             if (!response.ok) throw new Error("Failed to fetch feelings");
             const data = await response.json();
             // console.log(data, "hello")

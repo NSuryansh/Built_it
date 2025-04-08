@@ -46,7 +46,7 @@ const DoctorLogin = () => {
       return;
     }
     setError("");
-    const response = await fetch("https://built-it.onrender.com/docLogin", {
+    const response = await fetch("http://localhost:3000/docLogin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -69,7 +69,7 @@ const DoctorLogin = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch("https://built-it.onrender.com/forgotDoctorPassword", {
+    const response = await fetch("http://localhost:3000/forgotDoctorPassword", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

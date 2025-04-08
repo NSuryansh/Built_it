@@ -7,7 +7,7 @@ const DoctorBook = ({ onBookAppointment }) => {
 
   useEffect(() => {
     const fetchUsers = async() => {
-        const res = await fetch("https://built-it.onrender.com")
+        const res = await fetch("http://localhost:3000")
     }
 
     fetchUsers();

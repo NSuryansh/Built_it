@@ -58,7 +58,7 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://built-it.onrender.com/node-chat", {
+      const response = await fetch("http://localhost:3000/node-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

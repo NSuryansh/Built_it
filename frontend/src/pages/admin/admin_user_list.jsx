@@ -16,7 +16,7 @@ const User = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("https://built-it.onrender.com/getUsers");
+        const res = await fetch("http://localhost:3000/getUsers");
         const data = await res.json();
         setUsersData(data);
 
@@ -25,8 +25,8 @@ const User = () => {
             const userId = user.id;
             try {
               const [countRes, doctorRes] = await Promise.all([
-                fetch(`https://built-it.onrender.com/appointments-count?id=${userId}`),
-                fetch(`https://built-it.onrender.com/user-doctors?userId=${userId}`),
+                fetch(`http://localhost:3000/appointments-count?id=${userId}`),
+                fetch(`http://localhost:3000/user-doctors?userId=${userId}`),
               ]);
 
               const countData = await countRes.json();
