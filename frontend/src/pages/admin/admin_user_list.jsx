@@ -109,19 +109,19 @@ const User = () => {
       <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-[var(--custom-primary-green-100)]">
           {/* Header Section */}
-          <div className="bg-gradient-to-b from-emerald-400 to-emerald-600     px-8 py-10 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-white to-emerald-100 px-8 py-10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
               <svg viewBox="0 0 200 200" className="fill-white">
                 <path d="M0 0 L200 200 M200 0 L0 200" strokeWidth="20"/>
               </svg>
             </div>
             <div className="flex items-center relative z-10">
-              <Users className="h-14 w-14 text-white flex-shrink-0" />
+              <Users className="h-14 w-14 text-green-700 flex-shrink-0" />
               <div className="ml-6">
-                <h1 className="text-3xl font-bold text-white tracking-tight">
+                <h1 className="text-green-700 text-3xl font-bold tracking-tight">
                   Users Overview
                 </h1>
-                <p className="text-green-100 mt-1 text-lg opacity-90">
+                <p className="text-emerald-700 mt-1 text-lg opacity-90">
                   Administrative Dashboard
                 </p>
               </div>
@@ -142,10 +142,9 @@ const User = () => {
                 />
               </div>
               <div className="flex items-center gap-4">
-                <div className="relative flex items-center gap-2">
-                  <SlidersHorizontal className="h-5 w-5 text-gray-600" />
+                <div className="relative">
                   <select
-                    className="appearance-none pl-10 pr-10 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[var(--custom-primary-green-700)] focus:border-transparent transition-all duration-200 hover:border-gray-300 cursor-pointer"
+                    className="appearance-none pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[var(--custom-primary-green-700)] focus:border-transparent transition-all duration-200 hover:border-gray-300 cursor-pointer"
                     value={filterDegree}
                     onChange={(e) => setFilterDegree(e.target.value)}
                   >
@@ -155,7 +154,7 @@ const User = () => {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-3 h-4 w-4 text-gray-500 pointer-events-none" />
+                  <ChevronDown className="absolute top-4 right-3 h-4 w-4 text-gray-500 pointer-events-none" />
                 </div>
               </div>
             </div>

@@ -21,6 +21,7 @@ import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
 import DeletePopup from "../../components/admin/DeletePopup";
+import SessionExpired from "../../components/SessionExpired";
 
 const DoctorsList = () => {
   const [doctors, setDoc] = useState([]);
