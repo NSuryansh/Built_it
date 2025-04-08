@@ -67,6 +67,7 @@ const DoctorProfile = () => {
           `https://built-it-backend.onrender.com/available-slots?date=${date}&docId=${doctorId}`
         );
         const data = await response.json();
+        console.log(data)
         const data2 = await response2.json();
         const slots = [];
         data2.availableSlots.map((slot) => {
@@ -100,6 +101,7 @@ const DoctorProfile = () => {
           education: educations,
           availability: slots,
         });
+        setProfileImage(data.doctor.img)
         setEditedProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -173,13 +175,13 @@ const DoctorProfile = () => {
       formData.append("certifi", editedProfile.certifications);
       formData.append("image", file);
       const response = await fetch(
-        `https://built-it-backend.onrender.com/modifyDoc`,
+        `http://localhost:3000/modifyDoc`,
         {
           method: "PUT",
           body: formData,
         }
       );
-      const data = response.json();
+      const data = await response.json();
       console.log(data);
       CustomToast("Profile updated successfully");
     } catch (e) {
