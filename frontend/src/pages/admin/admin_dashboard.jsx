@@ -119,16 +119,9 @@ const AdminDashboard = () => {
         </h1>
 
         {/* Dropdown to choose graph type */}
-        <div className="flex justify-end">
-          <select
-            onChange={handleGraphTypeChange}
-            value={isPie ? "pie" : "bar"}
-            className="px-4 py-2 border border-purple-200 rounded-lg bg-white/50 backdrop-blur-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
-          >
-            <option value="pie">Pie Charts</option>
-            <option value="bar">Bar Graph</option>
-          </select>
-        </div>
+        {/* <div className="flex justify-end">
+
+        </div> */}
 
         {/* Conditional Rendering based on graph type */}
         {isPie ? (
@@ -138,10 +131,20 @@ const AdminDashboard = () => {
               <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
                 Appointments Breakdown by Doctor
               </h2>
-              <select name="" id="" className="mb-4">
-                <option value="Acad Program">Academic Program</option>
-                <option value="Gender Ratio">Gender Ratio</option>
-              </select>
+              <div className="flex justify-end gap-8">
+                <select
+                  onChange={handleGraphTypeChange}
+                  value={isPie ? "pie" : "bar"}
+                  className="mb-10 cursor-pointer"
+                >
+                  <option value="pie">Pie Charts</option>
+                  <option value="bar">Bar Graph</option>
+                </select>
+                <select name="" id="" className="mb-10 cursor-pointer">
+                  <option value="Acad Program">Academic Program</option>
+                  <option value="Gender Ratio">Gender Ratio</option>
+                </select>
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {Object.keys(appointmentsUG).map((doc) => {
@@ -188,9 +191,25 @@ const AdminDashboard = () => {
         ) : (
           // Render a single aggregated Bar Chart.
           <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg mt-8">
-            <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-              Appointments per Doctor
-            </h2>
+            <div className="flex flex-row flex-wrap justify-between">
+              <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
+                Appointments per Doctor
+              </h2>
+              <div className="flex justify-end gap-8">
+                <select
+                  onChange={handleGraphTypeChange}
+                  value={isPie ? "pie" : "bar"}
+                  className="mb-10 cursor-pointer"
+                >
+                  <option value="pie">Pie Charts</option>
+                  <option value="bar">Bar Graph</option>
+                </select>
+                <select name="" id="" className="mb-10 cursor-pointer">
+                  <option value="Acad Program">Academic Program</option>
+                  <option value="Gender Ratio">Gender Ratio</option>
+                </select>
+              </div>
+            </div>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={histogramData}>
