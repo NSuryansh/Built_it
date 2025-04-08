@@ -58,7 +58,7 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://built-it-backend.onrender.com/node-chat", {
+      const response = await fetch("http://127.0.0.1:5000/chatWithBot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -68,6 +68,7 @@ export default function Mood() {
       });
 
       const data = await response.json();
+      // print(data)
       const botMessage =
         data.response?.text ||
         (typeof data.response === "string"

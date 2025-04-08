@@ -154,7 +154,7 @@ const User = () => {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-3 h-4 w-4 text-gray-500 pointer-events-none" />
+                  <ChevronDown className="absolute top-4 right-3 h-4 w-4 text-gray-500 pointer-events-none" />
                 </div>
               </div>
             </div>
