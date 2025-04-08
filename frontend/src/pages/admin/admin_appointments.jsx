@@ -211,32 +211,8 @@ const AdminAppointments = () => {
             ))}
           </select>
         </div>
-
-        {/* Search Inputs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <input
-              type="text"
-              placeholder="Search by patient name..."
-              value={searchUser}
-              onChange={(e) => setSearchUser(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300 bg-white"
-            />
-          </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <input
-              type="text"
-              placeholder="Search by doctor name..."
-              value={searchDoctor}
-              onChange={(e) => setSearchDoctor(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300 bg-white"
-            />
-          </div>
-        </div>
       </div>
-
+  
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-6 mb-6">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -278,7 +254,7 @@ const AdminAppointments = () => {
             </div>
           </div>
         </div>
-
+  
         {/* Graph */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-12 border border-gray-100">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Appointments Overview</h2>
@@ -314,11 +290,34 @@ const AdminAppointments = () => {
             </ResponsiveContainer>
           </div>
         </div>
-
+  
         {/* Appointments List */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+          {/* Search Inputs Moved Here */}
           <div className="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-blue-50">
-            <h2 className="text-2xl font-semibold text-gray-900">Recent Appointments</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Recent Appointments</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  placeholder="Search by patient name..."
+                  value={searchUser}
+                  onChange={(e) => setSearchUser(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300 bg-white"
+                />
+              </div>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  placeholder="Search by doctor name..."
+                  value={searchDoctor}
+                  onChange={(e) => setSearchDoctor(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300 bg-white"
+                />
+              </div>
+            </div>
           </div>
           <div className="divide-y divide-gray-100">
             {filteredAppointments.map((appointment) => (
@@ -332,7 +331,7 @@ const AdminAppointments = () => {
                     </div>
                     <p className="text-lg font-medium text-blue-900 mb-1">{appointment.patientName}</p>
                   </div>
-
+  
                   {/* Doctor Info */}
                   <div className="flex-1 bg-gradient-to-br from-green-50/50 to-transparent p-4 rounded-xl">
                     <div className="flex items-center gap-3 mb-3">
@@ -343,7 +342,7 @@ const AdminAppointments = () => {
                       {doctors.find((d) => d.id === appointment.doctorId)?.name}
                     </p>
                   </div>
-
+  
                   {/* Appointment Info */}
                   <div className="flex-1 bg-gradient-to-br from-purple-50/50 to-transparent p-4 rounded-xl">
                     <div className="flex items-center gap-3 mb-3">
