@@ -47,7 +47,16 @@ const History = () => {
             });
 
             if (response.ok) {
-                alert('Follow-up appointment scheduled successfully!');
+                // alert('Follow-up appointment scheduled successfully!');
+                const notif = await fetch("http://localhost:3000/send-notification", {
+                    method: "POST",
+                    headers: {"Content-type": "Application/json"},
+                    body:JSON.stringify({
+                        userId: selectedAppointment.user.id, 
+                        message: "Doctor has requested an appointment with you",
+                        userType: "user"
+                    })
+                })
                 setShowFollowupModal(false);
                 setFollowupDate("");
                 setFollowupTime("");
