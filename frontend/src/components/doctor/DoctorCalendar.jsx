@@ -105,7 +105,7 @@ const DoctorCalendar = ({ onDateSelect }) => {
   const todayString = format(new Date(), "yyyy-MM-dd");
 
   return (
-    <div className="bg-white max-w-md rounded-xl shadow-sm p-6">
+    <div className="bg-white mx-auto max-w-md rounded-xl shadow-sm p-6">
       {/* Header with month navigation */}
       <div className="flex items-center justify-center mb-6">
         {/* <div className="flex items-center"> */}

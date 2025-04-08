@@ -745,7 +745,7 @@ app.post("/requests", async (req, res) => {
       data: {
         user_id: userId,
         doctor_id: doctorId,
-        dateTime: new Date(dateTime),
+        dateTime: date,
         reason: reason,
       },
     });
