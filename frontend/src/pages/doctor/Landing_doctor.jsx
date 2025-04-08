@@ -177,8 +177,8 @@ const DoctorLanding = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-semibold text-blue-800 mb-1">
-                  {greeting}
+                <h1 className="text-lg font-semibold text-blue-800 mb-1">
+                  {greeting},
                 </h1>
                 <h2 className="text-3xl md:text-4xl font-bold text-blue-800 mb-2">
                   Dr. {localStorage.getItem("username")}
