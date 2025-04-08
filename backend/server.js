@@ -34,14 +34,14 @@ const transporter = nodemailer.createTransport({
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 
 webpush.setVapidDetails(
   "mailto:spython.webd@gmail.com",
@@ -51,7 +51,7 @@ webpush.setVapidDetails(
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://built-it.vercel.app"], // Change this to your frontend URL in production
+    origin: ["http://localhost:5173", "https://built-it.vercel.app", "https://built-it-qwwp.onrender.com/"], // Change this to your frontend URL in production
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })

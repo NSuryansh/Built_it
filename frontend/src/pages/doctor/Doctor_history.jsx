@@ -33,7 +33,7 @@ const History = () => {
   const handleSubmitFollowup = async () => {
     try {
       const datetime = new Date(`${followupDate}T${followupTime}`).toISOString();
-      const response = await fetch('http://localhost:3000/request-to-user', {
+      const response = await fetch('https://built-it-backend.onrender.com/request-to-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const History = () => {
 
       if (response.ok) {
         // alert('Follow-up appointment scheduled successfully!');
-        const notif = await fetch("http://localhost:3000/send-notification", {
+        const notif = await fetch("https://built-it-backend.onrender.com/send-notification", {
           method: "POST",
           headers: { "Content-type": "Application/json" },
           body: JSON.stringify({
