@@ -19,6 +19,7 @@ const DoctorLanding = () => {
   const [events, setEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [greeting, setGreeting] = useState("");
+  const [newAppoinments, setNewAppoinments] = useState([]);
 
   const navigate = useNavigate();
 
@@ -108,6 +109,11 @@ const DoctorLanding = () => {
     fetchEvents();
   }, []);
 
+  useEffect(() => {
+    setNewAppoinments(appointments.slice(0, 5));
+  }, [appointments])
+  
+
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-50 to-blue-50">
@@ -157,7 +163,7 @@ const DoctorLanding = () => {
       y: 0
     }
   };
-
+ 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50">
       <DoctorNavbar className="shadow-sm" />
@@ -249,7 +255,7 @@ const DoctorLanding = () => {
   
                 <div className="space-y-4">
                   <AnimatePresence>
-                    {appointments.map((appointment, index) => (
+                    {newAppoinments.map((appointment, index) => (
                       <motion.div
                         key={appointment.id}
                         initial={{ opacity: 0, y: 20 }}

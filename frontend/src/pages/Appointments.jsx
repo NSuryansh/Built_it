@@ -9,13 +9,14 @@ import {
   History,
   Clock,
   FileText,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { format } from "date-fns";
 import { checkAuth } from "../utils/profile";
 import SessionExpired from "../components/SessionExpired";
+import { useNavigate } from "react-router-dom";
 
 const UserAppointments = () => {
   const [previousAppointments, setpreviousAppointments] = useState([]);
@@ -24,6 +25,7 @@ const UserAppointments = () => {
   const user_id = localStorage.getItem("userid");
   const [ratings, setRatings] = useState({});
   const [submittedRatings, setSubmittedRatings] = useState({});
+  const navigate = useNavigate();
 
   // Verify authentication
   useEffect(() => {
@@ -64,6 +66,10 @@ const UserAppointments = () => {
     getCurrApp();
   }, [submittedRatings]);
 
+  const handleClosePopup = () => {
+    navigate("/login");
+  };
+
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
@@ -74,21 +80,26 @@ const UserAppointments = () => {
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
+    return (
+      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
+    );
   }
 
   // Only handles submitting data, not the event
   const submitRating = async (appointmentId, ratingValue, docId) => {
     try {
-      const res = await fetch("https://built-it-backend.onrender.com/setRating", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: appointmentId,
-          stars: ratingValue,
-          docId: docId,
-        }),
-      });
+      const res = await fetch(
+        "https://built-it-backend.onrender.com/setRating",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: appointmentId,
+            stars: ratingValue,
+            docId: docId,
+          }),
+        }
+      );
 
       if (res.ok) {
         setSubmittedRatings((prev) => ({

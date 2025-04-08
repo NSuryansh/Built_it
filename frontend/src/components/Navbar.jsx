@@ -98,6 +98,7 @@ const Navbar = () => {
         location === "/peer" ||
         location === "/mood" ||
         location === "/book" ||
+        location === "/modify_profile" ||
         location === "/movies" ||
         location === "/entertainment" ||
         location === "/dashboard" ||
