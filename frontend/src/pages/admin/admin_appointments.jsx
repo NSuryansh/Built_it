@@ -221,7 +221,7 @@ const AdminAppointments = () => {
               placeholder="Search by patient name..."
               value={searchUser}
               onChange={(e) => setSearchUser(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300 bg-white"
             />
           </div>
           <div className="relative">
@@ -231,7 +231,7 @@ const AdminAppointments = () => {
               placeholder="Search by doctor name..."
               value={searchDoctor}
               onChange={(e) => setSearchDoctor(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md hover:shadow-lg transition-all duration-300 bg-white"
             />
           </div>
         </div>
