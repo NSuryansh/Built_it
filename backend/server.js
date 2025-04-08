@@ -821,7 +821,7 @@ app.post("/adminLogin", async (req, res) => {
 app.get("/reqApp", async (req, res) => {
   const docId = Number(req.query["docId"]);
   const appt = await prisma.requests.findMany({
-    where: { doctor_id: docId },
+    where: { doctor_id: docId, forDoctor: true },
     include: {
       user: {
         select: {
@@ -2207,7 +2207,7 @@ app.post("/request-to-user", async (req, res) => {
         forDoctor: false,
       },
     });
-
+    console.log(appointment)
     res.json({
       message: "Appointment requested successfully",
       appointment,
