@@ -43,6 +43,7 @@ const DoctorNavbar = () => {
     useEffect(() => {
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
+          setShowNotifications(false);
           setShowDetails(false);
         }
       }
@@ -84,10 +85,11 @@ const DoctorNavbar = () => {
                     >
                       <button
                         onClick={() => navigate(item.link)}
-                        className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${location == item.link
+                        className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                          location == item.link
                             ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                             : ""
-                          }`}
+                        }`}
                       >
                         {item.name}
                       </button>
@@ -112,17 +114,18 @@ const DoctorNavbar = () => {
               <button
                 key={i}
                 onClick={() => navigate(item.link)}
-                className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${location == item.link
+                className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                  location == item.link
                     ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
                     : ""
-                  }`}
+                }`}
               >
                 {item.name}
               </button>
             ))}
           </div>
           <div ref={wrapperRef} className="flex items-center space-x-4">
-            <button 
+            <button
               id="bell-icon"
               className="cursor-pointer"
               onClick={() => {
@@ -130,28 +133,28 @@ const DoctorNavbar = () => {
                 setIsOpen(false);
                 handleBellClick();
               }}
-
             >
               <Bell className="w-5 h-5" />
             </button>
-            {showNotifications && <DoctorNotificationPanel/>}
+            {showNotifications && <DoctorNotificationPanel />}
 
             {userType ? (
               <>
                 <button
                   onClick={() => {
                     setIsOpen(false);
+                    setShowNotifications(false);
                     setShowDetails(!showDetails);
                   }}
                   className="cursor-pointer relative"
                 >
                   <User className="w-5 h-5" />
                 </button>
-                
 
                 <div
-                  className={`user-details drop-shadow-xs absolute border-2 border-blue-700 rounded-lg top-12 right-5 list-none z-1 ${showDetails ? "opacity-100 visible" : "opacity-0 invisible"
-                    }`}
+                  className={`user-details drop-shadow-xs absolute border-2 border-blue-700 rounded-lg top-12 right-5 list-none z-1 ${
+                    showDetails ? "opacity-100 visible" : "opacity-0 invisible"
+                  }`}
                 >
                   <div className="w-64 bg-blue-100 rounded-lg shadow-lg p-6">
                     <div className="space-y-4">

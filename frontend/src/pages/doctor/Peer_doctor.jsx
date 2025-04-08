@@ -83,7 +83,7 @@ const DoctorPeer = () => {
         console.warn("No contacts received.");
         return;
       }
-
+      // console.log(contacts, "hallo")
       const updatedChats = contacts.map((contact) => ({
         name: contact.username,
         id: contact.id,
@@ -98,7 +98,7 @@ const DoctorPeer = () => {
           }
         });
       });
-      console.log(merged);
+      // console.log(merged);
       return merged;
     } catch (error) {
       console.error("Error fetching contacts:", error);
@@ -111,9 +111,7 @@ const DoctorPeer = () => {
     const getContacts = async () => {
       if (isAuthenticated && userId) {
         const user = await fetchContacts(userId);
-        // console.log(user, "AHAHAHAH")
         setUserList(user);
-        // console.log(userList, "halooooooooooooooooooooooooooooooooooooooooo")
       }
     };
     getContacts();
@@ -218,9 +216,15 @@ const DoctorPeer = () => {
     const pendingReads = async() => {
       console.log("HAL")
       try{
-      const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-      const data = await res.json();
-      setUnread(data);
+      // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+      // const data = await res.json();
+      socketRef.current.emit("countUnseen", {userId: userId, senderType:"doc"})
+      socketRef.current.on("unreadCount", (data) => {
+        console.log(data)
+        setUnread(data)
+      })
+      // setUnread(data);
+      // console.log(data)
       }catch (error) {
         console.log(error);
       }
@@ -230,9 +234,6 @@ const DoctorPeer = () => {
     pendingReads();
   }, [selectedChat, recId])
 
-  useEffect(() => {
-    
-  },[unread])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -333,6 +334,7 @@ const DoctorPeer = () => {
               selectedChat={selectedChat}
               setSelectedChat={setSelectedChat}
               setShowChatList={setShowChatList}
+              unread={unread.map((mes) => mes._count._all)}
             />
           </div>
         ) : (
