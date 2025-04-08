@@ -216,10 +216,15 @@ const DoctorPeer = () => {
     const pendingReads = async() => {
       console.log("HAL")
       try{
-      const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-      const data = await res.json();
-      setUnread(data);
-      console.log(data)
+      // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+      // const data = await res.json();
+      socketRef.current.emit("countUnseen", {userId: userId, senderType:"doc"})
+      socketRef.current.on("unreadCount", (data) => {
+        console.log(data)
+        setUnread(data)
+      })
+      // setUnread(data);
+      // console.log(data)
       }catch (error) {
         console.log(error);
       }
