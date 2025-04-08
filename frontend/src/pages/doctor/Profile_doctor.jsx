@@ -178,10 +178,13 @@ const DoctorProfile = () => {
       formData.append("educ", editedProfile.education);
       formData.append("certifi", editedProfile.certifications);
       formData.append("image", file);
-      const response = await fetch(`http://localhost:3000/modifyDoc`, {
-        method: "PUT",
-        body: formData,
-      });
+      const response = await fetch(
+        `https://built-it-backend.onrender.com/modifyDoc`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
       const data = await response.json();
       console.log(data);
       CustomToast("Profile updated successfully");
@@ -227,9 +230,9 @@ const DoctorProfile = () => {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
 
         {/* Header Section */}
-        <div className="flex justify-between items-center animate-fade-in-down">
+        <div className="flex flex-col sm:flex-row justify-between items-center animate-fade-in-down">
           <div>
-            <h1 className="text-5xl font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
+            <h1 className="text-3xl text-center sm:text-5xl sm:text-start font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
               Doctor Profile
             </h1>
             <p className="mt-3 text-lg text-gray-600 font-medium">
@@ -239,14 +242,14 @@ const DoctorProfile = () => {
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
-              className="group relative flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
+              className="group relative mt-4 sm:mt-0 flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
               <span className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               <Edit2 className="h-5 w-5 mr-2 relative  group-hover:animate-spin-slow" />
               <span className="relative ">Edit Profile</span>
             </button>
           ) : (
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 mt-4 sm:mt-0">
               <button
                 onClick={handleSave}
                 className="group relative flex items-center px-6 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-teal-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
@@ -269,7 +272,7 @@ const DoctorProfile = () => {
         {/* Profile Card */}
         <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-indigo-100/30 transition-all duration-500 hover:shadow-indigo-200/20 animate-fade-in-up">
           <div className="w-full flex justify-between flex-col md:flex-row gap-8">
-            <div className="flex items-center space-x-8">
+            <div className="flex flex-col md:flex-row items-center space-x-8">
               <div
                 onClick={triggerImageUpload}
                 className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
@@ -302,7 +305,7 @@ const DoctorProfile = () => {
                   className="hidden"
                 />
               </div>
-              <div>
+              <div className="mt-4 md:md-0">
                 {isEditing ? (
                   <input
                     type="text"

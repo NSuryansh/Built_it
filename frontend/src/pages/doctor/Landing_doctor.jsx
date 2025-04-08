@@ -226,7 +226,7 @@ const DoctorLanding = () => {
               variants={itemVariants}
             >
               <div className="bg-white rounded-2xl shadow-sm p-6 h-full border border-gray-100 hover:shadow-lg transition-shadow duration-300">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex justify-center items-center">
                   <CalendarIcon className="h-5 w-5 mr-2 text-blue-600" />
                   Calendar
                 </h2>
