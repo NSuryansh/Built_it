@@ -206,9 +206,9 @@ const DoctorProfile = () => {
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
-              className="group relative flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
+              className="group relative flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               <Edit2 className="h-5 w-5 mr-2 relative z-10 group-hover:animate-spin-slow" />
               <span className="relative z-10">Edit Profile</span>
             </button>
@@ -238,7 +238,7 @@ const DoctorProfile = () => {
           <div className="w-full flex justify-between flex-col md:flex-row gap-8">
             <div className="flex items-center space-x-8">
               <div className="relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group">
-                <User className="h-16 w-16 text-indigo-600 transform transition-all duration-300 group-hover:scale-110" />
+                <User className="h-16 w-16 text-blue-600 transform transition-all duration-300 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="absolute inset-0 border-2 border-indigo-300/50 rounded-full animate-spin-slow"></div>
               </div>
@@ -254,20 +254,20 @@ const DoctorProfile = () => {
                     className="text-4xl font-extrabold text-gray-900 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                   />
                 ) : (
-                  <h2 className="text-4xl font-extrabold text-gray-900 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+                  <h2 className="text-4xl font-extrabold text-gray-900 bg-blue-600 bg-clip-text text-transparent">
                     {profile.name}
                   </h2>
                 )}
-                <p className="text-xl text-indigo-600 font-semibold mt-2 tracking-wide">
+                <p className="text-xl text-blue-600 font-semibold mt-2 tracking-wide">
                   {profile.specialization}
                 </p>
               </div>
             </div>
             <Link
               to="/doctor/leave"
-              className="group relative flex self-end md:self-center items-center h-fit w-fit px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
+              className="group relative flex self-end md:self-center items-center h-fit w-fit px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               <BriefcaseBusiness className="h-5 w-5 mr-2 relative z-10 group-hover:animate-pulse" />
               <span className="relative z-10">Take Leave</span>
             </Link>
@@ -277,13 +277,13 @@ const DoctorProfile = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             {/* Contact Info */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
-              <div className="flex items-center text-indigo-600 font-semibold text-xl mb-5">
+              <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
                 <Mail className="h-6 w-6 mr-3 animate-bounce-slow" />
                 Contact Information
               </div>
               <div className="space-y-5">
                 <div className="flex items-center group">
-                  <Mail className="h-5 w-5 text-indigo-400 mr-4 transition-transform group-hover:scale-125" />
+                  <Mail className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
                   {isEditing ? (
                     <input
                       type="email"
@@ -298,13 +298,13 @@ const DoctorProfile = () => {
                       className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                     />
                   ) : (
-                    <span className="text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
                       {profile.email}
                     </span>
                   )}
                 </div>
                 <div className="flex items-center group">
-                  <Phone className="h-5 w-5 text-indigo-400 mr-4 transition-transform group-hover:scale-125" />
+                  <Phone className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
                   {isEditing ? (
                     <input
                       type="tel"
@@ -319,13 +319,13 @@ const DoctorProfile = () => {
                       className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                     />
                   ) : (
-                    <span className="text-gray-700 group-hover:text-indigo-600 transition-colors">
+                    <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
                       {profile.phone}
                     </span>
                   )}
                 </div>
                 <div className="flex items-start group">
-                  <MapPin className="h-5 w-5 text-indigo-400 mr-4 mt-1 transition-transform group-hover:scale-125" />
+                  <MapPin className="h-5 w-5 text-blue-600 mr-4 mt-1 transition-transform group-hover:scale-125" />
                   {isEditing ? (
                     <div className="flex-1 space-y-4">
                       <input
@@ -355,10 +355,10 @@ const DoctorProfile = () => {
                     </div>
                   ) : (
                     <div>
-                      <p className="text-gray-700 group-hover:text-indigo-600 transition 
+                      <p className="text-gray-700 group-hover:text-blue-600 transition 
      
   -colors">{profile.address}</p>
-                      <p className="text-gray-700 group-hover:text-indigo-600 transition-colors">{profile.city}</p>
+                      <p className="text-gray-700 group-hover:text-blue-600 transition-colors">{profile.city}</p>
                     </div>
                   )}
                 </div>
@@ -369,13 +369,13 @@ const DoctorProfile = () => {
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
               <div className="space-y-8">
                 <div>
-                  <div className="flex items-center text-indigo-600 font-semibold text-xl mb-5">
+                  <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
                     <Building className="h-6 w-6 mr-3 animate-bounce-slow" />
                     Professional Information
                   </div>
                   <div className="space-y-5">
                     <div className="flex items-center group">
-                      <Building className="h-5 w-5 text-indigo-400 mr-4 transition-transform group-hover:scale-125" />
+                      <Building className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
                       {isEditing ? (
                         <input
                           type="text"
@@ -390,13 +390,13 @@ const DoctorProfile = () => {
                           className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                         />
                       ) : (
-                        <span className="text-gray-700 group-hover:text-indigo-600 transition-colors">
+                        <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
                           {profile.specialization}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center group">
-                      <Clock className="h-5 w-5 text-indigo-400 mr-4 transition-transform group-hover:scale-125" />
+                      <Clock className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
                       {isEditing ? (
                         <input
                           type="text"
@@ -410,7 +410,7 @@ const DoctorProfile = () => {
                           className="flex-1 bg-white border border-indigo-200 rounded-xl px-4 py-2 focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                         />
                       ) : (
-                        <span className="text-gray-700 group-hover:text-indigo-600 transition-colors">
+                        <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
                           {profile.experience} of Experience
                         </span>
                       )}
@@ -420,7 +420,7 @@ const DoctorProfile = () => {
   
                 {/* Availability */}
                 <div>
-                  <div className="flex items-center text-indigo-600 font-semibold text-xl mb-5">
+                  <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
                     <Clock className="h-6 w-6 mr-3 animate-bounce-slow" />
                     Availability
                   </div>
@@ -445,7 +445,7 @@ const DoctorProfile = () => {
                             {index === editedProfile.availability.length - 1 && (
                               <button
                                 onClick={handleAddSlot}
-                                className="group flex items-center text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition-colors"
+                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
                               >
                                 <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
                                 Add Slot
@@ -459,7 +459,7 @@ const DoctorProfile = () => {
                         {profile.availability.map((slot, index) => (
                           <span
                             key={index}
-                            className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium shadow-md border border-indigo-200 transform hover:scale-110 hover:shadow-indigo-300/30 transition-all duration-300"
+                            className="inline-flex items-center px-4 py-2 bg-indigo-100 text-blue-600 rounded-full text-sm font-medium shadow-md border border-indigo-200 transform hover:scale-110 hover:shadow-indigo-300/30 transition-all duration-300"
                           >
                             <Clock className="h-4 w-4 mr-2 animate-pulse" />
                             {slot}
@@ -476,7 +476,7 @@ const DoctorProfile = () => {
   
             {/* Education */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
-              <div className="flex items-center text-indigo-600 font-semibold text-xl mb-5">
+              <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
                 <GraduationCap className="h-6 w-6 mr-3 animate-bounce-slow" />
                 Education
               </div>
@@ -485,7 +485,7 @@ const DoctorProfile = () => {
                   <div className="space-y-4">
                     {editedProfile.education.map((edu, index) => (
                       <div key={index} className="flex items-start space-x-4">
-                        <GraduationCap className="h-5 w-5 text-indigo-400 mr-3 mt-2 transition-transform hover:scale-125" />
+                        <GraduationCap className="h-5 w-5 text-blue-600 mr-3 mt-2 transition-transform hover:scale-125" />
                         <div className="flex-1">
                           <input
                             type="text"
@@ -503,7 +503,7 @@ const DoctorProfile = () => {
                           {index === editedProfile.education.length - 1 && (
                             <button
                               onClick={handleAddEducation}
-                              className="group flex items-center text-indigo-600 hover:text-indigo-800 text-sm font-semibold mt-3 transition-colors"
+                              className="group flex items-center text-blue-600 hover:text-blue-600  text-sm font-semibold mt-3 transition-colors"
                             >
                               <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
                               Add Education
@@ -517,8 +517,8 @@ const DoctorProfile = () => {
                   <div className="space-y-4">
                     {profile.education.map((edu, index) => (
                       <div key={index} className="flex items-center group">
-                        <GraduationCap className="h-5 w-5 text-indigo-400 mr-4 transition-transform group-hover:scale-125" />
-                        <span className="text-gray-700 group-hover:text-indigo-600 transition-colors">
+                        <GraduationCap className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
+                        <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
                           {edu}
                         </span>
                       </div>
@@ -530,7 +530,7 @@ const DoctorProfile = () => {
   
             {/* Certifications */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
-              <div className="flex items-center text-indigo-600 font-semibold text-xl mb-5">
+              <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
                 <Award className="h-6 w-6 mr-3 animate-bounce-slow" />
                 Certifications
               </div>
@@ -539,7 +539,7 @@ const DoctorProfile = () => {
                   <div className="space-y-4">
                     {editedProfile.certifications.map((cert, index) => (
                       <div key={index} className="flex items-start space-x-4">
-                        <Award className="h-5 w-5 text-indigo-400 mr-3 mt-2 transition-transform hover:scale-125" />
+                        <Award className="h-5 w-5 text-blue-600 mr-3 mt-2 transition-transform hover:scale-125" />
                         <div className="flex-1">
                           <input
                             type="text"
@@ -557,7 +557,7 @@ const DoctorProfile = () => {
                           {index === editedProfile.certifications.length - 1 && (
                             <button
                               onClick={handleAddCertification}
-                              className="group flex items-center text-indigo-600 hover:text-indigo-800 text-sm font-semibold mt-3 transition-colors"
+                              className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
                             >
                               <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
                               Add Certification
@@ -571,8 +571,8 @@ const DoctorProfile = () => {
                   <div className="space-y-4">
                     {profile.certifications.map((cert, index) => (
                       <div key={index} className="flex items-center group">
-                        <Award className="h-5 w-5 text-indigo-400 mr-4 transition-transform group-hover:scale-125" />
-                        <span className="text-gray-700 group-hover:text-indigo-600 transition-colors">
+                        <Award className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
+                        <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
                           {cert}
                         </span>
                       </div>
