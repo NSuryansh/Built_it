@@ -168,7 +168,7 @@ const DoctorLanding = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50">
       <DoctorNavbar className="shadow-sm" />
       <ToastContainer position="top-right" />
-
+  
       <motion.div 
         className="flex-1 px-4 sm:px-6 lg:px-8 py-8"
         initial="hidden"
@@ -183,9 +183,12 @@ const DoctorLanding = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-2">
-                  {greeting}, Dr. {localStorage.getItem("username")}
+                <h1 className="text-lg font-semibold text-blue-800 mb-1">
+                  {greeting},
                 </h1>
+                <h2 className="text-3xl md:text-4xl font-bold text-blue-800 mb-2">
+                  Dr. {localStorage.getItem("username")}
+                </h2>
                 <p className="text-gray-600 flex items-center">
                   <Clock className="h-4 w-4 mr-2" />
                   {format(new Date(), "EEEE, dd MMM yyyy")}
@@ -215,7 +218,7 @@ const DoctorLanding = () => {
               </div>
             </div>
           </motion.div>
-
+  
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Calendar Card */}
             <motion.div 
@@ -230,7 +233,7 @@ const DoctorLanding = () => {
                 <DoctorCalendar className="w-full" />
               </div>
             </motion.div>
-
+  
             {/* Appointments Card */}
             <motion.div 
               className="lg:col-span-2"
@@ -249,7 +252,7 @@ const DoctorLanding = () => {
                     View All <ChevronRight className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
-
+  
                 <div className="space-y-4">
                   <AnimatePresence>
                     {newAppoinments.map((appointment, index) => (
@@ -286,7 +289,7 @@ const DoctorLanding = () => {
                 </div>
               </div>
             </motion.div>
-
+  
             {/* Events Card */}
             <motion.div 
               className="lg:col-span-3"
@@ -299,7 +302,7 @@ const DoctorLanding = () => {
                     Upcoming Events
                   </h2>
                 </div>
-
+  
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <AnimatePresence>
                     {events.map((event, index) => (
@@ -338,7 +341,7 @@ const DoctorLanding = () => {
           </div>
         </div>
       </motion.div>
-
+  
       <Footer color={"blue"} className="mt-8" />
     </div>
   );

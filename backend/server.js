@@ -12,6 +12,7 @@ import nodemailer from "nodemailer";
 import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
+import multer from "multer";
 import { send } from "@emailjs/browser";
 
 const prisma = new PrismaClient();
@@ -66,6 +67,7 @@ const io = new Server(server, {
   transports: ["websocket", "polling"],
 });
 
+const upload = multer({ storage: multer.memoryStorage() });
 cloudinary.config({
   cloud_name: "dt7a9meug",
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -1920,9 +1922,24 @@ app.post("/scores-bot", async (req, res) => {
   }
 });
 
-app.put("/modifyDoc", async (req, res) => {
+app.put("/modifyDoc", upload.single("image"), async (req, res) => {
   try {
-    const { id, address, city, experience, educ, certifi } = req.query;
+    const { id, address, city, experience, educ, certifi } = req.body;
+    console.log(req.body)
+    const file = req.file
+    console.log(file)
+    // console.log(image)
+    var url=null;
+    if(file){
+      url = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream((error, result) => {
+          if (error) return reject(error);
+          resolve(result.secure_url);
+        });
+        stream.end(file.buffer);
+      });
+    }
+
     const doc_id = Number(id);
     // console.log(req.query);
     const certifications = certifi.split(",");
@@ -1948,11 +1965,12 @@ app.put("/modifyDoc", async (req, res) => {
         .status(400)
         .json({ error: "The updated field is already in use" });
     }
-
+    console.log(url)
     const updatedData = {};
     if (address?.trim()) updatedData.address = address;
     if (city?.trim()) updatedData.city = city;
     if (experience?.trim()) updatedData.experience = experience;
+    if(url) updatedData.img= url
 
     if (Object.keys(updatedData).length === 0) {
       return res
