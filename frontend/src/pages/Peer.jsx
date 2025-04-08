@@ -85,7 +85,7 @@ const Peer = () => {
   useEffect(() => {
     const fetchDocotors = async () => {
       try {
-        const response = await fetch("http://localhost:3000/getdoctors");
+        const response = await fetch("https://built-it-backend.onrender.com/getdoctors");
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
         setDocList(data);
@@ -99,7 +99,7 @@ const Peer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `https://built-it-backend.onrender.com/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
 
@@ -152,7 +152,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3000/", {
+    socketRef.current = io("https://built-it-backend.onrender.com/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -244,7 +244,7 @@ const Peer = () => {
     const pendingReads = async() => {
       console.log("HAL")
       try{
-      // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+      // const res = await fetch(`https://built-it-backend.onrender.com/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
       // const data = await res.json();
       socketRef.current.emit("countUnseen", {userId: userId, senderType:"user"})
       socketRef.current.on("unreadCount", (data) => {
@@ -265,7 +265,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `https://built-it-backend.onrender.com/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       const decrypted_api_messages = await Promise.all(

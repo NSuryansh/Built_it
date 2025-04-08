@@ -76,7 +76,7 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `https://built-it-backend.onrender.com/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
       if (!contacts || !Array.isArray(contacts)) {
@@ -135,7 +135,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3000/", {
+    socketRef.current = io("https://built-it-backend.onrender.com/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -216,7 +216,7 @@ const DoctorPeer = () => {
     const pendingReads = async() => {
       console.log("HAL")
       try{
-      // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+      // const res = await fetch(`https://built-it-backend.onrender.com/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
       // const data = await res.json();
       socketRef.current.emit("countUnseen", {userId: userId, senderType:"doc"})
       socketRef.current.on("unreadCount", (data) => {
@@ -266,7 +266,7 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `https://built-it-backend.onrender.com/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       // console.log(messages, "HALLLLLLO");

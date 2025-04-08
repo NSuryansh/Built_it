@@ -58,10 +58,10 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `http://localhost:3000/getDoc?docId=${doctorId}`
+          `https://built-it-backend.onrender.com/getDoc?docId=${doctorId}`
         );
         const response2 = await fetch(
-          `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+          `https://built-it-backend.onrender.com/available-slots?date=${date}&docId=${doctorId}`
         );
         const data = await response.json();
         const data2 = await response2.json();
@@ -162,7 +162,7 @@ const DoctorProfile = () => {
       const doctorId = localStorage.getItem("userid");
       console.log(doctorId);
       const response = await fetch(
-        `http://localhost:3000/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}`,
+        `https://built-it-backend.onrender.com/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}`,
         {
           method: "PUT",
         }

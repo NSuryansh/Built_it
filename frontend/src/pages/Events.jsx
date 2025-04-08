@@ -49,13 +49,13 @@ const Events = () => {
   }
 
   async function getCurrEvents() {
-    const res = await fetch("http://localhost:3000/events");
+    const res = await fetch("https://built-it-backend.onrender.com/events");
     const resp = await res.json();
     setcurrentEvents(resp);
   }
 
   async function getPastEvents() {
-    const res = await fetch("http://localhost:3000/getPastEvents");
+    const res = await fetch("https://built-it-backend.onrender.com/getPastEvents");
     const resp = await res.json();
     console.log(resp);
     setpastEvents(resp);

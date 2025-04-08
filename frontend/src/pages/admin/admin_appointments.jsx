@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  Calendar,
-  Users,
-  Clock,
-  Search,
+import {Calendar, Users, Clock, Search,
   User,
   Stethoscope,
   CalendarClock,
@@ -36,7 +32,7 @@ const AdminAppointments = () => {
 
     const fetchDoctors = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/getdoctors`);
+        const res = await fetch(`https://built-it-backend.onrender.com/getdoctors`);
         const data = await res.json();
         const formattedData = data.map((doc) => ({
           id: doc.id,
@@ -50,7 +46,7 @@ const AdminAppointments = () => {
 
     const fetchAppointments = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/all-appointments`);
+        const res = await fetch(`https://built-it-backend.onrender.com/all-appointments`);
         const data = await res.json();
         const formattedCurData = data.appts.map((appt) => ({
           id: appt.id,

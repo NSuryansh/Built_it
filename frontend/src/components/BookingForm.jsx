@@ -27,7 +27,7 @@ const BookingFormStep = ({
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+        `https://built-it-backend.onrender.com/available-slots?date=${date}&docId=${doctorId}`
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);
@@ -49,7 +49,7 @@ const BookingFormStep = ({
   //to get notifs for incoming requests
   const sendNotif = async () => {
     try {
-      const res = await fetch("http://localhost:3000/send-notification", {
+      const res = await fetch("https://built-it-backend.onrender.com/send-notification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

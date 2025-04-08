@@ -35,7 +35,7 @@ const DoctorLeave = () => {
   const fetchAvailableSlots = async (date, start) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${docId}`
+        `https://built-it-backend.onrender.com/available-slots?date=${date}&docId=${docId}`
       );
       const data = await response.json();
       console.log(data);
@@ -78,7 +78,7 @@ const DoctorLeave = () => {
 
     const setLeave = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/addLeave`, {
+        const response = await fetch(`https://built-it-backend.onrender.com/addLeave`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -30,10 +30,10 @@ const DoctorCalendar = ({ onDateSelect }) => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/pastdocappt?doctorId=${docId}`
+          `https://built-it-backend.onrender.com/pastdocappt?doctorId=${docId}`
         );
         const response = await fetch(
-          `http://localhost:3000/currentdocappt?doctorId=${docId}`
+          `https://built-it-backend.onrender.com/currentdocappt?doctorId=${docId}`
         );
         const data = await response.json();
         const data2 = await res.json();

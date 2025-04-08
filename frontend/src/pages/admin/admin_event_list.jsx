@@ -40,7 +40,7 @@ const EventsList = () => {
     // if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/events`, {
+      const response = await fetch(`https://built-it-backend.onrender.com/events`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({
@@ -76,7 +76,7 @@ const EventsList = () => {
   const handleLinkSubmit = async (eventId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/uploadURL?id=${eventId}&url=${newLink}`,
+        `https://built-it-backend.onrender.com/uploadURL?id=${eventId}&url=${newLink}`,
         { method: "PUT" }
       );
       CustomToast("URL uploaded successfully");
@@ -106,8 +106,8 @@ const EventsList = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/events");
-        const response2 = await fetch("http://localhost:3000/getPastEvents");
+        const response = await fetch("https://built-it-backend.onrender.com/events");
+        const response2 = await fetch("https://built-it-backend.onrender.com/getPastEvents");
         const data = await response.json();
         const data2 = await response2.json();
 

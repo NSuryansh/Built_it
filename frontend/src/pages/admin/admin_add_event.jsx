@@ -41,7 +41,7 @@ const AddEvent = () => {
     const dateTime = new Date(`${date}T${time}`);
 
     try {
-      const response = await fetch("http://localhost:3000/addEvent", {
+      const response = await fetch("https://built-it-backend.onrender.com/addEvent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -42,7 +42,7 @@ const DoctorsList = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors");
+        const res = await fetch("https://built-it-backend.onrender.com/getdoctors");
         const resp = await res.json();
         setDoc(resp);
         setfetched(true);
@@ -58,7 +58,7 @@ const DoctorsList = () => {
 
   const handleDelete = async (doctorId) => {
     try {
-      const res = await fetch("http://localhost:3000/deletedoc", {
+      const res = await fetch("https://built-it-backend.onrender.com/deletedoc", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ const DoctorsList = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    const res = await fetch("http://localhost:3000/getdoctors");
+    const res = await fetch("https://built-it-backend.onrender.com/getdoctors");
     const resp = await res.json();
     setDoc(resp);
     setTimeout(() => setIsRefreshing(false), 800);

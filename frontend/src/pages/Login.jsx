@@ -44,7 +44,7 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch("http://localhost:3000/login", {
+    const response = await fetch("https://built-it-backend.onrender.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -74,7 +74,7 @@ const Login = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch("http://localhost:3000/forgotPassword", {
+    const response = await fetch("https://built-it-backend.onrender.com/forgotPassword", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
