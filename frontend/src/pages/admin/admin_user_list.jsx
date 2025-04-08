@@ -49,10 +49,14 @@ const fetchUserAppointmentData = async (usersData) => {
   return result;
 };
 
-const usersData = await fetchUsers();
-console.log("ALL DA USERS R: ", usersData);
-const userCounts = await fetchUserAppointmentData(usersData);
-console.log(userCounts);
+const get_data = async() => {
+ const usersData = await fetchUsers();
+ console.log("ALL DA USERS R: ", usersData);
+ const userCounts = await fetchUserAppointmentData(usersData);
+ console.log(userCounts);
+}
+get_data();
+
 
 function User() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -106,9 +110,9 @@ function User() {
     );
   }, [userCounts, filteredAndSortedUsers]);
 
-  console.log("IAM NORMAL STUFF", userCounts);
-  console.log("IAM FILTERED STUFF", filteredAndSortedUsers);
-  console.log("IAM FILTERED counts wowoow", filteredUserCounts);
+  // console.log("IAM NORMAL STUFF", userCounts);
+  // console.log("IAM FILTERED STUFF", filteredAndSortedUsers);
+  // console.log("IAM FILTERED counts wowoow", filteredUserCounts);
 
   const handleSort = () => {
     setSortConfig((current) => ({
