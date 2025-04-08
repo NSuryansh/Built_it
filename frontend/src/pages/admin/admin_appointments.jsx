@@ -336,7 +336,7 @@ const AdminAppointments = () => {
               </div>
             </div>
           </div>
-          <div className="divide-y divide-gray-100 flex flex-col items-center lg:gap-3 mt-3">
+          <div className="divide-y divide-gray-100 flex flex-col items-center lg:gap-3 mt-3 mb-3">
             {filteredAppointments.map((appointment) => (
               <div
                 key={appointment.id}
