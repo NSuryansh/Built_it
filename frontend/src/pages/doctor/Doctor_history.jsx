@@ -32,6 +32,7 @@ const History = () => {
 
     const handleSubmitFollowup = async () => {
         try {
+            const datetime = new Date(`${followupDate}T${followupTime}`).toISOString();
             const response = await fetch('http://localhost:3000/request-to-user', {
                 method: 'POST',
                 headers: {
@@ -40,7 +41,7 @@ const History = () => {
                 body: JSON.stringify({
                     doctorId: localStorage.getItem("userid"),
                     userId: selectedAppointment.user.id,
-                    datetime: followupDate,
+                    dateTime: datetime,
                     reason: reason
                 }),
             });
