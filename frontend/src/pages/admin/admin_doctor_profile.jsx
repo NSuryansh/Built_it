@@ -33,6 +33,7 @@ const AdminDoctorProfile = () => {
   });
   const [fetched, setfetched] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
   const [doctor, setDoctor] = useState({
     name: "",
     field: "",
@@ -96,6 +97,7 @@ const AdminDoctorProfile = () => {
           education: educations,
           avgRating: data.doctor.avgRating,
         });
+        setProfileImage(data.doctor.img);
         setfetched(true);
       } catch (e) {
         console.error(e);
@@ -185,11 +187,15 @@ const AdminDoctorProfile = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.2),transparent)]"></div>
             <div className="flex flex-col sm:flex-row items-center space-x-8 relative">
               <div className="relative group">
-                <img
-                  src={doctor.image}
-                  alt={doctor.name}
-                  className="w-40 h-40 rounded-full border-[6px] border-yellow-400 object-cover shadow-xl group-hover:scale-[1.15] transition-transform duration-500 ease-out"
-                />
+                {profileImage ? (
+                  <img
+                    src={profileImage}
+                    alt="Profile"
+                    className="w-32 h-32 rounded-full border-[6px] border-yellow-400 object-cover shadow-xl group-hover:scale-[1.15] transition-transform duration-500 ease-out"
+                  />
+                ) : (
+                  <User className="w-32 h-32 rounded-full border-[6px] border-yellow-400 text-yellow-400 transform transition-all duration-300 group-hover:scale-110" />
+                )}
                 <div className="absolute inset-0 rounded-full bg-coral-400/20 opacity-0 group-hover:opacity-[0.6] transition-opacity duration-500"></div>
               </div>
               <div className="text-white space-y-3">

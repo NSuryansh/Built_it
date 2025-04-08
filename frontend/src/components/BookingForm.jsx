@@ -70,7 +70,7 @@ const BookingFormStep = ({
   };
 
   return (
-    <div className="bg-gradient-to-b from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
+    <div className="bg-gradient-to-b mx-auto from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
         <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
         <h2 className="text-center text-3xl font-bold text-[var(--custom-orange-500)] uppercase">

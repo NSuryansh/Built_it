@@ -133,6 +133,23 @@ const History = () => {
     return filtered;
   }, [searchUser, app]);
 
+  const handleClosePopup = () => {
+    navigate("/doctor/login");
+  };
+
+  if (isAuthenticated === null || fetched === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <p className="mt-4 text-gray-600">Loading your dashboard...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="blue" />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-teal-50">
       <DoctorNavbar />
