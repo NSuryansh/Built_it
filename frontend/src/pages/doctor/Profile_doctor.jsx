@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   User,
   Mail,
@@ -43,6 +43,9 @@ const DoctorProfile = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [editedProfile, setEditedProfile] = useState(profile);
   const [fetched, setfetched] = useState(null);
+  const fileInputRef = useRef(null);
+  const [profileImage, setProfileImage] = useState(null);
+  const [file, setfile] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -162,7 +165,7 @@ const DoctorProfile = () => {
       const doctorId = localStorage.getItem("userid");
       console.log(doctorId);
       const response = await fetch(
-        `https://built-it-backend.onrender.com/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}`,
+        `https://built-it-backend.onrender.com/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}&image=${file}`,
         {
           method: "PUT",
         }
@@ -184,6 +187,24 @@ const DoctorProfile = () => {
     setIsEditing(false);
   };
 
+  const handleImageUpload = (event) => {
+    const filee = event.target.files?.[0];
+    if (filee) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      setfile(filee);
+      reader.readAsDataURL(filee);
+    }
+  };
+
+  const triggerImageUpload = () => {
+    if (isEditing) {
+      fileInputRef.current?.click();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 overflow-hidden">
       <DoctorNavbar />
@@ -192,11 +213,11 @@ const DoctorProfile = () => {
         {/* Floating Decorative Elements */}
         <div className="absolute top-0 left-0 w-72 h-72 bg-indigo-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
-  
+
         {/* Header Section */}
         <div className="flex justify-between items-center animate-fade-in-down">
           <div>
-            <h1 className="text-5xl font-extrabold text-gray-900 bg-cyan-950 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
               Doctor Profile
             </h1>
             <p className="mt-3 text-lg text-gray-600 font-medium">
@@ -209,8 +230,8 @@ const DoctorProfile = () => {
               className="group relative flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
               <span className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <Edit2 className="h-5 w-5 mr-2 relative z-10 group-hover:animate-spin-slow" />
-              <span className="relative z-10">Edit Profile</span>
+              <Edit2 className="h-5 w-5 mr-2 relative  group-hover:animate-spin-slow" />
+              <span className="relative ">Edit Profile</span>
             </button>
           ) : (
             <div className="flex space-x-4">
@@ -219,8 +240,8 @@ const DoctorProfile = () => {
                 className="group relative flex items-center px-6 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-teal-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-teal-600 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                <Save className="h-5 w-5 mr-2 relative z-10 group-hover:animate-bounce" />
-                <span className="relative z-10">Save Changes</span>
+                <Save className="h-5 w-5 mr-2 relative  group-hover:animate-bounce" />
+                <span className="relative ">Save Changes</span>
               </button>
               <button
                 onClick={handleCancel}
@@ -232,15 +253,42 @@ const DoctorProfile = () => {
             </div>
           )}
         </div>
-  
+
         {/* Profile Card */}
         <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-indigo-100/30 transition-all duration-500 hover:shadow-indigo-200/20 animate-fade-in-up">
           <div className="w-full flex justify-between flex-col md:flex-row gap-8">
             <div className="flex items-center space-x-8">
-              <div className="relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group">
-                <User className="h-16 w-16 text-blue-600 transform transition-all duration-300 group-hover:scale-110" />
+              <div
+                onClick={triggerImageUpload}
+                className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
+                  isEditing ? "cursor-pointer" : ""
+                }`}
+              >
+                {profileImage ? (
+                  <img
+                    src={profileImage}
+                    alt="Profile"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <User className="h-16 w-16 text-blue-600 transform transition-all duration-300 group-hover:scale-110" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="absolute inset-0 border-2 border-indigo-300/50 rounded-full animate-spin-slow"></div>
+                {isEditing && (
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="text-white text-sm font-medium">
+                      Change Photo
+                    </p>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
               </div>
               <div>
                 {isEditing ? (
@@ -249,12 +297,15 @@ const DoctorProfile = () => {
                     disabled
                     value={editedProfile.name}
                     onChange={(e) =>
-                      setEditedProfile({ ...editedProfile, name: e.target.value })
+                      setEditedProfile({
+                        ...editedProfile,
+                        name: e.target.value,
+                      })
                     }
                     className="text-4xl font-extrabold text-gray-900 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                   />
                 ) : (
-                  <h2 className="text-4xl font-extrabold text-gray-900 bg-blue-600 bg-clip-text text-transparent">
+                  <h2 className="text-4xl font-extrabold bg-blue-600 bg-clip-text text-transparent">
                     {profile.name}
                   </h2>
                 )}
@@ -268,11 +319,11 @@ const DoctorProfile = () => {
               className="group relative flex self-end md:self-center items-center h-fit w-fit px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
               <span className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <BriefcaseBusiness className="h-5 w-5 mr-2 relative z-10 group-hover:animate-pulse" />
-              <span className="relative z-10">Take Leave</span>
+              <BriefcaseBusiness className="h-5 w-5 mr-2 relative  group-hover:animate-pulse" />
+              <span className="relative ">Take Leave</span>
             </Link>
           </div>
-  
+
           {/* Grid Layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             {/* Contact Info */}
@@ -355,16 +406,22 @@ const DoctorProfile = () => {
                     </div>
                   ) : (
                     <div>
-                      <p className="text-gray-700 group-hover:text-blue-600 transition 
+                      <p
+                        className="text-gray-700 group-hover:text-blue-600 transition 
      
-  -colors">{profile.address}</p>
-                      <p className="text-gray-700 group-hover:text-blue-600 transition-colors">{profile.city}</p>
+  -colors"
+                      >
+                        {profile.address}
+                      </p>
+                      <p className="text-gray-700 group-hover:text-blue-600 transition-colors">
+                        {profile.city}
+                      </p>
                     </div>
                   )}
                 </div>
               </div>
             </div>
-  
+
             {/* Professional Info */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
               <div className="space-y-8">
@@ -417,7 +474,7 @@ const DoctorProfile = () => {
                     </div>
                   </div>
                 </div>
-  
+
                 {/* Availability */}
                 <div>
                   <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
@@ -428,12 +485,17 @@ const DoctorProfile = () => {
                     {isEditing ? (
                       <div className="space-y-4">
                         {editedProfile.availability.map((slot, index) => (
-                          <div key={index} className="flex items-center space-x-4">
+                          <div
+                            key={index}
+                            className="flex items-center space-x-4"
+                          >
                             <input
                               type="time"
                               value={slot}
                               onChange={(e) => {
-                                const newAvailability = [...editedProfile.availability];
+                                const newAvailability = [
+                                  ...editedProfile.availability,
+                                ];
                                 newAvailability[index] = e.target.value;
                                 setEditedProfile({
                                   ...editedProfile,
@@ -442,7 +504,8 @@ const DoctorProfile = () => {
                               }}
                               className="bg-white border border-indigo-200 rounded-xl px-4 py-2 text-sm w-40 focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                             />
-                            {index === editedProfile.availability.length - 1 && (
+                            {index ===
+                              editedProfile.availability.length - 1 && (
                               <button
                                 onClick={handleAddSlot}
                                 className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
@@ -467,13 +530,15 @@ const DoctorProfile = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="text-gray-400 italic animate-fade-in">No slots added</div>
+                      <div className="text-gray-400 italic animate-fade-in">
+                        No slots added
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-  
+
             {/* Education */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
               <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
@@ -527,7 +592,7 @@ const DoctorProfile = () => {
                 )}
               </div>
             </div>
-  
+
             {/* Certifications */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
               <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
@@ -545,7 +610,9 @@ const DoctorProfile = () => {
                             type="text"
                             value={cert}
                             onChange={(e) => {
-                              const newCertifications = [...editedProfile.certifications];
+                              const newCertifications = [
+                                ...editedProfile.certifications,
+                              ];
                               newCertifications[index] = e.target.value;
                               setEditedProfile({
                                 ...editedProfile,
@@ -554,7 +621,8 @@ const DoctorProfile = () => {
                             }}
                             className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2 focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                           />
-                          {index === editedProfile.certifications.length - 1 && (
+                          {index ===
+                            editedProfile.certifications.length - 1 && (
                             <button
                               onClick={handleAddCertification}
                               className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
