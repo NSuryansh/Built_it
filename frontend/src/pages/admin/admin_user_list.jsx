@@ -10,8 +10,11 @@ import {
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import CustomToast from "../../components/CustomToast";
-
+import { checkAuth } from "../../utils/profile";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import SessionExpired from "../../components/SessionExpired";
 import Footer from "../../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 const AdminUser = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,6 +25,17 @@ const AdminUser = () => {
     key: "appointmentsCount",
     direction: "desc",
   });
+  const navigate = useNavigate();
+  const [fetched, setfetched] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +61,7 @@ const AdminUser = () => {
 
               const countData = await countRes.json();
               const doctorData = await doctorRes.json();
-
+              setfetched(true);
               return {
                 userId,
                 appointmentCount: countData.count || 0,
@@ -56,6 +70,7 @@ const AdminUser = () => {
             } catch (error) {
               console.error(`Failed to fetch data for user ${userId}:`, error);
               CustomToast("Error fetching user");
+              setfetched(false);
               return {
                 userId,
                 appointmentCount: 0,
@@ -119,6 +134,28 @@ const AdminUser = () => {
       direction: current.direction === "desc" ? "asc" : "desc",
     }));
   };
+
+  const handleClosePopup = () => {
+    navigate("/admin/login");
+  };
+
+  if (isAuthenticated === null || fetched === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+        <div className="relative">
+          <PacmanLoader color="#047857" size={30} />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-200/20 to-transparent animate-pulse"></div>
+        </div>
+        <p className="mt-4 text-emerald-800 font-medium animate-pulse">
+          Loading your dashboard...
+        </p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="green" />;
+  }
 
   const Controls = () => (
     <div className="px-8 py-6 bg-gray-50/50 border-b border-gray-100">

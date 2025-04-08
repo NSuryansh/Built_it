@@ -33,7 +33,7 @@ const AdminLogin = () => {
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <PacmanLoader color="#047857" size={30} />
         <p className="mt-4 text-emerald-800 font-medium">
-          Loading your dashboard...
+          Loading...
         </p>
       </div>
     );

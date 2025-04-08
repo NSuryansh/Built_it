@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Trash2,
   UserPlus,
@@ -31,6 +31,7 @@ const DoctorsList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [fetched, setfetched] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -43,7 +44,9 @@ const DoctorsList = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("https://built-it-backend.onrender.com/getdoctors");
+        const res = await fetch(
+          "https://built-it-backend.onrender.com/getdoctors"
+        );
         const resp = await res.json();
         setDoc(resp);
         setfetched(true);
@@ -59,13 +62,16 @@ const DoctorsList = () => {
 
   const handleDelete = async (doctorId) => {
     try {
-      const res = await fetch("https://built-it-backend.onrender.com/deletedoc", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ doctorID: doctorId }),
-      });
+      const res = await fetch(
+        "https://built-it-backend.onrender.com/deletedoc",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ doctorID: doctorId }),
+        }
+      );
       const resp = await res.json();
       setDoc((prevDoctors) =>
         prevDoctors.filter((doctor) => doctor.id !== doctorId)
@@ -120,11 +126,13 @@ const DoctorsList = () => {
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="green" />;
   }
 
   return (
-    <div className={`flex flex-col min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100`}>
+    <div
+      className={`flex flex-col min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100`}
+    >
       <AdminNavbar />
       <ToastContainer />
 
@@ -144,8 +152,9 @@ const DoctorsList = () => {
             <div className="flex gap-4">
               <button
                 onClick={handleRefresh}
-                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${isRefreshing ? "animate-spin" : ""
-                  }`}
+                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${
+                  isRefreshing ? "animate-spin" : ""
+                }`}
                 title="Refresh List"
               >
                 <RefreshCw size={24} />
@@ -316,7 +325,7 @@ const DoctorsList = () => {
           docId={docId}
           handleDeletePopup={handleDeletePopup}
           handleDelete={handleDelete}
-          text={'Are you sure you want to remove the doctor?'}
+          text={"Are you sure you want to remove the doctor?"}
         />
       )}
 

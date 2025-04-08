@@ -15,7 +15,7 @@ import {
   StarIcon,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
 import { checkAuth } from "../../utils/profile";
@@ -24,6 +24,7 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 
 const AdminDoctorProfile = () => {
   const search = useLocation().search;
+  const navigate = useNavigate();
   const [showReferralForm, setShowReferralForm] = useState(false);
   const [referralData, setReferralData] = useState({
     rollNo: "",
@@ -120,16 +121,19 @@ const AdminDoctorProfile = () => {
 
   const referralSub = async () => {
     try {
-      const response = await fetch("https://built-it-backend.onrender.com/referrals", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          roll_no: String(referralData.rollNo),
-          doctor_id: search.split("=")[1],
-          referred_by: referralData.referredBy,
-          reason: referralData.reason,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it-backend.onrender.com/referrals",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            roll_no: String(referralData.rollNo),
+            doctor_id: search.split("=")[1],
+            referred_by: referralData.referredBy,
+            reason: referralData.reason,
+          }),
+        }
+      );
       const data = await response.json();
 
       if (data.error) {
