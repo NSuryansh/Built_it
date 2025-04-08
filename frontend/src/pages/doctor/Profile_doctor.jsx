@@ -45,6 +45,7 @@ const DoctorProfile = () => {
   const [fetched, setfetched] = useState(null);
   const fileInputRef = useRef(null);
   const [profileImage, setProfileImage] = useState(null);
+  const [file, setfile] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -164,7 +165,7 @@ const DoctorProfile = () => {
       const doctorId = localStorage.getItem("userid");
       console.log(doctorId);
       const response = await fetch(
-        `https://built-it-backend.onrender.com/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}&image=${profileImage}`,
+        `https://built-it-backend.onrender.com/modifyDoc?id=${doctorId}&address=${editedProfile.address}&city=${editedProfile.city}&experience=${editedProfile.experience}&educ=${editedProfile.education}&certifi=${editedProfile.certifications}&image=${file}`,
         {
           method: "PUT",
         }
@@ -187,14 +188,14 @@ const DoctorProfile = () => {
   };
 
   const handleImageUpload = (event) => {
-    const file = event.target.files?.[0];
-    if (file) {
+    const filee = event.target.files?.[0];
+    if (filee) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);
       };
-      reader.readAsDataURL(file);
-      console.log(profileImage);
+      setfile(filee);
+      reader.readAsDataURL(filee);
     }
   };
 
