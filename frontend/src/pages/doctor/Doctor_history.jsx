@@ -97,10 +97,8 @@ const History = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-teal-50">
       <DoctorNavbar />
-
-
+  
       <main className="max-w-7xl mt-8 mx-auto px-4 sm:px-6 lg:px-8 md:py-6 mb-6">
-
         {/* Appointments List */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
           <div className="flex flex-col md:flex-row md:items-center justify-between px-8 pb-0 py-6 md:mb-4">
@@ -134,9 +132,8 @@ const History = () => {
                     <p className="text-md font-medium text-blue-900 mb-1">
                       {appointment.user.username}
                     </p>
-
                   </div>
-
+  
                   {/* Doctor Info */}
                   <div className="flex-1 bg-gradient-to-br from-green-50/50 to-transparent p-1 rounded-xl">
                     <div className="flex items-center gap-3 mb-1">
@@ -146,9 +143,8 @@ const History = () => {
                     <p className="text-md font-medium text-green-900 mb-1">
                       {appointment.note}
                     </p>
-
                   </div>
-
+  
                   {/* Appointment Info */}
                   <div className="flex-1 bg-gradient-to-br from-purple-50/50 to-transparent p-1 rounded-xl">
                     <div className="flex items-center gap-3 mb-1">
@@ -161,11 +157,13 @@ const History = () => {
                           {format(new Date(appointment.createdAt), "dd MMM yyyy")}
                         </p>
                       </div>
-
                     </div>
                   </div>
                   <div className="flex sm:justify-end lg:justify-center sm:absolute sm:z-10 sm:bottom-8 sm:right-6 lg:relative lg:bottom-0 lg:right-0">
-                    <button className="cursor-pointer h-11 w-30 px-3 py-2 mt-3 rounded-lg bg-white shadow-sm border font-semibold border-gray-100" onClick={() => handleFollowup(appointment)}>
+                    <button
+                      className="cursor-pointer h-11 w-30 px-3 py-2 mt-3 rounded-lg bg-white shadow-sm border font-semibold border-gray-100"
+                      onClick={() => handleFollowup(appointment)}
+                    >
                       Follow Up
                     </button>
                   </div>
@@ -175,22 +173,25 @@ const History = () => {
           </div>
         </div>
       </main>
+  
       {showFollowupModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-blue-100 bg-opacity-40 backdrop-blur-md flex items-center justify-center p-4 z-50 transition-all duration-300">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform scale-95 animate-modal-in border border-gray-100">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-semibold text-gray-900">Schedule Follow-Up</h3>
+              <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-emerald-600">
+                Schedule Follow-Up
+              </h3>
               <button
                 onClick={() => setShowFollowupModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-500 hover:text-gray-700 transition-colors duration-200 p-1 rounded-full hover:bg-gray-100"
               >
                 <X className="h-6 w-6" />
               </button>
             </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+  
+            <div className="space-y-6">
+              <div className="relative group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 transition-colors group-hover:text-teal-600">
                   Select Date
                 </label>
                 <input
@@ -198,46 +199,47 @@ const History = () => {
                   min={minDate}
                   value={followupDate}
                   onChange={(e) => setFollowupDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 hover:border-teal-300 shadow-sm text-gray-700"
                 />
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+  
+              <div className="relative group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 transition-colors group-hover:text-teal-600">
                   Select Time
                 </label>
                 <input
                   type="time"
                   value={followupTime}
                   onChange={(e) => setFollowupTime(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 hover:border-teal-300 shadow-sm text-gray-700"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Enter reason
+  
+              <div className="relative group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 transition-colors group-hover:text-teal-600">
+                  Enter Reason
                 </label>
                 <input
                   type="text"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 hover:border-teal-300 shadow-sm text-gray-700"
                 />
               </div>
-
-              <div className="flex justify-end gap-3 mt-6">
+  
+              <div className="flex justify-end gap-4 mt-8">
                 <button
                   onClick={() => setShowFollowupModal(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 font-semibold shadow-sm hover:shadow-md"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmitFollowup}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="px-6 py-2.5 bg-amber-600 text-white rounded-xl hover:from-teal-600 hover:to-indigo-600 transition-all duration-300 font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
                   disabled={!followupDate || !followupTime}
                 >
-                  Schedule Follow Up
+                  Schedule Follow-Up
                 </button>
               </div>
             </div>
