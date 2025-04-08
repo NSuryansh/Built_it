@@ -143,7 +143,7 @@ const Book = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 flex flex-col overflow-hidden">
     {/* Navbar with subtle shadow */}
-    <Navbar className="shadow-md bg-white/80 backdrop-blur-md" />
+    <Navbar />
   
     {/* Toast Container with custom styling */}
     <ToastContainer className="z-50" toastClassName="rounded-xl shadow-lg bg-white/90 text-gray-800" />
