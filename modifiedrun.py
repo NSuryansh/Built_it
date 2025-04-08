@@ -59,7 +59,7 @@ if not os.path.exists(memory_csv_file):
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True, allow_headers=["Content-Type"])
 
 def store_user_prompt(user_id: str, session_id: str, prompt: str):
     """Stores user prompts in a CSV file."""

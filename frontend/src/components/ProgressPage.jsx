@@ -8,7 +8,7 @@ const ProgressPage = ({ isLandingPage }) => {
   useEffect(() => {
     const fetchScores = async () => {
       try {
-        const response = await fetch("https://built-it-backend.onrender.com/scores-bot", {
+        const response = await fetch("http://127.0.0.1:5000/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
@@ -19,7 +19,7 @@ const ProgressPage = ({ isLandingPage }) => {
         }
 
         const data = await response.json();
-
+        console.log(data)
         setScores({
           mental_health_score: data.mental_health_score || 0,
           stress_score: data.stress_score || 0,

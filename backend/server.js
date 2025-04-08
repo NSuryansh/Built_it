@@ -1912,7 +1912,7 @@ app.post("/scores-bot", async (req, res) => {
       user_id,
     });
 
-    // console.log(response.data.json);
+    console.log(response.data.json);
     res.json(response.data);
   } catch (error) {
     console.error("Error calling the Flas API: ", error.message);
