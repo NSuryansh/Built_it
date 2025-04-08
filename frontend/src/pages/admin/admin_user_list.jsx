@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Users, Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import { Users, Search, SlidersHorizontal, ArrowUpDown , ChevronDown} from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
+
 import Footer from "../../components/Footer";
 
 const User = () => {
@@ -103,39 +104,47 @@ const User = () => {
   };
 
   return (
-    <div className="min-h-screen font-poppins bg-[var(--custom-primary-green-50)]">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-10">
       <AdminNavbar />
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="bg-[var(--custom-primary-green-200)] rounded-2xl shadow-lg overflow-hidden">
-          <div className="bg-[var(--custom-primary-green-900)] px-6 py-8">
-            <div className="flex items-center">
-              <Users className="h-12 w-12 text-white" />
-              <div className="ml-4">
-                <h1 className="text-2xl font-semibold text-white">
+      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-[var(--custom-primary-green-100)]">
+          {/* Header Section */}
+          <div className="bg-gradient-to-r from-white to-emerald-100 px-8 py-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
+              <svg viewBox="0 0 200 200" className="fill-white">
+                <path d="M0 0 L200 200 M200 0 L0 200" strokeWidth="20"/>
+              </svg>
+            </div>
+            <div className="flex items-center relative z-10">
+              <Users className="h-14 w-14 text-green-700 flex-shrink-0" />
+              <div className="ml-6">
+                <h1 className="text-green-700 text-3xl font-bold tracking-tight">
                   Users Overview
                 </h1>
-                <p className="text-green-100">Administrative Dashboard</p>
+                <p className="text-emerald-700 mt-1 text-lg opacity-90">
+                  Administrative Dashboard
+                </p>
               </div>
             </div>
           </div>
-
-          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+  
+          {/* Controls Section */}
+          <div className="px-8 py-6 bg-gray-50/50 border-b border-gray-100">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div className="relative flex-1 max-w-lg">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
                 <input
                   type="text"
                   placeholder="Search by name..."
-                  className="pl-10 pr-4 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-[var(--custom-primary-green-900)] focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[var(--custom-primary-green-700)] focus:border-transparent transition-all duration-200 hover:border-gray-300"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="h-5 w-5 text-gray-500" />
+                <div className="relative">
                   <select
-                    className="rounded-lg border border-gray-300 py-2 px-4 focus:ring-2 focus:ring-[var(--custom-primary-green-900)] focus:border-transparent"
+                    className="appearance-none pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[var(--custom-primary-green-700)] focus:border-transparent transition-all duration-200 hover:border-gray-300 cursor-pointer"
                     value={filterDegree}
                     onChange={(e) => setFilterDegree(e.target.value)}
                   >
@@ -145,65 +154,67 @@ const User = () => {
                       </option>
                     ))}
                   </select>
+                  <ChevronDown className="absolute top-4 right-3 h-4 w-4 text-gray-500 pointer-events-none" />
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Degree
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Doctors
-                  </th>
-                  <th
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={handleSort}
-                  >
-                    <div className="flex items-center gap-2">
-                      Appointments
-                      <ArrowUpDown className="h-4 w-4" />
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredAndSortedUsers.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {user.username}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {user.acadProg}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-500">
-                        {user.doctors.map((doc) => doc.name).join(", ")}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-[var(--custom-primary-green-900)]">
-                        {user.appointmentCount}
-                      </div>
-                    </td>
+  
+          {/* Table Section */}
+          <div className="p-4">
+            <div className="overflow-x-auto rounded-xl bg-white">
+              <table className="min-w-full divide-y divide-gray-100">
+                <thead className="bg-gray-50">
+                  <tr>
+                    {["User", "Degree", "Doctors", "Appointments"].map((header, idx) => (
+                      <th 
+                        key={header}
+                        className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
+                        onClick={header === "Appointments" ? handleSort : undefined}
+                      >
+                        <div className={`flex items-center gap-2 ${header === "Appointments" ? "cursor-pointer hover:text-[var(--custom-primary-green-700)]" : ""}`}>
+                          {header}
+                          {header === "Appointments" && <ArrowUpDown className="h-4 w-4" />}
+                        </div>
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {filteredAndSortedUsers.map((user) => (
+                    <tr 
+                      key={user.id}
+                      className="hover:bg-[var(--custom-primary-green-50)] transition-all duration-200 group"
+                    >
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900 group-hover:text-[var(--custom-primary-green-900)]">
+                          {user.username}
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="text-sm text-gray-600">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--custom-primary-green-100)] text-[var(--custom-primary-green-800)]">
+                            {user.acadProg}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5">
+                        <div className="text-sm text-gray-600 max-w-md truncate">
+                          {user.doctors.map((doc) => doc.name).join(", ")}
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="text-sm font-semibold text-[var(--custom-primary-green-900)]">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--custom-primary-green-100)]">
+                            {user.appointmentCount}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

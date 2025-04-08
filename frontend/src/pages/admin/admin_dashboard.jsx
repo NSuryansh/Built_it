@@ -18,14 +18,15 @@ import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
+import { BarChart3, PieChart as PieChartIcon, RefreshCw } from 'lucide-react';
 
 const AdminDashboard = () => {
   const [appointmentsUG, setAppointmentsUG] = useState({});
   const [appointmentsPG, setAppointmentsPG] = useState({});
   const [appointmentsPHD, setAppointmentsPHD] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  // New state: if true, show pie charts; if false, show bar graph.
   const [isPie, setIsPie] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -37,6 +38,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchAppointments = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch("https://built-it-backend.onrender.com/pastApp");
         const data = await response.json();
@@ -70,12 +72,13 @@ const AdminDashboard = () => {
       } catch (error) {
         console.error("Error fetching appointments: ", error);
         CustomToast("Error while fetching data");
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchAppointments();
   }, []);
 
-  // Data for the aggregated BarChart
   const histogramData = Object.keys(appointmentsUG).map((doc) => ({
     name: doc,
     UG: appointmentsUG[doc] || 0,
@@ -83,7 +86,6 @@ const AdminDashboard = () => {
     PHD: appointmentsPHD[doc] || 0,
   }));
 
-  // Colors for the charts
   const COLORS = [
     "#048A81",
     "#FFB703",
@@ -93,14 +95,29 @@ const AdminDashboard = () => {
     "#E76F51",
   ];
 
-  // Handler for graph type change via dropdown.
   const handleGraphTypeChange = (e) => {
     setIsPie(e.target.value === "pie");
   };
 
+  const handleRefresh = async () => {
+    const fetchAppointments = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("https://built-it-backend.onrender.com/pastApp");
+        const data = await response.json();
+        // ... rest of your fetch logic
+      } catch (error) {
+        CustomToast("Error while refreshing data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAppointments();
+  };
+
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <PacmanLoader color="#047857" size={30} />
         <p className="mt-4 text-emerald-800 font-medium">
           Loading your dashboard...
@@ -110,123 +127,156 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="flex flex-col bg-[var(--custom-primary-green-50)]">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
       <AdminNavbar />
       <ToastContainer />
-      <div className="space-y-4 max-w-7xl md:min-w-5xl mt-10 mx-auto mb-10">
-        <h1 className="text-3xl font-bold text-center md:text-left text-[var(--custom-primary-green-900)]">
-          Dashboard Overview
-        </h1>
-
-        {/* Dropdown to choose graph type */}
-        {/* <div className="flex justify-end">
-
-        </div> */}
-
-        {/* Conditional Rendering based on graph type */}
-        {isPie ? (
-          // Render multiple Pie Charts for each doctor.
-          <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg mt-8">
-            <div className="flex flex-row flex-wrap justify-between">
-              <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-                Appointments Breakdown by Doctor
-              </h2>
-              <div className="flex justify-end gap-8">
+      
+      <main className="flex-grow p-6 md:p-8 max-w-7xl mx-auto w-full">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-emerald-900 mb-4 md:mb-0">
+            Dashboard Overview
+          </h1>
+          
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleRefresh}
+              className="p-2 rounded-full hover:bg-emerald-100 transition-colors"
+              title="Refresh data"
+            >
+              <RefreshCw className={`w-5 h-5 text-emerald-700 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+            
+            <div className="flex gap-4">
+              <div className="relative">
                 <select
                   onChange={handleGraphTypeChange}
                   value={isPie ? "pie" : "bar"}
-                  className="mb-10 cursor-pointer"
+                  className="appearance-none bg-white pl-10 pr-4 py-2 rounded-lg border border-emerald-200 text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                 >
                   <option value="pie">Pie Charts</option>
                   <option value="bar">Bar Graph</option>
                 </select>
-                <select name="" id="" className="mb-10 cursor-pointer">
-                  <option value="Acad Program">Academic Program</option>
-                  <option value="Gender Ratio">Gender Ratio</option>
-                </select>
+                {isPie ? (
+                  <PieChartIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
+                ) : (
+                  <BarChart3 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
+                )}
               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {Object.keys(appointmentsUG).map((doc) => {
-                // Data for each doctor's pie chart
-                const pieData = [
-                  { name: "UG", value: appointmentsUG[doc] || 0 },
-                  { name: "PG", value: appointmentsPG[doc] || 0 },
-                  { name: "PHD", value: appointmentsPHD[doc] || 0 },
-                ];
-                return (
-                  <div key={doc} className="flex flex-col items-center">
-                    <h3 className="text-lg font-semibold mb-2 text-[var(--custom-primary-green-900)]">
-                      Dr. {doc}
-                    </h3>
-                    <ResponsiveContainer width="100%" height={250}>
-                      <PieChart>
-                        <Pie
-                          data={pieData}
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                          label={({ name, percent }) =>
-                            `${name} ${(percent * 100).toFixed(0)}%`
-                          }
-                        >
-                          {pieData.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                );
-              })}
+              
+              <select
+                className="appearance-none bg-white px-4 py-2 rounded-lg border border-emerald-200 text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+              >
+                <option value="Acad Program">Academic Program</option>
+                <option value="Gender Ratio">Gender Ratio</option>
+              </select>
             </div>
           </div>
-        ) : (
-          // Render a single aggregated Bar Chart.
-          <div className="bg-[var(--custom-white)] p-2 md:p-6 rounded-xl shadow-lg mt-8">
-            <div className="flex flex-row flex-wrap justify-between">
-              <h2 className="text-xl font-semibold text-[var(--custom-primary-green-800)] mb-4">
-                Appointments per Doctor
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-xl p-6 transition-all duration-300 hover:shadow-2xl">
+          {isPie ? (
+            <div className="space-y-8">
+              <h2 className="text-2xl font-semibold text-emerald-800 mb-6">
+                Appointments Distribution by Academic Program
               </h2>
-              <div className="flex justify-end gap-8">
-                <select
-                  onChange={handleGraphTypeChange}
-                  value={isPie ? "pie" : "bar"}
-                  className="mb-10 cursor-pointer"
-                >
-                  <option value="pie">Pie Charts</option>
-                  <option value="bar">Bar Graph</option>
-                </select>
-                <select name="" id="" className="mb-10 cursor-pointer">
-                  <option value="Acad Program">Academic Program</option>
-                  <option value="Gender Ratio">Gender Ratio</option>
-                </select>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {Object.keys(appointmentsUG).map((doc) => {
+                  const pieData = [
+                    { name: "UG", value: appointmentsUG[doc] || 0 },
+                    { name: "PG", value: appointmentsPG[doc] || 0 },
+                    { name: "PHD", value: appointmentsPHD[doc] || 0 },
+                  ];
+                  
+                  return (
+                    <div key={doc} className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl">
+                      <h3 className="text-xl font-semibold mb-4 text-emerald-900 text-center">
+                        Dr. {doc}
+                      </h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                          <Pie
+                            data={pieData}
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={100}
+                            innerRadius={60}
+                            fill="#8884d8"
+                            dataKey="value"
+                            label={({ name, percent }) =>
+                              `${name} ${(percent * 100).toFixed(0)}%`
+                            }
+                          >
+                            {pieData.map((entry, index) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={COLORS[index % COLORS.length]}
+                              />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                          <Legend verticalAlign="bottom" height={36} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={histogramData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="UG" fill="#048A81" name="UG Appointments" />
-                  <Bar dataKey="PG" fill="#FFB703" name="PG Appointments" />
-                  <Bar dataKey="PHD" fill="#FB8500" name="PhD Appointments" />
-                </BarChart>
-              </ResponsiveContainer>
+          ) : (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-semibold text-emerald-800 mb-6">
+                Appointments Distribution Overview
+              </h2>
+              
+              <div className="h-[500px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={histogramData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                    <XAxis
+                      dataKey="name"
+                      tick={{ fill: '#1F2937' }}
+                      axisLine={{ stroke: '#CBD5E1' }}
+                    />
+                    <YAxis
+                      tick={{ fill: '#1F2937' }}
+                      axisLine={{ stroke: '#CBD5E1' }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                      }}
+                    />
+                    <Legend />
+                    <Bar
+                      dataKey="UG"
+                      fill="#048A81"
+                      name="UG Appointments"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="PG"
+                      fill="#FFB703"
+                      name="PG Appointments"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="PHD"
+                      fill="#FB8500"
+                      name="PhD Appointments"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </main>
+      
       <Footer color={"green"} />
     </div>
   );
