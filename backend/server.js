@@ -129,7 +129,7 @@ io.on("connection", (socket) => {
           where: {
             senderType: "doc",
             recipientId: userId,
-            senderId: doctorId
+            senderId: doctorId,
           },
           data: {
             read: true
@@ -149,10 +149,9 @@ io.on("connection", (socket) => {
         })
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-
-  })
+  });
   socket.on(
     "sendMessage",
     async ({
@@ -446,7 +445,7 @@ app.get('/countUnseen', async (req, res) => {
   console.log(userId, senderType)
   if (senderType == "user") {
     const unreadCount = await prisma.message.groupBy({
-      by: ['senderId'],
+      by: ["senderId"],
       where: {
         recipientId: Number(userId),
         senderType: "doc",
@@ -460,7 +459,7 @@ app.get('/countUnseen', async (req, res) => {
     res.json(unreadCount)
   } else if (senderType == "doc") {
     const unreadCount = await prisma.message.groupBy({
-      by: ['senderId'],
+      by: ["senderId"],
       where: {
         recipientId: Number(userId),
         read: false,
@@ -906,7 +905,7 @@ app.post("/addEvent", async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => { });
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1204,29 +1203,23 @@ app.get("/getUserFeelings", async (req, res) => {
   }
 });
 
-app.get("/getFeelings", async(req,res) => {
+app.get("/getFeelings", async (req, res) => {
   try {
     const feelings = await prisma.feelings.findMany({
       include: {
         user: true,
       },
-  });
+    });
 
     if (!feelings) {
-      return res
-        .status(404)
-        .json({ message: "No feelings found" });
+      return res.status(404).json({ message: "No feelings found" });
     }
     res.status(200).json(feelings);
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error fetching feelings:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
-
-
 
 app.post("/feelings", async (req, res) => {
   try {
@@ -1481,7 +1474,7 @@ app.post("/resetAdminPassword", async (req, res) => {
 app.post("/setRating", async (req, res) => {
   const stars = req.body["stars"];
   const id = req.body["id"];
-  const docId = req.body["doctorId"]
+  const docId = req.body["doctorId"];
 
   try {
     const response = await prisma.pastAppointments.update({
@@ -1498,18 +1491,18 @@ app.post("/setRating", async (req, res) => {
         stars: true,
       },
       where: {
-        doc_id: docId
-      }
-    })
+        doc_id: docId,
+      },
+    });
 
     const updateRating = await prisma.doctor.update({
       where: {
-        id: docId
+        id: docId,
       },
       data: {
-        avgRating: setRating._avg.stars
-      }
-    })
+        avgRating: setRating._avg.stars,
+      },
+    });
 
     // console.log(updateRating)
 
@@ -1554,11 +1547,11 @@ app.post("/save-subscription", async (req, res) => {
         // } else {
         // Create a new subscription
         const subs = await prisma.subscription.upsert({
-          where:{
+          where: {
             // OR: [
             //   {
-                // userId: Number(userid),
-                endpoint: endpoint
+            // userId: Number(userid),
+            endpoint: endpoint,
             //   }
             // ]
           },
@@ -1573,7 +1566,7 @@ app.post("/save-subscription", async (req, res) => {
             endpoint: endpoint,
             authKey: keys.auth,
             p256dhKey: keys.p256dh,
-          }
+          },
         });
         // console.log(subs)
         // }
@@ -1584,11 +1577,11 @@ app.post("/save-subscription", async (req, res) => {
     } else if (userType == "doc") {
       try {
         const subs = await prisma.subscription.upsert({
-          where:{
+          where: {
             // OR: [
             //   {
-                // userId: Number(userid),
-                endpoint: endpoint
+            // userId: Number(userid),
+            endpoint: endpoint,
             //   }
             // ]
           },
@@ -1603,7 +1596,7 @@ app.post("/save-subscription", async (req, res) => {
             endpoint: endpoint,
             authKey: keys.auth,
             p256dhKey: keys.p256dh,
-          }
+          },
         });
         res.json({ success: true });
       } catch (e) {
@@ -1946,8 +1939,8 @@ app.put("/modifyDoc", async (req, res) => {
 
     const existingDoctor = orConditions.length
       ? await prisma.doctor.findFirst({
-        where: { OR: orConditions },
-      })
+          where: { OR: orConditions },
+        })
       : null;
 
     if (existingDoctor && existingDoctor.id !== doctorId) {
@@ -2123,7 +2116,7 @@ app.post("/referrals", async (req, res) => {
   }
 
   const user_id = user.id;
-  const docId = Number(doctor_id)
+  const docId = Number(doctor_id);
   try {
     const newReferral = await prisma.referrals.create({
       data: {
@@ -2277,6 +2270,88 @@ app.post("/rating", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.json({ message: "Error adding stars" });
+  }
+});
+
+app.get("/appointments-count", async (req, res) => {
+  try {
+    const userId = Number(req.query["id"]);
+
+    if (!userId) {
+      return res.status(400).json({ error: "Invalid or missing user ID" });
+    }
+
+    const curr = await prisma.appointments.count({
+      where: {
+        user_id: userId,
+      },
+    });
+    const past = await prisma.pastAppointments.count({
+      where: {
+        user_id: userId,
+      },
+    });
+    const count = curr + past;
+    res.status(200).json({
+      message: `User ${userId} has ${count} appointments`,
+      count,
+    });
+  } catch (error) {
+    console.error("Error fetching appointment count:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/user-doctors", async (req, res) => {
+  try {
+    const userId = Number(req.query["userId"]);
+
+    if (!userId) {
+      return res.status(400).json({ error: "Invalid or missing user ID" });
+    }
+
+    // Get doctors from upcoming/current appointments
+    const current = await prisma.appointments.findMany({
+      where: { user_id: userId },
+      include: { doctor: { select: { id: true, name: true } } },
+    });
+
+    // Get doctors from past appointments
+    const past = await prisma.pastAppointments.findMany({
+      where: { user_id: userId },
+      include: {
+        doc: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    // Extract all doctor objects from both
+    const allDoctors = [
+      ...current.map((a) => a.doctor),
+      ...past.map((p) => p.doc),
+    ].filter(Boolean); // remove any nulls (if some past don't have doctors)
+
+    // Filter out duplicates by doctor id
+    const uniqueDoctorsMap = new Map();
+    allDoctors.forEach((doc) => {
+      if (doc && !uniqueDoctorsMap.has(doc.id)) {
+        uniqueDoctorsMap.set(doc.id, doc);
+      }
+    });
+
+    const uniqueDoctors = Array.from(uniqueDoctorsMap.values());
+
+    res.status(200).json({
+      message: `User ${userId} has had appointments with ${uniqueDoctors.length} doctor(s)`,
+      doctors: uniqueDoctors,
+    });
+  } catch (error) {
+    console.error("Error fetching user doctors:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
