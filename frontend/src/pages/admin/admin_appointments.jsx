@@ -128,7 +128,9 @@ const AdminAppointments = () => {
     let filtered = appointments;
 
     if (selectedDoctor !== "all") {
-      filtered = filtered.filter((app) => app.doctorId === selectedDoctor);
+      filtered = filtered.filter(
+        (app) => Number(app.doctorId) === Number(selectedDoctor)
+      );
     }
 
     if (searchUser.trim()) {
@@ -170,7 +172,7 @@ const AdminAppointments = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-12 py-6">
         <div className="flex flex-col md:flex-row items-center justify-between mb-10">
           <h1 className="text-3xl md:text-4xl text-center font-extrabold text-gray-900 flex items-center gap-4">
-            <Calendar className="h-10 w-10 text-blue-600 animate-pulse" />
+            <Calendar className="h-10 w-10 text-blue-600 " />
             Appointments Dashboard
           </h1>
           <select
