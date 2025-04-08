@@ -1,85 +1,124 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Calendar, Users, Clock, Search, User, Stethoscope, CalendarClock, CheckCircle2, Clock3, AlertCircle, X } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  Clock,
+  Search,
+  User,
+  Stethoscope,
+  CalendarClock,
+  CheckCircle2,
+  Clock3,
+  AlertCircle,
+  X,
+} from "lucide-react";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
-
+import { useNavigate } from "react-router-dom";
+import { checkAuth } from "../../utils/profile";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import SessionExpired from "../../components/SessionExpired";
 
 const History = () => {
-  const [app, setApp] = useState([])
+  const [app, setApp] = useState([]);
   const [showFollowupModal, setShowFollowupModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [followupDate, setFollowupDate] = useState("");
   const [followupTime, setFollowupTime] = useState("");
   const [searchUser, setSearchUser] = useState("");
-  const [reason, setReason] = useState("")
+  const [reason, setReason] = useState("");
+  const [fetched, setfetched] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth("admin");
+      setIsAuthenticated(authStatus);
+    };
+    verifyAuth();
+  }, []);
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  const minDate = tomorrow.toISOString().split('T')[0];
+  const minDate = tomorrow.toISOString().split("T")[0];
 
   const getPastAppointments = async () => {
-    const docId = localStorage.getItem("userid")
-    const response = await fetch(`https://built-it-backend.onrender.com/pastdocappt?doctorId=${docId}`)
-    const data = await response.json()
-    setApp(data)
-  }
+    try {
+      const docId = localStorage.getItem("userid");
+      const response = await fetch(
+        `https://built-it-backend.onrender.com/pastdocappt?doctorId=${docId}`
+      );
+      const data = await response.json();
+      setApp(data);
+      setfetched(true);
+    } catch (e) {
+      console.error(e);
+      setfetched(false);
+    }
+  };
 
   const handleFollowup = async (appointment) => {
     setSelectedAppointment(appointment);
     setShowFollowupModal(true);
-  }
+  };
 
   const handleSubmitFollowup = async () => {
     try {
-      const datetime = new Date(`${followupDate}T${followupTime}`).toISOString();
-      const response = await fetch('https://built-it-backend.onrender.com/request-to-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          doctorId: localStorage.getItem("userid"),
-          userId: selectedAppointment.user.id,
-          dateTime: datetime,
-          reason: reason
-        }),
-      });
+      const datetime = new Date(
+        `${followupDate}T${followupTime}`
+      ).toISOString();
+      const response = await fetch(
+        "https://built-it-backend.onrender.com/request-to-user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            doctorId: localStorage.getItem("userid"),
+            userId: selectedAppointment.user.id,
+            dateTime: datetime,
+            reason: reason,
+          }),
+        }
+      );
 
       if (response.ok) {
         // alert('Follow-up appointment scheduled successfully!');
-        const notif = await fetch("https://built-it-backend.onrender.com/send-notification", {
-          method: "POST",
-          headers: { "Content-type": "Application/json" },
-          body: JSON.stringify({
-            userId: selectedAppointment.user.id,
-            message: "Doctor has requested an appointment with you",
-            userType: "user"
-          })
-        })
+        const notif = await fetch(
+          "https://built-it-backend.onrender.com/send-notification",
+          {
+            method: "POST",
+            headers: { "Content-type": "Application/json" },
+            body: JSON.stringify({
+              userId: selectedAppointment.user.id,
+              message: "Doctor has requested an appointment with you",
+              userType: "user",
+            }),
+          }
+        );
         setShowFollowupModal(false);
         setFollowupDate("");
         setFollowupTime("");
         setSelectedAppointment(null);
       } else {
-        alert('Failed to schedule follow-up appointment');
+        alert("Failed to schedule follow-up appointment");
       }
     } catch (error) {
-      console.error('Error scheduling follow-up:', error);
-      alert('Error scheduling follow-up appointment');
+      console.error("Error scheduling follow-up:", error);
+      alert("Error scheduling follow-up appointment");
     }
   };
 
+  useEffect(() => {
+    getPastAppointments();
+  }, []);
 
   useEffect(() => {
-    getPastAppointments()
-  }, [])
-
-  useEffect(() => {
-    console.log(app)
-  }, [app])
-
-
+    console.log(app);
+  }, [app]);
 
   const filteredAppointments = useMemo(() => {
     let filtered = app;
@@ -97,7 +136,7 @@ const History = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-teal-50">
       <DoctorNavbar />
-  
+
       <main className="max-w-7xl mt-8 mx-auto px-4 sm:px-6 lg:px-8 md:py-6 mb-6">
         {/* Appointments List */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
@@ -127,13 +166,15 @@ const History = () => {
                   <div className="flex-1 bg-gradient-to-br from-blue-50/50 to-transparent p-1 rounded-xl">
                     <div className="flex items-center gap-3 mb-1">
                       <User className="h-5 w-5 text-blue-600" />
-                      <h3 className="font-semibold text-gray-900">Patient Details</h3>
+                      <h3 className="font-semibold text-gray-900">
+                        Patient Details
+                      </h3>
                     </div>
                     <p className="text-md font-medium text-blue-900 mb-1">
                       {appointment.user.username}
                     </p>
                   </div>
-  
+
                   {/* Doctor Info */}
                   <div className="flex-1 bg-gradient-to-br from-green-50/50 to-transparent p-1 rounded-xl">
                     <div className="flex items-center gap-3 mb-1">
@@ -144,22 +185,27 @@ const History = () => {
                       {appointment.note}
                     </p>
                   </div>
-  
+
                   {/* Appointment Info */}
                   <div className="flex-1 bg-gradient-to-br from-purple-50/50 to-transparent p-1 rounded-xl">
                     <div className="flex items-center gap-3 mb-1">
                       <CalendarClock className="h-5 w-5 text-purple-600" />
-                      <h3 className="font-semibold text-gray-900">Appointment Details</h3>
+                      <h3 className="font-semibold text-gray-900">
+                        Appointment Details
+                      </h3>
                     </div>
                     <div className="flex flex-col items-start sm:flex-row sm:items-center justify-between">
                       <div>
                         <p className="text-md font-medium text-purple-900 mb-1">
-                          {format(new Date(appointment.createdAt), "dd MMM yyyy")}
+                          {format(
+                            new Date(appointment.createdAt),
+                            "dd MMM yyyy"
+                          )}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div className="flex sm:justify-end lg:justify-center sm:absolute sm:z-10 sm:bottom-8 sm:right-6 lg:relative lg:bottom-0 lg:right-0">
+                  <div className="flex sm:justify-end lg:justify-center sm:absolute sm:bottom-8 sm:right-6 lg:relative lg:bottom-0 lg:right-0">
                     <button
                       className="cursor-pointer h-11 w-30 px-3 py-2 mt-3 rounded-lg bg-white shadow-sm border font-semibold border-gray-100"
                       onClick={() => handleFollowup(appointment)}
@@ -173,7 +219,7 @@ const History = () => {
           </div>
         </div>
       </main>
-  
+
       {showFollowupModal && (
         <div className="fixed inset-0 bg-blue-100 bg-opacity-40 backdrop-blur-md flex items-center justify-center p-4 z-50 transition-all duration-300">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform scale-95 animate-modal-in border border-gray-100">
@@ -188,7 +234,7 @@ const History = () => {
                 <X className="h-6 w-6" />
               </button>
             </div>
-  
+
             <div className="space-y-6">
               <div className="relative group">
                 <label className="block text-sm font-semibold text-gray-700 mb-2 transition-colors group-hover:text-teal-600">
@@ -202,7 +248,7 @@ const History = () => {
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 hover:border-teal-300 shadow-sm text-gray-700"
                 />
               </div>
-  
+
               <div className="relative group">
                 <label className="block text-sm font-semibold text-gray-700 mb-2 transition-colors group-hover:text-teal-600">
                   Select Time
@@ -214,7 +260,7 @@ const History = () => {
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 hover:border-teal-300 shadow-sm text-gray-700"
                 />
               </div>
-  
+
               <div className="relative group">
                 <label className="block text-sm font-semibold text-gray-700 mb-2 transition-colors group-hover:text-teal-600">
                   Enter Reason
@@ -226,7 +272,7 @@ const History = () => {
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 hover:border-teal-300 shadow-sm text-gray-700"
                 />
               </div>
-  
+
               <div className="flex justify-end gap-4 mt-8">
                 <button
                   onClick={() => setShowFollowupModal(false)}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { User, CircleUser, Clock, Phone, FileText } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import emailjs from "@emailjs/browser";
-import { DateTimePicker } from "../../components/doctor/DateTimePicker";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
 import PacmanLoader from "react-spinners/PacmanLoader";

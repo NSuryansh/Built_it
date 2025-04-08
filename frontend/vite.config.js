@@ -22,6 +22,9 @@ export default defineConfig({
         name: "Vitality",
         short_name: "Vitality"
       },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB
+      },
     })
   ],
 })
