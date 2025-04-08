@@ -34,7 +34,7 @@ const History = () => {
 
   useEffect(() => {
     const verifyAuth = async () => {
-      const authStatus = await checkAuth("admin");
+      const authStatus = await checkAuth("doc");
       setIsAuthenticated(authStatus);
     };
     verifyAuth();
@@ -309,7 +309,8 @@ const History = () => {
           </div>
         </div>
       )}
-      <Footer color="green" />
+      <div className="mt-auto"></div>
+      <Footer color="blue" />
     </div>
   );
 };
