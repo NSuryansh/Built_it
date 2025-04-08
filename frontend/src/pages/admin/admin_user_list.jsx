@@ -1,82 +1,71 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Users, Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 
-const fetchUsers = async () => {
-  const res = await fetch("http://localhost:3000/getUsers");
-  const userData = await res.json();
-  return userData;
-};
-
-const fetchUserAppointmentData = async (usersData) => {
-  const result = await Promise.all(
-    usersData.map(async (user) => {
-      const userId = user.id;
-
-      try {
-        // Fetch appointment count
-        const countRes = await fetch(
-          `http://localhost:3000/appointments-count?id=${userId}`
-        );
-        const countData = await countRes.json();
-        const appointmentCount = countData.count || 0;
-
-        // Fetch doctors
-        const doctorRes = await fetch(
-          `http://localhost:3000/user-doctors?userId=${userId}`
-        );
-        const doctorData = await doctorRes.json();
-        const doctors = doctorData.doctors || [];
-
-        // Combine results
-        return {
-          userId,
-          appointmentCount,
-          doctors,
-        };
-      } catch (err) {
-        console.error(`Error fetching data for user ${userId}:`, err);
-        return {
-          userId,
-          appointmentCount: 0,
-          doctors: [],
-        };
-      }
-    })
-  );
-
-  return result;
-};
-
-const get_data = async() => {
- const usersData = await fetchUsers();
- console.log("ALL DA USERS R: ", usersData);
- const userCounts = await fetchUserAppointmentData(usersData);
- console.log(userCounts);
-}
-get_data();
-
-
-function User() {
+const User = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [usersData, setUsersData] = useState([]);
+  const [userCounts, setUserCounts] = useState([]);
   const [filterDegree, setFilterDegree] = useState("all");
   const [sortConfig, setSortConfig] = useState({
     key: "appointmentsCount",
     direction: "desc",
   });
 
-  // Get unique degrees for filter dropdown
-  const degrees = useMemo(() => {
-    return ["all", ...new Set(usersData.map((user) => user.acadProg))];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/getUsers");
+        const data = await res.json();
+        setUsersData(data);
+
+        const counts = await Promise.all(
+          data.map(async (user) => {
+            const userId = user.id;
+            try {
+              const [countRes, doctorRes] = await Promise.all([
+                fetch(`http://localhost:3000/appointments-count?id=${userId}`),
+                fetch(`http://localhost:3000/user-doctors?userId=${userId}`),
+              ]);
+
+              const countData = await countRes.json();
+              const doctorData = await doctorRes.json();
+
+              return {
+                userId,
+                appointmentCount: countData.count || 0,
+                doctors: doctorData.doctors || [],
+              };
+            } catch (error) {
+              console.error(`Failed to fetch data for user ${userId}:`, error);
+              return {
+                userId,
+                appointmentCount: 0,
+                doctors: [],
+              };
+            }
+          })
+        );
+
+        setUserCounts(counts);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  console.log("HAHAHAHAHHA I AM WORKING", usersData);
-  // Filter and sort users
+  const degrees = useMemo(
+    () => ["all", ...new Set(usersData.map((user) => user.acadProg))],
+    [usersData]
+  );
+
   const filteredAndSortedUsers = useMemo(() => {
     return usersData
       .map((user) => {
-        const userData = userCounts.find((u) => u.id === user.id);
+        const userData = userCounts.find((u) => u.userId === user.id);
         return {
           ...user,
           appointmentCount: userData?.appointmentCount || 0,
@@ -88,10 +77,12 @@ function User() {
         const matchesSearch =
           user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.doctors.some((doc) =>
-            doc.toLowerCase().includes(searchTerm.toLowerCase())
+            doc.name?.toLowerCase().includes(searchTerm.toLowerCase())
           );
+
         const matchesDegree =
           filterDegree === "all" || user.degree === filterDegree;
+
         return matchesSearch && matchesDegree;
       })
       .sort((a, b) => {
@@ -103,16 +94,6 @@ function User() {
         return 0;
       });
   }, [usersData, userCounts, searchTerm, filterDegree, sortConfig]);
-
-  const filteredUserCounts = useMemo(() => {
-    return userCounts.filter((uc) =>
-      filteredAndSortedUsers.some((user) => user.id === uc.userId)
-    );
-  }, [userCounts, filteredAndSortedUsers]);
-
-  // console.log("IAM NORMAL STUFF", userCounts);
-  // console.log("IAM FILTERED STUFF", filteredAndSortedUsers);
-  // console.log("IAM FILTERED counts wowoow", filteredUserCounts);
 
   const handleSort = () => {
     setSortConfig((current) => ({
@@ -126,7 +107,6 @@ function User() {
       <AdminNavbar />
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="bg-[var(--custom-primary-green-200)] rounded-2xl shadow-lg overflow-hidden">
-          {/* Header */}
           <div className="bg-[var(--custom-primary-green-900)] px-6 py-8">
             <div className="flex items-center">
               <Users className="h-12 w-12 text-white" />
@@ -139,7 +119,6 @@ function User() {
             </div>
           </div>
 
-          {/* Search and Filters */}
           <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="relative flex-1">
@@ -171,31 +150,20 @@ function User() {
             </div>
           </div>
 
-          {/* Table */}
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     User
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Degree
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Doctors
                   </th>
                   <th
-                    scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                     onClick={handleSort}
                   >
@@ -224,19 +192,12 @@ function User() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-500">
-                        {filteredUserCounts
-                          .find((item) => item.userId === user.id)
-                          .doctors.map((doc) => doc.name)
-                          .join(", ")}
+                        {user.doctors.map((doc) => doc.name).join(", ")}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-[var(--custom-primary-green-900)]">
-                        {
-                          filteredUserCounts.find(
-                            (item) => item.userId === user.id
-                          ).appointmentCount
-                        }
+                        {user.appointmentCount}
                       </div>
                     </td>
                   </tr>
@@ -249,6 +210,6 @@ function User() {
       <Footer color="green" />
     </div>
   );
-}
+};
 
 export default User;
