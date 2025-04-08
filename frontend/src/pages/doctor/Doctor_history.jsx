@@ -119,7 +119,7 @@ const History = () => {
             </div>
           </div>
           <div className="divide-y divide-gray-100 flex flex-col items-center gap-1">
-            {app.map((appointment) => (
+            {filteredAppointments.map((appointment) => (
               <div
                 key={appointment.id}
                 className="p-6 px-8 rounded-xl w-full lg:w-[95%] hover:bg-blue-100 bg-blue-50 scale-[0.9] md:scale-[0.95] lg:scale-[1] transition-all duration-200"
