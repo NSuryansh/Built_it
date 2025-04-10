@@ -39,9 +39,9 @@ const EventsDisplay = () => {
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap items-center gap-4 text-[var(--events-display-gray-600)]">
+              <div className="mt-4 flex flex-wrap items-center gap-1 sm:gap-4 xl:gap-1 text-[var(--events-display-gray-600)]">
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-full bg-[var(--mp-custom-peach)] group-hover:bg-white">
+                  <div className="p-1 rounded-full bg-[var(--mp-custom-peach)]">
                     <Calendar className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium">
@@ -49,7 +49,7 @@ const EventsDisplay = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-full bg-[var(--mp-custom-peach)] group-hover:bg-white">
+                  <div className="p-1 rounded-full bg-[var(--mp-custom-peach)]">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium">{event.venue}</span>
