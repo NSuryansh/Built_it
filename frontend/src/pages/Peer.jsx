@@ -397,6 +397,7 @@ const Peer = () => {
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
+                  unread={unread.map((mes) => mes._count._all)}
                 />
               </div>
             </>
@@ -489,6 +490,7 @@ const Peer = () => {
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
+                  unread={unread.map((mes) => mes._count._all)}
                   className="space-y-2 p-4"
                 />
               </>
