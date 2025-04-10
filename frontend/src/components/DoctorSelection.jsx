@@ -2,7 +2,7 @@ import { Mail, Phone, Stethoscope, User } from "lucide-react";
 
 const DoctorSelectionStep = ({ doctors, onSelect }) => {
   return (
-    <div className="bg-[var(--custom-white)] w-full max-w-[1200px] p-2 md:p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
+    <div className="bg-[var(--custom-white)] w-full max-w-[1200px] p-2 md:p-8 rounded-xl md:rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-md">
       {/* <div className="flex items-center justify-center gap-3 mb-4 md:mb-8">
         <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
         <h2 className="text-center font-bold text-3xl text-[var(--custom-orange-500)] uppercase">

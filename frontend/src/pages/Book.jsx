@@ -160,7 +160,7 @@ const Book = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex justify-center items-center px-2 sm:px-6 md:px-10 py-12">
-        <div className="w-full max-w-full bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-2 md:p-10 border border-orange-200/50 transition-all duration-500 hover:shadow-3xl">
+        <div className="w-full max-w-full bg-white/70 backdrop-blur-lg rounded-xl md:rounded-3xl shadow-2xl px-2 py-6 md:p-10 border border-orange-200/50 transition-all duration-500 hover:shadow-3xl">
           {/* Step Indicator */}
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-4">

@@ -143,7 +143,8 @@ const SignUp = () => {
     return exportedAsBase64.match(/.{1,64}/g).join("\n");
   }
 
-  async function handleInitialSignup() {
+  async function handleInitialSignup(e) {
+    e.preventDefault();
     setError("");
 
     // Validate required fields

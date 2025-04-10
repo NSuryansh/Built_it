@@ -24,7 +24,7 @@ model User {
   feelings    feelings?
   invite      Notifications[]      @relation("ChatInvite")
   notif       Notifications[]      @relation("User")
-  resetTokens PasswordResetToken[]
+  // resetTokens PasswordResetToken[]
   pastApp     PastAppointments[]
   referral    Referrals[]
   request     Requests[]
@@ -37,7 +37,7 @@ model PasswordResetToken {
   token     String   @unique
   expiresAt DateTime
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  // user      User     @relation(fields: [userId], references: [id])
 
   @@map("passwordResetToken")
 }
