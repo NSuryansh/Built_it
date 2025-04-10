@@ -180,6 +180,7 @@ const Peer = () => {
       encryptedAESKey,
       senderType,
     }) => {
+      console.log("HALLO - Raw event data:", data);
       console.log("HALLO")
       const decrypted = await decryptMessage(
         encryptedText,
@@ -201,7 +202,7 @@ const Peer = () => {
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
-  }, [aesKey, isAuthenticated, showMessages]);
+  }, [aesKey, isAuthenticated]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

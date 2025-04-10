@@ -3,44 +3,6 @@ import { Calendar, MapPin } from "lucide-react";
 import { format } from "date-fns";
 
 const EventsDisplay = () => {
-  // const events = [
-  //   {
-  //     name: "Interactive Session",
-  //     detail: "Join us for an interactive session on mental health",
-  //     date: "2022-10-10",
-  //     time: "10:00 AM",
-  //     location: "Zoom",
-  //   },
-  //   {
-  //     name: "Yoga Session",
-  //     detail: "Join us for a rejuvenating yoga session",
-  //     date: "2022-10-12",
-  //     time: "8:00 AM",
-  //     location: "Community Center",
-  //   },
-  //   {
-  //     name: "Yoga Session",
-  //     detail: "Join us for a rejuvenating yoga session",
-  //     date: "2022-10-12",
-  //     time: "8:00 AM",
-  //     location: "Community Center",
-  //   },
-  //   {
-  //     name: "Yoga Session",
-  //     detail: "Join us for a rejuvenating yoga session",
-  //     date: "2022-10-12",
-  //     time: "8:00 AM",
-  //     location: "Community Center",
-  //   },
-  //   {
-  //     name: "Yoga Session",
-  //     detail: "Join us for a rejuvenating yoga session",
-  //     date: "2022-10-12",
-  //     time: "8:00 AM",
-  //     location: "Community Center",
-  //   },
-  // ];
-
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const fetchEvents = async () => {

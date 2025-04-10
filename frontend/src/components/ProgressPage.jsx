@@ -19,7 +19,7 @@ const ProgressPage = ({ isLandingPage }) => {
         }
 
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setScores({
           mental_health_score: data.mental_health_score || 0,
           stress_score: data.stress_score || 0,
@@ -28,7 +28,7 @@ const ProgressPage = ({ isLandingPage }) => {
         });
       } catch (error) {
         console.error("Error in fetching scores: ", error.message);
-        CustomToast("Error while processing your message");
+        CustomToast("Error while fetching scores");
       }
     };
 
