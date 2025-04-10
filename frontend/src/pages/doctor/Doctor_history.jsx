@@ -48,7 +48,7 @@ const History = () => {
     try {
       const docId = localStorage.getItem("userid");
       const response = await fetch(
-        `https://built-it-backend.onrender.com/pastdocappt?doctorId=${docId}`
+        `http://localhost:3000/pastdocappt?doctorId=${docId}`
       );
       const data = await response.json();
       setApp(data);
@@ -70,7 +70,7 @@ const History = () => {
         `${followupDate}T${followupTime}`
       ).toISOString();
       const response = await fetch(
-        "https://built-it-backend.onrender.com/request-to-user",
+        "http://localhost:3000/request-to-user",
         {
           method: "POST",
           headers: {
@@ -88,7 +88,7 @@ const History = () => {
       if (response.ok) {
         // alert('Follow-up appointment scheduled successfully!');
         const notif = await fetch(
-          "https://built-it-backend.onrender.com/send-notification",
+          "http://localhost:3000/send-notification",
           {
             method: "POST",
             headers: { "Content-type": "Application/json" },

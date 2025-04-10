@@ -8,6 +8,7 @@ import {
   Stethoscope,
   User,
   Calendar,
+  Loader,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
@@ -19,6 +20,8 @@ const BookingFormStep = ({
   onBack,
   selectedDoctor,
   isAuthenticated,
+  isLoading,
+  setisLoading,
 }) => {
   const [slots, setAvailableSlots] = useState([]);
   const [date, setSelectedDate] = useState("");
@@ -27,7 +30,7 @@ const BookingFormStep = ({
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `https://built-it-backend.onrender.com/available-slots?date=${date}&docId=${doctorId}`
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);
@@ -49,15 +52,18 @@ const BookingFormStep = ({
   //to get notifs for incoming requests
   const sendNotif = async () => {
     try {
-      const res = await fetch("https://built-it-backend.onrender.com/send-notification", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userid: selectedDoctor.id,
-          message: `You have a new incoming appointment request!`,
-          userType: "doc",
-        }),
-      });
+      const res = await fetch(
+        "http://localhost:3000/send-notification",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userid: selectedDoctor.id,
+            message: `You have a new incoming appointment request!`,
+            userType: "doc",
+          }),
+        }
+      );
 
       if (res.ok) {
         console.log("HALLELUJAH");
@@ -87,7 +93,10 @@ const BookingFormStep = ({
         </div>
       </div>
 
-      <form onSubmit={onSubmit} className="space-y-6 max-w-3xl mx-auto">
+      <form
+        onSubmit={!isLoading ? (e) => onSubmit(e) : null}
+        className="space-y-6 max-w-3xl mx-auto"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="group">
             <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
@@ -100,9 +109,8 @@ const BookingFormStep = ({
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               placeholder="Enter your full name"
               required
               disabled={isAuthenticated}
@@ -120,9 +128,8 @@ const BookingFormStep = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               placeholder="Enter your email"
               required
               disabled={isAuthenticated}
@@ -140,9 +147,8 @@ const BookingFormStep = ({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                }`}
               placeholder="Enter your phone number"
               required
               disabled={isAuthenticated}
@@ -247,14 +253,21 @@ const BookingFormStep = ({
           </button>
 
           <button
-            onClick={() => {
-              sendNotif();
-            }}
+            disabled={isLoading}
+            onClick={sendNotif}
             type="submit"
             className="flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-[var(--custom-orange-500)] text-white font-semibold hover:bg-[var(--custom-orange-600)] transform hover:scale-[1.02] transition-all duration-200"
           >
-            <Check className="w-4 h-4" />
-            Confirm Booking
+            {isLoading ? (
+              <div>
+                <Loader />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                <Check className="w-4 h-4" />
+                Confirm Booking
+              </div>
+            )}
           </button>
         </div>
       </form>

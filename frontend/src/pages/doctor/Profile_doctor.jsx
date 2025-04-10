@@ -61,10 +61,10 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `https://built-it-backend.onrender.com/getDoc?docId=${doctorId}`
+          `http://localhost:3000/getDoc?docId=${doctorId}`
         );
         const response2 = await fetch(
-          `https://built-it-backend.onrender.com/available-slots?date=${date}&docId=${doctorId}`
+          `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
         );
         const data = await response.json();
         console.log(data);
@@ -179,7 +179,7 @@ const DoctorProfile = () => {
       formData.append("certifi", editedProfile.certifications);
       formData.append("image", file);
       const response = await fetch(
-        `https://built-it-backend.onrender.com/modifyDoc`,
+        `http://localhost:3000/modifyDoc`,
         {
           method: "PUT",
           body: formData,
@@ -275,9 +275,8 @@ const DoctorProfile = () => {
             <div className="flex flex-col md:flex-row items-center space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
-                  isEditing ? "cursor-pointer" : ""
-                }`}
+                className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
+                  }`}
               >
                 {profileImage ? (
                   <img
@@ -517,14 +516,14 @@ const DoctorProfile = () => {
                             />
                             {index ===
                               editedProfile.availability.length - 1 && (
-                              <button
-                                onClick={handleAddSlot}
-                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Slot
-                              </button>
-                            )}
+                                <button
+                                  onClick={handleAddSlot}
+                                  className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
+                                >
+                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                  Add Slot
+                                </button>
+                              )}
                           </div>
                         ))}
                       </div>
@@ -634,14 +633,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                            <button
-                              onClick={handleAddCertification}
-                              className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
-                            >
-                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                              Add Certification
-                            </button>
-                          )}
+                              <button
+                                onClick={handleAddCertification}
+                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
+                              >
+                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                Add Certification
+                              </button>
+                            )}
                         </div>
                       </div>
                     ))}

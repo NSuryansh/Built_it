@@ -41,7 +41,7 @@ const AdminUser = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          "https://built-it-backend.onrender.com/getUsers"
+          "http://localhost:3000/getUsers"
         );
         const data = await res.json();
         setUsersData(data);
@@ -52,10 +52,10 @@ const AdminUser = () => {
             try {
               const [countRes, doctorRes] = await Promise.all([
                 fetch(
-                  `https://built-it-backend.onrender.com/appointments-count?id=${userId}`
+                  `http://localhost:3000/appointments-count?id=${userId}`
                 ),
                 fetch(
-                  `https://built-it-backend.onrender.com/user-doctors?userId=${userId}`
+                  `http://localhost:3000/user-doctors?userId=${userId}`
                 ),
               ]);
 
@@ -204,11 +204,10 @@ const AdminUser = () => {
                     onClick={header === "Appointments" ? handleSort : undefined}
                   >
                     <div
-                      className={`flex items-center gap-2 ${
-                        header === "Appointments"
+                      className={`flex items-center gap-2 ${header === "Appointments"
                           ? "cursor-pointer hover:text-[var(--custom-primary-green-700)]"
                           : ""
-                      }`}
+                        }`}
                     >
                       {header}
                       {header === "Appointments" && (

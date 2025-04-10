@@ -60,13 +60,13 @@ const Events = () => {
   }
 
   async function getCurrEvents() {
-    const res = await fetch("https://built-it-backend.onrender.com/events");
+    const res = await fetch("http://localhost:3000/events");
     const resp = await res.json();
     setCurrentEvents(resp);
   }
 
   async function getPastEvents() {
-    const res = await fetch("https://built-it-backend.onrender.com/getPastEvents");
+    const res = await fetch("http://localhost:3000/getPastEvents");
     const resp = await res.json();
     setPastEvents(resp);
   }
@@ -99,7 +99,7 @@ const Events = () => {
       <Navbar />
 
       <main className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 flex justify-center"

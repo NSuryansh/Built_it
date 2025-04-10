@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, Eye, EyeOff } from "lucide-react";
+import { Lock, Eye, EyeOff, Loader } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
@@ -15,6 +15,7 @@ const Login = () => {
   const [showForgotModal, setShowForgotModal] = useState(false);
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -38,20 +39,25 @@ const Login = () => {
     );
   }
 
-  const handlelogin = async () => {
+  const handlelogin = async (e) => {
+    e.preventDefault();
+    setisLoading(true);
     if (username === "" || password === "") {
       setError("Please fill the fields");
       return;
     }
     setError("");
-    const response = await fetch("https://built-it-backend.onrender.com/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    });
+    const response = await fetch(
+      "http://localhost:3000/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      }
+    );
     const res = await response.json();
 
     // const data = await res.json();
@@ -67,6 +73,7 @@ const Login = () => {
     } else {
       CustomToast(res["message"]);
     }
+    setisLoading(false);
   };
 
   const handleForgotPassword = async () => {
@@ -74,13 +81,16 @@ const Login = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch("https://built-it-backend.onrender.com/forgotPassword", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
+    const response = await fetch(
+      "http://localhost:3000/forgotPassword",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    );
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
@@ -156,10 +166,11 @@ const Login = () => {
         </div>
 
         <button
+        disabled={isLoading}
           onClick={handlelogin}
-          className="w-full mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
+          className="w-full flex justify-center items-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
         >
-          Login
+          {isLoading ? <Loader /> : <>Login</>}
         </button>
         <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
           If not registered{" "}

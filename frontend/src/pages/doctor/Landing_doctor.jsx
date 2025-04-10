@@ -45,7 +45,7 @@ const DoctorLanding = () => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch(
-          `https://built-it-backend.onrender.com/currentdocappt?doctorId=${docId}`
+          `http://localhost:3000/currentdocappt?doctorId=${docId}`
         );
         const data = await response.json();
 
@@ -81,7 +81,7 @@ const DoctorLanding = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("https://built-it-backend.onrender.com/events");
+        const response = await fetch("http://localhost:3000/events");
         const data = await response.json();
 
         const formattedEvents = data.map((event) => {
@@ -112,7 +112,7 @@ const DoctorLanding = () => {
   useEffect(() => {
     setNewAppoinments(appointments.slice(0, 5));
   }, [appointments])
-  
+
 
   if (isAuthenticated === null) {
     return (
@@ -163,13 +163,13 @@ const DoctorLanding = () => {
       y: 0
     }
   };
- 
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50">
       <DoctorNavbar className="shadow-sm" />
       <ToastContainer position="top-right" />
-  
-      <motion.div 
+
+      <motion.div
         className="flex-1 px-4 sm:px-6 lg:px-8 py-8"
         initial="hidden"
         animate="visible"
@@ -177,7 +177,7 @@ const DoctorLanding = () => {
       >
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
-          <motion.div 
+          <motion.div
             className="mb-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
             variants={itemVariants}
           >
@@ -195,7 +195,7 @@ const DoctorLanding = () => {
                 </p>
               </div>
               <div className="hidden md:flex items-center space-x-4">
-                <motion.div 
+                <motion.div
                   className="flex items-center p-3 bg-blue-50 rounded-xl"
                   whileHover={{ scale: 1.05 }}
                 >
@@ -205,7 +205,7 @@ const DoctorLanding = () => {
                     <p className="text-2xl font-bold text-blue-600">{appointments.length}</p>
                   </div>
                 </motion.div>
-                <motion.div 
+                <motion.div
                   className="flex items-center p-3 bg-green-50 rounded-xl"
                   whileHover={{ scale: 1.05 }}
                 >
@@ -218,10 +218,10 @@ const DoctorLanding = () => {
               </div>
             </div>
           </motion.div>
-  
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Calendar Card */}
-            <motion.div 
+            <motion.div
               className="lg:col-span-1"
               variants={itemVariants}
             >
@@ -233,9 +233,9 @@ const DoctorLanding = () => {
                 <DoctorCalendar className="w-full" />
               </div>
             </motion.div>
-  
+
             {/* Appointments Card */}
-            <motion.div 
+            <motion.div
               className="lg:col-span-2"
               variants={itemVariants}
             >
@@ -252,7 +252,7 @@ const DoctorLanding = () => {
                     View All <ChevronRight className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
-  
+
                 <div className="space-y-4">
                   <AnimatePresence>
                     {newAppoinments.map((appointment, index) => (
@@ -289,9 +289,9 @@ const DoctorLanding = () => {
                 </div>
               </div>
             </motion.div>
-  
+
             {/* Events Card */}
-            <motion.div 
+            <motion.div
               className="lg:col-span-3"
               variants={itemVariants}
             >
@@ -302,7 +302,7 @@ const DoctorLanding = () => {
                     Upcoming Events
                   </h2>
                 </div>
-  
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <AnimatePresence>
                     {events.map((event, index) => (
@@ -341,7 +341,7 @@ const DoctorLanding = () => {
           </div>
         </div>
       </motion.div>
-  
+
       <Footer color={"blue"} className="mt-8" />
     </div>
   );

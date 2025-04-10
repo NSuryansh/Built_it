@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, Eye, EyeOff } from "lucide-react";
+import { Lock, Eye, EyeOff, Loader } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
@@ -14,6 +14,7 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -32,9 +33,7 @@ const AdminLogin = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <PacmanLoader color="#047857" size={30} />
-        <p className="mt-4 text-emerald-800 font-medium">
-          Loading...
-        </p>
+        <p className="mt-4 text-emerald-800 font-medium">Loading...</p>
       </div>
     );
   }
@@ -46,20 +45,26 @@ const AdminLogin = () => {
       return;
     }
     setError("");
-    const response = await fetch("https://built-it-backend.onrender.com/adminLogin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
+    setisLoading(true);
+    const response = await fetch(
+      "http://localhost:3000/adminLogin",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      }
+    );
     const res = await response.json();
 
     if (res["message"] === "Login successful") {
       localStorage.setItem("token", res["token"]);
+      setisLoading(false);
       navigate("/admin/dashboard");
     } else {
+      setisLoading(false);
       CustomToast(res["message"]);
     }
   };
@@ -69,13 +74,16 @@ const AdminLogin = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch("https://built-it-backend.onrender.com/forgotAdminPassword", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
+    const response = await fetch(
+      "http://localhost:3000/forgotAdminPassword",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    );
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
@@ -152,10 +160,11 @@ const AdminLogin = () => {
           </div>
 
           <button
+            disabled={isLoading}
             type="submit"
             className="w-full py-3 px-4 bg-[var(--custom-primary-green-600)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:ring-offset-2"
           >
-            Login
+            {isLoading ? <Loader /> : <>Login</>}
           </button>
         </form>
         <div className="flex justify-center mt-4 mb-2 items-center text-[var(--login-light-text)]">

@@ -53,7 +53,7 @@ const AdminAppointments = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "https://built-it-backend.onrender.com/getdoctors"
+          "http://localhost:3000/getdoctors"
         );
         const data = await res.json();
         const formattedData = data.map((doc) => ({
@@ -71,7 +71,7 @@ const AdminAppointments = () => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          "https://built-it-backend.onrender.com/all-appointments"
+          "http://localhost:3000/all-appointments"
         );
         const data = await res.json();
         const formattedCurData = data.appts.map((appt) => ({
@@ -435,13 +435,12 @@ const AdminAppointments = () => {
                     <div className="flex h-fit self-center items-center gap-2 px-4 py-2 rounded-lg bg-white shadow-sm border border-gray-100">
                       {getStatusIcon(appointment.status)}
                       <span
-                        className={`text-sm font-medium ${
-                          appointment.status === "Confirmed"
+                        className={`text-sm font-medium ${appointment.status === "Confirmed"
                             ? "text-green-600"
                             : appointment.status === "Pending"
-                            ? "text-yellow-600"
-                            : "text-red-600"
-                        }`}
+                              ? "text-yellow-600"
+                              : "text-red-600"
+                          }`}
                       >
                         {appointment.status}
                       </span>

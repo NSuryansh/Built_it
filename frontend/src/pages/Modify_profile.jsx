@@ -53,7 +53,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   const onSave = async (dataToSend) => {
     try {
       const response = await fetch(
-        "https://built-it-backend.onrender.com/modifyUser",
+        "http://localhost:3000/modifyUser",
         {
           method: "PUT", // Use PUT to modify user details
           headers: {
