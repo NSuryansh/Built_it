@@ -12,12 +12,12 @@ export default function ChatList({
   return (
     <div className="bg-[var(--mp-custom-white)] border-r border-[var(--mp-custom-gray-200)] overflow-y-auto">
       <div
-        className={`${isDoc ? "bg-blue-100" : "bg-[var(--mp-custom-peach)]"}`}
+        className={`${isDoc ? "bg-blue-200" : "bg-[var(--mp-custom-peach)]"}`}
       >
         <div className="p-4 border-b border-[var(--mp-custom-gray-200)]">
           <h1
             className={`text-2xl font-bold ${
-              isDoc ? "text-blue-500" : "text-[var(--mp-heading-text)]"
+              isDoc ? "text-blue-600" : "text-[var(--mp-heading-text)]"
             }`}
           >
             Messages
@@ -35,12 +35,20 @@ export default function ChatList({
               }}
               className={`w-full p-4 text-left transition-colors duration-150 ease-in-out flex cursor-pointer items-center gap-3 ${
                 selectedChat === index
-                  ? "bg-[var(--peer-custom-orange-50)] border-l-4 border-[var(--peer-custom-orange-500)] hover:bg-[var(--peer-custom-orange-100)]"
+                  ? isDoc
+                    ? "bg-blue-50 border-l-4 border-blue-500 hover:bg-blue-100"
+                    : "bg-[var(--peer-custom-orange-50)] border-l-4 border-[var(--peer-custom-orange-500)] hover:bg-[var(--peer-custom-orange-100)]"
                   : "hover:bg-[var(--mp-custom-gray-200)]"
               }`}
             >
               <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] flex items-center justify-center">
+                <div
+                  className={`w-10 h-10 rounded-full bg-gradient-to-br ${
+                    isDoc
+                      ? "from-blue-500 to-cyan-500"
+                      : "from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)]"
+                  } flex items-center justify-center`}
+                >
                   <MessageSquare className="w-5 h-5 text-[var(--mp-custom-white)]" />
                 </div>
                 {unread > 0 && (

@@ -401,6 +401,7 @@ const DoctorPeer = () => {
                     key={index}
                     message={msg.decryptedText}
                     isSent={msg.senderType === "user"}
+                    isDoc={true}
                   />
                 ))}
                 <div ref={messagesEndRef} />
