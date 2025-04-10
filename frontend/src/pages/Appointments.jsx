@@ -96,7 +96,7 @@ const UserAppointments = () => {
           body: JSON.stringify({
             id: appointmentId,
             stars: ratingValue,
-            docId: docId,
+            doctorId: docId,
           }),
         }
       );
