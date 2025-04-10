@@ -52,10 +52,10 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
   const filteredItems = getFilteredItems();
 
   return (
-    <div className="mb-16 bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div className="mb-4 md:mb-8 bg-white rounded-2xl shadow-md overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-100 transition-colors duration-300"
+        className="w-full flex items-center justify-between p-4 md:p-6 hover:bg-gray-100 transition-colors duration-300"
       >
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-full bg-gray-100">
@@ -94,14 +94,14 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {filteredItems.map((item, index) => (
               <a
                 key={index}
                 href={item.spotifyLink || item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                className="group scale-95 sm:scale-100 relative rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
                 onMouseEnter={() => setHoveredItem(index)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
@@ -141,10 +141,10 @@ function Entertainment() {
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+          <h1 className="text-[34px] lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4 tracking-tight">
             Entertainment Hub
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-md md:text-lg text-gray-600 max-w-2xl mx-auto">
             Discover and explore your favorite movies, books, music, and games
             all in one place
           </p>
