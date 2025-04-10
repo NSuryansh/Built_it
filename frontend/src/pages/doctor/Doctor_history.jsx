@@ -140,11 +140,11 @@ const History = () => {
 
   if (isAuthenticated === null || fetched === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="p-8 rounded-2xl bg-white/80 backdrop-blur-sm shadow-xl">
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+       
           <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
           <p className="mt-6 text-gray-700 font-medium animate-pulse">Loading your dashboard...</p>
-        </div>
+        
       </div>
     );
   }
