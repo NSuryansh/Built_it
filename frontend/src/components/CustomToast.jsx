@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 
 const CustomToast = (text) => {
+  toast.dismiss();
   return toast(text, {
     position: "bottom-right",
     autoClose: 3000,
