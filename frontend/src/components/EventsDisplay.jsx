@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, Users, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
 
 const EventsDisplay = () => {
@@ -22,30 +22,42 @@ const EventsDisplay = () => {
         Upcoming Events
       </h2>
 
-      {events.map((event, index) => (
-        <div
-          key={index}
-          className="bg-gradient-to-br from-[var(--mp-custom-peach)] to-[var(--mp-custom-white)] p-5 rounded-lg shadow-md hover:shadow-lg transition-all"
-        >
-          <h3 className="text-lg font-semibold text-[var(--events-display-gray-900)]">
-            {event.title}
-          </h3>
-          <p className="text-gray-700 mt-1">{event.description}</p>
+      {events.map((event) => (
+          <div
+            key={event.id}
+            className="group bg-[var(--custom-orange-100)] rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">                  
+                  <h3 className="mt-3 text-xl font-bold text-[var(--events-display-gray-900)] group-hover:text-[var(--events-display-gray-800)]">
+                    {event.title}
+                  </h3>
+                  <p className="mt-2 text-[var(--events-display-gray-600)] line-clamp-2">
+                    {event.description}
+                  </p>
+                </div>
+              </div>
 
-          <div className="flex flex-wrap items-center mt-3 space-x-4 text-[var(--events-display-gray-600)]">
-            <p className="flex items-center text-sm">
-              <Calendar className="w-4 h-4 mr-1" />{" "}
-              {format(event.dateTime, "dd-MMM-yyyy h:mm")}
-            </p>
-            {/* <p className="flex items-center text-sm">
-              <Clock className="w-4 h-4 mr-1" /> {event.time}
-            </p> */}
-            <p className="flex items-center text-sm">
-              <MapPin className="w-4 h-4 mr-1" /> {event.venue}
-            </p>
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-[var(--events-display-gray-600)]">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-full bg-[var(--mp-custom-peach)] group-hover:bg-white">
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium">
+                    {format(event.dateTime, "MMM d, yyyy 'at' h:mm a")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-full bg-[var(--mp-custom-peach)] group-hover:bg-white">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium">{event.venue}</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 };
