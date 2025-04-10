@@ -88,15 +88,18 @@ const UserAppointments = () => {
   // Only handles submitting data, not the event
   const submitRating = async (appointmentId, ratingValue, docId) => {
     try {
-      const res = await fetch("http://localhost:3000/setRating", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: appointmentId,
-          stars: ratingValue,
-          docId: docId,
-        }),
-      });
+      const res = await fetch(
+        "http://localhost:3000/setRating",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: appointmentId,
+            stars: ratingValue,
+            doctorId: docId,
+          }),
+        }
+      );
 
       if (res.ok) {
         setSubmittedRatings((prev) => ({

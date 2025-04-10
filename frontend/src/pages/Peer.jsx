@@ -210,8 +210,8 @@ const Peer = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
 
-  useEffect(() => {
-  }, [showMessages])
+  // useEffect(() => {
+  // }, [showMessages])
   
 
   const handleSubmit = async (e) => {

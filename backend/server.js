@@ -1377,7 +1377,7 @@ app.post("/forgotDoctorPassword", async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `https://built-it-1.onrender.com//doctor/reset_password?token=${token}`;
+    const resetLink = `http://localhost:5173/doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(doctor.email, subject, message);
@@ -1484,7 +1484,8 @@ app.post("/setRating", async (req, res) => {
   const stars = req.body["stars"];
   const id = req.body["id"];
   const docId = req.body["doctorId"];
-
+  console.log(id)
+  console.log(docId)
   try {
     const response = await prisma.pastAppointments.update({
       where: {
@@ -1945,13 +1946,15 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         });
         stream.end(file.buffer);
       });
+      console.log(url)
     }
 
-    const doc_id = Number(id);
+    // const doc_id = Number(id);
     // console.log(req.query);
     const certifications = certifi.split(",");
     const education = educ.split(",");
-    const doctorId = parseInt(doc_id, 10);
+    const doctorId = Number(id);
+    const doc_id = doctorId
     if (isNaN(doctorId) || doctorId <= 0) {
       return res.status(400).json({ error: "Invalid doctor ID" });
     }
@@ -1961,12 +1964,12 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
     if (city) orConditions.push({ city });
     if (experience) orConditions.push({ experience });
 
-    const existingDoctor = orConditions.length
-      ? await prisma.doctor.findFirst({
-          where: { OR: orConditions },
-        })
-      : null;
-
+    const existingDoctor = await prisma.doctor.findUnique({
+      where: {
+        id: doctorId
+      }
+    })
+    console.log(existingDoctor)
     if (existingDoctor && existingDoctor.id !== doctorId) {
       return res
         .status(400)
@@ -1978,7 +1981,7 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
     if (city?.trim()) updatedData.city = city;
     if (experience?.trim()) updatedData.experience = experience;
     if(url) updatedData.img= url
-
+    console.log(updatedData)
     if (Object.keys(updatedData).length === 0) {
       return res
         .status(400)
@@ -1990,6 +1993,8 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         where: { id: doctorId },
         data: updatedData,
       });
+
+      console.log(updatedDoctor)
 
       const certificate = await prisma.docCertification.deleteMany({
         where: {
