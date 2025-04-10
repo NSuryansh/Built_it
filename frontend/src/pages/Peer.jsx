@@ -23,6 +23,7 @@ const Peer = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState("");
   const [showMessages, setShowMessages] = useState([]);
+  const [editedMessages, setEditedMessages] = useState([]);
   const [recId, setRecid] = useState(0);
   const [showChatList, setShowChatList] = useState(true);
   const [messagesApi, setMessagesApi] = useState(null);
@@ -30,6 +31,7 @@ const Peer = () => {
   const [docList, setDocList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [unread, setUnread] = useState([]);
+  const [prevRecvId, setPrevRecId] = useState(0);
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
@@ -48,6 +50,9 @@ const Peer = () => {
 
   useEffect(() => {
     if (newChatId) {
+      if(recId){
+        setPrevRecId(recId);
+      }
       setRecid(newChatId);
     }
   }, [newChatId]);
@@ -200,6 +205,7 @@ const Peer = () => {
 
     socketRef.current.on("receiveMessage", handleReceiveMessage);
 
+
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
@@ -211,6 +217,7 @@ const Peer = () => {
 
   // useEffect(() => {
   // }, [showMessages])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -311,7 +318,18 @@ const Peer = () => {
   }, [selectedChat, userId, reloader, docList]);
 
   useEffect(() => {
-    console.log(showMessages, "HAHAHAHAHHAHAHAHAH");
+    console.log(showMessages, "JSA")
+    const filteredMessages = showMessages.filter((msg) => {
+      if (msg.senderType === "user") {
+        return msg.senderId === userId;
+      } else if (msg.senderType === "doc") {
+        return msg.recipientId === userId;
+      }
+      return false;
+      
+    });
+    setEditedMessages(filteredMessages)
+    console.log("Filtered Messages:", filteredMessages);
   }, [showMessages]);
   const handleClosePopup = () => {
     navigate("/login");
@@ -319,14 +337,23 @@ const Peer = () => {
 
   useEffect(() => {
     if (recId !== 0) {
-      const userId = localStorage.getItem("userid");
-      const docId = recId;
+      const userId = localStorage.getItem("userid")
+      const docId = recId
       socketRef.current.emit("joinRoom", {
         userId: userId,
-        doctorId: docId,
-      });
+        doctorId: docId
+      })
     }
-  }, [recId]);
+
+    if(prevRecvId !== 0){
+      const userId = localStorage.getItem("userid")
+      const docId = prevRecvId
+      socketRef.current.emit("leaveRoom", {
+        userId: userId,
+        doctorId: docId
+      })
+    }
+  }, [recId])
 
   if (isAuthenticated === null) {
     return (
@@ -407,7 +434,7 @@ const Peer = () => {
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {showMessages.map((msg, index) => (
+                {editedMessages.map((msg, index) => (
                   <ChatMessage
                     key={index}
                     message={msg.decryptedText}
@@ -498,7 +525,7 @@ const Peer = () => {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {showMessages.map((msg, index) => (
+              {editedMessages.map((msg, index) => (
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}

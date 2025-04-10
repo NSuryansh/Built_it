@@ -24,6 +24,7 @@ const DoctorPeer = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState("");
   const [showMessages, setShowMessages] = useState([]);
+  const [editedMessages, setEditedMessages] = useState([])
   const [recId, setRecid] = useState(0);
   const [showChatList, setShowChatList] = useState(true);
   const [messagesApi, setMessagesApi] = useState(null);
@@ -124,6 +125,21 @@ const DoctorPeer = () => {
       setRecid(userList[selectedChat].id);
     }
   }, [selectedChat, userList]);
+
+  useEffect(() => {
+      console.log(showMessages, "JSA")
+      const filteredMessages = showMessages.filter((msg) => {
+        if (msg.senderType === "user") {
+          return msg.recipientIdId === userId;
+        } else if (msg.senderType === "doc") {
+          return msg.senderId === userId;
+        }
+        return false;
+        
+      });
+      setEditedMessages(filteredMessages)
+      console.log("Filtered Messages:", filteredMessages);
+    }, [showMessages]);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -483,7 +499,7 @@ const DoctorPeer = () => {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
-              {showMessages.map((msg, index) => (
+              {editedMessages.map((msg, index) => (
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}
