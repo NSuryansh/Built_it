@@ -10,6 +10,7 @@ import SessionExpired from "../components/SessionExpired";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../components/CustomToast";
 import { Mic, MicOff } from "lucide-react";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 export default function Mood() {
   const [message, setMessage] = useState("");
@@ -25,6 +26,8 @@ export default function Mood() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [isSpeechToTextSupported, setIsSpeechToTextSupported] = useState(null);
+
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
 
@@ -32,10 +35,34 @@ export default function Mood() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  // Set speech recognition support on mount
+  useEffect(() => {
+    if (browserSupportsSpeechRecognition) {
+      setIsSpeechToTextSupported(true);
+    } else {
+      console.log("Your browser does not support speech recognition.");
+      setIsSpeechToTextSupported(false);
+    }
+  }, [browserSupportsSpeechRecognition]);
+
+  // Sync transcript with input message
+  useEffect(() => {
+    setMessage(transcript);
+  }, [transcript]);
+
+  // Scroll chat window to bottom when messages change
   useEffect(() => {
     scrollToBottom();
   }, [chats]);
 
+  // Verify user authentication on mount
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("user");
@@ -52,9 +79,11 @@ export default function Mood() {
     e.preventDefault();
     if (!message.trim()) return;
 
+    // Update chat with user's message
     const newChats = [...chats, { self: "True", message }];
     setChats(newChats);
     setMessage("");
+    resetTranscript();
     setIsLoading(true);
 
     try {
@@ -68,7 +97,6 @@ export default function Mood() {
       });
 
       const data = await response.json();
-      // print(data)
       const botMessage =
         data.response?.text ||
         (typeof data.response === "string"
@@ -91,11 +119,12 @@ export default function Mood() {
     }
   };
 
+  // Play the recorded audio when available and clean up URL
   useEffect(() => {
     if (audioBlob) {
       const audioURL = URL.createObjectURL(audioBlob);
       console.log("Audio blob available:", audioBlob);
-      
+
       const audio = new Audio(audioURL);
       audio.play().catch(error => {
         console.error("Error playing audio:", error);
@@ -107,34 +136,35 @@ export default function Mood() {
     }
   }, [audioBlob]);
 
+  // Send recorded audio to the server for emotion analysis
   const sendAudioToServer = async (blob) => {
     const formData = new FormData();
     formData.append("audio", blob, "audio.wav");
-  
+
     try {
       const response = await fetch("http://localhost:5000/emotion", {
         method: "POST",
         body: formData,
       });
-      
+
       if (!response.ok) {
         throw new Error(`Server responded with ${response.status}`);
       }
-      
+
       const result = await response.json();
       console.log("Audio sent successfully:", result);
       console.log("Emotion result:", result);
-      CustomToast(`Detected Emotion: ${result.emotion}`);
+      // CustomToast(`Detected Emotion: ${result.emotion}`);
     } catch (error) {
       console.error("Error sending audio:", error);
-      CustomToast("Failed to analyze emotion");
+      // CustomToast("Failed to analyze emotion");
     }
   };
-  
-  
 
   const startRecording = async () => {
     try {
+      SpeechRecognition.startListening({ continuous: true });
+      
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       let chunks = [];
@@ -142,14 +172,13 @@ export default function Mood() {
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           chunks.push(event.data);
-          
         }
       };
 
       recorder.onstop = () => {
         const blob = new Blob(chunks, { type: "audio/wav" });
         setAudioBlob(blob);
-        sendAudioToServer(blob);  // <-- Add this
+        sendAudioToServer(blob);
         chunks = [];
       };
 
@@ -167,6 +196,7 @@ export default function Mood() {
       mediaRecorder.stop();
       setIsRecording(false);
     }
+    SpeechRecognition.stopListening();
   };
 
   if (isAuthenticated === null) {
@@ -216,33 +246,31 @@ export default function Mood() {
             )}
             <div className="h-1" ref={messagesEndRef} />
           </div>
-          {/* <div className="p-4 "> */}
-            <div className="flex items-center gap-2">
-              <div className="flex-1">
-                <ChatInput
-                  message={message}
-                  setMessage={setMessage}
-                  handleSubmit={handleSubmit}
-                />
-              </div>
-              <button
-                type="button"
-                onClick={isRecording ? stopRecording : startRecording}
-                className={`p-3 rounded-full transition-colors ${
-                  isRecording 
-                    ? 'bg-red-500 hover:bg-red-600 text-white' 
-                    : 'bg-pink-500 hover:bg-pink-700 text-white'
-                }`}
-                title={isRecording ? "Stop Recording" : "Start Recording"}
-              >
-                {isRecording ? (
-                  <MicOff className="h-5 w-5" />
-                ) : (
-                  <Mic className="h-5 w-5" />
-                )}
-              </button>
+          <div className="flex items-center gap-2 p-4">
+            <div className="flex-1">
+              <ChatInput
+                message={message}
+                setMessage={setMessage}
+                handleSubmit={handleSubmit}
+              />
             </div>
-          {/* </div> */}
+            <button
+              type="button"
+              onClick={isRecording ? stopRecording : startRecording}
+              className={`p-3 rounded-full transition-colors ${
+                isRecording
+                  ? 'bg-red-500 hover:bg-red-600 text-white'
+                  : 'bg-pink-500 hover:bg-pink-700 text-white'
+              }`}
+              title={isRecording ? "Stop Recording" : "Start Recording"}
+            >
+              {isRecording ? (
+                <MicOff className="h-5 w-5" />
+              ) : (
+                <Mic className="h-5 w-5" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
