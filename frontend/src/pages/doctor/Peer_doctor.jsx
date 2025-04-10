@@ -400,7 +400,7 @@ const DoctorPeer = () => {
                   <ChatMessage
                     key={index}
                     message={msg.decryptedText}
-                    isSent={msg.senderType === "user"}
+                    isSent={msg.senderType !== "user"}
                     isDoc={true}
                   />
                 ))}
