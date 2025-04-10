@@ -171,8 +171,8 @@ const Peer = () => {
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
-    console.log("HIHIHIHIHIHIH")
-    console.log('Socket instance:', socketRef.current);
+    console.log("HIHIHIHIHIHIH");
+    console.log("Socket instance:", socketRef.current);
     const handleReceiveMessage = async ({
       senderId,
       encryptedText,
@@ -181,13 +181,13 @@ const Peer = () => {
       senderType,
     }) => {
       // console.log("HALLO - Raw event data:", data);
-      console.log("HALLO")
+      console.log("HALLO");
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
         encryptedAESKey
       );
-      console.log(decrypted, "decryptionnn")
+      console.log(decrypted, "decryptionnn");
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
@@ -200,7 +200,6 @@ const Peer = () => {
 
     socketRef.current.on("receiveMessage", handleReceiveMessage);
 
-   
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
@@ -212,7 +211,6 @@ const Peer = () => {
 
   // useEffect(() => {
   // }, [showMessages])
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -236,7 +234,7 @@ const Peer = () => {
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
     console.log(recId, "selectd", userId, " ");
     if (selectedChat !== null && recId !== 0) {
       socketRef.current.emit("markAsRead", {
@@ -247,15 +245,18 @@ useEffect(() => {
     }
 
     const pendingReads = async () => {
-      console.log("HAL")
+      console.log("HAL");
       try {
         // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
         // const data = await res.json();
-        socketRef.current.emit("countUnseen", { userId: userId, senderType: "user" })
+        socketRef.current.emit("countUnseen", {
+          userId: userId,
+          senderType: "user",
+        });
         socketRef.current.on("unreadCount", (data) => {
-          console.log(data)
-          setUnread(data)
-        })
+          console.log(data);
+          setUnread(data);
+        });
         // setUnread(data);
         // console.log(data)
       } catch (error) {
@@ -265,7 +266,7 @@ useEffect(() => {
     };
 
     pendingReads();
-  }, [selectedChat, recId])
+  }, [selectedChat, recId]);
 
   async function fetchMessages(userId, recipientId) {
     try {
@@ -317,15 +318,15 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    if(recId!==0){
-    const userId = localStorage.getItem("userid")
-    const docId = recId
-    socketRef.current.emit("joinRoom", {
-      userId: userId, 
-      doctorId: docId
-    })
-  }
-  }, [recId])
+    if (recId !== 0) {
+      const userId = localStorage.getItem("userid");
+      const docId = recId;
+      socketRef.current.emit("joinRoom", {
+        userId: userId,
+        doctorId: docId,
+      });
+    }
+  }, [recId]);
 
   if (isAuthenticated === null) {
     return (
@@ -344,11 +345,10 @@ useEffect(() => {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900">
-      <Navbar /> {/* Assume this is a light, minimal navbar */}
+      <Navbar />
       <ToastContainer />
       {/* Desktop Layout */}
       <div className="md:flex h-[calc(100vh-64px)] hidden max-[333px]:overflow-hidden">
-        {/* Sidebar (Doctor List) */}
         <div className="md:w-4/12 lg:w-3/12 bg-white border-r border-gray-200 flex flex-col transition-all duration-300">
           {docList.length > 0 ? (
             <>
@@ -370,7 +370,6 @@ useEffect(() => {
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  className="space-y-2 p-4"
                 />
               </div>
             </>
@@ -413,10 +412,6 @@ useEffect(() => {
                     key={index}
                     message={msg.decryptedText}
                     isSent={msg.senderType === "user"}
-                    className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
-                        ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
-                        : "bg-gray-100 text-gray-800"
-                      }`}
                   />
                 ))}
                 <div ref={messagesEndRef} />
@@ -426,7 +421,6 @@ useEffect(() => {
                   message={message}
                   setMessage={setMessage}
                   handleSubmit={handleSubmit}
-                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
                 />
               </div>
             </>
@@ -509,10 +503,11 @@ useEffect(() => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                    msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                    }`}
+                  }`}
                 />
               ))}
               <div ref={messagesEndRef} />
