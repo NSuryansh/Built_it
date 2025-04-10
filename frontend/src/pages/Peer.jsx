@@ -236,30 +236,36 @@ const Peer = () => {
     }
   };
 
-  useEffect(() => {
-    if (selectedChat && recId != 0) {
-      console.log("HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:P");
+useEffect(() => {
+    console.log(recId, "selectd", userId, " ");
+    if (selectedChat !== null && recId !== 0) {
       socketRef.current.emit("markAsRead", {
-        userId: userId,
-        doctorId: recId,
-        senderType: "user",
+        userId: recId,
+        doctorId: userId,
+        senderType: "doc",
       });
     }
+
     const pendingReads = async () => {
       console.log("HAL")
       try {
+        // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+        // const data = await res.json();
         socketRef.current.emit("countUnseen", { userId: userId, senderType: "user" })
         socketRef.current.on("unreadCount", (data) => {
           console.log(data)
           setUnread(data)
         })
+        // setUnread(data);
+        // console.log(data)
       } catch (error) {
         console.log(error);
       }
+      // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     };
 
     pendingReads();
-  }, [selectedChat, recId]);
+  }, [selectedChat, recId])
 
   async function fetchMessages(userId, recipientId) {
     try {
