@@ -10,6 +10,7 @@ const SessionExpired = ({ handleClosePopup, theme = "orange" }) => {
       buttonHover: "hover:from-orange-600 hover:to-orange-700",
       borderColor: "border-orange-200/50",
       bgGradient: "bg-gradient-to-br from-orange-50 to-white",
+      backdropGradient: "bg-gradient-to-br from-amber-50 to-orange-200", // Orange backdrop
     },
     blue: {
       iconColor: "text-blue-500",
@@ -19,31 +20,39 @@ const SessionExpired = ({ handleClosePopup, theme = "orange" }) => {
       buttonHover: "hover:from-blue-600 hover:to-blue-700",
       borderColor: "border-blue-200/50",
       bgGradient: "bg-gradient-to-br from-blue-50 to-white",
+      backdropGradient: "bg-gradient-to-br from-blue-50 to-blue-200", // Blue backdrop
     },
     green: {
-      iconColor: "text-green-500",
-      titleColor: "text-green-800",
-      messageColor: "text-green-600",
-      buttonBg: "bg-gradient-to-r from-green-500 to-green-600",
-      buttonHover: "hover:from-green-600 hover:to-green-700",
+      iconColor: "text-green-700",
+      titleColor: "text-green-700",
+      messageColor: "text-green-700",
+      buttonBg: "bg-gradient-to-r from-green-700 to-green-600",
+      buttonHover: "hover:from-green-700 hover:to-green-700",
       borderColor: "border-green-200/50",
-      bgGradient: "bg-gradient-to-br from-green-50 to-white",
+      bgGradient: "bg-gradient-to-br from-green-50 to-amber-50",
+      backdropGradient: "bg-gradient-to-br from-green-50 to-green-200", // Green backdrop
     },
   };
 
   const currentTheme = themes[theme] || themes.orange;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-60 backdrop-blur-sm z-50 animate-fadeIn">
+    <div
+      className={`fixed inset-0 flex items-center justify-center ${currentTheme.backdropGradient} bg-opacity-60 backdrop-blur-sm z-50 animate-fadeIn`}
+    >
       <div
         className={`relative ${currentTheme.bgGradient} p-8 rounded-2xl shadow-xl max-w-md w-full text-center border ${currentTheme.borderColor} transform transition-all duration-300 scale-100 hover:scale-[1.02]`}
       >
         {/* Decorative Top Accent */}
-        <div className={`absolute -top-3 left-1/2 transform -translate-x-1/2 w-16 h-1.5 rounded-full ${currentTheme.buttonBg}`} />
+        <div
+          className={`absolute -top-3 left-1/2 transform -translate-x-1/2 w-16 h-1.5 rounded-full ${currentTheme.buttonBg}`}
+        />
 
         {/* Chat Bubble Icon with Animation */}
         <div className="mx-auto w-16 h-16 mb-6 relative">
-          <div className={`absolute inset-0 rounded-full ${currentTheme.iconColor} opacity-10 animate-pulse`}></div>
+          <div
+            className={`absolute inset-0 rounded-full ${currentTheme.iconColor} opacity-10 animate-pulse`}
+          ></div>
           <svg
             className={`w-full h-full ${currentTheme.iconColor} relative z-10`}
             fill="currentColor"
@@ -61,7 +70,9 @@ const SessionExpired = ({ handleClosePopup, theme = "orange" }) => {
         </h2>
 
         {/* Message */}
-        <p className={`text-base ${currentTheme.messageColor} mb-8 leading-relaxed font-medium`}>
+        <p
+          className={`text-base ${currentTheme.messageColor} mb-8 leading-relaxed font-medium`}
+        >
           Your session has timed out for security reasons. Please log in again to continue your journey.
         </p>
 
