@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { User, CircleUser, Clock, Phone, FileText } from "lucide-react";
+import { User, CircleUser, Clock, Phone, FileText, Loader } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import emailjs from "@emailjs/browser";
 import Footer from "../../components/Footer";
@@ -8,32 +8,21 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
 import { TimeChange } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
+import PastAppointmentGraphs from "../../components/doctor/PastAppointmentGraphs";
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
   const [fixed, setFixed] = useState(false);
   const [completedNotes, setCompletedNotes] = useState({});
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
   const [appointments, setapp] = useState([]);
   const [curr, setcurr] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isBar, setIsBar] = useState(true);
+  const [isRescheduling, setisRescheduling] = useState(false);
   // Updated keys to use "PhD" for consistency
   const [timePeriodData, setTimePeriodData] = useState({
     "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
@@ -43,6 +32,31 @@ const DoctorAppointment = () => {
   });
   const [note, setNote] = useState("");
   const navigate = useNavigate();
+  const [slots, setAvailableSlots] = useState([]);
+  const [time, setSelectedTime] = useState("");
+  const fetchAvailableSlots = async (date) => {
+    try {
+      const doctorId = localStorage.getItem("userid");
+      const response = await fetch(
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+      );
+      const data = await response.json();
+      setAvailableSlots(data.availableSlots);
+    } catch (error) {
+      console.error("Error fetching available slots:", error);
+    }
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setSelectedTime("");
+    setAvailableSlots([]);
+    fetchAvailableSlots(date);
+  };
+
+  const handleTimeChange = (event) => {
+    setSelectedTime(event.target.value);
+  };
 
   const histogramData = Object.keys(timePeriodData).map((period) => ({
     name: period,
@@ -140,7 +154,7 @@ const DoctorAppointment = () => {
             const diffTime = now - apptDate;
             const diffDays = diffTime / (1000 * 3600 * 24);
             const branch = app.user.acadProg;
-            console.log(app);
+            // console.log(app);
 
             if (diffDays <= 30) {
               periods["Last 1 Month"][branch] += 1;
@@ -241,7 +255,7 @@ const DoctorAppointment = () => {
       username: appointment["user"]["username"],
       doctor: docName,
       origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
-      newTime: time,
+      newTime: format(time, "dd-MMM-yy hh:mm a"),
       email: appointment["user"]["email"],
     };
     const res = await fetch("http://localhost:3000/reschedule", {
@@ -258,9 +272,13 @@ const DoctorAppointment = () => {
       .then(
         (response) => {
           console.log("success", response.status);
+          CustomToast("Rescheduling request successfully sent");
+          setSelectedDate("");
+          setSelectedTime("");
         },
         (error) => {
           console.log(error);
+          CustomToast("Error rescheduling appointment");
         }
       );
   };
@@ -269,7 +287,7 @@ const DoctorAppointment = () => {
     navigate("/doctor/login");
   };
 
-  const handleDateSelect = (date, appointmentId) => {
+  const handleDateSelect = (date) => {
     setSelectedDate(date);
     if (date) {
       CustomToast("Booking Rescheduled");
@@ -279,13 +297,18 @@ const DoctorAppointment = () => {
 
   const handleReschedule = async (appointment) => {
     const appointmentId = appointment.id;
+    if (selectedDate != "" && time != "") {
+      setisRescheduling(true);
+      await emailParams(
+        appointment,
+        new Date(new Date(selectedDate).getTime() + new Date(time).getTime())
+      );
+      handleDateSelect(selectedDate, appointmentId);
+    }
     setSelectedAppointment(
       appointmentId === selectedAppointment ? null : appointmentId
     );
-    if (selectedDate) {
-      await emailParams(appointment, selectedDate);
-      handleDateSelect(selectedDate, appointmentId);
-    }
+    setisRescheduling(false);
   };
 
   if (isAuthenticated === null) {
@@ -434,19 +457,93 @@ const DoctorAppointment = () => {
                         >
                           Accept
                         </button>
-                        <button
-                          onClick={() => handleReschedule(appointment)}
-                          className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
-                        >
-                          Reschedule
-                        </button>
+                        {selectedAppointment !== appointment.id && (
+                          <button
+                            onClick={() => handleReschedule(appointment)}
+                            className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                          >
+                            Reschedule
+                          </button>
+                        )}
                       </div>
                       {selectedAppointment === appointment.id && (
                         <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-blue-200">
                           <h2 className="text-xl font-semibold mb-4 text-blue-600">
                             Select Date and Time
                           </h2>
-                          {/* DateTimePicker component would go here */}
+                          <div>
+                            <select
+                              name="date"
+                              value={selectedDate.split("T")[0]}
+                              onChange={(e) => {
+                                const newDate = e.target.value;
+                                const currentTime =
+                                  selectedDate.split("T")[2] || "09:00";
+                                handleDateChange(newDate);
+                                fetchAvailableSlots(newDate);
+                              }}
+                              className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+                              required
+                            >
+                              <option value="">Select Date</option>
+                              {[...Array(14)].map((_, index) => {
+                                const date = new Date();
+                                date.setDate(date.getDate() + index);
+                                const formattedDate = format(
+                                  date,
+                                  "yyyy-MM-dd"
+                                );
+                                const displayDate = format(date, "d MMM");
+                                return (
+                                  <option
+                                    key={formattedDate}
+                                    value={formattedDate}
+                                  >
+                                    {displayDate}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          </div>
+
+                          {/* Time Selection */}
+                          <div className="mt-4">
+                            <select
+                              name="time"
+                              value={time}
+                              onChange={(e) => {
+                                const currentDate = selectedDate.split("T")[0];
+                                handleTimeChange(e);
+                              }}
+                              className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+                            >
+                              <option value="">Select Time</option>
+                              {Array.isArray(slots) &&
+                                slots.map((slot) => (
+                                  <option
+                                    key={slot.id}
+                                    value={slot.starting_time}
+                                  >
+                                    {slot.starting_time
+                                      .split("T")[1]
+                                      .slice(0, 5)}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                          <center>
+                            <button
+                              disabled={isRescheduling}
+                              onClick={() => handleReschedule(appointment)}
+                              className="px-6 mt-4 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                            >
+                              {isRescheduling ? (
+                                <Loader className="mx-auto" />
+                              ) : (
+                                <div>Reschedule</div>
+                              )}
+                            </button>
+                          </center>
                         </div>
                       )}
                     </div>
@@ -456,82 +553,14 @@ const DoctorAppointment = () => {
             </div>
           </div>
         </div>
-
-        <div className="mt-20">
-          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-10 border border-blue-100 mb-8">
-            <div className="flex flex-col md:flex-row items-center justify-between mb-8">
-              <h2 className="text-3xl font-semibold text-blue-600">
-                Past Appointments Analysis
-              </h2>
-              <select
-                onChange={handleGraphTypeChange}
-                value={isBar ? "bar" : "pie"}
-                className="px-4 mt-4 md:mt-0 py-2 border border-blue-200 rounded-lg bg-white/50 backdrop-blur-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              >
-                <option value="bar">Bar Graph</option>
-                <option value="pie">Pie Charts</option>
-              </select>
-            </div>
-
-            {isBar ? (
-              <div className="h-96 w-full">
-                <ResponsiveContainer>
-                  <BarChart data={histogramData}>
-                    <CartesianGrid strokeDasharray="5 5" stroke="#e5e7eb" />
-                    <XAxis dataKey="name" stroke="#6b7280" fontSize={14} />
-                    <YAxis stroke="#6b7280" fontSize={14} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                        borderRadius: "8px",
-                        border: "1px solid rgba(229, 231, 235, 0.5)",
-                      }}
-                    />
-                    <Legend />
-                    <Bar dataKey="UG" fill={COLORS[0]} radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="PG" fill={COLORS[1]} radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="PHD" fill={COLORS[2]} radius={[8, 8, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {Object.keys(timePeriodData).map((period) => (
-                  <div key={period} className="h-86 w-[340px]">
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">
-                      {period}
-                    </h3>
-                    <ResponsiveContainer>
-                      <PieChart>
-                        <Pie
-                          data={getPieData(period)}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          outerRadius={120}
-                          fill="#8884d8"
-                          dataKey="value"
-                          label={({ name, percent }) =>
-                            `${name} ${(percent * 100).toFixed(0)}%`
-                          }
-                        >
-                          {getPieData(period).map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        <PastAppointmentGraphs
+          timePeriodData={timePeriodData}
+          getPieData={getPieData}
+          COLORS={COLORS}
+          handleGraphTypeChange={handleGraphTypeChange}
+          isBar={isBar}
+          histogramData={histogramData}
+        />
       </div>
       <Footer color={"blue"} />
     </div>
