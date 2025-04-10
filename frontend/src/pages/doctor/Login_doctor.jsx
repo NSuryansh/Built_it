@@ -48,17 +48,14 @@ const DoctorLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch(
-      "http://localhost:3000/docLogin",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/docLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
     const res = await response.json();
 
     if (res["message"] === "Login successful") {
@@ -76,16 +73,13 @@ const DoctorLogin = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch(
-      "http://localhost:3000/forgotDoctorPassword",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/forgotDoctorPassword", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
@@ -177,7 +171,7 @@ const DoctorLogin = () => {
               type="submit"
               className="w-full py-3 px-4 bg-blue-600 text-[var(--custom-white)] rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {isLoading ? <Loader /> : <>Login</>}
+              {isLoading ? <Loader className="mx-auto" /> : <>Login</>}
             </button>
           </form>
           <div className="flex justify-center mt-4 mb-2 items-center text-[var(--login-light-text)]">
