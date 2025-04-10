@@ -234,6 +234,17 @@ const DoctorPeer = () => {
     pendingReads();
   }, [selectedChat, recId])
 
+    useEffect(() => {
+      if(recId!==0){
+      const docId = localStorage.getItem("userid")
+      const userId = recId
+      socketRef.current.emit("joinRoom", {
+        userId: userId, 
+        doctorId: docId
+      })
+    }
+    }, [recId])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

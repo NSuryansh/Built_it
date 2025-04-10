@@ -88,6 +88,7 @@ io.on("connection", (socket) => {
   });
   socket.on("joinRoom", ({ userId, doctorId }) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
+    console.log(userId, " ", doctorId)
     socket.join(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
@@ -124,7 +125,7 @@ io.on("connection", (socket) => {
     socket.emit("unreadCount", unreadCount)
   })
   socket.on("markAsRead", async ({ userId, doctorId, senderType }) => {
-    console.log(userId, " ", doctorId, " ", senderType)
+    // console.log(userId, " ", doctorId, " ", senderType)
     try {
       if (senderType === "user") {
         const result = await prisma.message.updateMany({
@@ -175,8 +176,8 @@ io.on("connection", (socket) => {
           senderId = userId;
           recipientId = doctorId;
         }
-        // console.log(senderId);
-        // console.log(recipientId);
+        console.log(senderId);
+        console.log(recipientId);
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -191,7 +192,7 @@ io.on("connection", (socket) => {
         const room = `chat_${[userId, doctorId]
           .sort((a, b) => a - b)
           .join("_")}`;
-        // console.log(senderId, "message sent to", recipientId);
+        console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
         io.to(room).emit("receiveMessage", {
@@ -200,7 +201,7 @@ io.on("connection", (socket) => {
           encryptedText,
           iv,
           encryptedAESKey,
-          authTag,
+          // authTag,
           senderType,
         });
       //   senderId,
@@ -209,6 +210,7 @@ io.on("connection", (socket) => {
       // encryptedAESKey,
       // senderType,
         // console.log("Message sent");
+        console.log("hallo")
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -449,7 +451,7 @@ app.get('/countUnseen', async (req, res) => {
   const {userId, senderType} = req.query
   // const doctorId = Number(req.body['doctorId'])
   // const sender = req.body['senderType']
-  console.log(userId, senderType)
+  // console.log(userId, senderType)
   if (senderType == "user") {
     const unreadCount = await prisma.message.groupBy({
       by: ["senderId"],
@@ -1287,7 +1289,7 @@ async function sendEmail(to, subject, text) {
       subject,
       text,
     });
-    console.log("Email sent:", info.messageId);
+    // console.log("Email sent:", info.messageId);
   } catch (error) {
     console.error("Error sending email:", error);
   }

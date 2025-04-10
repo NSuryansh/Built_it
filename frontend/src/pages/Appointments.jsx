@@ -138,40 +138,42 @@ const UserAppointments = () => {
           </div>
           <div className="max-h-[350px] overflow-y-auto custom-scrollbar">
             {upcomingAppointments.length > 0 ? (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {upcomingAppointments.map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="bg-[var(--custom-orange-50)] bg-opacity-80 rounded-xl p-6 transition-all duration-300 hover:bg-[var(--custom-orange-100)] hover:shadow-md"
+                    className="group bg-white hover:bg-[var(--custom-orange-50)] rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-[var(--custom-orange-100)]"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-5">
-                        <div className="bg-[var(--custom-white)] p-3 rounded-full shadow-md">
-                          <User className="h-7 w-7 text-[var(--custom-orange-600)]" />
-                        </div>
+                    <div className="flex items-start gap-4">
+                      <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] p-3 rounded-full group-hover:from-[var(--custom-orange-200)] group-hover:to-[var(--custom-orange-300)] transition-all duration-300">
+                        <User className="h-6 w-6 text-[var(--custom-orange-700)]" />
+                      </div>
+
+                      <div className="flex-1 space-y-2">
                         <div>
-                          <h3 className="font-semibold text-[var(--custom-orange-900)] text-lg">
-                            {appointment.doctor.name}
-                          </h3>
-                          <p className="text-sm text-[var(--custom-orange-700)] mt-1">
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-semibold text-[var(--custom-orange-900)] text-lg">
+                              {appointment.doctor.name}
+                            </h3>
+                          </div>
+                          <p className="text-sm text-[var(--custom-orange-600)]">
+                            {appointment.doctor.specialty}
+                          </p>
+                        </div>
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                          <p className="text-sm text-[var(--custom-orange-700)]">
                             {appointment.reason}
                           </p>
-                          <p className="text-sm text-[var(--custom-orange-600)] mt-2 flex items-center gap-2">
-                            <Clock className="w-5 h-5" />
-                            {format(
-                              appointment.dateTime,
-                              "dd-MMM-yyyy hh:mm a"
-                            )}
-                          </p>
+                          <div className="mt-2 sm:mt-0 flex items-center gap-2 text-sm text-[var(--custom-orange-600)]">
+                            <Clock className="w-4 h-4" />
+                            <span>
+                              {format(
+                                appointment.dateTime,
+                                "MMM d 'at' h:mm a"
+                              )}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <button className="text-[var(--custom-orange-500)] hover:text-[var(--custom-orange-700)] transition-transform duration-200 hover:scale-110">
-                          <FileText className="w-6 h-6" />
-                        </button>
-                        <button className="text-[var(--custom-orange-500)] hover:text-[var(--custom-orange-700)] transition-transform duration-200 hover:scale-110">
-                          <Calendar className="w-6 h-6" />
-                        </button>
                       </div>
                     </div>
                   </div>

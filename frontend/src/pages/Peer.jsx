@@ -180,6 +180,7 @@ const Peer = () => {
       encryptedAESKey,
       senderType,
     }) => {
+      // console.log("HALLO - Raw event data:", data);
       console.log("HALLO")
       const decrypted = await decryptMessage(
         encryptedText,
@@ -193,19 +194,25 @@ const Peer = () => {
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
-        { decryptedText: decrypted, senderId, senderType },
+        // { decryptedText: decrypted, senderId, senderType },
       ]);
     };
 
     socketRef.current.on("receiveMessage", handleReceiveMessage);
+
+   
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
-  }, [aesKey, isAuthenticated, showMessages]);
+  }, [aesKey, isAuthenticated]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
+
+  // useEffect(() => {
+  // }, [showMessages])
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -302,6 +309,17 @@ const Peer = () => {
   const handleClosePopup = () => {
     navigate("/login");
   };
+
+  useEffect(() => {
+    if(recId!==0){
+    const userId = localStorage.getItem("userid")
+    const docId = recId
+    socketRef.current.emit("joinRoom", {
+      userId: userId, 
+      doctorId: docId
+    })
+  }
+  }, [recId])
 
   if (isAuthenticated === null) {
     return (

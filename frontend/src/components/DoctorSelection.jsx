@@ -1,8 +1,8 @@
-import { Mail, Phone, Stethoscope, User } from "lucide-react";
+import { Mail, Phone, Star, MapPin, Clock, User } from "lucide-react";
 
 const DoctorSelectionStep = ({ doctors, onSelect }) => {
   return (
-    <div className="bg-[var(--custom-white)] w-full max-w-[1200px] p-2 md:p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
+    <div className="bg-[var(--custom-orange-100)] w-full p-2 sm:p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] flex items-center justify-center shadow-md">
       {/* <div className="flex items-center justify-center gap-3 mb-4 md:mb-8">
         <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
         <h2 className="text-center font-bold text-3xl text-[var(--custom-orange-500)] uppercase">
@@ -11,33 +11,44 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
       </div> */}
 
       {doctors.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
-              className="bg-[var(--custom-orange-50)] hover:bg-[var(--custom-orange-100)] p-3 lg:p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-200)] hover:border-[var(--custom-orange-300)]"
+              className="group w-full bg-white hover:bg-[var(--custom-orange-50)] p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-100)] hover:border-[var(--custom-orange-200)]"
               onClick={() => onSelect(doctor)}
             >
-              <div className="flex flex-col items-center sm:flex-row sm:items-start gap-2 lg:gap-4 md:flex-col md:justify-center md:items-center lg:flex-row">
-                <div className="bg-[var(--custom-orange-200)] rounded-full p-3 group-hover:bg-[var(--custom-orange-300)] transition-colors duration-300">
-                  <User className="w-6 h-6 text-[var(--custom-orange-700)]" />
+              <div className="flex w-full flex-col justify-center items-center sm:flex-row gap-6">
+                <div className="flex flex-col items-center">
+                  <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] rounded-full p-4 group-hover:from-[var(--custom-orange-200)] group-hover:to-[var(--custom-orange-300)] transition-all duration-300">
+                    <User className="w-8 h-8 text-[var(--custom-orange-700)]" />
+                  </div>
+                  <div className="mt-4 flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
+                    <span className="text-sm font-medium text-gray-600">
+                      {doctor.avgRating}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-[var(--custom-orange-800)] transition-colors duration-300">
+
+                <div className="flex-1 space-y-2">
+                  <h3 className="text-xl text-left font-bold text-[var(--custom-orange-800)] group-hover:text-[var(--custom-orange-900)] transition-colors duration-300">
                     {doctor.name}
                   </h3>
-                  <p className="mt-3 text-sm text-[var(--custom-orange-700)] line-clamp-2">
-                    {doctor.desc ? doctor.desc : "No description available."}
+                  <p className="mt-2 text-left text-sm text-gray-600 line-clamp-2">
+                    {doctor.desc || "No description available."}
                   </p>
-                  <div className="mt-4 space-y-2">
-                    <div className="flex items-center gap-2 text-sm text-[var(--custom-orange-700)]">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 group-hover:text-[var(--custom-orange-700)] transition-colors duration-300">
+                    <div className="bg-[var(--custom-orange-100)] p-1.5 rounded-full">
                       <Phone className="w-4 h-4" />
-                      <span>{doctor.mobile}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-[var(--custom-orange-700)]">
+                    <span>{doctor.mobile}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600 group-hover:text-[var(--custom-orange-700)] transition-colors duration-300">
+                    <div className="bg-[var(--custom-orange-100)] p-1.5 rounded-full">
                       <Mail className="w-4 h-4" />
-                      <span>{doctor.email}</span>
                     </div>
+                    <span>{doctor.email}</span>
                   </div>
                 </div>
               </div>
