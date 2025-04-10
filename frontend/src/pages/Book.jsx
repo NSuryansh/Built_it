@@ -179,7 +179,7 @@ const Book = () => {
                     className="absolute inset-0 rounded-full border-2 border-orange-400/50 animate-ping"
                     initial={{ scale: 1 }}
                     animate={{ scale: 1.2 }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
+                    transition={{ duration: 2, repeat: Infinity }}
                   />
                 )}
               </div>
@@ -201,7 +201,7 @@ const Book = () => {
                     className="absolute inset-0 rounded-full border-2 border-rose-400/50 animate-ping"
                     initial={{ scale: 1 }}
                     animate={{ scale: 1.2 }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
+                    transition={{ duration: 2, repeat: Infinity }}
                   />
                 )}
               </div>
