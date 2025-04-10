@@ -256,13 +256,8 @@ const BookingFormStep = ({
           </button>
 
           <button
-            onClick={
-              !isLoading
-                ? () => {
-                    sendNotif();
-                  }
-                : null
-            }
+            disabled={isLoading}
+            onClick={sendNotif}
             type="submit"
             className="flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-[var(--custom-orange-500)] text-white font-semibold hover:bg-[var(--custom-orange-600)] transform hover:scale-[1.02] transition-all duration-200"
           >
