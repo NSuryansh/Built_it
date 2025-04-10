@@ -86,7 +86,7 @@ const Peer = () => {
   useEffect(() => {
     const fetchDocotors = async () => {
       try {
-        const response = await fetch("https://built-it-backend.onrender.com/getdoctors");
+        const response = await fetch("http://localhost:3000/getdoctors");
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
         setDocList(data);
@@ -100,7 +100,7 @@ const Peer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `https://built-it-backend.onrender.com/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
 
@@ -153,7 +153,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it-backend.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -197,7 +197,7 @@ const Peer = () => {
 
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId, senderType},
+        { decryptedText: decrypted, senderId, senderType },
       ]);
     };
 
@@ -242,19 +242,19 @@ const Peer = () => {
         senderType: "user",
       });
     }
-    const pendingReads = async() => {
+    const pendingReads = async () => {
       console.log("HAL")
-      try{
-      // const res = await fetch(`https://built-it-backend.onrender.com/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-      // const data = await res.json();
-      socketRef.current.emit("countUnseen", {userId: userId, senderType:"user"})
-      socketRef.current.on("unreadCount", (data) => {
-        console.log(data)
-        setUnread(data)
-      })
-      // setUnread(data);
-      // console.log(data)
-      }catch (error) {
+      try {
+        // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+        // const data = await res.json();
+        socketRef.current.emit("countUnseen", { userId: userId, senderType: "user" })
+        socketRef.current.on("unreadCount", (data) => {
+          console.log(data)
+          setUnread(data)
+        })
+        // setUnread(data);
+        // console.log(data)
+      } catch (error) {
         console.log(error);
       }
       // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -266,7 +266,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `https://built-it-backend.onrender.com/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       const decrypted_api_messages = await Promise.all(
@@ -315,9 +315,9 @@ const Peer = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-      <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-      <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
-    </div>
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
+      </div>
     );
   }
 
@@ -398,11 +398,10 @@ const Peer = () => {
                     key={index}
                     message={msg.decryptedText}
                     isSent={msg.senderType === "user"}
-                    className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
-                      msg.senderId === userId
+                    className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
                         ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                         : "bg-gray-100 text-gray-800"
-                    }`}
+                      }`}
                   />
                 ))}
                 <div ref={messagesEndRef} />
@@ -495,11 +494,10 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
-                    msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                  }`}
+                    }`}
                 />
               ))}
               <div ref={messagesEndRef} />

@@ -49,7 +49,7 @@ const DoctorLogin = () => {
     setError("");
     setisLoading(true);
     const response = await fetch(
-      "https://built-it-backend.onrender.com/docLogin",
+      "http://localhost:3000/docLogin",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -77,7 +77,7 @@ const DoctorLogin = () => {
       return;
     }
     const response = await fetch(
-      "https://built-it-backend.onrender.com/forgotDoctorPassword",
+      "http://localhost:3000/forgotDoctorPassword",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

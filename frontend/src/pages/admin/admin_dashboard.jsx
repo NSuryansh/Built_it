@@ -32,7 +32,7 @@ const AdminDashboard = () => {
   const [isPie, setIsPie] = useState(true);
   const [selectedView, setSelectedView] = useState("academic"); // "academic" or "gender"
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          "https://built-it-backend.onrender.com/pastApp"
+          "http://localhost:3000/pastApp"
         );
         const data = await response.json();
         if (response.ok) {
@@ -133,7 +133,7 @@ const AdminDashboard = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        "https://built-it-backend.onrender.com/pastApp"
+        "http://localhost:3000/pastApp"
       );
       const data = await response.json();
       if (response.ok) {
@@ -219,9 +219,8 @@ const AdminDashboard = () => {
               title="Refresh data"
             >
               <RefreshCw
-                className={`w-5 h-5 text-emerald-700 ${
-                  isLoading ? "animate-spin" : ""
-                }`}
+                className={`w-5 h-5 text-emerald-700 ${isLoading ? "animate-spin" : ""
+                  }`}
               />
             </button>
 

@@ -75,7 +75,7 @@ export default function App() {
 
     console.log(userType, "usetruegfua");
 
-    const res = await fetch("https://built-it-backend.onrender.com/save-subscription", {
+    const res = await fetch("http://localhost:3000/save-subscription", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -157,7 +157,7 @@ export default function App() {
         <Route path="/admin/add_doctor" element={<AddDoctor />} />
         <Route path="/admin/User" element={<User />} />
         <Route path="/admin/appointments" element={<AdminAppointments />} />
-        <Route path="/doctor/history" element={<History/>}/>
+        <Route path="/doctor/history" element={<History />} />
       </Routes>
     </div>
   );

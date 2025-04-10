@@ -76,7 +76,7 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `https://built-it-backend.onrender.com/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
       if (!contacts || !Array.isArray(contacts)) {
@@ -135,7 +135,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it-backend.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -213,19 +213,19 @@ const DoctorPeer = () => {
       });
     }
 
-    const pendingReads = async() => {
+    const pendingReads = async () => {
       console.log("HAL")
-      try{
-      // const res = await fetch(`https://built-it-backend.onrender.com/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-      // const data = await res.json();
-      socketRef.current.emit("countUnseen", {userId: userId, senderType:"doc"})
-      socketRef.current.on("unreadCount", (data) => {
-        console.log(data)
-        setUnread(data)
-      })
-      // setUnread(data);
-      // console.log(data)
-      }catch (error) {
+      try {
+        // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
+        // const data = await res.json();
+        socketRef.current.emit("countUnseen", { userId: userId, senderType: "doc" })
+        socketRef.current.on("unreadCount", (data) => {
+          console.log(data)
+          setUnread(data)
+        })
+        // setUnread(data);
+        // console.log(data)
+      } catch (error) {
         console.log(error);
       }
       // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -266,7 +266,7 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `https://built-it-backend.onrender.com/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       // console.log(messages, "HALLLLLLO");

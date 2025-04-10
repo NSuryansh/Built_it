@@ -47,7 +47,7 @@ const AdminLogin = () => {
     setError("");
     setisLoading(true);
     const response = await fetch(
-      "https://built-it-backend.onrender.com/adminLogin",
+      "http://localhost:3000/adminLogin",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -75,7 +75,7 @@ const AdminLogin = () => {
       return;
     }
     const response = await fetch(
-      "https://built-it-backend.onrender.com/forgotAdminPassword",
+      "http://localhost:3000/forgotAdminPassword",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

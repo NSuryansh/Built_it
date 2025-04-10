@@ -48,7 +48,7 @@ const Login = () => {
     }
     setError("");
     const response = await fetch(
-      "https://built-it-backend.onrender.com/login",
+      "http://localhost:3000/login",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,7 +82,7 @@ const Login = () => {
       return;
     }
     const response = await fetch(
-      "https://built-it-backend.onrender.com/forgotPassword",
+      "http://localhost:3000/forgotPassword",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
