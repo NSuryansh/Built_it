@@ -14,6 +14,7 @@ const Book = () => {
   const [step, setStep] = useState(1);
   const [doctors, setDoctors] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
   const [formData, setFormData] = useState({
     // booking details provided by the user
     name: "",
@@ -76,6 +77,7 @@ const Book = () => {
   // On form submission, send the booking request to the backend's requests API
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setisLoading(true);
 
     const lowerCaseEmail = formData.email.toLowerCase();
     const [address, domain] = lowerCaseEmail.split("@");
@@ -128,7 +130,9 @@ const Book = () => {
         note: "",
         date: "",
       });
+      setisLoading(false);
     } catch (err) {
+      setisLoading(false);
       console.error("Error submitting booking request:", err);
       CustomToast("Error while booking appointment");
     }
@@ -206,6 +210,8 @@ const Book = () => {
                   onBack={() => setStep(1)}
                   selectedDoctor={selectedDoctor}
                   isAuthenticated={isAuthenticated}
+                  isLoading={isLoading}
+                  setisLoading={setisLoading}
                 />
               </div>
             </div>

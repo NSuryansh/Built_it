@@ -178,13 +178,12 @@ const Peer = () => {
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
-
     const handleReceiveMessage = async ({
       senderId,
       encryptedText,
       iv,
       encryptedAESKey,
-      userType,
+      senderType,
     }) => {
       console.log("HALLO")
       const decrypted = await decryptMessage(
@@ -198,7 +197,7 @@ const Peer = () => {
 
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId, userType },
+        { decryptedText: decrypted, senderId, senderType},
       ]);
     };
 
@@ -206,7 +205,7 @@ const Peer = () => {
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
-  }, [aesKey, isAuthenticated]);
+  }, [aesKey, isAuthenticated, showMessages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

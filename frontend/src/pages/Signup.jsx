@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserPlus, Eye, EyeOff } from "lucide-react";
+import { UserPlus, Eye, EyeOff, Loader } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
@@ -17,7 +17,7 @@ const SignUp = () => {
   const [otp, setOtp] = useState("");
   const [otpRight, setOtpRight] = useState("");
   const [passwordScore, setpasswordScore] = useState(0);
-
+  const [isLoading, setisLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -59,11 +59,14 @@ const SignUp = () => {
 
   async function sendOTP() {
     try {
-      const response = await fetch("https://built-it-backend.onrender.com/otpGenerate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: formData.email }),
-      });
+      const response = await fetch(
+        "https://built-it-backend.onrender.com/otpGenerate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: formData.email }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
@@ -78,14 +81,17 @@ const SignUp = () => {
 
   async function verifyOTP() {
     try {
-      const response = await fetch("https://built-it-backend.onrender.com/otpcheck", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          otp: otp,
-          email: formData.email,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it-backend.onrender.com/otpcheck",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            otp: otp,
+            email: formData.email,
+          }),
+        }
+      );
       console.log(response);
       const res = await response.json();
       console.log(res);
@@ -208,7 +214,7 @@ const SignUp = () => {
       }
       setFormData({ ...formData, rollNo: roll });
     }
-
+    setisLoading(true);
     try {
       const response = await fetch(
         `https://built-it-backend.onrender.com/check-user?username=${formData.username}`
@@ -217,9 +223,11 @@ const SignUp = () => {
       if (data.message === "Username already exists!") {
         setError(data.message);
         CustomToast(data.message);
+        setisLoading(false);
         return;
       }
     } catch (error) {
+      setisLoading(false);
       console.error("Signup error:", error);
       CustomToast(error.toString());
     }
@@ -232,15 +240,19 @@ const SignUp = () => {
     } else {
       setAcadProg("UG");
     }
-
     await sendOTP();
+    setisLoading(false);
   }
 
   async function handleOTPVerification() {
     setError("");
+    setisLoading(true);
     const otpValid = await verifyOTP();
     console.log(otpValid);
-    if (!otpValid) return;
+    if (!otpValid) {
+      setisLoading(false);
+      return;
+    }
     try {
       const { publicKey, privateKey } = await generateKeyPair();
       const publicKeyPEM = await exportKeyToPEM(publicKey);
@@ -257,27 +269,32 @@ const SignUp = () => {
         rollNo,
         gender,
       } = formData;
-      const response = await fetch("https://built-it-backend.onrender.com/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          mobile: mobile,
-          password: password,
-          altNo: altNo,
-          publicKey: publicKeyPEM,
-          department: department,
-          acadProg: acadProg,
-          rollNo: rollNo,
-          gender: gender,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it-backend.onrender.com/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            mobile: mobile,
+            password: password,
+            altNo: altNo,
+            publicKey: publicKeyPEM,
+            department: department,
+            acadProg: acadProg,
+            rollNo: rollNo,
+            gender: gender,
+          }),
+        }
+      );
       const data = await response.json();
       console.log("Signup successful:", data);
       CustomToast("Signup successful");
+      setisLoading(false);
       navigate("/login");
     } catch (error) {
+      setisLoading(false);
       console.error("Signup error:", error);
       CustomToast(error.toString());
     }
@@ -469,12 +486,12 @@ const SignUp = () => {
                   </button>
                 </div>
               </div>
-              {/* <PasswordStrengthBar
+              <PasswordStrengthBar
                 onChangeScore={(score) => {
                   setpasswordScore(score);
                 }}
                 password={formData.password}
-              /> */}
+              />
 
               <div>
                 <label
@@ -511,10 +528,10 @@ const SignUp = () => {
 
             <button
               onClick={handleInitialSignup}
-              type="button"
-              className="w-full mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
+              disabled={isLoading}
+              className="w-full flex justify-center items-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
             >
-              Sign Up
+              {isLoading ? <Loader /> : <>Signup</>}
             </button>
           </form>
         )}
@@ -533,10 +550,11 @@ const SignUp = () => {
             />
             <button
               onClick={handleOTPVerification}
+              disabled={isLoading}
               type="button"
-              className="w-full mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
+              className="w-full flex items-center justify-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
             >
-              Verify OTP &amp; Complete Signup
+              {isLoading ? <Loader /> : <>Verify OTP &amp; Complete Signup</>}
             </button>
           </div>
         )}
