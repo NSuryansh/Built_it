@@ -1,11 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  MessageSquare,
-  Search,
-  X,
-  UserCircle2,
-  User,
-} from "lucide-react";
+import { MessageSquare, Search, X, UserCircle2, User } from "lucide-react";
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
@@ -40,7 +34,6 @@ const Peer = () => {
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
   const messagesEndRef = useRef(null);
-
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
 
@@ -178,6 +171,8 @@ const Peer = () => {
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
+    console.log("HIHIHIHIHIHIH")
+    console.log('Socket instance:', socketRef.current);
     const handleReceiveMessage = async ({
       senderId,
       encryptedText,
@@ -191,12 +186,13 @@ const Peer = () => {
         iv,
         encryptedAESKey
       );
-
+      console.log(decrypted, "decryptionnn")
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
       setShowMessages((prev) => [
         ...prev,
+        { decryptedText: decrypted, senderId, senderType },
         { decryptedText: decrypted, senderId, senderType },
       ]);
     };
@@ -245,19 +241,14 @@ const Peer = () => {
     const pendingReads = async () => {
       console.log("HAL")
       try {
-        // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-        // const data = await res.json();
         socketRef.current.emit("countUnseen", { userId: userId, senderType: "user" })
         socketRef.current.on("unreadCount", (data) => {
           console.log(data)
           setUnread(data)
         })
-        // setUnread(data);
-        // console.log(data)
       } catch (error) {
         console.log(error);
       }
-      // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     };
 
     pendingReads();

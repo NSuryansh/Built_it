@@ -203,6 +203,11 @@ io.on("connection", (socket) => {
           authTag,
           senderType,
         });
+      //   senderId,
+      // encryptedText,
+      // iv,
+      // encryptedAESKey,
+      // senderType,
         // console.log("Message sent");
       } catch (error) {
         console.error("Error sending message:", error);
