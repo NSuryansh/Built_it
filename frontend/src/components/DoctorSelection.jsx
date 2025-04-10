@@ -18,7 +18,7 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
               className="group w-full bg-white hover:bg-[var(--custom-orange-50)] p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-100)] hover:border-[var(--custom-orange-200)]"
               onClick={() => onSelect(doctor)}
             >
-              <div className="flex w-full flex-col justify-center items-center sm:flex-row gap-6">
+              <div className="flex w-full flex-col justify-center items-center sm:flex-row gap-3 sm:gap-6">
                 <div className="flex flex-col items-center">
                   <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] rounded-full p-4 group-hover:from-[var(--custom-orange-200)] group-hover:to-[var(--custom-orange-300)] transition-all duration-300">
                     <User className="w-8 h-8 text-[var(--custom-orange-700)]" />
@@ -31,24 +31,26 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
                   </div>
                 </div>
 
-                <div className="flex-1 space-y-2">
-                  <h3 className="text-xl text-left font-bold text-[var(--custom-orange-800)] group-hover:text-[var(--custom-orange-900)] transition-colors duration-300">
+                <div className="flex-1 space-y-0">
+                  <h3 className="text-xl text-center sm:text-left font-bold text-[var(--custom-orange-800)] group-hover:text-[var(--custom-orange-900)] transition-colors duration-300">
                     {doctor.name}
                   </h3>
-                  <p className="mt-2 text-left text-sm text-gray-600 line-clamp-2">
+                  <p className="text-center sm:text-left text-sm text-gray-600 line-clamp-2">
                     {doctor.desc || "No description available."}
                   </p>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 group-hover:text-[var(--custom-orange-700)] transition-colors duration-300">
-                    <div className="bg-[var(--custom-orange-100)] p-1.5 rounded-full">
-                      <Phone className="w-4 h-4" />
+                  <div className="flex-1 space-y-2 mt-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 group-hover:text-[var(--custom-orange-700)] transition-colors duration-300">
+                      <div className="bg-[var(--custom-orange-100)] p-1.5 rounded-full">
+                        <Phone className="w-4 h-4" />
+                      </div>
+                      <span>{doctor.mobile}</span>
                     </div>
-                    <span>{doctor.mobile}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 group-hover:text-[var(--custom-orange-700)] transition-colors duration-300">
-                    <div className="bg-[var(--custom-orange-100)] p-1.5 rounded-full">
-                      <Mail className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-sm text-gray-600 group-hover:text-[var(--custom-orange-700)] transition-colors duration-300">
+                      <div className="bg-[var(--custom-orange-100)] p-1.5 rounded-full">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <span>{doctor.email}</span>
                     </div>
-                    <span>{doctor.email}</span>
                   </div>
                 </div>
               </div>
