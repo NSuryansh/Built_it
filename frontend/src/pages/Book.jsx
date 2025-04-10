@@ -4,6 +4,7 @@ import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import Footer from "../components/Footer";
+import { motion } from 'framer-motion';
 import { ToastContainer } from "react-toastify";
 import DoctorSelectionStep from "../components/DoctorSelection";
 import BookingFormStep from "../components/BookingForm";
@@ -143,36 +144,66 @@ const Book = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 flex flex-col overflow-hidden">
-      {/* Navbar with subtle shadow */}
-      <Navbar />
+    <div className="min-h-screen bg-amber-50 flex flex-col overflow-hidden relative">
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-orange-300/20 rounded-full blur-3xl animate-non" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-rose-300/20 rounded-full blur-3xl animate-pulse-slow delay-1000" />
+      </div>
 
-      {/* Toast Container with custom styling */}
+      {/* Navbar with Glass Effect */}
+      <Navbar className="bg-white/10 backdrop-blur-md shadow-lg border-b border-white/20 sticky top-0 z-50" />
+
+      {/* Toast Container with Premium Styling */}
       <ToastContainer
         className="z-50"
-        toastClassName="rounded-xl shadow-lg bg-white/90 text-gray-800"
+        toastClassName="rounded-xl shadow-2xl bg-white/95 text-gray-900 border border-gray-100/50 p-5 font-medium backdrop-blur-sm transition-all duration-300 hover:shadow-3xl"
       />
 
       {/* Main Content */}
-      <div className="flex-1 flex justify-center items-center px-2 sm:px-6 md:px-10 py-12">
-        <div className="w-full max-w-full bg-white/70 backdrop-blur-lg rounded-xl md:rounded-3xl shadow-lg px-2 py-6 md:p-10 border border-orange-200/50 transition-all duration-500 hover:shadow-3xl">
-          {/* Step Indicator */}
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center gap-4">
+      <div className="flex-1 flex justify-center items-center px-4 sm:px-8 lg:px-16 py-20 relative z-10">
+        <div className="w-full max-w-5xl bg-white/40 backdrop-blur-xl rounded-3xl shadow-2xl p-8 lg:p-12 border border-white/30 transition-all duration-500 hover:shadow-3xl hover:bg-white/50">
+          {/* Step Indicator with Luxe Design */}
+          <div className="flex justify-center mb-12">
+            <div className="flex items-center gap-8 bg-gradient-to-r from-orange-100/50 to-rose-100/50 p-4 rounded-full border border-white/20 shadow-inner">
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${
-                  step === 1 ? "bg-orange-500 scale-110" : "bg-gray-300"
+                className={`w-14 h-14 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-500 shadow-md ${
+                  step === 1
+                    ? "bg-gradient-to-br from-orange-500 to-rose-500 scale-110"
+                    : "bg-gray-300/80"
                 }`}
               >
                 1
+                {step === 1 && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full border-2 border-orange-400/50 animate-ping"
+                    initial={{ scale: 1 }}
+                    animate={{ scale: 1.2 }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                )}
               </div>
-              <div className="w-16 h-1 bg-gray-300 rounded-full" />
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${
-                  step === 2 ? "bg-orange-500 scale-110" : "bg-gray-300"
+                className={`w-24 h-2 rounded-full transition-all duration-500 ${
+                  step === 2 ? "bg-gradient-to-r from-orange-400 to-rose-400" : "bg-gray-200/50"
+                }`}
+              />
+              <div
+                className={`w-14 h-14 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-500 shadow-md ${
+                  step === 2
+                    ? "bg-gradient-to-br from-orange-500 to-rose-500 scale-110"
+                    : "bg-gray-300/80"
                 }`}
               >
                 2
+                {step === 2 && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full border-2 border-rose-400/50 animate-ping"
+                    initial={{ scale: 1 }}
+                    animate={{ scale: 1.2 }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -180,23 +211,23 @@ const Book = () => {
           {/* Conditional Steps */}
           {step === 1 && (
             <div className="min-h-[60vh] flex items-center justify-center animate-fade-in">
-              <div className="text-center">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                  Select Your Doctor / Counsellor
+              <div className="text-center px-6">
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-10 bg-gradient-to-r from-orange-600 to-rose-600 bg-clip-text text-transparent">
+                  Choose Your Expert
                 </h2>
                 <DoctorSelectionStep
                   doctors={doctors}
                   onSelect={handleDoctorSelect}
-                  className="cursor-pointer"
+                  className="cursor-pointer transition-all duration-300 hover:scale-[1.03] hover:shadow-lg rounded-xl p-4 bg-white/50 backdrop-blur-sm border border-white/20"
                 />
               </div>
             </div>
           )}
           {step === 2 && (
             <div className="min-h-[60vh] flex items-center justify-center animate-fade-in">
-              <div className="text-center w-full">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                  Book Your Appointment
+              <div className="text-center w-full px-6">
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-10 bg-gradient-to-r from-orange-600 to-rose-600 bg-clip-text text-transparent">
+                  Secure Your Appointment
                 </h2>
                 <BookingFormStep
                   formData={formData}
@@ -207,6 +238,7 @@ const Book = () => {
                   isAuthenticated={isAuthenticated}
                   isLoading={isLoading}
                   setisLoading={setisLoading}
+                  className="space-y-8 bg-white/50 backdrop-blur-sm p-6 rounded-xl border border-white/20 shadow-inner"
                 />
               </div>
             </div>
@@ -214,13 +246,13 @@ const Book = () => {
         </div>
       </div>
 
-      {/* Footer with matching theme */}
+      {/* Footer with Premium Styling */}
       <Footer
         color="orange"
-        className="bg-orange-600/90 text-white shadow-inner"
+        className="bg-gradient-to-r from-orange-600 to-rose-600 text-white shadow-lg py-8 border-t border-white/20"
       />
     </div>
-  );
+);
 };
 
 export default Book;
