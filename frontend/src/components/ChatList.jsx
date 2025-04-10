@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { MessageSquare } from "lucide-react";
 
-export default function ChatList({ names, selectedChat, setSelectedChat, setShowChatList, unread }) {
-
-
+export default function ChatList({
+  names,
+  selectedChat,
+  setSelectedChat,
+  setShowChatList,
+  unread,
+  isDoc = false,
+}) {
   return (
     <div className="bg-[var(--mp-custom-white)] border-r border-[var(--mp-custom-gray-200)] overflow-y-auto">
-      <div className="bg-[var(--mp-custom-peach)]">
+      <div
+        className={`${isDoc ? "bg-blue-100" : "bg-[var(--mp-custom-peach)]"}`}
+      >
         <div className="p-4 border-b border-[var(--mp-custom-gray-200)]">
-          <h1 className="text-2xl font-bold text-[var(--mp-heading-text)]">
+          <h1
+            className={`text-2xl font-bold ${
+              isDoc ? "text-blue-500" : "text-[var(--mp-heading-text)]"
+            }`}
+          >
             Messages
           </h1>
         </div>
@@ -32,7 +43,7 @@ export default function ChatList({ names, selectedChat, setSelectedChat, setShow
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] flex items-center justify-center">
                   <MessageSquare className="w-5 h-5 text-[var(--mp-custom-white)]" />
                 </div>
-                {unread> 0 && (
+                {unread > 0 && (
                   <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {unread}
                   </div>
