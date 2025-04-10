@@ -217,6 +217,11 @@ io.on("connection", (socket) => {
     }
   );
 
+  socket.on("leaveRoom", async({userId, doctorId})=>{
+    const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
+    socket.leave(room)
+  })
+
   socket.on("disconnect", () => {
     // console.log(`User disconnected: ${socket.id}`);
     for (const [userId, socketId] of users.entries()) {

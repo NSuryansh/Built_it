@@ -28,7 +28,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center h-max bg-gradient-to-br from-orange-50 to-red-50">
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
         <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
@@ -52,10 +52,10 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
   const filteredItems = getFilteredItems();
 
   return (
-    <div className="mb-4 sm:mb-8 bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div className="mb-16 bg-white rounded-2xl shadow-lg overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-100 transition-colors duration-300"
+        className="w-full flex items-center justify-between p-6 hover:bg-gray-100 transition-colors duration-300"
       >
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-full bg-gray-100">
@@ -83,7 +83,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
                   selectedCategory === category
                     ? "bg-amber-700 text-white shadow-md scale-105"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
@@ -94,14 +94,14 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredItems.map((item, index) => (
               <a
                 key={index}
                 href={item.spotifyLink || item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group scale-95 sm:scale-100 relative rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                className="group relative rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
                 onMouseEnter={() => setHoveredItem(index)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
@@ -137,14 +137,14 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
 
 function Entertainment() {
   return (
-    <div className="h-max bg-gradient-to-br from-orange-100 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-indigo-50">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h1 className="text-[34px] lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4 tracking-tight">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4 tracking-tight">
             Entertainment Hub
           </h1>
-          <p className="text-sm sm:text-md md:text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Discover and explore your favorite movies, books, music, and games
             all in one place
           </p>

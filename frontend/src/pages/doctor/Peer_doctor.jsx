@@ -37,10 +37,10 @@ const DoctorPeer = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const userId = parseInt(localStorage.getItem("userid"));
   const username = localStorage.getItem("username");
-
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
+  
 
   useEffect(() => {
     if (newChatId) {
@@ -237,14 +237,14 @@ const DoctorPeer = () => {
     pendingReads();
   }, [selectedChat, recId]);
 
-  useEffect(() => {
-    if (recId !== 0) {
-      const docId = localStorage.getItem("userid");
-      const userId = recId;
-      socketRef.current.emit("joinRoom", {
-        userId: userId,
-        doctorId: docId,
-      });
+    useEffect(() => {
+      if(recId!==0){
+      const docId = localStorage.getItem("userid")
+      const userId = recId
+      socketRef.current.emit("joinRoom", {  
+        userId: userId, 
+        doctorId: docId
+      })
     }
   }, [recId]);
 
