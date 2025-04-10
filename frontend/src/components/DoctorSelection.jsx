@@ -28,7 +28,7 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
                       <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
                     ) : null}
                     <span className="text-sm font-medium text-gray-600">
-                      {doctor.avgRating != 0 ? doctor.avgRating : "No Rating"}
+                      {doctor.avgRating != 0 ? doctor.avgRating : "Unrated"}
                     </span>
                   </div>
                 </div>

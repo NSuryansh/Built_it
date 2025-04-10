@@ -257,10 +257,10 @@ export default function Mood() {
             <button
               type="button"
               onClick={isRecording ? stopRecording : startRecording}
-              className={`p-3 rounded-full transition-colors ${
+              className={`p-2 rounded-full transition-colors bg-gradient-to-r ${
                 isRecording
-                  ? 'bg-red-500 hover:bg-red-600 text-white'
-                  : 'bg-pink-500 hover:bg-pink-700 text-white'
+                  ? 'to-[var(--peer-custom-orange-500)] from-[var(--peer-custom-pink-500)] text-white'
+                  : 'from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] text-white'
               }`}
               title={isRecording ? "Stop Recording" : "Start Recording"}
             >

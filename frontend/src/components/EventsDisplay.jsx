@@ -39,13 +39,13 @@ const EventsDisplay = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-1 sm:gap-4 xl:gap-1 text-[var(--events-display-gray-600)]">
+              <div className="mt-4 flex flex-wrap items-center gap-1 sm:gap-4 text-[var(--events-display-gray-600)]">
                 <div className="flex items-center gap-2">
                   <div className="p-1 rounded-full bg-[var(--mp-custom-peach)]">
                     <Calendar className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium">
-                    {format(event.dateTime, "MMM d, yyyy 'at' h:mm a")}
+                    {format(event.dateTime, "MMM d - h:mm a")}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
