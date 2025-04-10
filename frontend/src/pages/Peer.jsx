@@ -1,11 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  MessageSquare,
-  Search,
-  X,
-  UserCircle2,
-  User,
-} from "lucide-react";
+import { MessageSquare, Search, X, UserCircle2, User } from "lucide-react";
 import ChatList from "../components/ChatList";
 import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
@@ -40,7 +34,6 @@ const Peer = () => {
   const socketRef = useRef(null);
   const lastMessageRef = useRef("");
   const messagesEndRef = useRef(null);
-
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
 
@@ -178,6 +171,8 @@ const Peer = () => {
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
+    console.log("HIHIHIHIHIHIH")
+    console.log('Socket instance:', socketRef.current);
     const handleReceiveMessage = async ({
       senderId,
       encryptedText,
@@ -191,13 +186,13 @@ const Peer = () => {
         iv,
         encryptedAESKey
       );
-
+      console.log(decrypted, "decryptionnn")
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId, senderType},
+        { decryptedText: decrypted, senderId, senderType },
       ]);
     };
 
@@ -242,22 +237,17 @@ const Peer = () => {
         senderType: "user",
       });
     }
-    const pendingReads = async() => {
+    const pendingReads = async () => {
       console.log("HAL")
-      try{
-      // const res = await fetch(`https://built-it-backend.onrender.com/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-      // const data = await res.json();
-      socketRef.current.emit("countUnseen", {userId: userId, senderType:"user"})
-      socketRef.current.on("unreadCount", (data) => {
-        console.log(data)
-        setUnread(data)
-      })
-      // setUnread(data);
-      // console.log(data)
-      }catch (error) {
+      try {
+        socketRef.current.emit("countUnseen", { userId: userId, senderType: "user" })
+        socketRef.current.on("unreadCount", (data) => {
+          console.log(data)
+          setUnread(data)
+        })
+      } catch (error) {
         console.log(error);
       }
-      // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     };
 
     pendingReads();
@@ -315,9 +305,9 @@ const Peer = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-      <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
-      <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
-    </div>
+        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
+      </div>
     );
   }
 
@@ -398,11 +388,10 @@ const Peer = () => {
                     key={index}
                     message={msg.decryptedText}
                     isSent={msg.senderType === "user"}
-                    className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
-                      msg.senderId === userId
+                    className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
                         ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                         : "bg-gray-100 text-gray-800"
-                    }`}
+                      }`}
                   />
                 ))}
                 <div ref={messagesEndRef} />
@@ -495,11 +484,10 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
-                    msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                  }`}
+                    }`}
                 />
               ))}
               <div ref={messagesEndRef} />
