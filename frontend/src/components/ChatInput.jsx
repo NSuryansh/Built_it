@@ -16,7 +16,7 @@ const ChatInput = ({ message, setMessage, handleSubmit, isDoc }) => {
               setMessage(e.target.value);
             }}
             placeholder="Type a message..."
-            className={`flex-1 rounded-full border border-[var(--mp-custom-gray-200)] px-4 py-2 focus:outline-none focus:border-${isDoc ? 'blue-500' : '[var(--peer-custom-orange-500)]'}`}
+            className={`flex-1 w-[95%] rounded-full border border-[var(--mp-custom-gray-200)] px-4 py-2 focus:outline-none focus:border-${isDoc ? 'blue-500' : '[var(--peer-custom-orange-500)]'}`}
           />
           <button
             type="submit"
