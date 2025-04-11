@@ -29,7 +29,7 @@ const DoctorPeer = () => {
   const [showChatList, setShowChatList] = useState(true);
   const [messagesApi, setMessagesApi] = useState(null);
   const [reloader, setReloader] = useState(true);
-  const [userList, setUserList] = useState([{}]);
+  const [userList, setUserList] = useState([]);
   const [unread, setUnread] = useState([]);
   const navigate = useNavigate();
   const socketRef = useRef(null);
@@ -107,6 +107,10 @@ const DoctorPeer = () => {
       return [];
     }
   }
+
+  const filteredUsers = userList.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   useEffect(() => {
     const getContacts = async () => {
@@ -373,7 +377,7 @@ const DoctorPeer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={userList.map((doctor) => doctor.name)}
+                  names={filteredUsers.map((doctor) => doctor.name)}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
@@ -477,7 +481,7 @@ const DoctorPeer = () => {
           userList.length > 0 ? (
             <div className="h-full">
               <ChatList
-                names={userList.map((doctor) => doctor.name)}
+                names={filteredUsers.map((doctor) => doctor.name)}
                 selectedChat={selectedChat}
                 setSelectedChat={setSelectedChat}
                 setShowChatList={setShowChatList}
