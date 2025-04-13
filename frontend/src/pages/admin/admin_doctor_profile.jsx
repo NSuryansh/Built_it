@@ -123,19 +123,16 @@ const AdminDoctorProfile = () => {
 
   const referralSub = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:3000/referrals",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            roll_no: String(referralData.rollNo),
-            doctor_id: search.split("=")[1],
-            referred_by: referralData.referredBy,
-            reason: referralData.reason,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/referrals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          roll_no: String(referralData.rollNo),
+          doctor_id: search.split("=")[1],
+          referred_by: referralData.referredBy,
+          reason: referralData.reason,
+        }),
+      });
       const data = await response.json();
 
       if (data.error) {
@@ -204,7 +201,9 @@ const AdminDoctorProfile = () => {
                 </h1>
                 <div className="flex">
                   <p className="text-yellow-200 text-xl font-medium italic">
-                    {`${doctor.field} (${doctor.avgRating}`}
+                    {`${doctor.field} (${parseFloat(
+                      doctor.avgRating
+                    ).toPrecision(2)}`}
                   </p>
                   <p>&nbsp;</p>
                   <StarIcon fill="#FFF085" className="text-[#FFF085]" />

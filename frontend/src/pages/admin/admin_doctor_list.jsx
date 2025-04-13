@@ -44,9 +44,7 @@ const DoctorsList = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:3000/getdoctors"
-        );
+        const res = await fetch("http://localhost:3000/getdoctors");
         const resp = await res.json();
         setDoc(resp);
         setfetched(true);
@@ -62,16 +60,13 @@ const DoctorsList = () => {
 
   const handleDelete = async (doctorId) => {
     try {
-      const res = await fetch(
-        "http://localhost:3000/deletedoc",
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ doctorID: doctorId }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/deletedoc", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ doctorID: doctorId }),
+      });
       const resp = await res.json();
       setDoc((prevDoctors) =>
         prevDoctors.filter((doctor) => doctor.id !== doctorId)
@@ -152,8 +147,9 @@ const DoctorsList = () => {
             <div className="flex gap-4">
               <button
                 onClick={handleRefresh}
-                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${isRefreshing ? "animate-spin" : ""
-                  }`}
+                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${
+                  isRefreshing ? "animate-spin" : ""
+                }`}
                 title="Refresh List"
               >
                 <RefreshCw size={24} />
@@ -225,7 +221,7 @@ const DoctorsList = () => {
                   <td className="px-6 py-4">
                     <div className="flex">
                       <span className="px-1 py-1 rounded-full text-sm font-medium text-green-700">
-                        {doctor.avgRating}
+                        {parseFloat(doctor.avgRating).toPrecision(2)}
                       </span>
                       <div>
                         <StarIcon
