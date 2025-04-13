@@ -95,7 +95,7 @@ const Events = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-rose-50">
       <Navbar />
 
       <main className="pt-20 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -171,7 +171,7 @@ const Events = () => {
                           <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
                             <div className="flex items-center">
                               <Clock className="h-4 w-4 mr-2 text-orange-500" />
-                              {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
+                              {format(event.dateTime, "dd MMM h:mm a")}
                             </div>
                           </td>
                           <td className="px-6 py-5 max-w-sm">
@@ -240,7 +240,7 @@ const Events = () => {
                           <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
                             <div className="flex items-center">
                               <Clock className="h-4 w-4 mr-2 text-gray-400" />
-                              {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
+                              {format(event.dateTime, "dd MMM h:mm a")}
                             </div>
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">

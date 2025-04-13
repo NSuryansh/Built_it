@@ -83,7 +83,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                className={`px-2.5 md:px-5 py-1.5 md:py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
                   selectedCategory === category
                     ? "bg-amber-700 text-white shadow-md scale-105"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
@@ -139,12 +139,12 @@ function Entertainment() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-indigo-50">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 py-4 lg:py-16 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h1 className="text-[34px] lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4 tracking-tight">
             Entertainment Hub
           </h1>
-          <p className="text-sm sm:text-md md:text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm lg:text-lg text-gray-600 max-w-2xl mx-auto">
             Discover and explore your favorite movies, books, music, and games
             all in one place
           </p>
