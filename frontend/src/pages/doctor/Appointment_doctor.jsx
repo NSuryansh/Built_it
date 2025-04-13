@@ -335,76 +335,90 @@ const DoctorAppointment = () => {
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600">
                   Current Appointments
                 </h1>
-                <p className="mt-3 text-center sm:text-left text-lg text-gray-600 tracking-wide font-light">
+                <p className="mt-3 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
                   Seamlessly manage your upcoming appointments
                 </p>
               </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 overflow-y-scroll overflow-x-hidden max-h-150">
-              {curr.map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="p-4 sm:p-8 border-b border-blue-100 hover:bg-blue-50/50 transition-all duration-500"
-                >
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-7">
-                    <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center shadow-lg shrink-0">
-                      <User className="h-8 w-8 text-blue-600" />
-                    </div>
-                    <div className="flex-1 mt-4 sm:mt-0 scale-90 sm:scale-100 space-y-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center text-lg text-gray-800">
-                          <CircleUser className="h-6 w-6 mr-4 text-blue-600" />
-                          <span className="font-semibold tracking-tight">
-                            {appointment.user.username}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-lg text-gray-800">
-                          <Clock className="h-6 w-6 mr-4 text-blue-600" />
-                          {format(appointment.dateTime, "dd MMM h:mm a")}
-                        </div>
-                        <div className="flex items-center text-lg text-gray-800">
-                          <Phone className="h-6 w-6 mr-4 text-blue-600" />
-                          {appointment.user.mobile}
-                        </div>
-                        <div className="flex items-start text-lg text-gray-800">
-                          <FileText className="h-6 w-6 mr-4 mt-1 text-blue-600" />
-                          <span>{appointment.reason}</span>
-                        </div>
+            {curr.length > 0 ? (
+              <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 overflow-y-scroll overflow-x-hidden max-h-150">
+                {curr.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="p-4 sm:p-8 border-b border-blue-100 hover:bg-blue-50/50 transition-all duration-500"
+                  >
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-7">
+                      <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center shadow-lg shrink-0">
+                        <User className="h-8 w-8 text-blue-600" />
                       </div>
-                      <div className="flex items-center space-x-5">
-                        {completedNotes[appointment.id] !== undefined ? (
-                          <button
-                            onClick={() => deleteApp(appointment)}
-                            className="px-6 py-2.5 bg-red-500 text-white font-semibold rounded-full shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all duration-300"
-                          >
-                            Done
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleMarkAsDone(appointment.id)}
-                            className="px-6 py-2.5 bg-blue-500 text-white font-semibold rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-105 transition-all duration-300"
-                          >
-                            Mark as Done
-                          </button>
+                      <div className="flex-1 mt-4 sm:mt-0 scale-90 sm:scale-100 space-y-6">
+                        <div className="space-y-4">
+                          <div className="flex items-center text-lg text-gray-800">
+                            <CircleUser className="h-6 w-6 mr-4 text-blue-600" />
+                            <span className="font-semibold tracking-tight">
+                              {appointment.user.username}
+                            </span>
+                          </div>
+                          <div className="flex items-center text-lg text-gray-800">
+                            <Clock className="h-6 w-6 mr-4 text-blue-600" />
+                            {format(appointment.dateTime, "dd MMM h:mm a")}
+                          </div>
+                          <div className="flex items-center text-lg text-gray-800">
+                            <Phone className="h-6 w-6 mr-4 text-blue-600" />
+                            {appointment.user.mobile}
+                          </div>
+                          <div className="flex items-start text-lg text-gray-800">
+                            <FileText className="h-6 w-6 mr-4 mt-1 text-blue-600" />
+                            <span>{appointment.reason}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-5">
+                          {completedNotes[appointment.id] !== undefined ? (
+                            <button
+                              onClick={() => deleteApp(appointment)}
+                              className="px-6 py-2.5 bg-red-500 text-white font-semibold rounded-full shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all duration-300"
+                            >
+                              Done
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleMarkAsDone(appointment.id)}
+                              className="px-6 py-2.5 bg-blue-500 text-white font-semibold rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-105 transition-all duration-300"
+                            >
+                              Mark as Done
+                            </button>
+                          )}
+                        </div>
+                        {completedNotes[appointment.id] !== undefined && (
+                          <div className="mt-6">
+                            <input
+                              type="text"
+                              placeholder="Enter completion notes..."
+                              className="w-full p-4 bg-white/50 backdrop-blur-sm border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all duration-300 text-gray-800 placeholder-gray-500"
+                              value={note}
+                              onChange={handleNoteChange}
+                            />
+                          </div>
                         )}
                       </div>
-                      {completedNotes[appointment.id] !== undefined && (
-                        <div className="mt-6">
-                          <input
-                            type="text"
-                            placeholder="Enter completion notes..."
-                            className="w-full p-4 bg-white/50 backdrop-blur-sm border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all duration-300 text-gray-800 placeholder-gray-500"
-                            value={note}
-                            onChange={handleNoteChange}
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col bg-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-blue-100 items-center justify-center py-8 px-4">
+                <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center mb-6">
+                  <Clock className="h-12 w-12 text-blue-400" />
                 </div>
-              ))}
-            </div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  No Current Appointments
+                </h3>
+                <p className="text-gray-600 text-center max-w-md">
+                  You don't have any appointments scheduled at the moment.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="mt-5 lg:mt-0 space-y-10">
@@ -413,144 +427,159 @@ const DoctorAppointment = () => {
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600">
                   Incoming Requests
                 </h1>
-                <p className="mt-3 text-center sm:text-left text-lg text-gray-600 tracking-wide font-light">
+                <p className="mt-3 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
                   Review and accept new appointment requests with ease
                 </p>
               </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 overflow-y-scroll overflow-x-hidden max-h-150">
-              {appointments.map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="p-4 sm:p-8 border-b border-blue-100 hover:bg-blue-50/50 transition-all duration-500"
-                >
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-7">
-                    <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center shadow-lg shrink-0">
-                      <User className="h-8 w-8 text-blue-600" />
-                    </div>
-                    <div className="flex-1 mt-4 sm:mt-0 scale-90 sm:scale-100 space-y-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center text-lg text-gray-800">
-                          <CircleUser className="h-6 w-6 mr-4 text-blue-600" />
-                          <span className="font-semibold tracking-tight">
-                            {appointment.user.username}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-lg text-gray-800">
-                          <Clock className="h-6 w-6 mr-4 text-blue-600" />
-                          {format(appointment.dateTime, "dd MMM h:mm a")}
-                        </div>
-                        <div className="flex items-center text-lg text-gray-800">
-                          <Phone className="h-6 w-6 mr-4 text-blue-600" />
-                          {appointment.user.mobile}
-                        </div>
-                        <div className="flex items-start text-lg text-gray-800">
-                          <FileText className="h-6 w-6 mr-4 mt-1 text-blue-600" />
-                          <span>{appointment.reason}</span>
-                        </div>
+            {appointments.length > 0 ? (
+              <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 overflow-y-scroll overflow-x-hidden max-h-150">
+                {appointments.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="p-4 sm:p-8 border-b border-blue-100 hover:bg-blue-50/50 transition-all duration-500"
+                  >
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-7">
+                      <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center shadow-lg shrink-0">
+                        <User className="h-8 w-8 text-blue-600" />
                       </div>
-                      <div className="flex space-x-5">
-                        <button
-                          onClick={() => acceptApp(appointment)}
-                          className="px-6 py-2.5 bg-blue-500 text-white font-semibold rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-105 transition-all duration-300"
-                        >
-                          Accept
-                        </button>
-                        {selectedAppointment !== appointment.id && (
+                      <div className="flex-1 mt-4 sm:mt-0 scale-90 sm:scale-100 space-y-6">
+                        <div className="space-y-4">
+                          <div className="flex items-center text-lg text-gray-800">
+                            <CircleUser className="h-6 w-6 mr-4 text-blue-600" />
+                            <span className="font-semibold tracking-tight">
+                              {appointment.user.username}
+                            </span>
+                          </div>
+                          <div className="flex items-center text-lg text-gray-800">
+                            <Clock className="h-6 w-6 mr-4 text-blue-600" />
+                            {format(appointment.dateTime, "dd MMM h:mm a")}
+                          </div>
+                          <div className="flex items-center text-lg text-gray-800">
+                            <Phone className="h-6 w-6 mr-4 text-blue-600" />
+                            {appointment.user.mobile}
+                          </div>
+                          <div className="flex items-start text-lg text-gray-800">
+                            <FileText className="h-6 w-6 mr-4 mt-1 text-blue-600" />
+                            <span>{appointment.reason}</span>
+                          </div>
+                        </div>
+                        <div className="flex space-x-5">
                           <button
-                            onClick={() => handleReschedule(appointment)}
-                            className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                            onClick={() => acceptApp(appointment)}
+                            className="px-6 py-2.5 bg-blue-500 text-white font-semibold rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-105 transition-all duration-300"
                           >
-                            Reschedule
+                            Accept
                           </button>
+                          {selectedAppointment !== appointment.id && (
+                            <button
+                              onClick={() => handleReschedule(appointment)}
+                              className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                            >
+                              Reschedule
+                            </button>
+                          )}
+                        </div>
+                        {selectedAppointment === appointment.id && (
+                          <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-blue-200">
+                            <h2 className="text-xl font-semibold mb-4 text-blue-600">
+                              Select Date and Time
+                            </h2>
+                            <div>
+                              <select
+                                name="date"
+                                value={selectedDate.split("T")[0]}
+                                onChange={(e) => {
+                                  const newDate = e.target.value;
+                                  const currentTime =
+                                    selectedDate.split("T")[2] || "09:00";
+                                  handleDateChange(newDate);
+                                  fetchAvailableSlots(newDate);
+                                }}
+                                className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+                                required
+                              >
+                                <option value="">Select Date</option>
+                                {[...Array(14)].map((_, index) => {
+                                  const date = new Date();
+                                  date.setDate(date.getDate() + index);
+                                  const formattedDate = format(
+                                    date,
+                                    "yyyy-MM-dd"
+                                  );
+                                  const displayDate = format(date, "d MMM");
+                                  return (
+                                    <option
+                                      key={formattedDate}
+                                      value={formattedDate}
+                                    >
+                                      {displayDate}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            </div>
+
+                            {/* Time Selection */}
+                            <div className="mt-4">
+                              <select
+                                name="time"
+                                value={time}
+                                onChange={(e) => {
+                                  const currentDate =
+                                    selectedDate.split("T")[0];
+                                  handleTimeChange(e);
+                                }}
+                                className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+                              >
+                                <option value="">Select Time</option>
+                                {Array.isArray(slots) &&
+                                  slots.map((slot) => (
+                                    <option
+                                      key={slot.id}
+                                      value={slot.starting_time}
+                                    >
+                                      {slot.starting_time
+                                        .split("T")[1]
+                                        .slice(0, 5)}
+                                    </option>
+                                  ))}
+                              </select>
+                            </div>
+                            <center>
+                              <button
+                                disabled={isRescheduling}
+                                onClick={() => handleReschedule(appointment)}
+                                className="px-6 mt-4 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                              >
+                                {isRescheduling ? (
+                                  <Loader className="mx-auto" />
+                                ) : (
+                                  <div>Reschedule</div>
+                                )}
+                              </button>
+                            </center>
+                          </div>
                         )}
                       </div>
-                      {selectedAppointment === appointment.id && (
-                        <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-blue-200">
-                          <h2 className="text-xl font-semibold mb-4 text-blue-600">
-                            Select Date and Time
-                          </h2>
-                          <div>
-                            <select
-                              name="date"
-                              value={selectedDate.split("T")[0]}
-                              onChange={(e) => {
-                                const newDate = e.target.value;
-                                const currentTime =
-                                  selectedDate.split("T")[2] || "09:00";
-                                handleDateChange(newDate);
-                                fetchAvailableSlots(newDate);
-                              }}
-                              className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
-                              required
-                            >
-                              <option value="">Select Date</option>
-                              {[...Array(14)].map((_, index) => {
-                                const date = new Date();
-                                date.setDate(date.getDate() + index);
-                                const formattedDate = format(
-                                  date,
-                                  "yyyy-MM-dd"
-                                );
-                                const displayDate = format(date, "d MMM");
-                                return (
-                                  <option
-                                    key={formattedDate}
-                                    value={formattedDate}
-                                  >
-                                    {displayDate}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
-
-                          {/* Time Selection */}
-                          <div className="mt-4">
-                            <select
-                              name="time"
-                              value={time}
-                              onChange={(e) => {
-                                const currentDate = selectedDate.split("T")[0];
-                                handleTimeChange(e);
-                              }}
-                              className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
-                            >
-                              <option value="">Select Time</option>
-                              {Array.isArray(slots) &&
-                                slots.map((slot) => (
-                                  <option
-                                    key={slot.id}
-                                    value={slot.starting_time}
-                                  >
-                                    {slot.starting_time
-                                      .split("T")[1]
-                                      .slice(0, 5)}
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                          <center>
-                            <button
-                              disabled={isRescheduling}
-                              onClick={() => handleReschedule(appointment)}
-                              className="px-6 mt-4 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
-                            >
-                              {isRescheduling ? (
-                                <Loader className="mx-auto" />
-                              ) : (
-                                <div>Reschedule</div>
-                              )}
-                            </button>
-                          </center>
-                        </div>
-                      )}
                     </div>
                   </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col bg-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-blue-100 items-center justify-center py-8 px-4">
+                <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center mb-6">
+                  <Clock className="h-12 w-12 text-blue-400" />
                 </div>
-              ))}
-            </div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  No Incoming Requests
+                </h3>
+                <p className="text-gray-600 text-center max-w-md">
+                  You don't have any requests at the moment.
+                </p>
+              </div>
+            )}
           </div>
         </div>
         <PastAppointmentGraphs
