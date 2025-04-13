@@ -102,14 +102,13 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Username Field */}
               <div className="relative">
-                <span className="absolute inset-0 flex items-center px-5 text-[var(--custom-orange-400)] opacity-50 pointer-events-none truncate peer-focus:opacity-0 transition-opacity duration-300">
-                  {localStorage.getItem("username") || "Your username"}
-                </span>
                 <input
                   type="text"
                   id="username"
                   className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
-                  value={formData.username}
+                  placeholder={
+                    localStorage.getItem("username") || "Your username"
+                  }
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -127,18 +126,15 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
               {/* Email Field */}
               <div className="relative">
-                <span className="absolute inset-0 flex items-center px-5 text-[var(--custom-orange-400)] opacity-50 pointer-events-none truncate peer-focus:opacity-0 transition-opacity duration-300">
-                  {localStorage.getItem("user_email") || "Your email"}
-                </span>
                 <input
                   type="email"
-                  disabled
                   id="email"
-                  className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  value={localStorage.getItem("user_email") || "Your email"}
+                  className="peer w-full cursor-not-allowed rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                  placeholder={
+                    localStorage.getItem("user_email") || "Your email"
                   }
+                  onChange={() => {}}
                 />
                 <label
                   htmlFor="email"
@@ -150,14 +146,13 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
               {/* Phone Number Field */}
               <div className="relative">
-                <span className="absolute inset-0 flex items-center px-5 text-[var(--custom-orange-400)] opacity-50 pointer-events-none truncate peer-focus:opacity-0 transition-opacity duration-300">
-                  {localStorage.getItem("user_mobile") || "Your phone number"}
-                </span>
                 <input
                   type="tel"
                   id="mobile"
                   className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
-                  value={formData.mobile}
+                  placeholder={
+                    localStorage.getItem("user_mobile") || "Your phone number"
+                  }
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, mobile: e.target.value }))
                   }
@@ -172,15 +167,12 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
               {/* Emergency Contact Number Field */}
               <div className="relative">
-                <span className="absolute inset-0 flex items-center px-5 text-[var(--custom-orange-400)] opacity-50 pointer-events-none truncate peer-focus:opacity-0 transition-opacity duration-300">
-                  {localStorage.getItem("user_alt_mobile") ||
-                    "Your emergency contact"}
-                </span>
                 <input
                   type="tel"
                   id="alt_mobile"
                   className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
-                  value={formData.alt_mobile}
+                  placeholder={localStorage.getItem("user_alt_mobile") ||
+                    "Your emergency contact"}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,

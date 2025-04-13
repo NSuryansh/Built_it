@@ -201,59 +201,76 @@ const Navbar = () => {
                 >
                   <User className="w-5 h-5" />
                 </button>
-
                 <div
-                  className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-orange-700)] rounded-lg top-12 right-5 list-none z-1 ${
-                    showDetails ? "opacity-100 visible" : "opacity-0 invisible"
+                  className={`absolute right-2 top-10 z-1 mt-3 transform transition-all duration-200 ease-in-out ${
+                    showDetails
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-2 pointer-events-none"
                   }`}
                 >
-                  <div className="w-64 bg-[var(--custom-orange-100)] rounded-lg shadow-lg p-6">
-                    <div className="space-y-4">
-                      <div className="text-center space-y-1">
-                        <h3 className="text-lg font-semibold text-[var(--custom-orange-900)]">
-                          {username}
-                        </h3>
-                        <p className="text-sm text-[var(--custom-orange-700)]">
-                          {email}
-                        </p>
+                  <div className="w-80 bg-white rounded-2xl shadow-lg overflow-hidden border border-[#FFE4CC]">
+                    {/* Header */}
+                    <div className="bg-[#FFF5EB] px-6 py-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-[#FFE4CC] rounded-full flex items-center justify-center">
+                          <span className="text-lg font-semibold text-[#FF6B35]">
+                            {username.charAt(0)}
+                          </span>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-800">
+                            {username}
+                          </h3>
+                          <p className="text-sm text-gray-600">{email}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Contact Details */}
+                    <div className="px-6 py-4 space-y-4">
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <label className="text-xs font-medium text-gray-500">
+                            Phone Number
+                          </label>
+                          <p className="text-sm font-medium text-gray-800">
+                            {phoneNumber}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-medium text-gray-500">
+                            Emergency Contact
+                          </label>
+                          <p className="text-sm font-medium text-gray-800">
+                            {altPhoneNumber}
+                          </p>
+                        </div>
                       </div>
 
+                      {/* Actions */}
                       <div className="space-y-2">
-                        <div className="text-sm text-[var(--custom-orange-800)]">
-                          <p>Phone Number</p>
-                          <p className="font-medium">{phoneNumber}</p>
-                        </div>
-
-                        <div className="text-sm text-[var(--custom-orange-800)]">
-                          <p>Emergency Contact Number</p>
-                          <p className="font-medium">{altPhoneNumber}</p>
-                        </div>
-                      </div>
-
-                      <div className="pt-2">
                         <button
                           onClick={() => {
                             navigate("/appointments");
                           }}
-                          className="text-sm px-4 py-2 rounded bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] w-full font-medium"
+                          className="w-full px-4 py-2 text-sm font-medium text-white bg-[#FF6B35] rounded-lg hover:bg-[#FF5722] transition-colors duration-200"
                         >
-                          Appointments
+                          View Appointments
                         </button>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => navigate("/modify_profile")}
-                          className="flex-1 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
-                        >
-                          Modify
-                        </button>
-                        <button
-                          onClick={handleLogout}
-                          className="flex-1 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
-                        >
-                          Logout
-                        </button>
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            onClick={() => navigate("/modify_profile")}
+                            className="px-4 py-2 text-sm font-medium text-[#FF6B35] bg-[#FFF5EB] rounded-lg hover:bg-[#FFE4CC] transition-colors duration-200"
+                          >
+                            Modify Profile
+                          </button>
+                          <button
+                            onClick={handleLogout}
+                            className="px-4 py-2 text-sm font-medium text-[#FF6B35] bg-[#FFF5EB] rounded-lg hover:bg-[#FFE4CC] transition-colors duration-200"
+                          >
+                            Logout
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

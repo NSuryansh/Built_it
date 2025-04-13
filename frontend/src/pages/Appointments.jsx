@@ -88,18 +88,15 @@ const UserAppointments = () => {
   // Only handles submitting data, not the event
   const submitRating = async (appointmentId, ratingValue, docId) => {
     try {
-      const res = await fetch(
-        "http://localhost:3000/setRating",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: appointmentId,
-            stars: ratingValue,
-            doctorId: docId,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/setRating", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: appointmentId,
+          stars: ratingValue,
+          doctorId: docId,
+        }),
+      });
 
       if (res.ok) {
         setSubmittedRatings((prev) => ({
@@ -217,10 +214,7 @@ const UserAppointments = () => {
                           </h3>
                           <p className="text-sm text-gray-600 mt-1 flex items-center gap-2">
                             <Calendar className="w-5 h-5" />
-                            {format(
-                              appointment.createdAt,
-                              "dd-MMM-yyyy hh:mm a"
-                            )}
+                            {format(appointment.createdAt, "dd MMM hh:mm a")}
                           </p>
                         </div>
                       </div>
