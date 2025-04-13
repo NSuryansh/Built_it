@@ -36,7 +36,9 @@ const Stress = () => {
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
+    return (
+      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
+    );
   }
 
   return (
@@ -78,21 +80,23 @@ const Stress = () => {
                   className="group block bg-gradient-to-br from-white to-orange-50 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
                   <div className="p-6">
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="p-3 rounded-lg bg-gradient-to-br from-amber-100 to-orange-500 text-white">
+                    <div className="flex flex-col sm:flex-row items-start gap-4 mb-4">
+                      <div className="p-3 self-center sm:self-start rounded-lg bg-gradient-to-br from-amber-100 to-orange-500 text-white">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-red-500 transition-colors duration-300">
-                          {article.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 mt-2">
-                          {article.description}
-                        </p>
+                      <div className="flex">
+                        <div className="flex-1">
+                          <h3 className="text-xl font-semibold text-gray-900 group-hover:text-red-500 transition-colors duration-300">
+                            {article.title}
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-2">
+                            {article.description}
+                          </p>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-red-500 transform group-hover:translate-x-1 transition-all duration-300" />
                       </div>
-                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-red-500 transform group-hover:translate-x-1 transition-all duration-300" />
                     </div>
-                    <div className="flex items-center justify-between text-sm border-t border-gray-100 pt-4 mt-4">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between text-sm border-t border-gray-100 pt-4 mt-4">
                       <span className="flex items-center text-red-500">
                         <Building className="w-4 h-4 mr-2" />
                         {article.source}

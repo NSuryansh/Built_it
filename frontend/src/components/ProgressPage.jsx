@@ -71,7 +71,7 @@ const ProgressPage = ({ isLandingPage }) => {
           />
           <ProgressBar label="Stress" value={scores.stress_score} />
           <ProgressBar
-            label="Academic Performance"
+            label="Academics"
             value={scores.academic_performance_score}
           />
           <ProgressBar
