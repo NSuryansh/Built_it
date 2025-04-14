@@ -137,6 +137,9 @@ const Peer = () => {
 
   useEffect(() => {
     if (docList.length > 0 && selectedChat !== null) {
+      if (recId){
+        setPrevRecId(recId);
+      }
       setRecid(docList[selectedChat].id);
     }
   }, [selectedChat, docList]);
@@ -155,7 +158,7 @@ const Peer = () => {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
-      console.log("Connected to WebSocket server");
+      // console.log("Connected to WebSocket server");
       socketRef.current.emit("register", { userId });
     });
     return () => {
@@ -176,8 +179,8 @@ const Peer = () => {
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
-    console.log("HIHIHIHIHIHIH");
-    console.log("Socket instance:", socketRef.current);
+    // console.log("HIHIHIHIHIHIH");
+    // console.log("Socket instance:", socketRef.current);
     const handleReceiveMessage = async ({
       senderId,
       encryptedText,
@@ -186,13 +189,13 @@ const Peer = () => {
       senderType,
     }) => {
       // console.log("HALLO - Raw event data:", data);
-      console.log("HALLO");
+      // console.log("HALLO");
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
         encryptedAESKey
       );
-      console.log(decrypted, "decryptionnn");
+      // console.log(decrypted, "decryptionnn");
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
@@ -242,7 +245,7 @@ const Peer = () => {
   };
 
   useEffect(() => {
-    console.log(recId, "selectd", userId, " ");
+    // console.log(recId, "selectd", userId, " ");
     if (selectedChat !== null && recId !== 0) {
       socketRef.current.emit("markAsRead", {
         userId: recId,
@@ -252,7 +255,7 @@ const Peer = () => {
     }
 
     const pendingReads = async () => {
-      console.log("HAL");
+      // console.log("HAL");
       try {
         // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
         // const data = await res.json();
@@ -261,7 +264,7 @@ const Peer = () => {
           senderType: "user",
         });
         socketRef.current.on("unreadCount", (data) => {
-          console.log(data);
+          // console.log(data, "Unread");
           setUnread(data);
         });
         // setUnread(data);
@@ -318,7 +321,7 @@ const Peer = () => {
   }, [selectedChat, userId, reloader, docList]);
 
   useEffect(() => {
-    console.log(showMessages, "JSA")
+    // console.log(showMessages, "JSA")
     const filteredMessages = showMessages.filter((msg) => {
       if (msg.senderType === "user") {
         return msg.senderId === userId;
@@ -329,7 +332,7 @@ const Peer = () => {
       
     });
     setEditedMessages(filteredMessages)
-    console.log("Filtered Messages:", filteredMessages);
+    // console.log("Filtered Messages:", filteredMessages);
   }, [showMessages]);
   const handleClosePopup = () => {
     navigate("/login");
@@ -344,7 +347,7 @@ const Peer = () => {
         doctorId: docId
       })
     }
-
+    console.log(prevRecvId, "HALLO")
     if(prevRecvId !== 0){
       const userId = localStorage.getItem("userid")
       const docId = prevRecvId
@@ -353,7 +356,7 @@ const Peer = () => {
         doctorId: docId
       })
     }
-  }, [recId])
+  }, [recId, prevRecvId])
 
   if (isAuthenticated === null) {
     return (

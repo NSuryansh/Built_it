@@ -46,6 +46,7 @@ const DoctorProfile = () => {
   const fileInputRef = useRef(null);
   const [profileImage, setProfileImage] = useState(null);
   const [file, setfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -56,22 +57,19 @@ const DoctorProfile = () => {
   }, []);
 
   useEffect(() => {
-    const date = format(new Date(), "yyyy-MM-dd");
-    const fetchData = async (date) => {
+    const fetchData = async () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
           `http://localhost:3000/getDoc?docId=${doctorId}`
         );
         const response2 = await fetch(
-          `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+          `http://localhost:3000/general-slots?docId=${doctorId}`
         );
         const data = await response.json();
-        console.log(data);
         const data2 = await response2.json();
         const slots = [];
-        console.log(slots);
-        data2.availableSlots.map((slot) => {
+        data2.generalSlots.map((slot) => {
           slots.push(
             format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
           );
@@ -125,7 +123,7 @@ const DoctorProfile = () => {
         setfetched(false);
       }
     };
-    fetchData(date);
+    fetchData();
   }, []);
 
   const handleAddSlot = () => {
@@ -167,9 +165,9 @@ const DoctorProfile = () => {
   }
 
   const handleSave = async () => {
+    setIsLoading(true);
     try {
       const doctorId = localStorage.getItem("userid");
-      console.log(doctorId);
       const formData = new FormData();
       formData.append("id", doctorId);
       formData.append("address", editedProfile.address);
@@ -178,18 +176,32 @@ const DoctorProfile = () => {
       formData.append("educ", editedProfile.education);
       formData.append("certifi", editedProfile.certifications);
       formData.append("image", file);
-      const response = await fetch(
-        `http://localhost:3000/modifyDoc`,
+      const response = await fetch(`http://localhost:3000/modifyDoc`, {
+        method: "PUT",
+        body: formData,
+      });
+      let dates = [];
+      for (let i = 0; i < editedProfile.availability.length; i++) {
+        const date = new Date(
+          "1970-01-01T" + editedProfile.availability[i] + ":00.000Z"
+        );
+        const newDate = TimeChange(date.getTime());
+        console.log(newDate);
+        dates.push(newDate);
+      }
+      const response2 = await fetch(
+        `http://localhost:3000/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
         {
           method: "PUT",
-          body: formData,
         }
       );
       const data = await response.json();
-      console.log(data);
+      const data2 = await response2.json();
+      setIsLoading(false);
       CustomToast("Profile updated successfully");
     } catch (e) {
       console.log(e);
+      setIsLoading(false);
       CustomToast("Error updating profile");
     }
     setProfile(editedProfile);
@@ -246,7 +258,7 @@ const DoctorProfile = () => {
             >
               <span className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               <Edit2 className="h-5 w-5 mr-2 relative  group-hover:animate-spin-slow" />
-              <span className="relative ">Edit Profile</span>
+              <span className="relative">Edit Profile</span>
             </button>
           ) : (
             <div className="flex space-x-4 mt-4 sm:mt-0">
@@ -275,8 +287,9 @@ const DoctorProfile = () => {
             <div className="flex flex-col md:flex-row items-center space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
-                  }`}
+                className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
+                  isEditing ? "cursor-pointer" : ""
+                }`}
               >
                 {profileImage ? (
                   <img
@@ -489,7 +502,7 @@ const DoctorProfile = () => {
                 <div>
                   <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
                     <Clock className="h-6 w-6 mr-3 animate-bounce-slow" />
-                    Availability
+                    General Slots
                   </div>
                   <div className="space-y-4">
                     {isEditing ? (
@@ -516,14 +529,14 @@ const DoctorProfile = () => {
                             />
                             {index ===
                               editedProfile.availability.length - 1 && (
-                                <button
-                                  onClick={handleAddSlot}
-                                  className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
-                                >
-                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                  Add Slot
-                                </button>
-                              )}
+                              <button
+                                onClick={handleAddSlot}
+                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
+                              >
+                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                Add Slot
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -633,14 +646,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                              <button
-                                onClick={handleAddCertification}
-                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Certification
-                              </button>
-                            )}
+                            <button
+                              onClick={handleAddCertification}
+                              className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
+                            >
+                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                              Add Certification
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -662,6 +675,14 @@ const DoctorProfile = () => {
           </div>
         </div>
       </div>
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white flex flex-col items-center justify-center rounded-3xl shadow-2xl w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 animate-modal-in border border-blue-100">
+            <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+            <p className="mt-4 text-gray-600">Updating your profile...</p>
+          </div>
+        </div>
+      )}
       <Footer color="blue" />
     </div>
   );

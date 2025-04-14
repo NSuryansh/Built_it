@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
-import { CalendarIcon, MapPin, User, ChevronRight, Clock, Bell, Calendar, Activity } from "lucide-react";
+import {
+  CalendarIcon,
+  MapPin,
+  User,
+  ChevronRight,
+  Clock,
+  Bell,
+  Calendar,
+  Activity,
+} from "lucide-react";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired";
@@ -111,8 +120,7 @@ const DoctorLanding = () => {
 
   useEffect(() => {
     setNewAppoinments(appointments.slice(0, 5));
-  }, [appointments])
-
+  }, [appointments]);
 
   if (isAuthenticated === null) {
     return (
@@ -151,17 +159,17 @@ const DoctorLanding = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
-      y: 0
-    }
+      y: 0,
+    },
   };
 
   return (
@@ -201,8 +209,12 @@ const DoctorLanding = () => {
                 >
                   <Calendar className="h-6 w-6 text-blue-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-blue-900">Upcoming Appointments</p>
-                    <p className="text-2xl font-bold text-blue-600">{appointments.length}</p>
+                    <p className="text-sm font-medium text-blue-900">
+                      Upcoming Appointments
+                    </p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {appointments.length}
+                    </p>
                   </div>
                 </motion.div>
                 <motion.div
@@ -211,8 +223,12 @@ const DoctorLanding = () => {
                 >
                   <Activity className="h-6 w-6 text-green-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-green-900">Upcoming Events</p>
-                    <p className="text-2xl font-bold text-green-600">{events.length}</p>
+                    <p className="text-sm font-medium text-green-900">
+                      Upcoming Events
+                    </p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {events.length}
+                    </p>
                   </div>
                 </motion.div>
               </div>
@@ -221,10 +237,7 @@ const DoctorLanding = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Calendar Card */}
-            <motion.div
-              className="lg:col-span-1"
-              variants={itemVariants}
-            >
+            <motion.div className="lg:col-span-1" variants={itemVariants}>
               <div className="bg-white rounded-2xl shadow-sm p-6 h-full border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex justify-center items-center">
                   <CalendarIcon className="h-5 w-5 mr-2 text-blue-600" />
@@ -235,10 +248,7 @@ const DoctorLanding = () => {
             </motion.div>
 
             {/* Appointments Card */}
-            <motion.div
-              className="lg:col-span-2"
-              variants={itemVariants}
-            >
+            <motion.div className="lg:col-span-2" variants={itemVariants}>
               <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 flex items-center">
@@ -253,48 +263,59 @@ const DoctorLanding = () => {
                   </Link>
                 </div>
 
-                <div className="space-y-4">
-                  <AnimatePresence>
-                    {newAppoinments.map((appointment, index) => (
-                      <motion.div
-                        key={appointment.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="flex items-center p-4 bg-white border border-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-blue-200 group"
-                      >
-                        <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
-                          <User className="h-6 w-6 text-blue-600" />
-                        </div>
-                        <div className="ml-4 flex-1 min-w-0">
-                          <h3 className="font-medium text-gray-900 truncate group-hover:text-blue-700 transition-colors">
-                            {appointment.patientName}
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            {appointment.type}
-                          </p>
-                        </div>
-                        <div className="ml-4 text-right flex-shrink-0">
-                          <p className="text-sm font-medium text-gray-900">
-                            {appointment.time}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {appointment.date}
-                          </p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
+                {newAppoinments.length > 0 ? (
+                  <div className="space-y-4">
+                    <AnimatePresence>
+                      {newAppoinments.map((appointment, index) => (
+                        <motion.div
+                          key={appointment.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex items-center p-4 bg-white border border-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-blue-200 group"
+                        >
+                          <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
+                            <User className="h-6 w-6 text-blue-600" />
+                          </div>
+                          <div className="ml-4 flex-1 min-w-0">
+                            <h3 className="font-medium text-gray-900 truncate group-hover:text-blue-700 transition-colors">
+                              {appointment.patientName}
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              {appointment.type}
+                            </p>
+                          </div>
+                          <div className="ml-4 text-right flex-shrink-0">
+                            <p className="text-sm font-medium text-gray-900">
+                              {appointment.time}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {appointment.date}
+                            </p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <div className="flex flex-col bg-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-blue-100 items-center justify-center py-8 px-4">
+                    <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center mb-6">
+                      <Clock className="h-12 w-12 text-blue-400" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                      No Current Appointments
+                    </h3>
+                    <p className="text-gray-600 text-center max-w-md">
+                      You don't have any appointments scheduled at the moment.
+                    </p>
+                  </div>
+                )}
               </div>
             </motion.div>
 
             {/* Events Card */}
-            <motion.div
-              className="lg:col-span-3"
-              variants={itemVariants}
-            >
+            <motion.div className="lg:col-span-3" variants={itemVariants}>
               <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 flex items-center">
