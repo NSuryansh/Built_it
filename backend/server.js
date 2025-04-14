@@ -52,7 +52,11 @@ webpush.setVapidDetails(
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://built-it.vercel.app", "https://built-it-qwwp.onrender.com"], 
+    origin: [
+      "http://localhost:5173",
+      "https://built-it.vercel.app",
+      "https://built-it-qwwp.onrender.com",
+    ],
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
@@ -88,42 +92,42 @@ io.on("connection", (socket) => {
   });
   socket.on("joinRoom", ({ userId, doctorId }) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
-    console.log(userId, " ", doctorId)
+    console.log(userId, " ", doctorId);
     socket.join(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
-  socket.on("countUnseen", async({userId, senderType}) =>{
+  socket.on("countUnseen", async ({ userId, senderType }) => {
     var unreadCount;
     if (senderType == "user") {
       unreadCount = await prisma.message.groupBy({
-        by: ['senderId'],
+        by: ["senderId"],
         where: {
           recipientId: Number(userId),
           senderType: "doc",
-          read: false
+          read: false,
         },
         _count: {
-          _all: true
-        }
-      })
+          _all: true,
+        },
+      });
       // res.json(unreadCount)
     } else if (senderType == "doc") {
       unreadCount = await prisma.message.groupBy({
-        by: ['senderId'],
+        by: ["senderId"],
         where: {
           recipientId: Number(userId),
           read: false,
-          senderType: "user"
+          senderType: "user",
         },
         _count: {
-          _all: true
-        }
-      })
+          _all: true,
+        },
+      });
       // res.json(unreadCount)
     }
 
-    socket.emit("unreadCount", unreadCount)
-  })
+    socket.emit("unreadCount", unreadCount);
+  });
   socket.on("markAsRead", async ({ userId, doctorId, senderType }) => {
     // console.log(userId, " ", doctorId, " ", senderType)
     try {
@@ -135,21 +139,21 @@ io.on("connection", (socket) => {
             senderId: doctorId,
           },
           data: {
-            read: true
-          }
-        })
+            read: true,
+          },
+        });
         // console.log(result,"HHHHHHHHHHHHHHHHHHHHHHHHHh")
       } else if (senderType === "doc") {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "user",
             senderId: userId,
-            recipientId: doctorId
+            recipientId: doctorId,
           },
           data: {
-            read: true
-          }
-        })
+            read: true,
+          },
+        });
       }
     } catch (e) {
       console.log(e);
@@ -204,23 +208,23 @@ io.on("connection", (socket) => {
           // authTag,
           senderType,
         });
-      //   senderId,
-      // encryptedText,
-      // iv,
-      // encryptedAESKey,
-      // senderType,
+        //   senderId,
+        // encryptedText,
+        // iv,
+        // encryptedAESKey,
+        // senderType,
         // console.log("Message sent");
-        console.log("hallo")
+        console.log("hallo");
       } catch (error) {
         console.error("Error sending message:", error);
       }
     }
   );
 
-  socket.on("leaveRoom", async({userId, doctorId})=>{
+  socket.on("leaveRoom", async ({ userId, doctorId }) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
-    socket.leave(room)
-  })
+    socket.leave(room);
+  });
 
   socket.on("disconnect", () => {
     // console.log(`User disconnected: ${socket.id}`);
@@ -452,8 +456,8 @@ app.get("/chatContacts", async (req, res) => {
   }
 });
 
-app.get('/countUnseen', async (req, res) => {
-  const {userId, senderType} = req.query
+app.get("/countUnseen", async (req, res) => {
+  const { userId, senderType } = req.query;
   // const doctorId = Number(req.body['doctorId'])
   // const sender = req.body['senderType']
   // console.log(userId, senderType)
@@ -463,30 +467,30 @@ app.get('/countUnseen', async (req, res) => {
       where: {
         recipientId: Number(userId),
         senderType: "doc",
-        read: false
+        read: false,
       },
       _count: {
-        _all: true
-      }
-    })
+        _all: true,
+      },
+    });
     // console.log(unreadCount, "HALLLO")
-    res.json(unreadCount)
+    res.json(unreadCount);
   } else if (senderType == "doc") {
     const unreadCount = await prisma.message.groupBy({
       by: ["senderId"],
       where: {
         recipientId: Number(userId),
         read: false,
-        senderType: "user"
+        senderType: "user",
       },
       _count: {
-        _all: true
-      }
-    })
+        _all: true,
+      },
+    });
     // console.log(unreadCount)
-    res.json(unreadCount)
+    res.json(unreadCount);
   }
-})
+});
 
 app.get("/messages", async (req, res) => {
   try {
@@ -1489,8 +1493,8 @@ app.post("/setRating", async (req, res) => {
   const stars = req.body["stars"];
   const id = req.body["id"];
   const docId = req.body["doctorId"];
-  console.log(id)
-  console.log(docId)
+  console.log(id);
+  console.log(docId);
   try {
     const response = await prisma.pastAppointments.update({
       where: {
@@ -1696,6 +1700,21 @@ app.post("/node-chat", async (req, res) => {
   } catch (error) {
     console.error("Error calling Flask API:", error.message);
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/general-slots", async (req, res) => {
+  const { docId } = req.query;
+  const doctor_id = Number(docId);
+
+  try {
+    let generalSlots = await prisma.slots.findMany({
+      where: { doctor_id: doctor_id },
+    });
+    res.json({ generalSlots });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Couldn't fetch the slots" });
   }
 });
 
@@ -1938,12 +1957,12 @@ app.post("/scores-bot", async (req, res) => {
 app.put("/modifyDoc", upload.single("image"), async (req, res) => {
   try {
     const { id, address, city, experience, educ, certifi } = req.body;
-    console.log(req.body)
-    const file = req.file
-    console.log(file)
+    console.log(req.body);
+    const file = req.file;
+    console.log(file);
     // console.log(image)
-    var url=null;
-    if(file){
+    var url = null;
+    if (file) {
       url = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream((error, result) => {
           if (error) return reject(error);
@@ -1951,7 +1970,7 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         });
         stream.end(file.buffer);
       });
-      console.log(url)
+      console.log(url);
     }
 
     // const doc_id = Number(id);
@@ -1959,7 +1978,7 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
     const certifications = certifi.split(",");
     const education = educ.split(",");
     const doctorId = Number(id);
-    const doc_id = doctorId
+    const doc_id = doctorId;
     if (isNaN(doctorId) || doctorId <= 0) {
       return res.status(400).json({ error: "Invalid doctor ID" });
     }
@@ -1971,22 +1990,22 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
 
     const existingDoctor = await prisma.doctor.findUnique({
       where: {
-        id: doctorId
-      }
-    })
-    console.log(existingDoctor)
+        id: doctorId,
+      },
+    });
+    console.log(existingDoctor);
     if (existingDoctor && existingDoctor.id !== doctorId) {
       return res
         .status(400)
         .json({ error: "The updated field is already in use" });
     }
-    console.log(url)
+    console.log(url);
     const updatedData = {};
     if (address?.trim()) updatedData.address = address;
     if (city?.trim()) updatedData.city = city;
     if (experience?.trim()) updatedData.experience = experience;
-    if(url) updatedData.img= url
-    console.log(updatedData)
+    if (url) updatedData.img = url;
+    console.log(updatedData);
     if (Object.keys(updatedData).length === 0) {
       return res
         .status(400)
@@ -1999,7 +2018,7 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         data: updatedData,
       });
 
-      console.log(updatedDoctor)
+      console.log(updatedDoctor);
 
       const certificate = await prisma.docCertification.deleteMany({
         where: {
@@ -2224,7 +2243,7 @@ app.post("/request-to-user", async (req, res) => {
         forDoctor: false,
       },
     });
-    console.log(appointment)
+    console.log(appointment);
     res.json({
       message: "Appointment requested successfully",
       appointment,
