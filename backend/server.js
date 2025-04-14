@@ -94,7 +94,7 @@ io.on("connection", (socket) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
     console.log(userId, " ", doctorId);
     socket.join(room);
-    console.log(room)
+    console.log(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
   socket.on("countUnseen", async ({ userId, senderType }) => {
@@ -224,10 +224,9 @@ io.on("connection", (socket) => {
 
   socket.on("leaveRoom", async ({ userId, doctorId }) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
-    console.log(room)
-    socket.leave(room)
-  })
-  
+    console.log(room);
+    socket.leave(room);
+  });
 
   socket.on("disconnect", () => {
     // console.log(`User disconnected: ${socket.id}`);
@@ -1816,11 +1815,11 @@ app.put("/modifySlots", async (req, res) => {
         doctor_id: Number(doctorId),
       },
     });
-    for (const slot of slots) {
+    for (let i = 0; i < slots.length; i++) {
       const newSlots = await prisma.slots.create({
         data: {
           doctor_id: Number(doctorId),
-          starting_time: new Date(slot),
+          starting_time: new Date(slots[i]),
         },
       });
     }

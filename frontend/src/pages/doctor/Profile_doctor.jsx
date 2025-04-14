@@ -183,11 +183,12 @@ const DoctorProfile = () => {
       let dates = [];
       for (let i = 0; i < editedProfile.availability.length; i++) {
         const date = new Date(
-          "1970-01-01T" + editedProfile.availability[0] + ":00.000Z"
+          "1970-01-01T" + editedProfile.availability[i] + ":00.000Z"
         );
-        dates.push(date);
+        const newDate = TimeChange(date.getTime());
+        console.log(newDate);
+        dates.push(newDate);
       }
-
       const response2 = await fetch(
         `http://localhost:3000/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
         {
