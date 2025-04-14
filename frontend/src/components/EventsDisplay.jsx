@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin, Users, ArrowRight } from "lucide-react";
+import { Calendar, MapPin, Users, ArrowRight, Clock } from "lucide-react";
 import { format } from "date-fns";
 
 const EventsDisplay = () => {
@@ -14,7 +14,7 @@ const EventsDisplay = () => {
     fetchEvents();
   }, []);
 
-  useEffect(() => { }, [events]);
+  useEffect(() => {}, [events]);
 
   return (
     <div className="space-y-4">
@@ -22,14 +22,15 @@ const EventsDisplay = () => {
         Upcoming Events
       </h2>
 
-      {events.map((event) => (
+      {events.length > 0 ? (
+        events.map((event) => (
           <div
             key={event.id}
             className="group bg-[var(--custom-orange-100)] rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
           >
             <div className="p-6">
               <div className="flex justify-between items-start">
-                <div className="flex-1">                  
+                <div className="flex-1">
                   <h3 className="mt-3 text-xl font-bold text-[var(--events-display-gray-900)] group-hover:text-[var(--events-display-gray-800)]">
                     {event.title}
                   </h3>
@@ -57,7 +58,20 @@ const EventsDisplay = () => {
               </div>
             </div>
           </div>
-        ))}
+        ))
+      ) : (
+        <div className="flex flex-col bg-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-orange-100 items-center justify-center py-8 px-4">
+          <div className="h-24 w-24 rounded-full bg-orange-50 flex items-center justify-center mb-6">
+            <Clock className="h-12 w-12 text-orange-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            No Upcoming Events
+          </h3>
+          <p className="text-gray-600 text-center max-w-md">
+            There are no upcoming events scheduled.
+          </p>
+        </div>
+      )}
     </div>
   );
 };

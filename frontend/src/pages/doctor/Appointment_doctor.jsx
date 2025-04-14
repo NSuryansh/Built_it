@@ -23,6 +23,7 @@ const DoctorAppointment = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isBar, setIsBar] = useState(true);
   const [isRescheduling, setisRescheduling] = useState(false);
+  const [isFetched, setisFetched] = useState(null);
   // Updated keys to use "PhD" for consistency
   const [timePeriodData, setTimePeriodData] = useState({
     "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
@@ -123,6 +124,7 @@ const DoctorAppointment = () => {
       }
       setapp(resp);
       setcurr(resp2);
+      setisFetched(true);
     };
 
     fetchData();
@@ -311,7 +313,7 @@ const DoctorAppointment = () => {
     setisRescheduling(false);
   };
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || isFetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />

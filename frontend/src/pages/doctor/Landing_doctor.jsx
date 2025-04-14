@@ -324,39 +324,53 @@ const DoctorLanding = () => {
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <AnimatePresence>
-                    {events.map((event, index) => (
-                      <motion.div
-                        key={event.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="p-4 bg-white border border-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-blue-200 group"
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="font-medium text-gray-900 truncate group-hover:text-blue-700 transition-colors">
-                            {event.title}
-                          </h3>
-                          <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full group-hover:bg-blue-100 transition-colors">
-                            {event.type}
-                          </span>
-                        </div>
-                        <div className="space-y-2 text-sm text-gray-600">
-                          <div className="flex items-center">
-                            <CalendarIcon className="h-4 w-4 mr-2 text-blue-500" />
-                            <span>{event.date}</span>
+                {events.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <AnimatePresence>
+                      {events.map((event, index) => (
+                        <motion.div
+                          key={event.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="p-4 bg-white border border-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-blue-200 group"
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="font-medium text-gray-900 truncate group-hover:text-blue-700 transition-colors">
+                              {event.title}
+                            </h3>
+                            <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full group-hover:bg-blue-100 transition-colors">
+                              {event.type}
+                            </span>
                           </div>
-                          <div className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-2 text-blue-500" />
-                            <span className="truncate">{event.location}</span>
+                          <div className="space-y-2 text-sm text-gray-600">
+                            <div className="flex items-center">
+                              <CalendarIcon className="h-4 w-4 mr-2 text-blue-500" />
+                              <span>{event.date}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <MapPin className="h-4 w-4 mr-2 text-blue-500" />
+                              <span className="truncate">{event.location}</span>
+                            </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <div className="flex flex-col bg-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-blue-100 items-center justify-center py-8 px-4">
+                    <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center mb-6">
+                      <Clock className="h-12 w-12 text-blue-400" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                      No Upcoming Events
+                    </h3>
+                    <p className="text-gray-600 text-center max-w-md">
+                      There are no upcoming events scheduled.
+                    </p>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
