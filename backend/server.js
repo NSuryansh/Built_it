@@ -94,6 +94,7 @@ io.on("connection", (socket) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
     console.log(userId, " ", doctorId);
     socket.join(room);
+    console.log(room)
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
   socket.on("countUnseen", async ({ userId, senderType }) => {
@@ -214,7 +215,7 @@ io.on("connection", (socket) => {
         // encryptedAESKey,
         // senderType,
         // console.log("Message sent");
-        console.log("hallo");
+        // console.log("hallo")
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -223,8 +224,10 @@ io.on("connection", (socket) => {
 
   socket.on("leaveRoom", async ({ userId, doctorId }) => {
     const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
-    socket.leave(room);
-  });
+    console.log(room)
+    socket.leave(room)
+  })
+  
 
   socket.on("disconnect", () => {
     // console.log(`User disconnected: ${socket.id}`);
