@@ -86,8 +86,9 @@ const History = () => {
           }),
         }
       );
+      const data = await response.json()
 
-      if (response.ok) {
+      if (data["message"] === "Appointment requested successfully") {
         const notif = await fetch(
           "http://localhost:3000/send-notification",
           {
