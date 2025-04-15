@@ -101,7 +101,7 @@ const AdminDoctorProfile = () => {
         setfetched(true);
       } catch (e) {
         console.error(e);
-        CustomToast("Error fetching doctor details");
+        CustomToast("Error fetching doctor details", "green");
         setfetched(false);
       }
     };
@@ -118,7 +118,7 @@ const AdminDoctorProfile = () => {
     console.log("Referral submitted:", referralData);
     setShowReferralForm(false);
     setReferralData({ rollNo: "", referredBy: "", reason: "" });
-    CustomToast("Referral submitted successfully");
+    CustomToast("Referral submitted successfully", "green");
   };
 
   const referralSub = async () => {
@@ -138,10 +138,10 @@ const AdminDoctorProfile = () => {
       if (data.error) {
         setError(data.error);
       }
-      CustomToast("Referral created successfully");
+      CustomToast("Referral created successfully", "green");
     } catch (err) {
       console.error("Error adding event:", err);
-      CustomToast("Internal error while adding referral");
+      CustomToast("Internal error while adding referral", "green");
     }
   };
 

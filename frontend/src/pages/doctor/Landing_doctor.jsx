@@ -80,7 +80,7 @@ const DoctorLanding = () => {
         setAppointments(formattedAppointments);
       } catch (error) {
         console.error("Error fetching appointments", error);
-        CustomToast("Error while fetching data");
+        CustomToast("Error while fetching data", "blue");
       }
     };
 
@@ -111,7 +111,7 @@ const DoctorLanding = () => {
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events", error);
-        CustomToast("Error while fetching data");
+        CustomToast("Error while fetching data", "blue");
       }
     };
 

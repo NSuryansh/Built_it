@@ -62,17 +62,17 @@ const DoctorLeave = () => {
     e.preventDefault();
     const startDate = new Date(
       new Date(leaveDetails.startDate).getTime() +
-      new Date(startSelectedSlot).getTime()
+        new Date(startSelectedSlot).getTime()
     );
     const endDate = new Date(
       new Date(leaveDetails.endDate).getTime() +
-      new Date(endSelectedSlot).getTime()
+        new Date(endSelectedSlot).getTime()
     );
     console.log(startDate, endDate);
 
     const today = new Date();
     if (startDate > endDate || startDate < today) {
-      CustomToast("Please select valid dates");
+      CustomToast("Please select valid dates", "blue");
       return;
     }
 
@@ -91,11 +91,11 @@ const DoctorLeave = () => {
         });
         console.log(response.json());
         navigate("/doctor/profile");
-        CustomToast("Leave added successfully");
+        CustomToast("Leave added successfully", "blue");
         // try {}
       } catch (e) {
         console.error(e);
-        CustomToast("Error taking leave");
+        CustomToast("Error taking leave", "blue");
       }
     };
     setLeave();

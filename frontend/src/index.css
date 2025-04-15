@@ -22,6 +22,8 @@
   --custom-gray-800: #1f2937;
   --custom-peach: #ffddc0;
   --custom-primary-blue: #004ba8;
+  --custom-primary-blue-100: #dbeafe;
+  --custom-primary-blue-900: #1c398e;
   --custom-primary-green: #048a81;
   --custom-primary-green-50: #e6f5f4;
   --custom-primary-green-100: #cce9e7;
@@ -100,7 +102,7 @@ button {
   }
 }
 
-.custom-toast {
+.custom-toast.orange {
   background-color: var(--custom-orange-100) !important;
   color: var(--custom-orange-900) !important;
   font-family: inherit;
@@ -110,12 +112,48 @@ button {
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.Toastify__progress-bar {
+.custom-toast.blue {
+  background-color: var(--custom-primary-blue-100) !important;
+  color: var(--custom-primary-blue-900) !important;
+  font-family: inherit;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.custom-toast.green {
+  background-color: var(--custom-primary-green-100) !important;
+  color: var(--custom-primary-green-900) !important;
+  font-family: inherit;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.Toastify__progress-bar.orange {
   background: var(--custom-orange-500) !important;
 }
 
-.Toastify__close-button {
+.Toastify__close-button.orange {
   color: var(--custom-orange-900) !important;
+}
+
+.Toastify__progress-bar.blue {
+  background: var(--custom-primary-blue) !important;
+}
+
+.Toastify__close-button.blue {
+  color: var(--custom-primary-blue-900) !important;
+}
+
+.Toastify__progress-bar.green {
+  background: var(--custom-primary-green-500) !important;
+}
+
+.Toastify__close-button.green {
+  color: var(--custom-primary-green-900) !important;
 }
 
 /* ::-webkit-scrollbar {

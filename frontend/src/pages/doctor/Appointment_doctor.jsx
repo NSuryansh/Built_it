@@ -181,7 +181,7 @@ const DoctorAppointment = () => {
         }
       } catch (error) {
         console.error("Error fetching past appointments: ", error);
-        CustomToast("Error while fetching past appointments");
+        CustomToast("Error while fetching past appointments", "blue");
       }
     };
     fetchPastAppointments();
@@ -274,13 +274,13 @@ const DoctorAppointment = () => {
       .then(
         (response) => {
           console.log("success", response.status);
-          CustomToast("Rescheduling request successfully sent");
+          CustomToast("Rescheduling request successfully sent", "blue");
           setSelectedDate("");
           setSelectedTime("");
         },
         (error) => {
           console.log(error);
-          CustomToast("Error rescheduling appointment");
+          CustomToast("Error rescheduling appointment", "blue");
         }
       );
   };
@@ -292,7 +292,7 @@ const DoctorAppointment = () => {
   const handleDateSelect = (date) => {
     setSelectedDate(date);
     if (date) {
-      CustomToast("Booking Rescheduled");
+      CustomToast("Booking Rescheduled", "blue");
       setSelectedAppointment(null);
     }
   };

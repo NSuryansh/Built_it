@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import SessionExpired from "../../components/SessionExpired";
+import CustomToast from "../../components/CustomToast";
 
 const History = () => {
   const [app, setApp] = useState([]);
@@ -71,46 +72,40 @@ const History = () => {
       const datetime = new Date(
         `${followupDate}T${followupTime}`
       ).toISOString();
-      const response = await fetch(
-        "http://localhost:3000/request-to-user",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            doctorId: localStorage.getItem("userid"),
-            userId: selectedAppointment.user.id,
-            dateTime: datetime,
-            reason: reason,
-          }),
-        }
-      );
-      const data = await response.json()
+      const response = await fetch("http://localhost:3000/request-to-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          doctorId: localStorage.getItem("userid"),
+          userId: selectedAppointment.user.id,
+          dateTime: datetime,
+          reason: reason,
+        }),
+      });
+      const data = await response.json();
 
       if (data["message"] === "Appointment requested successfully") {
-        const notif = await fetch(
-          "http://localhost:3000/send-notification",
-          {
-            method: "POST",
-            headers: { "Content-type": "Application/json" },
-            body: JSON.stringify({
-              userId: selectedAppointment.user.id,
-              message: "Doctor has requested an appointment with you",
-              userType: "user",
-            }),
-          }
-        );
+        const notif = await fetch("http://localhost:3000/send-notification", {
+          method: "POST",
+          headers: { "Content-type": "Application/json" },
+          body: JSON.stringify({
+            userId: selectedAppointment.user.id,
+            message: "Doctor has requested an appointment with you",
+            userType: "user",
+          }),
+        });
         setShowFollowupModal(false);
         setFollowupDate("");
         setFollowupTime("");
         setSelectedAppointment(null);
       } else {
-        alert("Failed to schedule follow-up appointment");
+        CustomToast("Failed to schedule follow-up appointment", "blue");
       }
     } catch (error) {
       console.error("Error scheduling follow-up:", error);
-      alert("Error scheduling follow-up appointment");
+      CustomToast("Error scheduling follow-up appointment", "blue");
     }
   };
 

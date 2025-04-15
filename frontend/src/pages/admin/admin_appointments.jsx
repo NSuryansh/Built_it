@@ -28,6 +28,7 @@ import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import SessionExpired from "../../components/SessionExpired";
 import { useNavigate } from "react-router-dom";
+import CustomToast from "../../components/CustomToast";
 
 const AdminAppointments = () => {
   const [doctors, setDoctors] = useState([]);
@@ -52,9 +53,7 @@ const AdminAppointments = () => {
 
     const fetchDoctors = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:3000/getdoctors"
-        );
+        const res = await fetch("http://localhost:3000/getdoctors");
         const data = await res.json();
         const formattedData = data.map((doc) => ({
           id: doc.id,
@@ -70,9 +69,7 @@ const AdminAppointments = () => {
 
     const fetchAppointments = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:3000/all-appointments"
-        );
+        const res = await fetch("http://localhost:3000/all-appointments");
         const data = await res.json();
         const formattedCurData = data.appts.map((appt) => ({
           id: appt.id,
@@ -101,6 +98,7 @@ const AdminAppointments = () => {
         setfetched(true);
       } catch (error) {
         console.error("Failed to fetch appointments:", error);
+        CustomToast("Failed to fetch appointments", "green");
         setfetched(false);
       }
     };
@@ -435,12 +433,13 @@ const AdminAppointments = () => {
                     <div className="flex h-fit self-center items-center gap-2 px-4 py-2 rounded-lg bg-white shadow-sm border border-gray-100">
                       {getStatusIcon(appointment.status)}
                       <span
-                        className={`text-sm font-medium ${appointment.status === "Confirmed"
+                        className={`text-sm font-medium ${
+                          appointment.status === "Confirmed"
                             ? "text-green-600"
                             : appointment.status === "Pending"
-                              ? "text-yellow-600"
-                              : "text-red-600"
-                          }`}
+                            ? "text-yellow-600"
+                            : "text-red-600"
+                        }`}
                       >
                         {appointment.status}
                       </span>

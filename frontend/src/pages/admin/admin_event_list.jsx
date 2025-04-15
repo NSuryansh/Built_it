@@ -56,11 +56,11 @@ const EventsList = () => {
         setDeletePopupOpen(false);
       } else {
         console.error("Failed to delete the event");
-        CustomToast("Failed to delete the event");
+        CustomToast("Failed to delete the event", "green");
       }
     } catch (error) {
       console.error("Error deleting event:", error);
-      CustomToast("Failed to delete the event");
+      CustomToast("Failed to delete the event", "green");
     }
   };
 
@@ -79,10 +79,10 @@ const EventsList = () => {
         `http://localhost:3000/uploadURL?id=${eventId}&url=${newLink}`,
         { method: "PUT" }
       );
-      CustomToast("URL uploaded successfully");
+      CustomToast("URL uploaded successfully", "green");
     } catch (e) {
       console.error(e.message);
-      CustomToast(e.message);
+      CustomToast(e.message, "green");
     }
     setEvents(
       events.map((event) =>
@@ -149,7 +149,7 @@ const EventsList = () => {
         setfetched(true);
       } catch (error) {
         console.error("Error fetching events", error);
-        CustomToast("Error while fetching events");
+        CustomToast("Error while fetching events", "green");
         setfetched(false);
       }
     };
@@ -216,7 +216,7 @@ const EventsList = () => {
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="green" />;
   }
 
   return (
@@ -353,10 +353,11 @@ const EventsList = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${event.type === "Session/Conference"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-blue-100 text-blue-700"
-                        }`}
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        event.type === "Session/Conference"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-blue-100 text-blue-700"
+                      }`}
                     >
                       {event.type}
                     </span>
@@ -479,7 +480,7 @@ const EventsList = () => {
           docId={eventId}
           handleDeletePopup={handleDeletePopup}
           handleDelete={handleDelete}
-          text={'Are you sure you want to remove the event?'}
+          text={"Are you sure you want to remove the event?"}
         />
       )}
 

@@ -24,7 +24,7 @@ const DoctorPeer = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState("");
   const [showMessages, setShowMessages] = useState([]);
-  const [editedMessages, setEditedMessages] = useState([])
+  const [editedMessages, setEditedMessages] = useState([]);
   const [recId, setRecid] = useState(0);
   const [showChatList, setShowChatList] = useState(true);
   const [messagesApi, setMessagesApi] = useState(null);
@@ -41,7 +41,6 @@ const DoctorPeer = () => {
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
-  
 
   useEffect(() => {
     if (newChatId) {
@@ -103,7 +102,7 @@ const DoctorPeer = () => {
       return merged;
     } catch (error) {
       console.error("Error fetching contacts:", error);
-      CustomToast("Error while fetching data");
+      CustomToast("Error while fetching data", "blue");
       return [];
     }
   }
@@ -131,19 +130,18 @@ const DoctorPeer = () => {
   }, [selectedChat, userList]);
 
   useEffect(() => {
-      console.log(showMessages, "JSA")
-      const filteredMessages = showMessages.filter((msg) => {
-        if (msg.senderType === "user") {
-          return msg.recipientIdId === userId;
-        } else if (msg.senderType === "doc") {
-          return msg.senderId === userId;
-        }
-        return false;
-        
-      });
-      setEditedMessages(filteredMessages)
-      console.log("Filtered Messages:", filteredMessages);
-    }, [showMessages]);
+    console.log(showMessages, "JSA");
+    const filteredMessages = showMessages.filter((msg) => {
+      if (msg.senderType === "user") {
+        return msg.recipientIdId === userId;
+      } else if (msg.senderType === "doc") {
+        return msg.senderId === userId;
+      }
+      return false;
+    });
+    setEditedMessages(filteredMessages);
+    console.log("Filtered Messages:", filteredMessages);
+  }, [showMessages]);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -257,14 +255,14 @@ const DoctorPeer = () => {
     pendingReads();
   }, [selectedChat, recId]);
 
-    useEffect(() => {
-      if(recId!==0){
-      const docId = localStorage.getItem("userid")
-      const userId = recId
-      socketRef.current.emit("joinRoom", {  
-        userId: userId, 
-        doctorId: docId
-      })
+  useEffect(() => {
+    if (recId !== 0) {
+      const docId = localStorage.getItem("userid");
+      const userId = recId;
+      socketRef.current.emit("joinRoom", {
+        userId: userId,
+        doctorId: docId,
+      });
     }
   }, [recId]);
 
@@ -330,7 +328,7 @@ const DoctorPeer = () => {
       setShowMessages(filteredMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
-      CustomToast("Error while fetching data");
+      CustomToast("Error while fetching data", "blue");
       return [];
     }
   }
