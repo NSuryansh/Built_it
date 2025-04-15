@@ -190,11 +190,13 @@ const Peer = () => {
     }) => {
       // console.log("HALLO - Raw event data:", data);
       // console.log("HALLO");
+      // console.log("received message")
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
         encryptedAESKey
       );
+      // console.log(decrypted)
       // console.log(decrypted, "decryptionnn");
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
@@ -204,6 +206,7 @@ const Peer = () => {
         { decryptedText: decrypted, senderId, senderType },
         // { decryptedText: decrypted, senderId, senderType },
       ]);
+      // console.log("messages", showMessages)
     };
 
     socketRef.current.on("receiveMessage", handleReceiveMessage);
@@ -214,6 +217,8 @@ const Peer = () => {
     };
   }, [aesKey, isAuthenticated]);
 
+
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
@@ -322,16 +327,21 @@ const Peer = () => {
 
   useEffect(() => {
     // console.log(showMessages, "JSA")
+    console.log(showMessages)
     const filteredMessages = showMessages.filter((msg) => {
+      // console.log("Filtering", msg)
       if (msg.senderType === "user") {
-        return msg.senderId === userId;
+        return msg.senderId = userId;
       } else if (msg.senderType === "doc") {
-        return msg.recipientId === userId;
+        return msg.recipientId = userId;
       }
       return false;
       
     });
+    // console.log(filteredMessages)
+    // console.log("hi")
     setEditedMessages(filteredMessages)
+    // console.log("edited", editedMessages)
     // console.log("Filtered Messages:", filteredMessages);
   }, [showMessages]);
   const handleClosePopup = () => {

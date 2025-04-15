@@ -91,7 +91,7 @@ io.on("connection", (socket) => {
     // console.log(userId);
   });
   socket.on("joinRoom", ({ userId, doctorId }) => {
-    const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
+    const room = `chat_${[Number(userId), Number(doctorId)].sort((a, b) => a - b).join("_")}`;
     console.log(userId, " ", doctorId);
     socket.join(room);
     console.log(room);
@@ -194,7 +194,7 @@ io.on("connection", (socket) => {
             senderType: senderType,
           },
         });
-        const room = `chat_${[userId, doctorId]
+        const room = `chat_${[Number(userId), Number(doctorId)]
           .sort((a, b) => a - b)
           .join("_")}`;
         console.log(senderId, "message sent to", recipientId);
@@ -223,7 +223,7 @@ io.on("connection", (socket) => {
   );
 
   socket.on("leaveRoom", async ({ userId, doctorId }) => {
-    const room = `chat_${[userId, doctorId].sort((a, b) => a - b).join("_")}`;
+    const room = `chat_${[Number(userId), Number(doctorId)].sort((a, b) => a - b).join("_")}`;
     console.log(room);
     socket.leave(room);
   });
