@@ -136,8 +136,8 @@ io.on("connection", (socket) => {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "doc",
-            recipientId: userId,
-            senderId: doctorId,
+            recipientId: Number(userId),
+            senderId: Number(doctorId),
           },
           data: {
             read: true,
@@ -148,8 +148,8 @@ io.on("connection", (socket) => {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "user",
-            senderId: userId,
-            recipientId: doctorId,
+            senderId: Number(userId),
+            recipientId: Number(doctorId),
           },
           data: {
             read: true,
