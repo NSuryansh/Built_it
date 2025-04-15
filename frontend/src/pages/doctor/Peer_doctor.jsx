@@ -133,9 +133,9 @@ const DoctorPeer = () => {
     console.log(showMessages, "JSA");
     const filteredMessages = showMessages.filter((msg) => {
       if (msg.senderType === "user") {
-        return msg.recipientIdId === userId;
+        return msg.recipientIdId = userId;
       } else if (msg.senderType === "doc") {
-        return msg.senderId === userId;
+        return msg.senderId = userId;
       }
       return false;
     });
