@@ -104,6 +104,7 @@ const DoctorProfile = () => {
           availability: slots,
         });
         setProfileImage(data.doctor.img);
+        localStorage.setItem("docImage", data.doctor.img);
         setEditedProfile({
           name: data.doctor.name,
           email: data.doctor.email,
