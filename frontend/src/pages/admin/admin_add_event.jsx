@@ -62,7 +62,7 @@ const AddEvent = () => {
       }
     } catch (err) {
       console.error("Error adding event:", err);
-      CustomToast("Internal error while adding event");
+      CustomToast("Internal error while adding event", "green");
       setError("Internal error while adding event");
     }
   };
@@ -82,9 +82,8 @@ const AddEvent = () => {
     );
   }
 
-
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="green" />);
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="green" />;
   }
 
   return (

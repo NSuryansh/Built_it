@@ -64,13 +64,13 @@ const DoctorLogin = () => {
       navigate("/doctor/landing");
     } else {
       setisLoading(false);
-      CustomToast(res["message"]);
+      CustomToast(res["message"], "blue");
     }
   };
 
   const handleForgotPassword = async () => {
     if (!email) {
-      CustomToast("Please enter an email");
+      CustomToast("Please enter an email", "blue");
       return;
     }
     const response = await fetch("http://localhost:3000/forgotDoctorPassword", {
@@ -81,7 +81,7 @@ const DoctorLogin = () => {
       }),
     });
     const res = await response.json();
-    CustomToast(res.message);
+    CustomToast(res.message, "blue");
     setShowForgotModal(false);
   };
 

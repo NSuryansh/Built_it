@@ -36,7 +36,7 @@ const DoctorResetPassword = () => {
       }),
     });
     const res = await response.json();
-    CustomToast("Password updated successfully!");
+    CustomToast("Password updated successfully!", "blue");
     setTimeout(() => {
       navigate("/doctor/login");
     }, 2000);

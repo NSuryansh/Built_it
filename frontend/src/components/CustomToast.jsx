@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-const CustomToast = (text) => {
+const CustomToast = (text, color = "orange") => {
   toast.dismiss();
   return toast(text, {
     position: "bottom-right",
@@ -10,7 +10,7 @@ const CustomToast = (text) => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    className: "custom-toast",
+    className: `custom-toast ${color}`,
   });
 };
 

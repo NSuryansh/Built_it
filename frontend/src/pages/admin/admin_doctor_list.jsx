@@ -50,7 +50,7 @@ const DoctorsList = () => {
         setfetched(true);
       } catch (e) {
         console.error(e);
-        CustomToast("Error fetching doctors");
+        CustomToast("Error fetching doctors", "green");
         setfetched(false);
       }
     };
@@ -71,10 +71,11 @@ const DoctorsList = () => {
       setDoc((prevDoctors) =>
         prevDoctors.filter((doctor) => doctor.id !== doctorId)
       );
+      CustomToast("Doctor removed successfully", "green");
       setDeletePopupOpen(false);
     } catch (error) {
       console.error("Error deleting doctor:", error);
-      CustomToast("Error while fetching data");
+      CustomToast("Error while fetching data", "green");
     }
   };
 

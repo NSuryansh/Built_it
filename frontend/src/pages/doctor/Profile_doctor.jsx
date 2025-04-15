@@ -104,6 +104,7 @@ const DoctorProfile = () => {
           availability: slots,
         });
         setProfileImage(data.doctor.img);
+        localStorage.setItem("docImage", data.doctor.img);
         setEditedProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -119,7 +120,7 @@ const DoctorProfile = () => {
         setfetched(true);
       } catch (error) {
         console.error("Error fetching data:", error);
-        CustomToast("Error fetching data");
+        CustomToast("Error fetching data", "blue");
         setfetched(false);
       }
     };
@@ -198,11 +199,11 @@ const DoctorProfile = () => {
       const data = await response.json();
       const data2 = await response2.json();
       setIsLoading(false);
-      CustomToast("Profile updated successfully");
+      CustomToast("Profile updated successfully", "blue");
     } catch (e) {
       console.log(e);
       setIsLoading(false);
-      CustomToast("Error updating profile");
+      CustomToast("Error updating profile", "blue");
     }
     setProfile(editedProfile);
     setIsEditing(false);

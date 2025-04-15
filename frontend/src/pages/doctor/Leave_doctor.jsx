@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Calendar, Clock, CalendarDays, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, CalendarDays, ArrowLeft, User } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { checkAuth } from "../../utils/profile";
@@ -19,6 +19,7 @@ const DoctorLeave = () => {
   const name = localStorage.getItem("username");
   const desc = localStorage.getItem("desc");
   const docId = localStorage.getItem("userid");
+  const img = localStorage.getItem("docImage");
   const [startSlots, setStartSlots] = useState([]);
   const [endSlots, setEndSlots] = useState([]);
   const [startSelectedSlot, setstartSelectedSlot] = useState([]);
@@ -62,17 +63,17 @@ const DoctorLeave = () => {
     e.preventDefault();
     const startDate = new Date(
       new Date(leaveDetails.startDate).getTime() +
-      new Date(startSelectedSlot).getTime()
+        new Date(startSelectedSlot).getTime()
     );
     const endDate = new Date(
       new Date(leaveDetails.endDate).getTime() +
-      new Date(endSelectedSlot).getTime()
+        new Date(endSelectedSlot).getTime()
     );
     console.log(startDate, endDate);
 
     const today = new Date();
     if (startDate > endDate || startDate < today) {
-      CustomToast("Please select valid dates");
+      CustomToast("Please select valid dates", "blue");
       return;
     }
 
@@ -91,11 +92,11 @@ const DoctorLeave = () => {
         });
         console.log(response.json());
         navigate("/doctor/profile");
-        CustomToast("Leave added successfully");
+        CustomToast("Leave added successfully", "blue");
         // try {}
       } catch (e) {
         console.error(e);
-        CustomToast("Error taking leave");
+        CustomToast("Error taking leave", "blue");
       }
     };
     setLeave();
@@ -129,11 +130,15 @@ const DoctorLeave = () => {
               Leave Management
             </h1>
             <div className="mt-2 flex items-center">
-              <img
-                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop"
-                alt="Doctor profile"
-                className="w-12 h-12 rounded-full object-cover"
-              />
+              {img ? (
+                <img
+                  src={img}
+                  alt="Profile"
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              ) : (
+                <User className="w-12 h-12 rounded-full text-blue-600 transform transition-all duration-300 group-hover:scale-110" />
+              )}
               <div className="ml-4">
                 <h2 className="text-xl font-semibold text-blue-800">
                   Dr. {name}

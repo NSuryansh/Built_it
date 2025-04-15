@@ -62,13 +62,13 @@ const AdminLogin = () => {
       navigate("/admin/dashboard");
     } else {
       setisLoading(false);
-      CustomToast(res["message"]);
+      CustomToast(res["message"], "green");
     }
   };
 
   const handleForgotPassword = async () => {
     if (!email) {
-      CustomToast("Please enter an email");
+      CustomToast("Please enter an email", "green");
       return;
     }
     const response = await fetch("http://localhost:3000/forgotAdminPassword", {
@@ -79,7 +79,7 @@ const AdminLogin = () => {
       }),
     });
     const res = await response.json();
-    CustomToast(res.message);
+    CustomToast(res.message, "green");
     setShowForgotModal(false);
   };
 

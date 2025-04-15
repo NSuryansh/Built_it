@@ -36,7 +36,7 @@ const AdminResetPassword = () => {
       }),
     });
     const res = await response.json();
-    CustomToast("Password updated successfully!");
+    CustomToast("Password updated successfully!",'green');
     setTimeout(() => {
       navigate("/admin/login");
     }, 2000);

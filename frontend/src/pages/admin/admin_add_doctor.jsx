@@ -53,18 +53,16 @@ const AddDoctor = () => {
         }),
       });
       const resp = await res.json();
-      CustomToast("Doctor Added");
+      CustomToast("Doctor Added", "green");
       navigate("/admin/doctor_list");
     } catch (e) {
-      CustomToast("Some error occured");
+      CustomToast("Some error occured", "green");
     }
     // Handle form submission
   };
 
   const handleClosePopup = () => {
-    navigate("/admin/login"
-
-    );
+    navigate("/admin/login");
   };
 
   if (isAuthenticated === null) {
