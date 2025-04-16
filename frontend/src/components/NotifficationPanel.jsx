@@ -1,37 +1,61 @@
 import React, { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {format} from "date-fns";
 
 const NotificationPanel = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate(); // Initialize navigate function
+  const userId = localStorage.getItem("userid");
 
-  // Fetch users from API
-  const getUsers = async () => {
+  const getRequests = async () => {
     try {
-      const response = await fetch("http://localhost:3000/getdoctors");
-      if (!response.ok) throw new Error("Failed to fetch users");
+      const response = await fetch(`http://localhost:3000/getRequests?userId=${userId}`);
+      if (!response.ok) throw new Error("Failed to fetch appointment requests");
       const data = await response.json();
-      console.log(data, "hello")
-      const filteredData = data.filter((user) => user.name !== localStorage.getItem("username"));
-      setNotifications(filteredData);
-    } catch (error) {
-      console.error("Error fetching users:", error);
+      setNotifications(data);
+      console.log(userId,data);
+
+    }
+    catch(error){
+      console.error(error);
     }
   };
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+  const confirmAppointment = async (notif) => {
+    try {
+      const res = await fetch(`http://localhost:3000/accept-booking-by-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          doctorId: notif.doctor_id,
+          dateTime: notif.dateTime,
+          reason: notif.reason,
+          id: notif.id
+        }),
+      });
 
-  const handleAccept = (notif) => {
-    navigate(`/peer?userId=${notif.id}&username=${notif.username}`);
+      if (res.ok) {
+        console.log("HALLELUJAH");
+      } else {
+        console.error("Failed to confirm appointment");
+      }
+    } catch (error) {
+      console.error("Error confirming appointment:", error);
+    }
   };
+  
+  useEffect(() => {
+    getRequests();
+  }, []);
 
   return (
     <div className="absolute top-14 right-5 w-80 bg-white shadow-xl border rounded-lg p-4 z-50">
       <h2 className="text-sm font-semibold text-gray-800 mb-2">
-        Notifications
+        Appointment Requests
       </h2>
       <div className="space-y-3 max-h-80 overflow-auto">
         {notifications.length > 0 ? (
@@ -42,13 +66,13 @@ const NotificationPanel = () => {
             >
               <div>
                 <p className="text-sm text-gray-600">
-                  Do you want to chat with
+                {format(new Date(notif.dateTime), "dd MMMM   hh:mm a")}
                 </p>
-                <p className="font-semibold text-gray-900">{notif.name}?</p>
+                <p className="font-semibold text-gray-900">Dr. {notif.doctor.name}?</p>
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => handleAccept(notif)}
+                  onClick={() => confirmAppointment(notif)}
                   className="text-green-600 hover:bg-green-100 p-2 rounded-full transition"
                 >
                   <Check size={20} />

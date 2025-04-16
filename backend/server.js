@@ -854,6 +854,27 @@ app.get("/reqApp", async (req, res) => {
   res.json(appt);
 });
 
+app.get("/getRequests", async(req,res) =>{
+  try{
+    const userId = Number(req.query["userId"]);
+    const reqs = await prisma.requests.findMany({
+      where: { user_id: userId, forDoctor: false},
+      include: {
+        doctor: {
+          select: {
+            name: true, // assuming "name" is the username
+            mobile: true,
+            email: true,
+          },
+        },
+      },
+    });
+    res.json(reqs);
+  }catch(error) {
+    console.error(error);
+  }
+});
+
 app.get("/docProfile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
