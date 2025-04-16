@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {format} from "date-fns";
+import { ToastContainer } from "react-toastify";
+import CustomToast from "./CustomToast";
 
 const NotificationPanel = () => {
   const [notifications, setNotifications] = useState([]);
@@ -39,7 +41,10 @@ const NotificationPanel = () => {
       });
 
       if (res.ok) {
-        console.log("HALLELUJAH");
+        CustomToast("Appointment Confirmed!");
+        setTimeout(()=>{
+          location.reload();
+        },5000);
       } else {
         console.error("Failed to confirm appointment");
       }
@@ -47,6 +52,9 @@ const NotificationPanel = () => {
       console.error("Error confirming appointment:", error);
     }
   };
+  useEffect(() => {
+    console.log("hi", notifications)
+  }, [notifications])
   
   useEffect(() => {
     getRequests();
@@ -54,6 +62,7 @@ const NotificationPanel = () => {
 
   return (
     <div className="absolute top-14 right-5 w-80 bg-white shadow-xl border rounded-lg p-4 z-50">
+      <ToastContainer/>
       <h2 className="text-sm font-semibold text-gray-800 mb-2">
         Appointment Requests
       </h2>

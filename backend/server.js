@@ -2278,8 +2278,8 @@ app.post("/request-to-user", async (req, res) => {
 });
 
 app.post("/accept-booking-by-user", async (req, res) => {
-  const userId = req.body["userId"];
-  const doctorId = req.body["doctorId"];
+  const userId = Number(req.body["userId"]);
+  const doctorId = Number(req.body["doctorId"]);
   const dateTime = req.body["dateTime"];
   const date = new Date();
   const newDate = new Date(dateTime);
@@ -2312,12 +2312,12 @@ app.post("/accept-booking-by-user", async (req, res) => {
           isDoctor: true,
         },
       });
-
+      console.log(appointment)
       //Remove from requests table
       const reqDel = await prisma.requests.delete({
         where: { id: parseInt(appId) },
       });
-      // console.log(reqDel);
+      console.log(reqDel);
       return { appointment, reqDel };
     });
     res.json({
