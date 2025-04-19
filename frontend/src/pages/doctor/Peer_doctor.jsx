@@ -375,11 +375,11 @@ const DoctorPeer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={filteredUsers.map((doctor) => doctor.name)}
+                  names={filteredUsers.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => mes._count._all)}
+                  unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
                   isDoc={true}
                 />
               </div>
@@ -479,10 +479,12 @@ const DoctorPeer = () => {
           userList.length > 0 ? (
             <div className="h-full">
               <ChatList
-                names={filteredUsers.map((doctor) => doctor.name)}
+                names={filteredUsers.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
                 selectedChat={selectedChat}
                 setSelectedChat={setSelectedChat}
                 setShowChatList={setShowChatList}
+                unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
+                isDoc={true}
               />
             </div>
           ) : (

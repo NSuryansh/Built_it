@@ -260,26 +260,19 @@ const Peer = () => {
     }
 
     const pendingReads = async () => {
-      // console.log("HAL");
       try {
-        // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-        // const data = await res.json();
         socketRef.current.emit("countUnseen", {
           userId: userId,
           senderType: "user",
         });
         socketRef.current.on("unreadCount", (data) => {
-          // console.log(data, "Unread");
+          console.log(data, "Unread");
           setUnread(data);
         });
-        // setUnread(data);
-        // console.log(data)
       } catch (error) {
         console.log(error);
       }
-      // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     };
-
     pendingReads();
   }, [selectedChat, recId]);
 
@@ -406,11 +399,11 @@ const Peer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={filteredDoctors.map((doctor) => doctor.name)}
+                  names={filteredDoctors.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => mes._count._all)}
+                  unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
                 />
               </div>
             </>
@@ -499,11 +492,11 @@ const Peer = () => {
                   </div>
                 </div>
                 <ChatList
-                  names={filteredDoctors.map((doctor) => doctor.name)}
+                  names={filteredDoctors.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => mes._count._all)}
+                  unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
                   className="space-y-2 p-4"
                 />
               </>
