@@ -136,11 +136,14 @@ const DoctorPeer = () => {
         return msg.recipientIdId = userId;
       } else if (msg.senderType === "doc") {
         return msg.senderId = userId;
+      }else{
+        return msg.recipientIdId = userId;
       }
       return false;
     });
     setEditedMessages(filteredMessages);
     console.log("Filtered Messages:", filteredMessages);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
 
   useEffect(() => {
@@ -205,13 +208,6 @@ const DoctorPeer = () => {
     };
   }, [aesKey, isAuthenticated]);
 
-  useEffect(() => {
-    console.log(showMessages, "SHOWINNGGNGNNGN");
-  }, [showMessages]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [showMessages]);
 
   useEffect(() => {
     if (userId && userList.length > 0 && selectedChat !== null) {

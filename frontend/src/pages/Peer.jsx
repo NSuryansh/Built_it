@@ -181,13 +181,7 @@ const Peer = () => {
     if (!isAuthenticated) return;
     // console.log("HIHIHIHIHIHIH");
     // console.log("Socket instance:", socketRef.current);
-    const handleReceiveMessage = async ({
-      senderId,
-      encryptedText,
-      iv,
-      encryptedAESKey,
-      senderType,
-    }) => {
+    const handleReceiveMessage = async ({ senderId, encryptedText, iv, encryptedAESKey, senderType }) => {
       // console.log("HALLO - Raw event data:", data);
       // console.log("HALLO");
       // console.log("received message")
@@ -216,16 +210,6 @@ const Peer = () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
   }, [aesKey, isAuthenticated]);
-
-
-  
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [showMessages]);
-
-  // useEffect(() => {
-  // }, [showMessages])
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -327,15 +311,14 @@ const Peer = () => {
         return msg.senderId = userId;
       } else if (msg.senderType === "doc") {
         return msg.recipientId = userId;
+      }else {
+        return msg.recipientId = userId;
       }
       return false;
       
     });
-    // console.log(filteredMessages)
-    // console.log("hi")
     setEditedMessages(filteredMessages)
-    // console.log("edited", editedMessages)
-    // console.log("Filtered Messages:", filteredMessages);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [showMessages]);
   const handleClosePopup = () => {
     navigate("/login");
