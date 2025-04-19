@@ -179,33 +179,21 @@ const Peer = () => {
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
-    // console.log("HIHIHIHIHIHIH");
-    // console.log("Socket instance:", socketRef.current);
     const handleReceiveMessage = async ({ senderId, encryptedText, iv, encryptedAESKey, senderType }) => {
-      // console.log("HALLO - Raw event data:", data);
-      // console.log("HALLO");
-      // console.log("received message")
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
         encryptedAESKey
       );
-      // console.log(decrypted)
-      // console.log(decrypted, "decryptionnn");
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
-        // { decryptedText: decrypted, senderId, senderType },
       ]);
-      // console.log("messages", showMessages)
     };
-
     socketRef.current.on("receiveMessage", handleReceiveMessage);
-
-
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
@@ -234,7 +222,6 @@ const Peer = () => {
   };
 
   useEffect(() => {
-    // console.log(recId, "selectd", userId, " ");
     if (selectedChat !== null && recId !== 0) {
       socketRef.current.emit("markAsRead", {
         userId: userId,
