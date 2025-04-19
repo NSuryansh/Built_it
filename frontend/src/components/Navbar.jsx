@@ -255,7 +255,7 @@ const Navbar = () => {
                           }}
                           className="w-full px-4 py-2 text-sm font-medium text-white bg-[#FF6B35] rounded-lg hover:bg-[#FF5722] transition-colors duration-200"
                         >
-                          View Appointments
+                        Appointments
                         </button>
                         <div className="grid grid-cols-2 gap-2">
                           <button

@@ -1,5 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { User, CircleUser, Clock, Phone, FileText, Loader } from "lucide-react";
+import {
+  User,
+  CircleUser,
+  Clock,
+  Phone,
+  FileText,
+  Loader,
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import emailjs from "@emailjs/browser";
 import Footer from "../../components/Footer";
@@ -10,7 +30,107 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
 import { TimeChange } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
-import PastAppointmentGraphs from "../../components/doctor/PastAppointmentGraphs";
+
+const PastAppointmentGraphs = ({
+  timePeriodData,
+  getPieData,
+  COLORS,
+  handleGraphTypeChange,
+  isBar,
+  histogramData,
+  selectedTimePeriod,
+  handleTimePeriodChange,
+}) => {
+  return (
+    <div className="py-12 mt-10">
+      <div className="w-full">
+        <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600 mb-2">
+          Past Appointments
+        </h1>
+        <p className="text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light mb-8">
+          Analyze your appointment history by time period and student category
+        </p>
+      </div>
+
+      <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 p-6 sm:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+          <div className="flex items-center">
+            
+            <select
+              className="form-select px-4 py-2 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+              onChange={handleGraphTypeChange}
+              defaultValue="bar"
+            >
+              <option value="bar">Bar Chart</option>
+              <option value="pie">Pie Chart</option>
+            </select>
+          </div>
+
+          {!isBar && (
+            <div className="flex items-center mt-4 sm:mt-0">
+             
+              <select
+                className="form-select px-4 py-2 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+                value={selectedTimePeriod}
+                onChange={handleTimePeriodChange}
+              >
+                {Object.keys(timePeriodData).map((period) => (
+                  <option key={period} value={period}>
+                    {period}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+
+        <div className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            {isBar ? (
+              <BarChart
+                data={histogramData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="UG" fill="#0088FE" />
+                <Bar dataKey="PG" fill="#00C49F" />
+                <Bar dataKey="PHD" fill="#FFBB28" />
+              </BarChart>
+            ) : (
+              <PieChart>
+                <Pie
+                  data={getPieData(selectedTimePeriod)}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={true}
+                  outerRadius={120}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label={({ name, percent }) =>
+                    `${name}: ${(percent * 100).toFixed(0)}%`
+                  }
+                >
+                  {getPieData(selectedTimePeriod).map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            )}
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -24,7 +144,7 @@ const DoctorAppointment = () => {
   const [isBar, setIsBar] = useState(true);
   const [isRescheduling, setisRescheduling] = useState(false);
   const [isFetched, setisFetched] = useState(null);
-  // Updated keys to use "PhD" for consistency
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState("Last 1 Month");
   const [timePeriodData, setTimePeriodData] = useState({
     "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
     "Last 3 Months": { UG: 0, PG: 0, PHD: 0 },
@@ -35,6 +155,7 @@ const DoctorAppointment = () => {
   const navigate = useNavigate();
   const [slots, setAvailableSlots] = useState([]);
   const [time, setSelectedTime] = useState("");
+
   const fetchAvailableSlots = async (date) => {
     try {
       const doctorId = localStorage.getItem("userid");
@@ -57,6 +178,10 @@ const DoctorAppointment = () => {
 
   const handleTimeChange = (event) => {
     setSelectedTime(event.target.value);
+  };
+
+  const handleTimePeriodChange = (event) => {
+    setSelectedTimePeriod(event.target.value);
   };
 
   const histogramData = Object.keys(timePeriodData).map((period) => ({
@@ -115,7 +240,6 @@ const DoctorAppointment = () => {
       );
       const resp2 = await res2.json();
       const resp = await res.json();
-      // console.log(resp)
       for (let i = 0; i < resp2.length; i++) {
         resp2[i].dateTime = TimeChange(new Date(resp2[i].dateTime).getTime());
       }
@@ -141,7 +265,6 @@ const DoctorAppointment = () => {
         );
         const data = await response.json();
         if (response.ok) {
-          // Use "PhD" as the key here
           const periods = {
             "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
             "Last 3 Months": { UG: 0, PG: 0, PHD: 0 },
@@ -156,7 +279,6 @@ const DoctorAppointment = () => {
             const diffTime = now - apptDate;
             const diffDays = diffTime / (1000 * 3600 * 24);
             const branch = app.user.acadProg;
-            // console.log(app);
 
             if (diffDays <= 30) {
               periods["Last 1 Month"][branch] += 1;
@@ -523,14 +645,12 @@ const DoctorAppointment = () => {
                               </select>
                             </div>
 
-                            {/* Time Selection */}
                             <div className="mt-4">
                               <select
                                 name="time"
                                 value={time}
                                 onChange={(e) => {
-                                  const currentDate =
-                                    selectedDate.split("T")[0];
+                                  const currentDate = selectedDate.split("T")[0];
                                   handleTimeChange(e);
                                 }}
                                 className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
@@ -591,6 +711,8 @@ const DoctorAppointment = () => {
           handleGraphTypeChange={handleGraphTypeChange}
           isBar={isBar}
           histogramData={histogramData}
+          selectedTimePeriod={selectedTimePeriod}
+          handleTimePeriodChange={handleTimePeriodChange}
         />
       </div>
       <Footer color={"blue"} />
