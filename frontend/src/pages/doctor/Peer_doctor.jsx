@@ -49,11 +49,10 @@ const DoctorPeer = () => {
   }, [newChatId]);
 
   useEffect(() => {
-    if (newChatId && newChatUsername) {
+    if (newChatId && newChatUsername && chats) {
       const existingIndex = chats.findIndex(
         (chat) => String(chat.id) === String(newChatId)
       );
-      // console.log(existingIndex, "existing chat index");
       if (existingIndex !== -1) {
         setSelectedChat(existingIndex);
         setRecid(chats[existingIndex].id);
@@ -211,8 +210,6 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (userId && userList.length > 0 && selectedChat !== null) {
-      // console.log("Fetching messages for selected doctor");
-      // console.log(userList, "HALLLLLLLLLLLLLLO")
       fetchMessages(userId, userList[selectedChat]?.id);
     }
   }, [selectedChat, userId, reloader, userList]);
