@@ -85,10 +85,10 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   return (
     <div className="bg-[var(--custom-orange-50)]">
-      <Navbar />
+      <Navbar className="bg-[var(--custom-orange-50)]"/>
       <ToastContainer />
       <div className="min-h-screen py-16 flex items-center justify-center">
-        <div className="max-w-2xl w-full mx-auto bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl border border-[var(--custom-orange-100)] overflow-hidden">
+        <div className="max-w-2xl w-full mx-auto bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-none md:shadow-xl md:border border-[var(--custom-orange-100)] overflow-hidden">
           <div className="px-10 py-12">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-extrabold text-[var(--custom-orange-900)] tracking-tight">
@@ -118,7 +118,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 />
                 <label
                   htmlFor="username"
-                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-white)] bg-opacity-90 px-2"
+                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 px-2"
                 >
                   Username
                 </label>
@@ -138,7 +138,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 />
                 <label
                   htmlFor="email"
-                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-white)] bg-opacity-90 px-2"
+                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 px-2"
                 >
                   Email
                 </label>
@@ -159,7 +159,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 />
                 <label
                   htmlFor="mobile"
-                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-white)] bg-opacity-90 px-2"
+                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 px-2"
                 >
                   Phone Number
                 </label>
@@ -182,7 +182,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 />
                 <label
                   htmlFor="alt_mobile"
-                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-white)] bg-opacity-90 px-2"
+                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 px-2"
                 >
                   Emergency Contact Number
                 </label>
@@ -194,7 +194,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   type="submit"
                   className="flex-1 bg-gradient-to-r from-[var(--custom-orange-500)] to-[var(--custom-orange-600)] text-[var(--custom-white)] rounded-xl px-8 py-4  font-semibold hover:from-[var(--custom-orange-600)] hover:to-[var(--custom-orange-700)] hover:shadow-lg transition-all duration-300 shadow-md"
                 >
-                  Save Changes
+                  Save
                 </button>
                 <button
                   type="button"
