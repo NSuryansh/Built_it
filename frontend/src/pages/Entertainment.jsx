@@ -83,7 +83,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-2.5 md:px-5 py-1.5 md:py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                className={`px-2.5 md:px-5 py-[5px] md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${
                   selectedCategory === category
                     ? "bg-amber-700 text-white shadow-md scale-105"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
@@ -94,14 +94,14 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {filteredItems.map((item, index) => (
               <a
                 key={index}
                 href={item.spotifyLink || item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group scale-95 sm:scale-100 relative rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                className="group relative rounded-lg md:rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
                 onMouseEnter={() => setHoveredItem(index)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
@@ -117,11 +117,11 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
                     hoveredItem === index ? "opacity-100" : "opacity-90"
                   }`}
                 >
-                  <div className="p-6 w-full transform transition-transform duration-300 group-hover:translate-y-0">
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors duration-300">
+                  <div className="p-2 sm:p-4 md:p-6 w-full transform transition-transform duration-300 group-hover:translate-y-0">
+                    <h3 className="text-sm sm:text-md md:text-lg font-bold text-white mb-1 md:mb-2 group-hover:text-indigo-300 transition-colors duration-300">
                       {item.title}
                     </h3>
-                    <span className="inline-block px-3 py-1 rounded-full bg-white/20 text-sm text-white backdrop-blur-sm">
+                    <span className="sm:inline-block hidden px-2 md:px-3 py-1 rounded-full bg-white/20 text-xs md:text-sm text-white backdrop-blur-sm">
                       {item.category}
                     </span>
                   </div>

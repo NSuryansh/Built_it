@@ -179,53 +179,25 @@ const Peer = () => {
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
-    // console.log("HIHIHIHIHIHIH");
-    // console.log("Socket instance:", socketRef.current);
-    const handleReceiveMessage = async ({
-      senderId,
-      encryptedText,
-      iv,
-      encryptedAESKey,
-      senderType,
-    }) => {
-      // console.log("HALLO - Raw event data:", data);
-      // console.log("HALLO");
-      // console.log("received message")
+    const handleReceiveMessage = async ({ senderId, encryptedText, iv, encryptedAESKey, senderType }) => {
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
         encryptedAESKey
       );
-      // console.log(decrypted)
-      // console.log(decrypted, "decryptionnn");
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
-        // { decryptedText: decrypted, senderId, senderType },
       ]);
-      // console.log("messages", showMessages)
     };
-
     socketRef.current.on("receiveMessage", handleReceiveMessage);
-
-
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
   }, [aesKey, isAuthenticated]);
-
-
-  
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [showMessages]);
-
-  // useEffect(() => {
-  // }, [showMessages])
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -250,36 +222,28 @@ const Peer = () => {
   };
 
   useEffect(() => {
-    // console.log(recId, "selectd", userId, " ");
     if (selectedChat !== null && recId !== 0) {
       socketRef.current.emit("markAsRead", {
-        userId: recId,
-        doctorId: userId,
-        senderType: "doc",
+        userId: userId,
+        doctorId: recId,
+        senderType: "user",
       });
     }
 
     const pendingReads = async () => {
-      // console.log("HAL");
       try {
-        // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-        // const data = await res.json();
         socketRef.current.emit("countUnseen", {
           userId: userId,
           senderType: "user",
         });
         socketRef.current.on("unreadCount", (data) => {
-          // console.log(data, "Unread");
+          console.log(data, "Unread");
           setUnread(data);
         });
-        // setUnread(data);
-        // console.log(data)
       } catch (error) {
         console.log(error);
       }
-      // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     };
-
     pendingReads();
   }, [selectedChat, recId]);
 
@@ -334,15 +298,14 @@ const Peer = () => {
         return msg.senderId = userId;
       } else if (msg.senderType === "doc") {
         return msg.recipientId = userId;
+      }else {
+        return msg.recipientId = userId;
       }
       return false;
       
     });
-    // console.log(filteredMessages)
-    // console.log("hi")
     setEditedMessages(filteredMessages)
-    // console.log("edited", editedMessages)
-    // console.log("Filtered Messages:", filteredMessages);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [showMessages]);
   const handleClosePopup = () => {
     navigate("/login");
@@ -406,11 +369,11 @@ const Peer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={filteredDoctors.map((doctor) => doctor.name)}
+                  names={filteredDoctors.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => mes._count._all)}
+                  unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
                 />
               </div>
             </>
@@ -499,11 +462,11 @@ const Peer = () => {
                   </div>
                 </div>
                 <ChatList
-                  names={filteredDoctors.map((doctor) => doctor.name)}
+                  names={filteredDoctors.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => mes._count._all)}
+                  unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
                   className="space-y-2 p-4"
                 />
               </>
