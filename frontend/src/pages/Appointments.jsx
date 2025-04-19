@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { checkAuth } from "../utils/profile";
 import SessionExpired from "../components/SessionExpired";
 import { useNavigate } from "react-router-dom";
+import CustomToast from "../components/CustomToast";
 
 const UserAppointments = () => {
   const [previousAppointments, setpreviousAppointments] = useState([]);
@@ -218,6 +219,7 @@ const UserAppointments = () => {
                                 ratings[appointment.id] || 3,
                                 appointment.doc.id
                               );
+                              CustomToast("The rating is been submitted")
                             }}
                             className="flex items-center gap-3"
                           >
