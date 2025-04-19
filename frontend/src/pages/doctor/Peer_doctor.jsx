@@ -136,11 +136,14 @@ const DoctorPeer = () => {
         return msg.recipientIdId = userId;
       } else if (msg.senderType === "doc") {
         return msg.senderId = userId;
+      }else{
+        return msg.recipientIdId = userId;
       }
       return false;
     });
     setEditedMessages(filteredMessages);
     console.log("Filtered Messages:", filteredMessages);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
 
   useEffect(() => {
@@ -205,13 +208,6 @@ const DoctorPeer = () => {
     };
   }, [aesKey, isAuthenticated]);
 
-  useEffect(() => {
-    console.log(showMessages, "SHOWINNGGNGNNGN");
-  }, [showMessages]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [showMessages]);
 
   useEffect(() => {
     if (userId && userList.length > 0 && selectedChat !== null) {
@@ -234,8 +230,6 @@ const DoctorPeer = () => {
     const pendingReads = async () => {
       console.log("HAL");
       try {
-        // const res = await fetch(`http://localhost:3000/countUnseen?userId=${userId}&senderType=${localStorage.getItem('user_type')}`)
-        // const data = await res.json();
         socketRef.current.emit("countUnseen", {
           userId: userId,
           senderType: "doc",
@@ -244,14 +238,10 @@ const DoctorPeer = () => {
           console.log(data);
           setUnread(data);
         });
-        // setUnread(data);
-        // console.log(data)
       } catch (error) {
         console.log(error);
       }
-      // console.log(data, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     };
-
     pendingReads();
   }, [selectedChat, recId]);
 
