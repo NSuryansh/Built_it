@@ -34,6 +34,8 @@ const History = () => {
   const [fetched, setfetched] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
+  const [expanded, setExpanded] = useState(false);
+  const toggleExpanded = () => setExpanded(!expanded);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -153,8 +155,8 @@ const History = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
       <DoctorNavbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-blue-100/50 overflow-hidden">
+      <main className="max-w-7xl mx-1 sm:mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 overflow-hidden">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-blue-200 pointer-events-none" />
             <div className="relative flex flex-col space-y-4 p-4 sm:p-6 lg:p-8">
@@ -183,13 +185,14 @@ const History = () => {
             </div>
           </div>
 
-          <div className="px-4 sm:px-6 lg:px-8 py-4 space-y-4">
+          <div className="px-4 sm:px-6 lg:px-8 py-4 space-y-4 max-h-170 overflow-y-scroll">
             {filteredAppointments.map((appointment) => (
               <div
                 key={appointment.id}
-                className="bg-gradient-to-br from-white to-blue-50/50 rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group"
+                className="bg-gradient-to-br from-white to-blue-50/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group"
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_2fr_2fr_1.5fr] gap-4 sm:gap-6">
+
                   <div className="space-y-1">
                     <div className="flex items-center space-x-3">
                       <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
@@ -206,20 +209,6 @@ const History = () => {
 
                   <div className="space-y-1">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
-                        <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
-                      </div>
-                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
-                        Notes
-                      </h3>
-                    </div>
-                    <p className="text-sm sm:text-base text-gray-700 ml-11">
-                      {appointment.note}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-3">
                       <div className="p-2 bg-violet-100 rounded-lg group-hover:bg-violet-200 transition-colors">
                         <CalendarClock className="h-4 w-4 sm:h-5 sm:w-5 text-violet-600" />
                       </div>
@@ -230,6 +219,28 @@ const History = () => {
                     <p className="text-base sm:text-lg font-medium text-violet-900 ml-11">
                       {format(new Date(appointment.createdAt), "dd MMM yyyy")}
                     </p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
+                        <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
+                      </div>
+                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+                        Notes
+                      </h3>
+                    </div>
+                    <p className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${expanded ? '' : 'line-clamp-2'}`}>
+                      {appointment.note}
+                    </p>
+                    {appointment.note.length > 80 && (
+                      <button
+                        onClick={toggleExpanded}
+                        className="text-blue-500 text-sm ml-11 cursor-pointer focus:outline-none"
+                      >
+                        {expanded ? "See less" : "See more"}
+                      </button>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-start sm:justify-end mt-4 sm:mt-0">
@@ -250,7 +261,7 @@ const History = () => {
       {/* Follow-up Modal */}
       {showFollowupModal && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 animate-modal-in border border-blue-100">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 animate-modal-in border border-blue-100">
             <div className="flex justify-between items-center mb-6 sm:mb-8">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-gradient-to-br from-blue-100 to-violet-100 rounded-xl">
