@@ -237,9 +237,9 @@ const Peer = () => {
     // console.log(recId, "selectd", userId, " ");
     if (selectedChat !== null && recId !== 0) {
       socketRef.current.emit("markAsRead", {
-        userId: recId,
-        doctorId: userId,
-        senderType: "doc",
+        userId: userId,
+        doctorId: recId,
+        senderType: "user",
       });
     }
 
