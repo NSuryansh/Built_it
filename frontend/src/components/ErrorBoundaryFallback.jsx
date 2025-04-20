@@ -7,7 +7,7 @@ const ErrorBoundaryFallback = ({ userType }) => {
 
   useEffect(() => {
     if (userType === "doc") {
-      setColor("blue");
+      setColor("green");
     } else if (userType === "admin") {
       setColor("green");
     }
@@ -18,21 +18,29 @@ const ErrorBoundaryFallback = ({ userType }) => {
   const buttonBgClass = `bg-${color}-500 hover:bg-${color}-600`;
 
   return (
-    <div className={`min-h-screen ${bgClass} flex items-center justify-center p-4`}>
+    <div
+      className={`min-h-screen ${bgClass} flex items-center justify-center p-4`}
+    >
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
         <div className="flex flex-col items-center text-center">
-          <AlertOctagon className={`w-16 h-16 ${iconColorClass} mb-4`} />
+          <AlertOctagon
+            className={`w-16 h-16 ${iconColorClass} ${
+              userType === "admin" ? "text-green-700" : ""
+            } mb-4`}
+          />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
             Oops! Something went wrong
           </h2>
           <p className="text-gray-600 mb-6">
-            We've encountered an unexpected error. Don't worry, it happens to the best of us!
+            We've encountered an unexpected error. Don't worry, it happens to
+            the best of us!
           </p>
           <div className="w-full mb-6 overflow-hidden rounded-lg">
             <Dinogame />
           </div>
           <p className="text-sm text-gray-500 mb-6">
-            While we fix this, why not try the classic Chrome dinosaur game? Press spacebar to jump!
+            While we fix this, why not try the classic Chrome dinosaur game?
+            Press spacebar to jump!
           </p>
           <button
             onClick={() => window.location.reload()}

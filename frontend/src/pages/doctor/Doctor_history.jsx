@@ -204,7 +204,7 @@ const History = () => {
                     placeholder="Search by patient name, date, or notes..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 placeholder-gray-400 text-sm sm:text-base"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-black transition-all duration-200 placeholder-gray-400 text-sm sm:text-base"
                   />
                 </div>
               </div>
@@ -310,7 +310,8 @@ const History = () => {
 
             <div className="space-y-5 sm:space-y-6">
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-7
+                00">
                   Date
                 </label>
                 <div className="relative">

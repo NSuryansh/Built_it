@@ -252,14 +252,16 @@ const DoctorAppointment = () => {
     setFixed(!fixed);
   };
 
+  
   const emailParams = async (appointment, time) => {
+    const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
     var params = {
       id: appointment["id"],
       username: appointment["user"]["username"],
       doctor: docName,
       origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
-      newTime: format(time, "dd-MMM-yy hh:mm a"),
+      newTime: format(newTime, "dd-MMM-yy hh:mm a"),
       email: appointment["user"]["email"],
     };
     const res = await fetch("http://localhost:3000/reschedule", {
@@ -530,7 +532,8 @@ const DoctorAppointment = () => {
                                 name="time"
                                 value={time}
                                 onChange={(e) => {
-                                  const currentDate = selectedDate.split("T")[0];
+                                  const currentDate =
+                                    selectedDate.split("T")[0];
                                   handleTimeChange(e);
                                 }}
                                 className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
@@ -593,7 +596,8 @@ const DoctorAppointment = () => {
           histogramData={histogramData}
           selectedTimePeriod={selectedTimePeriod}
           handleTimePeriodChange={handleTimePeriodChange}
-        />``
+        />
+        ``
       </div>
       <Footer color={"blue"} />
     </div>
