@@ -307,7 +307,7 @@ const SignUp = () => {
         <div className="text-center">
           <div className="flex justify-center">
             <div className="p-3 bg-[var(--custom-orange-100)] rounded-full">
-              <UserPlus className="h-8 w-8 text-[var(--custom-orange-600)]" />
+              <UserPlus className="h-8 w-8 text-[var(--custom-orange-500)]" />
             </div>
           </div>
           <h2 className="mt-4 text-3xl font-bold text-[var(--custom-orange-900)]">
