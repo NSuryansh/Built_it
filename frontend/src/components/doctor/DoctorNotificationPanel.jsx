@@ -1,10 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { CircleAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import CustomToast from "../CustomToast";
 
 const DoctorNotificationPanel = () => {
     const [notifications, setNotifications] = useState([]);
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
+    const [chats, setChats] = useState();
+    const userId = localStorage.getItem("userid")
+
+    useEffect(() => {
+        const getchats = async () => {
+            if (userId) {
+                try {
+                    const response = await fetch(
+                        `http://localhost:3000/chatContacts?userId=${userId}`
+                    );
+                    const contacts = await response.json();
+                    setChats(contacts);
+                } catch (error) {
+                    console.error("Error fetching contacts:", error);
+                    CustomToast("Error while fetching data", "blue");
+                    return [];
+                }
+            }
+        }
+        getchats();
+    }, [userId])
+
 
     const getUsers = async () => {
         try {
@@ -27,7 +50,7 @@ const DoctorNotificationPanel = () => {
             console.error("Error fetching users:", error);
         }
     };
-    
+
     const calculateHappinessScore = (record) => {
         let scores = [];
         const stress = record.less_stress_score;
@@ -46,7 +69,7 @@ const DoctorNotificationPanel = () => {
         getUsers();
     }, []);
 
-    const handleAccept = async(notif) => {
+    const handleAccept = async (notif) => {
         navigate(`/doctor/peer?userId=${notif.userId}&username=${notif.username}`);
     };
 

@@ -38,7 +38,6 @@ const Peer = () => {
   const messagesEndRef = useRef(null);
   const userId = parseInt(localStorage.getItem("userid"), 10);
   const username = localStorage.getItem("username");
-
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
