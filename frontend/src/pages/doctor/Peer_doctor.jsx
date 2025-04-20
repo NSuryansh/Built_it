@@ -135,7 +135,7 @@ const DoctorPeer = () => {
         return msg.recipientIdId = userId;
       } else if (msg.senderType === "doc") {
         return msg.senderId = userId;
-      }else{
+      } else {
         return msg.recipientIdId = userId;
       }
       return false;
@@ -362,11 +362,11 @@ const DoctorPeer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={filteredUsers.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
+                  names={filteredUsers.map((doctor) => ({ name: doctor.name, senderId: doctor.id }))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
+                  unread={unread.map((mes) => ({ count: mes._count._all, senderId: mes.senderId }))}
                   isDoc={true}
                 />
               </div>
@@ -434,31 +434,6 @@ const DoctorPeer = () => {
             </div>
           )}
         </div>
-        {/* <div className="flex flex-col h-full flex-1">
-            <div className="p-4 flex justify-between border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
-              <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
-                {userList[selectedChat]?.name || "Select a chat"}
-              </h2>
-            </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
-              {showMessages.map((msg, index) => (
-                <ChatMessage
-                  key={index}
-                  message={msg.decryptedText}
-                  isSent={msg.senderType === "doc"}
-                />
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-            <div className="flex-none border-t border-[var(--mp-custom-gray-200)]">
-              <ChatInput
-                message={message}
-                setMessage={setMessage}
-                handleSubmit={handleSubmit}
-                isDoc={true}
-              />
-            </div>
-          </div> */}
       </div>
       {/* Mobile Layout */}
       <div className="md:hidden h-[calc(100vh-64px)]">
@@ -466,11 +441,11 @@ const DoctorPeer = () => {
           userList.length > 0 ? (
             <div className="h-full">
               <ChatList
-                names={filteredUsers.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
+                names={filteredUsers.map((doctor) => ({ name: doctor.name, senderId: doctor.id }))}
                 selectedChat={selectedChat}
                 setSelectedChat={setSelectedChat}
                 setShowChatList={setShowChatList}
-                unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
+                unread={unread.map((mes) => ({ count: mes._count._all, senderId: mes.senderId }))}
                 isDoc={true}
               />
             </div>
@@ -490,11 +465,12 @@ const DoctorPeer = () => {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--mp-custom-white)]">
-              {editedMessages.map((msg, index) => (
+              {showMessages.map((msg, index) => (
                 <ChatMessage
                   key={index}
                   message={msg.decryptedText}
-                  isSent={msg.senderType === "doc"}
+                  isSent={msg.senderType !== "user"}
+                  isDoc={true}
                 />
               ))}
               <div ref={messagesEndRef} />
@@ -504,6 +480,7 @@ const DoctorPeer = () => {
                 message={message}
                 setMessage={setMessage}
                 handleSubmit={handleSubmit}
+                isDoc={true}
               />
             </div>
           </div>
