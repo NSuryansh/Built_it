@@ -28,7 +28,7 @@ const PastAppointmentGraphs = ({ timePeriodData, getPieData, COLORS, handleGraph
               </select>
             </div>
   
-            {/* {!isBar && (
+            {!isBar && (
               <div className="flex items-center mt-4 sm:mt-0">
                 
                 <select
@@ -43,7 +43,7 @@ const PastAppointmentGraphs = ({ timePeriodData, getPieData, COLORS, handleGraph
                   ))}
                 </select>
               </div>
-            )} */}
+            )}
           </div>
   
           <div className="h-96">
