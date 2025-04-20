@@ -333,13 +333,13 @@ const DoctorAppointment = () => {
       <DoctorNavbar />
       <div className="container mx-auto px-4 sm:px-8 lg:px-4 xl:px-16 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="space-y-10">
+          <div className="space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600">
                   Current Appointments
                 </h1>
-                <p className="mt-3 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
+                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
                   Seamlessly manage your upcoming appointments
                 </p>
               </div>
@@ -419,19 +419,19 @@ const DoctorAppointment = () => {
                   No Current Appointments
                 </h3>
                 <p className="text-gray-600 text-center max-w-md">
-                  You don't have any appointments scheduled at the moment.
+                  No appointments scheduled at the moment.
                 </p>
               </div>
             )}
           </div>
 
-          <div className="mt-5 lg:mt-0 space-y-10">
+          <div className="mt-5 lg:mt-0 space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600">
                   Incoming Requests
                 </h1>
-                <p className="mt-3 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
+                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
                   Review and accept new appointment requests with ease
                 </p>
               </div>

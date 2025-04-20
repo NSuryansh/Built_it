@@ -29,7 +29,7 @@ const History = () => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [followupDate, setFollowupDate] = useState("");
   const [followupTime, setFollowupTime] = useState("");
-  const [searchUser, setSearchUser] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [reason, setReason] = useState("");
   const [fetched, setfetched] = useState(null);
   const [slots, setAvailableSlots] = useState([]);
@@ -136,14 +136,26 @@ const History = () => {
     let filtered = app;
     console.log(filtered, "hello");
 
-    if (searchUser.trim()) {
-      filtered = filtered.filter((app) =>
-        app.user.username.toLowerCase().includes(searchUser.toLowerCase())
-      );
+    if (searchTerm.trim()) {
+      const searchTermLower = searchTerm.toLowerCase();
+      filtered = filtered.filter((app) => {
+        // Search by patient name
+        const usernameMatch = app.user.username.toLowerCase().includes(searchTermLower);
+        
+        // Search by date
+        const appointmentDate = format(new Date(app.createdAt), "dd MMM yyyy").toLowerCase();
+        const dateMatch = appointmentDate.includes(searchTermLower);
+        
+        // Search by notes
+        const notesMatch = app.note.toLowerCase().includes(searchTermLower);
+        
+        // Return true if any of the fields match
+        return usernameMatch || dateMatch || notesMatch;
+      });
     }
 
     return filtered;
-  }, [searchUser, app]);
+  }, [searchTerm, app]);
 
   const handleClosePopup = () => {
     navigate("/doctor/login");
@@ -188,9 +200,9 @@ const History = () => {
                   </div>
                   <input
                     type="text"
-                    placeholder="Search by patient name..."
-                    value={searchUser}
-                    onChange={(e) => setSearchUser(e.target.value)}
+                    placeholder="Search by patient name, date, or notes..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 placeholder-gray-400 text-sm sm:text-base"
                   />
                 </div>
