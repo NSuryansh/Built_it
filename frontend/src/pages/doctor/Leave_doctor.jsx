@@ -17,7 +17,7 @@ const DoctorLeave = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
   const name = localStorage.getItem("username");
-  const desc = localStorage.getItem("desc");
+  const desc = localStorage.getItem(" اسپ");
   const docId = localStorage.getItem("userid");
   const img = localStorage.getItem("docImage");
   const [startSlots, setStartSlots] = useState([]);
@@ -93,7 +93,6 @@ const DoctorLeave = () => {
         console.log(response.json());
         navigate("/doctor/profile");
         CustomToast("Leave added successfully", "blue");
-        // try {}
       } catch (e) {
         console.error(e);
         CustomToast("Error taking leave", "blue");
@@ -104,6 +103,11 @@ const DoctorLeave = () => {
 
   const handleClosePopup = () => {
     navigate("/doctor/login");
+  };
+
+  // Handler for back button
+  const handleBack = () => {
+    navigate("/doctor/profile");
   };
 
   if (isAuthenticated === null) {
@@ -125,10 +129,22 @@ const DoctorLeave = () => {
       <ToastContainer />
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white rounded-xl shadow-lg p-8">
+          <div className="mb-8 flex items-center justify-between">
+            <div className="flex items-center">
+              <button
+                onClick={handleBack}
+                className="mr-4 text-blue-600 hover:text-blue-800 transition-colors"
+                aria-label="Go back to history"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <h1 className="text-3xl font-bold text-blue-900">
+                Leave Management
+              </h1>
+            </div>
+          </div>
+
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-blue-900">
-              Leave Management
-            </h1>
             <div className="mt-2 flex items-center">
               {img ? (
                 <img
@@ -258,7 +274,7 @@ const DoctorLeave = () => {
               type="submit"
               className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors"
             >
-              Submit Leave Request
+              Submit
             </button>
           </form>
         </div>

@@ -55,7 +55,7 @@ const PastAppointmentGraphs = ({
       <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
           <div className="flex items-center">
-            
+          
             <select
               className="form-select px-4 py-2 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
               onChange={handleGraphTypeChange}
@@ -68,7 +68,7 @@ const PastAppointmentGraphs = ({
 
           {!isBar && (
             <div className="flex items-center mt-4 sm:mt-0">
-             
+              
               <select
                 className="form-select px-4 py-2 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
                 value={selectedTimePeriod}
