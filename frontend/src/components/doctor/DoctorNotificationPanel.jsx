@@ -48,6 +48,7 @@ const DoctorNotificationPanel = () => {
             setNotifications(filteredData);
         } catch (error) {
             console.error("Error fetching users:", error);
+            CustomToast("Error fetching users", "blue")
         }
     };
 
