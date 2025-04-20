@@ -52,18 +52,15 @@ const BookingFormStep = ({
   //to get notifs for incoming requests
   const sendNotif = async () => {
     try {
-      const res = await fetch(
-        "http://localhost:3000/send-notification",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userid: selectedDoctor.id,
-            message: `You have a new incoming appointment request!`,
-            userType: "doc",
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/send-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userid: selectedDoctor.id,
+          message: `You have a new incoming appointment request!`,
+          userType: "doc",
+        }),
+      });
 
       if (res.ok) {
         console.log("HALLELUJAH");
@@ -109,8 +106,9 @@ const BookingFormStep = ({
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="Enter your full name"
               required
               disabled={isAuthenticated}
@@ -128,8 +126,9 @@ const BookingFormStep = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="Enter your email"
               required
               disabled={isAuthenticated}
@@ -147,8 +146,9 @@ const BookingFormStep = ({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="Enter your phone number"
               required
               disabled={isAuthenticated}
@@ -239,6 +239,7 @@ const BookingFormStep = ({
             onChange={handleChange}
             className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none min-h-[150px] resize-y"
             placeholder="Please describe your symptoms or concerns..."
+            required
           />
         </div>
 

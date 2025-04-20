@@ -15,12 +15,12 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
-              className="group w-full bg-white hover:bg-[var(--custom-orange-50)] p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-100)] hover:border-[var(--custom-orange-200)]"
+              className="group w-full bg-white hover:bg-[var(--custom-orange-50)] p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-100)] hover:border-[var(--custom-orange-200)]"
               onClick={() => onSelect(doctor)}
             >
               <div className="flex w-full flex-col justify-center items-center sm:flex-row gap-3 sm:gap-6">
                 <div className="flex flex-col items-center">
-                  <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] rounded-full p-4 group-hover:from-[var(--custom-orange-200)] group-hover:to-[var(--custom-orange-300)] transition-all duration-300">
+                  <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] rounded-full p-4  transition-all duration-300">
                     <User className="w-8 h-8 text-[var(--custom-orange-700)]" />
                   </div>
                   <div className="mt-2 sm:mt-4 flex items-center gap-1">
