@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 const DoctorNotificationPanel = () => {
     const [notifications, setNotifications] = useState([]);
-    const navigate = useNavigate(); // Initialize navigate function
+    const navigate = useNavigate(); 
 
-    // Fetch users from API
     const getUsers = async () => {
         try {
             const response = await fetch("http://localhost:3000/getFeelings");
@@ -28,7 +27,7 @@ const DoctorNotificationPanel = () => {
             console.error("Error fetching users:", error);
         }
     };
-
+    
     const calculateHappinessScore = (record) => {
         let scores = [];
         const stress = record.less_stress_score;
@@ -47,7 +46,7 @@ const DoctorNotificationPanel = () => {
         getUsers();
     }, []);
 
-    const handleAccept = (notif) => {
+    const handleAccept = async(notif) => {
         navigate(`/doctor/peer?userId=${notif.userId}&username=${notif.username}`);
     };
 
