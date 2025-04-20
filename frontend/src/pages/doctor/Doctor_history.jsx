@@ -22,6 +22,7 @@ import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import SessionExpired from "../../components/SessionExpired";
 import CustomToast from "../../components/CustomToast";
+import { ToastContainer } from "react-toastify";
 
 const History = () => {
   const [app, setApp] = useState([]);
@@ -115,6 +116,7 @@ const History = () => {
         setShowFollowupModal(false);
         setFollowupDate("");
         setFollowupTime("");
+        setReason("");
         setSelectedAppointment(null);
       } else {
         CustomToast("Failed to schedule follow-up appointment", "blue");
@@ -179,6 +181,7 @@ const History = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
+      <ToastContainer />
       <DoctorNavbar />
 
       <main className="max-w-7xl mx-1 sm:mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">

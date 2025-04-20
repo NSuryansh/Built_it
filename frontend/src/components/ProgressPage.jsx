@@ -63,7 +63,7 @@ const ProgressPage = ({ isLandingPage }) => {
         </h2>
       </div>
 
-      <div className="p-8 pt-2 flex justify-center items-center w-full">
+      <div className="p-8 pt-5 flex justify-center items-center w-full">
         <div className="max-w-2xl w-full">
           <ProgressBar
             label="Mental Health"
