@@ -33,6 +33,7 @@ import { useEffect, useState } from "react";
 import AdminAppointments from "./pages/admin/admin_appointments";
 import DoctorBook from "./pages/doctor/Doctor_book";
 import History from "./pages/doctor/Doctor_history";
+import ErrorBoundaryFallback from "./components/ErrorBoundaryFallback";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -158,6 +159,7 @@ export default function App() {
         <Route path="/admin/User" element={<User />} />
         <Route path="/admin/appointments" element={<AdminAppointments />} />
         <Route path="/doctor/history" element={<History />} />
+        <Route path="/easter_egg" element={<ErrorBoundaryFallback />} />
       </Routes>
     </div>
   );
