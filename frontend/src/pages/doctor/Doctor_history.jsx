@@ -158,7 +158,7 @@ const History = () => {
       <main className="max-w-7xl mx-1 sm:mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 overflow-hidden">
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-blue-200 pointer-events-none" />
+            <div className="absolute inset-0 bg-white pointer-events-none" />
             <div className="relative flex flex-col space-y-4 p-4 sm:p-6 lg:p-8">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
                 <div className="flex items-center space-x-3">
