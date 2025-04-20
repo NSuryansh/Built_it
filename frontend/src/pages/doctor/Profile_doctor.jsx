@@ -237,7 +237,7 @@ const DoctorProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 overflow-hidden">
       <DoctorNavbar />
       <ToastContainer />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 space-y-12 relative">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 lg:py-10 space-y-12 relative">
         {/* Floating Decorative Elements */}
         <div className="absolute top-0 left-0 w-72 h-72 bg-indigo-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
@@ -245,10 +245,10 @@ const DoctorProfile = () => {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center animate-fade-in-down">
           <div>
-            <h1 className="text-3xl text-center sm:text-5xl sm:text-start font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
+            <h1 className="text-2xl text-center sm:text-3xl lg:text-4xl xl:text-5xl sm:text-start font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
               Doctor Profile
             </h1>
-            <p className="mt-3 text-lg text-gray-600 font-medium">
+            <p className="mt-3 text-sm sm:text-md lg:text-lg text-gray-600 font-medium">
               Curate your professional identity effortlessly
             </p>
           </div>
