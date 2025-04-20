@@ -12,10 +12,11 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+const userType = localStorage.getItem("user_type") ? localStorage.getItem("user_type") : "user";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <ErrorBoundary fallback={<ErrorBoundaryFallback />}>
+      <ErrorBoundary fallback={<ErrorBoundaryFallback userType={userType}/>}>
         <App />
       </ErrorBoundary>
     </BrowserRouter>
