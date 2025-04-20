@@ -32,10 +32,23 @@ const History = () => {
   const [searchUser, setSearchUser] = useState("");
   const [reason, setReason] = useState("");
   const [fetched, setfetched] = useState(null);
+  const [slots, setAvailableSlots] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => setExpanded(!expanded);
+  const fetchAvailableSlots = async (date) => {
+    try {
+      const doctorId = localStorage.getItem("userid");
+      const response = await fetch(
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+      );
+      const data = await response.json();
+      setAvailableSlots(data.availableSlots);
+    } catch (error) {
+      console.error("Error fetching available slots:", error);
+    }
+  };
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -192,7 +205,6 @@ const History = () => {
                 className="bg-gradient-to-br from-white to-blue-50/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_2fr_2fr_1.5fr] gap-4 sm:gap-6">
-
                   <div className="space-y-1">
                     <div className="flex items-center space-x-3">
                       <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
@@ -230,7 +242,11 @@ const History = () => {
                         Notes
                       </h3>
                     </div>
-                    <p className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${expanded ? '' : 'line-clamp-2'}`}>
+                    <p
+                      className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${
+                        expanded ? "" : "line-clamp-2"
+                      }`}
+                    >
                       {appointment.note}
                     </p>
                     {appointment.note.length > 80 && (

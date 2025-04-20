@@ -130,10 +130,10 @@ const UserAppointments = () => {
                 {upcomingAppointments.map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="group bg-white hover:bg-[var(--custom-orange-50)] rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-[var(--custom-orange-100)]"
+                    className="group bg-white hover:bg-[var(--custom-orange-50)] rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--custom-orange-100)]"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] p-3 rounded-full group-hover:from-[var(--custom-orange-200)] group-hover:to-[var(--custom-orange-300)] transition-all duration-300">
+                      <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] p-3 rounded-full transition-all duration-300">
                         <User className="h-6 w-6 text-[var(--custom-orange-700)]" />
                       </div>
 
