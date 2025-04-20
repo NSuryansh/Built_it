@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Rating from "@mui/material/Rating";
 import { Button } from "@mui/material";
-import { User, Calendar, CalendarClock, History, Clock, FileText, CheckCircle } from "lucide-react";
+import {
+  User,
+  Calendar,
+  CalendarClock,
+  History,
+  Clock,
+  FileText,
+  CheckCircle,
+} from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { format } from "date-fns";
@@ -9,6 +17,7 @@ import { checkAuth } from "../utils/profile";
 import SessionExpired from "../components/SessionExpired";
 import { useNavigate } from "react-router-dom";
 import CustomToast from "../components/CustomToast";
+import { TimeChange } from "../components/Time_Change";
 
 const UserAppointments = () => {
   const [previousAppointments, setpreviousAppointments] = useState([]);
@@ -153,7 +162,11 @@ const UserAppointments = () => {
                             <Clock className="w-4 h-4" />
                             <span>
                               {format(
-                                appointment.dateTime,
+                                new Date(
+                                  TimeChange(
+                                    new Date(appointment.dateTime).getTime()
+                                  )
+                                ),
                                 "MMM d 'at' h:mm a"
                               )}
                             </span>
@@ -216,7 +229,7 @@ const UserAppointments = () => {
                                 ratings[appointment.id] || 3,
                                 appointment.doc.id
                               );
-                              CustomToast("The rating has been submitted!")
+                              CustomToast("The rating has been submitted!");
                             }}
                             className="flex items-center ml-18 md:ml-0 gap-2 flex-col"
                           >
