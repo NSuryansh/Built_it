@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {format} from "date-fns";
+import { format } from "date-fns";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "./CustomToast";
+import { TimeChange } from "./Time_Change";
 
 const NotificationPanel = () => {
   const [notifications, setNotifications] = useState([]);
@@ -12,14 +13,14 @@ const NotificationPanel = () => {
 
   const getRequests = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/getRequests?userId=${userId}`);
+      const response = await fetch(
+        `http://localhost:3000/getRequests?userId=${userId}`
+      );
       if (!response.ok) throw new Error("Failed to fetch appointment requests");
       const data = await response.json();
       setNotifications(data);
-      console.log(userId,data);
-
-    }
-    catch(error){
+      console.log(userId, data);
+    } catch (error) {
       console.error(error);
     }
   };
@@ -34,17 +35,15 @@ const NotificationPanel = () => {
         body: JSON.stringify({
           userId: userId,
           doctorId: notif.doctor_id,
-          dateTime: notif.dateTime,
+          dateTime: new Date(TimeChange(new Date(notif.dateTime).getTime())),
           reason: notif.reason,
-          id: notif.id
+          id: notif.id,
         }),
       });
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
-        setTimeout(()=>{
-          location.reload();
-        },5000);
+        getRequests();
       } else {
         console.error("Failed to confirm appointment");
       }
@@ -53,16 +52,16 @@ const NotificationPanel = () => {
     }
   };
   useEffect(() => {
-    console.log("hi", notifications)
-  }, [notifications])
-  
+    console.log("hi", notifications);
+  }, [notifications]);
+
   useEffect(() => {
     getRequests();
   }, []);
 
   return (
-    <div className="absolute top-14 right-5 w-80 bg-white shadow-xl border rounded-lg p-4 z-50">
-      <ToastContainer/>
+    <div className="absolute top-14 right-5 w-80 bg-white shadow-xl border-2 border-[#FFE4CC] rounded-lg p-4 z-50">
+      <ToastContainer />
       <h2 className="text-sm font-semibold text-gray-800 mb-2">
         Appointment Requests
       </h2>
@@ -75,9 +74,14 @@ const NotificationPanel = () => {
             >
               <div>
                 <p className="text-sm text-gray-600">
-                {format(new Date(notif.dateTime), "dd MMMM   hh:mm a")}
+                  {format(
+                    TimeChange(new Date(notif.dateTime).getTime()),
+                    "dd MMMM   hh:mm a"
+                  )}
                 </p>
-                <p className="font-semibold text-gray-900">Dr. {notif.doctor.name}?</p>
+                <p className="font-semibold text-gray-900">
+                  Dr. {notif.doctor.name}?
+                </p>
               </div>
               <div className="flex gap-2">
                 <button
