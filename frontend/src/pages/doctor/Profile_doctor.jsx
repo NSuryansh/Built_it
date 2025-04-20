@@ -237,7 +237,7 @@ const DoctorProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 overflow-hidden">
       <DoctorNavbar />
       <ToastContainer />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 space-y-12 relative">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 lg:py-10 space-y-12 relative">
         {/* Floating Decorative Elements */}
         <div className="absolute top-0 left-0 w-72 h-72 bg-indigo-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
@@ -245,10 +245,10 @@ const DoctorProfile = () => {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center animate-fade-in-down">
           <div>
-            <h1 className="text-3xl text-center sm:text-5xl sm:text-start font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
+            <h1 className="text-2xl text-center sm:text-3xl lg:text-4xl xl:text-5xl sm:text-start font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
               Doctor Profile
             </h1>
-            <p className="mt-3 text-lg text-gray-600 font-medium">
+            <p className="mt-3 text-sm sm:text-md lg:text-lg text-gray-600 font-medium">
               Curate your professional identity effortlessly
             </p>
           </div>
@@ -356,13 +356,13 @@ const DoctorProfile = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             {/* Contact Info */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
-              <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
-                <Mail className="h-6 w-6 mr-3 animate-bounce-slow" />
+              <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
+                {/* <Mail className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                 Contact Information
               </div>
-              <div className="space-y-5">
+              <div className="space-y-3">
                 <div className="flex items-center group">
-                  <Mail className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
+                  <Mail className="h-5 w-5 text-blue-600 mr-3 transition-transform group-hover:scale-125" />
                   {isEditing ? (
                     <input
                       type="email"
@@ -383,7 +383,7 @@ const DoctorProfile = () => {
                   )}
                 </div>
                 <div className="flex items-center group">
-                  <Phone className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
+                  <Phone className="h-5 w-5 text-blue-600 mr-3 transition-transform group-hover:scale-125" />
                   {isEditing ? (
                     <input
                       type="tel"
@@ -404,7 +404,7 @@ const DoctorProfile = () => {
                   )}
                 </div>
                 <div className="flex items-start group">
-                  <MapPin className="h-5 w-5 text-blue-600 mr-4 mt-1 transition-transform group-hover:scale-125" />
+                  <MapPin className="h-5 w-5 text-blue-600 mr-3 mt-1 transition-transform group-hover:scale-125" />
                   {isEditing ? (
                     <div className="flex-1 space-y-4">
                       <input
@@ -435,7 +435,7 @@ const DoctorProfile = () => {
                   ) : (
                     <div>
                       <p className="text-gray-700 group-hover:text-blue-600 transition-colors">
-                        {profile.address}
+                        {profile.address},
                       </p>
                       <p className="text-gray-700 group-hover:text-blue-600 transition-colors">
                         {profile.city}
@@ -450,13 +450,13 @@ const DoctorProfile = () => {
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
               <div className="space-y-8">
                 <div>
-                  <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
-                    <Building className="h-6 w-6 mr-3 animate-bounce-slow" />
+                  <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
+                    {/* <Building className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                     Professional Information
                   </div>
-                  <div className="space-y-5">
+                  <div className="space-y-3">
                     <div className="flex items-center group">
-                      <Building className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
+                      <Building className="h-5 w-5 text-blue-600 mr-3 transition-transform group-hover:scale-125" />
                       {isEditing ? (
                         <input
                           type="text"
@@ -477,7 +477,7 @@ const DoctorProfile = () => {
                       )}
                     </div>
                     <div className="flex items-center group">
-                      <Clock className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
+                      <Clock className="h-5 w-5 text-blue-600 mr-3 transition-transform group-hover:scale-125" />
                       {isEditing ? (
                         <input
                           type="text"
@@ -501,8 +501,8 @@ const DoctorProfile = () => {
 
                 {/* Availability */}
                 <div>
-                  <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
-                    <Clock className="h-6 w-6 mr-3 animate-bounce-slow" />
+                  <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
+                    {/* <Clock className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                     General Slots
                   </div>
                   <div className="space-y-4">
@@ -565,8 +565,8 @@ const DoctorProfile = () => {
 
             {/* Education */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
-              <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
-                <GraduationCap className="h-6 w-6 mr-3 animate-bounce-slow" />
+              <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
+                {/* <GraduationCap className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                 Education
               </div>
               <div className="space-y-5">
@@ -603,10 +603,10 @@ const DoctorProfile = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {profile.education.map((edu, index) => (
                       <div key={index} className="flex items-center group">
-                        <GraduationCap className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
+                        <GraduationCap className="h-5 w-5 text-blue-600 mr-3 transition-transform group-hover:scale-125" />
                         <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
                           {edu}
                         </span>
@@ -619,8 +619,8 @@ const DoctorProfile = () => {
 
             {/* Certifications */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
-              <div className="flex items-center text-blue-600 font-semibold text-xl mb-5">
-                <Award className="h-6 w-6 mr-3 animate-bounce-slow" />
+              <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
+                {/* <Award className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                 Certifications
               </div>
               <div className="space-y-5">
@@ -660,10 +660,10 @@ const DoctorProfile = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {profile.certifications.map((cert, index) => (
                       <div key={index} className="flex items-center group">
-                        <Award className="h-5 w-5 text-blue-600 mr-4 transition-transform group-hover:scale-125" />
+                        <Award className="h-5 w-5 text-blue-600 mr-3 transition-transform group-hover:scale-125" />
                         <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
                           {cert}
                         </span>

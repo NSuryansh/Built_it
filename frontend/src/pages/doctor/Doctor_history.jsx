@@ -13,6 +13,7 @@ import {
   X,
   Calendar as CalendarIcon,
   Clock as ClockIcon,
+  Loader,
 } from "lucide-react";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
@@ -38,6 +39,8 @@ const History = () => {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => setExpanded(!expanded);
+  const [isScheduling, setisScheduling] = useState(false);
+
   const fetchAvailableSlots = async (date) => {
     try {
       const doctorId = localStorage.getItem("userid");
@@ -84,6 +87,7 @@ const History = () => {
   };
 
   const handleSubmitFollowup = async () => {
+    setisScheduling(true);
     try {
       const datetime = new Date(
         `${followupDate}T${followupTime.split("T")[1]}`
@@ -125,6 +129,7 @@ const History = () => {
       console.error("Error scheduling follow-up:", error);
       CustomToast("Error scheduling follow-up appointment", "blue");
     }
+    setisScheduling(false);
   };
 
   useEffect(() => {
@@ -143,15 +148,20 @@ const History = () => {
       const searchTermLower = searchTerm.toLowerCase();
       filtered = filtered.filter((app) => {
         // Search by patient name
-        const usernameMatch = app.user.username.toLowerCase().includes(searchTermLower);
-        
+        const usernameMatch = app.user.username
+          .toLowerCase()
+          .includes(searchTermLower);
+
         // Search by date
-        const appointmentDate = format(new Date(app.createdAt), "dd MMM yyyy").toLowerCase();
+        const appointmentDate = format(
+          new Date(app.createdAt),
+          "dd MMM yyyy"
+        ).toLowerCase();
         const dateMatch = appointmentDate.includes(searchTermLower);
-        
+
         // Search by notes
         const notesMatch = app.note.toLowerCase().includes(searchTermLower);
-        
+
         // Return true if any of the fields match
         return usernameMatch || dateMatch || notesMatch;
       });
@@ -313,8 +323,10 @@ const History = () => {
 
             <div className="space-y-5 sm:space-y-6">
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-7
-                00">
+                <label
+                  className="block text-sm font-medium text-gray-7
+                00"
+                >
                   Date
                 </label>
                 <div className="relative">
@@ -339,15 +351,6 @@ const History = () => {
                   Time
                 </label>
                 <div className="relative">
-                  {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <ClockIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="time"
-                    value={followupTime}
-                    onChange={(e) => setFollowupTime(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
-                  /> */}
                   <div>
                     <select
                       name="time"
@@ -357,10 +360,16 @@ const History = () => {
                       }}
                       className="w-full  px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black-500 focus:border-transparent transition-all duration-200 outline-none bg-white"
                     >
-                      <option className="text-sm" value="">Select Time</option>
+                      <option className="text-sm" value="">
+                        Select Time
+                      </option>
                       {Array.isArray(slots) &&
                         slots.map((slot) => (
-                          <option className="text-sm" key={slot.id} value={slot.starting_time}>
+                          <option
+                            className="text-sm"
+                            key={slot.id}
+                            value={slot.starting_time}
+                          >
                             {slot.starting_time.split("T")[1].slice(0, 5)}
                           </option>
                         ))}
@@ -391,10 +400,10 @@ const History = () => {
                 </button>
                 <button
                   onClick={handleSubmitFollowup}
-                  disabled={!followupDate || !followupTime}
-                  className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-100 text-blue-500 font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
+                  disabled={!followupDate || !followupTime || isScheduling}
+                  className="w-full mx-auto sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-100 text-blue-500 font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
                 >
-                  Schedule Follow-up
+                  {isScheduling ? <Loader /> : <>Schedule Follow-up</>}
                 </button>
               </div>
             </div>
