@@ -265,9 +265,9 @@ const DoctorProfile = () => {
             <div className="flex space-x-4 mt-4 sm:mt-0">
               <button
                 onClick={handleSave}
-                className="group relative flex items-center px-6 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-teal-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
+                className="group relative flex items-center px-6 py-3 bg-blue-700 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-teal-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-teal-600 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <span className="absolute inset-0 bg-blue-80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 <Save className="h-5 w-5 mr-2 relative  group-hover:animate-bounce" />
                 <span className="relative ">Save Changes</span>
               </button>
