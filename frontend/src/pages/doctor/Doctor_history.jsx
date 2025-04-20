@@ -85,7 +85,7 @@ const History = () => {
   const handleSubmitFollowup = async () => {
     try {
       const datetime = new Date(
-        `${followupDate}T${followupTime}`
+        `${followupDate}T${followupTime.split("T")[1]}`
       ).toISOString();
       const response = await fetch("http://localhost:3000/request-to-user", {
         method: "POST",
@@ -100,6 +100,7 @@ const History = () => {
         }),
       });
       const data = await response.json();
+      CustomToast("Follow-up appointment scheduled", "blue");
 
       if (data["message"] === "Appointment requested successfully") {
         const notif = await fetch("http://localhost:3000/send-notification", {
@@ -308,7 +309,10 @@ const History = () => {
                     type="date"
                     min={minDate}
                     value={followupDate}
-                    onChange={(e) => setFollowupDate(e.target.value)}
+                    onChange={(e) => {
+                      setFollowupDate(e.target.value);
+                      fetchAvailableSlots(e.target.value);
+                    }}
                     className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
@@ -319,7 +323,7 @@ const History = () => {
                   Time
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <ClockIcon className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
@@ -327,7 +331,25 @@ const History = () => {
                     value={followupTime}
                     onChange={(e) => setFollowupTime(e.target.value)}
                     className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
-                  />
+                  /> */}
+                  <div>
+                    <select
+                      name="time"
+                      value={followupTime}
+                      onChange={(e) => {
+                        setFollowupTime(e.target.value);
+                      }}
+                      className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-primary-blue-200)] focus:border-[var(--custom-primary-blue-400)] focus:ring-2 focus:ring-[var(--custom-primary-blue-200)] transition-all duration-200 outline-none bg-white"
+                    >
+                      <option value="">Select Time</option>
+                      {Array.isArray(slots) &&
+                        slots.map((slot) => (
+                          <option key={slot.id} value={slot.starting_time}>
+                            {slot.starting_time.split("T")[1].slice(0, 5)}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
                 </div>
               </div>
 
@@ -363,7 +385,7 @@ const History = () => {
           </div>
         </div>
       )}
-
+      <div className="mt-10"></div>
       <Footer color="blue" />
     </div>
   );
