@@ -130,10 +130,10 @@ const UserAppointments = () => {
                 {upcomingAppointments.map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="group bg-white hover:bg-[var(--custom-orange-50)] rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-[var(--custom-orange-100)]"
+                    className="group bg-white hover:bg-[var(--custom-orange-50)] rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--custom-orange-100)]"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] p-3 rounded-full group-hover:from-[var(--custom-orange-200)] group-hover:to-[var(--custom-orange-300)] transition-all duration-300">
+                      <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] p-3 rounded-full transition-all duration-300">
                         <User className="h-6 w-6 text-[var(--custom-orange-700)]" />
                       </div>
 
@@ -194,7 +194,7 @@ const UserAppointments = () => {
                     key={appointment.id}
                     className="bg-gray-50 bg-opacity-80 rounded-xl p-6 transition-all duration-300 hover:bg-gray-100 hover:shadow-md"
                   >
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4">
                       <div className="flex items-center space-x-5">
                         <div className="bg-white p-3 rounded-full shadow-md">
                           <User className="h-7 w-7 text-gray-600" />
@@ -219,9 +219,9 @@ const UserAppointments = () => {
                                 ratings[appointment.id] || 3,
                                 appointment.doc.id
                               );
-                              CustomToast("The rating is been submitted")
+                              CustomToast("The rating has been submitted!")
                             }}
-                            className="flex items-center gap-3"
+                            className="flex items-center ml-18 md:ml-0 gap-2 flex-col"
                           >
                             <Rating
                               name={`rating-${appointment.id}`}
@@ -234,22 +234,23 @@ const UserAppointments = () => {
                               }}
                               sx={{
                                 "& .MuiRating-iconFilled": {
-                                  color: "var(--custom-orange-600)",
+                                  color: "var(--custom-orange-500)",
                                 },
                                 "& .MuiRating-iconHover": {
-                                  color: "var(--custom-orange-700)",
+                                  color: "var(--custom-orange-600)",
                                 },
                               }}
+                              size="small"
                             />
                             <button
                               type="submit"
-                              className="bg-gradient-to-r from-[var(--custom-orange-500)] to-[var(--custom-orange-600)] text-white px-4 py-1 rounded-lg text-sm font-semibold hover:from-[var(--custom-orange-600)] hover:to-[var(--custom-orange-700)] transition-all duration-200"
+                              className="bg-[var(--custom-orange-500)] text-white px-4.5 py-1 rounded-md text-sm font-semibold hover:-translate-y-[1.5px] transition-all duration-200"
                             >
                               Submit
                             </button>
                           </form>
                         ) : (
-                          <span className="text-[var(--custom-orange-600)] font-semibold text-sm flex items-center gap-2">
+                          <span className="text-green-600 ml-18 md:ml-0 font-semibold text-sm flex items-center gap-2">
                             <CheckCircle className="w-5 h-5" /> Rating
                             Submitted!
                           </span>
