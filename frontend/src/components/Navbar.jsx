@@ -253,7 +253,7 @@ const Navbar = () => {
                           onClick={() => {
                             navigate("/appointments");
                           }}
-                          className="w-full px-4 py-2 text-sm font-medium text-white bg-[#FF6B35] rounded-lg hover:bg-[#FF5722] transition-colors duration-200"
+                          className="w-full px-4 py-2 text-sm font-medium text-white bg-[#fe855a] rounded-lg hover:bg-[#FF6B35] transition-colors duration-200"
                         >
                         Appointments
                         </button>
