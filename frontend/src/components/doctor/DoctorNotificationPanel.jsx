@@ -76,6 +76,7 @@ const DoctorNotificationPanel = () => {
 
     return (
         <div className="absolute top-14 right-5 w-80 bg-white shadow-xl border rounded-lg p-4 z-50">
+            <ToastContainer/>
             <h2 className="text-sm font-semibold text-gray-800 mb-2">
                 Care Alerts
             </h2>
