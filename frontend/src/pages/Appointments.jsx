@@ -132,21 +132,18 @@ const UserAppointments = () => {
                     key={appointment.id}
                     className="group bg-white hover:bg-[var(--custom-orange-50)] rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--custom-orange-100)]"
                   >
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-start md:items-center gap-4">
                       <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] p-3 rounded-full transition-all duration-300">
                         <User className="h-6 w-6 text-[var(--custom-orange-700)]" />
                       </div>
 
                       <div className="flex-1 space-y-2">
-                        <div>
+                        <div className="mb-0.5">
                           <div className="flex items-center justify-between">
                             <h3 className="font-semibold text-[var(--custom-orange-900)] text-lg">
                               {appointment.doctor.name}
                             </h3>
                           </div>
-                          <p className="text-sm text-[var(--custom-orange-600)]">
-                            {appointment.doctor.specialty}
-                          </p>
                         </div>
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                           <p className="text-sm text-[var(--custom-orange-700)]">

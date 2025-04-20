@@ -1,25 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  User,
-  CircleUser,
-  Clock,
-  Phone,
-  FileText,
-  Loader,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+import { User, CircleUser, Clock, Phone, FileText, Loader } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import emailjs from "@emailjs/browser";
 import Footer from "../../components/Footer";
@@ -30,107 +10,7 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
 import { TimeChange } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
-
-const PastAppointmentGraphs = ({
-  timePeriodData,
-  getPieData,
-  COLORS,
-  handleGraphTypeChange,
-  isBar,
-  histogramData,
-  selectedTimePeriod,
-  handleTimePeriodChange,
-}) => {
-  return (
-    <div className="py-12 mt-10">
-      <div className="w-full">
-        <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600 mb-2">
-          Past Appointments
-        </h1>
-        <p className="text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light mb-8">
-          Analyze your appointment history by time period and student category
-        </p>
-      </div>
-
-      <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 p-6 sm:p-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-          <div className="flex items-center">
-          
-            <select
-              className="form-select px-4 py-2 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
-              onChange={handleGraphTypeChange}
-              defaultValue="bar"
-            >
-              <option value="bar">Bar Chart</option>
-              <option value="pie">Pie Chart</option>
-            </select>
-          </div>
-
-          {!isBar && (
-            <div className="flex items-center mt-4 sm:mt-0">
-              
-              <select
-                className="form-select px-4 py-2 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
-                value={selectedTimePeriod}
-                onChange={handleTimePeriodChange}
-              >
-                {Object.keys(timePeriodData).map((period) => (
-                  <option key={period} value={period}>
-                    {period}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
-
-        <div className="h-96">
-          <ResponsiveContainer width="100%" height="100%">
-            {isBar ? (
-              <BarChart
-                data={histogramData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="UG" fill="#0088FE" />
-                <Bar dataKey="PG" fill="#00C49F" />
-                <Bar dataKey="PHD" fill="#FFBB28" />
-              </BarChart>
-            ) : (
-              <PieChart>
-                <Pie
-                  data={getPieData(selectedTimePeriod)}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={true}
-                  outerRadius={120}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) =>
-                    `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
-                >
-                  {getPieData(selectedTimePeriod).map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            )}
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  );
-};
+import PastAppointmentGraphs from "../../components/doctor/DoctorAppoinmentsGraph";
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -141,7 +21,7 @@ const DoctorAppointment = () => {
   const [appointments, setapp] = useState([]);
   const [curr, setcurr] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [isBar, setIsBar] = useState(true);
+  const [isBar, setIsBar] = useState(false);
   const [isRescheduling, setisRescheduling] = useState(false);
   const [isFetched, setisFetched] = useState(null);
   const [selectedTimePeriod, setSelectedTimePeriod] = useState("Last 1 Month");
@@ -453,13 +333,13 @@ const DoctorAppointment = () => {
       <DoctorNavbar />
       <div className="container mx-auto px-4 sm:px-8 lg:px-4 xl:px-16 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="space-y-10">
+          <div className="space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600">
                   Current Appointments
                 </h1>
-                <p className="mt-3 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
+                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
                   Seamlessly manage your upcoming appointments
                 </p>
               </div>
@@ -539,19 +419,19 @@ const DoctorAppointment = () => {
                   No Current Appointments
                 </h3>
                 <p className="text-gray-600 text-center max-w-md">
-                  You don't have any appointments scheduled at the moment.
+                  No appointments scheduled at the moment.
                 </p>
               </div>
             )}
           </div>
 
-          <div className="mt-5 lg:mt-0 space-y-10">
+          <div className="mt-5 lg:mt-0 space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600">
                   Incoming Requests
                 </h1>
-                <p className="mt-3 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
+                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-gray-600 tracking-wide font-light">
                   Review and accept new appointment requests with ease
                 </p>
               </div>
@@ -713,7 +593,7 @@ const DoctorAppointment = () => {
           histogramData={histogramData}
           selectedTimePeriod={selectedTimePeriod}
           handleTimePeriodChange={handleTimePeriodChange}
-        />
+        />``
       </div>
       <Footer color={"blue"} />
     </div>

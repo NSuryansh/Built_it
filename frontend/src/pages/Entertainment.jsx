@@ -118,7 +118,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
                   }`}
                 >
                   <div className="p-2 sm:p-4 md:p-6 w-full transform transition-transform duration-300 group-hover:translate-y-0">
-                    <h3 className="text-sm sm:text-md md:text-lg font-bold text-white mb-1 md:mb-2 group-hover:text-indigo-300 transition-colors duration-300">
+                    <h3 className="text-sm sm:text-md md:text-lg font-semibold md:font-bold text-white mb-1 md:mb-2 group-hover:text-indigo-300 transition-colors duration-300">
                       {item.title}
                     </h3>
                     <span className="sm:inline-block hidden px-2 md:px-3 py-1 rounded-full bg-white/20 text-xs md:text-sm text-white backdrop-blur-sm">
