@@ -297,7 +297,7 @@ const History = () => {
                   <CalendarClock className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-blue-500">
-                  Schedule Follow-up
+                  Schedule
                 </h3>
               </div>
               <button
@@ -326,7 +326,7 @@ const History = () => {
                       setFollowupDate(e.target.value);
                       fetchAvailableSlots(e.target.value);
                     }}
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
               </div>
@@ -352,12 +352,12 @@ const History = () => {
                       onChange={(e) => {
                         setFollowupTime(e.target.value);
                       }}
-                      className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-primary-blue-200)] focus:border-[var(--custom-primary-blue-400)] focus:ring-2 focus:ring-[var(--custom-primary-blue-200)] transition-all duration-200 outline-none bg-white"
+                      className="w-full  px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black-500 focus:border-transparent transition-all duration-200 outline-none bg-white"
                     >
-                      <option value="">Select Time</option>
+                      <option className="text-sm" value="">Select Time</option>
                       {Array.isArray(slots) &&
                         slots.map((slot) => (
-                          <option key={slot.id} value={slot.starting_time}>
+                          <option className="text-sm" key={slot.id} value={slot.starting_time}>
                             {slot.starting_time.split("T")[1].slice(0, 5)}
                           </option>
                         ))}
@@ -375,7 +375,7 @@ const History = () => {
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Enter reason for follow-up"
-                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
                 />
               </div>
 
