@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CircleAlert } from "lucide-react";
+import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import CustomToast from "../CustomToast";
 
@@ -29,28 +30,39 @@ const DoctorNotificationPanel = () => {
     }, [userId])
 
 
-    const getUsers = async () => {
-        try {
-            const response = await fetch("http://localhost:3000/getFeelings");
-            if (!response.ok) throw new Error("Failed to fetch feelings");
-            const data = await response.json();
-            // console.log(data, "hello")
-            const filteredData = [];
-            for (let i = 0; i < data.length; i++) {
-                const scores = calculateHappinessScore(data[i]);
-                const sum = scores.reduce((acc, curr) => acc + curr, 0) / scores.length;
-                // console.log(sum);
-                if (sum <= 3) {
-                    console.log(data[i].user.id, data[i].user.username)
-                    filteredData.push({ userId: data[i].user.id, username: data[i].user.username });
+    useEffect(() => {
+        const getUsers = async () => {
+            if (chats) {
+                console.log(chats)
+                try {
+                    const response = await fetch("http://localhost:3000/getFeelings");
+                    if (!response.ok) throw new Error("Failed to fetch feelings");
+                    const data = await response.json();
+                    // console.log(data, "hello")
+                    const filteredData = [];
+                    for (let i = 0; i < data.length; i++) {
+                        const scores = calculateHappinessScore(data[i]);
+                        const sum = scores.reduce((acc, curr) => acc + curr, 0) / scores.length;
+                        // console.log(sum);
+                        if (sum <= 3 && !chats.map(chat => chat.id).includes(data[i].user.id)) {
+                            console.log(data[i].user.id, data[i].user.username)
+                            filteredData.push({ userId: data[i].user.id, username: data[i].user.username });
+                        }
+                    }
+                    setNotifications(filteredData);
+                } catch (error) {
+                    console.error("Error fetching users:", error);
+                    CustomToast("Error fetching users", "blue")
                 }
-            }
-            setNotifications(filteredData);
-        } catch (error) {
-            console.error("Error fetching users:", error);
-            CustomToast("Error fetching users", "blue")
+            };
         }
-    };
+
+        getUsers();
+
+    }, [chats])
+
+
+
 
     const calculateHappinessScore = (record) => {
         let scores = [];
@@ -66,17 +78,13 @@ const DoctorNotificationPanel = () => {
         return scores;
     };
 
-    useEffect(() => {
-        getUsers();
-    }, []);
-
     const handleAccept = async (notif) => {
         navigate(`/doctor/peer?userId=${notif.userId}&username=${notif.username}`);
     };
 
     return (
         <div className="absolute top-14 right-5 w-80 bg-white shadow-xl border rounded-lg p-4 z-50">
-            <ToastContainer/>
+            <ToastContainer />
             <h2 className="text-sm font-semibold text-gray-800 mb-2">
                 Care Alerts
             </h2>
