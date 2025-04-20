@@ -23,6 +23,8 @@
   --custom-peach: #ffddc0;
   --custom-primary-blue: #004ba8;
   --custom-primary-blue-100: #dbeafe;
+  --custom-primary-blue-200: #bedbff;
+  --custom-primary-blue-400: #51a2ff;
   --custom-primary-blue-900: #1c398e;
   --custom-primary-green: #048a81;
   --custom-primary-green-50: #e6f5f4;
@@ -130,4 +132,18 @@ button {
   padding: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* subtle thumb */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }
