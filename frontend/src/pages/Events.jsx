@@ -133,7 +133,7 @@ const Events = () => {
                 Upcoming Events
               </h2>
             </div>
-            <div className="bg-white/95 rounded-2xl shadow-lg p-8 border border-gray-100 transition-all duration-300 hover:shadow-xl">
+            <div className="bg-white/95 rounded-2xl shadow-lg p-8 border border-gray-100 transition-all duration-300 hover:shadow-xl max-h-[500px] overflow-y-auto">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -195,7 +195,7 @@ const Events = () => {
           </motion.section>
 
           <motion.section
-            initial={{ opacity: 0, y: 20 }}
+ szó            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
@@ -205,7 +205,7 @@ const Events = () => {
                 Past Events
               </h2>
             </div>
-            <div className="bg-white/95 rounded-2xl shadow-lg p-8 border border-gray-100 transition-all duration-300 hover:shadow-xl">
+            <div className="bg-white/95 rounded-2xl shadow-lg p-8 border border-gray-100 transition-all duration-300 hover:shadow-xl max-h-[500px] overflow-y-auto">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -292,7 +292,7 @@ const Events = () => {
                 Upcoming Events
               </h2>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 max-h-[500px] overflow-y-auto">
               <AnimatePresence>
                 {filterEvents(currentEvents).length > 0 ? (
                   filterEvents(currentEvents).map((event) => (
@@ -304,7 +304,7 @@ const Events = () => {
                       className="bg-white/95 rounded-xl shadow-md p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
                       <div className="flex items-center mb-4">
-                        <div className="h-2.5 w-2.5 bg-emerald-400 rounded-full mr-3" />
+                        <div className="h-2.5 w-2.5 bg-emercld-400 rounded-full mr-3" />
                         <h3 className="text-lg font-medium text-gray-900">{event.title}</h3>
                       </div>
                       <div className="space-y-3 text-sm text-gray-600">
@@ -346,7 +346,7 @@ const Events = () => {
                 Past Events
               </h2>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 max-h-[500px] overflow-y-auto">
               <AnimatePresence>
                 {filterEvents(pastEvents).length > 0 ? (
                   filterEvents(pastEvents).map((event) => (
@@ -394,7 +394,7 @@ const Events = () => {
                     exit={{ opacity: 0, y: -20 }}
                     className="bg-white/95 rounded-xl shadow-md p-6 text-center border border-gray-100"
                   >
-                    <CalendarX className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                    <CalendarX className="h-12 w-12 text-gray-300 mx-auto mb-4 animate-pulse" />
                     <p className="text-gray-500 text-sm italic">No past events to display</p>
                   </motion.div>
                 )}
@@ -405,7 +405,7 @@ const Events = () => {
       </main>
       <Footer color={"orange"} />
     </div>
-);
+  );
 };
 
 export default Events;
