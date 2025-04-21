@@ -208,8 +208,7 @@ const Navbar = () => {
                       : "opacity-0 translate-y-2 pointer-events-none"
                   }`}
                 >
-                  <div className="w-80 bg-white rounded-2xl shadow-lg overflow-hidden border border-[#FFE4CC]">
-                    {/* Header */}
+                  <div className="w-80 bg-white rounded-2xl shadow-lg overflow-hidden border-[#FFE4CC] border-2">
                     <div className="bg-[#FFF5EB] px-6 py-4">
                       <div className="flex items-center space-x-3">
                         <div className="w-12 h-12 bg-[#FFE4CC] rounded-full flex items-center justify-center">

@@ -1,33 +1,71 @@
 import React, { useEffect, useState } from "react";
 import { CircleAlert } from "lucide-react";
+import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import CustomToast from "../CustomToast";
 
 const DoctorNotificationPanel = () => {
     const [notifications, setNotifications] = useState([]);
-    const navigate = useNavigate(); // Initialize navigate function
+    const navigate = useNavigate();
+    const [chats, setChats] = useState();
+    const userId = localStorage.getItem("userid")
 
-    // Fetch users from API
-    const getUsers = async () => {
-        try {
-            const response = await fetch("http://localhost:3000/getFeelings");
-            if (!response.ok) throw new Error("Failed to fetch feelings");
-            const data = await response.json();
-            // console.log(data, "hello")
-            const filteredData = [];
-            for (let i = 0; i < data.length; i++) {
-                const scores = calculateHappinessScore(data[i]);
-                const sum = scores.reduce((acc, curr) => acc + curr, 0) / scores.length;
-                // console.log(sum);
-                if (sum <= 3) {
-                    console.log(data[i].user.id, data[i].user.username)
-                    filteredData.push({ userId: data[i].user.id, username: data[i].user.username });
+    useEffect(() => {
+        const getchats = async () => {
+            if (userId) {
+                try {
+                    const response = await fetch(
+                        `http://localhost:3000/chatContacts?userId=${userId}`
+                    );
+                    const contacts = await response.json();
+                    setChats(contacts);
+                } catch (error) {
+                    console.error("Error fetching contacts:", error);
+                    CustomToast("Error while fetching data", "blue");
+                    return [];
                 }
             }
-            setNotifications(filteredData);
-        } catch (error) {
-            console.error("Error fetching users:", error);
         }
-    };
+        getchats();
+    }, [userId])
+
+
+    useEffect(() => {
+        const getUsers = async () => {
+            if (chats) {
+                console.log(chats)
+                try {
+                    const response = await fetch("http://localhost:3000/getFeelings");
+                    if (!response.ok) throw new Error("Failed to fetch feelings");
+                    const data = await response.json();
+                    // console.log(data, "hello")
+                    const filteredData = [];
+                    for (let i = 0; i < data.length; i++) {
+                        const scores = calculateHappinessScore(data[i]);
+                        const sum = scores.reduce((acc, curr) => acc + curr, 0) / scores.length;
+                        // console.log(sum);
+                        if (sum <= 3) {
+                            console.log(data[i].user.id, data[i].user.username)
+                            if (chats.map(chat => chat.id).includes(data[i].user.id)) {
+                                filteredData.push({ userId: data[i].user.id, username: data[i].user.username, inChat: "Yes" });
+                            } else {
+                                filteredData.push({ userId: data[i].user.id, username: data[i].user.username, inChat: "No" });
+                            }
+                        }
+                    }
+                    setNotifications(filteredData);
+                } catch (error) {
+                    console.error("Error fetching users:", error);
+                    CustomToast("Error fetching users", "blue")
+                }
+            };
+        }
+        getUsers();
+
+    }, [chats])
+
+
+    
 
     const calculateHappinessScore = (record) => {
         let scores = [];
@@ -43,16 +81,13 @@ const DoctorNotificationPanel = () => {
         return scores;
     };
 
-    useEffect(() => {
-        getUsers();
-    }, []);
-
-    const handleAccept = (notif) => {
+    const handleAccept = async (notif) => {
         navigate(`/doctor/peer?userId=${notif.userId}&username=${notif.username}`);
     };
 
     return (
         <div className="absolute top-14 right-5 w-80 bg-white shadow-xl border rounded-lg p-4 z-50">
+            <ToastContainer />
             <h2 className="text-sm font-semibold text-gray-800 mb-2">
                 Care Alerts
             </h2>
@@ -66,16 +101,25 @@ const DoctorNotificationPanel = () => {
                             <div>
                                 <p className="font-semibold text-gray-900 text-md">{notif.username}</p>
                                 <p className="text-sm text-gray-600">
-                                    flagged for potential support.
+                                    {notif.inChat === "Yes"
+                                        ? "Already in chat flagged for potential support."
+                                        : "Not in chat flagged for potential support."}
                                 </p>
-                            </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => handleAccept(notif)}
-                                    className="text-red-600 hover:bg-red-100 p-2 rounded-full transition"
-                                >
-                                    <CircleAlert size={26} />
-                                </button>
+                                <div className="flex gap-2">
+                                    {notif.inChat === "Yes"
+                                        ? <div className="text-red-600 hover:bg-red-100 p-2 rounded-full transition">
+                                            <CircleAlert size={26} />
+                                        </div>
+                                        :
+                                        <button
+                                            onClick={() => handleAccept(notif)}
+                                            className="text-red-600 hover:bg-red-100 p-2 rounded-full transition"
+                                        >
+                                            <CircleAlert size={26} />
+                                        </button>
+                                    }
+
+                                </div>
                             </div>
                         </div>
                     ))
@@ -84,7 +128,7 @@ const DoctorNotificationPanel = () => {
                 )}
             </div>
         </div>
-    );
+    )
 };
 
 export default DoctorNotificationPanel;

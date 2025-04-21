@@ -597,7 +597,6 @@ const DoctorAppointment = () => {
           selectedTimePeriod={selectedTimePeriod}
           handleTimePeriodChange={handleTimePeriodChange}
         />
-        ``
       </div>
       <Footer color={"blue"} />
     </div>

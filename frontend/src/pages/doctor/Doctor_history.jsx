@@ -13,6 +13,7 @@ import {
   X,
   Calendar as CalendarIcon,
   Clock as ClockIcon,
+  Loader,
 } from "lucide-react";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
@@ -22,6 +23,7 @@ import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import SessionExpired from "../../components/SessionExpired";
 import CustomToast from "../../components/CustomToast";
+import { ToastContainer } from "react-toastify";
 
 const History = () => {
   const [app, setApp] = useState([]);
@@ -37,6 +39,8 @@ const History = () => {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => setExpanded(!expanded);
+  const [isScheduling, setisScheduling] = useState(false);
+
   const fetchAvailableSlots = async (date) => {
     try {
       const doctorId = localStorage.getItem("userid");
@@ -83,6 +87,7 @@ const History = () => {
   };
 
   const handleSubmitFollowup = async () => {
+    setisScheduling(true);
     try {
       const datetime = new Date(
         `${followupDate}T${followupTime.split("T")[1]}`
@@ -115,6 +120,7 @@ const History = () => {
         setShowFollowupModal(false);
         setFollowupDate("");
         setFollowupTime("");
+        setReason("");
         setSelectedAppointment(null);
       } else {
         CustomToast("Failed to schedule follow-up appointment", "blue");
@@ -123,6 +129,7 @@ const History = () => {
       console.error("Error scheduling follow-up:", error);
       CustomToast("Error scheduling follow-up appointment", "blue");
     }
+    setisScheduling(false);
   };
 
   useEffect(() => {
@@ -141,15 +148,20 @@ const History = () => {
       const searchTermLower = searchTerm.toLowerCase();
       filtered = filtered.filter((app) => {
         // Search by patient name
-        const usernameMatch = app.user.username.toLowerCase().includes(searchTermLower);
-        
+        const usernameMatch = app.user.username
+          .toLowerCase()
+          .includes(searchTermLower);
+
         // Search by date
-        const appointmentDate = format(new Date(app.createdAt), "dd MMM yyyy").toLowerCase();
+        const appointmentDate = format(
+          new Date(app.createdAt),
+          "dd MMM yyyy"
+        ).toLowerCase();
         const dateMatch = appointmentDate.includes(searchTermLower);
-        
+
         // Search by notes
         const notesMatch = app.note.toLowerCase().includes(searchTermLower);
-        
+
         // Return true if any of the fields match
         return usernameMatch || dateMatch || notesMatch;
       });
@@ -179,6 +191,7 @@ const History = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
+      <ToastContainer />
       <DoctorNavbar />
 
       <main className="max-w-7xl mx-1 sm:mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
@@ -297,7 +310,7 @@ const History = () => {
                   <CalendarClock className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-blue-500">
-                  Schedule Follow-up
+                  Schedule
                 </h3>
               </div>
               <button
@@ -310,8 +323,10 @@ const History = () => {
 
             <div className="space-y-5 sm:space-y-6">
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-7
-                00">
+                <label
+                  className="block text-sm font-medium text-gray-7
+                00"
+                >
                   Date
                 </label>
                 <div className="relative">
@@ -326,7 +341,7 @@ const History = () => {
                       setFollowupDate(e.target.value);
                       fetchAvailableSlots(e.target.value);
                     }}
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
               </div>
@@ -336,15 +351,6 @@ const History = () => {
                   Time
                 </label>
                 <div className="relative">
-                  {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <ClockIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="time"
-                    value={followupTime}
-                    onChange={(e) => setFollowupTime(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
-                  /> */}
                   <div>
                     <select
                       name="time"
@@ -352,12 +358,18 @@ const History = () => {
                       onChange={(e) => {
                         setFollowupTime(e.target.value);
                       }}
-                      className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-primary-blue-200)] focus:border-[var(--custom-primary-blue-400)] focus:ring-2 focus:ring-[var(--custom-primary-blue-200)] transition-all duration-200 outline-none bg-white"
+                      className="w-full  px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black-500 focus:border-transparent transition-all duration-200 outline-none bg-white"
                     >
-                      <option value="">Select Time</option>
+                      <option className="text-sm" value="">
+                        Select Time
+                      </option>
                       {Array.isArray(slots) &&
                         slots.map((slot) => (
-                          <option key={slot.id} value={slot.starting_time}>
+                          <option
+                            className="text-sm"
+                            key={slot.id}
+                            value={slot.starting_time}
+                          >
                             {slot.starting_time.split("T")[1].slice(0, 5)}
                           </option>
                         ))}
@@ -375,7 +387,7 @@ const History = () => {
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Enter reason for follow-up"
-                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
                 />
               </div>
 
@@ -388,10 +400,10 @@ const History = () => {
                 </button>
                 <button
                   onClick={handleSubmitFollowup}
-                  disabled={!followupDate || !followupTime}
-                  className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-100 text-blue-500 font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
+                  disabled={!followupDate || !followupTime || isScheduling}
+                  className="w-full mx-auto sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-100 text-blue-500 font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
                 >
-                  Schedule Follow-up
+                  {isScheduling ? <Loader /> : <>Schedule Follow-up</>}
                 </button>
               </div>
             </div>
