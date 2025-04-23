@@ -73,7 +73,7 @@ const DoctorProfile = () => {
             format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
           );
         });
-  
+
         let certifications = [];
         // Handle different possible formats of data.certifications
         if (typeof data.certifications === "string") {
@@ -82,18 +82,22 @@ const DoctorProfile = () => {
             certifications = JSON.parse(data.certifications);
           } catch (e) {
             // If not JSON, assume it's a | delimited string
-            certifications = data.certifications.split("|").filter(cert => cert !== "");
+            certifications = data.certifications
+              .split("|")
+              .filter((cert) => cert !== "");
           }
         } else if (Array.isArray(data.certifications)) {
           // If it's already an array, map it
-          certifications = data.certifications.map(cert => 
-            typeof cert === "object" ? cert.certification : cert
-          ).filter(cert => cert !== "");
+          certifications = data.certifications
+            .map((cert) =>
+              typeof cert === "object" ? cert.certification : cert
+            )
+            .filter((cert) => cert !== "");
         }
         if (certifications.length === 0) {
           certifications = ["<Add>"];
         }
-  
+
         let educations = [];
         // Handle different possible formats of data.education
         if (typeof data.education === "string") {
@@ -102,18 +106,18 @@ const DoctorProfile = () => {
             educations = JSON.parse(data.education);
           } catch (e) {
             // If not JSON, assume it's a | delimited string
-            educations = data.education.split("|").filter(edu => edu !== "");
+            educations = data.education.split("|").filter((edu) => edu !== "");
           }
         } else if (Array.isArray(data.education)) {
           // If it's already an array, map it
-          educations = data.education.map(edu => 
-            typeof edu === "object" ? edu.education : edu
-          ).filter(edu => edu !== "");
+          educations = data.education
+            .map((edu) => (typeof edu === "object" ? edu.education : edu))
+            .filter((edu) => edu !== "");
         }
         if (educations.length === 0) {
           educations = ["<Add>"];
         }
-  
+
         setProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -268,7 +272,7 @@ const DoctorProfile = () => {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center animate-fade-in-down">
           <div>
-            <h1 className="text-2xl text-center sm:text-3xl lg:text-4xl xl:text-5xl sm:text-start font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
+            <h1 className="text-center text-3xl lg:text-4xl xl:text-5xl sm:text-start font-extrabold bg-cyan-950 bg-clip-text text-blue-800">
               Doctor Profile
             </h1>
             <p className="mt-3 text-sm sm:text-md lg:text-lg text-gray-600 font-medium">
@@ -278,7 +282,7 @@ const DoctorProfile = () => {
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
-              className="group relative mt-4 sm:mt-0 flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
+              className="group relative mt-4 sm:mt-0 flex items-center px-3 py-1.5 sm:px-6 sm:py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
               <span className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               <Edit2 className="h-5 w-5 mr-2 relative  group-hover:animate-spin-slow" />
@@ -307,11 +311,11 @@ const DoctorProfile = () => {
 
         {/* Profile Card */}
         <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-indigo-100/30 transition-all duration-500 hover:shadow-indigo-200/20 animate-fade-in-up">
-          <div className="w-full flex justify-between flex-col md:flex-row gap-8">
-            <div className="flex flex-col md:flex-row items-center space-x-8">
+          <div className="w-full flex justify-between flex-col md:flex-row gap-4 md:gap-8">
+            <div className="flex flex-col md:flex-row items-center md:space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
+                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
                   isEditing ? "cursor-pointer" : ""
                 }`}
               >
@@ -353,10 +357,10 @@ const DoctorProfile = () => {
                         name: e.target.value,
                       })
                     }
-                    className="text-4xl font-extrabold text-gray-900 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                    className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-extrabold text-gray-900 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                   />
                 ) : (
-                  <h2 className="text-4xl font-extrabold bg-blue-600 bg-clip-text text-transparent">
+                  <h2 className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-extrabold bg-blue-600 bg-clip-text text-transparent">
                     {profile.name}
                   </h2>
                 )}
@@ -367,7 +371,7 @@ const DoctorProfile = () => {
             </div>
             <Link
               to="/doctor/leave"
-              className="group relative flex self-end md:self-center items-center h-fit w-fit px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
+              className="group relative flex self-end md:self-center items-center h-fit w-fit px-3 py-1.5 sm:px-6 sm:py-3 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-xl hover:shadow-indigo-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
               <span className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               <BriefcaseBusiness className="h-5 w-5 mr-2 relative  group-hover:animate-pulse" />
@@ -376,7 +380,7 @@ const DoctorProfile = () => {
           </div>
 
           {/* Grid Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6 md:mt-12">
             {/* Contact Info */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
               <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">

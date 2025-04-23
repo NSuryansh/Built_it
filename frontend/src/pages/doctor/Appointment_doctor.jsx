@@ -333,8 +333,8 @@ const DoctorAppointment = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-teal-50">
       <DoctorNavbar />
-      <div className="container mx-auto px-4 sm:px-8 lg:px-4 xl:px-16 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-4 xl:px-16 py-5 md:py-10 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
           <div className="space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
