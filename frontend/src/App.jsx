@@ -34,6 +34,7 @@ import AdminAppointments from "./pages/admin/admin_appointments";
 import DoctorBook from "./pages/doctor/Doctor_book";
 import History from "./pages/doctor/Doctor_history";
 import ErrorBoundaryFallback from "./components/ErrorBoundaryFallback";
+import { messaging, getToken } from "./firebase";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -61,30 +62,23 @@ export default function App() {
 
     const registration = await navigator.serviceWorker.ready;
 
-    const subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: convertedVapidKey, // your VAPID key here
+    const fcmToken = await getToken(messaging, {
+      vapidKey: import.meta.env.VITE_PUBLIC_VAPID_KEY,
     });
 
-    console.log("Push Subscription:", subscription);
+    if (fcmToken) {
+      console.log("FCM Token:", fcmToken);
 
-    // Attach user info with subscription
-    const body = {
-      userid: userid,
-      subscription: subscription,
-      userType: userType,
-    };
-
-    console.log(userType, "usetruegfua");
-
-    const res = await fetch("http://localhost:3000/save-subscription", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    console.log("RESSSSSSSSSSSSSS: ", res);
-    const response = await res.json();
-    console.log("Subscription saved:", response);
+      const res = await fetch("http://localhost:3000/save-subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userid: userid,
+          subscription: fcmToken,
+          userType: userType,
+        }),
+      });
+    }
 
     // return subscription;
   };

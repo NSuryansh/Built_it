@@ -228,8 +228,8 @@ model Chatbot {
 model Subscription {
   id        String   @id @default(uuid())
   endpoint  String   @unique
-  authKey   String
-  p256dhKey String
+  // authKey   String
+  // p256dhKey String
   createdAt DateTime @default(now())
   doctorId  Int?
   userId    Int?
