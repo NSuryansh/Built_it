@@ -311,7 +311,7 @@ const AdminUser = () => {
       <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-[var(--custom-primary-green-100)]">
           {/* Header Section */}
-          <div className="bg-gradient-to-r from-white to-emerald-100 px-8 py-10 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-white to-emerald-100 px-5 py-8 md:px-8 md:py-10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
               <svg viewBox="0 0 200 200" className="fill-white">
                 <path d="M0 0 L200 200 M200 0 L0 200" strokeWidth="20" />
@@ -320,7 +320,7 @@ const AdminUser = () => {
             <div className="flex items-center relative">
               <Users className="h-14 w-14 text-green-700 flex-shrink-0" />
               <div className="ml-6">
-                <h1 className="text-green-700 text-3xl font-bold tracking-tight">
+                <h1 className="text-green-700 text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
                   Users Overview
                 </h1>
                 <p className="text-emerald-700 mt-1 text-lg opacity-90">

@@ -231,7 +231,7 @@ const AdminAppointments = () => {
       <AdminNavbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-12 py-6">
         <div className="flex flex-col md:flex-row items-center justify-between mb-10">
-          <h1 className="text-3xl md:text-4xl text-center font-extrabold text-gray-900 flex items-center gap-4">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl text-center font-extrabold text-gray-900 flex items-center gap-4">
             <Calendar className="h-10 w-10 text-blue-600 animate-pulse" />
             Appointments Dashboard
           </h1>
@@ -257,7 +257,7 @@ const AdminAppointments = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-6 mb-6">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div className="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-blue-100 transform hover:-translate-y-1">
+          <div className="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg p-6 md:p-3 lg:p-6  hover:shadow-xl transition-all duration-300 border border-blue-100 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 font-medium">
@@ -270,7 +270,7 @@ const AdminAppointments = () => {
               <Calendar className="h-10 w-10 text-blue-600" />
             </div>
           </div>
-          <div className="bg-gradient-to-br from-white to-green-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-green-100 transform hover:-translate-y-1">
+          <div className="bg-gradient-to-br from-white to-green-50 rounded-2xl shadow-lg p-6 md:p-3 lg:p-6 hover:shadow-xl transition-all duration-300 border border-green-100 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 font-medium">
@@ -283,7 +283,7 @@ const AdminAppointments = () => {
               <Users className="h-10 w-10 text-green-600 animate-pulse" />
             </div>
           </div>
-          <div className="bg-gradient-to-br from-white to-purple-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-purple-100 transform hover:-translate-y-1">
+          <div className="bg-gradient-to-br from-white to-purple-50 rounded-2xl shadow-lg p-6 md:p-3 lg:p-6 hover:shadow-xl transition-all duration-300 border border-purple-100 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 font-medium">

@@ -167,7 +167,7 @@ const AdminDoctorProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300">
       <AdminNavbar />
       <ToastContainer />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 lg:py-14">
         {/* Back Button */}
         <Link
           to="/admin/doctor_list"
@@ -238,12 +238,12 @@ const AdminDoctorProfile = () => {
                 ].map((info, index) => (
                   <div
                     key={index}
-                    className="flex items-center space-x-[15px] text-gray-800 hover:text-coral-500 transition-colors duration-[200ms]"
+                    className="flex items-center space-x-3 md:space-x-[15px] text-gray-800 hover:text-coral-500 transition-colors duration-[200ms]"
                   >
-                    {React.createElement(info.icon, {
-                      className: "w-[25px] h-[25px] text-coral-500",
-                    })}
-                    <span className="text-lg font-medium">{info.label}</span>
+                    {<info.icon className="!w-6 !h-6 text-coral-500" />}
+                    <span className="text-md sm:text-lg font-medium">
+                      {info.label}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -325,11 +325,11 @@ const AdminDoctorProfile = () => {
           </div>
 
           {/* Referral Section */}
-          <div className="p-[60px] pt-0">
+          <div className="px-4 sm:px-6 md:px-8 lg:px-[60px] pt-0 pb-4 md:pb-8">
             {/* Referral Button */}
             <button
               onClick={() => setShowReferralForm(!showReferralForm)}
-              className="group relative inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-teal-600 hover:to-teal-800 transition-all duration-300 transform hover:scale-105 overflow-hidden"
+              className="mx-auto w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-teal-600 hover:to-teal-800 transition-all duration-300 transform hover:scale-105 overflow-hidden"
             >
               <FileText className="w-5 h-5 group-hover:animate-pulse" />
               {showReferralForm ? "Close Referral" : "Create Referral"}
