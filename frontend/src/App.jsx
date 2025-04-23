@@ -71,7 +71,7 @@ onMessage(messaging, async (payload) => {
     if (registration) {
       registration.showNotification(payload.notification.title, {
         body: payload.notification.body,
-        icon: '/icon.png',
+        icon: '../assets/final-image.png',
       });
       console.log("sent")
     } else {
