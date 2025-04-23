@@ -83,7 +83,9 @@ const Peer = () => {
   useEffect(() => {
     const fetchDocotors = async () => {
       try {
-        const response = await fetch("https://built-it.onrender.com/getdoctors");
+        const response = await fetch(
+          "https://built-it.onrender.com/getdoctors"
+        );
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
         setDocList(data);
@@ -178,7 +180,13 @@ const Peer = () => {
   useEffect(() => {
     if (!aesKey) return;
     if (!isAuthenticated) return;
-    const handleReceiveMessage = async ({ senderId, encryptedText, iv, encryptedAESKey, senderType }) => {
+    const handleReceiveMessage = async ({
+      senderId,
+      encryptedText,
+      iv,
+      encryptedAESKey,
+      senderType,
+    }) => {
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
@@ -290,21 +298,20 @@ const Peer = () => {
 
   useEffect(() => {
     // console.log(showMessages, "JSA")
-    console.log(showMessages)
+    console.log(showMessages);
     const filteredMessages = showMessages.filter((msg) => {
       // console.log("Filtering", msg)
       if (msg.senderType === "user") {
-        return msg.senderId = userId;
+        return (msg.senderId = userId);
       } else if (msg.senderType === "doc") {
-        return msg.recipientId = userId;
+        return (msg.recipientId = userId);
       } else {
-        return msg.recipientId = userId;
+        return (msg.recipientId = userId);
       }
       return false;
-
     });
-    setEditedMessages(filteredMessages)
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    setEditedMessages(filteredMessages);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
   const handleClosePopup = () => {
     navigate("/login");
@@ -312,23 +319,23 @@ const Peer = () => {
 
   useEffect(() => {
     if (recId !== 0) {
-      const userId = localStorage.getItem("userid")
-      const docId = recId
+      const userId = localStorage.getItem("userid");
+      const docId = recId;
       socketRef.current.emit("joinRoom", {
         userId: userId,
-        doctorId: docId
-      })
+        doctorId: docId,
+      });
     }
-    console.log(prevRecvId, "HALLO")
+    console.log(prevRecvId, "HALLO");
     if (prevRecvId !== 0) {
-      const userId = localStorage.getItem("userid")
-      const docId = prevRecvId
+      const userId = localStorage.getItem("userid");
+      const docId = prevRecvId;
       socketRef.current.emit("leaveRoom", {
         userId: userId,
-        doctorId: docId
-      })
+        doctorId: docId,
+      });
     }
-  }, [recId, prevRecvId])
+  }, [recId, prevRecvId]);
 
   if (isAuthenticated === null) {
     return (
@@ -368,11 +375,18 @@ const Peer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={filteredDoctors.map((doctor) => ({ name: doctor.name, senderId: doctor.id, img: doctor.img }))}
+                  names={filteredDoctors.map((doctor) => ({
+                    name: doctor.name,
+                    senderId: doctor.id,
+                    img: doctor.img,
+                  }))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => ({ count: mes._count._all, senderId: mes.senderId }))}
+                  unread={unread.map((mes) => ({
+                    count: mes._count._all,
+                    senderId: mes.senderId,
+                  }))}
                 />
               </div>
             </>
@@ -395,7 +409,15 @@ const Peer = () => {
             <>
               <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-white shadow-sm">
                 <div className="flex items-center space-x-3">
-                  <User className="w-8 h-8 text-orange-500" />
+                  {docList[selectedChat]?.img != "" ? (
+                    <img
+                      src={docList[selectedChat]?.img}
+                      alt="Profile"
+                      className="w-8 h-8 object-cover rounded-full"
+                    />
+                  ) : (
+                    <User className="w-8 h-8 text-orange-500" />
+                  )}
                   <div>
                     <h2 className="text-xl font-bold text-gray-900 drop-shadow-sm">
                       {docList[selectedChat]?.name}
@@ -461,11 +483,17 @@ const Peer = () => {
                   </div>
                 </div>
                 <ChatList
-                  names={filteredDoctors.map((doctor) => ({ name: doctor.name, senderId: doctor.id }))}
+                  names={filteredDoctors.map((doctor) => ({
+                    name: doctor.name,
+                    senderId: doctor.id,
+                  }))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => ({ count: mes._count._all, senderId: mes.senderId }))}
+                  unread={unread.map((mes) => ({
+                    count: mes._count._all,
+                    senderId: mes.senderId,
+                  }))}
                   className="space-y-2 p-4"
                 />
               </>
@@ -507,10 +535,11 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                    msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                    }`}
+                  }`}
                 />
               ))}
               <div ref={messagesEndRef} />

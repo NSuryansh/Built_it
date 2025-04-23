@@ -78,8 +78,9 @@ const Landing_user = () => {
             <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-orange-500 tracking-wide mb-4 drop-shadow-[0_2px_4px_rgba(255,147,51,0.4)] group-hover:text-orange-600 transition-colors duration-200">
               Upcoming Events
             </div>
-            <div className="h-full overflow-y-scroll">
+            <div className="h-full pr-2 overflow-y-scroll">
               <EventsDisplay />
+            <div className="h-10"></div>
             </div>
           </div>
         </div>
