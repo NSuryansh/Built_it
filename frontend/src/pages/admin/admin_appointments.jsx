@@ -194,12 +194,10 @@ const AdminAppointments = () => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case "Confirmed":
-        return <CheckCircle2 className="h-5 w-5 text-green-600" />;
       case "Pending":
         return <Clock3 className="h-5 w-5 text-yellow-600" />;
       default:
-        return <AlertCircle className="h-5 w-5 text-red-600" />;
+        return <CheckCircle2 className="h-5 w-5 text-green-600" />;
     }
   };
 
@@ -372,7 +370,7 @@ const AdminAppointments = () => {
               </div>
             </div>
           </div>
-          <div className="divide-y divide-gray-100 flex flex-col items-center lg:gap-3 mt-3 mb-3">
+          <div className="divide-y max-h-screen overflow-y-auto divide-gray-100 flex flex-col items-center lg:gap-3 mt-3 mb-3">
             {filteredAppointments.map((appointment) => (
               <div
                 key={appointment.id}
@@ -434,11 +432,9 @@ const AdminAppointments = () => {
                       {getStatusIcon(appointment.status)}
                       <span
                         className={`text-sm font-medium ${
-                          appointment.status === "Confirmed"
-                            ? "text-green-600"
-                            : appointment.status === "Pending"
+                          appointment.status === "Pending"
                             ? "text-yellow-600"
-                            : "text-red-600"
+                            : "text-green-600"
                         }`}
                       >
                         {appointment.status}
