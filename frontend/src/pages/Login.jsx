@@ -47,17 +47,14 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch(
-      "http://localhost:3000/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    });
     const res = await response.json();
 
     // const data = await res.json();
@@ -68,7 +65,9 @@ const Login = () => {
     }
 
     if (res["message"] === "Login successful") {
+      console.log("Backend response:", res);
       localStorage.setItem("token", res["token"]);
+      localStorage.setItem("refreshToken", res["refreshToken"]);
       navigate("/dashboard");
     } else {
       CustomToast(res["message"]);
@@ -81,16 +80,13 @@ const Login = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch(
-      "http://localhost:3000/forgotPassword",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/forgotPassword", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
@@ -166,7 +162,7 @@ const Login = () => {
         </div>
 
         <button
-        disabled={isLoading}
+          disabled={isLoading}
           onClick={handlelogin}
           className="w-full flex justify-center items-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
         >

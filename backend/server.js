@@ -91,7 +91,9 @@ io.on("connection", (socket) => {
     // console.log(userId);
   });
   socket.on("joinRoom", ({ userId, doctorId }) => {
-    const room = `chat_${[Number(userId), Number(doctorId)].sort((a, b) => a - b).join("_")}`;
+    const room = `chat_${[Number(userId), Number(doctorId)]
+      .sort((a, b) => a - b)
+      .join("_")}`;
     console.log(userId, " ", doctorId);
     socket.join(room);
     console.log(room);
@@ -223,7 +225,9 @@ io.on("connection", (socket) => {
   );
 
   socket.on("leaveRoom", async ({ userId, doctorId }) => {
-    const room = `chat_${[Number(userId), Number(doctorId)].sort((a, b) => a - b).join("_")}`;
+    const room = `chat_${[Number(userId), Number(doctorId)]
+      .sort((a, b) => a - b)
+      .join("_")}`;
     console.log(room);
     socket.leave(room);
   });
@@ -371,12 +375,48 @@ app.post("/login", async (req, res) => {
     { userId: user.id, username: user.username, email: user.email },
     SECRET_KEY,
     {
-      expiresIn: "1h",
+      expiresIn: "168h",
     }
   );
 
-  res.json({ message: "Login successful", token });
+  const refreshToken = jwt.sign(
+    { userId: user.id, username: user.username, email: user.email },
+    SECRET_KEY,
+    {
+      expiresIn: "7d",
+    }
+  );
+  console.log(refreshToken, "token");
+
+  res.json({ message: "Login successful", token, refreshToken });
 });
+
+////////////////////////////
+// app.post("/refresh", (req, res) => {
+//   const refreshToken = req.body["refreshToken"];
+//   if (!refreshToken)
+//     return res.status(401).json({ message: "No Refresh Token Found" });
+
+//   try {
+//     const userData = jwt.verify(refreshToken, SECRET_KEY);
+
+//     const newAccessToken = jwt.sign(
+//       {
+//         userId: userData.userId,
+//         username: userData.username,
+//         email: userData.email,
+//       },
+//       SECRET_KEY,
+//       { expiresIn: "1h" }
+//     );
+
+//     res.json({ accessToken: newAccessToken });
+//   } catch (err) {
+//     res.status(403).json({ message: err });
+//   }
+// });
+
+/////////////////////////////////
 
 app.get("/profile", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -854,11 +894,11 @@ app.get("/reqApp", async (req, res) => {
   res.json(appt);
 });
 
-app.get("/getRequests", async(req,res) =>{
-  try{
+app.get("/getRequests", async (req, res) => {
+  try {
     const userId = Number(req.query["userId"]);
     const reqs = await prisma.requests.findMany({
-      where: { user_id: userId, forDoctor: false},
+      where: { user_id: userId, forDoctor: false },
       include: {
         doctor: {
           select: {
@@ -870,7 +910,7 @@ app.get("/getRequests", async(req,res) =>{
       },
     });
     res.json(reqs);
-  }catch(error) {
+  } catch (error) {
     console.error(error);
   }
 });
@@ -2312,7 +2352,7 @@ app.post("/accept-booking-by-user", async (req, res) => {
           isDoctor: true,
         },
       });
-      console.log(appointment)
+      console.log(appointment);
       //Remove from requests table
       const reqDel = await prisma.requests.delete({
         where: { id: parseInt(appId) },
