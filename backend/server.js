@@ -1715,11 +1715,11 @@ app.post("/send-notification", async (req, res) => {
           },
         };        
         const response = await admin.messaging().send(payload);
-        res.send({success: true, response})
       } catch (err) {
         console.error("Failed to send to one subscription:", err);
       }
     }
+    res.send({success: true})
 
     // res.json({ success: true });
   } catch (error) {
