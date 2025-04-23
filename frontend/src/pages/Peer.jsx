@@ -49,7 +49,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (newChatId) {
-      if(recId){
+      if (recId) {
         setPrevRecId(recId);
       }
       setRecid(newChatId);
@@ -83,7 +83,7 @@ const Peer = () => {
   useEffect(() => {
     const fetchDocotors = async () => {
       try {
-        const response = await fetch("http://localhost:3000/getdoctors");
+        const response = await fetch("https://built-it.onrender.com/getdoctors");
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
         setDocList(data);
@@ -97,7 +97,7 @@ const Peer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `https://built-it.onrender.com/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
 
@@ -136,7 +136,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (docList.length > 0 && selectedChat !== null) {
-      if (recId){
+      if (recId) {
         setPrevRecId(recId);
       }
       setRecid(docList[selectedChat].id);
@@ -153,7 +153,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3000/", {
+    socketRef.current = io("https://built-it.onrender.com/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -249,7 +249,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `https://built-it.onrender.com/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       const decrypted_api_messages = await Promise.all(
@@ -297,11 +297,11 @@ const Peer = () => {
         return msg.senderId = userId;
       } else if (msg.senderType === "doc") {
         return msg.recipientId = userId;
-      }else {
+      } else {
         return msg.recipientId = userId;
       }
       return false;
-      
+
     });
     setEditedMessages(filteredMessages)
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -320,7 +320,7 @@ const Peer = () => {
       })
     }
     console.log(prevRecvId, "HALLO")
-    if(prevRecvId !== 0){
+    if (prevRecvId !== 0) {
       const userId = localStorage.getItem("userid")
       const docId = prevRecvId
       socketRef.current.emit("leaveRoom", {
@@ -368,11 +368,11 @@ const Peer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={filteredDoctors.map((doctor) => ({name: doctor.name, senderId: doctor.id, img: doctor.img}))}
+                  names={filteredDoctors.map((doctor) => ({ name: doctor.name, senderId: doctor.id, img: doctor.img }))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
+                  unread={unread.map((mes) => ({ count: mes._count._all, senderId: mes.senderId }))}
                 />
               </div>
             </>
@@ -461,11 +461,11 @@ const Peer = () => {
                   </div>
                 </div>
                 <ChatList
-                  names={filteredDoctors.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
+                  names={filteredDoctors.map((doctor) => ({ name: doctor.name, senderId: doctor.id }))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => ({count: mes._count._all, senderId: mes.senderId}))}
+                  unread={unread.map((mes) => ({ count: mes._count._all, senderId: mes.senderId }))}
                   className="space-y-2 p-4"
                 />
               </>
@@ -507,11 +507,10 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
-                    msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                  }`}
+                    }`}
                 />
               ))}
               <div ref={messagesEndRef} />

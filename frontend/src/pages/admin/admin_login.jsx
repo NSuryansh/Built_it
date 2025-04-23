@@ -46,7 +46,7 @@ const AdminLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch("http://localhost:3000/adminLogin", {
+    const response = await fetch("https://built-it.onrender.com/adminLogin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -71,7 +71,7 @@ const AdminLogin = () => {
       CustomToast("Please enter an email", "green");
       return;
     }
-    const response = await fetch("http://localhost:3000/forgotAdminPassword", {
+    const response = await fetch("https://built-it.onrender.com/forgotAdminPassword", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -52,7 +52,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   const onSave = async (dataToSend) => {
     try {
-      const response = await fetch("http://localhost:3000/modifyUser", {
+      const response = await fetch("https://built-it.onrender.com/modifyUser", {
         method: "PUT", // Use PUT to modify user details
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   return (
     <div className="bg-[var(--custom-orange-50)]">
-      <Navbar className="bg-[var(--custom-orange-50)]"/>
+      <Navbar className="bg-[var(--custom-orange-50)]" />
       <ToastContainer />
       <div className="min-h-screen py-16 flex items-center justify-center">
         <div className="max-w-2xl w-full mx-auto bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-none md:shadow-xl md:border border-[var(--custom-orange-100)] overflow-hidden">
@@ -134,7 +134,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   placeholder={
                     localStorage.getItem("user_email") || "Your email"
                   }
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
                 <label
                   htmlFor="email"

@@ -45,7 +45,7 @@ const History = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+        `https://built-it.onrender.com/available-slots?date=${date}&docId=${doctorId}`
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);
@@ -70,7 +70,7 @@ const History = () => {
     try {
       const docId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/pastdocappt?doctorId=${docId}`
+        `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`
       );
       const data = await response.json();
       setApp(data);
@@ -92,7 +92,7 @@ const History = () => {
       const datetime = new Date(
         `${followupDate}T${followupTime.split("T")[1]}`
       ).toISOString();
-      const response = await fetch("http://localhost:3000/request-to-user", {
+      const response = await fetch("https://built-it.onrender.com/request-to-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ const History = () => {
       CustomToast("Follow-up appointment scheduled", "blue");
 
       if (data["message"] === "Appointment requested successfully") {
-        const notif = await fetch("http://localhost:3000/send-notification", {
+        const notif = await fetch("https://built-it.onrender.com/send-notification", {
           method: "POST",
           headers: { "Content-type": "Application/json" },
           body: JSON.stringify({
@@ -269,9 +269,8 @@ const History = () => {
                       </h3>
                     </div>
                     <p
-                      className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${
-                        expanded ? "" : "line-clamp-2"
-                      }`}
+                      className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${expanded ? "" : "line-clamp-2"
+                        }`}
                     >
                       {appointment.note}
                     </p>

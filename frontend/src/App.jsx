@@ -69,7 +69,7 @@ export default function App() {
     if (fcmToken) {
       console.log("FCM Token:", fcmToken);
 
-      const res = await fetch("http://localhost:3000/save-subscription", {
+      const res = await fetch("https://built-it.onrender.com/save-subscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -154,7 +154,7 @@ export default function App() {
         <Route path="/admin/User" element={<User />} />
         <Route path="/admin/appointments" element={<AdminAppointments />} />
         <Route path="/doctor/history" element={<History />} />
-        <Route path="/easter_egg" element={<ErrorBoundaryFallback userType={userType}/>} />
+        <Route path="/easter_egg" element={<ErrorBoundaryFallback userType={userType} />} />
       </Routes>
     </div>
   );

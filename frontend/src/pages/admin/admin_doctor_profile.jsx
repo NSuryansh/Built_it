@@ -63,7 +63,7 @@ const AdminDoctorProfile = () => {
       try {
         const doctorId = search.split("=")[1];
         const response = await fetch(
-          `http://localhost:3000/getDoc?docId=${doctorId}`
+          `https://built-it.onrender.com/getDoc?docId=${doctorId}`
         );
         const data = await response.json();
         let certifications = [];
@@ -123,7 +123,7 @@ const AdminDoctorProfile = () => {
 
   const referralSub = async () => {
     try {
-      const response = await fetch("http://localhost:3000/referrals", {
+      const response = await fetch("https://built-it.onrender.com/referrals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -201,11 +201,10 @@ const AdminDoctorProfile = () => {
                 </h1>
                 <div className="flex">
                   <p className="text-yellow-200 text-xl font-medium italic">
-                    {`${doctor.field} (${
-                      doctor.avgRating != 0.0
+                    {`${doctor.field} (${doctor.avgRating != 0.0
                         ? parseFloat(doctor.avgRating).toPrecision(2)
                         : "Unrated"
-                    }`}
+                      }`}
                   </p>
                   {doctor.avgRating != 0.0 && (
                     <div className="flex">

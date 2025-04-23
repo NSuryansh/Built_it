@@ -36,7 +36,7 @@ const AdminDashboard = () => {
     const fetchAppointments = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/pastApp");
+        const response = await fetch("https://built-it.onrender.com/pastApp");
         const data = await response.json();
         if (response.ok) {
           const result = {};
@@ -121,7 +121,7 @@ const AdminDashboard = () => {
   const handleRefresh = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/pastApp");
+      const response = await fetch("https://built-it.onrender.com/pastApp");
       const data = await response.json();
       if (response.ok) {
         const result = {};

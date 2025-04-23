@@ -39,7 +39,7 @@ const UserAppointments = () => {
   async function getPrevApp() {
     try {
       const res = await fetch(
-        `http://localhost:3000/pastuserappt?userId=${user_id}`
+        `https://built-it.onrender.com/pastuserappt?userId=${user_id}`
       );
       const resp = await res.json();
       setpreviousAppointments(resp);
@@ -52,7 +52,7 @@ const UserAppointments = () => {
   async function getCurrApp() {
     try {
       const res = await fetch(
-        `http://localhost:3000/currentuserappt?userId=${user_id}`
+        `https://built-it.onrender.com/currentuserappt?userId=${user_id}`
       );
       const resp = await res.json();
       setupcomingAppointments(resp);
@@ -88,7 +88,7 @@ const UserAppointments = () => {
   // Only handles submitting data, not the event
   const submitRating = async (appointmentId, ratingValue, docId) => {
     try {
-      const res = await fetch("http://localhost:3000/setRating", {
+      const res = await fetch("https://built-it.onrender.com/setRating", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

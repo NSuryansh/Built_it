@@ -15,7 +15,7 @@ const DoctorNotificationPanel = () => {
             if (userId) {
                 try {
                     const response = await fetch(
-                        `http://localhost:3000/chatContacts?userId=${userId}`
+                        `https://built-it.onrender.com/chatContacts?userId=${userId}`
                     );
                     const contacts = await response.json();
                     setChats(contacts);
@@ -35,7 +35,7 @@ const DoctorNotificationPanel = () => {
             if (chats) {
                 console.log(chats)
                 try {
-                    const response = await fetch("http://localhost:3000/getFeelings");
+                    const response = await fetch("https://built-it.onrender.com/getFeelings");
                     if (!response.ok) throw new Error("Failed to fetch feelings");
                     const data = await response.json();
                     // console.log(data, "hello")
@@ -65,7 +65,7 @@ const DoctorNotificationPanel = () => {
     }, [chats])
 
 
-    
+
 
     const calculateHappinessScore = (record) => {
         let scores = [];

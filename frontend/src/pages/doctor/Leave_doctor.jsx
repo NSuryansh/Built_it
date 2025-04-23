@@ -36,7 +36,7 @@ const DoctorLeave = () => {
   const fetchAvailableSlots = async (date, start) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${docId}`
+        `https://built-it.onrender.com/available-slots?date=${date}&docId=${docId}`
       );
       const data = await response.json();
       console.log(data);
@@ -63,11 +63,11 @@ const DoctorLeave = () => {
     e.preventDefault();
     const startDate = new Date(
       new Date(leaveDetails.startDate).getTime() +
-        new Date(startSelectedSlot).getTime()
+      new Date(startSelectedSlot).getTime()
     );
     const endDate = new Date(
       new Date(leaveDetails.endDate).getTime() +
-        new Date(endSelectedSlot).getTime()
+      new Date(endSelectedSlot).getTime()
     );
     console.log(startDate, endDate);
 
@@ -79,7 +79,7 @@ const DoctorLeave = () => {
 
     const setLeave = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/addLeave`, {
+        const response = await fetch(`https://built-it.onrender.com/addLeave`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

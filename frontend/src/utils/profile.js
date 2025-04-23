@@ -27,7 +27,7 @@ export const checkAuth = async (userType) => {
       user = "adminprofile";
     }
     // console("HAHAHAHAHAHAh")
-    const response = await fetch(`http://localhost:3000/${user}`, {
+    const response = await fetch(`https://built-it.onrender.com/${user}`, {
       method: "GET",
       headers: { Authorization: "Bearer " + token },
     });

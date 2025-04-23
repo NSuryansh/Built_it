@@ -40,7 +40,7 @@ const DoctorAppointment = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+        `https://built-it.onrender.com/available-slots?date=${date}&docId=${doctorId}`
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);
@@ -73,7 +73,7 @@ const DoctorAppointment = () => {
 
   const sendNotif = async (appointment) => {
     try {
-      const res = await fetch("http://localhost:3000/send-notification", {
+      const res = await fetch("https://built-it.onrender.com/send-notification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -114,9 +114,9 @@ const DoctorAppointment = () => {
     if (!docId) return;
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
-      const res = await fetch(`http://localhost:3000/reqApp?docId=${docId}`);
+      const res = await fetch(`https://built-it.onrender.com/reqApp?docId=${docId}`);
       const res2 = await fetch(
-        `http://localhost:3000/currentdocappt?doctorId=${docId}`
+        `https://built-it.onrender.com/currentdocappt?doctorId=${docId}`
       );
       const resp2 = await res2.json();
       const resp = await res.json();
@@ -141,7 +141,7 @@ const DoctorAppointment = () => {
     const fetchPastAppointments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/pastdocappt?doctorId=${docId}`
+          `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`
         );
         const data = await response.json();
         if (response.ok) {
@@ -202,7 +202,7 @@ const DoctorAppointment = () => {
 
   const acceptApp = async (appointment) => {
     appointment.dateTime = new Date(appointment.dateTime);
-    const res = await fetch("http://localhost:3000/book", {
+    const res = await fetch("https://built-it.onrender.com/book", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -238,7 +238,7 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    const res = await fetch("http://localhost:3000/deleteApp", {
+    const res = await fetch("https://built-it.onrender.com/deleteApp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -252,7 +252,7 @@ const DoctorAppointment = () => {
     setFixed(!fixed);
   };
 
-  
+
   const emailParams = async (appointment, time) => {
     const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
@@ -264,7 +264,7 @@ const DoctorAppointment = () => {
       newTime: format(newTime, "dd-MMM-yy hh:mm a"),
       email: appointment["user"]["email"],
     };
-    const res = await fetch("http://localhost:3000/reschedule", {
+    const res = await fetch("https://built-it.onrender.com/reschedule", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

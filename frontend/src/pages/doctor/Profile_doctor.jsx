@@ -60,10 +60,10 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `http://localhost:3000/getDoc?docId=${doctorId}`
+          `https://built-it.onrender.com/getDoc?docId=${doctorId}`
         );
         const response2 = await fetch(
-          `http://localhost:3000/general-slots?docId=${doctorId}`
+          `https://built-it.onrender.com/general-slots?docId=${doctorId}`
         );
         const data = await response.json();
         const data2 = await response2.json();
@@ -73,7 +73,7 @@ const DoctorProfile = () => {
             format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
           );
         });
-  
+
         let certifications = [];
         // Handle different possible formats of data.certifications
         if (typeof data.certifications === "string") {
@@ -86,14 +86,14 @@ const DoctorProfile = () => {
           }
         } else if (Array.isArray(data.certifications)) {
           // If it's already an array, map it
-          certifications = data.certifications.map(cert => 
+          certifications = data.certifications.map(cert =>
             typeof cert === "object" ? cert.certification : cert
           ).filter(cert => cert !== "");
         }
         if (certifications.length === 0) {
           certifications = ["<Add>"];
         }
-  
+
         let educations = [];
         // Handle different possible formats of data.education
         if (typeof data.education === "string") {
@@ -106,14 +106,14 @@ const DoctorProfile = () => {
           }
         } else if (Array.isArray(data.education)) {
           // If it's already an array, map it
-          educations = data.education.map(edu => 
+          educations = data.education.map(edu =>
             typeof edu === "object" ? edu.education : edu
           ).filter(edu => edu !== "");
         }
         if (educations.length === 0) {
           educations = ["<Add>"];
         }
-  
+
         setProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -200,7 +200,7 @@ const DoctorProfile = () => {
       formData.append("educ", editedProfile.education);
       formData.append("certifi", editedProfile.certifications);
       formData.append("image", file);
-      const response = await fetch(`http://localhost:3000/modifyDoc`, {
+      const response = await fetch(`https://built-it.onrender.com/modifyDoc`, {
         method: "PUT",
         body: formData,
       });
@@ -214,7 +214,7 @@ const DoctorProfile = () => {
         dates.push(newDate);
       }
       const response2 = await fetch(
-        `http://localhost:3000/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+        `https://built-it.onrender.com/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
         {
           method: "PUT",
         }
@@ -311,9 +311,8 @@ const DoctorProfile = () => {
             <div className="flex flex-col md:flex-row items-center space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
-                  isEditing ? "cursor-pointer" : ""
-                }`}
+                className={`relative h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
+                  }`}
               >
                 {profileImage ? (
                   <img
@@ -553,14 +552,14 @@ const DoctorProfile = () => {
                             />
                             {index ===
                               editedProfile.availability.length - 1 && (
-                              <button
-                                onClick={handleAddSlot}
-                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Slot
-                              </button>
-                            )}
+                                <button
+                                  onClick={handleAddSlot}
+                                  className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
+                                >
+                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                  Add Slot
+                                </button>
+                              )}
                           </div>
                         ))}
                       </div>
@@ -670,14 +669,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                            <button
-                              onClick={handleAddCertification}
-                              className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
-                            >
-                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                              Add Certification
-                            </button>
-                          )}
+                              <button
+                                onClick={handleAddCertification}
+                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
+                              >
+                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                Add Certification
+                              </button>
+                            )}
                         </div>
                       </div>
                     ))}

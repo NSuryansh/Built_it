@@ -60,7 +60,7 @@ const SignUp = () => {
   async function sendOTP() {
     try {
       const response = await fetch(
-        "http://localhost:3000/otpGenerate",
+        "https://built-it.onrender.com/otpGenerate",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -82,7 +82,7 @@ const SignUp = () => {
   async function verifyOTP() {
     try {
       const response = await fetch(
-        "http://localhost:3000/otpcheck",
+        "https://built-it.onrender.com/otpcheck",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -218,7 +218,7 @@ const SignUp = () => {
     setisLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:3000/check-user?username=${formData.username}`
+        `https://built-it.onrender.com/check-user?username=${formData.username}`
       );
       const data = await response.json();
       if (data.message === "Username already exists!") {
@@ -271,7 +271,7 @@ const SignUp = () => {
         gender,
       } = formData;
       const response = await fetch(
-        "http://localhost:3000/signup",
+        "https://built-it.onrender.com/signup",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
