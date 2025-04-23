@@ -7,6 +7,7 @@ import {
   GraduationCap,
   ArrowUpDown,
   ChevronDown,
+  ArrowDownUp,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import CustomToast from "../../components/CustomToast";
@@ -55,7 +56,7 @@ const Controls = ({
   </div>
 );
 
-const DesktopLayout = ({ filteredAndSortedUsers }) => {
+const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig }) => {
   const handleSort = () => {
     setSortConfig((current) => ({
       key: "appointmentsCount",
@@ -337,7 +338,10 @@ const AdminUser = () => {
             degrees={degrees}
           />
           <MobileLayout filteredAndSortedUsers={filteredAndSortedUsers} />
-          <DesktopLayout filteredAndSortedUsers={filteredAndSortedUsers} />
+          <DesktopLayout
+            filteredAndSortedUsers={filteredAndSortedUsers}
+            setSortConfig={setSortConfig}
+          />
         </div>
       </div>
       <Footer color="green" />
