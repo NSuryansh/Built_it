@@ -53,15 +53,15 @@ export default function App() {
 //   const app = initializeApp(firebaseConfig);
 // const messaging = getMessaging(app);
 
-onMessage(messaging, (payload) => {
-  console.log('Foreground message received:', payload);
-  if (Notification.permission === "granted") {
-    new Notification(payload.notification.title, {
-      body: payload.notification.body,
-      icon: '/icon.png',
-    });
-  }
-});
+// onMessage(messaging, (payload) => {
+//   console.log('Foreground message received:', payload);
+//   if (Notification.permission === "granted") {
+//     new Notification(payload.notification.title, {
+//       body: payload.notification.body,
+//       icon: '/icon.png',
+//     });
+//   }
+// });
 
   const [type, setType] = useState(null);
   const userType = localStorage.getItem("user_type");
