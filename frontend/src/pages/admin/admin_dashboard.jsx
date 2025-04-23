@@ -199,7 +199,7 @@ const AdminDashboard = () => {
 
       <main className="flex-grow p-6 md:p-8 max-w-7xl mx-auto w-full">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-emerald-900 mb-4 md:mb-0">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-emerald-900 mb-4 md:mb-0">
             Dashboard Overview
           </h1>
 
@@ -220,7 +220,7 @@ const AdminDashboard = () => {
                 <select
                   onChange={handleGraphTypeChange}
                   value={isPie ? "pie" : "bar"}
-                  className="appearance-none bg-white pl-10 pr-4 py-2 rounded-lg border border-emerald-200 text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                  className="appearance-none bg-white pl-8 pr-4 py-2 rounded-lg border border-emerald-200 text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                 >
                   <option value="pie">Pie Charts</option>
                   <option value="bar">Bar Graph</option>
@@ -255,7 +255,7 @@ const AdminDashboard = () => {
             // Academic Program View
             isPie ? (
               <div className="space-y-8">
-                <h2 className="text-2xl font-semibold text-emerald-800 mb-6">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-emerald-800 mb-6">
                   Appointments Distribution by Academic Program
                 </h2>
 

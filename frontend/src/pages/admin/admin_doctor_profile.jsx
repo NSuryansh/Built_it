@@ -171,7 +171,7 @@ const AdminDoctorProfile = () => {
         {/* Back Button */}
         <Link
           to="/admin/doctor_list"
-          className="mb-12 inline-flex items-center gap-3 px-6 py-3  font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-700 rounded-full hover:bg-gradient-to-l hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
+          className="mb-12 inline-flex items-center gap-3 px-6 py-3 font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-700 rounded-full hover:bg-gradient-to-l hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to List
@@ -180,33 +180,39 @@ const AdminDoctorProfile = () => {
         {/* Doctor Profile Card */}
         <div className="relative bg-white/70 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden border border-purple-300">
           {/* Header Section */}
-          <div className="bg-gradient-to-br from-teal-600 via-teal-500 to-teal-400 px-8 py-14 relative overflow-hidden rounded-t-3xl">
+          <div className="bg-gradient-to-br from-teal-600 via-teal-500 to-teal-400 py-8 sm:px-8 md:py-14 relative overflow-hidden rounded-t-3xl">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.2),transparent)]"></div>
-            <div className="flex flex-col sm:flex-row items-center space-x-8 relative">
+            <div className="flex flex-col sm:flex-row items-center sm:space-x-8 relative">
               <div className="relative group">
                 {profileImage ? (
                   <img
                     src={profileImage}
                     alt="Profile"
-                    className="w-32 h-32 rounded-full border-[6px] border-yellow-400 object-cover shadow-xl group-hover:scale-[1.15] transition-transform duration-500 ease-out"
+                    className="w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover shadow-xl group-hover:scale-[1.15] transition-transform duration-500 ease-out"
                   />
                 ) : (
-                  <User className="w-32 h-32 rounded-full border-[6px] border-yellow-400 text-yellow-400 transform transition-all duration-300 group-hover:scale-110" />
+                  <User className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-[6px] border-yellow-400 text-yellow-400 transform transition-all duration-300 group-hover:scale-110" />
                 )}
                 <div className="absolute inset-0 rounded-full bg-coral-400/20 opacity-0 group-hover:opacity-[0.6] transition-opacity duration-500"></div>
               </div>
-              <div className="text-white space-y-3">
-                <h1 className="text-[3rem] font-extrabold tracking-tight drop-shadow-lg">
+              <div className="text-white">
+                <h1 className="md:text-[2.5rem] text-[2rem] text-center sm:text-start lg:text-[3rem] font-extrabold tracking-tight drop-shadow-lg">
                   {doctor.name.toUpperCase()}
                 </h1>
                 <div className="flex">
                   <p className="text-yellow-200 text-xl font-medium italic">
-                    {`${doctor.field} (${parseFloat(
-                      doctor.avgRating
-                    ).toPrecision(2)}`}
+                    {`${doctor.field} (${
+                      doctor.avgRating != 0.0
+                        ? parseFloat(doctor.avgRating).toPrecision(2)
+                        : "Unrated"
+                    }`}
                   </p>
-                  <p>&nbsp;</p>
-                  <StarIcon fill="#FFF085" className="text-[#FFF085]" />
+                  {doctor.avgRating != 0.0 && (
+                    <div className="flex">
+                      <p>&nbsp;</p>
+                      <StarIcon fill="#FFF085" className="text-[#FFF085]" />
+                    </div>
+                  )}
                   <p className="text-yellow-200 text-xl font-medium italic">
                     )
                   </p>
@@ -218,9 +224,9 @@ const AdminDoctorProfile = () => {
           {/* Content Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[50px] gap-x-[30px] p-4 sm:p-[60px] bg-gray-50/50 rounded-b-[2rem]">
             {/* Left Column */}
-            <div className="space-y-[40px]">
+            <div className="space-y-5 md:space-y-10">
               {/* Contact Information */}
-              <h2 className="text-[1.5rem] sm:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
+              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
                 <User className="w-[30px] h-[30px] text-coral-500 animate-pulse" />
                 Contact Information
               </h2>
@@ -243,7 +249,7 @@ const AdminDoctorProfile = () => {
               </div>
 
               {/* Educational Qualification */}
-              <h2 className="text-[1.5rem] sm:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
+              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
                 <GraduationCap className="w-[30px] h-[30px] text-coral-500" />
                 Educational Qualification
               </h2>
@@ -261,9 +267,9 @@ const AdminDoctorProfile = () => {
             </div>
 
             {/* Right Column */}
-            <div className="space-y-[40px]">
+            <div className="space-y-5 md:space-y-10">
               {/* Professional Information */}
-              <h2 className="text-[1.5rem] sm:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
+              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
                 <Briefcase className="w-[30px] h-[30px] text-coral-500 animate-spin-slow" />
                 Professional Information
               </h2>
@@ -300,7 +306,7 @@ const AdminDoctorProfile = () => {
               </div>
 
               {/* Certifications */}
-              <h2 className="text-[1.5rem] sm:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
+              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-teal-600 flex items-center gap-[10px] bg-purple-100/50 p-[20px] rounded-lg shadow-md">
                 <Certificate className="w-[30px] h-[30px] text-coral-500 animate-pulse" />
                 Certifications
               </h2>
