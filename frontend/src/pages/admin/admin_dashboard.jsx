@@ -447,6 +447,12 @@ const AdminDashboard = () => {
                         name="Female Appointments"
                         radius={[4, 4, 0, 0]}
                       />
+                      <Bar
+                        dataKey="OTHERS"
+                        fill="#FB8500"
+                        name="Others Appointments"
+                        radius={[4, 4, 0, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
