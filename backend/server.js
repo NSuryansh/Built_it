@@ -15,7 +15,7 @@ import webpush from "web-push";
 import multer from "multer";
 import { send } from "@emailjs/browser";
 import admin from 'firebase-admin';
-import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
+// import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
 const app = express();
@@ -36,6 +36,7 @@ const transporter = nodemailer.createTransport({
 
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
+const serviceAccount = JSON.parse(process.env.FIREBASE_ACCOUNT_SERVICE_KEY)
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

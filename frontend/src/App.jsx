@@ -62,32 +62,6 @@ export default function App() {
 
     const registration = await navigator.serviceWorker.ready;
 
-    // const subscription = await registration.pushManager.subscribe({
-    //   userVisibleOnly: true,
-    //   applicationServerKey: convertedVapidKey, // your VAPID key here
-    // });
-
-    // console.log("Push Subscription:", subscription);
-
-    // // Attach user info with subscription
-    // const body = {
-    //   userid: userid,
-    //   subscription: subscription,
-    //   userType: userType,
-    // };
-
-
-    // console.log(userType, "usetruegfua");
-
-    // const res = await fetch("http://localhost:3000/save-subscription", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(body),
-    // });
-    // console.log("RESSSSSSSSSSSSSS: ", res);
-    // const response = await res.json();
-    // console.log("Subscription saved:", response);
-
     const fcmToken = await getToken(messaging, {
       vapidKey: import.meta.env.VITE_PUBLIC_VAPID_KEY,
     });
