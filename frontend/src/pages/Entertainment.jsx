@@ -140,7 +140,7 @@ function Entertainment() {
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-indigo-50">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-4 lg:py-16 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 md:mb-16">
           <h1 className="text-[34px] lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4 tracking-tight">
             Entertainment Hub
           </h1>

@@ -98,7 +98,7 @@ const Events = () => {
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-rose-50">
       <Navbar />
 
-      <main className="pt-20 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <main className="pt-10 md:pt-20 pb-12 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
