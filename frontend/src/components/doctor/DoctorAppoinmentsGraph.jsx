@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 
 const PastAppointmentGraphs = ({ timePeriodData, getPieData, COLORS, handleGraphTypeChange, isBar, histogramData, selectedTimePeriod, handleTimePeriodChange }) => {
     return (
-      <div className="py-12 mt-10">
+      <div className="mt-10 lg:mt-20">
         <div className="w-full">
           <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-blue-600 mb-2">
             Past Appointments

@@ -225,7 +225,7 @@ const EventsList = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div>
-            <h1 className="text-4xl font-bold text-emerald-900 mb-2">
+            <h1 className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-bold text-emerald-900 mb-2">
               Events Dashboard
             </h1>
             <p className="text-emerald-600">
@@ -235,7 +235,7 @@ const EventsList = () => {
 
           <Link
             to="/admin/add_event"
-            className="group flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-full hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-emerald-200 mt-4 md:mt-0"
+            className="group flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 md:px-6 md:py-3 rounded-full hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-emerald-200 mt-4 md:mt-0"
           >
             <Calendar className="w-5 h-5" />
             <span>Create Event</span>
@@ -275,7 +275,7 @@ const EventsList = () => {
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
                 />
               </div>
-              <div className="bg-white p-4 flex justify-center gap-4 items-center rounded-2xl border-2 border-emerald-500">
+              <div className="bg-white p-2 md:p-4 flex justify-center gap-4 items-center rounded-2xl border-2 border-emerald-500">
                 <h3 className="text-emerald-600 font-semibold text-nowrap text-lg">
                   Total Events
                 </h3>
