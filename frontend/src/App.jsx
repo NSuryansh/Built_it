@@ -73,6 +73,7 @@ onMessage(messaging, async (payload) => {
         body: payload.notification.body,
         icon: '/icon.png',
       });
+      console.log("sent")
     } else {
       console.error('No service worker registration found.');
     }
