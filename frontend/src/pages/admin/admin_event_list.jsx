@@ -26,7 +26,7 @@ import DeletePopup from "../../components/admin/DeletePopup";
 const EventsList = () => {
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedType, setSelectedType] = useState("");
+  // const [selectedType, setSelectedType] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
   const [editingLinkId, setEditingLinkId] = useState(null);
@@ -123,7 +123,6 @@ const EventsList = () => {
               day: "numeric",
             }),
             location: event.venue,
-            type: event.description ? "Session/Conference" : "Meeting",
             link: event.url,
           };
         });
@@ -140,7 +139,6 @@ const EventsList = () => {
               day: "numeric",
             }),
             location: data2[i].venue,
-            type: data2[i].description ? "Session/Conference" : "Meeting",
             link: data2[i].url,
           });
         }
@@ -187,8 +185,7 @@ const EventsList = () => {
     const matchesSearch =
       event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = selectedType === "" || event.type === selectedType;
-    return matchesSearch && matchesType;
+    return matchesSearch;
   });
 
   const dateFilteredEvents = getFilteredEventsByDate(
@@ -255,46 +252,43 @@ const EventsList = () => {
                 Filters
               </h2>
               <button
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={() => {
+                  if (showFilters) {
+                    setDateFilter("all");
+                  }
+                  setShowFilters(!showFilters);
+                }}
                 className="text-emerald-600 hover:text-emerald-700 font-medium text-sm"
               >
                 {showFilters ? "Hide Filters" : "Show Filters"}
               </button>
             </div>
 
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search events..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
-              />
+            <div className="flex flex-col gap-6 justify-between items-center sm:flex-row">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search events..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                />
+              </div>
+              <div className="bg-white p-4 flex justify-center gap-4 items-center rounded-2xl border-2 border-emerald-500">
+                <h3 className="text-emerald-600 font-semibold text-nowrap text-lg">
+                  Total Events
+                </h3>
+                <p className="text-3xl font-bold text-emerald-600">
+                  {dateFilteredEvents.length}
+                </p>
+              </div>
             </div>
           </div>
 
           {showFilters && (
             <div className="p-6 bg-gray-50 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-emerald-600" />
-                    Event Type
-                  </label>
-                  <select
-                    value={selectedType}
-                    onChange={(e) => setSelectedType(e.target.value)}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"
-                  >
-                    <option value="">All Types</option>
-                    <option value="Session/Conference">
-                      Session/Conference
-                    </option>
-                    <option value="Meeting">Meeting</option>
-                  </select>
-                </div>
-
                 <div>
                   <label className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                     <CalendarDays className="w-4 h-4 text-emerald-600" />
@@ -316,32 +310,6 @@ const EventsList = () => {
           )}
         </div>
 
-        {/* Events Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-2xl shadow-md">
-            <h3 className="text-gray-500 text-sm font-medium">Total Events</h3>
-            <p className="text-3xl font-bold text-emerald-600 mt-2">
-              {dateFilteredEvents.length}
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-2xl shadow-md">
-            <h3 className="text-gray-500 text-sm font-medium">Conferences</h3>
-            <p className="text-3xl font-bold text-emerald-600 mt-2">
-              {
-                dateFilteredEvents.filter(
-                  (e) => e.type === "Session/Conference"
-                ).length
-              }
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-2xl shadow-md">
-            <h3 className="text-gray-500 text-sm font-medium">Meetings</h3>
-            <p className="text-3xl font-bold text-emerald-600 mt-2">
-              {dateFilteredEvents.filter((e) => e.type === "Meeting").length}
-            </p>
-          </div>
-        </div>
-
         {/* Events Grid */}
         <div className="grid gap-6 mb-10">
           {dateFilteredEvents.map((event) => (
@@ -351,18 +319,6 @@ const EventsList = () => {
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        event.type === "Session/Conference"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-blue-100 text-blue-700"
-                      }`}
-                    >
-                      {event.type}
-                    </span>
-                  </div>
-
                   <h2 className="text-xl font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">
                     {event.title}
                   </h2>
