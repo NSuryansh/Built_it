@@ -49,10 +49,10 @@ const Stress = () => {
       <div className="relative overflow-hidden bg-gradient-to-r from-amber-400 to-orange-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative z-1">
-            <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4">
               Your Mental Wellness Journey
             </h1>
-            <p className="text-xl text-center text-red-100 max-w-3xl mx-auto">
+            <p className="text-md md:text-xl text-center text-red-100 max-w-3xl mx-auto">
               Discover resources, techniques, and exercises to help manage
               stress and improve your mental well-being
             </p>
@@ -65,7 +65,7 @@ const Stress = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
         {/* Articles Section */}
         <section className="bg-white rounded-2xl shadow-xl p-8 mb-12 transform transition-all duration-500 hover:shadow-2xl">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
             Expert Resources
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
