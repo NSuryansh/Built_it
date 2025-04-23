@@ -14,6 +14,8 @@ import axios from "axios";
 import webpush from "web-push";
 import multer from "multer";
 import { send } from "@emailjs/browser";
+import admin from 'firebase-admin';
+// import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
 const app = express();
@@ -34,6 +36,7 @@ const transporter = nodemailer.createTransport({
 
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
+const serviceAccount = JSON.parse(process.env.FIREBASE_ACCOUNT_SERVICE_KEY)
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -49,6 +52,13 @@ webpush.setVapidDetails(
   publicVapidKey,
   privateVapidKey
 );
+
+// const admin = require("firebase-admin");
+// const serviceAccount = require("./serviceAccountKey.json"); // from Firebase Console
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 app.use(
   cors({
@@ -92,9 +102,9 @@ io.on("connection", (socket) => {
   });
   socket.on("joinRoom", ({ userId, doctorId }) => {
     const room = `chat_${[Number(userId), Number(doctorId)].sort((a, b) => a - b).join("_")}`;
-    console.log(userId, " ", doctorId);
+    // console.log(userId, " ", doctorId);
     socket.join(room);
-    console.log(room);
+    // console.log(room);
     // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
   socket.on("countUnseen", async ({ userId, senderType }) => {
@@ -181,8 +191,8 @@ io.on("connection", (socket) => {
           senderId = userId;
           recipientId = doctorId;
         }
-        console.log(senderId);
-        console.log(recipientId);
+        // console.log(senderId);
+        // console.log(recipientId);
         const message = await prisma.message.create({
           data: {
             senderId: parseInt(senderId),
@@ -197,7 +207,7 @@ io.on("connection", (socket) => {
         const room = `chat_${[Number(userId), Number(doctorId)]
           .sort((a, b) => a - b)
           .join("_")}`;
-        console.log(senderId, "message sent to", recipientId);
+        // console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
         io.to(room).emit("receiveMessage", {
@@ -224,7 +234,7 @@ io.on("connection", (socket) => {
 
   socket.on("leaveRoom", async ({ userId, doctorId }) => {
     const room = `chat_${[Number(userId), Number(doctorId)].sort((a, b) => a - b).join("_")}`;
-    console.log(room);
+    // console.log(room);
     socket.leave(room);
   });
 
@@ -1569,7 +1579,8 @@ app.post("/save-subscription", async (req, res) => {
 
     // console.log(userType, " userType");
 
-    const { endpoint, keys } = subscription;
+    // const { endpoint, keys } = subscription;
+    console.log("hi")
     if (userType == "user") {
       // const existingSub = await prisma.subscription.findMany({
       //   where: { userId: Number(userid)
@@ -1593,24 +1604,24 @@ app.post("/save-subscription", async (req, res) => {
             // OR: [
             //   {
             // userId: Number(userid),
-            endpoint: endpoint,
+            endpoint: subscription,
             //   }
             // ]
           },
           update: {
             userId: Number(userid),
-            endpoint: endpoint,
-            authKey: keys.auth,
-            p256dhKey: keys.p256dh,
+            endpoint: subscription,
+            // authKey: keys.auth,
+            // p256dhKey: keys.p256dh,
           },
           create: {
             userId: Number(userid),
-            endpoint: endpoint,
-            authKey: keys.auth,
-            p256dhKey: keys.p256dh,
+            endpoint: subscription,
+            // authKey: keys.auth,
+            // p256dhKey: keys.p256dh,
           },
         });
-        // console.log(subs)
+        console.log(subs)
         // }
       } catch (e) {
         console.log(e);
@@ -1623,23 +1634,24 @@ app.post("/save-subscription", async (req, res) => {
             // OR: [
             //   {
             // userId: Number(userid),
-            endpoint: endpoint,
+            endpoint: subscription,
             //   }
             // ]
           },
           update: {
             doctorId: Number(userid),
-            endpoint: endpoint,
-            authKey: keys.auth,
-            p256dhKey: keys.p256dh,
+            endpoint: subscription,
+            // authKey: keys.auth,
+            // p256dhKey: keys.p256dh,
           },
           create: {
             doctorId: Number(userid),
-            endpoint: endpoint,
-            authKey: keys.auth,
-            p256dhKey: keys.p256dh,
+            endpoint: subscription,
+            // authKey: keys.auth,
+            // p256dhKey: keys.p256dh,
           },
         });
+        console.log(subs)
         res.json({ success: true });
       } catch (e) {
         console.log(e);
@@ -1654,11 +1666,11 @@ app.post("/save-subscription", async (req, res) => {
 
 app.post("/send-notification", async (req, res) => {
   try {
-    const { userid, message, userType } = req.body;
+    const { userid, title, message, userType, } = req.body;
     if (!userid || !message) {
       return res.status(400).json({ error: "Missing userId or message" });
     }
-
+    console.log("heyyyy")
     // Fetch the subscription from the database
     var subscription;
     if (userType == "user") {
@@ -1679,29 +1691,37 @@ app.post("/send-notification", async (req, res) => {
       return res.status(404).json({ error: "User subscription not found" });
     }
 
-    const payload = JSON.stringify({
-      title: "New Message",
-      body: message,
-    });
+    // const payload = JSON.stringify({
+    //   title: "New Message",
+    //   body: message,
+    // });
     for (const sub of subscription) {
       try {
-        await webpush.sendNotification(
-          {
-            endpoint: sub.endpoint,
-            keys: {
-              auth: sub.authKey,
-              p256dh: sub.p256dhKey,
-            },
+        // await webpush.sendNotification(
+        //   {
+        //     endpoint: sub.endpoint,
+        //     keys: {
+        //       auth: sub.authKey,
+        //       p256dh: sub.p256dhKey,
+        //     },
+        //   },
+        //   payload
+        // );
+        const payload = {
+          token: sub.endpoint, 
+          notification: {
+            title: title,
+            body: message,
           },
-          payload
-        );
+        };        
+        const response = await admin.messaging().send(payload);
       } catch (err) {
         console.error("Failed to send to one subscription:", err);
-        // Optionally remove from DB if err.statusCode === 410 (expired)
       }
     }
+    res.send({success: true})
 
-    res.json({ success: true });
+    // res.json({ success: true });
   } catch (error) {
     console.error("Push error:", error);
     res.status(500).json({ error: "Failed to send push notification" });
