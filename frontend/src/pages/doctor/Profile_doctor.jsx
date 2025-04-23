@@ -55,7 +55,6 @@ const DoctorProfile = () => {
     };
     verifyAuth();
   }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -74,23 +73,47 @@ const DoctorProfile = () => {
             format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
           );
         });
+  
         let certifications = [];
-        data.certifications.map((certification) => {
-          certifications.push(certification.certification);
-        });
-        if (slots.length === 0) {
-          slots.push("<Add>");
+        // Handle different possible formats of data.certifications
+        if (typeof data.certifications === "string") {
+          try {
+            // Try parsing as JSON if it's a stringified array
+            certifications = JSON.parse(data.certifications);
+          } catch (e) {
+            // If not JSON, assume it's a | delimited string
+            certifications = data.certifications.split("|").filter(cert => cert !== "");
+          }
+        } else if (Array.isArray(data.certifications)) {
+          // If it's already an array, map it
+          certifications = data.certifications.map(cert => 
+            typeof cert === "object" ? cert.certification : cert
+          ).filter(cert => cert !== "");
         }
         if (certifications.length === 0) {
           certifications = ["<Add>"];
         }
+  
         let educations = [];
-        data.education.map((education) => {
-          educations.push(education.education);
-        });
+        // Handle different possible formats of data.education
+        if (typeof data.education === "string") {
+          try {
+            // Try parsing as JSON if it's a stringified array
+            educations = JSON.parse(data.education);
+          } catch (e) {
+            // If not JSON, assume it's a | delimited string
+            educations = data.education.split("|").filter(edu => edu !== "");
+          }
+        } else if (Array.isArray(data.education)) {
+          // If it's already an array, map it
+          educations = data.education.map(edu => 
+            typeof edu === "object" ? edu.education : edu
+          ).filter(edu => edu !== "");
+        }
         if (educations.length === 0) {
           educations = ["<Add>"];
         }
+  
         setProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -101,7 +124,7 @@ const DoctorProfile = () => {
           city: data.doctor.city,
           certifications: certifications,
           education: educations,
-          availability: slots,
+          availability: slots.length === 0 ? ["<Add>"] : slots,
         });
         setProfileImage(data.doctor.img);
         localStorage.setItem("docImage", data.doctor.img);
@@ -115,7 +138,7 @@ const DoctorProfile = () => {
           city: data.doctor.city,
           certifications: certifications,
           education: educations,
-          availability: slots,
+          availability: slots.length === 0 ? ["<Add>"] : slots,
         });
         setfetched(true);
       } catch (error) {
