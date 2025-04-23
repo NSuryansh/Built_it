@@ -368,7 +368,7 @@ const Peer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={filteredDoctors.map((doctor) => ({name: doctor.name, senderId: doctor.id}))}
+                  names={filteredDoctors.map((doctor) => ({name: doctor.name, senderId: doctor.id, img: doctor.img}))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}

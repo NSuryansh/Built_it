@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { MessageSquare } from "lucide-react";
 
-export default function ChatList({names, selectedChat, setSelectedChat, setShowChatList, unread, isDoc = false }) {
-  console.log(  names, "Unread CHht List")
+export default function ChatList({
+  names,
+  selectedChat,
+  setSelectedChat,
+  setShowChatList,
+  unread,
+  isDoc = false,
+}) {
+  console.log(names, "Unread CHht List");
   return (
     <div className="bg-[var(--mp-custom-white)] border-r border-[var(--mp-custom-gray-200)] overflow-y-auto">
       <div className="space-y-1">
         {names && names.length > 0 ? (
           names.map((chat, index) => {
-            const unreadEntry = unread.find(u => u.senderId === chat.senderId);
+            const unreadEntry = unread.find(
+              (u) => u.senderId === chat.senderId
+            );
             const unreadCount = unreadEntry?.count || 0;
-
+            console.log(chat);
             return (
               <button
                 key={chat.senderId}
@@ -34,7 +43,15 @@ export default function ChatList({names, selectedChat, setSelectedChat, setShowC
                         : "from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)]"
                     }`}
                   >
-                    <MessageSquare className="w-5 h-5 text-white" />
+                    {!isDoc && chat.img != "" ? (
+                      <img
+                        src={chat.img}
+                        alt="Profile"
+                        className="w-10 h-10 object-cover rounded-full"
+                      />
+                    ) : (
+                      <MessageSquare className="w-5 h-5 text-white" />
+                    )}
                   </div>
 
                   {unreadCount > 0 && (

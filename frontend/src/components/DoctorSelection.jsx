@@ -20,8 +20,18 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
             >
               <div className="flex w-full flex-col justify-center items-center sm:flex-row gap-3 sm:gap-6">
                 <div className="flex flex-col items-center">
-                  <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] rounded-full p-4  transition-all duration-300">
-                    <User className="w-8 h-8 text-[var(--custom-orange-700)]" />
+                  <div className="bg-gradient-to-br from-[var(--custom-orange-100)] to-[var(--custom-orange-200)] rounded-full transition-all duration-300">
+                    {doctor.img != "" ? (
+                      <img
+                        src={doctor.img}
+                        alt="Profile"
+                        className="w-16 h-16 object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="p-4">
+                        <User className="w-8 h-8  text-[var(--custom-orange-700)]" />
+                      </div>
+                    )}
                   </div>
                   <div className="mt-2 sm:mt-4 flex items-center gap-1">
                     {doctor.avgRating != 0 ? (

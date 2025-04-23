@@ -83,7 +83,15 @@ const BookingFormStep = ({
 
       <div className="mb-8 text-center">
         <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--custom-orange-100)] rounded-full">
-          <User className="w-5 h-5 text-[var(--custom-orange-700)]" />
+          {selectedDoctor.img != "" ? (
+            <img
+              src={selectedDoctor.img}
+              alt="Profile"
+              className="w-8 h-8 object-cover rounded-full"
+            />
+          ) : (
+            <User className="w-5 h-5  text-[var(--custom-orange-700)]" />
+          )}
           <span className="text-[var(--custom-orange-800)] font-medium">
             {selectedDoctor.name}
           </span>
