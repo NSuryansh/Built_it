@@ -138,10 +138,10 @@ const DoctorsList = () => {
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
           <div className="relative flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
-              <h1 className="text-4xl md:text-5xl font-extrabold text-green-700 mb-2 tracking-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-green-700 mb-2 tracking-tight">
                 Doctors Directory
               </h1>
-              <p className="text-emerald-700 text-lg">
+              <p className="text-emerald-700 text-md md:text-lg">
                 Managing {doctors.length} Healthcare Professionals
               </p>
             </div>
@@ -250,7 +250,7 @@ const DoctorsList = () => {
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition-colors duration-300"
                         title="View Profile"
                       >
-                        <span>View Profile</span>
+                        <span className="text-center">View Profile</span>
                       </Link>
                     </div>
                   </td>
@@ -277,8 +277,8 @@ const DoctorsList = () => {
                       {doctor.name}
                     </h3>
                     <div className="flex">
-                      <span className="px-3 py-1 rounded-full text-sm font-medium text-green-700">
-                        {doctor.avgRating}
+                      <span className="pr-2 py-1 rounded-full text-sm font-medium text-green-700">
+                        {parseFloat(doctor.avgRating).toPrecision(2)}
                       </span>
                       <div>
                         <StarIcon

@@ -35,7 +35,9 @@ const Landing_user = () => {
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
+    return (
+      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
+    );
   }
 
   return (
@@ -72,11 +74,13 @@ const Landing_user = () => {
           </div>
 
           {/* Events Section - Luxurious Holography with Visible Scrollbar */}
-          <div className="w-full xl:w-1/3 h-[85vh] bg-white/60 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(147,51,234,0.2),_inset_0_4px_12px_rgba(255,255,255,0.6)] p-4 sm:p-6 md:p-8 overflow-y-auto border border-orange-200/40 transform hover:scale-[1.02] hover:shadow-[0_15px_50px_rgba(255,147,51,0.3)] hover:border-orange-300/60 transition-all duration-200 ease-out group">
+          <div className="w-full xl:w-1/3 h-[85vh] bg-white/60 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(147,51,234,0.2),_inset_0_4px_12px_rgba(255,255,255,0.6)] p-4 sm:p-6 md:p-8 border overflow-hidden border-orange-200/40 transform hover:scale-[1.02] hover:shadow-[0_15px_50px_rgba(255,147,51,0.3)] hover:border-orange-300/60 transition-all duration-200 ease-out group">
             <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-orange-500 tracking-wide mb-4 drop-shadow-[0_2px_4px_rgba(255,147,51,0.4)] group-hover:text-orange-600 transition-colors duration-200">
               Upcoming Events
             </div>
-            <EventsDisplay />
+            <div className="h-full overflow-y-scroll">
+              <EventsDisplay />
+            </div>
           </div>
         </div>
       </div>
