@@ -309,7 +309,7 @@ const AdminUser = () => {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-10">
       <AdminNavbar />
       <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-[var(--custom-primary-green-100)]">
+        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-[var(--custom-primary-green-100)]">
           {/* Header Section */}
           <div className="bg-gradient-to-r from-white to-emerald-100 px-8 py-10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
