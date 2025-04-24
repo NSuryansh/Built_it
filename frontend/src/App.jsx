@@ -71,7 +71,7 @@ onMessage(messaging, async (payload) => {
     if (registration) {
       registration.showNotification(payload.notification.title, {
         body: payload.notification.body,
-        icon: '../assets/final-image.png',
+        icon: 'https://res.cloudinary.com/dt7a9meug/image/upload/v1745488000/final-logo_l1fg7i.jpg',
       });
       console.log("sent")
     } else {
