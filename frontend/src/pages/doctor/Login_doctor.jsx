@@ -7,6 +7,30 @@ import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import CustomToast from "../../components/CustomToast";
 
+// Circular Loader Component
+const CircularLoader = ({
+  color = '#004ba8',
+  size = 40,
+  text = 'Loading...'
+}) => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div 
+        className="rounded-full border-4 border-t-transparent animate-spin"
+        style={{
+          borderColor: `${color}40`,
+          borderTopColor: color,
+          width: size,
+          height: size
+        }}
+      />
+      {text && (
+        <p className="mt-4 text-blue-800 font-medium">{text}</p>
+      )}
+    </div>
+  );
+};
+
 const DoctorLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +64,6 @@ const DoctorLogin = () => {
   }
 
   const handlelogin = async (e) => {
-    // If this was triggered by a keydown, we want to prevent the default form submission behavior.
     e.preventDefault();
     if (email === "" || password === "") {
       setError("Please fill the fields");
@@ -169,9 +192,15 @@ const DoctorLogin = () => {
               onKeyDown={handleEnterKey}
               disabled={isLoading}
               type="submit"
-              className="w-full py-3 px-4 bg-blue-600 text-[var(--custom-white)] rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full py-3 px-4 bg-blue-600 text-[var(--custom-white)] rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center min-h-[48px]"
             >
-              {isLoading ? <Loader className="mx-auto" /> : <>Login</>}
+              {isLoading ? (
+                <div className="flex items-center justify-center w-[24px] h-[24px]">
+                  <CircularLoader color="#ffffff" size={24} text={null} className="inline-block" />
+                </div>
+              ) : (
+                <>Login</>
+              )}
             </button>
           </form>
           <div className="flex justify-center mt-4 mb-2 items-center text-[var(--login-light-text)]">
@@ -181,14 +210,14 @@ const DoctorLogin = () => {
           </div>
           <div className="flex w-full mt-2">
             <p className="w-full text-center">
-              Login as a&nbsp;
+              Login as a 
               <button
                 onClick={() => navigate("/login")}
                 className="underline font-bold text-blue-500"
               >
                 User
               </button>
-              &nbsp;or&nbsp;
+               or 
               <button
                 onClick={() => navigate("/admin/login")}
                 className="underline font-bold text-blue-500"
