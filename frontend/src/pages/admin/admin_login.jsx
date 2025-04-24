@@ -3,8 +3,93 @@ import { useNavigate } from "react-router-dom";
 import { Lock, Eye, EyeOff, Loader } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
 import CustomToast from "../../components/CustomToast";
+
+// Loading Spinner Component
+const LoadingSpinner = ({
+  color = '#047857',
+  size = 30,
+  text = 'Loading...'
+}) => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div className="animate-spin">
+        <Loader color={color} size={size} />
+      </div>
+      {text && (
+        <p className="mt-4 text-emerald-800 font-medium">{text}</p>
+      )}
+    </div>
+  );
+};
+
+// Pulsing Dots Component
+const PulsingDots = ({
+  color = '#047857',
+  size = 10,
+  text = 'Loading...'
+}) => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div className="flex space-x-2">
+        <div 
+          className="animate-pulse rounded-full" 
+          style={{
+            backgroundColor: color,
+            height: size,
+            width: size,
+            animationDelay: '0ms'
+          }}
+        />
+        <div 
+          className="animate-pulse rounded-full" 
+          style={{
+            backgroundColor: color,
+            height: size,
+            width: size,
+            animationDelay: '300ms'
+          }}
+        />
+        <div 
+          className="animate-pulse rounded-full" 
+          style={{
+            backgroundColor: color,
+            height: size,
+            width: size,
+            animationDelay: '600ms'
+          }}
+        />
+      </div>
+      {text && (
+        <p className="mt-4 text-emerald-800 font-medium">{text}</p>
+      )}
+    </div>
+  );
+};
+
+// Circular Loader Component
+const CircularLoader = ({
+  color = '#047857',
+  size = 40,
+  text = 'Loading...'
+}) => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div 
+        className="rounded-full border-4 border-t-transparent animate-spin"
+        style={{
+          borderColor: `${color}40`,
+          borderTopColor: color,
+          width: size,
+          height: size
+        }}
+      />
+      {text && (
+        <p className="mt-4 text-emerald-800 font-medium">{text}</p>
+      )}
+    </div>
+  );
+};
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -32,8 +117,7 @@ const AdminLogin = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
-        <PacmanLoader color="#047857" size={30} />
-        <p className="mt-4 text-emerald-800 font-medium">Loading...</p>
+        <PulsingDots color="#047857" size={12} text="Verifying authentication..." />
       </div>
     );
   }
@@ -158,7 +242,11 @@ const AdminLogin = () => {
             type="submit"
             className="w-full py-3 px-4 bg-[var(--custom-primary-green-600)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-primary-green-700)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-primary-green-500)] focus:ring-offset-2"
           >
-            {isLoading ? <Loader className="mx-auto" /> : <>Login</>}
+            {isLoading ? (
+              <CircularLoader color="#ffffff" size={24} text={null} />
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
         <div className="flex justify-center mt-4 mb-2 items-center text-[var(--login-light-text)]">
