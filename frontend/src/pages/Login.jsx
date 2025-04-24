@@ -44,20 +44,18 @@ const Login = () => {
     setisLoading(true);
     if (username === "" || password === "") {
       setError("Please fill the fields");
+      setisLoading(false);
       return;
     }
     setError("");
-    const response = await fetch(
-      "https://built-it.onrender.com/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      }
-    );
+    const response = await fetch("https://built-it.onrender.com/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    });
     const res = await response.json();
 
     // const data = await res.json();
