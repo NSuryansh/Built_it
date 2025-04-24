@@ -1,5 +1,3 @@
-import collections.abc
-collections.Iterable = collections.abc.Iterable  # Compatibility fix
 from agno.agent import Agent, AgentMemory
 from agno.models.groq import Groq  
 from agno.embedder.google import GeminiEmbedder
