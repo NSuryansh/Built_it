@@ -486,6 +486,7 @@ const Peer = () => {
                   names={filteredDoctors.map((doctor) => ({
                     name: doctor.name,
                     senderId: doctor.id,
+                    img: doctor.img,
                   }))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
