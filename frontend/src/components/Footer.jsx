@@ -30,7 +30,7 @@ const Footer = ({ color }) => {
             </h3>
             <div className="space-y-2">
               <a
-                href="https://www.instagram.com/shubhraaa01._/"
+                href="https://www.instagram.com/manan_jiwnani_23/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`flex items-center space-x-2 text-sm text-gray-500 hover:${
