@@ -10,7 +10,9 @@ import SessionExpired from "../components/SessionExpired";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../components/CustomToast";
 import { Mic, MicOff } from "lucide-react";
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 export default function Mood() {
   const [message, setMessage] = useState("");
@@ -39,7 +41,7 @@ export default function Mood() {
     transcript,
     listening,
     resetTranscript,
-    browserSupportsSpeechRecognition
+    browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
   // Set speech recognition support on mount
@@ -87,7 +89,7 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://built-it-python-895c.onrender.com/chatWithBot", {
+      const response = await fetch("http://127.0.0.1:5000/chatWithBot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -126,7 +128,7 @@ export default function Mood() {
       console.log("Audio blob available:", audioBlob);
 
       const audio = new Audio(audioURL);
-      audio.play().catch(error => {
+      audio.play().catch((error) => {
         console.error("Error playing audio:", error);
       });
       console.log("Audio URL:", audioURL);
@@ -142,7 +144,7 @@ export default function Mood() {
     formData.append("audio", blob, "audio.wav");
 
     try {
-      const response = await fetch("https://built-it-python-895c.onrender.com/emotion", {
+      const response = await fetch("http://127.0.0.1:5000/emotion", {
         method: "POST",
         body: formData,
       });
@@ -164,7 +166,7 @@ export default function Mood() {
   const startRecording = async () => {
     try {
       SpeechRecognition.startListening({ continuous: true });
-      
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       let chunks = [];
@@ -209,7 +211,9 @@ export default function Mood() {
   }
 
   if (!isAuthenticated) {
-    return (<SessionExpired handleClosePopup={handleClosePopup} theme="orange" />);
+    return (
+      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
+    );
   }
 
   return (
@@ -259,8 +263,8 @@ export default function Mood() {
               onClick={isRecording ? stopRecording : startRecording}
               className={`p-2 rounded-full transition-colors bg-gradient-to-r ${
                 isRecording
-                  ? 'to-[var(--peer-custom-orange-500)] from-[var(--peer-custom-pink-500)] text-white'
-                  : 'from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] text-white'
+                  ? "to-[var(--peer-custom-orange-500)] from-[var(--peer-custom-pink-500)] text-white"
+                  : "from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] text-white"
               }`}
               title={isRecording ? "Stop Recording" : "Start Recording"}
             >
