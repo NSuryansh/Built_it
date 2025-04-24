@@ -27,4 +27,14 @@ export default defineConfig({
       },
     })
   ],
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://built-it-python-895c.onrender.com',
+  //       changeOrigin: true,
+  //       rewrite: path => path.replace(/^\/api/, ''),
+  //       secure: false
+  //     }
+  //   }
+  // }
 })

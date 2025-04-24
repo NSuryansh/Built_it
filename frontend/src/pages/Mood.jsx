@@ -144,7 +144,7 @@ export default function Mood() {
     formData.append("audio", blob, "audio.wav");
 
     try {
-      const response = await fetch("https://built-it-python-895c.onrender.com/emotion", {
+      const response = await fetch("https://built-it-python-895c.onrender.com/analyze", {
         method: "POST",
         body: formData,
       });
