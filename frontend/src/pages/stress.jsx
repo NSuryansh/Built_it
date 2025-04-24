@@ -48,7 +48,7 @@ const Stress = () => {
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-amber-400 to-orange-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative z-1">
+          <div className="relative">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4">
               Your Mental Wellness Journey
             </h1>
