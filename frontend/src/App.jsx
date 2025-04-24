@@ -63,6 +63,23 @@ export default function App() {
 //   }
 // });
 
+onMessage(messaging, async (payload) => {
+  console.log('Foreground message received:', payload);
+
+  if (Notification.permission === "granted" && 'serviceWorker' in navigator) {
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (registration) {
+      registration.showNotification(payload.notification.title, {
+        body: payload.notification.body,
+        icon: '../assets/final-image.png',
+      });
+      console.log("sent")
+    } else {
+      console.error('No service worker registration found.');
+    }
+  }
+});
+
   const [type, setType] = useState(null);
   const userType = localStorage.getItem("user_type");
 

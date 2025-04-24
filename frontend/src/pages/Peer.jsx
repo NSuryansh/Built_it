@@ -194,7 +194,7 @@ const Peer = () => {
       );
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-
+      console.log(decrypted, "decrypted")
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },

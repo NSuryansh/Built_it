@@ -66,6 +66,7 @@ app.use(
       "http://localhost:5173",
       "https://built-it.vercel.app",
       "https://built-it-qwwp.onrender.com",
+      "https://built-it-frontend.onrender.com",
     ],
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
@@ -74,7 +75,7 @@ app.use(
 
 const io = new Server(server, {
   cors: {
-    origin: "https://built-it-xjiq.onrender.com",
+    origin: "https://built-it-frontend.onrender.com",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -210,7 +211,7 @@ io.on("connection", (socket) => {
         // console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
-        io.to(room).emit("receiveMessage", {
+        socket.to(room).emit("receiveMessage", {
           id: message.id,
           senderId,
           encryptedText,

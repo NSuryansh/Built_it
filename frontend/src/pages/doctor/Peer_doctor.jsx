@@ -194,7 +194,9 @@ const DoctorPeer = () => {
         encryptedAESKey
       );
       if (lastMessageRef.current === decrypted) return;
+      console.log(decrypted, "decrypt")
       lastMessageRef.current = decrypted;
+
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
