@@ -216,32 +216,35 @@ def chat_handler():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route('/analyze', methods=['POST'])
+@app.route('/analyze', methods=['POST', 'OPTIONS'])
 def analyze_user():
-    data_id = request.get_json()
-    user_id = int(data_id.get('user_id'))
-    print(user_id, "userof")
-    try:
-        # Load and filter CSV data
-        data = pd.read_csv('tmp/memory.csv')
-        # print(data, "dara")
-        user_data = data[data['user_id'] == user_id]
-        # print(user_data, "AEEE HALLLLLo")
-        if user_data.empty:
-            return jsonify({"error": "User not found"}), 404
+    if request.method=='POST':
+        data_id = request.get_json()
+        user_id = int(data_id.get('user_id'))
+        print(user_id, "userof")
+        try:
+            # Load and filter CSV data
+            data = pd.read_csv('tmp/memory.csv')
+            # print(data, "dara")
+            user_data = data[data['user_id'] == user_id]
+            # print(user_data, "AEEE HALLLLLo")
+            if user_data.empty:
+                return jsonify({"error": "User not found"}), 404
+                
+            # Get prompts and calculate metrics
+            prompts = user_data['prompt'].tolist()
             
-        # Get prompts and calculate metrics
-        prompts = user_data['prompt'].tolist()
-        
-        print("HELEoooo")
-        result = analyze_mental_health(prompts, user_id)
-        
-        return jsonify(result['metrics_json'])
-        
-    except FileNotFoundError:
-        return jsonify({"error": "Data file missing"}), 500
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+            print("HELEoooo")
+            result = analyze_mental_health(prompts, user_id)
+            
+            return jsonify(result['metrics_json'])
+            
+        except FileNotFoundError:
+            return jsonify({"error": "Data file missing"}), 500
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    if request.method=='OPTIONS':
+        return '', 200
     
 @app.route('/emotion', methods=['POST'])
 def classify_emotion():

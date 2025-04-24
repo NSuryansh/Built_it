@@ -89,7 +89,7 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/chatWithBot", {
+      const response = await fetch("https://built-it-python-895c.onrender.com/chatWithBot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -144,7 +144,7 @@ export default function Mood() {
     formData.append("audio", blob, "audio.wav");
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/emotion", {
+      const response = await fetch("https://built-it-python-895c.onrender.com/emotion", {
         method: "POST",
         body: formData,
       });
