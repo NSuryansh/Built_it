@@ -218,14 +218,14 @@ const Login = () => {
         </div>
         <div className="flex w-full mt-2">
           <p className="w-full text-center">
-            Login as a 
+            Login as a&nbsp; 
             <button
               onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
             >
               Doctor
             </button>
-             or 
+            &nbsp;or&nbsp;
             <button
               onClick={() => navigate("/admin/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"

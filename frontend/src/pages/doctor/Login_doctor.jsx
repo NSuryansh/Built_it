@@ -210,14 +210,14 @@ const DoctorLogin = () => {
           </div>
           <div className="flex w-full mt-2">
             <p className="w-full text-center">
-              Login as a 
+              Login as a&nbsp; 
               <button
                 onClick={() => navigate("/login")}
                 className="underline font-bold text-blue-500"
               >
                 User
               </button>
-               or 
+              &nbsp;or&nbsp;
               <button
                 onClick={() => navigate("/admin/login")}
                 className="underline font-bold text-blue-500"
