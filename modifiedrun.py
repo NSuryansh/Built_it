@@ -192,30 +192,6 @@ IMPORTANT: Ensure scores are precise and based on the entire conversation contex
             "json_string": json.dumps(default_dict)
         }
 
-
-@app.route('/chatWithBot', methods=['POST'])
-def chat_handler():
-    try:
-        print("HIHI")
-        data = request.get_json()
-        user_id = data.get("user_id", "default_user")
-        message = data["message"]
-        message=message+"Reply in 2-3 sentences only and avoid lengthy explanations. Provide detailed information only when explicitly requested."
-        agent = create_mental_agent(user_id)
-        response = agent.run(message=message, markdown=True)
-        
-        # Store user prompt in CSV file
-        store_user_prompt(user_id, agent.session_id, message)
-        
-        return jsonify({
-            "response": str(response.content),
-            "session_id": agent.session_id,
-            "user_id": user_id
-        })
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 @app.after_request
 def add_cors_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -223,6 +199,36 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
     
+    
+@app.route('/chatWithBot', methods=['POST', 'OPTIONS'])
+@cross_origin()
+def chat_handler():
+    if request.method == "POST":
+        try:
+            print("HIHI")
+            data = request.get_json()
+            user_id = data.get("user_id", "default_user")
+            message = data["message"]
+            message=message+"Reply in 2-3 sentences only and avoid lengthy explanations. Provide detailed information only when explicitly requested."
+            agent = create_mental_agent(user_id)
+            response = agent.run(message=message, markdown=True)
+            
+            # Store user prompt in CSV file
+            store_user_prompt(user_id, agent.session_id, message)
+            
+            return jsonify({
+                "response": str(response.content),
+                "session_id": agent.session_id,
+                "user_id": user_id
+            })
+        
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    if request.method=='OPTIONS':
+        print("HALALALLALA options")
+        return '', 200
+
+
 @app.route("/analyze", methods=["POST", "OPTIONS"])
 @cross_origin()  
 def analyze_user():
@@ -256,50 +262,55 @@ def analyze_user():
         print("HALALALLALA options")
         return '', 200
     
-@app.route('/emotion', methods=['POST'])
+@app.route('/emotion', methods=['POST', 'OPTIONS'])
+@cross_origin()
 def classify_emotion():
     print("EMOTION")
+    if request.method == "POST":
+        if 'audio' not in request.files:
+            return jsonify({"error": "No audio file uploaded"}), 400
 
-    if 'audio' not in request.files:
-        return jsonify({"error": "No audio file uploaded"}), 400
+        audio_file = request.files['audio']
 
-    audio_file = request.files['audio']
+        # Save to a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
+            audio_file.save(temp_audio.name)
+            audio_path = temp_audio.name
 
-    # Save to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
-        audio_file.save(temp_audio.name)
-        audio_path = temp_audio.name
+        print(audio_path, "AUDIO PATH")
 
-    print(audio_path, "AUDIO PATH")
+        # For testing purposes, override the audio_path if needed:
+        # audio_path = "C:\\Users\\Shorya\\AppData\\Local\\Temp\\tmplgilil_u.wav"
 
-    # For testing purposes, override the audio_path if needed:
-    # audio_path = "C:\\Users\\Shorya\\AppData\\Local\\Temp\\tmplgilil_u.wav"
+        client = InferenceClient(
+            provider="hf-inference",
+            api_key=api_key_hf,
+        )
 
-    client = InferenceClient(
-        provider="hf-inference",
-        api_key=api_key_hf,
-    )
+        output = client.audio_classification(
+            audio_path,
+            model="ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition"
+        )
+        print(output)
 
-    output = client.audio_classification(
-        audio_path,
-        model="ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition"
-    )
-    print(output)
+        # Create a list of dictionaries for each classification element
+        results = [{"label": elem.label, "score": elem.score} for elem in output]
 
-    # Create a list of dictionaries for each classification element
-    results = [{"label": elem.label, "score": elem.score} for elem in output]
+        # Find the element with the maximum score
+        max_elem = max(output, key=lambda elem: elem.score)
 
-    # Find the element with the maximum score
-    max_elem = max(output, key=lambda elem: elem.score)
-
-    # Return all the results along with the max label
-    return jsonify({
-        "results": results,
-        "max_emotion": max_elem.label
-    })
-    # except Exception as e:
-    #     print("❌ Error occurred during emotion classification:")
-    #     return jsonify({"error": str(e)}), 500
+        # Return all the results along with the max label
+        return jsonify({
+            "results": results,
+            "max_emotion": max_elem.label
+        })
+        # except Exception as e:
+        #     print("❌ Error occurred during emotion classification:")
+        #     return jsonify({"error": str(e)}), 500
+    if request.method=='OPTIONS':
+        print("HALALALLALA options")
+        return '', 200
+    
         
 if __name__ == "__main__":
        with app.app_context():
