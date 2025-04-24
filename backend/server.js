@@ -1658,7 +1658,7 @@ app.post("/save-subscription", async (req, res) => {
 
 app.post("/send-notification", async (req, res) => {
   try {
-    const { userid, title, message, userType, } = req.body;
+    const { userid, message, userType, } = req.body;
     if (!userid || !message) {
       return res.status(400).json({ error: "Missing userId or message" });
     }
@@ -1702,7 +1702,7 @@ app.post("/send-notification", async (req, res) => {
         const payload = {
           token: sub.endpoint, 
           notification: {
-            title: title,
+            title: "Vitality",
             body: message,
           },
         };        
