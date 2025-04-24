@@ -137,6 +137,8 @@ const AdminDoctorProfile = () => {
 
       if (data.error) {
         setError(data.error);
+        CustomToast("Internal error while adding referral", "green");
+        return;
       }
       CustomToast("Referral created successfully", "green");
     } catch (err) {
@@ -201,10 +203,11 @@ const AdminDoctorProfile = () => {
                 </h1>
                 <div className="flex">
                   <p className="text-yellow-200 text-xl font-medium italic">
-                    {`${doctor.field} (${doctor.avgRating != 0.0
+                    {`${doctor.field} (${
+                      doctor.avgRating != 0.0
                         ? parseFloat(doctor.avgRating).toPrecision(2)
                         : "Unrated"
-                      }`}
+                    }`}
                   </p>
                   {doctor.avgRating != 0.0 && (
                     <div className="flex">
