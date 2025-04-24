@@ -217,8 +217,7 @@ const Book = () => {
         color="orange"
         className="bg-orange-600/90 text-white shadow-inner"
       />
-    </div>
-  );
+    </div>);
 };
 
 export default Book;
