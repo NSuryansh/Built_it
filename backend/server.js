@@ -75,7 +75,7 @@ app.use(
 
 const io = new Server(server, {
   cors: {
-    origin: "https://built-it-xjiq.onrender.com",
+    origin: "https://built-it-frontend.onrender.com",
     methods: ["GET", "POST"],
     credentials: true,
   },
