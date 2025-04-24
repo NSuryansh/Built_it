@@ -61,20 +61,12 @@ admin.initializeApp({
 });
 
 app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://built-it.vercel.app",
-      "https://built-it-qwwp.onrender.com",
-    ],
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  })
+  cors()
 );
 
 const io = new Server(server, {
   cors: {
-    origin: "https://built-it-xjiq.onrender.com",
+    origin: "https://built-it-frontend.onrender.com",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -1230,7 +1222,7 @@ app.get("/pastApp", async (req, res) => {
 });
 
 app.get("/getUserFeelings", async (req, res) => {
-  const userId = req.query["userId"]; // Fix: Use query parameters
+  const userId = Number(req.query["userId"]); // Fix: Use query parameters
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });

@@ -194,7 +194,7 @@ const Peer = () => {
       );
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-      console.log("hi i m in receive")
+      console.log(decrypted, "decrypted")
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
@@ -209,10 +209,10 @@ const Peer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
-      // setShowMessages((prev) => [
-      //   ...prev,
-      //   { decryptedText: message, senderId: userId, senderType: "user" },
-      // ]);
+      setShowMessages((prev) => [
+        ...prev,
+        { decryptedText: message, senderId: userId, senderType: "user" },
+      ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
       socketRef.current.emit("sendMessage", {
