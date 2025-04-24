@@ -68,7 +68,7 @@ const Login = () => {
     setisLoading(true);
     if (username === "" || password === "") {
       setError("Please fill the fields");
-      
+      setisLoading(false);
       return;
     }
     setError("");
