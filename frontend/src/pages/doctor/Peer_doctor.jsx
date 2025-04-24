@@ -194,7 +194,9 @@ const DoctorPeer = () => {
         encryptedAESKey
       );
       if (lastMessageRef.current === decrypted) return;
+      console.log(decrypted, "decrypt")
       lastMessageRef.current = decrypted;
+
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
@@ -256,14 +258,14 @@ const DoctorPeer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim()) {
-      // setShowMessages((prev) => [
-      //   ...prev,
-      //   {
-      //     decryptedText: message,
-      //     senderId: userId,
-      //     senderType: localStorage.getItem("user_type"),
-      //   },
-      // ]);
+      setShowMessages((prev) => [
+        ...prev,
+        {
+          decryptedText: message,
+          senderId: userId,
+          senderType: localStorage.getItem("user_type"),
+        },
+      ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
       // console.log(recId, userId)
