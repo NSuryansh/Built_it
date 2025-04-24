@@ -194,11 +194,11 @@ const Peer = () => {
       );
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-
-      // setShowMessages((prev) => [
-      //   ...prev,
-      //   { decryptedText: decrypted, senderId, senderType },
-      // ]);
+      console.log("hi i m in receive")
+      setShowMessages((prev) => [
+        ...prev,
+        { decryptedText: decrypted, senderId, senderType },
+      ]);
     };
     socketRef.current.on("receiveMessage", handleReceiveMessage);
     return () => {
