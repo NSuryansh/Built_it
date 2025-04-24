@@ -1231,7 +1231,7 @@ app.get("/pastApp", async (req, res) => {
 });
 
 app.get("/getUserFeelings", async (req, res) => {
-  const userId = req.query["userId"]; // Fix: Use query parameters
+  const userId = Number(req.query["userId"]); // Fix: Use query parameters
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });
