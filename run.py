@@ -1,3 +1,6 @@
+import inspect
+if not hasattr(inspect, 'getargspec'):
+    inspect.getargspec = inspect.getfullargspec
 from agno.agent import Agent, AgentMemory 
 from agno.models.google import Gemini 
 from agno.embedder.google import GeminiEmbedder 
