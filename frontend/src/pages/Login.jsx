@@ -6,6 +6,30 @@ import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import CustomToast from "../components/CustomToast";
 
+// Circular Loader Component
+const CircularLoader = ({
+  color = '#ff4800',
+  size = 40,
+  text = 'Loading...'
+}) => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div 
+        className="rounded-full border-4 border-t-transparent animate-spin"
+        style={{
+          borderColor: `${color}40`,
+          borderTopColor: color,
+          width: size,
+          height: size
+        }}
+      />
+      {text && (
+        <p className="mt-4 text-orange-800 font-medium">{text}</p>
+      )}
+    </div>
+  );
+};
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -44,21 +68,22 @@ const Login = () => {
     setisLoading(true);
     if (username === "" || password === "") {
       setError("Please fill the fields");
-      setisLoading(false);
+      
       return;
     }
     setError("");
-    const response = await fetch("https://built-it.onrender.com/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    });
+    const response = await fetch("https://built-it.onrender.com/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      }
+    );
     const res = await response.json();
 
-    // const data = await res.json();
     if (res.success) {
       localStorage.setItem("userid", res.user.id);
 
@@ -166,9 +191,15 @@ const Login = () => {
         <button
           disabled={isLoading}
           onClick={handlelogin}
-          className="w-full flex justify-center items-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
+          className="w-full flex justify-center items-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2 min-h-[48px]"
         >
-          {isLoading ? <Loader /> : <>Login</>}
+          {isLoading ? (
+            <div className="flex items-center justify-center w-[24px] h-[24px]">
+              <CircularLoader color="#ffffff" size={24} text={null} className="inline-block" />
+            </div>
+          ) : (
+            <>Login</>
+          )}
         </button>
         <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
           If not registered{" "}
@@ -187,14 +218,14 @@ const Login = () => {
         </div>
         <div className="flex w-full mt-2">
           <p className="w-full text-center">
-            Login as a&nbsp;
+            Login as a 
             <button
               onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
             >
               Doctor
             </button>
-            &nbsp;or&nbsp;
+             or 
             <button
               onClick={() => navigate("/admin/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"
