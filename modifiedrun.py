@@ -61,6 +61,22 @@ def store_user_prompt(user_id: str, session_id: str, prompt: str):
         writer = csv.writer(file)
         writer.writerow([user_id, session_id, prompt, "CURRENT_TIMESTAMP"])
 
+global agent_knowledge_base
+try:
+    agent_knowledge_base = JSONKnowledgeBase(
+        path="mental-health-data.json",
+        vector_db=LanceDb(
+            uri="tmp/lancedb",
+            table_name="mental-health",
+            search_type=SearchType.hybrid,
+            embedder=GeminiEmbedder(api_key=os.getenv("GEMINI_API_KEY")),
+        )
+    )
+except Exception as e:
+    print(f"Error initializing knowledge base: {e}")
+    agent_knowledge_base = None  # Handle initialization failure
+
+
 def create_mental_agent(user_id: str, session_id: str = None) -> Agent:
     return Agent(
         name="Helper",
@@ -80,15 +96,7 @@ def create_mental_agent(user_id: str, session_id: str = None) -> Agent:
     "Only provide detailed information when explicitly requested."     
         ], 
         description="AI psychiatrist for engineering students",
-        knowledge=JSONKnowledgeBase(
-            path="mental-health-data.json",
-            vector_db=LanceDb(
-                uri="tmp/lancedb",
-                table_name="mental-health",
-                search_type=SearchType.hybrid,
-                embedder=GeminiEmbedder(api_key=os.getenv("GEMINI_API_KEY")),
-            )
-        ),
+        knowledge=agent_knowledge_base,
         tools=[DuckDuckGoTools()],
         markdown=True,
         read_chat_history=True,
@@ -199,7 +207,7 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
     
-    
+
 @app.route('/chatWithBot', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def chat_handler():
