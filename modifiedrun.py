@@ -14,7 +14,7 @@ import csv
 from huggingface_hub import InferenceClient
 from agno.models.google import Gemini 
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import os
 import pandas as pd
 import json
@@ -35,7 +35,7 @@ import numpy as np
 
 collections.Iterable = collections.abc.Iterable
 
-load_dotenv(dotenv_path="backend/.env")
+load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 api_key_hf = os.getenv("HF_API_KEY")
 
@@ -223,8 +223,10 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
     
-@app.route('/analyze', methods=['POST', 'OPTIONS'])
+@app.route("/analyze", methods=["POST", "OPTIONS"])
+@cross_origin()  
 def analyze_user():
+    print(request)
     if request.method=='POST':
         data_id = request.get_json()
         user_id = int(data_id.get('user_id'))
@@ -251,6 +253,7 @@ def analyze_user():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
     if request.method=='OPTIONS':
+        print("HALALALLALA options")
         return '', 200
     
 @app.route('/emotion', methods=['POST'])
