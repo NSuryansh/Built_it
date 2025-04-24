@@ -195,10 +195,10 @@ const Peer = () => {
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
 
-      setShowMessages((prev) => [
-        ...prev,
-        { decryptedText: decrypted, senderId, senderType },
-      ]);
+      // setShowMessages((prev) => [
+      //   ...prev,
+      //   { decryptedText: decrypted, senderId, senderType },
+      // ]);
     };
     socketRef.current.on("receiveMessage", handleReceiveMessage);
     return () => {
