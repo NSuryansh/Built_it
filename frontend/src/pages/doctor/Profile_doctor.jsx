@@ -55,6 +55,7 @@ const DoctorProfile = () => {
     };
     verifyAuth();
   }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,19 +76,15 @@ const DoctorProfile = () => {
         });
 
         let certifications = [];
-        // Handle different possible formats of data.certifications
         if (typeof data.certifications === "string") {
           try {
-            // Try parsing as JSON if it's a stringified array
             certifications = JSON.parse(data.certifications);
           } catch (e) {
-            // If not JSON, assume it's a | delimited string
             certifications = data.certifications
               .split("|")
               .filter((cert) => cert !== "");
           }
         } else if (Array.isArray(data.certifications)) {
-          // If it's already an array, map it
           certifications = data.certifications
             .map((cert) =>
               typeof cert === "object" ? cert.certification : cert
@@ -99,17 +96,13 @@ const DoctorProfile = () => {
         }
 
         let educations = [];
-        // Handle different possible formats of data.education
         if (typeof data.education === "string") {
           try {
-            // Try parsing as JSON if it's a stringified array
             educations = JSON.parse(data.education);
           } catch (e) {
-            // If not JSON, assume it's a | delimited string
             educations = data.education.split("|").filter((edu) => edu !== "");
           }
         } else if (Array.isArray(data.education)) {
-          // If it's already an array, map it
           educations = data.education
             .map((edu) => (typeof edu === "object" ? edu.education : edu))
             .filter((edu) => edu !== "");
@@ -179,52 +172,62 @@ const DoctorProfile = () => {
     navigate("/doctor/login");
   };
 
-  if (isAuthenticated === null || fetched === null) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p className="mt-4 text-gray-600">Loading your dashboard...</p>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} theme="blue" />;
-  }
-
   const handleSave = async () => {
     setIsLoading(true);
     try {
       const doctorId = localStorage.getItem("userid");
+      // Filter out empty or "<Add>" entries from education and certifications
+      const filteredEducation = editedProfile.education.filter(
+        (edu) => edu.trim() !== "" && edu !== "<Add>"
+      );
+      const filteredCertifications = editedProfile.certifications.filter(
+        (cert) => cert.trim() !== "" && cert !== "<Add>"
+      );
+
       const formData = new FormData();
       formData.append("id", doctorId);
       formData.append("address", editedProfile.address);
       formData.append("city", editedProfile.city);
       formData.append("experience", editedProfile.experience);
-      formData.append("educ", editedProfile.education);
-      formData.append("certifi", editedProfile.certifications);
+      formData.append("educ", filteredEducation.length > 0 ? filteredEducation : ["<Add>"]);
+      formData.append("certifi", filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"]);
       formData.append("image", file);
+
       const response = await fetch(`https://built-it.onrender.com/modifyDoc`, {
         method: "PUT",
         body: formData,
       });
+
+      const filteredAvailability = editedProfile.availability.filter(
+        (slot) => slot.trim() !== "" && slot !== "<Add>"
+      );
       let dates = [];
-      for (let i = 0; i < editedProfile.availability.length; i++) {
+      for (let i = 0; i < filteredAvailability.length; i++) {
         const date = new Date(
-          "1970-01-01T" + editedProfile.availability[i] + ":00.000Z"
+          "1970-01-01T" + filteredAvailability[i] + ":00.000Z"
         );
         const newDate = TimeChange(date.getTime());
-        console.log(newDate);
         dates.push(newDate);
       }
+
       const response2 = await fetch(
         `https://built-it.onrender.com/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
         {
           method: "PUT",
         }
       );
+
       const data = await response.json();
       const data2 = await response2.json();
+
+      // Update profile with filtered data
+      setProfile({
+        ...editedProfile,
+        education: filteredEducation.length > 0 ? filteredEducation : ["<Add>"],
+        certifications: filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"],
+        availability: filteredAvailability.length > 0 ? filteredAvailability : ["<Add>"],
+      });
+
       setIsLoading(false);
       CustomToast("Profile updated successfully", "blue");
     } catch (e) {
@@ -232,9 +235,7 @@ const DoctorProfile = () => {
       setIsLoading(false);
       CustomToast("Error updating profile", "blue");
     }
-    setProfile(editedProfile);
     setIsEditing(false);
-    console.log(editedProfile);
   };
 
   const handleCancel = () => {
@@ -259,6 +260,19 @@ const DoctorProfile = () => {
       fileInputRef.current?.click();
     }
   };
+
+  if (isAuthenticated === null || fetched === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <p className="mt-4 text-gray-600">Loading your dashboard...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="blue" />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 overflow-hidden">
@@ -384,7 +398,6 @@ const DoctorProfile = () => {
             {/* Contact Info */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
               <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
-                {/* <Mail className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                 Contact Information
               </div>
               <div className="space-y-3">
@@ -478,7 +491,6 @@ const DoctorProfile = () => {
               <div className="space-y-8">
                 <div>
                   <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
-                    {/* <Building className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                     Professional Information
                   </div>
                   <div className="space-y-3">
@@ -529,7 +541,6 @@ const DoctorProfile = () => {
                 {/* Availability */}
                 <div>
                   <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
-                    {/* <Clock className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                     General Slots
                   </div>
                   <div className="space-y-4">
@@ -593,7 +604,6 @@ const DoctorProfile = () => {
             {/* Education */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
               <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
-                {/* <GraduationCap className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                 Education
               </div>
               <div className="space-y-5">
@@ -647,7 +657,6 @@ const DoctorProfile = () => {
             {/* Certifications */}
             <div className="bg-white/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
               <div className="flex items-center text-blue-600 font-semibold text-lg md:text-2xl mb-5">
-                {/* <Award className="h-6 w-6 mr-3 animate-bounce-slow" /> */}
                 Certifications
               </div>
               <div className="space-y-5">
