@@ -26,7 +26,6 @@ from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
 from flask import Flask, jsonify, request
-from flask_cors import CORS
 import pandas as pd
 import tempfile
 import os
@@ -57,8 +56,7 @@ if not os.path.exists(memory_csv_file):
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True, allow_headers=["Content-Type"])
-
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://built-it-onrender.com"]}}, supports_credentials=True, allow_headers=["Content-Type"])
 def store_user_prompt(user_id: str, session_id: str, prompt: str):
     """Stores user prompts in a CSV file."""
     with open(memory_csv_file, mode='a', newline='') as file:
