@@ -44,12 +44,6 @@ api_key_hf = os.getenv("HF_API_KEY")
 # Initialize databases
 agent_storage = SqliteAgentStorage(table_name="study_sessions", db_file="tmp/agents.db")
 
-memory_db = LanceMemoryDb(
-    uri="tmp/memory_lancedb",
-    table_name="user_memories",
-    embedder=GeminiEmbedder(api_key=os.getenv("GEMINI_API_KEY")),
-)
-
 # CSV file for storing user prompts
 memory_csv_file = "tmp/memory.csv"
 
