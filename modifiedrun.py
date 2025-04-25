@@ -48,7 +48,7 @@ agent_storage = SqliteAgentStorage(table_name="study_sessions", db_file="tmp/age
 memory_csv_file = "tmp/memory.csv"
 
 db_path = "tmp/lancedb"  # Choose a path to store your LanceDB data
-lance_db = LanceDb(path=db_path, embedding=GeminiEmbedder(api_key=api_key))
+lance_db = LanceDb(embedding=GeminiEmbedder(api_key=api_key))
 
 # Create CSV file with headers if it doesn't exist
 if not os.path.exists(memory_csv_file):
