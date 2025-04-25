@@ -7,6 +7,7 @@ from agno.vectordb.lancedb import LanceDb, SearchType
 from agno.memory.classifier import MemoryClassifier
 from agno.memory.manager import MemoryManager
 from agno.memory.summarizer import MemorySummarizer
+import lancedb
 from agno.storage.agent.sqlite import SqliteAgentStorage
 # from agno.memory import LanceMemoryDb
 from dotenv import load_dotenv
@@ -48,7 +49,7 @@ agent_storage = SqliteAgentStorage(table_name="study_sessions", db_file="tmp/age
 memory_csv_file = "tmp/memory.csv"
 
 db_path = "tmp/lancedb"  # Choose a path to store your LanceDB data
-lance_db = LanceDb(embedding=GeminiEmbedder(api_key=api_key))
+lance_db = lancedb.connect(db_path)
 
 # Create CSV file with headers if it doesn't exist
 if not os.path.exists(memory_csv_file):
