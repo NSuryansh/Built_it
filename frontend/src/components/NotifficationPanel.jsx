@@ -43,6 +43,17 @@ const NotificationPanel = () => {
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
+        await fetch("https://built-it.onrender.com/send-notification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userType: "doc", 
+            userid: userId,
+            message: "User accepted the appointment!",
+          }),
+        })
         getRequests();
       } else {
         console.error("Failed to confirm appointment");

@@ -140,6 +140,15 @@ const AdminDoctorProfile = () => {
         return false;
       }
       CustomToast("Referral created successfully", "green");
+      await fetch("https://built-it.onrender.com/send-notification",{
+        method:"POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userType: "doc",
+          userid: Number(search.split("=")[1]),
+          message: "A new referral has been added"
+        })
+      })
       return true;
     } catch (err) {
       console.error("Error adding event:", err);
