@@ -123,7 +123,7 @@ const AdminDoctorProfile = () => {
 
   const referralSub = async () => {
     try {
-      const response = await fetch("http://localhost:3000/referrals", {
+      const response = await fetch("https://built-it.onrender.com/referrals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
