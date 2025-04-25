@@ -114,16 +114,16 @@ const AdminDoctorProfile = () => {
 
   const handleReferralSubmit = (e) => {
     e.preventDefault();
-    referralSub();
-    console.log("Referral submitted:", referralData);
-    setShowReferralForm(false);
-    setReferralData({ rollNo: "", referredBy: "", reason: "" });
-    CustomToast("Referral submitted successfully", "green");
+    if (referralSub()) {
+      setShowReferralForm(false);
+      setReferralData({ rollNo: "", referredBy: "", reason: "" });
+      // CustomToast("Referral submitted successfully", "green");
+    }
   };
 
   const referralSub = async () => {
     try {
-      const response = await fetch("https://built-it.onrender.com/referrals", {
+      const response = await fetch("http://localhost:3000/referrals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -135,15 +135,16 @@ const AdminDoctorProfile = () => {
       });
       const data = await response.json();
 
-      if (data.error) {
-        setError(data.error);
-        CustomToast("Internal error while adding referral", "green");
-        return;
+      if (data.message === "User with given roll number not found") {
+        CustomToast("User with given roll number not found", "green");
+        return false;
       }
       CustomToast("Referral created successfully", "green");
+      return true;
     } catch (err) {
       console.error("Error adding event:", err);
       CustomToast("Internal error while adding referral", "green");
+      return false;
     }
   };
 

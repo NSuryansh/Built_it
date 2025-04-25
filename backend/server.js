@@ -14,7 +14,7 @@ import axios from "axios";
 import webpush from "web-push";
 import multer from "multer";
 import { send } from "@emailjs/browser";
-import admin from 'firebase-admin';
+import admin from "firebase-admin";
 // import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
@@ -36,7 +36,7 @@ const transporter = nodemailer.createTransport({
 
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
-const serviceAccount = JSON.parse(process.env.FIREBASE_ACCOUNT_SERVICE_KEY)
+const serviceAccount = JSON.parse(process.env.FIREBASE_ACCOUNT_SERVICE_KEY);
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -60,9 +60,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-app.use(
-  cors()
-);
+app.use(cors());
 
 const io = new Server(server, {
   cors: {
@@ -93,7 +91,9 @@ io.on("connection", (socket) => {
     // console.log(userId);
   });
   socket.on("joinRoom", ({ userId, doctorId }) => {
-    const room = `chat_${[Number(userId), Number(doctorId)].sort((a, b) => a - b).join("_")}`;
+    const room = `chat_${[Number(userId), Number(doctorId)]
+      .sort((a, b) => a - b)
+      .join("_")}`;
     // console.log(userId, " ", doctorId);
     socket.join(room);
     // console.log(room);
@@ -225,7 +225,9 @@ io.on("connection", (socket) => {
   );
 
   socket.on("leaveRoom", async ({ userId, doctorId }) => {
-    const room = `chat_${[Number(userId), Number(doctorId)].sort((a, b) => a - b).join("_")}`;
+    const room = `chat_${[Number(userId), Number(doctorId)]
+      .sort((a, b) => a - b)
+      .join("_")}`;
     // console.log(room);
     socket.leave(room);
   });
@@ -856,11 +858,11 @@ app.get("/reqApp", async (req, res) => {
   res.json(appt);
 });
 
-app.get("/getRequests", async(req,res) =>{
-  try{
+app.get("/getRequests", async (req, res) => {
+  try {
     const userId = Number(req.query["userId"]);
     const reqs = await prisma.requests.findMany({
-      where: { user_id: userId, forDoctor: false},
+      where: { user_id: userId, forDoctor: false },
       include: {
         doctor: {
           select: {
@@ -872,7 +874,7 @@ app.get("/getRequests", async(req,res) =>{
       },
     });
     res.json(reqs);
-  }catch(error) {
+  } catch (error) {
     console.error(error);
   }
 });
@@ -1572,7 +1574,7 @@ app.post("/save-subscription", async (req, res) => {
     // console.log(userType, " userType");
 
     // const { endpoint, keys } = subscription;
-    console.log("hi")
+    console.log("hi");
     if (userType == "user") {
       // const existingSub = await prisma.subscription.findMany({
       //   where: { userId: Number(userid)
@@ -1613,7 +1615,7 @@ app.post("/save-subscription", async (req, res) => {
             // p256dhKey: keys.p256dh,
           },
         });
-        console.log(subs)
+        console.log(subs);
         // }
       } catch (e) {
         console.log(e);
@@ -1643,7 +1645,7 @@ app.post("/save-subscription", async (req, res) => {
             // p256dhKey: keys.p256dh,
           },
         });
-        console.log(subs)
+        console.log(subs);
         res.json({ success: true });
       } catch (e) {
         console.log(e);
@@ -1658,11 +1660,11 @@ app.post("/save-subscription", async (req, res) => {
 
 app.post("/send-notification", async (req, res) => {
   try {
-    const { userid, message, userType, } = req.body;
+    const { userid, message, userType } = req.body;
     if (!userid || !message) {
       return res.status(400).json({ error: "Missing userId or message" });
     }
-    console.log("heyyyy")
+    console.log("heyyyy");
     // Fetch the subscription from the database
     var subscription;
     if (userType == "user") {
@@ -1700,18 +1702,18 @@ app.post("/send-notification", async (req, res) => {
         //   payload
         // );
         const payload = {
-          token: sub.endpoint, 
+          token: sub.endpoint,
           notification: {
             title: "Vitality",
             body: message,
           },
-        };        
+        };
         const response = await admin.messaging().send(payload);
       } catch (err) {
         console.error("Failed to send to one subscription:", err);
       }
     }
-    res.send({success: true})
+    res.send({ success: true });
 
     // res.json({ success: true });
   } catch (error) {
@@ -1725,10 +1727,13 @@ app.post("/node-chat", async (req, res) => {
     // console.log("HELOE");
     const { user_id, message } = req.body;
 
-    const response = await axios.post("https://built-it-python-895c.onrender.com/chatWithBot", {
-      user_id,
-      message,
-    });
+    const response = await axios.post(
+      "https://built-it-python-895c.onrender.com/chatWithBot",
+      {
+        user_id,
+        message,
+      }
+    );
     // console.log(response.data);
 
     res.json(response.data);
@@ -1977,9 +1982,12 @@ app.post("/scores-bot", async (req, res) => {
   try {
     const { user_id } = req.body;
 
-    const response = await axios.post("https://built-it-python-895c.onrender.com/analyze", {
-      user_id,
-    });
+    const response = await axios.post(
+      "https://built-it-python-895c.onrender.com/analyze",
+      {
+        user_id,
+      }
+    );
 
     console.log(response.data.json);
     res.json(response.data);
@@ -2198,7 +2206,7 @@ app.post("/referrals", async (req, res) => {
     },
   });
 
-  if (!user) {
+  if (user === null) {
     return res
       .status(404)
       .json({ message: "User with given roll number not found" });
@@ -2324,7 +2332,7 @@ app.post("/accept-booking-by-user", async (req, res) => {
           isDoctor: true,
         },
       });
-      console.log(appointment)
+      console.log(appointment);
       //Remove from requests table
       const reqDel = await prisma.requests.delete({
         where: { id: parseInt(appId) },
