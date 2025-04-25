@@ -78,7 +78,7 @@ const DoctorNotificationPanel = () => {
     const getReferrals = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/get-referrals?doctor_id=${docId}`
+          `https://built-it.onrender.com/get-referrals?doctor_id=${docId}`
         );
         if (!response.ok) throw new Error("Failed to fetch referrals");
         const data = await response.json();
