@@ -73,6 +73,7 @@ const History = () => {
         `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`
       );
       const data = await response.json();
+      console.log(data);
       setApp(data);
       setfetched(true);
     } catch (e) {
@@ -92,31 +93,37 @@ const History = () => {
       const datetime = new Date(
         `${followupDate}T${followupTime.split("T")[1]}`
       ).toISOString();
-      const response = await fetch("https://built-it.onrender.com/request-to-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          doctorId: localStorage.getItem("userid"),
-          userId: selectedAppointment.user.id,
-          dateTime: datetime,
-          reason: reason,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it.onrender.com/request-to-user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            doctorId: localStorage.getItem("userid"),
+            userId: selectedAppointment.user.id,
+            dateTime: datetime,
+            reason: reason,
+          }),
+        }
+      );
       const data = await response.json();
       CustomToast("Follow-up appointment scheduled", "blue");
 
       if (data["message"] === "Appointment requested successfully") {
-        const notif = await fetch("https://built-it.onrender.com/send-notification", {
-          method: "POST",
-          headers: { "Content-type": "Application/json" },
-          body: JSON.stringify({
-            userId: selectedAppointment.user.id,
-            message: "Doctor has requested an appointment with you",
-            userType: "user",
-          }),
-        });
+        const notif = await fetch(
+          "https://built-it.onrender.com/send-notification",
+          {
+            method: "POST",
+            headers: { "Content-type": "Application/json" },
+            body: JSON.stringify({
+              userId: selectedAppointment.user.id,
+              message: "Doctor has requested an appointment with you",
+              userType: "user",
+            }),
+          }
+        );
         setShowFollowupModal(false);
         setFollowupDate("");
         setFollowupTime("");
@@ -225,76 +232,85 @@ const History = () => {
           </div>
 
           <div className="px-4 sm:px-6 lg:px-8 py-4 space-y-4 max-h-170 overflow-y-scroll">
-            {filteredAppointments.map((appointment) => (
-              <div
-                key={appointment.id}
-                className="bg-gradient-to-br from-white to-blue-50/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_2fr_2fr_1.5fr] gap-4 sm:gap-6">
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
-                        <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+            {filteredAppointments.map((appointment, index) => {
+              let users = [];
+              for (let i = 0; i < filteredAppointments.length; i++) {
+                users.push(filteredAppointments[i].user);
+              }
+              return (
+                <div
+                  key={appointment.id}
+                  className="bg-gradient-to-br from-white to-blue-50/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group"
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_2fr_2fr_1.5fr] gap-4 sm:gap-6">
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
+                          <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                        </div>
+                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+                          Patient
+                        </h3>
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
-                        Patient
-                      </h3>
+                      <p className="text-base sm:text-lg font-medium text-blue-900 ml-11">
+                        {filteredAppointments[index].user != null
+                          ? filteredAppointments[index].user.username
+                          : null}
+                      </p>
                     </div>
-                    <p className="text-base sm:text-lg font-medium text-blue-900 ml-11">
-                      {appointment.user.username}
-                    </p>
-                  </div>
 
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-violet-100 rounded-lg group-hover:bg-violet-200 transition-colors">
-                        <CalendarClock className="h-4 w-4 sm:h-5 sm:w-5 text-violet-600" />
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-violet-100 rounded-lg group-hover:bg-violet-200 transition-colors">
+                          <CalendarClock className="h-4 w-4 sm:h-5 sm:w-5 text-violet-600" />
+                        </div>
+                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+                          Date
+                        </h3>
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
-                        Date
-                      </h3>
+                      <p className="text-base sm:text-lg font-medium text-violet-900 ml-11">
+                        {format(new Date(appointment.createdAt), "dd MMM yyyy")}
+                      </p>
                     </div>
-                    <p className="text-base sm:text-lg font-medium text-violet-900 ml-11">
-                      {format(new Date(appointment.createdAt), "dd MMM yyyy")}
-                    </p>
-                  </div>
 
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
-                        <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
+                          <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
+                        </div>
+                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+                          Notes
+                        </h3>
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
-                        Notes
-                      </h3>
-                    </div>
-                    <p
-                      className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${expanded ? "" : "line-clamp-2"
+                      <p
+                        className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${
+                          expanded ? "" : "line-clamp-2"
                         }`}
-                    >
-                      {appointment.note}
-                    </p>
-                    {appointment.note.length > 80 && (
-                      <button
-                        onClick={toggleExpanded}
-                        className="text-blue-500 text-sm ml-11 cursor-pointer focus:outline-none"
                       >
-                        {expanded ? "See less" : "See more"}
-                      </button>
-                    )}
-                  </div>
+                        {appointment.note}
+                      </p>
+                      {appointment.note.length > 80 && (
+                        <button
+                          onClick={toggleExpanded}
+                          className="text-blue-500 text-sm ml-11 cursor-pointer focus:outline-none"
+                        >
+                          {expanded ? "See less" : "See more"}
+                        </button>
+                      )}
+                    </div>
 
-                  <div className="flex items-center justify-start sm:justify-end mt-4 sm:mt-0">
-                    <button
-                      onClick={() => handleFollowup(appointment)}
-                      className="mx-auto sm:mx-0 w-auto px-4 sm:px-4 py-2.5 sm:py-2 bg-blue-500 text-white text-sm sm:text-base rounded-lg transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                    >
-                      Follow-up
-                    </button>
+                    <div className="flex items-center justify-start sm:justify-end mt-4 sm:mt-0">
+                      <button
+                        onClick={() => handleFollowup(appointment)}
+                        className="mx-auto sm:mx-0 w-auto px-4 sm:px-4 py-2.5 sm:py-2 bg-blue-500 text-white text-sm sm:text-base rounded-lg transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                      >
+                        Follow-up
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </main>
