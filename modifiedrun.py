@@ -8,6 +8,7 @@ from agno.memory.classifier import MemoryClassifier
 from agno.memory.manager import MemoryManager
 from agno.memory.summarizer import MemorySummarizer
 from agno.storage.agent.sqlite import SqliteAgentStorage
+from agno.memory.memorydb import LanceMemoryDb
 from dotenv import load_dotenv
 import os
 import csv
@@ -42,6 +43,12 @@ api_key_hf = os.getenv("HF_API_KEY")
 
 # Initialize databases
 agent_storage = SqliteAgentStorage(table_name="study_sessions", db_file="tmp/agents.db")
+
+memory_db = LanceMemoryDb(
+    uri="tmp/memory_lancedb",
+    table_name="user_memories",
+    embedder=GeminiEmbedder(api_key=os.getenv("GEMINI_API_KEY")),
+)
 
 # CSV file for storing user prompts
 memory_csv_file = "tmp/memory.csv"
@@ -89,6 +96,7 @@ def create_mental_agent(user_id: str, session_id: str = None) -> Agent:
             classifier=MemoryClassifier(model=Gemini(id="gemini-2.0-flash-exp", api_key=api_key)),
             summarizer=MemorySummarizer(model=Gemini(id="gemini-2.0-flash-exp", api_key=api_key)),
             manager=MemoryManager(model=Gemini(id="gemini-2.0-flash-exp", api_key=api_key), user_id=user_id),
+            memory_db=memory_db,
         ),
         storage=agent_storage,
         instructions=["You are a helpful mental health assistant for engineering students. Keep your responses concise and to the point." 
