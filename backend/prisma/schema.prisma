@@ -266,6 +266,7 @@ model Referrals {
   doctor_id   Int
   referred_by String
   reason      String
+  username    String @default("Hello")
   doctor      Doctor @relation(fields: [doctor_id], references: [id])
   user        User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 

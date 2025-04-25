@@ -2220,6 +2220,7 @@ app.post("/referrals", async (req, res) => {
         user_id: user_id,
         doctor_id: docId,
         referred_by: referred_by,
+        username: user.username,
         reason: reason,
       },
     });
@@ -2238,11 +2239,12 @@ app.post("/referrals", async (req, res) => {
 });
 
 app.get("/get-referrals", async (req, res) => {
-  const { doctor_id } = req.body;
+  const { doctor_id } = req.query;
   try {
     const data = await prisma.referrals.findMany({
-      where: { doctor_id: doctor_id },
+      where: { doctor_id: Number(doctor_id) },
     });
+
     res.status(200).json({
       message: "All referrals displayed succesfully",
       referrals: data,
