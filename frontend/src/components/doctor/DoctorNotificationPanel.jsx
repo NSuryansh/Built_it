@@ -133,13 +133,13 @@ const DoctorNotificationPanel = () => {
                 </p>
                 <div className="flex gap-2">
                   {referral.inChat === "Yes" ? (
-                    <div className="text-green-600 hover:bg-red-100 py-1 rounded-full transition">
+                    <div className="text-green-600 hover:bg-green-100 px-2 p-1 rounded-full transition">
                       Chat
                     </div>
                   ) : (
                     <button
                       onClick={() => handleAccept(referral)}
-                      className="text-red-600 hover:bg-red-100 py-1 rounded-full transition"
+                      className="text-red-600 hover:bg-red-100 px-2 p-1 rounded-full transition"
                     >
                       Chat
                     </button>
@@ -171,13 +171,13 @@ const DoctorNotificationPanel = () => {
                 </p>
                 <div className="flex gap-2">
                   {notif.inChat === "Yes" ? (
-                    <div className="text-green-600 hover:bg-red-100 py-1 rounded-full transition">
+                    <div className="text-green-600 hover:bg-green-100 px-2 p-1 rounded-full transition">
                       Chat
                     </div>
                   ) : (
                     <button
                       onClick={() => handleAccept(notif)}
-                      className="text-red-600 hover:bg-red-100 py-1 rounded-full transition"
+                      className="text-red-600 hover:bg-red-100 px-2 p-1 rounded-full transition"
                     >
                       Chat
                     </button>
