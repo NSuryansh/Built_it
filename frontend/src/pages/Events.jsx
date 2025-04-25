@@ -258,7 +258,7 @@ const Events = () => {
                                 className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md"
                               >
                                 <Download className="h-4 w-4 mr-2" />
-                                Download
+                               Resources
                               </motion.button>
                             ) : (
                               <span className="text-gray-400 text-sm italic">Not available</span>
