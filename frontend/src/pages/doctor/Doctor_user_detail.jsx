@@ -28,23 +28,59 @@ const UserDetail = () => {
     verifyAuth();
   }, []);
 
-  const handleFollowup = (appointment) => {
+  const handleFollowup = async (appointment) => {
     setSelectedAppointment(appointment);
     setShowFollowupModal(true);
   };
 
-  const handleSubmitFollowup = (data) => {
+  const handleSubmitFollowup = async () => {
     setIsScheduling(true);
+    try {
+      const datetime = new Date(
+        `${followupDate}T${followupTime.split("T")[1]}`
+      ).toISOString();
+      const response = await fetch("http://localhost:3000/request-to-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          doctorId: localStorage.getItem("userid"),
+          userId: selectedAppointment.user.id,
+          dateTime: datetime,
+          reason: reason,
+        }),
+      });
+      const data = await response.json();
+      CustomToast("Follow-up appointment scheduled", "blue");
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsScheduling(false);
-      setShowFollowupModal(false);
-      CustomToast(
-        `Follow-up scheduled with ${userWithAppointments?.user.username} on ${data.date}`,
-        "blue"
-      );
-    }, 1500);
+      if (data["message"] === "Appointment requested successfully") {
+        const notif = await fetch("http://localhost:3000/send-notification", {
+          method: "POST",
+          headers: {
+            "Content-type": "Application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            userId: selectedAppointment.user.id,
+            message: "Doctor has requested an appointment with you",
+            userType: "user",
+          }),
+        });
+        setShowFollowupModal(false);
+        setFollowupDate("");
+        setFollowupTime("");
+        setReason("");
+        setSelectedAppointment(null);
+      } else {
+        CustomToast("Failed to schedule follow-up appointment", "blue");
+      }
+    } catch (error) {
+      console.error("Error scheduling follow-up:", error);
+      CustomToast("Error scheduling follow-up appointment", "blue");
+    }
+    setIsScheduling(false);
   };
 
   // if (!userWithAppointments) {
@@ -81,7 +117,7 @@ const UserDetail = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/doctor/history")}
           className="flex items-center text-blue-600 hover:text-blue-800 transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />

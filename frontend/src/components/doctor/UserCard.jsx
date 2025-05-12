@@ -10,23 +10,10 @@ import { Link } from "react-router-dom";
 
 const UserCard = ({ userWithAppointments }) => {
   const user = userWithAppointments;
-  console.log(user);
   return (
     <div className="bg-gradient-to-br from-white to-blue-50/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group transform hover:-translate-y-1">
       <div className="grid grid-cols-1 md:grid-cols-[1fr_3fr_auto] gap-4 sm:gap-6">
-        <div className="flex justify-center md:justify-start">
-          <div className="relative">
-            <img
-              src={
-                "https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=600"
-              }
-              alt={`${user.username} profile`}
-              className="w-20 h-20 rounded-full object-cover border-2 border-blue-200 group-hover:border-blue-300 transition-all"
-            />
-            <div className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-white"></div>
-          </div>
-        </div>
-
+        
         <div className="space-y-3">
           <div className="space-y-1 text-center md:text-left">
             <h3 className="font-bold text-lg text-blue-900">{user.username}</h3>

@@ -28,7 +28,6 @@ import FollowUpModal from "../../components/doctor/FollowUpModal";
 import UserCard from "../../components/doctor/UserCard";
 
 const History = () => {
-  const [app, setApp] = useState([]);
   const [showFollowupModal, setShowFollowupModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [followupDate, setFollowupDate] = useState("");
@@ -36,15 +35,13 @@ const History = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [reason, setReason] = useState("");
   const [fetched, setfetched] = useState(null);
-  const [slots, setAvailableSlots] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState(false);
-  const toggleExpanded = () => setExpanded(!expanded);
   const [isScheduling, setisScheduling] = useState(false);
   const token = localStorage.getItem("token");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [userWiseAppointments, setUserWiseAppointments] = useState({});
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -67,9 +64,8 @@ const History = () => {
       );
       const data = await response.json();
       data.forEach((app, i) => {
-        setFilteredUsers([...filteredUsers, app.user])
+        setFilteredUsers([...filteredUsers, app.user]);
       });
-      setApp(data);
       setfetched(true);
     } catch (e) {
       console.error(e);
@@ -77,9 +73,24 @@ const History = () => {
     }
   };
 
-  const handleFollowup = async (appointment) => {
-    setSelectedAppointment(appointment);
-    setShowFollowupModal(true);
+  const getUserAppointments = async (userId) => {
+    try {
+      console.log(token);
+      const response = await fetch(
+        `http://localhost:3000/getAppointmentForDoctorUser?userId=${userId}&docId=${localStorage.getItem(
+          "userid"
+        )}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      const data = await response.json();
+      return data.appointments;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSubmitFollowup = async () => {
@@ -146,7 +157,7 @@ const History = () => {
 
   const searchUsers = (searchTerm) => {
     const lowerSearchTerm = searchTerm.toLowerCase();
-    return mockUsersWithAppointments.filter(
+    return filteredUsers.filter(
       (item) =>
         item.user.username.toLowerCase().includes(lowerSearchTerm) ||
         item.appointments.some(

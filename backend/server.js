@@ -437,18 +437,18 @@ app.get(
   async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(401).json({ message: "Unauthorized", token });
+      return res.status(401).json({ message: "Unauthorized token" });
     }
     try {
-      console.log("Hello");
       const userId = Number(req.query["userId"]);
       const docId = Number(req.query["docId"]);
-      const appointments = await prisma.user.findMany({
+      const appointments = await prisma.pastAppointments.findMany({
         where: { user_id: userId, doc_id: docId },
       });
+      console.log(appointments);
       res.json({ appointments: appointments });
     } catch (e) {
-      // console.log(e);
+      return res.status(400).json({ message: "Error in appointments" });
     }
   }
 );

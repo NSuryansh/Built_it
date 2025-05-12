@@ -3,10 +3,10 @@ import {
   User as UserIcon,
   Phone,
   Mail,
-  MapPin,
   Calendar,
   UserRound,
   Stethoscope,
+  Book,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PacmanLoader from "react-spinners/PacmanLoader";
@@ -108,7 +108,7 @@ const UserProfile = () => {
                 </div>
               </div>
               <div className="flex items-center">
-                <MapPin className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                <Book className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                 <div>
                   <p className="text-xs text-gray-500 mb-0.5">
                     Academic Program
@@ -148,15 +148,6 @@ const UserProfile = () => {
                 Patient has a history of mild hypertension. Regular follow-ups
                 recommended every 3 months. No known allergies to medications.
               </p>
-            </div>
-
-            <div className="flex space-x-2 mt-4">
-              <button className="flex-1 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium text-sm hover:bg-blue-600 hover:text-white transition-colors">
-                Update Info
-              </button>
-              <button className="flex-1 px-4 py-2 bg-violet-100 text-violet-700 rounded-lg font-medium text-sm hover:bg-violet-600 hover:text-white transition-colors">
-                View Medical Records
-              </button>
             </div>
           </div>
         </div>

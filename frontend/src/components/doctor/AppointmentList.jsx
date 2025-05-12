@@ -17,6 +17,7 @@ const AppointmentList = ({ onFollowUp }) => {
   useEffect(() => {
     const getAppointments = async () => {
       try {
+        console.log(token);
         const response = await fetch(
           `http://localhost:3000/getAppointmentForDoctorUser?userId=${userId}&docId=${localStorage.getItem(
             "userid"
@@ -27,9 +28,8 @@ const AppointmentList = ({ onFollowUp }) => {
             },
           }
         );
-        const data = response.json();
-        console.log(data);
-        setappointments(data);
+        const data = await response.json();
+        setappointments(data.appointments);
       } catch (error) {
         console.error(error);
       }
@@ -52,7 +52,7 @@ const AppointmentList = ({ onFollowUp }) => {
         </div>
       ) : (
         <div className="space-y-3">
-          {appointments.forEach((appointment) => (
+          {appointments.map((appointment) => (
             <div
               key={appointment.id}
               className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:shadow-md transition-shadow"
