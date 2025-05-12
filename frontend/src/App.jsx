@@ -111,7 +111,9 @@ export default function App() {
 
       const res = await fetch("http://localhost:3000/save-subscription", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           userid: userid,
           subscription: fcmToken,

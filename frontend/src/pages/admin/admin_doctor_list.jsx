@@ -32,6 +32,7 @@ const DoctorsList = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [fetched, setfetched] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -44,7 +45,9 @@ const DoctorsList = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors");
+        const res = await fetch("http://localhost:3000/getdoctors", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const resp = await res.json();
         setDoc(resp);
         setfetched(true);
@@ -64,6 +67,7 @@ const DoctorsList = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify({ doctorID: doctorId }),
       });
@@ -94,7 +98,9 @@ const DoctorsList = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    const res = await fetch("http://localhost:3000/getdoctors");
+    const res = await fetch("http://localhost:3000/getdoctors", {
+      headers: { Authorization: "Bearer " + token },
+    });
     const resp = await res.json();
     setDoc(resp);
     setTimeout(() => setIsRefreshing(false), 800);

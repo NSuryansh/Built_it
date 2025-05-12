@@ -15,6 +15,7 @@ const ResetPassword = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const jwt_token = localStorage.getItem("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +31,10 @@ const ResetPassword = () => {
 
     const response = await fetch(`http://localhost:3000/resetPassword`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + jwt_token,
+      },
       body: JSON.stringify({
         password: formData.password,
         token: token,

@@ -189,6 +189,7 @@ const AdminUser = () => {
   const navigate = useNavigate();
   const [fetched, setfetched] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -201,7 +202,9 @@ const AdminUser = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getUsers");
+        const res = await fetch("http://localhost:3000/getUsers", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await res.json();
         setUsersData(data);
 
@@ -210,8 +213,12 @@ const AdminUser = () => {
             const userId = user.id;
             try {
               const [countRes, doctorRes] = await Promise.all([
-                fetch(`http://localhost:3000/appointments-count?id=${userId}`),
-                fetch(`http://localhost:3000/user-doctors?userId=${userId}`),
+                fetch(`http://localhost:3000/appointments-count?id=${userId}`, {
+                  headers: { Authorization: "Bearer " + token },
+                }),
+                fetch(`http://localhost:3000/user-doctors?userId=${userId}`, {
+                  headers: { Authorization: "Bearer " + token },
+                }),
               ]);
 
               const countData = await countRes.json();

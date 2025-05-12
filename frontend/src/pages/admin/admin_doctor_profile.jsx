@@ -49,6 +49,7 @@ const AdminDoctorProfile = () => {
     certifications: [],
     avgRating: 0,
   });
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -63,7 +64,8 @@ const AdminDoctorProfile = () => {
       try {
         const doctorId = search.split("=")[1];
         const response = await fetch(
-          `http://localhost:3000/getDoc?docId=${doctorId}`
+          `http://localhost:3000/getDoc?docId=${doctorId}`,
+          { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
         let certifications = [];
@@ -125,7 +127,10 @@ const AdminDoctorProfile = () => {
     try {
       const response = await fetch("http://localhost:3000/referrals", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           roll_no: String(referralData.rollNo),
           doctor_id: search.split("=")[1],
@@ -142,7 +147,10 @@ const AdminDoctorProfile = () => {
       CustomToast("Referral created successfully", "green");
       await fetch("http://localhost:3000/send-notification", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           userType: "doc",
           userid: Number(search.split("=")[1]),

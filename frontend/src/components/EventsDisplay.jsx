@@ -3,10 +3,14 @@ import { Calendar, MapPin, Users, ArrowRight, Clock } from "lucide-react";
 import { format } from "date-fns";
 
 const EventsDisplay = () => {
+  const token = localStorage.getItem("token");
+
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch("http://localhost:3000/events");
+      const res = await fetch("http://localhost:3000/events", {
+        headers: { Authorization: "Bearer " + token },
+      });
       const resp = await res.json();
       setEvents(resp);
     };

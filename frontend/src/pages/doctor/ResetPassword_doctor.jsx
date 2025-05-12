@@ -13,6 +13,7 @@ const DoctorResetPassword = () => {
   const [error, setError] = useState("");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const jwt_token = localStorage.getItem("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +30,10 @@ const DoctorResetPassword = () => {
 
     const response = await fetch(`http://localhost:3000/resetDoctorPassword`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + jwt_token,
+      },
       body: JSON.stringify({
         password: formData.password,
         token: token,

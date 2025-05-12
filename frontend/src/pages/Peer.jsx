@@ -41,6 +41,7 @@ const Peer = () => {
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
+  const token = localStorage.getItem("token");
 
   // Filter doctors based on search query
   const filteredDoctors = docList.filter((doctor) =>
@@ -83,7 +84,10 @@ const Peer = () => {
   useEffect(() => {
     const fetchDocotors = async () => {
       try {
-        const response = await fetch("http://localhost:3000/getdoctors");
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:3000/getdoctors", {
+          headers: { Authorization: "Bearer " + token },
+        });
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
         setDocList(data);
@@ -97,7 +101,8 @@ const Peer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const contacts = await response.json();
 
@@ -255,7 +260,8 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
       const decrypted_api_messages = await Promise.all(

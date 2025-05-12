@@ -10,11 +10,15 @@ const NotificationPanel = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate(); // Initialize navigate function
   const userId = localStorage.getItem("userid");
+  const token = localStorage.getItem("token");
 
   const getRequests = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/getRequests?userId=${userId}`
+        `http://localhost:3000/getRequests?userId=${userId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
       );
       if (!response.ok) throw new Error("Failed to fetch appointment requests");
       const data = await response.json();
@@ -31,6 +35,7 @@ const NotificationPanel = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify({
           userId: userId,
@@ -47,6 +52,7 @@ const NotificationPanel = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
           },
           body: JSON.stringify({
             userType: "doc",

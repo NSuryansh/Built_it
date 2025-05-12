@@ -10,6 +10,7 @@ import { checkAuth } from "../utils/profile";
 const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const token = localStorage.getItem("token");
 
   const [formData, setFormData] = useState({
     username,
@@ -56,6 +57,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
         method: "PUT", // Use PUT to modify user details
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify(dataToSend),
       });

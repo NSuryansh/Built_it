@@ -24,6 +24,7 @@ const DoctorLeave = () => {
   const [endSlots, setEndSlots] = useState([]);
   const [startSelectedSlot, setstartSelectedSlot] = useState([]);
   const [endSelectedSlot, setEndSelectedSlot] = useState([]);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -36,7 +37,8 @@ const DoctorLeave = () => {
   const fetchAvailableSlots = async (date, start) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${docId}`
+        `http://localhost:3000/available-slots?date=${date}&docId=${docId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
       console.log(data);
@@ -83,6 +85,7 @@ const DoctorLeave = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
           },
           body: JSON.stringify({
             doc_id: docId,

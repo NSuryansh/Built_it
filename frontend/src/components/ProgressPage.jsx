@@ -8,14 +8,14 @@ const ProgressPage = ({ isLandingPage }) => {
   useEffect(() => {
     const fetchScores = async () => {
       try {
-        const response = await fetch("https://built-it-python-895c.onrender.com/analyze", {
+        const response = await fetch("http://127.0.0.1:5000/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error!!!!! status: ${response.status}`);
         }
 
         const data = await response.json();

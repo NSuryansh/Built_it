@@ -39,6 +39,7 @@ const AdminAppointments = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [fetched, setfetched] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -53,7 +54,9 @@ const AdminAppointments = () => {
 
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors");
+        const res = await fetch("http://localhost:3000/getdoctors", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await res.json();
         const formattedData = data.map((doc) => ({
           id: doc.id,
@@ -69,7 +72,9 @@ const AdminAppointments = () => {
 
     const fetchAppointments = async () => {
       try {
-        const res = await fetch("http://localhost:3000/all-appointments");
+        const res = await fetch("http://localhost:3000/all-appointments", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await res.json();
         const formattedCurData = data.appts.map((appt) => ({
           id: appt.id,

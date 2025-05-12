@@ -33,6 +33,7 @@ const AdminDashboard = () => {
   const [isPie, setIsPie] = useState(true);
   const [selectedView, setSelectedView] = useState("academic");
   const [isLoading, setIsLoading] = useState(false);
+  const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
 
@@ -48,7 +49,9 @@ const AdminDashboard = () => {
     const fetchAppointments = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/pastApp");
+        const response = await fetch("http://localhost:3000/pastApp", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await response.json();
         if (response.ok) {
           const result = {};
@@ -140,7 +143,9 @@ const AdminDashboard = () => {
   const handleRefresh = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/pastApp");
+      const response = await fetch("http://localhost:3000/pastApp", {
+        headers: { Authorization: "Bearer " + token },
+      });
       const data = await response.json();
       if (response.ok) {
         const result = {};

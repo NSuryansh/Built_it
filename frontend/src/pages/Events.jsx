@@ -22,6 +22,7 @@ const Events = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -69,13 +70,17 @@ const Events = () => {
   }
 
   async function getCurrEvents() {
-    const res = await fetch("http://localhost:3000/events");
+    const res = await fetch("http://localhost:3000/events", {
+      headers: { Authorization: "Bearer " + token },
+    });
     const resp = await res.json();
     setCurrentEvents(resp);
   }
 
   async function getPastEvents() {
-    const res = await fetch("http://localhost:3000/getPastEvents");
+    const res = await fetch("http://localhost:3000/getPastEvents", {
+      headers: { Authorization: "Bearer " + token },
+    });
     const resp = await res.json();
     setPastEvents(resp);
   }

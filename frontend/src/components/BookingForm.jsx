@@ -30,7 +30,8 @@ const BookingFormStep = ({
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);

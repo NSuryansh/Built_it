@@ -23,7 +23,7 @@ const Book = () => {
     note: "",
     date: "",
   });
-
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
@@ -40,7 +40,9 @@ const Book = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors");
+        const res = await fetch("http://localhost:3000/getdoctors", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await res.json();
         setDoctors(data);
       } catch (err) {
@@ -105,7 +107,10 @@ const Book = () => {
     try {
       const res = await fetch("http://localhost:3000/requests", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           userId: user_id,
           doctorId: selectedDoctor.id,

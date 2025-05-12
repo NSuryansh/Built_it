@@ -10,13 +10,15 @@ const DoctorNotificationPanel = () => {
   const [chats, setChats] = useState();
   const [referrals, setreferrals] = useState([]);
   const docId = localStorage.getItem("userid");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const getchats = async () => {
       if (docId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/chatContacts?userId=${docId}`
+            `http://localhost:3000/chatContacts?userId=${docId}`,
+            { headers: { Authorization: "Bearer " + token } }
           );
           const contacts = await response.json();
           setChats(contacts);
@@ -34,7 +36,9 @@ const DoctorNotificationPanel = () => {
     const getUsers = async () => {
       if (chats) {
         try {
-          const response = await fetch("http://localhost:3000/getFeelings");
+          const response = await fetch("http://localhost:3000/getFeelings", {
+            headers: { Authorization: "Bearer " + token },
+          });
           if (!response.ok) throw new Error("Failed to fetch feelings");
           const data = await response.json();
           // console.log(data, "hello")
@@ -76,7 +80,10 @@ const DoctorNotificationPanel = () => {
     const getReferrals = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/get-referrals?doctor_id=${docId}`
+          `http://localhost:3000/get-referrals?doctor_id=${docId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
         );
         if (!response.ok) throw new Error("Failed to fetch referrals");
         const data = await response.json();

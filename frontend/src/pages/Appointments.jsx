@@ -27,6 +27,7 @@ const UserAppointments = () => {
   const [ratings, setRatings] = useState({});
   const [submittedRatings, setSubmittedRatings] = useState({});
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -39,7 +40,8 @@ const UserAppointments = () => {
   async function getPrevApp() {
     try {
       const res = await fetch(
-        `http://localhost:3000/pastuserappt?userId=${user_id}`
+        `http://localhost:3000/pastuserappt?userId=${user_id}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const resp = await res.json();
       setpreviousAppointments(resp);
@@ -52,7 +54,10 @@ const UserAppointments = () => {
   async function getCurrApp() {
     try {
       const res = await fetch(
-        `http://localhost:3000/currentuserappt?userId=${user_id}`
+        `http://localhost:3000/currentuserappt?userId=${user_id}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
       );
       const resp = await res.json();
       setupcomingAppointments(resp);
@@ -90,7 +95,10 @@ const UserAppointments = () => {
     try {
       const res = await fetch("http://localhost:3000/setRating", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           id: appointmentId,
           stars: ratingValue,

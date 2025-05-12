@@ -47,6 +47,7 @@ const DoctorProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [file, setfile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -61,10 +62,12 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `http://localhost:3000/getDoc?docId=${doctorId}`
+          `http://localhost:3000/getDoc?docId=${doctorId}`,
+          { headers: { Authorization: "Bearer " + token } }
         );
         const response2 = await fetch(
-          `http://localhost:3000/general-slots?docId=${doctorId}`
+          `http://localhost:3000/general-slots?docId=${doctorId}`,
+          { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
         const data2 = await response2.json();
@@ -201,6 +204,7 @@ const DoctorProfile = () => {
 
       const response = await fetch(`http://localhost:3000/modifyDoc`, {
         method: "PUT",
+        headers: { Authorization: "Bearer " + token },
         body: formData,
       });
 
@@ -220,6 +224,7 @@ const DoctorProfile = () => {
         `http://localhost:3000/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
         {
           method: "PUT",
+          headers: { Authorization: "Bearer " + token },
         }
       );
 
