@@ -47,7 +47,7 @@ const Peer = () => {
   const isChatDisabled = () => {
     const now = new Date();
     const hours = now.getHours();
-    return hours >= 19 && hours < 20; // Restrict chat from 8 PM (20:00) to 10 PM (22:00)
+    return hours >= 20 && hours < 23; // Restrict chat from 8 PM (20:00) to 10 PM (22:00)
   };
 
   // Filter doctors based on search query
@@ -97,6 +97,7 @@ const Peer = () => {
         });
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
+        console.log("Doctors data:", data); // Debug: Log doctor data to check phone field
         setDocList(data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -459,8 +460,12 @@ const Peer = () => {
                       Chat is disabled from 8 PM to 10 PM.
                     </p>
                     <p>
-                      For emergencies, please contact: <strong>+1-800-555-1234</strong>
+                      For emergencies, please contact:{" "}
+                      <strong>
+                        {docList[selectedChat]?.mobile || "No emergency contact available"}
+                      </strong>
                     </p>
+                    {/* Note: If the phone number is not displaying, check the console for the 'Doctors data' log. Ensure the backend returns a 'phone' field for each doctor. If the field is named differently (e.g., 'phone_number'), replace 'phone' with the correct field name in docList[selectedChat]?.phone */}
                   </div>
                 ) : (
                   <ChatInput
@@ -574,8 +579,12 @@ const Peer = () => {
                     Chat is disabled from 8 PM to 10 PM.
                   </p>
                   <p>
-                    For emergencies, please contact: <strong>+1-800-555-1234</strong>
+                    For emergencies, please contact:{" "}
+                    <strong>
+                      {docList[selectedChat]?.mobile || "No emergency contact available"}
+                    </strong>
                   </p>
+                  {/* Note: If the phone number is not displaying, check the console for the 'Doctors data' log. Ensure the backend returns a 'phone' field for each doctor. If the field is named differently (e.g., 'phone_number'), replace 'phone' with the correct field name in docList[selectedChat]?.phone */}
                 </div>
               ) : (
                 <ChatInput
