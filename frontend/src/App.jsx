@@ -37,6 +37,7 @@ import ErrorBoundaryFallback from "./components/ErrorBoundaryFallback";
 import { messaging, getToken } from "./firebase";
 import { getMessaging, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
+import UserDetail from "./pages/doctor/Doctor_user_detail";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -185,6 +186,8 @@ export default function App() {
         <Route path="/doctor/peer" element={<DoctorPeer />} />
         <Route path="/doctor/leave" element={<DoctorLeave />} />
         <Route path="/doctor/book" element={<DoctorBook />} />
+        <Route path="/doctor/history" element={<History />} />
+        <Route path="/doctor/user" element={<UserDetail />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/reset_password" element={<AdminResetPassword />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -195,7 +198,6 @@ export default function App() {
         <Route path="/admin/add_doctor" element={<AddDoctor />} />
         <Route path="/admin/User" element={<User />} />
         <Route path="/admin/appointments" element={<AdminAppointments />} />
-        <Route path="/doctor/history" element={<History />} />
         <Route
           path="/easter_egg"
           element={<ErrorBoundaryFallback userType={userType} />}

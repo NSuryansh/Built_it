@@ -15,7 +15,7 @@ import webpush from "web-push";
 import multer from "multer";
 import { send } from "@emailjs/browser";
 import admin from "firebase-admin";
-import {authorizeRoles} from "./authMiddleware.js"
+import { authorizeRoles } from "./authMiddleware.js";
 // import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
@@ -278,7 +278,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.get("/getUsers", authorizeRoles(["doc", "admin"]), async (req, res) => { 
+app.get("/getUsers", authorizeRoles(["doc", "admin"]), async (req, res) => {
   try {
     const users = await prisma.user.findMany();
     res.json(users);
@@ -297,8 +297,8 @@ app.put("/modifyUser", authorizeRoles(["user"]), async (req, res) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
-    if(id!==req.user.userId){
-      res.json({error: "Access denied"})
+    if (id !== req.user.userId) {
+      res.json({ error: "Access denied" });
     }
 
     if (username) {
@@ -376,7 +376,12 @@ app.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Incorrect password" });
   }
   const token = jwt.sign(
-    { userId: user.id, username: user.username, email: user.email, role: "user" },
+    {
+      userId: user.id,
+      username: user.username,
+      email: user.email,
+      role: "user",
+    },
     SECRET_KEY,
     {
       expiresIn: "1h",
@@ -386,7 +391,7 @@ app.post("/login", async (req, res) => {
   res.json({ message: "Login successful", token });
 });
 
-app.get("/profile", authorizeRoles("user") , async (req, res) => {
+app.get("/profile", authorizeRoles("user"), async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   // console.log(token, "vgsnbrjegaf")
   if (!token) {
@@ -400,8 +405,8 @@ app.get("/profile", authorizeRoles("user") , async (req, res) => {
       where: { username: decoded.username },
     });
     // console.log(req, "hfebg")
-    if(user.id!==req.user.userId){
-      res.json({error: "Access Denied"})
+    if (user.id !== req.user.userId) {
+      res.json({ error: "Access Denied" });
     }
     // console.log(user);
     res.json(JSON.parse(JSON.stringify({ user: user, message: "User found" })));
@@ -409,6 +414,44 @@ app.get("/profile", authorizeRoles("user") , async (req, res) => {
     // console.log(e);
   }
 });
+
+app.get("/getUserById", authorizeRoles("doc"), async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized", token });
+  }
+  try {
+    const userId = Number(req.query["userId"]);
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    res.json({ user: user, message: "User found" });
+  } catch (e) {
+    return res.status(400).json({ message: "User not found" });
+  }
+});
+
+app.get(
+  "/getAppointmentForDoctorUser",
+  authorizeRoles("doc"),
+  async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized", token });
+    }
+    try {
+      console.log("Hello");
+      const userId = Number(req.query["userId"]);
+      const docId = Number(req.query["docId"]);
+      const appointments = await prisma.user.findMany({
+        where: { user_id: userId, doc_id: docId },
+      });
+      res.json({ appointments: appointments });
+    } catch (e) {
+      // console.log(e);
+    }
+  }
+);
 
 // app.post('/admin', async(req,res)=>{
 //   const name = req.body["name"]
@@ -427,12 +470,13 @@ app.get("/profile", authorizeRoles("user") , async (req, res) => {
 //   res.json(admin)
 // })
 
-app.get("/chatContacts", authorizeRoles("doc", "user") ,async (req, res) => {
+app.get("/chatContacts", authorizeRoles(["doc", "user"]), async (req, res) => {
   try {
     const userId = req.query["userId"];
     const userType = req.query["userType"];
-    if(userId!==req.user.userId || userType!==req.user.role){
-      res.json({error: "Access denied"})
+    if (userId !== req.user.userId || userType !== req.user.role) {
+      console.log("HALL");
+      return res.status(403).json({ error: "Access Denied" });
     }
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
@@ -476,10 +520,10 @@ app.get("/chatContacts", authorizeRoles("doc", "user") ,async (req, res) => {
   }
 });
 
-app.get("/countUnseen", authorizeRoles("user", "doc") ,async (req, res) => {
+app.get("/countUnseen", authorizeRoles("user", "doc"), async (req, res) => {
   const { userId, senderType } = req.query;
-  if(userId!==req.user.userId){
-    res.json({error: "Access denied"})
+  if (userId !== req.user.userId) {
+    res.json({ error: "Access denied" });
   }
   if (senderType == "user") {
     const unreadCount = await prisma.message.groupBy({
@@ -512,11 +556,11 @@ app.get("/countUnseen", authorizeRoles("user", "doc") ,async (req, res) => {
   }
 });
 
-app.get("/messages", authorizeRoles("user", "doc") ,async (req, res) => {
+app.get("/messages", authorizeRoles("user", "doc"), async (req, res) => {
   try {
     const { userId, recId, userType, recType } = req.query;
-    if(userId!==req.user.userId){
-      res.json({error: "Access denied"})
+    if (userId !== req.user.userId) {
+      res.json({ error: "Access denied" });
     }
     const messages = await prisma.message.findMany({
       where: {
@@ -544,9 +588,9 @@ app.get("/messages", authorizeRoles("user", "doc") ,async (req, res) => {
 
 app.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
   const id = req.body["appId"];
-  const userId = req.body["userId"]
-  if(userId!==req.user.userId){
-    res.json({error: "Access denied"})
+  const userId = req.body["userId"];
+  if (userId !== req.user.userId) {
+    res.json({ error: "Access denied" });
   }
   // console.log(id);
   try {
@@ -825,7 +869,12 @@ app.post("/docLogin", async (req, res) => {
     return res.status(401).json({ message: "Incorrect password" });
   }
   const token = jwt.sign(
-    { userId: doctor.id, username: doctor.name, email: doctor.email, role: "doc" },
+    {
+      userId: doctor.id,
+      username: doctor.name,
+      email: doctor.email,
+      role: "doc",
+    },
     SECRET_KEY,
     {
       expiresIn: "1h",
@@ -849,7 +898,12 @@ app.post("/adminLogin", async (req, res) => {
     return res.status(401).json({ message: "Incorrect password" });
   }
   const token = jwt.sign(
-    { userId: admin.id, email: admin.email, mobile: admin.mobile, role: "admin" },
+    {
+      userId: admin.id,
+      email: admin.email,
+      mobile: admin.mobile,
+      role: "admin",
+    },
     SECRET_KEY,
     {
       expiresIn: "1h",
