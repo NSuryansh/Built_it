@@ -268,6 +268,7 @@ const DoctorAppointment = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         appId: appointment["id"],
+        userId: localStorage.getItem("userid")
       }),
     });
     const resp = await res.json();
