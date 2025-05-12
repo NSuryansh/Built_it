@@ -7,7 +7,7 @@ const ErrorBoundaryFallback = ({ userType }) => {
 
   useEffect(() => {
     if (userType === "doc") {
-      setColor("green");
+      setColor("blue");
     } else if (userType === "admin") {
       setColor("green");
     }
