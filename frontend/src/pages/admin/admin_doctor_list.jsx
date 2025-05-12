@@ -44,7 +44,7 @@ const DoctorsList = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("https://built-it.onrender.com/getdoctors");
+        const res = await fetch("http://localhost:3000/getdoctors");
         const resp = await res.json();
         setDoc(resp);
         setfetched(true);
@@ -60,7 +60,7 @@ const DoctorsList = () => {
 
   const handleDelete = async (doctorId) => {
     try {
-      const res = await fetch("https://built-it.onrender.com/deletedoc", {
+      const res = await fetch("http://localhost:3000/deletedoc", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -94,7 +94,7 @@ const DoctorsList = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    const res = await fetch("https://built-it.onrender.com/getdoctors");
+    const res = await fetch("http://localhost:3000/getdoctors");
     const resp = await res.json();
     setDoc(resp);
     setTimeout(() => setIsRefreshing(false), 800);
@@ -148,8 +148,9 @@ const DoctorsList = () => {
             <div className="flex gap-4">
               <button
                 onClick={handleRefresh}
-                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${isRefreshing ? "animate-spin" : ""
-                  }`}
+                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${
+                  isRefreshing ? "animate-spin" : ""
+                }`}
                 title="Refresh List"
               >
                 <RefreshCw size={24} />

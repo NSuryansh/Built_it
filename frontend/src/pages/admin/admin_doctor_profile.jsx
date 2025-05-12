@@ -63,7 +63,7 @@ const AdminDoctorProfile = () => {
       try {
         const doctorId = search.split("=")[1];
         const response = await fetch(
-          `https://built-it.onrender.com/getDoc?docId=${doctorId}`
+          `http://localhost:3000/getDoc?docId=${doctorId}`
         );
         const data = await response.json();
         let certifications = [];
@@ -123,7 +123,7 @@ const AdminDoctorProfile = () => {
 
   const referralSub = async () => {
     try {
-      const response = await fetch("https://built-it.onrender.com/referrals", {
+      const response = await fetch("http://localhost:3000/referrals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -140,15 +140,15 @@ const AdminDoctorProfile = () => {
         return false;
       }
       CustomToast("Referral created successfully", "green");
-      await fetch("https://built-it.onrender.com/send-notification",{
-        method:"POST",
+      await fetch("http://localhost:3000/send-notification", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userType: "doc",
           userid: Number(search.split("=")[1]),
-          message: "A new referral has been added"
-        })
-      })
+          message: "A new referral has been added",
+        }),
+      });
       return true;
     } catch (err) {
       console.error("Error adding event:", err);

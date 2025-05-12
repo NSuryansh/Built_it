@@ -75,7 +75,7 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
       if (!contacts || !Array.isArray(contacts)) {
@@ -132,11 +132,11 @@ const DoctorPeer = () => {
     console.log(showMessages, "JSA");
     const filteredMessages = showMessages.filter((msg) => {
       if (msg.senderType === "user") {
-        return msg.recipientIdId = userId;
+        return (msg.recipientIdId = userId);
       } else if (msg.senderType === "doc") {
-        return msg.senderId = userId;
+        return (msg.senderId = userId);
       } else {
-        return msg.recipientIdId = userId;
+        return (msg.recipientIdId = userId);
       }
       return false;
     });
@@ -155,7 +155,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -194,7 +194,7 @@ const DoctorPeer = () => {
         encryptedAESKey
       );
       if (lastMessageRef.current === decrypted) return;
-      console.log(decrypted, "decrypt")
+      console.log(decrypted, "decrypt");
       lastMessageRef.current = decrypted;
 
       setShowMessages((prev) => [
@@ -208,7 +208,6 @@ const DoctorPeer = () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
     };
   }, [aesKey, isAuthenticated]);
-
 
   useEffect(() => {
     if (userId && userList.length > 0 && selectedChat !== null) {
@@ -286,7 +285,7 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `https://built-it.onrender.com/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       // console.log(messages, "HALLLLLLO");
@@ -364,11 +363,17 @@ const DoctorPeer = () => {
               </div>
               <div className="flex-1 overflow-y-auto">
                 <ChatList
-                  names={filteredUsers.map((doctor) => ({ name: doctor.name, senderId: doctor.id }))}
+                  names={filteredUsers.map((doctor) => ({
+                    name: doctor.name,
+                    senderId: doctor.id,
+                  }))}
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
                   setShowChatList={setShowChatList}
-                  unread={unread.map((mes) => ({ count: mes._count._all, senderId: mes.senderId }))}
+                  unread={unread.map((mes) => ({
+                    count: mes._count._all,
+                    senderId: mes.senderId,
+                  }))}
                   isDoc={true}
                 />
               </div>
@@ -443,11 +448,17 @@ const DoctorPeer = () => {
           userList.length > 0 ? (
             <div className="h-full">
               <ChatList
-                names={filteredUsers.map((doctor) => ({ name: doctor.name, senderId: doctor.id }))}
+                names={filteredUsers.map((doctor) => ({
+                  name: doctor.name,
+                  senderId: doctor.id,
+                }))}
                 selectedChat={selectedChat}
                 setSelectedChat={setSelectedChat}
                 setShowChatList={setShowChatList}
-                unread={unread.map((mes) => ({ count: mes._count._all, senderId: mes.senderId }))}
+                unread={unread.map((mes) => ({
+                  count: mes._count._all,
+                  senderId: mes.senderId,
+                }))}
                 isDoc={true}
               />
             </div>

@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { CalendarCheck, CalendarX, Clock, MapPin, Download, Search } from "lucide-react";
+import {
+  CalendarCheck,
+  CalendarX,
+  Clock,
+  MapPin,
+  Download,
+  Search,
+} from "lucide-react";
 import Footer from "../components/Footer";
 import { format } from "date-fns";
 import SessionExpired from "../components/SessionExpired";
@@ -56,26 +63,30 @@ const Events = () => {
   }
 
   if (!isAuthenticated) {
-    return <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />;
+    return (
+      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
+    );
   }
 
   async function getCurrEvents() {
-    const res = await fetch("https://built-it.onrender.com/events");
+    const res = await fetch("http://localhost:3000/events");
     const resp = await res.json();
     setCurrentEvents(resp);
   }
 
   async function getPastEvents() {
-    const res = await fetch("https://built-it.onrender.com/getPastEvents");
+    const res = await fetch("http://localhost:3000/getPastEvents");
     const resp = await res.json();
     setPastEvents(resp);
   }
 
   const filterEvents = (events) => {
     return events.filter((event) => {
-      return event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      return (
+        event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         event.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.venue.toLowerCase().includes(searchTerm.toLowerCase());
+        event.venue.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     });
   };
 
@@ -165,7 +176,9 @@ const Events = () => {
                           <td className="px-6 py-5 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="h-2.5 w-2.5 bg-emerald-400 rounded-full mr-3 transition-transform duration-200" />
-                              <span className="text-sm font-medium text-gray-900">{event.title}</span>
+                              <span className="text-sm font-medium text-gray-900">
+                                {event.title}
+                              </span>
                             </div>
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
@@ -175,7 +188,9 @@ const Events = () => {
                             </div>
                           </td>
                           <td className="px-6 py-5 max-w-sm">
-                            <p className="text-sm text-gray-600 line-clamp-2">{event.description}</p>
+                            <p className="text-sm text-gray-600 line-clamp-2">
+                              {event.description}
+                            </p>
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
                             <div className="flex items-center">
@@ -195,7 +210,8 @@ const Events = () => {
           </motion.section>
 
           <motion.section
-            szó initial={{ opacity: 0, y: 20 }}
+            szó
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
@@ -258,10 +274,12 @@ const Events = () => {
                                 className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md"
                               >
                                 <Download className="h-4 w-4 mr-2" />
-                               Resources
+                                Resources
                               </motion.button>
                             ) : (
-                              <span className="text-gray-400 text-sm italic">Not available</span>
+                              <span className="text-gray-400 text-sm italic">
+                                Not available
+                              </span>
                             )}
                           </td>
                         </motion.tr>
@@ -305,14 +323,18 @@ const Events = () => {
                     >
                       <div className="flex items-center mb-4">
                         <div className="h-2.5 w-2.5 bg-emercld-400 rounded-full mr-3" />
-                        <h3 className="text-lg font-medium text-gray-900">{event.title}</h3>
+                        <h3 className="text-lg font-medium text-gray-900">
+                          {event.title}
+                        </h3>
                       </div>
                       <div className="space-y-3 text-sm text-gray-600">
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 mr-2 text-orange-500" />
                           {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
                         </div>
-                        <p className="text-gray-600 line-clamp-3">{event.description}</p>
+                        <p className="text-gray-600 line-clamp-3">
+                          {event.description}
+                        </p>
                         <div className="flex items-center">
                           <MapPin className="h-4 w-4 mr-2 text-orange-500" />
                           {event.venue}
@@ -328,7 +350,9 @@ const Events = () => {
                     className="bg-white/95 rounded-xl shadow-md p-6 text-center border border-gray-100"
                   >
                     <CalendarX className="h-12 w-12 text-gray-300 mx-auto mb-4 animate-pulse" />
-                    <p className="text-gray-500 text-sm italic">No upcoming events scheduled</p>
+                    <p className="text-gray-500 text-sm italic">
+                      No upcoming events scheduled
+                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -357,7 +381,9 @@ const Events = () => {
                       exit={{ opacity: 0, y: -20 }}
                       className="bg-white/95 rounded-xl shadow-md p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">{event.title}</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        {event.title}
+                      </h3>
                       <div className="space-y-3 text-sm text-gray-600">
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 mr-2 text-gray-400" />
@@ -395,7 +421,9 @@ const Events = () => {
                     className="bg-white/95 rounded-xl shadow-md p-6 text-center border border-gray-100"
                   >
                     <CalendarX className="h-12 w-12 text-gray-300 mx-auto mb-4 animate-pulse" />
-                    <p className="text-gray-500 text-sm italic">No past events to display</p>
+                    <p className="text-gray-500 text-sm italic">
+                      No past events to display
+                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>

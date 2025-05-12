@@ -83,9 +83,7 @@ const Peer = () => {
   useEffect(() => {
     const fetchDocotors = async () => {
       try {
-        const response = await fetch(
-          "https://built-it.onrender.com/getdoctors"
-        );
+        const response = await fetch("http://localhost:3000/getdoctors");
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
         setDocList(data);
@@ -99,7 +97,7 @@ const Peer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}`
       );
       const contacts = await response.json();
 
@@ -155,7 +153,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -194,7 +192,7 @@ const Peer = () => {
       );
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-      console.log(decrypted, "decrypted")
+      console.log(decrypted, "decrypted");
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
@@ -257,7 +255,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
       );
       const messages = await response.json();
       const decrypted_api_messages = await Promise.all(

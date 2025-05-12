@@ -41,44 +41,43 @@ import { initializeApp } from "firebase/app";
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
 
-//   const firebaseConfig = {
-//     apiKey: "AIzaSyAmaUTaZr1rp_2kYzu4jEOo859YEA4OVls",
-//     authDomain: "vitality-71a0e.firebaseapp.com",
-//     projectId: "vitality-71a0e",
-//     messagingSenderId: "908490427241",
-//     appId: "1:908490427241:web:e4b7f255fddae0f4cb4bf8",
-//   };
+  //   const firebaseConfig = {
+  //     apiKey: "AIzaSyAmaUTaZr1rp_2kYzu4jEOo859YEA4OVls",
+  //     authDomain: "vitality-71a0e.firebaseapp.com",
+  //     projectId: "vitality-71a0e",
+  //     messagingSenderId: "908490427241",
+  //     appId: "1:908490427241:web:e4b7f255fddae0f4cb4bf8",
+  //   };
 
+  //   const app = initializeApp(firebaseConfig);
+  // const messaging = getMessaging(app);
 
-//   const app = initializeApp(firebaseConfig);
-// const messaging = getMessaging(app);
+  // onMessage(messaging, (payload) => {
+  //   console.log('Foreground message received:', payload);
+  //   if (Notification.permission === "granted") {
+  //     new Notification(payload.notification.title, {
+  //       body: payload.notification.body,
+  //       icon: '/icon.png',
+  //     });
+  //   }
+  // });
 
-// onMessage(messaging, (payload) => {
-//   console.log('Foreground message received:', payload);
-//   if (Notification.permission === "granted") {
-//     new Notification(payload.notification.title, {
-//       body: payload.notification.body,
-//       icon: '/icon.png',
-//     });
-//   }
-// });
+  onMessage(messaging, async (payload) => {
+    console.log("Foreground message received:", payload);
 
-onMessage(messaging, async (payload) => {
-  console.log('Foreground message received:', payload);
-
-  if (Notification.permission === "granted" && 'serviceWorker' in navigator) {
-    const registration = await navigator.serviceWorker.getRegistration();
-    if (registration) {
-      registration.showNotification(payload.notification.title, {
-        body: payload.notification.body,
-        icon: 'https://res.cloudinary.com/dt7a9meug/image/upload/v1745488000/final-logo_l1fg7i.jpg',
-      });
-      console.log("sent")
-    } else {
-      console.error('No service worker registration found.');
+    if (Notification.permission === "granted" && "serviceWorker" in navigator) {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration) {
+        registration.showNotification(payload.notification.title, {
+          body: payload.notification.body,
+          icon: "https://res.cloudinary.com/dt7a9meug/image/upload/v1745488000/final-logo_l1fg7i.jpg",
+        });
+        console.log("sent");
+      } else {
+        console.error("No service worker registration found.");
+      }
     }
-  }
-});
+  });
 
   const [type, setType] = useState(null);
   const userType = localStorage.getItem("user_type");
@@ -110,7 +109,7 @@ onMessage(messaging, async (payload) => {
     if (fcmToken) {
       console.log("FCM Token:", fcmToken);
 
-      const res = await fetch("https://built-it.onrender.com/save-subscription", {
+      const res = await fetch("http://localhost:3000/save-subscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -195,7 +194,10 @@ onMessage(messaging, async (payload) => {
         <Route path="/admin/User" element={<User />} />
         <Route path="/admin/appointments" element={<AdminAppointments />} />
         <Route path="/doctor/history" element={<History />} />
-        <Route path="/easter_egg" element={<ErrorBoundaryFallback userType={userType} />} />
+        <Route
+          path="/easter_egg"
+          element={<ErrorBoundaryFallback userType={userType} />}
+        />
       </Routes>
     </div>
   );

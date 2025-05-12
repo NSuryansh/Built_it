@@ -45,7 +45,7 @@ const History = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       const response = await fetch(
-        `https://built-it.onrender.com/available-slots?date=${date}&docId=${doctorId}`
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);
@@ -70,7 +70,7 @@ const History = () => {
     try {
       const docId = localStorage.getItem("userid");
       const response = await fetch(
-        `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`
+        `http://localhost:3000/pastdocappt?doctorId=${docId}`
       );
       const data = await response.json();
       console.log(data);
@@ -93,37 +93,31 @@ const History = () => {
       const datetime = new Date(
         `${followupDate}T${followupTime.split("T")[1]}`
       ).toISOString();
-      const response = await fetch(
-        "https://built-it.onrender.com/request-to-user",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            doctorId: localStorage.getItem("userid"),
-            userId: selectedAppointment.user.id,
-            dateTime: datetime,
-            reason: reason,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/request-to-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          doctorId: localStorage.getItem("userid"),
+          userId: selectedAppointment.user.id,
+          dateTime: datetime,
+          reason: reason,
+        }),
+      });
       const data = await response.json();
       CustomToast("Follow-up appointment scheduled", "blue");
 
       if (data["message"] === "Appointment requested successfully") {
-        const notif = await fetch(
-          "https://built-it.onrender.com/send-notification",
-          {
-            method: "POST",
-            headers: { "Content-type": "Application/json" },
-            body: JSON.stringify({
-              userId: selectedAppointment.user.id,
-              message: "Doctor has requested an appointment with you",
-              userType: "user",
-            }),
-          }
-        );
+        const notif = await fetch("http://localhost:3000/send-notification", {
+          method: "POST",
+          headers: { "Content-type": "Application/json" },
+          body: JSON.stringify({
+            userId: selectedAppointment.user.id,
+            message: "Doctor has requested an appointment with you",
+            userType: "user",
+          }),
+        });
         setShowFollowupModal(false);
         setFollowupDate("");
         setFollowupTime("");

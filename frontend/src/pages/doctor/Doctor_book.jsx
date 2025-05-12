@@ -1,28 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { Stethoscope, Calendar, ArrowLeft, Clock, Search, UserCircle } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import {
+  Stethoscope,
+  Calendar,
+  ArrowLeft,
+  Clock,
+  Search,
+  UserCircle,
+} from "lucide-react";
 
 const DoctorBook = ({ onBookAppointment }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [user, setUser] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("https://built-it.onrender.com")
-    }
+      const res = await fetch("http://localhost:3000");
+    };
 
     fetchUsers();
-  }, [])
+  }, []);
 
   const MOCK_USERS = [
-    { id: 1, name: "John Doe", email: "john@example.com", phone: "+1 234-567-8900", lastVisit: "2024-02-15" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", phone: "+1 234-567-8901", lastVisit: "2024-03-01" },
-    { id: 3, name: "Mike Johnson", email: "mike@example.com", phone: "+1 234-567-8902", lastVisit: "2024-03-10" },
-    { id: 4, name: "Sarah Williams", email: "sarah@example.com", phone: "+1 234-567-8903", lastVisit: "2024-03-18" },
+    {
+      id: 1,
+      name: "John Doe",
+      email: "john@example.com",
+      phone: "+1 234-567-8900",
+      lastVisit: "2024-02-15",
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      email: "jane@example.com",
+      phone: "+1 234-567-8901",
+      lastVisit: "2024-03-01",
+    },
+    {
+      id: 3,
+      name: "Mike Johnson",
+      email: "mike@example.com",
+      phone: "+1 234-567-8902",
+      lastVisit: "2024-03-10",
+    },
+    {
+      id: 4,
+      name: "Sarah Williams",
+      email: "sarah@example.com",
+      phone: "+1 234-567-8903",
+      lastVisit: "2024-03-18",
+    },
   ];
-  const filteredUsers = MOCK_USERS.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.phone.includes(searchTerm)
+  const filteredUsers = MOCK_USERS.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.phone.includes(searchTerm)
   );
 
   return (
@@ -48,10 +80,18 @@ const DoctorBook = ({ onBookAppointment }) => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Visit</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Contact
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Last Visit
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -83,19 +123,19 @@ const DoctorBook = ({ onBookAppointment }) => {
       </div>
     </div>
   );
-}
+};
 
 function AppointmentForm({ user, onBack }) {
   const [formData, setFormData] = useState({
-    date: '',
-    time: '',
-    reason: '',
-    duration: '30',
+    date: "",
+    time: "",
+    reason: "",
+    duration: "30",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', { ...formData, user });
+    console.log("Form submitted:", { ...formData, user });
     onBack();
   };
 
@@ -111,7 +151,9 @@ function AppointmentForm({ user, onBack }) {
 
       <div className="flex items-center gap-2 mb-6">
         <Stethoscope className="w-6 h-6 text-blue-600" />
-        <h2 className="text-2xl font-semibold text-gray-800">New Appointment</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          New Appointment
+        </h2>
       </div>
 
       <div className="mb-6 p-4 bg-blue-50 rounded-lg">
@@ -124,21 +166,29 @@ function AppointmentForm({ user, onBack }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Date</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Date
+            </label>
             <input
               type="date"
               value={formData.date}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, date: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Time</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Time
+            </label>
             <input
               type="time"
               value={formData.time}
-              onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, time: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
@@ -146,10 +196,14 @@ function AppointmentForm({ user, onBack }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Duration</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Duration
+          </label>
           <select
             value={formData.duration}
-            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, duration: e.target.value })
+            }
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           >
             <option value="30">30 minutes</option>
@@ -159,10 +213,14 @@ function AppointmentForm({ user, onBack }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Reason for Visit</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Reason for Visit
+          </label>
           <textarea
             value={formData.reason}
-            onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, reason: e.target.value })
+            }
             rows={3}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
@@ -193,7 +251,10 @@ function App() {
       {!selectedUser ? (
         <UserTable onBookAppointment={handleBookAppointment} />
       ) : (
-        <AppointmentForm user={selectedUser} onBack={() => setSelectedUser(null)} />
+        <AppointmentForm
+          user={selectedUser}
+          onBack={() => setSelectedUser(null)}
+        />
       )}
     </div>
   );

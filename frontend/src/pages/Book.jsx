@@ -40,7 +40,7 @@ const Book = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("https://built-it.onrender.com/getdoctors");
+        const res = await fetch("http://localhost:3000/getdoctors");
         const data = await res.json();
         setDoctors(data);
       } catch (err) {
@@ -103,7 +103,7 @@ const Book = () => {
     const user_id = localStorage.getItem("userid");
 
     try {
-      const res = await fetch("https://built-it.onrender.com/requests", {
+      const res = await fetch("http://localhost:3000/requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -160,15 +160,17 @@ const Book = () => {
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-4">
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${step === 1 ? "bg-orange-500 scale-110" : "bg-gray-300"
-                  }`}
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${
+                  step === 1 ? "bg-orange-500 scale-110" : "bg-gray-300"
+                }`}
               >
                 1
               </div>
               <div className="w-16 h-1 bg-gray-300 rounded-full" />
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${step === 2 ? "bg-orange-500 scale-110" : "bg-gray-300"
-                  }`}
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${
+                  step === 2 ? "bg-orange-500 scale-110" : "bg-gray-300"
+                }`}
               >
                 2
               </div>
@@ -217,7 +219,8 @@ const Book = () => {
         color="orange"
         className="bg-orange-600/90 text-white shadow-inner"
       />
-    </div>);
+    </div>
+  );
 };
 
 export default Book;

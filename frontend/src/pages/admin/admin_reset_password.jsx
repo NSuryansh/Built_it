@@ -27,7 +27,7 @@ const AdminResetPassword = () => {
     setError("");
     const token = searchParams.get("token");
 
-    const response = await fetch(`https://built-it.onrender.com/resetAdminPassword`, {
+    const response = await fetch(`http://localhost:3000/resetAdminPassword`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -36,7 +36,7 @@ const AdminResetPassword = () => {
       }),
     });
     const res = await response.json();
-    CustomToast("Password updated successfully!", 'green');
+    CustomToast("Password updated successfully!", "green");
     setTimeout(() => {
       navigate("/admin/login");
     }, 2000);

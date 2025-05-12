@@ -7,86 +7,76 @@ import CustomToast from "../../components/CustomToast";
 
 // Loading Spinner Component
 const LoadingSpinner = ({
-  color = '#047857',
+  color = "#047857",
   size = 30,
-  text = 'Loading...'
+  text = "Loading...",
 }) => {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="animate-spin">
         <Loader color={color} size={size} />
       </div>
-      {text && (
-        <p className="mt-4 text-emerald-800 font-medium">{text}</p>
-      )}
+      {text && <p className="mt-4 text-emerald-800 font-medium">{text}</p>}
     </div>
   );
 };
 
 // Pulsing Dots Component
-const PulsingDots = ({
-  color = '#047857',
-  size = 10,
-  text = 'Loading...'
-}) => {
+const PulsingDots = ({ color = "#047857", size = 10, text = "Loading..." }) => {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="flex space-x-2">
-        <div 
-          className="animate-pulse rounded-full" 
+        <div
+          className="animate-pulse rounded-full"
           style={{
             backgroundColor: color,
             height: size,
             width: size,
-            animationDelay: '0ms'
+            animationDelay: "0ms",
           }}
         />
-        <div 
-          className="animate-pulse rounded-full" 
+        <div
+          className="animate-pulse rounded-full"
           style={{
             backgroundColor: color,
             height: size,
             width: size,
-            animationDelay: '300ms'
+            animationDelay: "300ms",
           }}
         />
-        <div 
-          className="animate-pulse rounded-full" 
+        <div
+          className="animate-pulse rounded-full"
           style={{
             backgroundColor: color,
             height: size,
             width: size,
-            animationDelay: '600ms'
+            animationDelay: "600ms",
           }}
         />
       </div>
-      {text && (
-        <p className="mt-4 text-emerald-800 font-medium">{text}</p>
-      )}
+      {text && <p className="mt-4 text-emerald-800 font-medium">{text}</p>}
     </div>
   );
 };
 
 // Circular Loader Component
 const CircularLoader = ({
-  color = '#047857',
+  color = "#047857",
   size = 40,
-  text = 'Loading...'
+  text = "Loading...",
 }) => {
   return (
     <div className="flex flex-col items-center justify-center">
-      <div 
+      <div
         className="rounded-full border-4 border-t-transparent animate-spin"
         style={{
           borderColor: `${color}40`,
           borderTopColor: color,
           width: size,
-          height: size
+          height: size,
         }}
       />
-      {text && (
-        <p className="mt-4 text-emerald-800 font-medium">{text}</p>
-      )}
+      {text && <p className="mt-4 text-emerald-800 font-medium">{text}</p>}
     </div>
   );
 };
@@ -117,7 +107,11 @@ const AdminLogin = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
-        <PulsingDots color="#047857" size={12} text="Verifying authentication..." />
+        <PulsingDots
+          color="#047857"
+          size={12}
+          text="Verifying authentication..."
+        />
       </div>
     );
   }
@@ -130,7 +124,7 @@ const AdminLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch("https://built-it.onrender.com/adminLogin", {
+    const response = await fetch("http://localhost:3000/adminLogin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -155,7 +149,7 @@ const AdminLogin = () => {
       CustomToast("Please enter an email", "green");
       return;
     }
-    const response = await fetch("https://built-it.onrender.com/forgotAdminPassword", {
+    const response = await fetch("http://localhost:3000/forgotAdminPassword", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

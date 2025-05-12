@@ -59,14 +59,11 @@ const SignUp = () => {
 
   async function sendOTP() {
     try {
-      const response = await fetch(
-        "https://built-it.onrender.com/otpGenerate",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: formData.email }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/otpGenerate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+      });
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
@@ -81,17 +78,14 @@ const SignUp = () => {
 
   async function verifyOTP() {
     try {
-      const response = await fetch(
-        "https://built-it.onrender.com/otpcheck",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            otp: otp,
-            email: formData.email,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/otpcheck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          otp: otp,
+          email: formData.email,
+        }),
+      });
       console.log(response);
       const res = await response.json();
       console.log(res);
@@ -218,7 +212,7 @@ const SignUp = () => {
     setisLoading(true);
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/check-user?username=${formData.username}`
+        `http://localhost:3000/check-user?username=${formData.username}`
       );
       const data = await response.json();
       if (data.message === "Username already exists!") {
@@ -270,25 +264,22 @@ const SignUp = () => {
         rollNo,
         gender,
       } = formData;
-      const response = await fetch(
-        "https://built-it.onrender.com/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username: username,
-            email: email,
-            mobile: mobile,
-            password: password,
-            altNo: altNo,
-            publicKey: publicKeyPEM,
-            department: department,
-            acadProg: acadProg,
-            rollNo: rollNo,
-            gender: gender,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          mobile: mobile,
+          password: password,
+          altNo: altNo,
+          publicKey: publicKeyPEM,
+          department: department,
+          acadProg: acadProg,
+          rollNo: rollNo,
+          gender: gender,
+        }),
+      });
       const data = await response.json();
       console.log("Signup successful:", data);
       CustomToast("Signup successful");

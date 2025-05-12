@@ -9,24 +9,22 @@ import CustomToast from "../../components/CustomToast";
 
 // Circular Loader Component
 const CircularLoader = ({
-  color = '#004ba8',
+  color = "#004ba8",
   size = 40,
-  text = 'Loading...'
+  text = "Loading...",
 }) => {
   return (
     <div className="flex flex-col items-center justify-center">
-      <div 
+      <div
         className="rounded-full border-4 border-t-transparent animate-spin"
         style={{
           borderColor: `${color}40`,
           borderTopColor: color,
           width: size,
-          height: size
+          height: size,
         }}
       />
-      {text && (
-        <p className="mt-4 text-blue-800 font-medium">{text}</p>
-      )}
+      {text && <p className="mt-4 text-blue-800 font-medium">{text}</p>}
     </div>
   );
 };
@@ -71,7 +69,7 @@ const DoctorLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch("https://built-it.onrender.com/docLogin", {
+    const response = await fetch("http://localhost:3000/docLogin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -96,7 +94,7 @@ const DoctorLogin = () => {
       CustomToast("Please enter an email", "blue");
       return;
     }
-    const response = await fetch("https://built-it.onrender.com/forgotDoctorPassword", {
+    const response = await fetch("http://localhost:3000/forgotDoctorPassword", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -196,7 +194,12 @@ const DoctorLogin = () => {
             >
               {isLoading ? (
                 <div className="flex items-center justify-center w-[24px] h-[24px]">
-                  <CircularLoader color="#ffffff" size={24} text={null} className="inline-block" />
+                  <CircularLoader
+                    color="#ffffff"
+                    size={24}
+                    text={null}
+                    className="inline-block"
+                  />
                 </div>
               ) : (
                 <>Login</>
@@ -210,7 +213,7 @@ const DoctorLogin = () => {
           </div>
           <div className="flex w-full mt-2">
             <p className="w-full text-center">
-              Login as a&nbsp; 
+              Login as a&nbsp;
               <button
                 onClick={() => navigate("/login")}
                 className="underline font-bold text-blue-500"

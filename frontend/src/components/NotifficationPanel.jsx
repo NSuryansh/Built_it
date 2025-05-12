@@ -14,7 +14,7 @@ const NotificationPanel = () => {
   const getRequests = async () => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/getRequests?userId=${userId}`
+        `http://localhost:3000/getRequests?userId=${userId}`
       );
       if (!response.ok) throw new Error("Failed to fetch appointment requests");
       const data = await response.json();
@@ -27,7 +27,7 @@ const NotificationPanel = () => {
 
   const confirmAppointment = async (notif) => {
     try {
-      const res = await fetch(`https://built-it.onrender.com/accept-booking-by-user`, {
+      const res = await fetch(`http://localhost:3000/accept-booking-by-user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,17 +43,17 @@ const NotificationPanel = () => {
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
-        await fetch("https://built-it.onrender.com/send-notification", {
+        await fetch("http://localhost:3000/send-notification", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userType: "doc", 
+            userType: "doc",
             userid: userId,
             message: "User accepted the appointment!",
           }),
-        })
+        });
         getRequests();
       } else {
         console.error("Failed to confirm appointment");

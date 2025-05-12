@@ -61,10 +61,10 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `https://built-it.onrender.com/getDoc?docId=${doctorId}`
+          `http://localhost:3000/getDoc?docId=${doctorId}`
         );
         const response2 = await fetch(
-          `https://built-it.onrender.com/general-slots?docId=${doctorId}`
+          `http://localhost:3000/general-slots?docId=${doctorId}`
         );
         const data = await response.json();
         const data2 = await response2.json();
@@ -189,11 +189,17 @@ const DoctorProfile = () => {
       formData.append("address", editedProfile.address);
       formData.append("city", editedProfile.city);
       formData.append("experience", editedProfile.experience);
-      formData.append("educ", filteredEducation.length > 0 ? filteredEducation : ["<Add>"]);
-      formData.append("certifi", filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"]);
+      formData.append(
+        "educ",
+        filteredEducation.length > 0 ? filteredEducation : ["<Add>"]
+      );
+      formData.append(
+        "certifi",
+        filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"]
+      );
       formData.append("image", file);
 
-      const response = await fetch(`https://built-it.onrender.com/modifyDoc`, {
+      const response = await fetch(`http://localhost:3000/modifyDoc`, {
         method: "PUT",
         body: formData,
       });
@@ -211,7 +217,7 @@ const DoctorProfile = () => {
       }
 
       const response2 = await fetch(
-        `https://built-it.onrender.com/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+        `http://localhost:3000/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
         {
           method: "PUT",
         }
@@ -224,8 +230,12 @@ const DoctorProfile = () => {
       setProfile({
         ...editedProfile,
         education: filteredEducation.length > 0 ? filteredEducation : ["<Add>"],
-        certifications: filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"],
-        availability: filteredAvailability.length > 0 ? filteredAvailability : ["<Add>"],
+        certifications:
+          filteredCertifications.length > 0
+            ? filteredCertifications
+            : ["<Add>"],
+        availability:
+          filteredAvailability.length > 0 ? filteredAvailability : ["<Add>"],
       });
 
       setIsLoading(false);
@@ -568,14 +578,14 @@ const DoctorProfile = () => {
                             />
                             {index ===
                               editedProfile.availability.length - 1 && (
-                                <button
-                                  onClick={handleAddSlot}
-                                  className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
-                                >
-                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                  Add Slot
-                                </button>
-                              )}
+                              <button
+                                onClick={handleAddSlot}
+                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
+                              >
+                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                Add Slot
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -683,14 +693,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                              <button
-                                onClick={handleAddCertification}
-                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Certification
-                              </button>
-                            )}
+                            <button
+                              onClick={handleAddCertification}
+                              className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
+                            >
+                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                              Add Certification
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

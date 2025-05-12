@@ -19,7 +19,7 @@ const Calendar = ({ onDateSelect }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [pastEvents, setPastEvents] = useState([]); // List for past event dates
   const [futureEvents, setFutureEvents] = useState([]); // List for future event dates
-  const rollNo = localStorage.getItem("user_rollNo")
+  const rollNo = localStorage.getItem("user_rollNo");
   const navigate = useNavigate();
   // console.log("hi");
   // console.log(rollNo);
@@ -36,7 +36,7 @@ const Calendar = ({ onDateSelect }) => {
   // Fetch past events
   useEffect(() => {
     axios
-      .get("https://built-it.onrender.com/getPastEvents")
+      .get("http://localhost:3000/getPastEvents")
       .then((response) => {
         setPastEvents(
           response.data.map((event) =>
@@ -50,14 +50,13 @@ const Calendar = ({ onDateSelect }) => {
   // Fetch future events
   useEffect(() => {
     axios
-      .get("https://built-it.onrender.com/events")
+      .get("http://localhost:3000/events")
       .then((response) => {
         setFutureEvents(
           response.data.map((event) =>
             format(new Date(event.dateTime), "yyyy-MM-dd")
           )
         );
-
       })
       .catch((error) => console.error("Error fetching future events:", error));
   }, []);
@@ -119,31 +118,37 @@ const Calendar = ({ onDateSelect }) => {
                 className={`
                   relative p-2 rounded-lg aspect-square flex items-center justify-center
                   transition-all duration-200 text-sm font-medium
-                  ${isSameMonth(dayItem, currentMonth)
-                    ? "text-gray-900"
-                    : "text-gray-400"
+                  ${
+                    isSameMonth(dayItem, currentMonth)
+                      ? "text-gray-900"
+                      : "text-gray-400"
                   }
-                  ${isPastEvent && !isToday
-                    ? "bg-red-500 text-white hover:bg-red-600"
-                    : isFutureEvent && !isToday
+                  ${
+                    isPastEvent && !isToday
+                      ? "bg-red-500 text-white hover:bg-red-600"
+                      : isFutureEvent && !isToday
                       ? "bg-blue-500 text-white hover:bg-blue-600"
                       : ""
                   }
-                  ${isToday && isPastEvent
-                    ? "ring-2 ring-black text-white bg-blue-500 hover:bg-blue-600 ring-offset-2 font-bold"
-                    : ""
+                  ${
+                    isToday && isPastEvent
+                      ? "ring-2 ring-black text-white bg-blue-500 hover:bg-blue-600 ring-offset-2 font-bold"
+                      : ""
                   }
-                  ${!isToday && !isPastEvent && !isFutureEvent
-                    ? "hover:bg-gray-100"
-                    : ""
+                  ${
+                    !isToday && !isPastEvent && !isFutureEvent
+                      ? "hover:bg-gray-100"
+                      : ""
                   }
-                  ${isToday && !isPastEvent
-                    ? "ring-2 ring-black-50 ring-offset-2 font-bold"
-                    : ""
+                  ${
+                    isToday && !isPastEvent
+                      ? "ring-2 ring-black-50 ring-offset-2 font-bold"
+                      : ""
                   }
-                  ${isSameDay(dayItem, selectedDate) && !isToday
-                    ? "ring-2 ring-blue-600"
-                    : ""
+                  ${
+                    isSameDay(dayItem, selectedDate) && !isToday
+                      ? "ring-2 ring-blue-600"
+                      : ""
                   }
                 `}
                 onClick={() => {

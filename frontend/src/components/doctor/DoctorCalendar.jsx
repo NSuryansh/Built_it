@@ -30,10 +30,10 @@ const DoctorCalendar = ({ onDateSelect }) => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`
+          `http://localhost:3000/pastdocappt?doctorId=${docId}`
         );
         const response = await fetch(
-          `https://built-it.onrender.com/currentdocappt?doctorId=${docId}`
+          `http://localhost:3000/currentdocappt?doctorId=${docId}`
         );
         const data = await response.json();
         const data2 = await res.json();
@@ -162,26 +162,27 @@ const DoctorCalendar = ({ onDateSelect }) => {
                 className={`
                   relative aspect-square p-1 flex items-center justify-center
                   text-sm font-medium rounded-md transition-all duration-200
-                  ${!isSameMonth(dayItem, currentMonth)
-                    ? "text-gray-400"
-                    : "text-gray-900"
+                  ${
+                    !isSameMonth(dayItem, currentMonth)
+                      ? "text-gray-400"
+                      : "text-gray-900"
                   }
-                  ${isToday
-                    ? "ring-2 ring-black ring-offset-1 font-bold"
-                    : ""
-                  }
+                  ${isToday ? "ring-2 ring-black ring-offset-1 font-bold" : ""}
                   ${isSelected && !isToday ? "ring-2 ring-blue-500" : ""}
-                  ${isPastAppointment
-                    ? "bg-rose-500 text-white hover:bg-rose-600"
-                    : ""
+                  ${
+                    isPastAppointment
+                      ? "bg-rose-500 text-white hover:bg-rose-600"
+                      : ""
                   }
-                  ${isFutureAppointment
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : ""
+                  ${
+                    isFutureAppointment
+                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      : ""
                   }
-                  ${!isPastAppointment && !isFutureAppointment
-                    ? "hover:bg-gray-100"
-                    : ""
+                  ${
+                    !isPastAppointment && !isFutureAppointment
+                      ? "hover:bg-gray-100"
+                      : ""
                   }
                 `}
               >

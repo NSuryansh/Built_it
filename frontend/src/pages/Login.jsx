@@ -8,24 +8,22 @@ import CustomToast from "../components/CustomToast";
 
 // Circular Loader Component
 const CircularLoader = ({
-  color = '#ff4800',
+  color = "#ff4800",
   size = 40,
-  text = 'Loading...'
+  text = "Loading...",
 }) => {
   return (
     <div className="flex flex-col items-center justify-center">
-      <div 
+      <div
         className="rounded-full border-4 border-t-transparent animate-spin"
         style={{
           borderColor: `${color}40`,
           borderTopColor: color,
           width: size,
-          height: size
+          height: size,
         }}
       />
-      {text && (
-        <p className="mt-4 text-orange-800 font-medium">{text}</p>
-      )}
+      {text && <p className="mt-4 text-orange-800 font-medium">{text}</p>}
     </div>
   );
 };
@@ -72,16 +70,14 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch("https://built-it.onrender.com/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    });
     const res = await response.json();
 
     if (res.success) {
@@ -104,16 +100,13 @@ const Login = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch(
-      "https://built-it.onrender.com/forgotPassword",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/forgotPassword", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
@@ -195,7 +188,12 @@ const Login = () => {
         >
           {isLoading ? (
             <div className="flex items-center justify-center w-[24px] h-[24px]">
-              <CircularLoader color="#ffffff" size={24} text={null} className="inline-block" />
+              <CircularLoader
+                color="#ffffff"
+                size={24}
+                text={null}
+                className="inline-block"
+              />
             </div>
           ) : (
             <>Login</>
@@ -218,7 +216,7 @@ const Login = () => {
         </div>
         <div className="flex w-full mt-2">
           <p className="w-full text-center">
-            Login as a&nbsp; 
+            Login as a&nbsp;
             <button
               onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-primary-orange)]"

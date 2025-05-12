@@ -30,7 +30,7 @@ const BookingFormStep = ({
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `https://built-it.onrender.com/available-slots?date=${date}&docId=${doctorId}`
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);
@@ -52,7 +52,7 @@ const BookingFormStep = ({
   //to get notifs for incoming requests
   const sendNotif = async () => {
     try {
-      const res = await fetch("https://built-it.onrender.com/send-notification", {
+      const res = await fetch("http://localhost:3000/send-notification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -114,8 +114,9 @@ const BookingFormStep = ({
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="Enter your full name"
               required
               disabled={isAuthenticated}
@@ -133,8 +134,9 @@ const BookingFormStep = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="Enter your email"
               required
               disabled={isAuthenticated}
@@ -152,8 +154,9 @@ const BookingFormStep = ({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
-                }`}
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="Enter your phone number"
               required
               disabled={isAuthenticated}
