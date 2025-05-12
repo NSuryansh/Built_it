@@ -1,0 +1,75 @@
+import React from "react";
+import {
+  User as UserIcon,
+  CalendarClock,
+  Stethoscope,
+  ArrowRight,
+} from "lucide-react";
+import { format, parseISO } from "date-fns";
+import { Link } from "react-router-dom";
+
+const UserCard = ({ userWithAppointments }) => {
+  const user = userWithAppointments;
+  console.log(user);
+  return (
+    <div className="bg-gradient-to-br from-white to-blue-50/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group transform hover:-translate-y-1">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_3fr_auto] gap-4 sm:gap-6">
+        <div className="flex justify-center md:justify-start">
+          <div className="relative">
+            <img
+              src={
+                "https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=600"
+              }
+              alt={`${user.username} profile`}
+              className="w-20 h-20 rounded-full object-cover border-2 border-blue-200 group-hover:border-blue-300 transition-all"
+            />
+            <div className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-white"></div>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div className="space-y-1 text-center md:text-left">
+            <h3 className="font-bold text-lg text-blue-900">{user.username}</h3>
+            <p className="text-sm text-gray-600 flex items-center justify-center md:justify-start">
+              <UserIcon className="h-3.5 w-3.5 mr-1 text-blue-400" />
+              {user.email} • {user.gender}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            {/* <div className="flex items-center space-x-2">
+              <div className="p-1.5 bg-violet-100 rounded-lg group-hover:bg-violet-200 transition-colors">
+                <CalendarClock className="h-3.5 w-3.5 text-violet-600" />
+              </div>
+              <p className="text-sm text-violet-800">
+                Last visit:{" "}
+                {format(parseISO(latestAppointment.createdAt), "dd MMM yyyy")}
+              </p>
+            </div> */}
+
+            {/* <div className="flex items-start space-x-2">
+              <div className="p-1.5 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors mt-0.5">
+                <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
+              </div>
+              <p className="text-sm text-gray-700 line-clamp-2">
+                {latestAppointment.note}
+              </p>
+            </div> */}
+          </div>
+        </div>
+
+        <div className="flex justify-center md:justify-end items-center mt-2 md:mt-0">
+          <Link
+            to={`/doctor/user?userId=${user.id}`}
+            className="inline-flex items-center justify-center p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all group-hover:shadow-md"
+            aria-label={`View ${user.username}'s details`}
+          >
+            <ArrowRight className="h-5 w-5" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserCard;
