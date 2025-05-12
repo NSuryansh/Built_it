@@ -36,37 +36,41 @@ const Calendar = ({ onDateSelect }) => {
   const linkAcadCalender = sendLink(rollNo);
 
   // Fetch past events
-  useEffect(async () => {
-    try {
-      const response = await fetch("http://localhost:3000/getPastEvents", {
-        headers: { Authorization: "Bearer " + token },
-      });
-      const data = await response.json();
-      setPastEvents(
-        data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd"))
-      );
-    } catch (e) {
-      CustomToast("Error fetching past events");
-      console.error(e);
-    }
+  useEffect(() => {
+    const PastEvents = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/getPastEvents", {
+          headers: { Authorization: "Bearer " + token },
+        });
+        const data = await response.json();
+        setPastEvents(
+          data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd"))
+        );
+      } catch (e) {
+        CustomToast("Error fetching past events");
+        console.error(e);
+      }
+    };
+    PastEvents();
   }, []);
 
   // Fetch future events
-  useEffect(async () => {
-    try {
-      const response = await fetch("http://localhost:3000/events", {
-        headers: { Authorization: "Bearer " + token },
-      });
-      const data = await response.json();
-      setFutureEvents(
-        response.data.map((event) =>
-          format(new Date(event.dateTime), "yyyy-MM-dd")
-        )
-      );
-    } catch (e) {
-      CustomToast("Error fetching future events");
-      console.error(e);
-    }
+  useEffect( () => {
+    const FutureEvents = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/events", {
+          headers: { Authorization: "Bearer " + token },
+        });
+        const data = await response.json();
+        setFutureEvents(
+          data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd"))
+        );
+      } catch (e) {
+        CustomToast("Error fetching future events");
+        console.error(e);
+      }
+    };
+    FutureEvents();
   }, []);
 
   const startDate = startOfWeek(startOfMonth(currentMonth));
