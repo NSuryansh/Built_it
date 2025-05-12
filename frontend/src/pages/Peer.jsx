@@ -43,6 +43,13 @@ const Peer = () => {
   const newChatUsername = searchParams.get("username");
   const token = localStorage.getItem("token");
 
+  // Function to check if current time is within chat restriction hours (8 PM to 10 PM)
+  const isChatDisabled = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    return hours >= 19 && hours < 20; // Restrict chat from 8 PM (20:00) to 10 PM (22:00)
+  };
+
   // Filter doctors based on search query
   const filteredDoctors = docList.filter((doctor) =>
     doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -446,11 +453,22 @@ const Peer = () => {
                 <div ref={messagesEndRef} />
               </div>
               <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
-                <ChatInput
-                  message={message}
-                  setMessage={setMessage}
-                  handleSubmit={handleSubmit}
-                />
+                {isChatDisabled() ? (
+                  <div className="text-center text-gray-600">
+                    <p className="mb-2">
+                      Chat is disabled from 8 PM to 10 PM.
+                    </p>
+                    <p>
+                      For emergencies, please contact: <strong>+1-800-555-1234</strong>
+                    </p>
+                  </div>
+                ) : (
+                  <ChatInput
+                    message={message}
+                    setMessage={setMessage}
+                    handleSubmit={handleSubmit}
+                  />
+                )}
               </div>
             </>
           ) : (
@@ -550,12 +568,23 @@ const Peer = () => {
               <div ref={messagesEndRef} />
             </div>
             <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
-              <ChatInput
-                message={message}
-                setMessage={setMessage}
-                handleSubmit={handleSubmit}
-                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
-              />
+              {isChatDisabled() ? (
+                <div className="text-center text-gray-600">
+                  <p className="mb-2">
+                    Chat is disabled from 8 PM to 10 PM.
+                  </p>
+                  <p>
+                    For emergencies, please contact: <strong>+1-800-555-1234</strong>
+                  </p>
+                </div>
+              ) : (
+                <ChatInput
+                  message={message}
+                  setMessage={setMessage}
+                  handleSubmit={handleSubmit}
+                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                />
+              )}
             </div>
           </div>
         )}
