@@ -26,6 +26,8 @@ const BookingFormStep = ({
   const [slots, setAvailableSlots] = useState([]);
   const [date, setSelectedDate] = useState("");
   const [time, setSelectedTime] = useState("");
+  const token = localStorage.getItem("token");
+
   const fetchAvailableSlots = async (date) => {
     try {
       const doctorId = selectedDoctor.id;
@@ -55,7 +57,10 @@ const BookingFormStep = ({
     try {
       const res = await fetch("http://localhost:3000/send-notification", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           userid: selectedDoctor.id,
           message: `You have a new incoming appointment request!`,

@@ -24,6 +24,7 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import SessionExpired from "../../components/SessionExpired";
 import CustomToast from "../../components/CustomToast";
 import { ToastContainer } from "react-toastify";
+import FollowUpModal from "../../components/doctor/FollowUpModal";
 
 const History = () => {
   const [app, setApp] = useState([]);
@@ -41,20 +42,8 @@ const History = () => {
   const toggleExpanded = () => setExpanded(!expanded);
   const [isScheduling, setisScheduling] = useState(false);
   const token = localStorage.getItem("token");
-
-  const fetchAvailableSlots = async (date) => {
-    try {
-      const doctorId = localStorage.getItem("userid");
-      const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`,
-        { headers: { Authorization: "Bearer " + token } }
-      );
-      const data = await response.json();
-      setAvailableSlots(data.availableSlots);
-    } catch (error) {
-      console.error("Error fetching available slots:", error);
-    }
-  };
+  const [filteredUsers, setFilteredUsers] = useState(mockUsersWithAppointments);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -148,35 +137,54 @@ const History = () => {
     console.log(app);
   }, [app]);
 
-  const filteredAppointments = useMemo(() => {
-    let filtered = app;
-    console.log(filtered, "hello");
+  // const filteredAppointments = useMemo(() => {
+  //   let filtered = app;
+  //   console.log(filtered, "hello");
 
-    if (searchTerm.trim()) {
-      const searchTermLower = searchTerm.toLowerCase();
-      filtered = filtered.filter((app) => {
-        // Search by patient name
-        const usernameMatch = app.user.username
-          .toLowerCase()
-          .includes(searchTermLower);
+  //   if (searchTerm.trim()) {
+  //     const searchTermLower = searchTerm.toLowerCase();
+  //     filtered = filtered.filter((app) => {
+  //       // Search by patient name
+  //       const usernameMatch = app.user.username
+  //         .toLowerCase()
+  //         .includes(searchTermLower);
 
-        // Search by date
-        const appointmentDate = format(
-          new Date(app.createdAt),
-          "dd MMM yyyy"
-        ).toLowerCase();
-        const dateMatch = appointmentDate.includes(searchTermLower);
+  //       // Search by date
+  //       const appointmentDate = format(
+  //         new Date(app.createdAt),
+  //         "dd MMM yyyy"
+  //       ).toLowerCase();
+  //       const dateMatch = appointmentDate.includes(searchTermLower);
 
-        // Search by notes
-        const notesMatch = app.note.toLowerCase().includes(searchTermLower);
+  //       // Search by notes
+  //       const notesMatch = app.note.toLowerCase().includes(searchTermLower);
 
-        // Return true if any of the fields match
-        return usernameMatch || dateMatch || notesMatch;
-      });
+  //       // Return true if any of the fields match
+  //       return usernameMatch || dateMatch || notesMatch;
+  //     });
+  //   }
+
+  //   return filtered;
+  // }, [searchTerm, app]);
+
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredUsers();
+    } else {
+      setFilteredUsers(searchUsers(searchTerm));
     }
+  }, [searchTerm]);
 
-    return filtered;
-  }, [searchTerm, app]);
+  const searchUsers = (searchTerm) => {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    return mockUsersWithAppointments.filter(item => 
+      item.user.username.toLowerCase().includes(lowerSearchTerm) ||
+      item.appointments.some(app => 
+        app.note.toLowerCase().includes(lowerSearchTerm) ||
+        format(parseISO(app.createdAt), 'dd MMM yyyy').toLowerCase().includes(lowerSearchTerm)
+      )
+    );
+  };
 
   const handleClosePopup = () => {
     navigate("/doctor/login");
@@ -198,235 +206,295 @@ const History = () => {
   }
 
   return (
+    // <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
+    //   <ToastContainer />
+    //   <DoctorNavbar />
+
+    //   <main className="max-w-7xl mx-1 sm:mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+    //     <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 overflow-hidden">
+    //       <div className="relative">
+    //         <div className="absolute inset-0 bg-white pointer-events-none" />
+    //         <div className="relative flex flex-col space-y-4 p-4 sm:p-6 lg:p-8">
+    //           <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+    //             <div className="flex items-center space-x-3">
+    //               <div className="p-2 bg-blue-100 rounded-xl">
+    //                 <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+    //               </div>
+    //               <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-blue-500">
+    //                 Past Appointments
+    //               </h2>
+    //             </div>
+    //             <div className="relative w-full sm:w-64 md:w-96">
+    //               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+    //                 <Search className="h-5 w-5 text-gray-400" />
+    //               </div>
+    //               <input
+    //                 type="text"
+    //                 placeholder="Search by patient name, date, or notes..."
+    //                 value={searchTerm}
+    //                 onChange={(e) => setSearchTerm(e.target.value)}
+    //                 className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-black transition-all duration-200 placeholder-gray-400 text-sm sm:text-base"
+    //               />
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+
+    //       <div className="px-4 sm:px-6 lg:px-8 py-4 space-y-4 max-h-170 overflow-y-scroll">
+    //         {filteredAppointments.map((appointment, index) => {
+    //           let users = [];
+    //           for (let i = 0; i < filteredAppointments.length; i++) {
+    //             users.push(filteredAppointments[i].user);
+    //           }
+    //           return (
+    //             <div
+    //               key={appointment.id}
+    //               className="bg-gradient-to-br from-white to-blue-50/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group"
+    //             >
+    //               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_2fr_2fr_1.5fr] gap-4 sm:gap-6">
+    //                 <div className="space-y-1">
+    //                   <div className="flex items-center space-x-3">
+    //                     <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
+    //                       <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+    //                     </div>
+    //                     <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+    //                       Patient
+    //                     </h3>
+    //                   </div>
+    //                   <p className="text-base sm:text-lg font-medium text-blue-900 ml-11">
+    //                     {filteredAppointments[index].user != null
+    //                       ? filteredAppointments[index].user.username
+    //                       : null}
+    //                   </p>
+    //                 </div>
+
+    //                 <div className="space-y-1">
+    //                   <div className="flex items-center space-x-3">
+    //                     <div className="p-2 bg-violet-100 rounded-lg group-hover:bg-violet-200 transition-colors">
+    //                       <CalendarClock className="h-4 w-4 sm:h-5 sm:w-5 text-violet-600" />
+    //                     </div>
+    //                     <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+    //                       Date
+    //                     </h3>
+    //                   </div>
+    //                   <p className="text-base sm:text-lg font-medium text-violet-900 ml-11">
+    //                     {format(new Date(appointment.createdAt), "dd MMM yyyy")}
+    //                   </p>
+    //                 </div>
+
+    //                 <div className="space-y-1">
+    //                   <div className="flex items-center space-x-3">
+    //                     <div className="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
+    //                       <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
+    //                     </div>
+    //                     <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+    //                       Notes
+    //                     </h3>
+    //                   </div>
+    //                   <p
+    //                     className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${
+    //                       expanded ? "" : "line-clamp-2"
+    //                     }`}
+    //                   >
+    //                     {appointment.note}
+    //                   </p>
+    //                   {appointment.note.length > 80 && (
+    //                     <button
+    //                       onClick={toggleExpanded}
+    //                       className="text-blue-500 text-sm ml-11 cursor-pointer focus:outline-none"
+    //                     >
+    //                       {expanded ? "See less" : "See more"}
+    //                     </button>
+    //                   )}
+    //                 </div>
+
+    //                 <div className="flex items-center justify-start sm:justify-end mt-4 sm:mt-0">
+    //                   <button
+    //                     onClick={() => handleFollowup(appointment)}
+    //                     className="mx-auto sm:mx-0 w-auto px-4 sm:px-4 py-2.5 sm:py-2 bg-blue-500 text-white text-sm sm:text-base rounded-lg transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+    //                   >
+    //                     Follow-up
+    //                   </button>
+    //                 </div>
+    //               </div>
+    //             </div>
+    //           );
+    //         })}
+    //       </div>
+    //     </div>
+    //   </main>
+
+    //   {/* Follow-up Modal */}
+    //   {showFollowupModal && (
+    //     <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    //       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 animate-modal-in border border-blue-100">
+    //         <div className="flex justify-between items-center mb-6 sm:mb-8">
+    //           <div className="flex items-center space-x-3">
+    //             <div className="p-2 bg-gradient-to-br from-blue-100 to-violet-100 rounded-xl">
+    //               <CalendarClock className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+    //             </div>
+    //             <h3 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-blue-500">
+    //               Schedule
+    //             </h3>
+    //           </div>
+    //           <button
+    //             onClick={() => setShowFollowupModal(false)}
+    //             className="text-gray-400 hover:text-gray-600 transition-colors p-1.5 sm:p-2 hover:bg-gray-100 rounded-full"
+    //           >
+    //             <X className="h-5 w-5" />
+    //           </button>
+    //         </div>
+
+    //         <div className="space-y-5 sm:space-y-6">
+    //           <div className="space-y-2">
+    //             <label
+    //               className="block text-sm font-medium text-gray-7
+    //             00"
+    //             >
+    //               Date
+    //             </label>
+    //             <div className="relative">
+    //               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+    //                 <CalendarIcon className="h-5 w-5 text-gray-400" />
+    //               </div>
+    //               <input
+    //                 type="date"
+    //                 min={minDate}
+    //                 value={followupDate}
+    //                 onChange={(e) => {
+    //                   setFollowupDate(e.target.value);
+    //                   fetchAvailableSlots(e.target.value);
+    //                 }}
+    //                 className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
+    //               />
+    //             </div>
+    //           </div>
+
+    //           <div className="space-y-2">
+    //             <label className="block text-sm font-medium text-gray-700">
+    //               Time
+    //             </label>
+    //             <div className="relative">
+    //               <div>
+    //                 <select
+    //                   name="time"
+    //                   value={followupTime}
+    //                   onChange={(e) => {
+    //                     setFollowupTime(e.target.value);
+    //                   }}
+    //                   className="w-full  px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black-500 focus:border-transparent transition-all duration-200 outline-none bg-white"
+    //                 >
+    //                   <option className="text-sm" value="">
+    //                     Select Time
+    //                   </option>
+    //                   {Array.isArray(slots) &&
+    //                     slots.map((slot) => (
+    //                       <option
+    //                         className="text-sm"
+    //                         key={slot.id}
+    //                         value={slot.starting_time}
+    //                       >
+    //                         {slot.starting_time.split("T")[1].slice(0, 5)}
+    //                       </option>
+    //                     ))}
+    //                 </select>
+    //               </div>
+    //             </div>
+    //           </div>
+
+    //           <div className="space-y-2">
+    //             <label className="block text-sm font-medium text-gray-700">
+    //               Reason
+    //             </label>
+    //             <input
+    //               type="text"
+    //               value={reason}
+    //               onChange={(e) => setReason(e.target.value)}
+    //               placeholder="Enter reason for follow-up"
+    //               className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
+    //             />
+    //           </div>
+
+    //           <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 mt-6 sm:mt-8">
+    //             <button
+    //               onClick={() => setShowFollowupModal(false)}
+    //               className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium text-sm sm:text-base"
+    //             >
+    //               Cancel
+    //             </button>
+    //             <button
+    //               onClick={handleSubmitFollowup}
+    //               disabled={!followupDate || !followupTime || isScheduling}
+    //               className="w-full mx-auto sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-100 text-blue-500 font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
+    //             >
+    //               {isScheduling ? <Loader /> : <>Schedule Follow-up</>}
+    //             </button>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   )}
+    //   <div className="mt-10"></div>
+    //   <Footer color="blue" />
+    // </div>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
       <ToastContainer />
       <DoctorNavbar />
 
-      <main className="max-w-7xl mx-1 sm:mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 overflow-hidden">
-          <div className="relative">
-            <div className="absolute inset-0 bg-white pointer-events-none" />
-            <div className="relative flex flex-col space-y-4 p-4 sm:p-6 lg:p-8">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-blue-100 rounded-xl">
-                    <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
-                  </div>
-                  <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-blue-500">
-                    Past Appointments
-                  </h2>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-blue-100 rounded-xl">
+                  <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
-                <div className="relative w-full sm:w-64 md:w-96">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search by patient name, date, or notes..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-black transition-all duration-200 placeholder-gray-400 text-sm sm:text-base"
-                  />
+                <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-violet-500">
+                  Patient Directory
+                </h2>
+              </div>
+              <div className="relative w-full sm:w-64 md:w-96">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
                 </div>
+                <input
+                  type="text"
+                  placeholder="Search patients by name or appointment details..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-black transition-all duration-200 placeholder-gray-400 text-sm sm:text-base"
+                />
               </div>
             </div>
           </div>
 
-          <div className="px-4 sm:px-6 lg:px-8 py-4 space-y-4 max-h-170 overflow-y-scroll">
-            {filteredAppointments.map((appointment, index) => {
-              let users = [];
-              for (let i = 0; i < filteredAppointments.length; i++) {
-                users.push(filteredAppointments[i].user);
-              }
-              return (
-                <div
-                  key={appointment.id}
-                  className="bg-gradient-to-br from-white to-blue-50/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50 group"
-                >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_2fr_2fr_1.5fr] gap-4 sm:gap-6">
-                    <div className="space-y-1">
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
-                          <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                        </div>
-                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
-                          Patient
-                        </h3>
-                      </div>
-                      <p className="text-base sm:text-lg font-medium text-blue-900 ml-11">
-                        {filteredAppointments[index].user != null
-                          ? filteredAppointments[index].user.username
-                          : null}
-                      </p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-violet-100 rounded-lg group-hover:bg-violet-200 transition-colors">
-                          <CalendarClock className="h-4 w-4 sm:h-5 sm:w-5 text-violet-600" />
-                        </div>
-                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
-                          Date
-                        </h3>
-                      </div>
-                      <p className="text-base sm:text-lg font-medium text-violet-900 ml-11">
-                        {format(new Date(appointment.createdAt), "dd MMM yyyy")}
-                      </p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
-                          <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
-                        </div>
-                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
-                          Notes
-                        </h3>
-                      </div>
-                      <p
-                        className={`text-sm sm:text-base text-gray-700 mb-0 ml-11 ${
-                          expanded ? "" : "line-clamp-2"
-                        }`}
-                      >
-                        {appointment.note}
-                      </p>
-                      {appointment.note.length > 80 && (
-                        <button
-                          onClick={toggleExpanded}
-                          className="text-blue-500 text-sm ml-11 cursor-pointer focus:outline-none"
-                        >
-                          {expanded ? "See less" : "See more"}
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-start sm:justify-end mt-4 sm:mt-0">
-                      <button
-                        onClick={() => handleFollowup(appointment)}
-                        className="mx-auto sm:mx-0 w-auto px-4 sm:px-4 py-2.5 sm:py-2 bg-blue-500 text-white text-sm sm:text-base rounded-lg transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                      >
-                        Follow-up
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8 space-y-4">
+            {filteredUsers.length === 0 ? (
+              <div className="text-center py-12 bg-gray-50 rounded-xl">
+                <p className="text-gray-500">
+                  No patients match your search criteria
+                </p>
+              </div>
+            ) : (
+              filteredUsers.map((userWithAppointments) => (
+                <UserCard
+                  key={userWithAppointments.user.id}
+                  userWithAppointments={userWithAppointments}
+                />
+              ))
+            )}
           </div>
         </div>
       </main>
 
-      {/* Follow-up Modal */}
-      {showFollowupModal && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 animate-modal-in border border-blue-100">
-            <div className="flex justify-between items-center mb-6 sm:mb-8">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-br from-blue-100 to-violet-100 rounded-xl">
-                  <CalendarClock className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-blue-500">
-                  Schedule
-                </h3>
-              </div>
-              <button
-                onClick={() => setShowFollowupModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors p-1.5 sm:p-2 hover:bg-gray-100 rounded-full"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
+      <FollowUpModal
+        isOpen={showFollowupModal}
+        onClose={() => setShowFollowupModal(false)}
+        onSubmit={handleSubmitFollowup}
+        selectedUser={selectedUser}
+        isLoading={isScheduling}
+      />
 
-            <div className="space-y-5 sm:space-y-6">
-              <div className="space-y-2">
-                <label
-                  className="block text-sm font-medium text-gray-7
-                00"
-                >
-                  Date
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <CalendarIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="date"
-                    min={minDate}
-                    value={followupDate}
-                    onChange={(e) => {
-                      setFollowupDate(e.target.value);
-                      fetchAvailableSlots(e.target.value);
-                    }}
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Time
-                </label>
-                <div className="relative">
-                  <div>
-                    <select
-                      name="time"
-                      value={followupTime}
-                      onChange={(e) => {
-                        setFollowupTime(e.target.value);
-                      }}
-                      className="w-full  px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black-500 focus:border-transparent transition-all duration-200 outline-none bg-white"
-                    >
-                      <option className="text-sm" value="">
-                        Select Time
-                      </option>
-                      {Array.isArray(slots) &&
-                        slots.map((slot) => (
-                          <option
-                            className="text-sm"
-                            key={slot.id}
-                            value={slot.starting_time}
-                          >
-                            {slot.starting_time.split("T")[1].slice(0, 5)}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Reason
-                </label>
-                <input
-                  type="text"
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  placeholder="Enter reason for follow-up"
-                  className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
-                />
-              </div>
-
-              <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 mt-6 sm:mt-8">
-                <button
-                  onClick={() => setShowFollowupModal(false)}
-                  className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium text-sm sm:text-base"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmitFollowup}
-                  disabled={!followupDate || !followupTime || isScheduling}
-                  className="w-full mx-auto sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-100 text-blue-500 font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
-                >
-                  {isScheduling ? <Loader /> : <>Schedule Follow-up</>}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      <div className="mt-10"></div>
       <Footer color="blue" />
     </div>
   );
