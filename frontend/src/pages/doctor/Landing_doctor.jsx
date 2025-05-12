@@ -29,8 +29,8 @@ const DoctorLanding = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [greeting, setGreeting] = useState("");
   const [newAppoinments, setNewAppoinments] = useState([]);
-
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -54,7 +54,8 @@ const DoctorLanding = () => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/currentdocappt?doctorId=${docId}`
+          `http://localhost:3000/currentdocappt?doctorId=${docId}`,
+          { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
 
@@ -90,7 +91,9 @@ const DoctorLanding = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/events");
+        const response = await fetch("http://localhost:3000/events", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await response.json();
 
         const formattedEvents = data.map((event) => {

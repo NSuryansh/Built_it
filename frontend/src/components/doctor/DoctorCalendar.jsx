@@ -22,6 +22,7 @@ const DoctorCalendar = ({ onDateSelect }) => {
   const [pastAppointments, setPastAppointments] = useState([]); // List for past event dates
   const [futureAppointments, setFutureAppointments] = useState([]); // List for future event dates
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const docId = localStorage.getItem("userid");
@@ -30,10 +31,16 @@ const DoctorCalendar = ({ onDateSelect }) => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/pastdocappt?doctorId=${docId}`
+          `http://localhost:3000/pastdocappt?doctorId=${docId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
         );
         const response = await fetch(
-          `http://localhost:3000/currentdocappt?doctorId=${docId}`
+          `http://localhost:3000/currentdocappt?doctorId=${docId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
         );
         const data = await response.json();
         const data2 = await res.json();

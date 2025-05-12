@@ -90,6 +90,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setisLoading] = useState(false);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -126,7 +127,10 @@ const AdminLogin = () => {
     setisLoading(true);
     const response = await fetch("http://localhost:3000/adminLogin", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
       body: JSON.stringify({
         email: email,
         password: password,
@@ -151,7 +155,10 @@ const AdminLogin = () => {
     }
     const response = await fetch("http://localhost:3000/forgotAdminPassword", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
       body: JSON.stringify({
         email: email,
       }),

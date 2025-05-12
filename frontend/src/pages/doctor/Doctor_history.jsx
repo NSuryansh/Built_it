@@ -40,12 +40,14 @@ const History = () => {
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => setExpanded(!expanded);
   const [isScheduling, setisScheduling] = useState(false);
+  const token = localStorage.getItem("token");
 
   const fetchAvailableSlots = async (date) => {
     try {
       const doctorId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`
+        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);
@@ -70,7 +72,8 @@ const History = () => {
     try {
       const docId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/pastdocappt?doctorId=${docId}`
+        `http://localhost:3000/pastdocappt?doctorId=${docId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
       console.log(data);
@@ -97,6 +100,7 @@ const History = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify({
           doctorId: localStorage.getItem("userid"),
@@ -111,7 +115,10 @@ const History = () => {
       if (data["message"] === "Appointment requested successfully") {
         const notif = await fetch("http://localhost:3000/send-notification", {
           method: "POST",
-          headers: { "Content-type": "Application/json" },
+          headers: {
+            "Content-type": "Application/json",
+            Authorization: "Bearer " + token,
+          },
           body: JSON.stringify({
             userId: selectedAppointment.user.id,
             message: "Doctor has requested an appointment with you",

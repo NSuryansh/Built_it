@@ -11,10 +11,13 @@ import {
 const DoctorBook = ({ onBookAppointment }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [user, setUser] = useState([]);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("http://localhost:3000");
+      const res = await fetch("http://localhost:3000", {
+        headers: { Authorization: "Bearer " + token },
+      });
     };
 
     fetchUsers();

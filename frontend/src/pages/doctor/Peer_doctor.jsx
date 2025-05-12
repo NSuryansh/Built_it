@@ -41,6 +41,7 @@ const DoctorPeer = () => {
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (newChatId) {
@@ -75,7 +76,8 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const contacts = await response.json();
       if (!contacts || !Array.isArray(contacts)) {
@@ -285,7 +287,8 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
       // console.log(messages, "HALLLLLLO");

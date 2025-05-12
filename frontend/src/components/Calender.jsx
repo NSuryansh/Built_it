@@ -13,6 +13,7 @@ import {
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import CustomToast from "./CustomToast";
 
 const Calendar = ({ onDateSelect }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -20,6 +21,7 @@ const Calendar = ({ onDateSelect }) => {
   const [pastEvents, setPastEvents] = useState([]); // List for past event dates
   const [futureEvents, setFutureEvents] = useState([]); // List for future event dates
   const rollNo = localStorage.getItem("user_rollNo");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   // console.log("hi");
   // console.log(rollNo);
@@ -34,31 +36,37 @@ const Calendar = ({ onDateSelect }) => {
   const linkAcadCalender = sendLink(rollNo);
 
   // Fetch past events
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/getPastEvents")
-      .then((response) => {
-        setPastEvents(
-          response.data.map((event) =>
-            format(new Date(event.dateTime), "yyyy-MM-dd")
-          )
-        );
-      })
-      .catch((error) => console.error("Error fetching past events:", error));
+  useEffect(async () => {
+    try {
+      const response = await fetch("http://localhost:3000/getPastEvents", {
+        headers: { Authorization: "Bearer " + token },
+      });
+      const data = await response.json();
+      setPastEvents(
+        data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd"))
+      );
+    } catch (e) {
+      CustomToast("Error fetching past events");
+      console.error(e);
+    }
   }, []);
 
   // Fetch future events
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/events")
-      .then((response) => {
-        setFutureEvents(
-          response.data.map((event) =>
-            format(new Date(event.dateTime), "yyyy-MM-dd")
-          )
-        );
-      })
-      .catch((error) => console.error("Error fetching future events:", error));
+  useEffect(async () => {
+    try {
+      const response = await fetch("http://localhost:3000/events", {
+        headers: { Authorization: "Bearer " + token },
+      });
+      const data = await response.json();
+      setFutureEvents(
+        response.data.map((event) =>
+          format(new Date(event.dateTime), "yyyy-MM-dd")
+        )
+      );
+    } catch (e) {
+      CustomToast("Error fetching future events");
+      console.error(e);
+    }
   }, []);
 
   const startDate = startOfWeek(startOfMonth(currentMonth));
