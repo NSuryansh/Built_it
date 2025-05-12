@@ -377,7 +377,7 @@ const EventsList = () => {
                       type="text"
                       value={newLink}
                       onChange={(e) => setNewLink(e.target.value)}
-                      placeholder="Enter document/drive link"
+                      placeholder="Enter google drive link"
                       className="flex-1 text-sm border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 outline-none"
                     />
                     <div className="flex gap-2">
