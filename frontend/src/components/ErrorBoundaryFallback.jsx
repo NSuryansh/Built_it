@@ -24,8 +24,9 @@ const ErrorBoundaryFallback = ({ userType }) => {
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
         <div className="flex flex-col items-center text-center">
           <AlertOctagon
-            className={`w-16 h-16 ${iconColorClass} ${userType === "admin" ? "text-green-700" : ""
-              } mb-4`}
+            className={`w-16 h-16 ${iconColorClass} ${
+              userType === "admin" ? "text-green-700" : ""
+            } mb-4`}
           />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
             Oops! Something went wrong
@@ -43,16 +44,14 @@ const ErrorBoundaryFallback = ({ userType }) => {
           </p>
           <button
             onClick={() => window.location.reload()}
-            className={`inline-flex items-center px-4 py-2 ${buttonBgClass} bg-emerald-500 text-white rounded-lg transition-colors`}
+            className={`inline-flex items-center px-4 py-2 ${buttonBgClass} text-white rounded-lg transition-colors`}
           >
-            <div>
+            <div className="flex justify-center items-center">
               <RefreshCw className={`w-4 h-4 mr-2 `} />
               <p className={`${userType === "admin" ? "text-green-700" : ""}`}>
-                
-              Try Again
+                Try Again
               </p>
             </div>
-
           </button>
         </div>
       </div>
