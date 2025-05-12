@@ -4,3 +4,4 @@ tmp/agents.db
 tmp/memory.csv
 env
 venv/
+node_modules
