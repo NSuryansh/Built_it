@@ -9,7 +9,7 @@ import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../components/CustomToast";
-import { Mic, MicOff } from "lucide-react";
+import { InfoIcon, Mic, MicOff } from "lucide-react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -89,14 +89,17 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://built-it-python-895c.onrender.com/chatWithBot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: localStorage.getItem("userid"),
-          message,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it-python-895c.onrender.com/chatWithBot",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: localStorage.getItem("userid"),
+            message,
+          }),
+        }
+      );
 
       const data = await response.json();
       const botMessage =
@@ -144,10 +147,13 @@ export default function Mood() {
     formData.append("audio", blob, "audio.wav");
 
     try {
-      const response = await fetch("https://built-it-python-895c.onrender.com/analyze", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://built-it-python-895c.onrender.com/analyze",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Server responded with ${response.status}`);
@@ -229,6 +235,11 @@ export default function Mood() {
             <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
               Calm Bot
             </h2>
+          </div>
+          <div className="w-full px-3 flex justify-center items-center text-gray-400 text-xs font-light mt-3">
+            <InfoIcon size={12} className="mr-1 !w-4 !h-4" />
+            This chatbot is for informational purposes only and does not provide
+            medical advice, diagnosis, or treatment.
           </div>
           <div className="flex-1 overflow-y-auto flex flex-col p-4 bg-[var(--mp-custom-white)]">
             {chats.map((msg, index) => (
