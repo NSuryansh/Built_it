@@ -75,6 +75,7 @@ const DoctorPeer = () => {
 
   async function fetchContacts(userId) {
     try {
+      console.log(localStorage.getItem("token"))
       const response = await fetch(
         `http://localhost:3000/chatContacts?userId=${userId}&&userType=${localStorage.getItem("user_type")}`,
         {
