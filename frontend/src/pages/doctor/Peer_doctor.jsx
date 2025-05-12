@@ -77,8 +77,15 @@ const DoctorPeer = () => {
     try {
       const response = await fetch(
         `http://localhost:3000/chatContacts?userId=${userId}&&userType=${localStorage.getItem("user_type")}`,
-        { headers: { Authorization: "Bearer " + token } }
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
+
       const contacts = await response.json();
       if (!contacts || !Array.isArray(contacts)) {
         console.warn("No contacts received.");
