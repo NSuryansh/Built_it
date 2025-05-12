@@ -41,6 +41,7 @@ const History = () => {
   const token = localStorage.getItem("token");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [usersWithAppointments, setusersWithAppointments] = useState({});
   const [userWiseAppointments, setUserWiseAppointments] = useState({});
 
   useEffect(() => {
@@ -63,33 +64,11 @@ const History = () => {
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
-      data.forEach((app, i) => {
-        setFilteredUsers([...filteredUsers, app.user]);
-      });
+      setFilteredUsers(data);
       setfetched(true);
     } catch (e) {
       console.error(e);
       setfetched(false);
-    }
-  };
-
-  const getUserAppointments = async (userId) => {
-    try {
-      console.log(token);
-      const response = await fetch(
-        `http://localhost:3000/getAppointmentForDoctorUser?userId=${userId}&docId=${localStorage.getItem(
-          "userid"
-        )}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
-      const data = await response.json();
-      return data.appointments;
-    } catch (error) {
-      console.error(error);
     }
   };
 

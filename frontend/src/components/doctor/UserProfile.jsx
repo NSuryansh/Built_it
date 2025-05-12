@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  User as UserIcon,
-  Phone,
-  Mail,
-  Calendar,
-  UserRound,
-  Stethoscope,
-  Book,
-} from "lucide-react";
+import { User as UserIcon, Phone, Mail, Book } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
@@ -67,7 +59,7 @@ const UserProfile = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="mt-8">
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <UserIcon className="h-5 w-5 mr-2 text-blue-500" />
@@ -86,68 +78,42 @@ const UserProfile = () => {
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center">
-                <Mail className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-500 mb-0.5">Email</p>
-                  <p className="font-medium">{user.email}</p>
+              <div className="flex">
+                <div className="flex items-center w-1/2">
+                  <Mail className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Email</p>
+                    <p className="font-medium">{user.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-center w-1/2">
+                  <Phone className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Phone</p>
+                    <p className="font-medium">{user.mobile}</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center">
-                <Phone className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-500 mb-0.5">Phone</p>
-                  <p className="font-medium">{user.mobile}</p>
+              <div className="flex justify-between">
+                <div className="flex items-center w-1/2">
+                  <Phone className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">
+                      Alternate Number
+                    </p>
+                    <p className="font-medium">{user.alt_mobile}</p>
+                  </div>
+                </div>
+                <div className="flex items-center w-1/2">
+                  <Book className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">
+                      Academic Program
+                    </p>
+                    <p className="font-medium">{user.acadProg}</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center">
-                <Phone className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-500 mb-0.5">Alternate Number</p>
-                  <p className="font-medium">{user.alt_mobile}</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Book className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-500 mb-0.5">
-                    Academic Program
-                  </p>
-                  <p className="font-medium">{user.acadProg}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Stethoscope className="h-5 w-5 mr-2 text-blue-500" />
-              Medical Information
-            </h3>
-
-            <div className="bg-blue-50/50 rounded-lg p-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-medium text-gray-500">
-                  Last Check-up
-                </span>
-                <span className="text-xs bg-blue-200 text-blue-800 px-2 py-0.5 rounded-full">
-                  Recent
-                </span>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="w-5 h-5 text-blue-500 mr-2" />
-                <span className="font-medium">May 15, 2024</span>
-              </div>
-            </div>
-
-            <div className="bg-blue-50/50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 mb-2">
-                Health Notes
-              </p>
-              <p className="text-sm text-gray-700">
-                Patient has a history of mild hypertension. Regular follow-ups
-                recommended every 3 months. No known allergies to medications.
-              </p>
             </div>
           </div>
         </div>
