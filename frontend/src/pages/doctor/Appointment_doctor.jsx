@@ -10,7 +10,19 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
 import { TimeChange } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
-import PastAppointmentGraphs from "../../components/doctor/DoctorAppoinmentsGraph";
+import {
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -24,7 +36,6 @@ const DoctorAppointment = () => {
   const [isBar, setIsBar] = useState(false);
   const [isRescheduling, setisRescheduling] = useState(false);
   const [isFetched, setisFetched] = useState(null);
-  const [selectedTimePeriod, setSelectedTimePeriod] = useState("Last 1 Month");
   const [timePeriodData, setTimePeriodData] = useState({
     "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
     "Last 3 Months": { UG: 0, PG: 0, PHD: 0 },
@@ -64,16 +75,110 @@ const DoctorAppointment = () => {
     setSelectedTime(event.target.value);
   };
 
-  const handleTimePeriodChange = (event) => {
-    setSelectedTimePeriod(event.target.value);
+  const handleGraphTypeChange = (e) => {
+    setIsBar(e.target.value === "bar");
   };
 
-  const histogramData = Object.keys(timePeriodData).map((period) => ({
-    name: period,
-    UG: timePeriodData[period].UG || 0,
-    PG: timePeriodData[period].PG || 0,
-    PHD: timePeriodData[period].PHD || 0,
-  }));
+  const getPieData = (period) => [
+    { name: "UG", value: timePeriodData[period].UG || 0 },
+    { name: "PG", value: timePeriodData[period].PG || 0 },
+    { name: "PHD", value: timePeriodData[period].PHD || 0 },
+  ];
+
+  const PastAppointmentGraphs = ({ timePeriodData, getPieData, COLORS, handleGraphTypeChange, isBar }) => {
+    const timePeriods = [
+      "Last 1 Month",
+      "Last 3 Months",
+      "Last 6 Months",
+      "Last 12 Months",
+    ];
+
+    return (
+      <div className="mt-12 bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-blue-100 p-6 sm:p-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-blue-600 mb-2">
+              Past Appointments Analytics
+            </h2>
+            <p className="text-gray-600">
+              View distribution of students by academic program
+            </p>
+          </div>
+          <div className="mt-4 sm:mt-0">
+            <select
+              onChange={handleGraphTypeChange}
+              className="px-4 py-2 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+            >
+              <option value="pie">Pie Chart</option>
+              <option value="bar">Bar Chart</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {timePeriods.map((period) => (
+            <div 
+              key={period} 
+              className="bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-blue-100 shadow-md"
+            >
+              <h3 className="text-xl font-semibold text-blue-600 mb-4 text-center">
+                {period}
+              </h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  {isBar ? (
+                    <BarChart
+                      data={[
+                        {
+                          name: period,
+                          UG: timePeriodData[period].UG || 0,
+                          PG: timePeriodData[period].PG || 0,
+                          PHD: timePeriodData[period].PHD || 0,
+                        },
+                      ]}
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="UG" fill="#0088FE" />
+                      <Bar dataKey="PG" fill="#00C49F" />
+                      <Bar dataKey="PHD" fill="#FFBB28" />
+                    </BarChart>
+                  ) : (
+                    <PieChart>
+                      <Pie
+                        data={getPieData(period)}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={({ name, percent }) =>
+                          `${name}: ${(percent * 100).toFixed(0)}%`
+                        }
+                      >
+                        {getPieData(period).map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  )}
+                </ResponsiveContainer>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   const sendNotif = async (appointment) => {
     try {
@@ -96,16 +201,6 @@ const DoctorAppointment = () => {
     } catch (error) {
       console.error("Error sending notification:", error);
     }
-  };
-
-  const getPieData = (period) => [
-    { name: "UG", value: timePeriodData[period].UG || 0 },
-    { name: "PG", value: timePeriodData[period].PG || 0 },
-    { name: "PHD", value: timePeriodData[period].PHD || 0 },
-  ];
-
-  const handleGraphTypeChange = (e) => {
-    setIsBar(e.target.value === "bar");
   };
 
   useEffect(() => {
@@ -607,15 +702,13 @@ const DoctorAppointment = () => {
             )}
           </div>
         </div>
+        
         <PastAppointmentGraphs
           timePeriodData={timePeriodData}
           getPieData={getPieData}
           COLORS={COLORS}
           handleGraphTypeChange={handleGraphTypeChange}
           isBar={isBar}
-          histogramData={histogramData}
-          selectedTimePeriod={selectedTimePeriod}
-          handleTimePeriodChange={handleTimePeriodChange}
         />
       </div>
       <Footer color={"blue"} />
