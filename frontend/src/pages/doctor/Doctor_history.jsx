@@ -41,8 +41,6 @@ const History = () => {
   const token = localStorage.getItem("token");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [usersWithAppointments, setusersWithAppointments] = useState({});
-  const [userWiseAppointments, setUserWiseAppointments] = useState({});
 
   useEffect(() => {
     const verifyAuth = async () => {

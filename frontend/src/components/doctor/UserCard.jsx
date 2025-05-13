@@ -20,7 +20,7 @@ const UserCard = ({ userWithAppointments }) => {
             </h3>
             <p className="text-sm text-gray-600 flex items-center justify-center md:justify-start">
               <UserIcon className="h-3.5 w-3.5 mr-1 text-blue-400" />
-              {user.user.email} • {user.user.gender}
+              {user.user.email}
             </p>
           </div>
         </div>
