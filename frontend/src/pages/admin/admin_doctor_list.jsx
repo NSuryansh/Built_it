@@ -42,22 +42,22 @@ const DoctorsList = () => {
     verifyAuth();
   }, []);
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/getdoctors", {
-          headers: { Authorization: "Bearer " + token },
-        });
-        const resp = await res.json();
-        setDoctors(resp);
-        setfetched(true);
-      } catch (e) {
-        console.error(e);
-        CustomToast("Error fetching doctors", "green");
-        setfetched(false);
-      }
-    };
+  const fetchDoctors = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/getdoctors", {
+        headers: { Authorization: "Bearer " + token },
+      });
+      const resp = await res.json();
+      setDoctors(resp);
+      setfetched(true);
+    } catch (e) {
+      console.error(e);
+      CustomToast("Error fetching doctors", "green");
+      setfetched(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDoctors();
   }, []);
 
@@ -77,6 +77,7 @@ const DoctorsList = () => {
         }),
       });
       const resp = await res.json();
+      fetchDoctors();
       if (res.ok) {
         if (doctor.isInactive) {
           CustomToast("Doctor activated successfully", "green");

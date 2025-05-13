@@ -102,11 +102,11 @@ io.on("connection", (socket) => {
   });
   socket.on("countUnseen", async ({ userId, senderType }) => {
     var unreadCount;
-    if (senderType == "user") {
+    if (senderType === "user") {
       unreadCount = await prisma.message.groupBy({
-        by: ["senderId"],
+        by: ["doctorId"],
         where: {
-          recipientId: Number(userId),
+          userId: Number(userId),
           senderType: "doc",
           read: false,
         },
@@ -115,11 +115,11 @@ io.on("connection", (socket) => {
         },
       });
       // res.json(unreadCount)
-    } else if (senderType == "doc") {
+    } else if (senderType === "doc") {
       unreadCount = await prisma.message.groupBy({
-        by: ["senderId"],
+        by: ["userId"],
         where: {
-          recipientId: Number(userId),
+          doctorId: Number(userId),
           read: false,
           senderType: "user",
         },
@@ -139,8 +139,8 @@ io.on("connection", (socket) => {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "doc",
-            recipientId: Number(userId),
-            senderId: Number(doctorId),
+            userId: Number(userId),
+            doctorId: Number(doctorId),
           },
           data: {
             read: true,
@@ -151,8 +151,8 @@ io.on("connection", (socket) => {
         const result = await prisma.message.updateMany({
           where: {
             senderType: "user",
-            senderId: Number(userId),
-            recipientId: Number(doctorId),
+            userId: Number(userId),
+            doctorId: Number(doctorId),
           },
           data: {
             read: true,
@@ -176,20 +176,19 @@ io.on("connection", (socket) => {
     }) => {
       try {
         // console.log(doctorId,'doc')
-        var senderId, recipientId;
-        if (senderType === "doc") {
-          senderId = doctorId;
-          recipientId = userId;
-        } else if (senderType === "user") {
-          senderId = userId;
-          recipientId = doctorId;
-        }
+        // if (senderType === "doc") {
+        //   doctorId = doctorId;
+        //   userId = userId;
+        // } else if (senderType === "user") {
+        //   userId = userId;
+        //   recipientId = doctorId;
+        // }
         // console.log(senderId);
         // console.log(recipientId);
         const message = await prisma.message.create({
           data: {
-            senderId: parseInt(senderId),
-            recipientId: parseInt(recipientId),
+            userId: parseInt(userId),
+            doctorId: parseInt(doctorId),
             encryptedText: encryptedText,
             iv: iv,
             encryptedAESKey,
@@ -203,22 +202,20 @@ io.on("connection", (socket) => {
         // console.log(senderId, "message sent to", recipientId);
 
         // console.log(users.get(recipientId));
+        var senderId;
+        if(senderType === "doc"){
+          senderId = doctorId;
+        }else{
+          senderId = userId
+        }
         socket.to(room).emit("receiveMessage", {
           id: message.id,
           senderId,
           encryptedText,
           iv,
           encryptedAESKey,
-          // authTag,
           senderType,
         });
-        //   senderId,
-        // encryptedText,
-        // iv,
-        // encryptedAESKey,
-        // senderType,
-        // console.log("Message sent");
-        // console.log("hallo")
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -229,12 +226,10 @@ io.on("connection", (socket) => {
     const room = `chat_${[Number(userId), Number(doctorId)]
       .sort((a, b) => a - b)
       .join("_")}`;
-    // console.log(room);
     socket.leave(room);
   });
 
   socket.on("disconnect", () => {
-    // console.log(`User disconnected: ${socket.id}`);
     for (const [userId, socketId] of users.entries()) {
       if (socketId === socket.id) {
         users.delete(userId);
