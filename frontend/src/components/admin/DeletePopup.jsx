@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DeletePopup = ({docId, handleDeletePopup, handleDelete, text}) => {
+const DeletePopup = ({doc, handleToggleDocPopup, handleToggleDoc, text}) => {
          
 
     //   const handleDeletePopup()
@@ -16,7 +16,7 @@ const DeletePopup = ({docId, handleDeletePopup, handleDelete, text}) => {
                         <button
                             onClick={() => {
                                 // handleDeletePopup(true);
-                                handleDelete(docId)
+                                handleToggleDoc(doc)
                                 // console.log(docId)
                             }}
                             className="mt-4 w-16 cursor-pointer bg-red-500 text-white px-4 py-2 rounded-lg"
@@ -25,7 +25,7 @@ const DeletePopup = ({docId, handleDeletePopup, handleDelete, text}) => {
                         </button>
                         <button
                             onClick={() => {
-                                handleDeletePopup(docId, false);
+                                handleToggleDocPopup(doc, false);
                             }}
                             className="mt-4 w-16 cursor-pointer bg-red-500 text-white px-4 py-2 rounded-lg"
                         >

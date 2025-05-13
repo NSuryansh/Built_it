@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { User as UserIcon, Phone, Mail, Book } from "lucide-react";
+import {
+  User as UserIcon,
+  Phone,
+  Mail,
+  Book,
+  PhoneCallIcon,
+} from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
@@ -78,15 +84,15 @@ const UserProfile = () => {
             </div>
 
             <div className="space-y-3">
-              <div className="flex">
-                <div className="flex items-center w-1/2">
+              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0">
+                <div className="flex items-center w-full sm:w-1/2">
                   <Mail className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                   <div>
                     <p className="text-xs text-gray-500 mb-0.5">Email</p>
                     <p className="font-medium">{user.email}</p>
                   </div>
                 </div>
-                <div className="flex items-center w-1/2">
+                <div className="flex items-center w-full sm:w-1/2">
                   <Phone className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                   <div>
                     <p className="text-xs text-gray-500 mb-0.5">Phone</p>
@@ -94,9 +100,9 @@ const UserProfile = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between">
-                <div className="flex items-center w-1/2">
-                  <Phone className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0">
+                <div className="flex items-center w-full sm:w-1/2">
+                  <PhoneCallIcon className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                   <div>
                     <p className="text-xs text-gray-500 mb-0.5">
                       Alternate Number
@@ -104,7 +110,7 @@ const UserProfile = () => {
                     <p className="font-medium">{user.alt_mobile}</p>
                   </div>
                 </div>
-                <div className="flex items-center w-1/2">
+                <div className="flex items-center w-full sm:w-1/2">
                   <Book className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                   <div>
                     <p className="text-xs text-gray-500 mb-0.5">
