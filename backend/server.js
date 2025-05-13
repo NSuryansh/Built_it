@@ -160,7 +160,7 @@ io.on("connection", (socket) => {
         });
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   });
   socket.on(
@@ -269,7 +269,7 @@ app.post("/signup", async (req, res) => {
     });
     res.status(201).json({ message: "User added" });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 });
 
@@ -440,7 +440,7 @@ app.get(
       const appointments = await prisma.pastAppointments.findMany({
         where: { user_id: userId, doc_id: docId },
       });
-      console.log(appointments);
+      // console.log(appointments);
       res.json({ appointments: appointments });
     } catch (e) {
       return res.status(400).json({ message: "Error in appointments" });
@@ -465,11 +465,12 @@ app.get(
 //   res.json(admin)
 // })
 
-app.get("/chatContacts", authorizeRoles(["doc", "user"]), async (req, res) => {
+app.get("/chatContacts", authorizeRoles("doc", "user"), async (req, res) => {
   try {
     const userId = req.query["userId"];
     const userType = req.query["userType"];
-    if (userId !== req.user.userId || userType !== req.user.role) {
+    console.log(req.user, "req")
+    if (userId.toString() !== req.user.userId.toString() || userType.toString() !== req.user.role.toString()) {
       return res.status(403).json({ error: "Access denied" });
     }
     if (!userId) {
@@ -480,19 +481,19 @@ app.get("/chatContacts", authorizeRoles(["doc", "user"]), async (req, res) => {
 
     const chatPartners = await prisma.message.findMany({
       where: {
-        OR: [{ senderId: id }, { recipientId: id }],
+        OR: [{ userId: id }, { doctorId: id }],
       },
       select: {
-        senderId: true,
-        recipientId: true,
+        userId: true,
+        doctorId: true,
       },
-      distinct: ["senderId", "recipientId"],
+      distinct: ["userId", "doctorId"],
     });
 
     const uniqueUserIds = new Set();
     chatPartners.forEach((chat) => {
-      if (chat.senderId !== id) uniqueUserIds.add(chat.senderId);
-      if (chat.recipientId !== id) uniqueUserIds.add(chat.recipientId);
+      if (chat.userId !== id) uniqueUserIds.add(chat.userId);
+      if (chat.doctorId !== id) uniqueUserIds.add(chat.doctorId);
     });
 
     const users = await prisma.user.findMany({
@@ -508,8 +509,7 @@ app.get("/chatContacts", authorizeRoles(["doc", "user"]), async (req, res) => {
     res.json(users);
   } catch (error) {
     console.error("Error fetching chat contacts:", error);
-    res
-      .status(500)
+    res.status(500)
       .json({ message: "Internal Server Error", error: error.message });
   }
 });
@@ -553,30 +553,33 @@ app.get("/countUnseen", authorizeRoles("user", "doc"), async (req, res) => {
 app.get("/messages", authorizeRoles("user", "doc"), async (req, res) => {
   try {
     const { userId, recId, userType, recType } = req.query;
-    if (userId !== req.user.userId) {
-      res.json({ error: "Access denied" });
+    // console.log(userId, "hehehe hakte rinkiya ke papa");
+    // console.log(req.user.userId, "huuuu haaaaaaahahhahah");
+    if (userId.toString() !== req.user.userId.toString()) {
+      // console.log("NOT possible")
+      return res.status(403).json({ error: "Access denied" });
     }
     const messages = await prisma.message.findMany({
       where: {
         OR: [
           {
-            senderId: parseInt(userId),
-            recipientId: parseInt(recId),
+            userId: parseInt(userId),
+            doctorId: parseInt(recId),
             senderType: userType,
           },
           {
-            senderId: parseInt(recId),
-            recipientId: parseInt(userId),
+            userId: parseInt(recId),
+            doctorId: parseInt(userId),
             senderType: recType,
           },
         ],
       },
       orderBy: { createdAt: "asc" },
     });
-    // console.log(messages);
+    console.log(messages, "hello");
     res.json(messages);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 });
 
@@ -842,7 +845,6 @@ app.post("/requests", async (req, res) => {
 app.get("/getdoctors", async (req, res) => {
   try {
     const docs = await prisma.doctor.findMany();
-    console.log(docs);
     res.json(docs);
   } catch (e) {
     console.error(e);
@@ -963,7 +965,7 @@ app.get("/docProfile", async (req, res) => {
       JSON.parse(JSON.stringify({ doctor: doctor, message: "Doctor found" }))
     );
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 });
 
@@ -1044,7 +1046,7 @@ app.get("/notifications", async (req, res) => {
     });
     res.json(notifs);
   } catch (e) {
-    console.log(e);
+    console.error(e);
     res.status(500).json({ error: "Error fetching notifications" });
   }
 });
@@ -1110,7 +1112,7 @@ app.post("/deleteApp", async (req, res) => {
 app.post("/toggleDoc", async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
   const isInactive = Boolean(req.body["isInactive"]);
-  console.log(doctorId);
+  // console.log(doctorId);
   try {
     // Find the doctor
     const doctor = await prisma.doctor.findUnique({
@@ -1293,7 +1295,7 @@ app.get("/pastApp", async (req, res) => {
     // console.log(pastApp);
     res.json(pastApp);
   } catch (e) {
-    console.log(e);
+    console.error(e);
     res.json(e);
   }
 });
@@ -1595,8 +1597,8 @@ app.post("/setRating", async (req, res) => {
   const stars = req.body["stars"];
   const id = req.body["id"];
   const docId = req.body["doctorId"];
-  console.log(id);
-  console.log(docId);
+  // console.log(id);
+  // console.log(docId);
   try {
     const response = await prisma.pastAppointments.update({
       where: {
@@ -1649,7 +1651,7 @@ app.post("/save-subscription", async (req, res) => {
     // console.log(userType, " userType");
 
     // const { endpoint, keys } = subscription;
-    console.log("hi");
+    // console.log("hi");
     if (userType == "user") {
       // const existingSub = await prisma.subscription.findMany({
       //   where: { userId: Number(userid)
@@ -1690,10 +1692,10 @@ app.post("/save-subscription", async (req, res) => {
             // p256dhKey: keys.p256dh,
           },
         });
-        console.log(subs);
+        // console.log(subs);
         // }
       } catch (e) {
-        console.log(e);
+        console.error(e);
         res.json(e);
       }
     } else if (userType == "doc") {
@@ -1720,10 +1722,10 @@ app.post("/save-subscription", async (req, res) => {
             // p256dhKey: keys.p256dh,
           },
         });
-        console.log(subs);
+        // console.log(subs);
         res.json({ success: true });
       } catch (e) {
-        console.log(e);
+        console.error(e);
         res.json(e);
       }
     }
@@ -1739,7 +1741,7 @@ app.post("/send-notification", async (req, res) => {
     if (!userid || !message) {
       return res.status(400).json({ error: "Missing userId or message" });
     }
-    console.log("heyyyy");
+    // console.log("heyyyy");
     // Fetch the subscription from the database
     var subscription;
     if (userType == "user") {
@@ -1938,7 +1940,7 @@ app.put("/modifySlots", async (req, res) => {
     }
     res.json({ message: "Doctor slots updated successfully" });
   } catch (e) {
-    console.log(e);
+    console.error(e);
     res.json(e);
   }
 });
@@ -2064,7 +2066,7 @@ app.post("/scores-bot", async (req, res) => {
       }
     );
 
-    console.log(response.data.json);
+    // console.log(response.data.json);
     res.json(response.data);
   } catch (error) {
     console.error("Error calling the Flas API: ", error.message);
@@ -2075,9 +2077,9 @@ app.post("/scores-bot", async (req, res) => {
 app.put("/modifyDoc", upload.single("image"), async (req, res) => {
   try {
     const { id, address, city, experience, educ, certifi } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const file = req.file;
-    console.log(file);
+    // console.log(file);
     // console.log(image)
     var url = null;
     if (file) {
@@ -2088,7 +2090,7 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         });
         stream.end(file.buffer);
       });
-      console.log(url);
+      // console.log(url);
     }
 
     // const doc_id = Number(id);
@@ -2111,19 +2113,19 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         id: doctorId,
       },
     });
-    console.log(existingDoctor);
+    // console.log(existingDoctor);
     if (existingDoctor && existingDoctor.id !== doctorId) {
       return res
         .status(400)
         .json({ error: "The updated field is already in use" });
     }
-    console.log(url);
+    // console.log(url);
     const updatedData = {};
     if (address?.trim()) updatedData.address = address;
     if (city?.trim()) updatedData.city = city;
     if (experience?.trim()) updatedData.experience = experience;
     if (url) updatedData.img = url;
-    console.log(updatedData);
+    // console.log(updatedData);
     if (Object.keys(updatedData).length === 0) {
       return res
         .status(400)
@@ -2136,7 +2138,7 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         data: updatedData,
       });
 
-      console.log(updatedDoctor);
+      // console.log(updatedDoctor);
 
       const certificate = await prisma.docCertification.deleteMany({
         where: {
@@ -2363,7 +2365,7 @@ app.post("/request-to-user", async (req, res) => {
         forDoctor: false,
       },
     });
-    console.log(appointment);
+    // console.log(appointment);
     res.json({
       message: "Appointment requested successfully",
       appointment,
@@ -2409,12 +2411,12 @@ app.post("/accept-booking-by-user", async (req, res) => {
           isDoctor: true,
         },
       });
-      console.log(appointment);
+      // console.log(appointment);
       //Remove from requests table
       const reqDel = await prisma.requests.delete({
         where: { id: parseInt(appId) },
       });
-      console.log(reqDel);
+      // console.log(reqDel);
       return { appointment, reqDel };
     });
     res.json({

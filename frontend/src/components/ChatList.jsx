@@ -9,7 +9,7 @@ export default function ChatList({
   unread,
   isDoc = false,
 }) {
-  console.log(names, "Unread CHht List");
+  // console.log(names, "Unread CHht List");
   return (
     <div className="bg-[var(--mp-custom-white)] border-r border-[var(--mp-custom-gray-200)] overflow-y-auto">
       <div className="space-y-1">
@@ -19,7 +19,7 @@ export default function ChatList({
               (u) => u.senderId === chat.senderId
             );
             const unreadCount = unreadEntry?.count || 0;
-            console.log(chat);
+            // console.log(chat);
             return (
               <button
                 key={chat.senderId}
