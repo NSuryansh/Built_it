@@ -1115,7 +1115,7 @@ app.post("/deleteApp", async (req, res) => {
 app.post("/toggleDoc", async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
   const isInactive = Boolean(req.body["isInactive"]);
-  console.log(doctorId);
+  // console.log(doctorId);
   try {
     // Find the doctor
     const doctor = await prisma.doctor.findUnique({
@@ -1582,8 +1582,8 @@ app.post("/setRating", async (req, res) => {
   const stars = req.body["stars"];
   const id = req.body["id"];
   const docId = req.body["doctorId"];
-  console.log(id);
-  console.log(docId);
+  // console.log(id);
+  // console.log(docId);
   try {
     const response = await prisma.pastAppointments.update({
       where: {
@@ -1636,7 +1636,7 @@ app.post("/save-subscription", async (req, res) => {
     // console.log(userType, " userType");
 
     // const { endpoint, keys } = subscription;
-    console.log("hi");
+    // console.log("hi");
     if (userType == "user") {
       // const existingSub = await prisma.subscription.findMany({
       //   where: { userId: Number(userid)
@@ -1677,7 +1677,7 @@ app.post("/save-subscription", async (req, res) => {
             // p256dhKey: keys.p256dh,
           },
         });
-        console.log(subs);
+        // console.log(subs);
         // }
       } catch (e) {
         console.log(e);
@@ -1707,7 +1707,7 @@ app.post("/save-subscription", async (req, res) => {
             // p256dhKey: keys.p256dh,
           },
         });
-        console.log(subs);
+        // console.log(subs);
         res.json({ success: true });
       } catch (e) {
         console.log(e);
@@ -1726,7 +1726,7 @@ app.post("/send-notification", async (req, res) => {
     if (!userid || !message) {
       return res.status(400).json({ error: "Missing userId or message" });
     }
-    console.log("heyyyy");
+    // console.log("heyyyy");
     // Fetch the subscription from the database
     var subscription;
     if (userType == "user") {
@@ -2051,7 +2051,7 @@ app.post("/scores-bot", async (req, res) => {
       }
     );
 
-    console.log(response.data.json);
+    // console.log(response.data.json);
     res.json(response.data);
   } catch (error) {
     console.error("Error calling the Flas API: ", error.message);
@@ -2062,9 +2062,9 @@ app.post("/scores-bot", async (req, res) => {
 app.put("/modifyDoc", upload.single("image"), async (req, res) => {
   try {
     const { id, address, city, experience, educ, certifi } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const file = req.file;
-    console.log(file);
+    // console.log(file);
     // console.log(image)
     var url = null;
     if (file) {
@@ -2075,7 +2075,7 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         });
         stream.end(file.buffer);
       });
-      console.log(url);
+      // console.log(url);
     }
 
     // const doc_id = Number(id);
@@ -2098,19 +2098,19 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         id: doctorId,
       },
     });
-    console.log(existingDoctor);
+    // console.log(existingDoctor);
     if (existingDoctor && existingDoctor.id !== doctorId) {
       return res
         .status(400)
         .json({ error: "The updated field is already in use" });
     }
-    console.log(url);
+    // console.log(url);
     const updatedData = {};
     if (address?.trim()) updatedData.address = address;
     if (city?.trim()) updatedData.city = city;
     if (experience?.trim()) updatedData.experience = experience;
     if (url) updatedData.img = url;
-    console.log(updatedData);
+    // console.log(updatedData);
     if (Object.keys(updatedData).length === 0) {
       return res
         .status(400)
@@ -2123,7 +2123,7 @@ app.put("/modifyDoc", upload.single("image"), async (req, res) => {
         data: updatedData,
       });
 
-      console.log(updatedDoctor);
+      // console.log(updatedDoctor);
 
       const certificate = await prisma.docCertification.deleteMany({
         where: {
@@ -2350,7 +2350,7 @@ app.post("/request-to-user", async (req, res) => {
         forDoctor: false,
       },
     });
-    console.log(appointment);
+    // console.log(appointment);
     res.json({
       message: "Appointment requested successfully",
       appointment,
@@ -2396,12 +2396,12 @@ app.post("/accept-booking-by-user", async (req, res) => {
           isDoctor: true,
         },
       });
-      console.log(appointment);
+      // console.log(appointment);
       //Remove from requests table
       const reqDel = await prisma.requests.delete({
         where: { id: parseInt(appId) },
       });
-      console.log(reqDel);
+      // console.log(reqDel);
       return { appointment, reqDel };
     });
     res.json({
