@@ -64,6 +64,7 @@ model Doctor {
   city           String?
   experience     String?
   avgRating      Decimal            @default(0)
+  isInactive     Boolean            @default(false)
   certificaition DocCertification[]
   education      DocEducation[]
   emerApp        EmergencyApp[]
@@ -85,17 +86,6 @@ model Admin {
   name     String
 
   @@map("admin")
-}
-
-model PastDoc {
-  id        Int      @id @default(autoincrement())
-  name      String
-  mobile    String   @unique
-  email     String   @unique
-  reg_id    String   @unique
-  removedAt DateTime @default(now())
-
-  @@map("pastDoc")
 }
 
 model Message {
