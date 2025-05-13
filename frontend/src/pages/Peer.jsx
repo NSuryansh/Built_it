@@ -47,7 +47,7 @@ const Peer = () => {
   const isChatDisabled = () => {
     const now = new Date();
     const hours = now.getHours();
-    return hours >= 20 && hours < 24; // Restrict chat from 8 PM (20:00) to 11 PM (23:00)
+    return hours >= 21 && hours < 8; // Restrict chat from 8 PM (20:00) to 11 PM (23:00)
   };
 
   // Filter doctors based on search query
