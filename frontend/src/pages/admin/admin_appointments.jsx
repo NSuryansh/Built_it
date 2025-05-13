@@ -54,7 +54,7 @@ const AdminAppointments = () => {
 
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors", {
+        const res = await fetch("http://localhost:3000/getdoctors?user_type=admin", {
           headers: { Authorization: "Bearer " + token },
         });
         const data = await res.json();

@@ -92,7 +92,7 @@ const Peer = () => {
     const fetchDocotors = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3000/getdoctors", {
+        const response = await fetch("http://localhost:3000/getdoctors?user_type=admin", {
           headers: { Authorization: "Bearer " + token },
         });
         if (!response.ok) throw new Error("Failed to fetch users");
