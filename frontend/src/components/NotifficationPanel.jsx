@@ -12,6 +12,22 @@ const NotificationPanel = () => {
   const userId = localStorage.getItem("userid");
   const token = localStorage.getItem("token");
 
+  const deleteRequest = async (id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/deleteRequest?id=${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      if (!response.ok) throw new Error("Failed to delete requests");
+      const data = await response.json();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const getRequests = async () => {
     try {
       const response = await fetch(
@@ -27,6 +43,8 @@ const NotificationPanel = () => {
       data.forEach((request) => {
         if (new Date(request.dateTime) > now) {
           notifs.push(request);
+        } else {
+          deleteRequest(request.id);
         }
       });
       setNotifications(notifs);

@@ -1078,6 +1078,27 @@ app.delete("/deletenotifs", async (req, res) => {
   }
 });
 
+app.delete("/deleteRequest", async (req, res) => {
+  try {
+    const id = Number(req.query["id"]);
+
+    // Validate input
+    if (!id) {
+      return res.status(400).json({ error: "ID is required" });
+    }
+
+    // Delete the notification from the database
+    const deletedNotif = await prisma.requests.delete({
+      where: { id: id },
+    });
+
+    res.json({ message: "Notification deleted successfully", deletedNotif });
+  } catch (error) {
+    console.error("Error deleting notification: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/deleteApp", async (req, res) => {
   const appId = Number(req.body["appId"]);
   const doc_id = Number(req.body["doctorId"]);
