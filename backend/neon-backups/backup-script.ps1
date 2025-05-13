@@ -1,9 +1,9 @@
 # Set variables
 
-$PGHOST='ep-bold-bar-a8i49grg-pooler.eastus2.azure.neon.tech'
+$PGHOST=$env:DATABASE_HOST
 $PGDATABASE='neondb'
 $PGUSER='neondb_owner'
-$PGPASSWORD='npg_1ojmXkcEFw5I'
+$PGPASSWORD=$env:DATABASE_PASSWORD
 $env:PGPASSWORD = $PGPASSWORD  # Export env var for pg_dump
 
 $TIMESTAMP = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
