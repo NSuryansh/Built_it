@@ -208,9 +208,13 @@ const Peer = () => {
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
       // console.log(decrypted, "decrypted");
+      setShowMessages((prev) => [
+        ...prev,
+        { decryptedText: decrypted, senderId, senderType, recipientId: userId },
+      ]);
       setEditedMessages((prev) => [
         ...prev,
-        { decryptedText: decrypted, senderId, senderType },
+        { decryptedText: decrypted, senderId, senderType, recipientId: userId },
       ]);
     };
     socketRef.current.on("receiveMessage", handleReceiveMessage);
