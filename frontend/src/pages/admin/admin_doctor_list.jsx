@@ -24,10 +24,10 @@ import DeletePopup from "../../components/admin/DeletePopup";
 import SessionExpired from "../../components/SessionExpired";
 
 const DoctorsList = () => {
-  const [doctors, setDoc] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [deletePopupOpen, setDeletePopupOpen] = useState(false);
-  const [docId, setDocId] = useState(null);
+  const [toggleDocPopupOpen, setToggleDocPopupOpen] = useState(false);
+  const [selectedDoc, setSelectedDoc] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [fetched, setfetched] = useState(null);
@@ -49,7 +49,7 @@ const DoctorsList = () => {
           headers: { Authorization: "Bearer " + token },
         });
         const resp = await res.json();
-        setDoc(resp);
+        setDoctors(resp);
         setfetched(true);
       } catch (e) {
         console.error(e);
@@ -61,34 +61,44 @@ const DoctorsList = () => {
     fetchDoctors();
   }, []);
 
-  const handleDelete = async (doctorId) => {
+  const handleToggleDoc = async (doctor) => {
+    console.log(doctor.id);
+    console.log(doctor);
     try {
-      const res = await fetch("http://localhost:3000/deletedoc", {
-        method: "DELETE",
+      const res = await fetch("http://localhost:3000/toggleDoc", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token,
         },
-        body: JSON.stringify({ doctorID: doctorId }),
+        body: JSON.stringify({
+          doctorID: doctor.id,
+          isInactive: doctor.isInactive,
+        }),
       });
       const resp = await res.json();
-      setDoc((prevDoctors) =>
-        prevDoctors.filter((doctor) => doctor.id !== doctorId)
-      );
-      CustomToast("Doctor removed successfully", "green");
-      setDeletePopupOpen(false);
+      if (res.ok) {
+        if (doctor.isInactive) {
+          CustomToast("Doctor activated successfully", "green");
+        } else {
+          CustomToast("Doctor deactivated successfully", "green");
+        }
+      } else {
+        CustomToast("Error updating doctor", "green");
+      }
+      setToggleDocPopupOpen(false);
     } catch (error) {
-      console.error("Error deleting doctor:", error);
-      CustomToast("Error while fetching data", "green");
+      console.error(error);
+      CustomToast("Error updating doctor", "green");
     }
   };
 
-  const handleDeletePopup = (doctorId, isOpen) => {
+  const handleToggleDocPopup = (doctor, isOpen) => {
     if (isOpen == true) {
-      setDeletePopupOpen(true);
-      setDocId(doctorId);
+      setToggleDocPopupOpen(true);
+      setSelectedDoc(doctor);
     } else {
-      setDeletePopupOpen(false);
+      setToggleDocPopupOpen(false);
     }
   };
 
@@ -102,7 +112,7 @@ const DoctorsList = () => {
       headers: { Authorization: "Bearer " + token },
     });
     const resp = await res.json();
-    setDoc(resp);
+    setDoctors(resp);
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
@@ -242,13 +252,25 @@ const DoctorsList = () => {
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-5">
                       <button
-                        onClick={() => handleDeletePopup(doctor.id, true)}
-                        className="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50 group relative"
+                        onClick={() => handleToggleDocPopup(doctor, true)}
+                        className={`p-2 ${
+                          doctor.isInactive
+                            ? "text-green-600 hover:text-green-700"
+                            : "text-red-600 hover:text-red-700"
+                        } transition-colors rounded-full hover:bg-red-50 group relative`}
                         title="Set Doctor Inactive"
                       >
-                        <UserMinus size={18} />
+                        {doctor.isInactive ? (
+                          <UserPlus size={18} />
+                        ) : (
+                          <UserMinus size={18} />
+                        )}
                         <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          Set Inactive
+                          {doctor.isInactive ? (
+                            <div>Set Active</div>
+                          ) : (
+                            <div>Set Inactive</div>
+                          )}
                         </span>
                       </button>
                       <Link
@@ -297,10 +319,18 @@ const DoctorsList = () => {
                 </div>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => handleDeletePopup(doctor.id, true)}
-                    className="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50"
+                    onClick={() => handleToggleDocPopup(doctor, true)}
+                    className={`p-2 ${
+                      doctor.isInactive
+                        ? "text-green-600 hover:text-green-700"
+                        : "text-red-600 hover:text-red-700"
+                    } transition-colors rounded-full hover:bg-red-50`}
                   >
-                    <UserMinus size={20} />
+                    {doctor.isInactive ? (
+                      <UserPlus size={20} />
+                    ) : (
+                      <UserMinus size={20} />
+                    )}
                   </button>
                 </div>
               </div>
@@ -322,12 +352,16 @@ const DoctorsList = () => {
         </div>
       </div>
 
-      {deletePopupOpen && (
+      {toggleDocPopupOpen && (
         <DeletePopup
-          docId={docId}
-          handleDeletePopup={handleDeletePopup}
-          handleDelete={handleDelete}
-          text={"Are you sure you want to remove the doctor?"}
+          doc={selectedDoc}
+          handleToggleDocPopup={handleToggleDocPopup}
+          handleToggleDoc={handleToggleDoc}
+          text={
+            selectedDoc.isInactive
+              ? "Are you sure you want to activate the doctor?"
+              : "Are you sure you want to deactivate the doctor?"
+          }
         />
       )}
 

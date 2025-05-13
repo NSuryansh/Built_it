@@ -469,8 +469,8 @@ app.get("/chatContacts", authorizeRoles(["doc", "user"]), async (req, res) => {
   try {
     const userId = req.query["userId"];
     const userType = req.query["userType"];
-    if(userId!==req.user.userId || userType!==req.user.role){
-      return res.status(403).json({error: "Access denied"});
+    if (userId !== req.user.userId || userType !== req.user.role) {
+      return res.status(403).json({ error: "Access denied" });
     }
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
@@ -842,6 +842,7 @@ app.post("/requests", async (req, res) => {
 app.get("/getdoctors", async (req, res) => {
   try {
     const docs = await prisma.doctor.findMany();
+    console.log(docs);
     res.json(docs);
   } catch (e) {
     console.error(e);
@@ -1106,9 +1107,10 @@ app.post("/deleteApp", async (req, res) => {
   }
 });
 
-app.delete("/deletedoc", async (req, res) => {
+app.post("/toggleDoc", async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
-
+  const isInactive = Boolean(req.body["isInactive"]);
+  console.log(doctorId);
   try {
     // Find the doctor
     const doctor = await prisma.doctor.findUnique({
@@ -1122,25 +1124,31 @@ app.delete("/deletedoc", async (req, res) => {
     }
 
     // Start transaction to move and delete
-    await prisma.$transaction([
-      // Move to pastdoc table
-      prisma.pastDoc.create({
-        data: {
-          id: doctor.id,
-          name: doctor.name,
-          mobile: doctor.mobile,
-          email: doctor.email,
-          reg_id: doctor.reg_id,
-          removedAt: new Date(),
-        },
-      }),
-      // Delete from doc table
-      prisma.doctor.delete({
-        where: { id: doctorId },
-      }),
-    ]);
+    // await prisma.$transaction([
+    //   // Move to pastdoc table
+    //   prisma.pastDoc.create({
+    //     data: {
+    //       id: doctor.id,
+    //       name: doctor.name,
+    //       mobile: doctor.mobile,
+    //       email: doctor.email,
+    //       reg_id: doctor.reg_id,
+    //       removedAt: new Date(),
+    //     },
+    //   }),
+    //   // Delete from doc table
+    //   prisma.doctor.delete({
+    //     where: { id: doctorId },
+    //   }),
+    // ]);
+    await prisma.doctor.update({
+      where: { id: doctorId },
+      data: {
+        isInactive: !isInactive,
+      },
+    });
 
-    res.json({ message: "Doctor moved to PastDoc and deleted successfully" });
+    res.json({ message: "Doctor toggled successfully" });
   } catch (error) {
     console.error("Error deleting doctor:", error);
     res.status(500).json({ error: "Internal server error" });

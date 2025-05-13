@@ -1,19 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
 import {
-  Calendar,
   Users,
-  Clock,
   Search,
-  User,
-  Stethoscope,
-  CalendarClock,
-  CheckCircle2,
-  Clock3,
-  AlertCircle,
-  X,
   Calendar as CalendarIcon,
   Clock as ClockIcon,
-  Loader,
 } from "lucide-react";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
@@ -40,6 +30,7 @@ const History = () => {
   const [isScheduling, setisScheduling] = useState(false);
   const token = localStorage.getItem("token");
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
@@ -63,6 +54,7 @@ const History = () => {
       );
       const data = await response.json();
       setFilteredUsers(data);
+      setAllUsers(data);
       setfetched(true);
     } catch (e) {
       console.error(e);
@@ -126,7 +118,7 @@ const History = () => {
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
-      setFilteredUsers([]);
+      setFilteredUsers(allUsers);
     } else {
       setFilteredUsers(searchUsers(searchTerm));
     }
@@ -134,16 +126,10 @@ const History = () => {
 
   const searchUsers = (searchTerm) => {
     const lowerSearchTerm = searchTerm.toLowerCase();
-    return filteredUsers.filter(
+    return allUsers.filter(
       (item) =>
         item.user.username.toLowerCase().includes(lowerSearchTerm) ||
-        item.appointments.some(
-          (app) =>
-            app.note.toLowerCase().includes(lowerSearchTerm) ||
-            format(parseISO(app.createdAt), "dd MMM yyyy")
-              .toLowerCase()
-              .includes(lowerSearchTerm)
-        )
+        item.user.email.toLowerCase().includes(lowerSearchTerm)
     );
   };
 
@@ -167,11 +153,11 @@ const History = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
       <ToastContainer />
       <DoctorNavbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+      <main className="max-w-7xl xl:min-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 overflow-hidden">
           <div className="p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
@@ -189,7 +175,7 @@ const History = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Search patients by name or appointment details..."
+                  placeholder="Search patients by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-black transition-all duration-200 placeholder-gray-400 text-sm sm:text-base"
@@ -224,7 +210,7 @@ const History = () => {
         selectedUser={selectedUser}
         isLoading={isScheduling}
       />
-
+      <div className="mt-auto"></div>
       <Footer color="blue" />
     </div>
   );
