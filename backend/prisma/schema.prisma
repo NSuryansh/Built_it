@@ -28,6 +28,7 @@ model User {
   pastApp     PastAppointments[]
   referral    Referrals[]
   request     Requests[]
+  messages    Message[]
 
   @@map("user")
 }
@@ -74,6 +75,7 @@ model Doctor {
   referral       Referrals[]
   request        Requests[]
   slot           Slots[]
+  messages       Message[]
 
   @@map("doctor")
 }
@@ -93,12 +95,14 @@ model Message {
   encryptedText   String
   iv              String
   createdAt       DateTime @default(now())
-  senderId        Int
-  recipientId     Int
+  userId          Int
+  doctorId        Int
   encryptedAESKey String
   authTag         String
   senderType      String
   read            Boolean @default(false)
+  user            User @relation(fields: [userId], references: [id])
+  doctor          Doctor @relation(fields: [doctorId], references: [id])
 }
 
 model Events {
