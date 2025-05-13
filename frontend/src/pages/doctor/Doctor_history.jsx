@@ -19,15 +19,10 @@ import UserCard from "../../components/doctor/UserCard";
 
 const History = () => {
   const [showFollowupModal, setShowFollowupModal] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [followupDate, setFollowupDate] = useState("");
-  const [followupTime, setFollowupTime] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [reason, setReason] = useState("");
   const [fetched, setfetched] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
-  const [isScheduling, setisScheduling] = useState(false);
   const token = localStorage.getItem("token");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
@@ -60,56 +55,6 @@ const History = () => {
       console.error(e);
       setfetched(false);
     }
-  };
-
-  const handleSubmitFollowup = async () => {
-    setisScheduling(true);
-    try {
-      const datetime = new Date(
-        `${followupDate}T${followupTime.split("T")[1]}`
-      ).toISOString();
-      const response = await fetch("http://localhost:3000/request-to-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          doctorId: localStorage.getItem("userid"),
-          userId: selectedAppointment.user.id,
-          dateTime: datetime,
-          reason: reason,
-        }),
-      });
-      const data = await response.json();
-      CustomToast("Follow-up appointment scheduled", "blue");
-
-      if (data["message"] === "Appointment requested successfully") {
-        const notif = await fetch("http://localhost:3000/send-notification", {
-          method: "POST",
-          headers: {
-            "Content-type": "Application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userId: selectedAppointment.user.id,
-            message: "Doctor has requested an appointment with you",
-            userType: "user",
-          }),
-        });
-        setShowFollowupModal(false);
-        setFollowupDate("");
-        setFollowupTime("");
-        setReason("");
-        setSelectedAppointment(null);
-      } else {
-        CustomToast("Failed to schedule follow-up appointment", "blue");
-      }
-    } catch (error) {
-      console.error("Error scheduling follow-up:", error);
-      CustomToast("Error scheduling follow-up appointment", "blue");
-    }
-    setisScheduling(false);
   };
 
   useEffect(() => {
@@ -202,14 +147,6 @@ const History = () => {
           </div>
         </div>
       </main>
-
-      <FollowUpModal
-        isOpen={showFollowupModal}
-        onClose={() => setShowFollowupModal(false)}
-        onSubmit={handleSubmitFollowup}
-        selectedUser={selectedUser}
-        isLoading={isScheduling}
-      />
       <div className="mt-auto"></div>
       <Footer color="blue" />
     </div>

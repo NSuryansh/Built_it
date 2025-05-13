@@ -181,9 +181,7 @@ const UserDetail = () => {
       <FollowUpModal
         isOpen={showFollowupModal}
         onClose={() => setShowFollowupModal(false)}
-        onSubmit={handleSubmitFollowup}
-        selectedUser={userWithAppointments}
-        isLoading={isScheduling}
+        selectedAppointment={selectedAppointment}
       />
 
       <Footer color="blue" />
