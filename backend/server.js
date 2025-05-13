@@ -262,7 +262,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.get("/getUsers", authorizeRoles(["doc", "admin"]), async (req, res) => {
+app.get("/getUsers", authorizeRoles("doc", "admin"), async (req, res) => {
   try {
     const users = await prisma.user.findMany();
     res.json(users);
