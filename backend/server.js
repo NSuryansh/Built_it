@@ -1099,6 +1099,30 @@ app.delete("/deleteRequest", async (req, res) => {
   }
 });
 
+app.post("/changeRoomNo", async (req, res) => {
+  try {
+    const user_Id = Number(req.query["user_Id"]);
+    const room_no = req.query["roomNo"];
+    console.log(room_no);
+
+    // Validate input
+    if (!user_Id || !room_no) {
+      return res.status(400).json({ error: "ID and room number is required" });
+    }
+
+    // Delete the notification from the database
+    const changeRoom = await prisma.user.update({
+      where: { id: user_Id },
+      data: { roomNo: room_no },
+    });
+
+    res.json({ message: "Room number updated successfully", changeRoom });
+  } catch (error) {
+    console.error("Error changing room number: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/deleteApp", async (req, res) => {
   const appId = Number(req.body["appId"]);
   const doc_id = Number(req.body["doctorId"]);
