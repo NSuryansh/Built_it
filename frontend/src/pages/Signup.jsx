@@ -30,6 +30,7 @@ const SignUp = () => {
     gender: "",
   });
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -61,7 +62,10 @@ const SignUp = () => {
     try {
       const response = await fetch("http://localhost:3000/otpGenerate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({ email: formData.email }),
       });
       const data = await response.json();
@@ -80,7 +84,10 @@ const SignUp = () => {
     try {
       const response = await fetch("http://localhost:3000/otpcheck", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           otp: otp,
           email: formData.email,
@@ -212,7 +219,8 @@ const SignUp = () => {
     setisLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:3000/check-user?username=${formData.username}`
+        `http://localhost:3000/check-user?username=${formData.username}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
       if (data.message === "Username already exists!") {
@@ -266,7 +274,10 @@ const SignUp = () => {
       } = formData;
       const response = await fetch("http://localhost:3000/signup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           username: username,
           email: email,

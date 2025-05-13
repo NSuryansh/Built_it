@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Trash2,
+  UserMinus,
   UserPlus,
   Search,
   Filter,
@@ -32,6 +32,7 @@ const DoctorsList = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [fetched, setfetched] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -44,7 +45,9 @@ const DoctorsList = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors");
+        const res = await fetch("http://localhost:3000/getdoctors", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const resp = await res.json();
         setDoc(resp);
         setfetched(true);
@@ -64,6 +67,7 @@ const DoctorsList = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify({ doctorID: doctorId }),
       });
@@ -94,7 +98,9 @@ const DoctorsList = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    const res = await fetch("http://localhost:3000/getdoctors");
+    const res = await fetch("http://localhost:3000/getdoctors", {
+      headers: { Authorization: "Bearer " + token },
+    });
     const resp = await res.json();
     setDoc(resp);
     setTimeout(() => setIsRefreshing(false), 800);
@@ -238,11 +244,11 @@ const DoctorsList = () => {
                       <button
                         onClick={() => handleDeletePopup(doctor.id, true)}
                         className="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50 group relative"
-                        title="Delete Doctor"
+                        title="Set Doctor Inactive"
                       >
-                        <Trash2 size={18} />
+                        <UserMinus size={18} />
                         <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          Delete
+                          Set Inactive
                         </span>
                       </button>
                       <Link
@@ -294,7 +300,7 @@ const DoctorsList = () => {
                     onClick={() => handleDeletePopup(doctor.id, true)}
                     className="p-2 text-red-600 hover:text-red-700 transition-colors rounded-full hover:bg-red-50"
                   >
-                    <Trash2 size={20} />
+                    <UserMinus size={20} />
                   </button>
                 </div>
               </div>

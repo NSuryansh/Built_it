@@ -41,6 +41,14 @@ const Peer = () => {
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
+  const token = localStorage.getItem("token");
+
+  // Function to check if current time is within chat restriction hours (8 PM to 11 PM)
+  const isChatDisabled = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    return hours >= 20 && hours < 24; // Restrict chat from 8 PM (20:00) to 11 PM (23:00)
+  };
 
   // Filter doctors based on search query
   const filteredDoctors = docList.filter((doctor) =>
@@ -83,9 +91,13 @@ const Peer = () => {
   useEffect(() => {
     const fetchDocotors = async () => {
       try {
-        const response = await fetch("http://localhost:3000/getdoctors");
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:3000/getdoctors", {
+          headers: { Authorization: "Bearer " + token },
+        });
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
+        console.log("Doctors data:", data); // Debug: Log doctor data to check phone field
         setDocList(data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -97,7 +109,8 @@ const Peer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const contacts = await response.json();
 
@@ -255,7 +268,8 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
       const decrypted_api_messages = await Promise.all(
@@ -440,11 +454,26 @@ const Peer = () => {
                 <div ref={messagesEndRef} />
               </div>
               <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
-                <ChatInput
-                  message={message}
-                  setMessage={setMessage}
-                  handleSubmit={handleSubmit}
-                />
+                {isChatDisabled() ? (
+                  <div className="text-center text-gray-600">
+                    <p className="mb-2">
+                      Chat is disabled from 8 PM to 11 PM.
+                    </p>
+                    <p>
+                      For emergencies, please contact:{" "}
+                      <strong>
+                        {docList[selectedChat]?.mobile || "No emergency contact available"}
+                      </strong>
+                    </p>
+                    {/* Note: If the phone number is not displaying, check the console for the 'Doctors data' log. Ensure the backend returns a 'mobile' field for each doctor. If the field is named differently (e.g., 'phone_number'), replace 'mobile' with the correct field name in docList[selectedChat]?.mobile */}
+                  </div>
+                ) : (
+                  <ChatInput
+                    message={message}
+                    setMessage={setMessage}
+                    handleSubmit={handleSubmit}
+                  />
+                )}
               </div>
             </>
           ) : (
@@ -475,7 +504,7 @@ const Peer = () => {
                       placeholder="Search doctors..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                      className="w-full pl-10 pr-4 py-1 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
                     />
                     <Search className="absolute left-3 top-3 h-5 w-5 text-orange-500" />
                   </div>
@@ -544,12 +573,35 @@ const Peer = () => {
               <div ref={messagesEndRef} />
             </div>
             <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
-              <ChatInput
-                message={message}
-                setMessage={setMessage}
-                handleSubmit={handleSubmit}
-                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
-              />
+              {isChatDisabled() ? (
+                <div className="text-center text-gray-600">
+                  <p className="mb-2">
+                    Chat is disabled from 8 PM to 11 PM.
+                  </p>
+                  <p>
+                    For emergencies, please contact:{" "}
+                    <strong>
+                      {docList[selectedChat]?.mobile || "No emergency contact available"}
+                    </strong>
+                    {docList[selectedChat]?.mobile && (
+                      <a
+                        href={`tel:${docList[selectedChat]?.mobile}`}
+                        className="bg-orange-500 text-white px-3 py-1 rounded-md ml-2 inline-block"
+                      >
+                        Call
+                      </a>
+                    )}
+                  </p>
+                  {/* Note: If the phone number is not displaying, check the console for the 'Doctors data' log. Ensure the backend returns a 'mobile' field for each doctor. If the field is named differently (e.g., 'phone_number'), replace 'mobile' with the correct field name in docList[selectedChat]?.mobile */}
+                </div>
+              ) : (
+                <ChatInput
+                  message={message}
+                  setMessage={setMessage}
+                  handleSubmit={handleSubmit}
+                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-900 placeholder-gray-500 transition-all duration-200"
+                />
+              )}
             </div>
           </div>
         )}

@@ -38,6 +38,7 @@ const DoctorLogin = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setisLoading] = useState(false);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -71,7 +72,10 @@ const DoctorLogin = () => {
     setisLoading(true);
     const response = await fetch("http://localhost:3000/docLogin", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
       body: JSON.stringify({
         email: email,
         password: password,
@@ -96,7 +100,10 @@ const DoctorLogin = () => {
     }
     const response = await fetch("http://localhost:3000/forgotDoctorPassword", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
       body: JSON.stringify({
         email: email,
       }),

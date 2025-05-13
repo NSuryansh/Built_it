@@ -35,6 +35,7 @@ const EventsList = () => {
   const navigate = useNavigate();
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [eventId, setEventId] = useState(null);
+  const token = localStorage.getItem("token");
 
   const handleDelete = async (id) => {
     // if (!window.confirm("Are you sure you want to delete this event?")) return;
@@ -42,7 +43,10 @@ const EventsList = () => {
     try {
       const response = await fetch(`http://localhost:3000/events`, {
         method: "POST",
-        headers: { "Content-type": "application/json" },
+        headers: {
+          "Content-type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           id: id,
         }),
@@ -77,7 +81,7 @@ const EventsList = () => {
     try {
       const response = await fetch(
         `http://localhost:3000/uploadURL?id=${eventId}&url=${newLink}`,
-        { method: "PUT" }
+        { method: "PUT", headers: { Authorization: "Bearer " + token } }
       );
       CustomToast("URL uploaded successfully", "green");
     } catch (e) {
@@ -106,8 +110,12 @@ const EventsList = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/events");
-        const response2 = await fetch("http://localhost:3000/getPastEvents");
+        const response = await fetch("http://localhost:3000/events", {
+          headers: { Authorization: "Bearer " + token },
+        });
+        const response2 = await fetch("http://localhost:3000/getPastEvents", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await response.json();
         const data2 = await response2.json();
 
@@ -369,7 +377,7 @@ const EventsList = () => {
                       type="text"
                       value={newLink}
                       onChange={(e) => setNewLink(e.target.value)}
-                      placeholder="Enter document/drive link"
+                      placeholder="Enter google drive link"
                       className="flex-1 text-sm border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 outline-none"
                     />
                     <div className="flex gap-2">

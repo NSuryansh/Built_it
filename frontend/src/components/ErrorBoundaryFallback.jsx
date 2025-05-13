@@ -7,7 +7,7 @@ const ErrorBoundaryFallback = ({ userType }) => {
 
   useEffect(() => {
     if (userType === "doc") {
-      setColor("green");
+      setColor("blue");
     } else if (userType === "admin") {
       setColor("green");
     }
@@ -46,8 +46,12 @@ const ErrorBoundaryFallback = ({ userType }) => {
             onClick={() => window.location.reload()}
             className={`inline-flex items-center px-4 py-2 ${buttonBgClass} text-white rounded-lg transition-colors`}
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Try Again
+            <div className="flex justify-center items-center">
+              <RefreshCw className={`w-4 h-4 mr-2 `} />
+              <p className={`${userType === "admin" ? "text-green-700" : ""}`}>
+                Try Again
+              </p>
+            </div>
           </button>
         </div>
       </div>

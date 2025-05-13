@@ -41,6 +41,7 @@ const DoctorPeer = () => {
   const [searchParams] = useSearchParams();
   const newChatId = searchParams.get("userId");
   const newChatUsername = searchParams.get("username");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (newChatId) {
@@ -74,9 +75,18 @@ const DoctorPeer = () => {
 
   async function fetchContacts(userId) {
     try {
+      console.log(localStorage.getItem("token"), ":sdjagkj");
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`
+        `http://localhost:3000/chatContacts?userId=${userId}}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': "Bearer " + token,
+            'Content-Type': 'application/json'
+          }
+        }
       );
+
       const contacts = await response.json();
       if (!contacts || !Array.isArray(contacts)) {
         console.warn("No contacts received.");
@@ -285,7 +295,8 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
       // console.log(messages, "HALLLLLLO");

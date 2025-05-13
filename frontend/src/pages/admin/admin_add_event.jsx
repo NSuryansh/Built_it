@@ -25,6 +25,7 @@ const AddEvent = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -43,7 +44,10 @@ const AddEvent = () => {
     try {
       const response = await fetch("http://localhost:3000/addEvent", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({
           title: title,
           description: description,
