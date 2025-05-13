@@ -597,7 +597,7 @@ app.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
     const reschedule = await prisma.requests.delete({ where: { id: id } });
     res.json(reschedule);
   } catch (e) {
-    res.json(e);
+    res.status(400).json(e);
   }
 });
 

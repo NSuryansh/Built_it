@@ -371,7 +371,7 @@ const DoctorAppointment = () => {
     setFixed(!fixed);
   };
 
-  const emailParams = async (appointment, time, isCancel = false) => {
+  const emailParams = async (appointment, time) => {
     const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
     var params = {
@@ -395,20 +395,31 @@ const DoctorAppointment = () => {
     });
     const resp = await res.json();
     setFixed(!fixed);
-    emailjs
-      .send("service_coucldi", "template_b96adyb", params, "5rqHkmhJJfAxWBFNo")
-      .then(
-        (response) => {
-          console.log("success", response.status);
-          CustomToast("Rescheduling request successfully sent", "blue");
-          setSelectedDate("");
-          setSelectedTime("");
-        },
-        (error) => {
-          console.log(error);
-          CustomToast("Error rescheduling appointment", "blue");
-        }
-      );
+    if (res.status !== 400) {
+      emailjs
+        .send(
+          "service_coucldi",
+          "template_b96adyb",
+          params,
+          "5rqHkmhJJfAxWBFNo"
+        )
+        .then(
+          (response) => {
+            console.log("success", response.status);
+            CustomToast("Rescheduling request successfully sent", "blue");
+            setSelectedDate("");
+            setSelectedTime("");
+          },
+          (error) => {
+            console.log(error);
+            CustomToast("Error rescheduling appointment", "blue");
+          }
+        );
+    } else {
+      CustomToast("Error rescheduling appointment", "blue");
+      setSelectedDate("");
+      setSelectedTime("");
+    }
   };
 
   const handleClosePopup = () => {
