@@ -98,7 +98,7 @@ const Peer = () => {
         });
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
-        console.log("Doctors data:", data); // Debug: Log doctor data to check phone field
+        // console.log("Doctors data:", data); // Debug: Log doctor data to check phone field
         setDocList(data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -199,6 +199,7 @@ const Peer = () => {
       encryptedAESKey,
       senderType,
     }) => {
+      // console.log("hal")
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
@@ -206,8 +207,8 @@ const Peer = () => {
       );
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-      console.log(decrypted, "decrypted");
-      setShowMessages((prev) => [
+      // console.log(decrypted, "decrypted");
+      setEditedMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType },
       ]);
@@ -260,7 +261,7 @@ const Peer = () => {
           setUnread(data);
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     pendingReads();
@@ -290,7 +291,7 @@ const Peer = () => {
           };
         })
       );
-
+      console.log(decrypted_api_messages, "messgaesjpoas")
       setMessagesApi(decrypted_api_messages);
       const filteredMessages = decrypted_api_messages.filter((msg) => {
         return (
@@ -315,16 +316,16 @@ const Peer = () => {
 
   useEffect(() => {
     // console.log(showMessages, "JSA")
-    console.log(showMessages, "hal");
+    // console.log(showMessages, "hal");
     const filteredMessages = showMessages.filter((msg) => {
-      console.log(msg, "msg")
+      // console.log(msg, "msg")
       if(msg.senderType === "user"){
       return (msg.senderId === userId);
       }else{
         return (msg.recipientId === userId)
       }
     });
-    console.log(filteredMessages, "filtered")
+    // console.log(filteredMessages, "filtered")
     setEditedMessages(filteredMessages);
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
@@ -341,7 +342,7 @@ const Peer = () => {
         doctorId: docId,
       });
     }
-    console.log(prevRecvId, "HALLO");
+    // console.log(prevRecvId, "HALLO");
     if (prevRecvId !== 0) {
       const userId = localStorage.getItem("userid");
       const docId = prevRecvId;
