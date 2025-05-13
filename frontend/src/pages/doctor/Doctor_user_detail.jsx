@@ -19,6 +19,9 @@ const UserDetail = () => {
   const [showFollowupModal, setShowFollowupModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isScheduling, setIsScheduling] = useState(false);
+  const [roomNumber, setRoomNumber] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -31,6 +34,12 @@ const UserDetail = () => {
   const handleFollowup = async (appointment) => {
     setSelectedAppointment(appointment);
     setShowFollowupModal(true);
+  };
+
+  const handleSaveRoom = () => {
+    setIsEditing(false);
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 3000);
   };
 
   const handleSubmitFollowup = async () => {
@@ -83,14 +92,6 @@ const UserDetail = () => {
     setIsScheduling(false);
   };
 
-  // if (!userWithAppointments) {
-  //   return (
-  //     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50 flex items-center justify-center">
-  //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-  //     </div>
-  //   );
-  // }
-
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
@@ -125,7 +126,51 @@ const UserDetail = () => {
         </button>
 
         <div className="space-y-6">
-          <UserProfile user={userWithAppointments} />
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 p-4 sm:p-6 lg:p-8">
+           
+              {/* Room Number Input */}
+              <div className="absolute top-3 right-3">
+                {isEditing ? (
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={roomNumber}
+                      onChange={(e) => setRoomNumber(e.target.value)}
+                      placeholder="Room #"
+                      className="border border-gray-300 rounded px-2 py-1 text-sm w-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      autoFocus
+                    />
+                    <button
+                      onClick={handleSaveRoom}
+                      className="bg-blue-500 text-white rounded px-3 py-1 text-sm hover:bg-blue-600 transition-colors duration-200"
+                    >
+                      Done
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    {roomNumber && (
+                      <span className="text-sm text-gray-700 mr-2">
+                        Room: <span className="font-medium">{roomNumber}</span>
+                      </span>
+                    )}
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="text-blue-500 hover:text-blue-700 text-sm"
+                    >
+                      {roomNumber ? 'Edit' : 'Add Room #'}
+                    </button>
+                    {isSaved && (
+                      <span className="ml-2 text-green-500 text-xs animate-fade-in-out">
+                        Saved!
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+              <UserProfile user={userWithAppointments} />
+          
+          </div>
 
           <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 p-4 sm:p-6 lg:p-8">
             <AppointmentList onFollowUp={handleFollowup} />
