@@ -175,22 +175,12 @@ io.on("connection", (socket) => {
       authTag,
     }) => {
       try {
-        // console.log(doctorId,'doc')
-        // if (senderType === "doc") {
-        //   doctorId = doctorId;
-        //   userId = userId;
-        // } else if (senderType === "user") {
-        //   userId = userId;
-        //   recipientId = doctorId;
-        // }
-        // console.log(senderId);
-        // console.log(recipientId);
         const message = await prisma.message.create({
           data: {
             userId: parseInt(userId),
             doctorId: parseInt(doctorId),
             encryptedText: encryptedText,
-            iv: iv,
+            iv,
             encryptedAESKey,
             authTag,
             senderType: senderType,
@@ -199,15 +189,14 @@ io.on("connection", (socket) => {
         const room = `chat_${[Number(userId), Number(doctorId)]
           .sort((a, b) => a - b)
           .join("_")}`;
-        // console.log(senderId, "message sent to", recipientId);
-
-        // console.log(users.get(recipientId));
+       
         var senderId;
         if (senderType === "doc") {
           senderId = doctorId;
         } else {
           senderId = userId;
         }
+        console.log(senderId, ",mesgaerh")
         socket.to(room).emit("receiveMessage", {
           id: message.id,
           senderId,
@@ -489,7 +478,7 @@ app.get("/chatContacts", authorizeRoles("doc", "user"), async (req, res) => {
       },
       distinct: ["userId", "doctorId"],
     });
-
+    // console.log(chatPartners, "chat ")
     const uniqueUserIds = new Set();
     chatPartners.forEach((chat) => {
       if (chat.userId !== id) uniqueUserIds.add(chat.userId);
@@ -553,12 +542,10 @@ app.get("/countUnseen", authorizeRoles("user", "doc"), async (req, res) => {
 app.get("/messages", authorizeRoles("user", "doc"), async (req, res) => {
   try {
     const { userId, recId, userType, recType } = req.query;
-    // console.log(userId, "hehehe hakte rinkiya ke papa");
-    // console.log(req.user.userId, "huuuu haaaaaaahahhahah");
     if (userId.toString() !== req.user.userId.toString()) {
-      // console.log("NOT possible")
       return res.status(403).json({ error: "Access denied" });
     }
+    console.log(userId, recId, userType, recType);
     const messages = await prisma.message.findMany({
       where: {
         OR: [
@@ -568,8 +555,8 @@ app.get("/messages", authorizeRoles("user", "doc"), async (req, res) => {
             senderType: userType,
           },
           {
-            userId: parseInt(recId),
-            doctorId: parseInt(userId),
+            userId: parseInt(userId),
+            doctorId: parseInt(recId),
             senderType: recType,
           },
         ],
