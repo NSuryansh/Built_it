@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { CalendarClock, X, Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import CustomToast from "../CustomToast";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import { useSearchParams } from "react-router-dom";
 
-const FollowUpModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  selectedUser,
-  isLoading,
-}) => {
+const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
   const [followupDate, setFollowupDate] = useState("");
   const [followupTime, setFollowupTime] = useState("");
   const [reason, setReason] = useState("");
-  const [slots, setSlots] = useState([]);
-
+  const [slots, setAvailableSlots] = useState([]);
+  const [isScheduling, setisScheduling] = useState(false);
   const minDate = format(new Date(), "yyyy-MM-dd");
+  const token = localStorage.getItem("token");
+  const [searchParams] = useSearchParams();
+  const userId = searchParams.get("userId");
 
   useEffect(() => {
     if (followupDate) {
@@ -36,15 +35,55 @@ const FollowUpModal = ({
     }
   }, [followupDate]);
 
-  const handleSubmit = () => {
-    if (!selectedUser || !followupDate || !followupTime) return;
+  const handleSubmitFollowup = async () => {
+    setisScheduling(true);
+    try {
+      const datetime = new Date(
+        `${followupDate}T${followupTime.split("T")[1]}`
+      ).toISOString();
+      console.log(selectedAppointment);
+      const response = await fetch("http://localhost:3000/request-to-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          doctorId: localStorage.getItem("userid"),
+          userId: userId,
+          dateTime: datetime,
+          reason: reason,
+        }),
+      });
+      const data = await response.json();
+      CustomToast("Follow-up appointment scheduled", "blue");
 
-    onSubmit({
-      userId: selectedUser.id,
-      date: followupDate,
-      time: followupTime,
-      reason,
-    });
+      if (data["message"] === "Appointment requested successfully") {
+        const notif = await fetch("http://localhost:3000/send-notification", {
+          method: "POST",
+          headers: {
+            "Content-type": "Application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            userId: userId,
+            message: "Doctor has requested an appointment with you",
+            userType: "user",
+          }),
+        });
+        setFollowupDate("");
+        setFollowupTime("");
+        setReason("");
+        onClose();
+        // setSelectedAppointment(null);
+      } else {
+        CustomToast("Failed to schedule follow-up appointment", "blue");
+      }
+    } catch (error) {
+      console.error("Error scheduling follow-up:", error);
+      CustomToast("Error scheduling follow-up appointment", "blue");
+    }
+    setisScheduling(false);
   };
 
   if (!isOpen) return null;
@@ -71,22 +110,6 @@ const FollowUpModal = ({
             <X className="h-5 w-5" />
           </button>
         </div>
-
-        {selectedUser && (
-          <div className="mb-5 flex items-center p-3 bg-blue-50 rounded-xl">
-            <img
-              src={selectedUser.profileImage}
-              alt={selectedUser.username}
-              className="w-10 h-10 rounded-full mr-3 object-cover border border-blue-200"
-            />
-            <div>
-              <p className="font-medium text-blue-900">
-                {selectedUser.username}
-              </p>
-              <p className="text-xs text-blue-600">{selectedUser.phone}</p>
-            </div>
-          </div>
-        )}
 
         <div className="space-y-5 sm:space-y-6">
           <div className="space-y-2">
@@ -152,11 +175,11 @@ const FollowUpModal = ({
               Cancel
             </button>
             <button
-              onClick={handleSubmit}
-              disabled={!followupDate || !followupTime || isLoading}
+              onClick={handleSubmitFollowup}
+              disabled={!followupDate || !followupTime || isScheduling}
               className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-500 text-white font-medium rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
             >
-              {isLoading ? <PacmanLoader /> : "Schedule Follow-up"}
+              {isScheduling ? <PacmanLoader /> : "Schedule Follow-up"}
             </button>
           </div>
         </div>

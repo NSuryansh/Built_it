@@ -18,6 +18,7 @@ model User {
   department  String
   rollNo      String               @unique
   acadProg    String
+  roomNo      String               @default("")
   gender      Gender
   appointment Appointments[]
   chatbot     Chatbot[]

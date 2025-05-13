@@ -203,10 +203,10 @@ io.on("connection", (socket) => {
 
         // console.log(users.get(recipientId));
         var senderId;
-        if(senderType === "doc"){
+        if (senderType === "doc") {
           senderId = doctorId;
-        }else{
-          senderId = userId
+        } else {
+          senderId = userId;
         }
         socket.to(room).emit("receiveMessage", {
           id: message.id,
@@ -843,9 +843,15 @@ app.post("/requests", async (req, res) => {
 });
 
 app.get("/getdoctors", async (req, res) => {
+  const user_type = req.query["user_type"];
   try {
-    const docs = await prisma.doctor.findMany();
-    res.json(docs);
+    let doctors = [];
+    if (user_type === "user") {
+      doctors = await prisma.doctor.findMany({ where: { isInactive: false } });
+    } else if (user_type === "admin") {
+      doctors = await prisma.doctor.findMany();
+    }
+    res.json(doctors);
   } catch (e) {
     console.error(e);
     res.status(0).json({ message: "Error fetching doctors" });
@@ -1075,6 +1081,51 @@ app.delete("/deletenotifs", async (req, res) => {
   }
 });
 
+app.delete("/deleteRequest", async (req, res) => {
+  try {
+    const id = Number(req.query["id"]);
+
+    // Validate input
+    if (!id) {
+      return res.status(400).json({ error: "ID is required" });
+    }
+
+    // Delete the notification from the database
+    const deletedNotif = await prisma.requests.delete({
+      where: { id: id },
+    });
+
+    res.json({ message: "Notification deleted successfully", deletedNotif });
+  } catch (error) {
+    console.error("Error deleting notification: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.post("/changeRoomNo", async (req, res) => {
+  try {
+    const user_Id = Number(req.query["user_Id"]);
+    const room_no = req.query["roomNo"];
+    console.log(room_no);
+
+    // Validate input
+    if (!user_Id || !room_no) {
+      return res.status(400).json({ error: "ID and room number is required" });
+    }
+
+    // Delete the notification from the database
+    const changeRoom = await prisma.user.update({
+      where: { id: user_Id },
+      data: { roomNo: room_no },
+    });
+
+    res.json({ message: "Room number updated successfully", changeRoom });
+  } catch (error) {
+    console.error("Error changing room number: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/deleteApp", async (req, res) => {
   const appId = Number(req.body["appId"]);
   const doc_id = Number(req.body["doctorId"]);
@@ -1125,24 +1176,6 @@ app.post("/toggleDoc", async (req, res) => {
         .json({ error: "Doctor not found OR Invalid Doctor ID" });
     }
 
-    // Start transaction to move and delete
-    // await prisma.$transaction([
-    //   // Move to pastdoc table
-    //   prisma.pastDoc.create({
-    //     data: {
-    //       id: doctor.id,
-    //       name: doctor.name,
-    //       mobile: doctor.mobile,
-    //       email: doctor.email,
-    //       reg_id: doctor.reg_id,
-    //       removedAt: new Date(),
-    //     },
-    //   }),
-    //   // Delete from doc table
-    //   prisma.doctor.delete({
-    //     where: { id: doctorId },
-    //   }),
-    // ]);
     await prisma.doctor.update({
       where: { id: doctorId },
       data: {

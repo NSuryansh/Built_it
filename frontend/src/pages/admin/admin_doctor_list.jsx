@@ -42,22 +42,25 @@ const DoctorsList = () => {
     verifyAuth();
   }, []);
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/getdoctors", {
+  const fetchDoctors = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:3000/getdoctors?user_type=admin",
+        {
           headers: { Authorization: "Bearer " + token },
-        });
-        const resp = await res.json();
-        setDoctors(resp);
-        setfetched(true);
-      } catch (e) {
-        console.error(e);
-        CustomToast("Error fetching doctors", "green");
-        setfetched(false);
-      }
-    };
+        }
+      );
+      const resp = await res.json();
+      setDoctors(resp);
+      setfetched(true);
+    } catch (e) {
+      console.error(e);
+      CustomToast("Error fetching doctors", "green");
+      setfetched(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDoctors();
   }, []);
 
@@ -77,6 +80,7 @@ const DoctorsList = () => {
         }),
       });
       const resp = await res.json();
+      await fetchDoctors();
       if (res.ok) {
         if (doctor.isInactive) {
           CustomToast("Doctor activated successfully", "green");
@@ -108,11 +112,7 @@ const DoctorsList = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    const res = await fetch("http://localhost:3000/getdoctors", {
-      headers: { Authorization: "Bearer " + token },
-    });
-    const resp = await res.json();
-    setDoctors(resp);
+    await fetchDoctors();
     setTimeout(() => setIsRefreshing(false), 800);
   };
 

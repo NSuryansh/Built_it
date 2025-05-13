@@ -5,7 +5,6 @@ import {
   Stethoscope,
   ArrowRight,
 } from "lucide-react";
-import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
 
 const UserCard = ({ userWithAppointments }) => {

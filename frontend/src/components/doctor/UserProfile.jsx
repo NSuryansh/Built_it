@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import CustomToast from "../CustomToast";
 
 const UserProfile = () => {
   const [searchParams] = useSearchParams();
@@ -16,6 +17,9 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const [fetched, setfetched] = useState(null);
+  const [roomNumber, setRoomNumber] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -31,6 +35,7 @@ const UserProfile = () => {
           );
           const data = await response.json();
           setUser(data.user);
+          setRoomNumber(data.user.roomNo);
           setfetched(true);
         } catch (error) {
           setfetched(false);
@@ -41,6 +46,27 @@ const UserProfile = () => {
       getUserById();
     }
   }, [userId, navigate]);
+
+  const handleSaveRoom = async () => {
+    if (roomNumber != "") {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/changeRoomNo?user_Id=${userId}&roomNo=${roomNumber}`,
+          { method: "POST", headers: { Authorization: "Bearer " + token } }
+        );
+        const data = await response.json();
+        CustomToast("Room number updated successfully", "blue");
+        setIsSaved(true);
+        setIsEditing(false);
+      } catch (e) {
+        console.error(e);
+        CustomToast("Error changing room number", "blue");
+        setIsSaved(false);
+      }
+    } else {
+      CustomToast("Provide a room number", "blue");
+    }
+  };
 
   if (fetched === null) {
     return (
@@ -62,6 +88,45 @@ const UserProfile = () => {
               {user.username}
             </h2>
             <p className="text-sm text-gray-500 mt-1">Patient ID: {user.id}</p>
+          </div>
+          <div className="">
+            {isEditing ? (
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  value={roomNumber}
+                  onChange={(e) => setRoomNumber(e.target.value)}
+                  placeholder="Room #"
+                  className="border border-gray-300 rounded px-2 py-1 text-sm w-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  autoFocus
+                />
+                <button
+                  onClick={handleSaveRoom}
+                  className="bg-blue-500 text-white rounded px-3 py-1 text-sm hover:bg-blue-600 transition-colors duration-200"
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                {roomNumber && (
+                  <span className="text-sm text-gray-700 mr-2">
+                    Room: <span className="font-medium">{roomNumber}</span>
+                  </span>
+                )}
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="text-blue-500 hover:text-blue-700 text-sm"
+                >
+                  {roomNumber ? "Edit" : "Add Room #"}
+                </button>
+                {isSaved && (
+                  <span className="ml-2 text-green-500 text-xs animate-fade-in-out">
+                    Saved!
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
