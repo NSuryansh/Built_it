@@ -44,9 +44,12 @@ const DoctorsList = () => {
 
   const fetchDoctors = async () => {
     try {
-      const res = await fetch("http://localhost:3000/getdoctors", {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const res = await fetch(
+        "http://localhost:3000/getdoctors?user_type=admin",
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
       const resp = await res.json();
       setDoctors(resp);
       setfetched(true);
@@ -77,7 +80,7 @@ const DoctorsList = () => {
         }),
       });
       const resp = await res.json();
-      fetchDoctors();
+      await fetchDoctors();
       if (res.ok) {
         if (doctor.isInactive) {
           CustomToast("Doctor activated successfully", "green");
@@ -109,11 +112,7 @@ const DoctorsList = () => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    const res = await fetch("http://localhost:3000/getdoctors", {
-      headers: { Authorization: "Bearer " + token },
-    });
-    const resp = await res.json();
-    setDoctors(resp);
+    await fetchDoctors();
     setTimeout(() => setIsRefreshing(false), 800);
   };
 

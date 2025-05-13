@@ -203,10 +203,10 @@ io.on("connection", (socket) => {
 
         // console.log(users.get(recipientId));
         var senderId;
-        if(senderType === "doc"){
+        if (senderType === "doc") {
           senderId = doctorId;
-        }else{
-          senderId = userId
+        } else {
+          senderId = userId;
         }
         socket.to(room).emit("receiveMessage", {
           id: message.id,
@@ -840,10 +840,15 @@ app.post("/requests", async (req, res) => {
 });
 
 app.get("/getdoctors", async (req, res) => {
+  const user_type = req.query["user_type"];
   try {
-    const docs = await prisma.doctor.findMany();
-    console.log(docs);
-    res.json(docs);
+    let doctors = [];
+    if (user_type === "user") {
+      doctors = await prisma.doctor.findMany({ where: { isInactive: false } });
+    } else if (user_type === "admin") {
+      doctors = await prisma.doctor.findMany();
+    }
+    res.json(doctors);
   } catch (e) {
     console.error(e);
     res.status(0).json({ message: "Error fetching doctors" });
@@ -1123,24 +1128,6 @@ app.post("/toggleDoc", async (req, res) => {
         .json({ error: "Doctor not found OR Invalid Doctor ID" });
     }
 
-    // Start transaction to move and delete
-    // await prisma.$transaction([
-    //   // Move to pastdoc table
-    //   prisma.pastDoc.create({
-    //     data: {
-    //       id: doctor.id,
-    //       name: doctor.name,
-    //       mobile: doctor.mobile,
-    //       email: doctor.email,
-    //       reg_id: doctor.reg_id,
-    //       removedAt: new Date(),
-    //     },
-    //   }),
-    //   // Delete from doc table
-    //   prisma.doctor.delete({
-    //     where: { id: doctorId },
-    //   }),
-    // ]);
     await prisma.doctor.update({
       where: { id: doctorId },
       data: {

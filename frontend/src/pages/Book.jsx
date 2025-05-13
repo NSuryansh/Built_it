@@ -40,7 +40,7 @@ const Book = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors", {
+        const res = await fetch("http://localhost:3000/getdoctors?user_type=user", {
           headers: { Authorization: "Bearer " + token },
         });
         const data = await res.json();
