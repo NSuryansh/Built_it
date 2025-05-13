@@ -590,7 +590,7 @@ app.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
   const id = req.body["appId"];
   const userId = req.body["userId"];
   if (userId !== req.user.userId) {
-    res.json({ error: "Access denied" });
+    return res.status(400).json({ error: "Access denied" });
   }
   // console.log(id);
   try {

@@ -35,6 +35,7 @@ const DoctorAppointment = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isBar, setIsBar] = useState(false);
   const [isRescheduling, setisRescheduling] = useState(false);
+  const [isCancelling, setisCanelling] = useState(false);
   const [isFetched, setisFetched] = useState(null);
   const [timePeriodData, setTimePeriodData] = useState({
     "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
@@ -85,7 +86,13 @@ const DoctorAppointment = () => {
     { name: "PHD", value: timePeriodData[period].PHD || 0 },
   ];
 
-  const PastAppointmentGraphs = ({ timePeriodData, getPieData, COLORS, handleGraphTypeChange, isBar }) => {
+  const PastAppointmentGraphs = ({
+    timePeriodData,
+    getPieData,
+    COLORS,
+    handleGraphTypeChange,
+    isBar,
+  }) => {
     const timePeriods = [
       "Last 1 Month",
       "Last 3 Months",
@@ -117,8 +124,8 @@ const DoctorAppointment = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {timePeriods.map((period) => (
-            <div 
-              key={period} 
+            <div
+              key={period}
               className="bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-blue-100 shadow-md"
             >
               <h3 className="text-xl font-semibold text-blue-600 mb-4 text-center">
@@ -364,7 +371,7 @@ const DoctorAppointment = () => {
     setFixed(!fixed);
   };
 
-  const emailParams = async (appointment, time) => {
+  const emailParams = async (appointment, time, isCancel = false) => {
     const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
     var params = {
@@ -383,7 +390,7 @@ const DoctorAppointment = () => {
       },
       body: JSON.stringify({
         appId: appointment["id"],
-        userId: localStorage.getItem("userid")
+        userId: localStorage.getItem("userid"),
       }),
     });
     const resp = await res.json();
@@ -510,7 +517,95 @@ const DoctorAppointment = () => {
                               Mark as Done
                             </button>
                           )}
+                          {selectedAppointment !== appointment.id && (
+                            <button
+                              onClick={() => handleReschedule(appointment)}
+                              className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                            >
+                              Reschedule
+                            </button>
+                          )}
                         </div>
+                        {selectedAppointment === appointment.id && (
+                          <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-blue-200">
+                            <h2 className="text-xl font-semibold mb-4 text-blue-600">
+                              Select Date and Time
+                            </h2>
+                            <div>
+                              <select
+                                name="date"
+                                value={selectedDate.split("T")[0]}
+                                onChange={(e) => {
+                                  const newDate = e.target.value;
+                                  const currentTime =
+                                    selectedDate.split("T")[2] || "09:00";
+                                  handleDateChange(newDate);
+                                  fetchAvailableSlots(newDate);
+                                }}
+                                className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+                                required
+                              >
+                                <option value="">Select Date</option>
+                                {[...Array(14)].map((_, index) => {
+                                  const date = new Date();
+                                  date.setDate(date.getDate() + index);
+                                  const formattedDate = format(
+                                    date,
+                                    "yyyy-MM-dd"
+                                  );
+                                  const displayDate = format(date, "d MMM");
+                                  return (
+                                    <option
+                                      key={formattedDate}
+                                      value={formattedDate}
+                                    >
+                                      {displayDate}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            </div>
+
+                            <div className="mt-4">
+                              <select
+                                name="time"
+                                value={time}
+                                onChange={(e) => {
+                                  const currentDate =
+                                    selectedDate.split("T")[0];
+                                  handleTimeChange(e);
+                                }}
+                                className="w-full px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none bg-white"
+                              >
+                                <option value="">Select Time</option>
+                                {Array.isArray(slots) &&
+                                  slots.map((slot) => (
+                                    <option
+                                      key={slot.id}
+                                      value={slot.starting_time}
+                                    >
+                                      {slot.starting_time
+                                        .split("T")[1]
+                                        .slice(0, 5)}
+                                    </option>
+                                  ))}
+                              </select>
+                            </div>
+                            <center>
+                              <button
+                                disabled={isRescheduling}
+                                onClick={() => handleReschedule(appointment)}
+                                className="px-6 mt-4 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                              >
+                                {isRescheduling ? (
+                                  <Loader className="mx-auto" />
+                                ) : (
+                                  <div>Reschedule</div>
+                                )}
+                              </button>
+                            </center>
+                          </div>
+                        )}
                         {completedNotes[appointment.id] !== undefined && (
                           <div className="mt-6">
                             <input
@@ -702,7 +797,7 @@ const DoctorAppointment = () => {
             )}
           </div>
         </div>
-        
+
         <PastAppointmentGraphs
           timePeriodData={timePeriodData}
           getPieData={getPieData}
