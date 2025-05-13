@@ -432,7 +432,7 @@ app.get("/chatContacts", authorizeRoles("doc", "user") ,async (req, res) => {
     const userId = req.query["userId"];
     const userType = req.query["userType"];
     if(userId!==req.user.userId || userType!==req.user.role){
-      res.json({error: "Access denied"})
+      return res.status(403).json({error: "Access denied"});
     }
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
