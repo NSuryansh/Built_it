@@ -75,18 +75,11 @@ const DoctorPeer = () => {
 
   async function fetchContacts(userId) {
     try {
-      console.log(localStorage.getItem("token"), ":sdjagkj");
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}}`,
-        {
-          method: 'GET',
-          headers: {
-            'Authorization': "Bearer " + token,
-            'Content-Type': 'application/json'
-          }
-        }
+        `http://localhost:3000/chatContacts?userId=${userId}&userType=doc}`,
+        { headers: { Authorization: "Bearer " + token } }
       );
-
+      if (!response.ok) throw new Error("Failed to fetch users");
       const contacts = await response.json();
       if (!contacts || !Array.isArray(contacts)) {
         console.warn("No contacts received.");
@@ -115,12 +108,7 @@ const DoctorPeer = () => {
       return [];
     }
   }
-
-  const filteredUsers = userList.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  useEffect(() => {
+   useEffect(() => {
     const getContacts = async () => {
       if (isAuthenticated && userId) {
         const user = await fetchContacts(userId);
@@ -129,6 +117,11 @@ const DoctorPeer = () => {
     };
     getContacts();
   }, [isAuthenticated, userId]);
+
+  // const filteredUsers = userList.filter((user) =>
+  //   user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+
 
   // Update the recipient id from the selected doctor in userList
   useEffect(() => {
@@ -141,14 +134,11 @@ const DoctorPeer = () => {
   useEffect(() => {
     console.log(showMessages, "JSA");
     const filteredMessages = showMessages.filter((msg) => {
-      if (msg.senderType === "user") {
-        return (msg.recipientIdId = userId);
-      } else if (msg.senderType === "doc") {
-        return (msg.senderId = userId);
-      } else {
-        return (msg.recipientIdId = userId);
+      if(msg.senderType === "doctor"){
+      return (msg.senderId === userId);
+      }else{
+        return (msg.recipientId === userId)
       }
-      return false;
     });
     setEditedMessages(filteredMessages);
     console.log("Filtered Messages:", filteredMessages);
@@ -272,7 +262,7 @@ const DoctorPeer = () => {
         {
           decryptedText: message,
           senderId: userId,
-          senderType: localStorage.getItem("user_type"),
+          senderType: "doc",
         },
       ]);
 
@@ -281,7 +271,7 @@ const DoctorPeer = () => {
       socketRef.current.emit("sendMessage", {
         userId: recId,
         doctorId: userId,
-        senderType: localStorage.getItem("user_type"),
+        senderType: "doc",
         encryptedText,
         iv,
         encryptedAESKey: aesKey,
@@ -295,24 +285,27 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`,
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}&userType=doc&recType=user`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
-      // console.log(messages, "HALLLLLLO");
       const decrypted_api_messages = await Promise.all(
-        messages.map(async (msg) => ({
-          senderId: msg["senderId"],
-          recipientId: msg["recipientId"],
-          encryptedAESKey: msg["encryptedAESKey"],
-          decryptedText: await decryptMessage(
-            msg["encryptedText"],
-            msg["iv"],
-            msg["encryptedAESKey"]
-          ),
-          senderType: msg["senderType"],
-        }))
+        messages.map(async (msg) => {
+          const isUser = msg["senderType"] === "user";
+          return {
+            senderId: isUser ? msg["userId"] : msg["doctorId"],
+            recipientId: isUser ? msg["doctorId"] : msg["userId"],
+            encryptedAESKey: msg["encryptedAESKey"],
+            decryptedText: await decryptMessage(
+              msg["encryptedText"],
+              msg["iv"],
+              msg["encryptedAESKey"]
+            ),
+            senderType: msg["senderType"],
+          };
+        })
       );
+
 
       setMessagesApi(decrypted_api_messages);
 

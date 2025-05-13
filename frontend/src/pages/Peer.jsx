@@ -45,9 +45,10 @@ const Peer = () => {
 
   // Function to check if current time is within chat restriction hours (8 PM to 11 PM)
   const isChatDisabled = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    return hours >= 20 && hours < 24; // Restrict chat from 8 PM (20:00) to 11 PM (23:00)
+    // const now = new Date();
+    // const hours = now.getHours();
+    // return hours >= 20 && hours < 24; // Restrict chat from 8 PM (20:00) to 11 PM (23:00)
+    return false
   };
 
   // Filter doctors based on search query
@@ -106,46 +107,46 @@ const Peer = () => {
     fetchDocotors();
   }, []);
 
-  async function fetchContacts(userId) {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}`,
-        { headers: { Authorization: "Bearer " + token } }
-      );
-      const contacts = await response.json();
+  // async function fetchContacts(userId) {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3000/chatContacts?userId=${userId}`,
+  //       { headers: { Authorization: "Bearer " + token } }
+  //     );
+  //     const contacts = await response.json();
 
-      if (!contacts || !Array.isArray(contacts)) {
-        console.warn("No contacts received.");
-        return;
-      }
+  //     if (!contacts || !Array.isArray(contacts)) {
+  //       console.warn("No contacts received.");
+  //       return;
+  //     }
 
-      const updatedChats = contacts.map((contact) => ({
-        name: contact.username,
-        id: contact.id,
-        messages: [],
-      }));
+  //     const updatedChats = contacts.map((contact) => ({
+  //       name: contact.username,
+  //       id: contact.id,
+  //       messages: [],
+  //     }));
 
-      setChats((prevChats) => {
-        const merged = [...updatedChats];
-        prevChats.forEach((chat) => {
-          if (!merged.find((c) => String(c.id) === String(chat.id))) {
-            merged.push(chat);
-          }
-        });
-        return merged;
-      });
-    } catch (error) {
-      console.error("Error fetching contacts:", error);
-      CustomToast("Error while fetching data");
-      return [];
-    }
-  }
+  //     setChats((prevChats) => {
+  //       const merged = [...updatedChats];
+  //       prevChats.forEach((chat) => {
+  //         if (!merged.find((c) => String(c.id) === String(chat.id))) {
+  //           merged.push(chat);
+  //         }
+  //       });
+  //       return merged;
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching contacts:", error);
+  //     CustomToast("Error while fetching data");
+  //     return [];
+  //   }
+  // }
 
-  useEffect(() => {
-    if (isAuthenticated && userId) {
-      fetchContacts(userId);
-    }
-  }, [isAuthenticated, userId]);
+  // useEffect(() => {
+  //   if (isAuthenticated && userId) {
+  //     fetchContacts(userId);
+  //   }
+  // }, [isAuthenticated, userId]);
 
   useEffect(() => {
     if (docList.length > 0 && selectedChat !== null) {
@@ -255,7 +256,7 @@ const Peer = () => {
           senderType: "user",
         });
         socketRef.current.on("unreadCount", (data) => {
-          console.log(data, "Unread");
+          // console.log(data, "Unread");
           setUnread(data);
         });
       } catch (error) {
@@ -268,22 +269,26 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}`,
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
+      console.log(messages,"messgaes")
       const decrypted_api_messages = await Promise.all(
-        messages.map(async (msg) => ({
-          senderId: msg["senderId"],
-          recipientId: msg["recipientId"],
-          encryptedAESKey: msg["encryptedAESKey"],
-          decryptedText: await decryptMessage(
-            msg["encryptedText"],
-            msg["iv"],
-            msg["encryptedAESKey"]
-          ),
-          senderType: msg["senderType"],
-        }))
+        messages.map(async (msg) => {
+          const isUser = msg["senderType"] === "user";
+          return {
+            senderId: isUser ? msg["userId"] : msg["doctorId"],
+            recipientId: isUser ? msg["doctorId"] : msg["userId"],
+            encryptedAESKey: msg["encryptedAESKey"],
+            decryptedText: await decryptMessage(
+              msg["encryptedText"],
+              msg["iv"],
+              msg["encryptedAESKey"]
+            ),
+            senderType: msg["senderType"],
+          };
+        })
       );
 
       setMessagesApi(decrypted_api_messages);
@@ -310,18 +315,16 @@ const Peer = () => {
 
   useEffect(() => {
     // console.log(showMessages, "JSA")
-    console.log(showMessages);
+    console.log(showMessages, "hal");
     const filteredMessages = showMessages.filter((msg) => {
-      // console.log("Filtering", msg)
-      if (msg.senderType === "user") {
-        return (msg.senderId = userId);
-      } else if (msg.senderType === "doc") {
-        return (msg.recipientId = userId);
-      } else {
-        return (msg.recipientId = userId);
+      console.log(msg, "msg")
+      if(msg.senderType === "user"){
+      return (msg.senderId === userId);
+      }else{
+        return (msg.recipientId === userId)
       }
-      return false;
     });
+    console.log(filteredMessages, "filtered")
     setEditedMessages(filteredMessages);
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
@@ -563,11 +566,10 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
-                    msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                  }`}
+                    }`}
                 />
               ))}
               <div ref={messagesEndRef} />
