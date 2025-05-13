@@ -112,27 +112,28 @@ const DoctorPeer = () => {
     const getContacts = async () => {
       if (isAuthenticated && userId) {
         const user = await fetchContacts(userId);
+        // console.log(user, "uesr")
         setUserList(user);
       }
     };
     getContacts();
   }, [isAuthenticated, userId]);
 
-  // const filteredUsers = userList.filter((user) =>
-  //   user.name.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
+  const filteredUsers = userList.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
 
   // Update the recipient id from the selected doctor in userList
   useEffect(() => {
     if (userList.length > 0 && selectedChat !== null) {
-      console.log("Selected doctor:", userList[selectedChat]);
+      // console.log("Selected doctor:", userList[selectedChat]);
       setRecid(userList[selectedChat].id);
     }
   }, [selectedChat, userList]);
 
   useEffect(() => {
-    console.log(showMessages, "JSA");
+    // console.log(showMessages, "JSA");
     const filteredMessages = showMessages.filter((msg) => {
       if(msg.senderType === "doctor"){
       return (msg.senderId === userId);
@@ -141,7 +142,7 @@ const DoctorPeer = () => {
       }
     });
     setEditedMessages(filteredMessages);
-    console.log("Filtered Messages:", filteredMessages);
+    // console.log("Filtered Messages:", filteredMessages);
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
 
@@ -194,7 +195,7 @@ const DoctorPeer = () => {
         encryptedAESKey
       );
       if (lastMessageRef.current === decrypted) return;
-      console.log(decrypted, "decrypt");
+      // console.log(decrypted, "decrypt");
       lastMessageRef.current = decrypted;
 
       setShowMessages((prev) => [
@@ -202,7 +203,7 @@ const DoctorPeer = () => {
         { decryptedText: decrypted, senderId, senderType },
       ]);
     };
-
+    
     socketRef.current.on("receiveMessage", handleReceiveMessage);
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
@@ -216,7 +217,7 @@ const DoctorPeer = () => {
   }, [selectedChat, userId, reloader, userList]);
 
   useEffect(() => {
-    console.log(recId, "selectd", userId, " ");
+    // console.log(recId, "selectd", userId, " ");
     if (selectedChat !== null && recId !== 0) {
       socketRef.current.emit("markAsRead", {
         userId: recId,
@@ -226,18 +227,18 @@ const DoctorPeer = () => {
     }
 
     const pendingReads = async () => {
-      console.log("HAL");
+      // console.log("HAL");
       try {
         socketRef.current.emit("countUnseen", {
           userId: userId,
           senderType: "doc",
         });
         socketRef.current.on("unreadCount", (data) => {
-          console.log(data);
+          // console.log(data);
           setUnread(data);
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     pendingReads();
@@ -259,15 +260,12 @@ const DoctorPeer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        {
-          decryptedText: message,
-          senderId: userId,
+        { decryptedText: message, senderId: userId,
           senderType: "doc",
         },
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
-      // console.log(recId, userId)
       socketRef.current.emit("sendMessage", {
         userId: recId,
         doctorId: userId,
@@ -285,10 +283,11 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}&userType=doc&recType=user`,
+        `http://localhost:3000/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
+      console.log(messages, "non mes");
       const decrypted_api_messages = await Promise.all(
         messages.map(async (msg) => {
           const isUser = msg["senderType"] === "user";
@@ -306,7 +305,7 @@ const DoctorPeer = () => {
         })
       );
 
-
+      // console.log(decryptMessage, "decrypt")
       setMessagesApi(decrypted_api_messages);
 
       const filteredMessages = decrypted_api_messages.filter((msg) => {

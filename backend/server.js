@@ -542,9 +542,15 @@ app.get("/countUnseen", authorizeRoles("user", "doc"), async (req, res) => {
 app.get("/messages", authorizeRoles("user", "doc"), async (req, res) => {
   try {
     const { userId, recId, userType, recType } = req.query;
+    if(userType === "user"){
     if (userId.toString() !== req.user.userId.toString()) {
       return res.status(403).json({ error: "Access denied" });
     }
+  }else{
+    if (recId.toString() !== req.user.userId.toString()) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+  }
     console.log(userId, recId, userType, recType);
     const messages = await prisma.message.findMany({
       where: {
