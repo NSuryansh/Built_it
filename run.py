@@ -13,6 +13,7 @@ from agno.memory.db.sqlite import SqliteMemoryDb
 from agno.memory.manager import MemoryManager 
 from agno.memory.summarizer import MemorySummarizer 
 from agno.storage.agent.sqlite import SqliteAgentStorage   
+from updated_chatbot import Mental_Agent
 
 # Initialize Flask app 
 app = Flask(__name__) 
@@ -75,35 +76,36 @@ def create_mental_agent(user_id: str, session_id: str = None) -> Agent:
 @app.route('/chat', methods=['POST']) 
 def chat():     
     try:         
-        data = request.get_json()         
-        user_id = data.get("user_id", "default_user")         
-        user_message = data.get("message", "")          
+        # data = request.get_json()         
+        # user_id = data.get("user_id", "default_user")         
+        # user_message = data.get("message", "")          
         
-        if not user_message:             
-            return jsonify({"error": "Empty message"}), 400          
+        # if not user_message:             
+        #     return jsonify({"error": "Empty message"}), 400          
         
-        # Create an agent instance for the user         
-        agent = create_mental_agent(user_id)          
+        # # Create an agent instance for the user         
+        # agent = create_mental_agent(user_id)          
         
-        # Get response from the agent         
-        response_obj = agent.run(user_message)          
+        # # Get response from the agent         
+        # response_obj = agent.run(user_message)          
         
-        # Extract just the text content 
-        # If it's a RunResponse object, extract the 'content' attribute
-        if hasattr(response_obj, 'content'):
-            bot_response = response_obj.content.strip()
-        # If it's a dictionary, try to get 'text' or convert to string
-        elif isinstance(response_obj, dict):
-            bot_response = response_obj.get('text', str(response_obj)).strip()
-        # Otherwise, convert to string
-        else:
-            bot_response = str(response_obj).strip()
+        # # Extract just the text content 
+        # # If it's a RunResponse object, extract the 'content' attribute
+        # if hasattr(response_obj, 'content'):
+        #     bot_response = response_obj.content.strip()
+        # # If it's a dictionary, try to get 'text' or convert to string
+        # elif isinstance(response_obj, dict):
+        #     bot_response = response_obj.get('text', str(response_obj)).strip()
+        # # Otherwise, convert to string
+        # else:
+        #     bot_response = str(response_obj).strip()
         
-        # Return response with session ID         
-        return jsonify({
-            "response": {"text": bot_response}, 
-            "session_id": agent.session_id
-        })     
+        # # Return response with session ID         
+        # return jsonify({
+        #     "response": {"text": bot_response}, 
+        #     "session_id": agent.session_id
+        # })     
+        Mental_Agent()
     except Exception as e:         
         return jsonify({"error": str(e)}), 500
     

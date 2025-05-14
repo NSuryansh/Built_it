@@ -17,6 +17,12 @@ from agno.memory.manager import MemoryManager
 from agno.memory.summarizer import MemorySummarizer
 from agno.storage.agent.sqlite import SqliteAgentStorage 
 from agno.tools.youtube import YouTubeTools   
+from flask import Flask, request, jsonify 
+from flask_cors import CORS 
+
+app = Flask(__name__) 
+CORS(app, resources={r"/*": {"origins": "*"}})  
+
 agent_storage = SqliteAgentStorage(table_name="mental_sessions", db_file="tmp/agents.db")
 memory_db = SqliteMemoryDb(
     table_name="mental_memory",
