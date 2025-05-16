@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Phone } from "lucide-react";
 
 const EmergencyCallButton = ({ phoneNumber }) => {
@@ -7,10 +7,8 @@ const EmergencyCallButton = ({ phoneNumber }) => {
 
   const handleCall = () => {
     setIsClicked(true);
-    // In a real app, you might want to implement additional logic here
     window.location.href = `tel:${phoneNumber}`;
 
-    // Reset the clicked state after animation completes
     setTimeout(() => {
       setIsClicked(false);
     }, 300);
