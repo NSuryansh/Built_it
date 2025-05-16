@@ -103,6 +103,7 @@ const UserAppointments = () => {
           id: appointmentId,
           stars: ratingValue,
           doctorId: docId,
+          userId: user_id
         }),
       });
 
