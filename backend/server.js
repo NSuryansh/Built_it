@@ -1310,7 +1310,7 @@ app.get("/currentuserappt", authorizeRoles("user"), async (req, res) => {
   }
 });
 
-app.get("/pastApp", async (req, res) => {
+app.get("/pastApp", authorizeRoles("admin") ,async (req, res) => {
   const currDate = new Date();
   const oneYear = new Date();
   oneYear.setFullYear(currDate.getFullYear() - 1);
@@ -1335,13 +1335,15 @@ app.get("/pastApp", async (req, res) => {
   }
 });
 
-app.get("/getUserFeelings", async (req, res) => {
+app.get("/getUserFeelings", authorizeRoles("user") ,async (req, res) => {
   const userId = Number(req.query["userId"]); // Fix: Use query parameters
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });
   }
-
+  if(userId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   try {
     const feelings = await prisma.feelings.findUnique({
       where: { user_id: userId },
@@ -1360,7 +1362,7 @@ app.get("/getUserFeelings", async (req, res) => {
   }
 });
 
-app.get("/getFeelings", async (req, res) => {
+app.get("/getFeelings", authorizeRoles("doc") ,async (req, res) => {
   try {
     const feelings = await prisma.feelings.findMany({
       include: {
@@ -1378,42 +1380,42 @@ app.get("/getFeelings", async (req, res) => {
   }
 });
 
-app.post("/feelings", async (req, res) => {
-  try {
-    const { userId, menPeace, sleepQ, socLife, passion, lsScore, happyScore } =
-      req.body;
+// app.post("/feelings", authorizeRoles("") ,async (req, res) => {
+//   try {
+//     const { userId, menPeace, sleepQ, socLife, passion, lsScore, happyScore } =
+//       req.body;
 
-    if (!userId) {
-      return res.status(400).json({ error: "User ID is required" });
-    }
+//     if (!userId) {
+//       return res.status(400).json({ error: "User ID is required" });
+//     }
 
-    const feelings = await prisma.feelings.upsert({
-      where: { user_id: userId },
-      update: {
-        mental_peace: menPeace,
-        sleep_quality: sleepQ,
-        social_life: socLife,
-        passion: passion,
-        less_stress_score: lsScore,
-        happiness_score: happyScore,
-      },
-      create: {
-        user_id: userId,
-        mental_peace: menPeace,
-        sleep_quality: sleepQ,
-        social_life: socLife,
-        passion: passion,
-        less_stress_score: lsScore,
-        happiness_score: happyScore,
-      },
-    });
+//     const feelings = await prisma.feelings.upsert({
+//       where: { user_id: userId },
+//       update: {
+//         mental_peace: menPeace,
+//         sleep_quality: sleepQ,
+//         social_life: socLife,
+//         passion: passion,
+//         less_stress_score: lsScore,
+//         happiness_score: happyScore,
+//       },
+//       create: {
+//         user_id: userId,
+//         mental_peace: menPeace,
+//         sleep_quality: sleepQ,
+//         social_life: socLife,
+//         passion: passion,
+//         less_stress_score: lsScore,
+//         happiness_score: happyScore,
+//       },
+//     });
 
-    res.status(200).json(feelings);
-  } catch (error) {
-    console.error("Error adding/updating feelings:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//     res.status(200).json(feelings);
+//   } catch (error) {
+//     console.error("Error adding/updating feelings:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
 async function sendEmail(to, subject, text) {
   // var params = {
@@ -1442,7 +1444,7 @@ async function sendEmail(to, subject, text) {
     console.error("Error sending email:", error);
   }
 }
-app.post("/forgotPassword", async (req, res) => {
+app.post("/forgotPassword", authorizeRoles("user") , async (req, res) => {
   const email = req.body["email"];
   try {
     const user = await prisma.user.findUnique({
@@ -1506,7 +1508,7 @@ app.post("/resetPassword", async (req, res) => {
   }
 });
 
-app.post("/forgotDoctorPassword", async (req, res) => {
+app.post("/forgotDoctorPassword", authorizeRoles("doc") ,async (req, res) => {
   const email = req.body["email"];
   try {
     const doctor = await prisma.doctor.findUnique({
@@ -1567,7 +1569,7 @@ app.post("/resetDoctorPassword", async (req, res) => {
   }
 });
 
-app.post("/forgotAdminPassword", async (req, res) => {
+app.post("/forgotAdminPassword", authorizeRoles("admin"),async (req, res) => {
   const email = req.body["email"];
   try {
     const admin = await prisma.admin.findUnique({
@@ -1628,10 +1630,14 @@ app.post("/resetAdminPassword", async (req, res) => {
   }
 });
 
-app.post("/setRating", async (req, res) => {
+app.post("/setRating", authorizeRoles("user") ,async (req, res) => {
   const stars = req.body["stars"];
   const id = req.body["id"];
   const docId = req.body["doctorId"];
+  const userId = req.body["userId"]
+  if(userId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   // console.log(id);
   // console.log(docId);
   try {
@@ -1673,7 +1679,7 @@ app.post("/setRating", async (req, res) => {
   }
 });
 
-app.post("/save-subscription", async (req, res) => {
+app.post("/save-subscription", authorizeRoles("user", "doc", "admin"),async (req, res) => {
   try {
     // console.log("HELLLLLOOOOOOO");
     const { userid, subscription, userType } = req.body;
@@ -1770,7 +1776,7 @@ app.post("/save-subscription", async (req, res) => {
   }
 });
 
-app.post("/send-notification", async (req, res) => {
+app.post("/send-notification", authorizeRoles("user", "admin", "doc") ,async (req, res) => {
   try {
     const { userid, message, userType } = req.body;
     if (!userid || !message) {
@@ -1834,29 +1840,32 @@ app.post("/send-notification", async (req, res) => {
   }
 });
 
-app.post("/node-chat", async (req, res) => {
-  try {
-    // console.log("HELOE");
-    const { user_id, message } = req.body;
+// app.post("/node-chat", async (req, res) => {
+//   try {
+//     // console.log("HELOE");
+//     const { user_id, message } = req.body;
 
-    const response = await axios.post(
-      "https://built-it-python-895c.onrender.com/chatWithBot",
-      {
-        user_id,
-        message,
-      }
-    );
-    // console.log(response.data);
+//     const response = await axios.post(
+//       "https://built-it-python-895c.onrender.com/chatWithBot",
+//       {
+//         user_id,
+//         message,
+//       }
+//     );
+//     // console.log(response.data);
 
-    res.json(response.data);
-  } catch (error) {
-    console.error("Error calling Flask API:", error.message);
-    res.status(500).json({ error: error.message });
-  }
-});
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error("Error calling Flask API:", error.message);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
-app.get("/general-slots", async (req, res) => {
+app.get("/general-slots", authorizeRoles("doc") ,async (req, res) => {
   const { docId } = req.query;
+  if(docId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   const doctor_id = Number(docId);
 
   try {
@@ -1870,7 +1879,7 @@ app.get("/general-slots", async (req, res) => {
   }
 });
 
-app.get("/available-slots", async (req, res) => {
+app.get("/available-slots", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
   const { docId, date } = req.query;
   const doctor_id = Number(docId);
 
@@ -1954,8 +1963,11 @@ app.get("/available-slots", async (req, res) => {
   }
 });
 
-app.put("/modifySlots", async (req, res) => {
+app.put("/modifySlots", authorizeRoles("doc"),async (req, res) => {
   const { slotsArray, doctorId } = req.query;
+  if(doctorId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   // console.log(slotsArray);
   const slots = slotsArray.split(",");
   // console.log(doctorId);
@@ -1980,7 +1992,7 @@ app.put("/modifySlots", async (req, res) => {
   }
 });
 
-app.get("/getDoc", async (req, res) => {
+app.get("/getDoc", authorizeRoles("user", "doc", "admin"),async (req, res) => {
   const { docId } = req.query;
   const doctor_id = Number(docId);
 
@@ -2090,28 +2102,31 @@ app.post("/otpcheck", async (req, res) => {
   }
 });
 
-app.post("/scores-bot", async (req, res) => {
-  try {
-    const { user_id } = req.body;
+// app.post("/scores-bot", async (req, res) => {
+//   try {
+//     const { user_id } = req.body;
 
-    const response = await axios.post(
-      "https://built-it-python-895c.onrender.com/analyze",
-      {
-        user_id,
-      }
-    );
+//     const response = await axios.post(
+//       "https://built-it-python-895c.onrender.com/analyze",
+//       {
+//         user_id,
+//       }
+//     );
 
-    // console.log(response.data.json);
-    res.json(response.data);
-  } catch (error) {
-    console.error("Error calling the Flas API: ", error.message);
-    res.status(500).json({ error: error.message });
-  }
-});
+//     // console.log(response.data.json);
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error("Error calling the Flas API: ", error.message);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
-app.put("/modifyDoc", upload.single("image"), async (req, res) => {
+app.put("/modifyDoc", authorizeRoles("doc"),upload.single("image"), async (req, res) => {
   try {
     const { id, address, city, experience, educ, certifi } = req.body;
+    if(id!==req.user.userId){
+      return res.status(403).json({error: "Access denied"})
+    }
     // console.log(req.body);
     const file = req.file;
     // console.log(file);
@@ -2247,7 +2262,7 @@ app.post("/emerApp", async (req, res) => {
   }
 });
 
-app.get("/all-appointments", async (req, res) => {
+app.get("/all-appointments", authorizeRoles("admin"), async (req, res) => {
   try {
     // Fetch upcoming/current appointments with related doctor and user
     const appts = await prisma.appointments.findMany({
@@ -2279,8 +2294,11 @@ app.get("/all-appointments", async (req, res) => {
   }
 });
 
-app.post("/add-slot", async (req, res) => {
+app.post("/add-slot", authorizeRoles("doc") ,async (req, res) => {
   const doctorId = req.body["doctorId"];
+  if(doctorId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   const startTime = req.body["startTime"];
   // console.log(req.body);
   try {
@@ -2304,7 +2322,7 @@ app.post("/add-slot", async (req, res) => {
   }
 });
 
-app.post("/referrals", async (req, res) => {
+app.post("/referrals", authorizeRoles("admin"), async (req, res) => {
   const { roll_no, doctor_id, referred_by, reason } = req.body;
 
   if (!roll_no || !doctor_id || !referred_by || !reason) {
@@ -2350,8 +2368,11 @@ app.post("/referrals", async (req, res) => {
   }
 });
 
-app.get("/get-referrals", async (req, res) => {
+app.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   const { doctor_id } = req.query;
+  if(doctor_id!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   try {
     const data = await prisma.referrals.findMany({
       where: { doctor_id: Number(doctor_id) },
@@ -2370,9 +2391,12 @@ app.get("/get-referrals", async (req, res) => {
   }
 });
 
-app.post("/request-to-user", async (req, res) => {
+app.post("/request-to-user", authorizeRoles("doc"), async (req, res) => {
   const userId = Number(req.body["userId"]);
   const doctorId = Number(req.body["doctorId"]);
+  if(doctorId.toString()!==req.user.userId){
+    return res.status(403).json({error:"Access denied"})
+  }
   const dateTime = req.body["dateTime"];
   const reason = req.body["reason"];
 
@@ -2411,9 +2435,12 @@ app.post("/request-to-user", async (req, res) => {
   }
 });
 
-app.post("/accept-booking-by-user", async (req, res) => {
+app.post("/accept-booking-by-user", authorizeRoles("user"), async (req, res) => {
   const userId = Number(req.body["userId"]);
   const doctorId = Number(req.body["doctorId"]);
+  if(userId.toString()!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   const dateTime = req.body["dateTime"];
   const date = new Date();
   const newDate = new Date(dateTime);
@@ -2464,27 +2491,27 @@ app.post("/accept-booking-by-user", async (req, res) => {
   }
 });
 
-app.post("/rating", async (req, res) => {
-  const stars = req.body["stars"];
-  const appId = req.body["id"];
-  try {
-    const updatedApp = await prisma.appointments.update({
-      where: { id: appId },
-      data: {
-        stars: stars,
-      },
-    });
-    res.json({
-      message: "Stars Added",
-      updatedApp,
-    });
-  } catch (error) {
-    console.error(error);
-    res.json({ message: "Error adding stars" });
-  }
-});
+// app.post("/rating", async (req, res) => {
+//   const stars = req.body["stars"];
+//   const appId = req.body["id"];
+//   try {
+//     const updatedApp = await prisma.appointments.update({
+//       where: { id: appId },
+//       data: {
+//         stars: stars,
+//       },
+//     });
+//     res.json({
+//       message: "Stars Added",
+//       updatedApp,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.json({ message: "Error adding stars" });
+//   }
+// });
 
-app.get("/appointments-count", async (req, res) => {
+app.get("/appointments-count", authorizeRoles("admin"), async (req, res) => {
   try {
     const userId = Number(req.query["id"]);
 
@@ -2513,7 +2540,7 @@ app.get("/appointments-count", async (req, res) => {
   }
 });
 
-app.get("/user-doctors", async (req, res) => {
+app.get("/user-doctors", authorizeRoles("admin"), async (req, res) => {
   try {
     const userId = Number(req.query["userId"]);
 
