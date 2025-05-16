@@ -272,7 +272,7 @@ app.get("/getUsers", authorizeRoles("doc", "admin"), async (req, res) => {
   }
 });
 
-app.put("/modifyUser", authorizeRoles(["user"]), async (req, res) => {
+app.put("/modifyUser", authorizeRoles("user"), async (req, res) => {
   try {
     const { id, username, email, mobile, alt_mobile, gender } = req.body;
     // console.log(req.body);
@@ -282,7 +282,7 @@ app.put("/modifyUser", authorizeRoles(["user"]), async (req, res) => {
     }
 
     if (id !== req.user.userId) {
-      res.json({ error: "Access denied" });
+      return res.status(403).json({ error: "Access denied" });
     }
 
     if (username) {
@@ -591,7 +591,7 @@ app.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-app.get("/getPastEvents", async (req, res) => {
+app.get("/getPastEvents", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
   try {
     // console.log("hello");
     const thirtyDaysAgo = new Date();
@@ -612,7 +612,7 @@ app.get("/getPastEvents", async (req, res) => {
   }
 });
 
-app.get("/events", async (req, res) => {
+app.get("/events", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
   try {
     const events = await prisma.events.findMany({
       where: {
@@ -628,7 +628,7 @@ app.get("/events", async (req, res) => {
   }
 });
 
-app.put("/uploadURL", async (req, res) => {
+app.put("/uploadURL", authorizeRoles("admin") ,async (req, res) => {
   const { id, url } = req.query;
   const event_id = Number(id);
   try {
@@ -647,34 +647,7 @@ app.put("/uploadURL", async (req, res) => {
   }
 });
 
-app.put("/updateUser", async (req, res) => {
-  try {
-    const { userId, username, mobile, email, alt_mobile } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({ error: "User ID is required" });
-    }
-
-    const updatedData = {
-      ...(username && { username }),
-      ...(mobile && { mobile }),
-      ...(email && { email }),
-      ...(alt_mobile && { alt_mobile }),
-    };
-
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: updatedData,
-    });
-
-    res.json({ message: "User updated successfully", updatedUser });
-  } catch (error) {
-    console.error("Error updating user: ", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-app.post("/events", async (req, res) => {
+app.post("/events", authorizeRoles("admin") ,async (req, res) => {
   const id = req.body["id"];
 
   try {
@@ -690,8 +663,11 @@ app.post("/events", async (req, res) => {
   }
 });
 
-app.post("/addSlot", async (req, res) => {
+app.post("/addSlot", authorizeRoles("admin") ,async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
+  if(doc_id!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   const slotTime = req.body["time"];
   const slot = await prisma.slots.create({
     data: {
@@ -702,8 +678,11 @@ app.post("/addSlot", async (req, res) => {
   res.json(slot);
 });
 
-app.post("/addLeave", async (req, res) => {
+app.post("/addLeave", authorizeRoles("doc") ,async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
+  if(doc_id!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   const start = req.body["start"];
   const end = req.body["end"];
 
@@ -718,7 +697,7 @@ app.post("/addLeave", async (req, res) => {
   res.json(leave);
 });
 
-app.post("/addDoc", async (req, res) => {
+app.post("/addDoc", authorizeRoles("admin") ,async (req, res) => {
   const {
     name,
     mobile,
@@ -754,9 +733,12 @@ app.post("/addDoc", async (req, res) => {
   }
 });
 
-app.post("/book", async (req, res) => {
+app.post("/book", authorizeRoles("doc") ,async (req, res) => {
   const userId = req.body["userId"];
   const doctorId = req.body["doctorId"];
+  if(doctorId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   const dateTime = req.body["dateTime"];
   const date = new Date();
   const newDate = new Date(dateTime);
@@ -798,11 +780,14 @@ app.post("/book", async (req, res) => {
   }
 });
 
-app.post("/requests", async (req, res) => {
+app.post("/requests", authorizeRoles("user", "doc") ,async (req, res) => {
   const userId = Number(req.body["userId"]);
   const doctorId = Number(req.body["doctorId"]);
   const dateTime = req.body["dateTime"];
   const reason = req.body["reason"];
+  if(userId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
 
   try {
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -835,7 +820,7 @@ app.post("/requests", async (req, res) => {
   }
 });
 
-app.get("/getdoctors", async (req, res) => {
+app.get("/getdoctors", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
   const user_type = req.query["user_type"];
   try {
     let doctors = [];
@@ -909,14 +894,17 @@ app.post("/adminLogin", async (req, res) => {
   res.json({ message: "Login successful", token });
 });
 
-app.get("/reqApp", async (req, res) => {
+app.get("/reqApp", authorizeRoles("doc") ,async (req, res) => {
   const docId = Number(req.query["docId"]);
+  if(docId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   const appt = await prisma.requests.findMany({
     where: { doctor_id: docId, forDoctor: true },
     include: {
       user: {
         select: {
-          username: true, // assuming "name" is the username
+          username: true,
           mobile: true,
           email: true,
         },
@@ -927,9 +915,12 @@ app.get("/reqApp", async (req, res) => {
   res.json(appt);
 });
 
-app.get("/getRequests", async (req, res) => {
+app.get("/getRequests", authorizeRoles("user") ,async (req, res) => {
   try {
     const userId = Number(req.query["userId"]);
+    if(userId!==req.user.userId){
+      return res.status(403).json({error: "Access denied"})
+    }
     const reqs = await prisma.requests.findMany({
       where: { user_id: userId, forDoctor: false },
       include: {
@@ -986,7 +977,7 @@ app.get("/adminProfile", async (req, res) => {
   }
 });
 
-app.post("/addEvent", async (req, res) => {
+app.post("/addEvent", authorizeRoles("admin") ,async (req, res) => {
   try {
     const title = req.body["title"];
     const description = req.body["description"];
@@ -1074,13 +1065,16 @@ app.delete("/deletenotifs", async (req, res) => {
   }
 });
 
-app.delete("/deleteRequest", async (req, res) => {
+app.delete("/deleteRequest", authorizeRoles("user") ,async (req, res) => {
   try {
     const id = Number(req.query["id"]);
-
+    const userId = Number(req.query["userId"])
     // Validate input
     if (!id) {
       return res.status(400).json({ error: "ID is required" });
+    }
+    if(userId!==req.user.userId){
+      return res.status(403).json({error:"Access denied"})
     }
 
     // Delete the notification from the database
@@ -1095,7 +1089,7 @@ app.delete("/deleteRequest", async (req, res) => {
   }
 });
 
-app.post("/changeRoomNo", async (req, res) => {
+app.post("/changeRoomNo", authorizeRoles("doc") ,async (req, res) => {
   try {
     const user_Id = Number(req.query["user_Id"]);
     const room_no = req.query["roomNo"];
@@ -1119,9 +1113,12 @@ app.post("/changeRoomNo", async (req, res) => {
   }
 });
 
-app.post("/deleteApp", async (req, res) => {
+app.post("/deleteApp", authorizeRoles("doc") ,async (req, res) => {
   const appId = Number(req.body["appId"]);
   const doc_id = Number(req.body["doctorId"]);
+  if(doc_id!==req.user.userId){
+    return res.status(403).json({error:"Access denied"})
+  }
   const user_id = Number(req.body["userId"]);
   const note = req.body["note"];
   const dateTime = new Date();
@@ -1153,7 +1150,7 @@ app.post("/deleteApp", async (req, res) => {
   }
 });
 
-app.post("/toggleDoc", async (req, res) => {
+app.post("/toggleDoc", authorizeRoles("admin") ,async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
   const isInactive = Boolean(req.body["isInactive"]);
   // console.log(doctorId);
@@ -1183,11 +1180,14 @@ app.post("/toggleDoc", async (req, res) => {
   }
 });
 
-app.get("/currentdocappt", async (req, res) => {
+app.get("/currentdocappt", authorizeRoles("doc") ,async (req, res) => {
   const doctorId = Number(req.query["doctorId"]);
   // Get today's date range (start and end of today)
   if (!doctorId) {
     return res.status(400).json({ message: "Doctor ID is required" });
+  }
+  if(doctorId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
   }
   try {
     const doctor = await prisma.doctor.findUnique({
@@ -1219,11 +1219,14 @@ app.get("/currentdocappt", async (req, res) => {
   }
 });
 
-app.get("/pastdocappt", async (req, res) => {
+app.get("/pastdocappt", authorizeRoles("doc") ,async (req, res) => {
   const doctorId = Number(req.query["doctorId"]);
   // Get today's date range (start and end of today)
   if (!doctorId) {
     return res.status(400).json({ message: "Doctor ID is required" });
+  }
+  if(doctorId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
   }
   try {
     const doctor = await prisma.doctor.findUnique({
@@ -1248,8 +1251,11 @@ app.get("/pastdocappt", async (req, res) => {
   }
 });
 
-app.get("/pastuserappt", async (req, res) => {
+app.get("/pastuserappt", authorizeRoles("user") ,async (req, res) => {
   const userId = Number(req.query["userId"]);
+  if(userId!==req.user.userId){
+    return res.status(403).json({error: "Access denied"})
+  }
   // console.log(userId);
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
@@ -1275,11 +1281,14 @@ app.get("/pastuserappt", async (req, res) => {
   }
 });
 
-app.get("/currentuserappt", async (req, res) => {
+app.get("/currentuserappt", authorizeRoles("user"), async (req, res) => {
   const userId = Number(req.query["userId"]);
   // Get today's date range (start and end of today)
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
+  }
+  if(req.user.userId.toString() !==userId.toString()){
+    return res.status(403).json({error: "Access denied"})
   }
   try {
     const user = await prisma.user.findUnique({
