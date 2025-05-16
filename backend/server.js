@@ -189,14 +189,14 @@ io.on("connection", (socket) => {
         const room = `chat_${[Number(userId), Number(doctorId)]
           .sort((a, b) => a - b)
           .join("_")}`;
-       
+
         var senderId;
         if (senderType === "doc") {
           senderId = doctorId;
         } else {
           senderId = userId;
         }
-        console.log(senderId, ",mesgaerh")
+        console.log(senderId, ",mesgaerh");
         socket.to(room).emit("receiveMessage", {
           id: message.id,
           senderId,
@@ -437,6 +437,24 @@ app.get(
   }
 );
 
+app.get("/getAppointmentById", authorizeRoles("user"), async (req, res) => {
+  console.log(req.headers.authorization);
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized token" });
+  }
+  try {
+    const id = Number(req.query["id"]);
+    const appointment = await prisma.pastAppointments.findUnique({
+      where: { id: id },
+    });
+    // console.log(appointments);
+    res.json(appointment);
+  } catch (e) {
+    return res.status(400).json({ message: "Error in appointment" });
+  }
+});
+
 // app.post('/admin', async(req,res)=>{
 //   const name = req.body["name"]
 //   const email = req.body["email"]
@@ -458,8 +476,11 @@ app.get("/chatContacts", authorizeRoles("doc", "user"), async (req, res) => {
   try {
     const userId = req.query["userId"];
     const userType = req.query["userType"];
-    console.log(req.user, "req")
-    if (userId.toString() !== req.user.userId.toString() || userType.toString() !== req.user.role.toString()) {
+    // console.log(req.user, "req");
+    if (
+      userId.toString() !== req.user.userId.toString() ||
+      userType.toString() !== req.user.role.toString()
+    ) {
       return res.status(403).json({ error: "Access denied" });
     }
     if (!userId) {
@@ -498,7 +519,8 @@ app.get("/chatContacts", authorizeRoles("doc", "user"), async (req, res) => {
     res.json(users);
   } catch (error) {
     console.error("Error fetching chat contacts:", error);
-    res.status(500)
+    res
+      .status(500)
       .json({ message: "Internal Server Error", error: error.message });
   }
 });
@@ -542,16 +564,16 @@ app.get("/countUnseen", authorizeRoles("user", "doc"), async (req, res) => {
 app.get("/messages", authorizeRoles("user", "doc"), async (req, res) => {
   try {
     const { userId, recId, userType, recType } = req.query;
-    if(userType === "user"){
-    if (userId.toString() !== req.user.userId.toString()) {
-      return res.status(403).json({ error: "Access denied" });
+    if (userType === "user") {
+      if (userId.toString() !== req.user.userId.toString()) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+    } else {
+      if (recId.toString() !== req.user.userId.toString()) {
+        return res.status(403).json({ error: "Access denied" });
+      }
     }
-  }else{
-    if (recId.toString() !== req.user.userId.toString()) {
-      return res.status(403).json({ error: "Access denied" });
-    }
-  }
-    console.log(userId, recId, userType, recType);
+    // console.log(userId, recId, userType, recType);
     const messages = await prisma.message.findMany({
       where: {
         OR: [
@@ -569,7 +591,7 @@ app.get("/messages", authorizeRoles("user", "doc"), async (req, res) => {
       },
       orderBy: { createdAt: "asc" },
     });
-    console.log(messages, "hello");
+    // console.log(messages, "hello");
     res.json(messages);
   } catch (e) {
     console.error(e);
@@ -591,28 +613,32 @@ app.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-app.get("/getPastEvents", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
-  try {
-    // console.log("hello");
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+app.get(
+  "/getPastEvents",
+  authorizeRoles("user", "doc", "admin"),
+  async (req, res) => {
+    try {
+      // console.log("hello");
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const events = await prisma.events.findMany({
-      where: {
-        dateTime: {
-          gte: thirtyDaysAgo,
-          lte: new Date(),
+      const events = await prisma.events.findMany({
+        where: {
+          dateTime: {
+            gte: thirtyDaysAgo,
+            lte: new Date(),
+          },
         },
-      },
-    });
-    // console.log(events);
-    res.json(events);
-  } catch (e) {
-    res.json(e);
+      });
+      // console.log(events);
+      res.json(events);
+    } catch (e) {
+      res.json(e);
+    }
   }
-});
+);
 
-app.get("/events", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
+app.get("/events", authorizeRoles("user", "doc", "admin"), async (req, res) => {
   try {
     const events = await prisma.events.findMany({
       where: {
@@ -628,7 +654,7 @@ app.get("/events", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
   }
 });
 
-app.put("/uploadURL", authorizeRoles("admin") ,async (req, res) => {
+app.put("/uploadURL", authorizeRoles("admin"), async (req, res) => {
   const { id, url } = req.query;
   const event_id = Number(id);
   try {
@@ -647,7 +673,7 @@ app.put("/uploadURL", authorizeRoles("admin") ,async (req, res) => {
   }
 });
 
-app.post("/events", authorizeRoles("admin") ,async (req, res) => {
+app.post("/events", authorizeRoles("admin"), async (req, res) => {
   const id = req.body["id"];
 
   try {
@@ -663,10 +689,10 @@ app.post("/events", authorizeRoles("admin") ,async (req, res) => {
   }
 });
 
-app.post("/addSlot", authorizeRoles("admin") ,async (req, res) => {
+app.post("/addSlot", authorizeRoles("admin"), async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
-  if(doc_id!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (doc_id !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
   const slotTime = req.body["time"];
   const slot = await prisma.slots.create({
@@ -678,10 +704,10 @@ app.post("/addSlot", authorizeRoles("admin") ,async (req, res) => {
   res.json(slot);
 });
 
-app.post("/addLeave", authorizeRoles("doc") ,async (req, res) => {
+app.post("/addLeave", authorizeRoles("doc"), async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
-  if(doc_id!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (doc_id !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
   const start = req.body["start"];
   const end = req.body["end"];
@@ -697,7 +723,7 @@ app.post("/addLeave", authorizeRoles("doc") ,async (req, res) => {
   res.json(leave);
 });
 
-app.post("/addDoc", authorizeRoles("admin") ,async (req, res) => {
+app.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
   const {
     name,
     mobile,
@@ -733,11 +759,11 @@ app.post("/addDoc", authorizeRoles("admin") ,async (req, res) => {
   }
 });
 
-app.post("/book", authorizeRoles("doc") ,async (req, res) => {
+app.post("/book", authorizeRoles("doc"), async (req, res) => {
   const userId = req.body["userId"];
   const doctorId = req.body["doctorId"];
-  if(doctorId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (doctorId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
   const dateTime = req.body["dateTime"];
   const date = new Date();
@@ -780,13 +806,13 @@ app.post("/book", authorizeRoles("doc") ,async (req, res) => {
   }
 });
 
-app.post("/requests", authorizeRoles("user", "doc") ,async (req, res) => {
+app.post("/requests", authorizeRoles("user", "doc"), async (req, res) => {
   const userId = Number(req.body["userId"]);
   const doctorId = Number(req.body["doctorId"]);
   const dateTime = req.body["dateTime"];
   const reason = req.body["reason"];
-  if(userId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (userId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
 
   try {
@@ -820,21 +846,27 @@ app.post("/requests", authorizeRoles("user", "doc") ,async (req, res) => {
   }
 });
 
-app.get("/getdoctors", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
-  const user_type = req.query["user_type"];
-  try {
-    let doctors = [];
-    if (user_type === "user") {
-      doctors = await prisma.doctor.findMany({ where: { isInactive: false } });
-    } else if (user_type === "admin") {
-      doctors = await prisma.doctor.findMany();
+app.get(
+  "/getdoctors",
+  authorizeRoles("user", "doc", "admin"),
+  async (req, res) => {
+    const user_type = req.query["user_type"];
+    try {
+      let doctors = [];
+      if (user_type === "user") {
+        doctors = await prisma.doctor.findMany({
+          where: { isInactive: false },
+        });
+      } else if (user_type === "admin") {
+        doctors = await prisma.doctor.findMany();
+      }
+      res.json(doctors);
+    } catch (e) {
+      console.error(e);
+      res.status(0).json({ message: "Error fetching doctors" });
     }
-    res.json(doctors);
-  } catch (e) {
-    console.error(e);
-    res.status(0).json({ message: "Error fetching doctors" });
   }
-});
+);
 
 app.post("/docLogin", async (req, res) => {
   // console.log(req.body);
@@ -894,10 +926,10 @@ app.post("/adminLogin", async (req, res) => {
   res.json({ message: "Login successful", token });
 });
 
-app.get("/reqApp", authorizeRoles("doc") ,async (req, res) => {
+app.get("/reqApp", authorizeRoles("doc"), async (req, res) => {
   const docId = Number(req.query["docId"]);
-  if(docId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (docId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
   const appt = await prisma.requests.findMany({
     where: { doctor_id: docId, forDoctor: true },
@@ -915,11 +947,11 @@ app.get("/reqApp", authorizeRoles("doc") ,async (req, res) => {
   res.json(appt);
 });
 
-app.get("/getRequests", authorizeRoles("user") ,async (req, res) => {
+app.get("/getRequests", authorizeRoles("user"), async (req, res) => {
   try {
     const userId = Number(req.query["userId"]);
-    if(userId!==req.user.userId){
-      return res.status(403).json({error: "Access denied"})
+    if (userId !== req.user.userId) {
+      return res.status(403).json({ error: "Access denied" });
     }
     const reqs = await prisma.requests.findMany({
       where: { user_id: userId, forDoctor: false },
@@ -977,7 +1009,7 @@ app.get("/adminProfile", async (req, res) => {
   }
 });
 
-app.post("/addEvent", authorizeRoles("admin") ,async (req, res) => {
+app.post("/addEvent", authorizeRoles("admin"), async (req, res) => {
   try {
     const title = req.body["title"];
     const description = req.body["description"];
@@ -1065,16 +1097,16 @@ app.delete("/deletenotifs", async (req, res) => {
   }
 });
 
-app.delete("/deleteRequest", authorizeRoles("user") ,async (req, res) => {
+app.delete("/deleteRequest", authorizeRoles("user"), async (req, res) => {
   try {
     const id = Number(req.query["id"]);
-    const userId = Number(req.query["userId"])
+    const userId = Number(req.query["userId"]);
     // Validate input
     if (!id) {
       return res.status(400).json({ error: "ID is required" });
     }
-    if(userId!==req.user.userId){
-      return res.status(403).json({error:"Access denied"})
+    if (userId !== req.user.userId) {
+      return res.status(403).json({ error: "Access denied" });
     }
 
     // Delete the notification from the database
@@ -1089,11 +1121,11 @@ app.delete("/deleteRequest", authorizeRoles("user") ,async (req, res) => {
   }
 });
 
-app.post("/changeRoomNo", authorizeRoles("doc") ,async (req, res) => {
+app.post("/changeRoomNo", authorizeRoles("doc"), async (req, res) => {
   try {
     const user_Id = Number(req.query["user_Id"]);
     const room_no = req.query["roomNo"];
-    console.log(room_no);
+    // console.log(room_no);
 
     // Validate input
     if (!user_Id || !room_no) {
@@ -1113,11 +1145,11 @@ app.post("/changeRoomNo", authorizeRoles("doc") ,async (req, res) => {
   }
 });
 
-app.post("/deleteApp", authorizeRoles("doc") ,async (req, res) => {
+app.post("/deleteApp", authorizeRoles("doc"), async (req, res) => {
   const appId = Number(req.body["appId"]);
   const doc_id = Number(req.body["doctorId"]);
-  if(doc_id!==req.user.userId){
-    return res.status(403).json({error:"Access denied"})
+  if (doc_id !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
   const user_id = Number(req.body["userId"]);
   const note = req.body["note"];
@@ -1150,7 +1182,7 @@ app.post("/deleteApp", authorizeRoles("doc") ,async (req, res) => {
   }
 });
 
-app.post("/toggleDoc", authorizeRoles("admin") ,async (req, res) => {
+app.post("/toggleDoc", authorizeRoles("admin"), async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
   const isInactive = Boolean(req.body["isInactive"]);
   // console.log(doctorId);
@@ -1180,14 +1212,14 @@ app.post("/toggleDoc", authorizeRoles("admin") ,async (req, res) => {
   }
 });
 
-app.get("/currentdocappt", authorizeRoles("doc") ,async (req, res) => {
+app.get("/currentdocappt", authorizeRoles("doc"), async (req, res) => {
   const doctorId = Number(req.query["doctorId"]);
   // Get today's date range (start and end of today)
   if (!doctorId) {
     return res.status(400).json({ message: "Doctor ID is required" });
   }
-  if(doctorId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (doctorId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
   try {
     const doctor = await prisma.doctor.findUnique({
@@ -1219,14 +1251,14 @@ app.get("/currentdocappt", authorizeRoles("doc") ,async (req, res) => {
   }
 });
 
-app.get("/pastdocappt", authorizeRoles("doc") ,async (req, res) => {
+app.get("/pastdocappt", authorizeRoles("doc"), async (req, res) => {
   const doctorId = Number(req.query["doctorId"]);
   // Get today's date range (start and end of today)
   if (!doctorId) {
     return res.status(400).json({ message: "Doctor ID is required" });
   }
-  if(doctorId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (doctorId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
   try {
     const doctor = await prisma.doctor.findUnique({
@@ -1251,10 +1283,10 @@ app.get("/pastdocappt", authorizeRoles("doc") ,async (req, res) => {
   }
 });
 
-app.get("/pastuserappt", authorizeRoles("user") ,async (req, res) => {
+app.get("/pastuserappt", authorizeRoles("user"), async (req, res) => {
   const userId = Number(req.query["userId"]);
-  if(userId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (userId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
   }
   // console.log(userId);
   if (!userId) {
@@ -1287,8 +1319,8 @@ app.get("/currentuserappt", authorizeRoles("user"), async (req, res) => {
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
   }
-  if(req.user.userId.toString() !==userId.toString()){
-    return res.status(403).json({error: "Access denied"})
+  if (req.user.userId.toString() !== userId.toString()) {
+    return res.status(403).json({ error: "Access denied" });
   }
   try {
     const user = await prisma.user.findUnique({
@@ -1628,10 +1660,15 @@ app.post("/resetAdminPassword", async (req, res) => {
   }
 });
 
-app.post("/setRating", async (req, res) => {
+app.post("/setFeedback", async (req, res) => {
   const stars = req.body["stars"];
-  const id = req.body["id"];
+  const id = Number(req.body["id"]);
   const docId = req.body["doctorId"];
+  const question1 = req.body["question1"];
+  const question2 = req.body["question2"];
+  const question3 = req.body["question3"];
+  const question4 = req.body["question4"];
+  const question5 = req.body["question5"];
   // console.log(id);
   // console.log(docId);
   try {
@@ -1641,6 +1678,11 @@ app.post("/setRating", async (req, res) => {
       },
       data: {
         stars: stars,
+        question1: question1,
+        question2: question2,
+        question3: question3,
+        question4: question4,
+        question5: question5,
       },
     });
 

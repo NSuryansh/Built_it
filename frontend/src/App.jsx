@@ -38,6 +38,7 @@ import { messaging, getToken } from "./firebase";
 import { getMessaging, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
 import UserDetail from "./pages/doctor/Doctor_user_detail";
+import FeedbackPage from "./pages/Feedback";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -174,6 +175,7 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/modify_profile" element={<ModifyProfile />} />
         <Route path="/appointments" element={<Appointments />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/dashboard" element={<Landing_user />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />
         <Route
