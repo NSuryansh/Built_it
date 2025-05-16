@@ -350,7 +350,7 @@ const SignUp = () => {
                 </label>
                 <input
                   type="email"
-                  placeholder="Email"
+                  placeholder="Email (Institute email only)"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
