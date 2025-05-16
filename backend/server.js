@@ -1905,7 +1905,7 @@ app.post("/send-notification", authorizeRoles("user", "admin", "doc") ,async (re
 
 app.get("/general-slots", authorizeRoles("doc") ,async (req, res) => {
   const { docId } = req.query;
-  if(docId!==req.user.userId){
+  if(docId!==req.user.userId.toString()){
     return res.status(403).json({error: "Access denied"})
   }
   const doctor_id = Number(docId);
@@ -2007,7 +2007,7 @@ app.get("/available-slots", authorizeRoles("user", "doc", "admin") ,async (req, 
 
 app.put("/modifySlots", authorizeRoles("doc"),async (req, res) => {
   const { slotsArray, doctorId } = req.query;
-  if(doctorId!==req.user.userId){
+  if(doctorId!==req.user.userId.toString()){
     return res.status(403).json({error: "Access denied"})
   }
   // console.log(slotsArray);
@@ -2166,7 +2166,7 @@ app.post("/otpcheck", async (req, res) => {
 app.put("/modifyDoc", authorizeRoles("doc"),upload.single("image"), async (req, res) => {
   try {
     const { id, address, city, experience, educ, certifi } = req.body;
-    if(id!==req.user.userId){
+    if(id!==req.user.userId.toString()){
       return res.status(403).json({error: "Access denied"})
     }
     // console.log(req.body);
