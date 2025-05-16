@@ -2436,7 +2436,7 @@ app.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
 app.post("/request-to-user", authorizeRoles("doc"), async (req, res) => {
   const userId = Number(req.body["userId"]);
   const doctorId = Number(req.body["doctorId"]);
-  if(doctorId.toString()!==req.user.userId){
+  if(doctorId.toString()!==req.user.userId.toString()){
     return res.status(403).json({error:"Access denied"})
   }
   const dateTime = req.body["dateTime"];
