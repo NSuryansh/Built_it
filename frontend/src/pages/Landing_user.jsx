@@ -8,6 +8,7 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 import Footer from "../components/Footer";
+import EmergencyCallButton from "../components/EmergencyCallButton";
 
 const Landing_user = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -85,6 +86,8 @@ const Landing_user = () => {
           </div>
         </div>
       </div>
+
+      <EmergencyCallButton phoneNumber='9711249305' />
 
       {/* Footer - Radiant and Polished */}
       <Footer

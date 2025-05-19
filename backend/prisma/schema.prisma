@@ -20,6 +20,8 @@ model User {
   acadProg    String
   roomNo      String               @default("")
   gender      Gender
+  challenge   String               @default("")
+  credentials Authenticator[]
   appointment Appointments[]
   chatbot     Chatbot[]
   feelings    feelings?
@@ -32,6 +34,18 @@ model User {
   messages    Message[]
 
   @@map("user")
+}
+
+model Authenticator{
+  id                     Int @id @default(autoincrement())
+  credentialID           Bytes    @unique  
+  publicKey              Bytes             
+  counter                Int
+  transports             String[] 
+  deviceType             String   
+  backedUp               Boolean
+  userId                 Int
+  user                   User     @relation(fields: [userId], references: [id])
 }
 
 model PasswordResetToken {
@@ -139,6 +153,11 @@ model PastAppointments {
   createdAt DateTime
   isDoctor  Boolean  @default(false)
   stars     Int?
+  question1 String?
+  question2 String?
+  question3 String?
+  question4 String?
+  question5 String?
   doc       Doctor?  @relation(fields: [doc_id], references: [id])
   user      User?    @relation(fields: [user_id], references: [id])
 

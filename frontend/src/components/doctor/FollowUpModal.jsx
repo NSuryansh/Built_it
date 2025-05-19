@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { CalendarClock, X, Calendar as CalendarIcon } from "lucide-react";
+import { CalendarClock, X, Calendar as CalendarIcon, Loader } from "lucide-react";
 import { format } from "date-fns";
 import CustomToast from "../CustomToast";
-import PacmanLoader from "react-spinners/PacmanLoader";
 import { useSearchParams } from "react-router-dom";
 
 const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
@@ -179,7 +178,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
               disabled={!followupDate || !followupTime || isScheduling}
               className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-500 text-white font-medium rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
             >
-              {isScheduling ? <PacmanLoader /> : "Schedule Follow-up"}
+              {isScheduling ? <Loader /> : "Schedule Follow-up"}
             </button>
           </div>
         </div>
