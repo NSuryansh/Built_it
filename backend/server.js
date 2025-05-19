@@ -16,6 +16,7 @@ import multer from "multer";
 import { send } from "@emailjs/browser";
 import admin from "firebase-admin";
 import { authorizeRoles } from "./authMiddleware.js";
+import { generateRegistrationOptions, verifyRegistrationResponse, generateAuthenticationOptions, verifyAuthenticationResponse } from "@simplewebauthn/server"
 // import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
@@ -228,6 +229,24 @@ io.on("connection", (socket) => {
   });
 });
 
+const biometricOptions = async (user) => {
+  const options = generateRegistrationOptions({
+    rpname: "Vitality",
+    rpID: "localhost",
+    userID: user.id,
+    userName: user.email
+  })
+  const addChallenge = await prisma.user.update({
+    where: {
+      id: Number(user.id)
+    },
+    data: {
+      challenge: options.challenge
+    }
+  })
+  return options
+}
+
 app.post("/signup", async (req, res) => {
   const username = req.body["username"];
   const email = req.body["email"];
@@ -260,6 +279,147 @@ app.post("/signup", async (req, res) => {
   } catch (e) {
     console.error(e);
   }
+});
+
+app.post("/generateOptions", authorizeRoles("user"), async (req, res) => {
+  const user = req.body["user"]
+  if (user.id !== req.user.id) {
+    return res.status(403).json({ error: "Access denied" })
+  }
+  const options = biometricOptions(user)
+  return res.json({ options: options })
+})
+
+app.post("verifyBioRegistration", async (req, res) => {
+  try {
+    const emailId = req.body["emailId"]
+    const user = await prisma.user.findUnique({
+      where: {
+        email: emailId
+      }
+    })
+    const verification = await verifyRegistrationResponse({
+      response: req.body,
+      expectedChallenge: user.challenge,
+      expectedOrigin: origin,
+      expectedRPID: "localhost",
+      // authenticator: {
+      //     credentialID: credential.credentialID,
+      //     credentialPublicKey: credential.publicKey,
+      //     counter: credential.counter,
+      //     credentialDeviceType: credential.deviceType,
+      //     credentialBackedUp: credential.backedUp
+      // },
+    })
+
+    if (verification.verified && verification.registrationInfo) {
+      await prisma.authenticator.create({
+        data: {
+          credentialID: verification.registrationInfo.credentialID,
+          publicKey: verification.registrationInfo.credentialPublicKey,
+          counter: verification.registrationInfo.counter,
+          deviceType: verification.registrationInfo.credentialDeviceType,
+          backedUp: verification.registrationInfo.credentialBackedUp,
+          transports: req.body.response?.transports || [],
+          user: { connect: { id: user.id } }
+        }
+      })
+    }
+    return res.status(200).json({ success: true });
+  } catch (e) {
+    return res.status(400).json({ error: e })
+  }
+})
+
+app.post("/generateBioAuthOptions", authorizeRoles("user"), async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: { email: req.body.email },
+    include: { credentials: true }
+  });
+  if (user.id !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" })
+  }
+
+  if (!user || user.credentials.length === 0) {
+    return res.status(404).json({ error: "No credentials found" });
+  }
+
+  const options = generateAuthenticationOptions({
+    allowCredentials: user.credentials.map(cred => ({
+      id: cred.credentialID,
+      type: 'public-key',
+      transports: cred.transports || [],
+    })),
+    userVerification: 'preferred',
+  })
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { challenge: options.challenge }
+  })
+
+  res.json(options)
+})
+
+app.post("/verifyBioLogin", async (req, res) => {
+  const { emailId } = req.body;
+
+  const user = await prisma.user.findUnique({
+    where: { email: emailId },
+    include: {
+      credentials: true,
+    }
+  });
+
+  if (!user || user.credentials.length === 0) {
+    return res.status(404).json({ error: "User or credentials not found" });
+  }
+
+  const credential = user.credentials.find(c =>
+    base64url.encode(Buffer.from(c.credentialID)) === req.body.id
+  );
+
+  if (!credential) {
+    return res.status(400).json({ error: "Credential not recognized" });
+  }
+
+  const verification = await verifyAuthenticationResponse({
+    response: req.body,
+    expectedChallenge: user.challenge,
+    expectedOrigin: "http://localhost:5173",
+    expectedRPID: "localhost",
+    authenticator: {
+      credentialID: credential.credentialID,
+      credentialPublicKey: credential.publicKey,
+      counter: credential.counter,
+      credentialDeviceType: credential.deviceType,
+      credentialBackedUp: credential.backedUp
+    },
+  });
+
+  if (!verification.verified) {
+    return res.status(403).json({ success: false, error: "Verification failed" });
+  }
+
+  await prisma.authenticator.update({
+    where: { id: credential.id },
+    data: {
+      counter: verification.authenticationInfo.newCounter,
+    }
+  });
+  const token = jwt.sign(
+    {
+      userId: user.id,
+      username: user.username,
+      email: user.email,
+      role: "user",
+    },
+    SECRET_KEY,
+    {
+      expiresIn: "1h",
+    }
+  )
+  return res.json({ success: true, token });
 });
 
 app.get("/getUsers", authorizeRoles("doc", "admin"), async (req, res) => {
@@ -1042,7 +1202,7 @@ app.post("/addEvent", authorizeRoles("admin"), async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => {});
+app.post("/notifications", async (req, res) => { });
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1342,7 +1502,7 @@ app.get("/currentuserappt", authorizeRoles("user"), async (req, res) => {
   }
 });
 
-app.get("/pastApp", authorizeRoles("admin") ,async (req, res) => {
+app.get("/pastApp", authorizeRoles("admin"), async (req, res) => {
   const currDate = new Date();
   const oneYear = new Date();
   oneYear.setFullYear(currDate.getFullYear() - 1);
@@ -1367,14 +1527,14 @@ app.get("/pastApp", authorizeRoles("admin") ,async (req, res) => {
   }
 });
 
-app.get("/getUserFeelings", authorizeRoles("user") ,async (req, res) => {
+app.get("/getUserFeelings", authorizeRoles("user"), async (req, res) => {
   const userId = Number(req.query["userId"]); // Fix: Use query parameters
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });
   }
-  if(userId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (userId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" })
   }
   try {
     const feelings = await prisma.feelings.findUnique({
@@ -1394,7 +1554,7 @@ app.get("/getUserFeelings", authorizeRoles("user") ,async (req, res) => {
   }
 });
 
-app.get("/getFeelings", authorizeRoles("doc") ,async (req, res) => {
+app.get("/getFeelings", authorizeRoles("doc"), async (req, res) => {
   try {
     const feelings = await prisma.feelings.findMany({
       include: {
@@ -1476,7 +1636,7 @@ async function sendEmail(to, subject, text) {
     console.error("Error sending email:", error);
   }
 }
-app.post("/forgotPassword", authorizeRoles("user") , async (req, res) => {
+app.post("/forgotPassword", authorizeRoles("user"), async (req, res) => {
   const email = req.body["email"];
   try {
     const user = await prisma.user.findUnique({
@@ -1540,7 +1700,7 @@ app.post("/resetPassword", async (req, res) => {
   }
 });
 
-app.post("/forgotDoctorPassword", authorizeRoles("doc") ,async (req, res) => {
+app.post("/forgotDoctorPassword", authorizeRoles("doc"), async (req, res) => {
   const email = req.body["email"];
   try {
     const doctor = await prisma.doctor.findUnique({
@@ -1601,7 +1761,7 @@ app.post("/resetDoctorPassword", async (req, res) => {
   }
 });
 
-app.post("/forgotAdminPassword", authorizeRoles("admin"),async (req, res) => {
+app.post("/forgotAdminPassword", authorizeRoles("admin"), async (req, res) => {
   const email = req.body["email"];
   try {
     const admin = await prisma.admin.findUnique({
@@ -1662,13 +1822,13 @@ app.post("/resetAdminPassword", async (req, res) => {
   }
 });
 
-app.post("/setFeedback", authorizeRoles("user") ,async (req, res) => {
+app.post("/setFeedback", authorizeRoles("user"), async (req, res) => {
   const stars = req.body["stars"];
   const id = Number(req.body["id"]);
   const docId = req.body["doctorId"];
   const userId = req.body["userId"]
-  if(userId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (userId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" })
   }
   const question1 = req.body["question1"];
   const question2 = req.body["question2"];
@@ -1721,7 +1881,7 @@ app.post("/setFeedback", authorizeRoles("user") ,async (req, res) => {
   }
 });
 
-app.post("/save-subscription", authorizeRoles("user", "doc", "admin"),async (req, res) => {
+app.post("/save-subscription", authorizeRoles("user", "doc", "admin"), async (req, res) => {
   try {
     // console.log("HELLLLLOOOOOOO");
     const { userid, subscription, userType } = req.body;
@@ -1818,7 +1978,7 @@ app.post("/save-subscription", authorizeRoles("user", "doc", "admin"),async (req
   }
 });
 
-app.post("/send-notification", authorizeRoles("user", "admin", "doc") ,async (req, res) => {
+app.post("/send-notification", authorizeRoles("user", "admin", "doc"), async (req, res) => {
   try {
     const { userid, message, userType } = req.body;
     if (!userid || !message) {
@@ -1903,10 +2063,10 @@ app.post("/send-notification", authorizeRoles("user", "admin", "doc") ,async (re
 //   }
 // });
 
-app.get("/general-slots", authorizeRoles("doc") ,async (req, res) => {
+app.get("/general-slots", authorizeRoles("doc"), async (req, res) => {
   const { docId } = req.query;
-  if(docId!==req.user.userId.toString()){
-    return res.status(403).json({error: "Access denied"})
+  if (docId !== req.user.userId.toString()) {
+    return res.status(403).json({ error: "Access denied" })
   }
   const doctor_id = Number(docId);
 
@@ -1921,7 +2081,7 @@ app.get("/general-slots", authorizeRoles("doc") ,async (req, res) => {
   }
 });
 
-app.get("/available-slots", authorizeRoles("user", "doc", "admin") ,async (req, res) => {
+app.get("/available-slots", authorizeRoles("user", "doc", "admin"), async (req, res) => {
   const { docId, date } = req.query;
   const doctor_id = Number(docId);
 
@@ -2005,10 +2165,10 @@ app.get("/available-slots", authorizeRoles("user", "doc", "admin") ,async (req, 
   }
 });
 
-app.put("/modifySlots", authorizeRoles("doc"),async (req, res) => {
+app.put("/modifySlots", authorizeRoles("doc"), async (req, res) => {
   const { slotsArray, doctorId } = req.query;
-  if(doctorId!==req.user.userId.toString()){
-    return res.status(403).json({error: "Access denied"})
+  if (doctorId !== req.user.userId.toString()) {
+    return res.status(403).json({ error: "Access denied" })
   }
   // console.log(slotsArray);
   const slots = slotsArray.split(",");
@@ -2034,7 +2194,7 @@ app.put("/modifySlots", authorizeRoles("doc"),async (req, res) => {
   }
 });
 
-app.get("/getDoc", authorizeRoles("user", "doc", "admin"),async (req, res) => {
+app.get("/getDoc", authorizeRoles("user", "doc", "admin"), async (req, res) => {
   const { docId } = req.query;
   const doctor_id = Number(docId);
 
@@ -2163,11 +2323,11 @@ app.post("/otpcheck", async (req, res) => {
 //   }
 // });
 
-app.put("/modifyDoc", authorizeRoles("doc"),upload.single("image"), async (req, res) => {
+app.put("/modifyDoc", authorizeRoles("doc"), upload.single("image"), async (req, res) => {
   try {
     const { id, address, city, experience, educ, certifi } = req.body;
-    if(id!==req.user.userId.toString()){
-      return res.status(403).json({error: "Access denied"})
+    if (id !== req.user.userId.toString()) {
+      return res.status(403).json({ error: "Access denied" })
     }
     // console.log(req.body);
     const file = req.file;
@@ -2336,10 +2496,10 @@ app.get("/all-appointments", authorizeRoles("admin"), async (req, res) => {
   }
 });
 
-app.post("/add-slot", authorizeRoles("doc") ,async (req, res) => {
+app.post("/add-slot", authorizeRoles("doc"), async (req, res) => {
   const doctorId = req.body["doctorId"];
-  if(doctorId!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (doctorId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" })
   }
   const startTime = req.body["startTime"];
   // console.log(req.body);
@@ -2412,8 +2572,8 @@ app.post("/referrals", authorizeRoles("admin"), async (req, res) => {
 
 app.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   const { doctor_id } = req.query;
-  if(doctor_id!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (doctor_id !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" })
   }
   try {
     const data = await prisma.referrals.findMany({
@@ -2436,8 +2596,8 @@ app.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
 app.post("/request-to-user", authorizeRoles("doc"), async (req, res) => {
   const userId = Number(req.body["userId"]);
   const doctorId = Number(req.body["doctorId"]);
-  if(doctorId.toString()!==req.user.userId.toString()){
-    return res.status(403).json({error:"Access denied"})
+  if (doctorId.toString() !== req.user.userId.toString()) {
+    return res.status(403).json({ error: "Access denied" })
   }
   const dateTime = req.body["dateTime"];
   const reason = req.body["reason"];
@@ -2480,8 +2640,8 @@ app.post("/request-to-user", authorizeRoles("doc"), async (req, res) => {
 app.post("/accept-booking-by-user", authorizeRoles("user"), async (req, res) => {
   const userId = Number(req.body["userId"]);
   const doctorId = Number(req.body["doctorId"]);
-  if(userId.toString()!==req.user.userId){
-    return res.status(403).json({error: "Access denied"})
+  if (userId.toString() !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" })
   }
   const dateTime = req.body["dateTime"];
   const date = new Date();
