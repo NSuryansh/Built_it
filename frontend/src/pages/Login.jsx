@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, Eye, EyeOff, Loader } from "lucide-react";
+import { Lock, Eye, EyeOff, Fingerprint } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import CustomToast from "../components/CustomToast";
 
-// Circular Loader Component
 const CircularLoader = ({
   color = "#ff4800",
   size = 40,
@@ -190,8 +189,20 @@ const Login = () => {
 
         <button
           disabled={isLoading}
+          className="w-full flex justify-center items-center py-3 px-4 bg-[var(--custom-orange-100)] text-[var(--custom-orange-600)] rounded-lg hover:bg-[var(--custom-orange-200)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] "
+        >
+          <div className="flex items-center">
+            <Fingerprint
+              className="h-5 w-5 mr-2 group-hover:animate-pulse"
+            />
+            <span>Login with Biometric</span>
+          </div>
+        </button>
+
+        <button
+          disabled={isLoading}
           onClick={handlelogin}
-          className="w-full flex justify-center items-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2 min-h-[48px]"
+          className="w-full flex justify-center items-center mt-3 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2 min-h-[48px]"
         >
           {isLoading ? (
             <div className="flex items-center justify-center w-[24px] h-[24px]">
