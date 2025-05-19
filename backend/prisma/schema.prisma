@@ -20,6 +20,7 @@ model User {
   acadProg    String
   roomNo      String               @default("")
   gender      Gender
+  challenge   String               @default("")
   appointment Appointments[]
   chatbot     Chatbot[]
   feelings    feelings?
