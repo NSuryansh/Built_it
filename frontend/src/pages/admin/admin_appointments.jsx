@@ -1,26 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  Calendar,
-  Users,
-  Clock,
-  Search,
-  User,
-  Stethoscope,
-  CalendarClock,
-  CheckCircle2,
-  Clock3,
-  CheckCircle,
-  AlertCircle, // Ensure this is imported
-} from "lucide-react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import {Calendar, Users, Clock, Search, User, Stethoscope, CalendarClock, CheckCircle2, Clock3, CheckCircle, AlertCircle} from "lucide-react";
+import { AreaChart, Area, XAxis, YAxis,  CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";

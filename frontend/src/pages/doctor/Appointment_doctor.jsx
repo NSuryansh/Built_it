@@ -10,19 +10,7 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
 import { TimeChange } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -536,6 +524,12 @@ const DoctorAppointment = () => {
                               Reschedule
                             </button>
                           )}
+                            <button
+                              onClick={() => navigate(`/doctor/history?username=${appointment.user.username}`)}
+                              className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                            >
+                              Check History
+                            </button>
                         </div>
                         {selectedAppointment === appointment.id && (
                           <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-blue-200">
@@ -707,6 +701,12 @@ const DoctorAppointment = () => {
                               Reschedule
                             </button>
                           )}
+                          <button
+                              onClick={() => navigate(`/doctor/history?username=${appointment.user.username}`)}
+                              className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                            >
+                              Check History
+                            </button>
                         </div>
                         {selectedAppointment === appointment.id && (
                           <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-blue-200">

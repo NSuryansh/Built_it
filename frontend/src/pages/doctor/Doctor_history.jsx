@@ -1,14 +1,8 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  Users,
-  Search,
-  Calendar as CalendarIcon,
-  Clock as ClockIcon,
-} from "lucide-react";
+import {Users, Search, Calendar as CalendarIcon, Clock as ClockIcon } from "lucide-react";
 import Footer from "../../components/Footer";
-import { format } from "date-fns";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { checkAuth } from "../../utils/profile";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import SessionExpired from "../../components/SessionExpired";
@@ -27,14 +21,25 @@ const History = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-
+  const [searchParams] = useSearchParams();
+  const [searchUsername, setSearchUsername] = useState("");
+  
+ 
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
       setIsAuthenticated(authStatus);
     };
     verifyAuth();
+    getPastAppointments();
+    setSearchUsername(searchParams.get("username"))
   }, []);
+
+  useEffect(() => {
+    if(searchUsername){
+      setSearchTerm(searchUsername)
+    }
+  }, [searchUsername])
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -58,19 +63,18 @@ const History = () => {
   };
 
   useEffect(() => {
-    getPastAppointments();
-  }, []);
-
-  useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredUsers(allUsers);
     } else {
+      
+    console.log(searchTerm)
       setFilteredUsers(searchUsers(searchTerm));
     }
-  }, [searchTerm]);
+  }, [searchTerm, allUsers]);
 
   const searchUsers = (searchTerm) => {
     const lowerSearchTerm = searchTerm.toLowerCase();
+    
     return allUsers.filter(
       (item) =>
         item.user.username.toLowerCase().includes(lowerSearchTerm) ||

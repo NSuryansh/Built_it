@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Rating from "@mui/material/Rating";
 import { Button } from "@mui/material";
-import {
-  User,
-  Calendar,
-  CalendarClock,
-  History,
-  Clock,
-  FileText,
-  CheckCircle,
-} from "lucide-react";
+import { User, Calendar, CalendarClock, History, Clock, FileText, CheckCircle } from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { format } from "date-fns";
