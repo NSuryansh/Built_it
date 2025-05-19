@@ -14,6 +14,7 @@ from agno.memory.manager import MemoryManager
 from agno.memory.summarizer import MemorySummarizer 
 from agno.storage.agent.sqlite import SqliteAgentStorage   
 from updated_chatbot import Mental_Agent
+from Updated_score import MentalHealthAnalyzer
 
 # Initialize Flask app 
 app = Flask(__name__) 
@@ -108,6 +109,13 @@ def chat():
         Mental_Agent()
     except Exception as e:         
         return jsonify({"error": str(e)}), 500
+    
+# @app.route('/chat', methods=['POST']) 
+# def scores():
+#     try:
+#         anyalzer = MentalHealthAnalyzer()
+#         result = analyzer.add_message(msg) 
+
     
 if __name__ == '__main__':     
     app.run(host="0.0.0.0", port=5000, debug=True)
