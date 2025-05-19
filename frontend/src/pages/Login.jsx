@@ -192,9 +192,7 @@ const Login = () => {
           className="w-full flex justify-center items-center py-3 px-4 bg-[var(--custom-orange-100)] text-[var(--custom-orange-600)] rounded-lg hover:bg-[var(--custom-orange-200)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] "
         >
           <div className="flex items-center">
-            <Fingerprint
-              className="h-5 w-5 mr-2 group-hover:animate-pulse"
-            />
+            <Fingerprint className="h-5 w-5 mr-2"/>
             <span>Login with Biometric</span>
           </div>
         </button>
