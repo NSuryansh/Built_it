@@ -38,6 +38,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setisLoading] = useState(false);
+  const [showBiometricModal, setShowBiometricModal] = useState(false)
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -118,6 +119,10 @@ const Login = () => {
     setShowForgotModal(false);
   };
 
+  const handleBiometricLogin = async () => {
+    setShowBiometricModal(false);
+  }
+
   return (
     <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">
       <ToastContainer />
@@ -188,6 +193,7 @@ const Login = () => {
         </div>
 
         <button
+        onClick={() => setShowBiometricModal(true)}
           disabled={isLoading}
           className="w-full flex justify-center items-center py-3 px-4 bg-[var(--custom-orange-100)] text-[var(--custom-orange-600)] rounded-lg hover:bg-[var(--custom-orange-200)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] "
         >
@@ -252,7 +258,7 @@ const Login = () => {
 
       {/* Forgot Password Modal */}
       {showForgotModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-25 backdrop-blur-sm">
           <div className="bg-[var(--custom-white)] p-6 rounded-lg shadow-lg max-w-sm w-full">
             <h3 className="text-xl font-bold text-[var(--custom-orange-900)] mb-4">
               Reset Password
@@ -274,6 +280,38 @@ const Login = () => {
               </button>
               <button
                 onClick={handleForgotPassword}
+                className="px-4 py-2 text-sm bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded hover:bg-[var(--custom-orange-500)] transition-colors"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showBiometricModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-25 backdrop-blur-sm">
+          <div className="bg-[var(--custom-white)] p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 className="text-xl font-bold text-[var(--custom-orange-900)] mb-4">
+              Biometric Login
+            </h3>
+            <p className="mb-4 text-sm">Please enter your username:</p>
+            <input
+              type="email"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="username"
+              className="w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
+            />
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setShowBiometricModal(false)}
+                className="mr-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleBiometricLogin}
                 className="px-4 py-2 text-sm bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded hover:bg-[var(--custom-orange-500)] transition-colors"
               >
                 Submit
