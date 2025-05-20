@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import SessionExpired from "../components/SessionExpired";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../utils/profile";
+import { Fingerprint } from "lucide-react";
 
 const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   const navigate = useNavigate();
@@ -190,6 +191,10 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 >
                   Emergency Contact Number
                 </label>
+              </div>
+
+              <div className="realtive flex items-center">
+                <Fingerprint className="h-5 w-5 mr-2"/> <span>Input for biometric</span>
               </div>
 
               {/* Buttons */}
