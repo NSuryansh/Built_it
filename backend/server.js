@@ -411,14 +411,14 @@ app.post("/verifyBioLogin", async (req, res) => {
     return res.status(400).json({ error: "Credential not recognized" });
   }
   const encodedCredentialId = base64url.encode(Buffer.from(credential.credentialID))
-  console.log(encodedCredentialId)
+  console.log(credential.counter)
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
     expectedOrigin: "http://localhost:5173",
     expectedRPID: "localhost",
     authenticator: {
-      credentialID: encodedCredentialId,
+      credentialID: credential.credentialID,
       credentialPublicKey: credential.publicKey,
       counter: credential.counter,
       credentialDeviceType: credential.deviceType,

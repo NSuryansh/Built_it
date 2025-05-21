@@ -126,7 +126,12 @@ const Login = () => {
     }
     return base64;
   }
-
+  const bufferToBase64url=(buffer)=> {
+    return btoa(String.fromCharCode(...new Uint8Array(buffer)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
 
   const handleBiometricLogin = async () => {
     console.log(username, "usduse")
@@ -148,15 +153,15 @@ const Login = () => {
     const assertion = await navigator.credentials.get({ publicKey: options });
 
     const response = {
-      id: assertion.id,
-      rawId: btoa(String.fromCharCode(...new Uint8Array(assertion.rawId))),
+      id: bufferToBase64url(assertion.rawId),
+      rawId: bufferToBase64url(assertion.rawId),
       type: assertion.type,
       response: {
-        clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(assertion.response.clientDataJSON))),
-        authenticatorData: btoa(String.fromCharCode(...new Uint8Array(assertion.response.authenticatorData))),
-        signature: btoa(String.fromCharCode(...new Uint8Array(assertion.response.signature))),
+        clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
+        authenticatorData: bufferToBase64url(assertion.response.authenticatorData),
+        signature: bufferToBase64url(assertion.response.signature),
         userHandle: assertion.response.userHandle
-          ? btoa(String.fromCharCode(...new Uint8Array(assertion.response.userHandle)))
+          ? bufferToBase64url(assertion.response.userHandle)
           : null,
       },
     };
