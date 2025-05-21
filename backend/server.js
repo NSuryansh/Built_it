@@ -325,7 +325,7 @@ app.post("/verifyBioRegistration", async (req, res) => {
     const verification = await verifyRegistrationResponse({
       response: req.body,
       expectedChallenge: user.challenge,
-      expectedOrigin: "http://built-it-frontend.onrender.com",
+      expectedOrigin: "https://built-it-frontend.onrender.com",
       expectedRPID: "built-it-frontend.onrender.com",
       // authenticator: {
       //     credentialID: credential.credentialID,
@@ -1748,7 +1748,7 @@ app.post("/forgotDoctorPassword", authorizeRoles("doc"), async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `http://built-it-frontend.onrender.com/doctor/reset_password?token=${token}`;
+    const resetLink = `https://built-it-frontend.onrender.com/doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(doctor.email, subject, message);
