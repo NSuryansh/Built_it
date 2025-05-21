@@ -6,6 +6,7 @@ import NotificationPanel from "./NotifficationPanel";
 import { checkAuth } from "../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "./CustomToast";
+import LogoutModal from "./LogoutModal";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const ref = useRef(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const links = [
     { name: "Home", link: "/dashboard" },
@@ -47,14 +49,12 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    if (userType === "user") {
-      // res.clearCookie("refreshToken")
-      navigate("/login");
-    } else if (userType === "doc") {
-      navigate("/doctor/login");
-    } else {
-      navigate("admin/login");
-    }
+    setShowLogoutModal(false);
+    navigate("/login");
+  };
+
+  const handleCancel = () => {
+    setShowLogoutModal(false);
   };
 
   const handleBellClick = () => {
@@ -254,7 +254,7 @@ const Navbar = () => {
                           }}
                           className="w-full px-4 py-2 text-sm font-medium text-white bg-[#fe855a] rounded-lg hover:bg-[#FF6B35] transition-colors duration-200"
                         >
-                        Appointments
+                          Appointments
                         </button>
                         <div className="grid grid-cols-2 gap-2">
                           <button
@@ -264,7 +264,7 @@ const Navbar = () => {
                             Modify Profile
                           </button>
                           <button
-                            onClick={handleLogout}
+                            onClick={() => setShowLogoutModal(true)}
                             className="px-4 py-2 text-sm font-medium text-[#FF6B35] bg-[#FFF5EB] rounded-lg hover:bg-[#FFE4CC] transition-colors duration-200"
                           >
                             Logout
@@ -286,6 +286,9 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      {showLogoutModal && (
+        <LogoutModal handleLogout={handleLogout} handleCancel={handleCancel} />
+      )}
     </nav>
   );
 };
