@@ -233,7 +233,7 @@ io.on("connection", (socket) => {
 const biometricOptions = async (user) => {
   const options = await generateRegistrationOptions({
     rpName: "Vitality",
-    rpID: "localhost",
+    rpID: "built-it-frontend.onrender.com",
     userID: Number(user.id),
     userName: user.email,
     userDisplayName: user.email
@@ -325,8 +325,8 @@ app.post("/verifyBioRegistration", async (req, res) => {
     const verification = await verifyRegistrationResponse({
       response: req.body,
       expectedChallenge: user.challenge,
-      expectedOrigin: "http://localhost:5173",
-      expectedRPID: "localhost",
+      expectedOrigin: "http://built-it-frontend.onrender.com",
+      expectedRPID: "built-it-frontend.onrender.com",
       // authenticator: {
       //     credentialID: credential.credentialID,
       //     credentialPublicKey: credential.publicKey,
@@ -416,7 +416,7 @@ app.post("/verifyBioLogin", async (req, res) => {
     response: req.body,
     expectedChallenge: user.challenge,
     expectedOrigin: "https://built-it-frontend.onrender.com",
-    expectedRPID: "localhost",
+    expectedRPID: "built-it-frontend.onrender.com",
     credential: {
       credentialID: Buffer.from(credential.credentialID),
       publicKey: Buffer.from(credential.publicKey),
@@ -1748,7 +1748,7 @@ app.post("/forgotDoctorPassword", authorizeRoles("doc"), async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `http://localhost:5173/doctor/reset_password?token=${token}`;
+    const resetLink = `http://built-it-frontend.onrender.com/doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(doctor.email, subject, message);
