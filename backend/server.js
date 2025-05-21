@@ -415,7 +415,7 @@ app.post("/verifyBioLogin", async (req, res) => {
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
-    expectedOrigin: "http://localhost:5173",
+    expectedOrigin: "https://built-it-frontend.onrender.com",
     expectedRPID: "localhost",
     credential: {
       credentialID: Buffer.from(credential.credentialID),
