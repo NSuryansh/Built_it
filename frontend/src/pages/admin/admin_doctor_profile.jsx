@@ -20,7 +20,7 @@ import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 
 const AdminDoctorProfile = () => {
   const search = useLocation().search;
@@ -169,7 +169,7 @@ const AdminDoctorProfile = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <div className="relative">
-          <PacmanLoader color="#047857" size={30} />
+          <HashLoader color="#047857" size={30} />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-200/20 to-transparent animate-pulse"></div>
         </div>
         <p className="mt-4 text-emerald-800 font-medium animate-pulse">
@@ -221,11 +221,10 @@ const AdminDoctorProfile = () => {
                 </h1>
                 <div className="flex">
                   <p className="text-yellow-200 text-xl font-medium italic">
-                    {`${doctor.field} (${
-                      doctor.avgRating != 0.0
+                    {`${doctor.field} (${doctor.avgRating != 0.0
                         ? parseFloat(doctor.avgRating).toPrecision(2)
                         : "Unrated"
-                    }`}
+                      }`}
                   </p>
                   {doctor.avgRating != 0.0 && (
                     <div className="flex">

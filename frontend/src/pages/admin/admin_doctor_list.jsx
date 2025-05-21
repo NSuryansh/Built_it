@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/CustomToast";
@@ -127,7 +127,7 @@ const DoctorsList = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <div className="relative">
-          <PacmanLoader color="#047857" size={30} />
+          <HashLoader color="#047857" size={30} />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-200/20 to-transparent animate-pulse"></div>
         </div>
         <p className="mt-4 text-emerald-800 font-medium animate-pulse">
@@ -164,9 +164,8 @@ const DoctorsList = () => {
             <div className="flex gap-4">
               <button
                 onClick={handleRefresh}
-                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${
-                  isRefreshing ? "animate-spin" : ""
-                }`}
+                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${isRefreshing ? "animate-spin" : ""
+                  }`}
                 title="Refresh List"
               >
                 <RefreshCw size={24} />
@@ -253,11 +252,10 @@ const DoctorsList = () => {
                     <div className="flex items-center justify-center gap-5">
                       <button
                         onClick={() => handleToggleDocPopup(doctor, true)}
-                        className={`p-2 ${
-                          doctor.isInactive
+                        className={`p-2 ${doctor.isInactive
                             ? "text-green-600 hover:text-green-700"
                             : "text-red-600 hover:text-red-700"
-                        } transition-colors rounded-full hover:bg-red-50 group relative`}
+                          } transition-colors rounded-full hover:bg-red-50 group relative`}
                         title="Set Doctor Inactive"
                       >
                         {doctor.isInactive ? (
@@ -320,11 +318,10 @@ const DoctorsList = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={() => handleToggleDocPopup(doctor, true)}
-                    className={`p-2 ${
-                      doctor.isInactive
+                    className={`p-2 ${doctor.isInactive
                         ? "text-green-600 hover:text-green-700"
                         : "text-red-600 hover:text-red-700"
-                    } transition-colors rounded-full hover:bg-red-50`}
+                      } transition-colors rounded-full hover:bg-red-50`}
                   >
                     {doctor.isInactive ? (
                       <UserPlus size={20} />

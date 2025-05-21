@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
 import Navbar from "../components/Navbar";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import Footer from "../components/Footer";
 import { ToastContainer } from "react-toastify";
 import DoctorSelectionStep from "../components/DoctorSelection";
@@ -144,7 +144,7 @@ const Book = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <HashLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
@@ -168,17 +168,15 @@ const Book = () => {
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-4">
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${
-                  step === 1 ? "bg-orange-500 scale-110" : "bg-gray-300"
-                }`}
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${step === 1 ? "bg-orange-500 scale-110" : "bg-gray-300"
+                  }`}
               >
                 1
               </div>
               <div className="w-16 h-1 bg-gray-300 rounded-full" />
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${
-                  step === 2 ? "bg-orange-500 scale-110" : "bg-gray-300"
-                }`}
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${step === 2 ? "bg-orange-500 scale-110" : "bg-gray-300"
+                  }`}
               >
                 2
               </div>

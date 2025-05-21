@@ -9,7 +9,7 @@ import Footer from "../../components/Footer";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { checkAuth } from "../../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import SessionExpired from "../../components/SessionExpired";
 import CustomToast from "../../components/CustomToast";
 import { ToastContainer } from "react-toastify";
@@ -92,7 +92,7 @@ const History = () => {
   if (isAuthenticated === null || fetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
-        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <HashLoader color="#004ba8" radius={6} height={20} width={5} />
         <p className="mt-6 text-gray-700 font-medium animate-pulse">
           Loading your dashboard...
         </p>

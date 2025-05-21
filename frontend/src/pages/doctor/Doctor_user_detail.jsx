@@ -8,7 +8,7 @@ import AppointmentList from "../../components/doctor/AppointmentList";
 import FollowUpModal from "../../components/doctor/FollowUpModal";
 import CustomToast from "../../components/CustomToast";
 import UserProfile from "../../components/doctor/UserProfile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired";
 
@@ -18,7 +18,7 @@ const UserDetail = () => {
   const [userWithAppointments, setUserWithAppointments] = useState(undefined);
   const [showFollowupModal, setShowFollowupModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  
+
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
@@ -35,7 +35,7 @@ const UserDetail = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
-        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <HashLoader color="#004ba8" radius={6} height={20} width={5} />
         <p className="mt-6 text-gray-700 font-medium animate-pulse">
           Loading your dashboard...
         </p>

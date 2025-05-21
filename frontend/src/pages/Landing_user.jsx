@@ -4,7 +4,7 @@ import Calendar from "../components/Calender";
 import ProgressPage from "../components/ProgressPage";
 import EventsDisplay from "../components/EventsDisplay";
 import { checkAuth } from "../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 import Footer from "../components/Footer";
@@ -29,7 +29,7 @@ const Landing_user = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <HashLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );

@@ -8,7 +8,7 @@ import { decryptMessage } from "../../utils/decryptMessage";
 import { generateAESKey } from "../../utils/aeskey";
 import { encryptMessage } from "../../utils/encryptMessage";
 import { checkAuth } from "../../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { ToastContainer } from "react-toastify";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
@@ -330,7 +330,7 @@ const DoctorPeer = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <HashLoader color="#004ba8" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your dashboard...</p>
       </div>
     );

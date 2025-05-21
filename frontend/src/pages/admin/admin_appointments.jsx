@@ -25,7 +25,7 @@ import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
 import { checkAuth } from "../../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import SessionExpired from "../../components/SessionExpired";
 import { useNavigate } from "react-router-dom";
 import CustomToast from "../../components/CustomToast";
@@ -225,7 +225,7 @@ const AdminAppointments = () => {
   if (isAuthenticated === null || fetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
-        <PacmanLoader color="#047857" size={30} />
+        <HashLoader color="#047857" size={30} />
         <p className="mt-4 text-emerald-800 font-medium">
           Loading your dashboard...
         </p>
@@ -442,11 +442,10 @@ const AdminAppointments = () => {
                     <div className="flex h-fit self-center items-center gap-2 px-4 py-2 rounded-lg bg-white shadow-sm border border-gray-100">
                       {getStatusIcon(appointment.status)}
                       <span
-                        className={`text-sm font-medium ${
-                          appointment.status === "Pending"
+                        className={`text-sm font-medium ${appointment.status === "Pending"
                             ? "text-yellow-600"
                             : "text-green-600"
-                        }`}
+                          }`}
                       >
                         {appointment.status}
                       </span>

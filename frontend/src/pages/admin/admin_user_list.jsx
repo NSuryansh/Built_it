@@ -12,7 +12,7 @@ import {
 import AdminNavbar from "../../components/admin/admin_navbar";
 import CustomToast from "../../components/CustomToast";
 import { checkAuth } from "../../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import SessionExpired from "../../components/SessionExpired";
 import Footer from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
@@ -77,11 +77,10 @@ const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig }) => {
                     onClick={header === "Appointments" ? handleSort : undefined}
                   >
                     <div
-                      className={`flex items-center gap-2 ${
-                        header === "Appointments"
+                      className={`flex items-center gap-2 ${header === "Appointments"
                           ? "cursor-pointer hover:text-[var(--custom-primary-green-700)]"
                           : ""
-                      }`}
+                        }`}
                     >
                       {header}
                       {header === "Appointments" && (
@@ -304,7 +303,7 @@ const AdminUser = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
         <div className="relative">
-          <PacmanLoader color="#047857" size={30} />
+          <HashLoader color="#047857" size={30} />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-200/20 to-transparent animate-pulse"></div>
         </div>
         <p className="mt-4 text-emerald-800 font-medium animate-pulse">

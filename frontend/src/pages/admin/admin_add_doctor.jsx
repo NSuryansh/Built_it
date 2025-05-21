@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import SessionExpired from "../../components/SessionExpired";
@@ -72,7 +72,7 @@ const AddDoctor = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
-        <PacmanLoader color="#047857" size={30} />
+        <HashLoader color="#047857" size={30} />
         <p className="mt-4 text-emerald-800 font-medium">
           Loading your dashboard...
         </p>

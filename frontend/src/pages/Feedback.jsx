@@ -11,7 +11,7 @@ import {
   Loader,
 } from "lucide-react";
 import CustomToast from "../components/CustomToast";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 
 const StarRating = ({ value, onChange, label }) => {
   return (
@@ -26,11 +26,10 @@ const StarRating = ({ value, onChange, label }) => {
             className="focus:outline-none transition-all duration-150"
           >
             <Star
-              className={`w-8 h-8 ${
-                star <= value
+              className={`w-8 h-8 ${star <= value
                   ? "fill-[var(--custom-orange-500)] text-[var(--custom-orange-500)]"
                   : "text-gray-300"
-              } transition-all duration-200 hover:scale-110`}
+                } transition-all duration-200 hover:scale-110`}
             />
           </button>
         ))}
@@ -215,7 +214,7 @@ const FeedbackPage = () => {
   if (isFetching) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <HashLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );

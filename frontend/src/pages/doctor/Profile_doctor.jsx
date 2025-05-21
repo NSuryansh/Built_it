@@ -17,7 +17,7 @@ import {
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { checkAuth } from "../../utils/profile";
 import { useNavigate, Link } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
@@ -279,7 +279,7 @@ const DoctorProfile = () => {
   if (isAuthenticated === null || fetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <HashLoader color="#004ba8" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your dashboard...</p>
       </div>
     );
@@ -344,9 +344,8 @@ const DoctorProfile = () => {
             <div className="flex flex-col md:flex-row items-center md:space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
-                  isEditing ? "cursor-pointer" : ""
-                }`}
+                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
+                  }`}
               >
                 {profileImage ? (
                   <img
@@ -583,14 +582,14 @@ const DoctorProfile = () => {
                             />
                             {index ===
                               editedProfile.availability.length - 1 && (
-                              <button
-                                onClick={handleAddSlot}
-                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Slot
-                              </button>
-                            )}
+                                <button
+                                  onClick={handleAddSlot}
+                                  className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
+                                >
+                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                  Add Slot
+                                </button>
+                              )}
                           </div>
                         ))}
                       </div>
@@ -698,14 +697,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                            <button
-                              onClick={handleAddCertification}
-                              className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
-                            >
-                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                              Add Certification
-                            </button>
-                          )}
+                              <button
+                                onClick={handleAddCertification}
+                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
+                              >
+                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                Add Certification
+                              </button>
+                            )}
                         </div>
                       </div>
                     ))}
@@ -730,7 +729,7 @@ const DoctorProfile = () => {
       {isLoading && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white flex flex-col items-center justify-center rounded-3xl shadow-2xl w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 animate-modal-in border border-blue-100">
-            <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+            <HashLoader color="#004ba8" radius={6} height={20} width={5} />
             <p className="mt-4 text-gray-600">Updating your profile...</p>
           </div>
         </div>

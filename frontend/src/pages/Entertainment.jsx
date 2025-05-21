@@ -3,7 +3,7 @@ import { Music, Book, Gamepad2, Film, ChevronDown } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import SessionExpired from "../components/SessionExpired";
 import { movies, games, books, categories, music } from "../utils/data";
 
@@ -29,7 +29,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <HashLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
@@ -64,18 +64,16 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
           <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
         </div>
         <div
-          className={`transform transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`transform transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+            }`}
         >
           <ChevronDown className="w-6 h-6 text-gray-500" />
         </div>
       </button>
 
       <div
-        className={`transition-all duration-500 ease-in-out ${
-          isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
-        } overflow-hidden`}
+        className={`transition-all duration-500 ease-in-out ${isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+          } overflow-hidden`}
       >
         <div className="p-6 pt-2">
           <div className="flex flex-wrap gap-2 mb-8">
@@ -83,11 +81,10 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-2.5 md:px-5 py-[5px] md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${
-                  selectedCategory === category
+                className={`px-2.5 md:px-5 py-[5px] md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${selectedCategory === category
                     ? "bg-amber-700 text-white shadow-md scale-105"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
-                }`}
+                  }`}
               >
                 {category}
               </button>
@@ -113,9 +110,8 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
                   />
                 </div>
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end transition-opacity duration-300 ${
-                    hoveredItem === index ? "opacity-100" : "opacity-90"
-                  }`}
+                  className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end transition-opacity duration-300 ${hoveredItem === index ? "opacity-100" : "opacity-90"
+                    }`}
                 >
                   <div className="p-2 sm:p-4 md:p-6 w-full transform transition-transform duration-300 group-hover:translate-y-0">
                     <h3 className="text-sm sm:text-md md:text-lg font-semibold md:font-bold text-white mb-1 md:mb-2 group-hover:text-indigo-300 transition-colors duration-300">

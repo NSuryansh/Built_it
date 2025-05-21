@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import CustomToast from "../components/CustomToast";
 import { ToastContainer } from "react-toastify";
 import SessionExpired from "../components/SessionExpired";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { checkAuth } from "../utils/profile";
 import { Fingerprint } from "lucide-react";
 
@@ -118,7 +118,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <HashLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
@@ -220,7 +220,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   placeholder={
                     localStorage.getItem("user_email") || "Your email"
                   }
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
                 <label
                   htmlFor="email"

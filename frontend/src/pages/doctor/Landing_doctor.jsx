@@ -10,7 +10,7 @@ import {
   Calendar,
   Activity,
 } from "lucide-react";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/SessionExpired";
 import Footer from "../../components/Footer";
@@ -133,7 +133,7 @@ const DoctorLanding = () => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+          <HashLoader color="#004ba8" radius={6} height={20} width={5} />
         </motion.div>
         <motion.p
           initial={{ y: 20, opacity: 0 }}

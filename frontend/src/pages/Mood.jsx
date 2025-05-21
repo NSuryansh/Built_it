@@ -4,7 +4,7 @@ import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import Navbar from "../components/Navbar";
 import SessionExpired from "../components/SessionExpired";
 import { ToastContainer } from "react-toastify";
@@ -210,7 +210,7 @@ export default function Mood() {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <HashLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
@@ -251,7 +251,7 @@ export default function Mood() {
             ))}
             {isLoading && (
               <div className="flex justify-center items-center my-2">
-                <PacmanLoader
+                <HashLoader
                   color="#ff4800"
                   radius={6}
                   height={20}
@@ -272,11 +272,10 @@ export default function Mood() {
             <button
               type="button"
               onClick={isRecording ? stopRecording : startRecording}
-              className={`p-2 rounded-full transition-colors bg-gradient-to-r ${
-                isRecording
+              className={`p-2 rounded-full transition-colors bg-gradient-to-r ${isRecording
                   ? "to-[var(--peer-custom-orange-500)] from-[var(--peer-custom-pink-500)] text-white"
                   : "from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] text-white"
-              }`}
+                }`}
               title={isRecording ? "Stop Recording" : "Start Recording"}
             >
               {isRecording ? (

@@ -4,7 +4,7 @@ import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import emailjs from "@emailjs/browser";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
@@ -459,7 +459,7 @@ const DoctorAppointment = () => {
   if (isAuthenticated === null || isFetched === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
+        <HashLoader color="#004ba8" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your dashboard...</p>
       </div>
     );

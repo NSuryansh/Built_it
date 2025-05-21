@@ -10,7 +10,7 @@ import SessionExpired from "../components/SessionExpired";
 import { generateAESKey } from "../utils/aeskey";
 import { encryptMessage } from "../utils/encryptMessage";
 import { checkAuth } from "../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import Navbar from "../components/Navbar";
 import { ToastContainer } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
@@ -363,7 +363,7 @@ const Peer = () => {
   if (isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-red-50">
-        <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+        <HashLoader color="#ff4800" radius={6} height={20} width={5} />
         <p className="mt-4 text-gray-600">Loading your wellness journey...</p>
       </div>
     );
@@ -573,11 +573,10 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
-                    msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                  }`}
+                    }`}
                 />
               ))}
               <div ref={messagesEndRef} />

@@ -12,7 +12,7 @@ import Footer from "../components/Footer";
 import { format } from "date-fns";
 import SessionExpired from "../components/SessionExpired";
 import { checkAuth } from "../utils/profile";
-import PacmanLoader from "react-spinners/PacmanLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -49,7 +49,7 @@ const Events = () => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <PacmanLoader color="#ff4800" radius={6} height={20} width={5} />
+          <HashLoader color="#ff4800" radius={6} height={20} width={5} />
         </motion.div>
         <motion.p
           initial={{ y: 20, opacity: 0 }}
