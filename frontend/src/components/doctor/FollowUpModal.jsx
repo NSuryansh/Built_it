@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { CalendarClock, X, Calendar as CalendarIcon, Loader } from "lucide-react";
+import {
+  CalendarClock,
+  X,
+  Calendar as CalendarIcon,
+  Loader,
+} from "lucide-react";
 import { format } from "date-fns";
 import CustomToast from "../CustomToast";
 import { useSearchParams } from "react-router-dom";
@@ -21,7 +26,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
         try {
           const doctorId = localStorage.getItem("userid");
           const response = await fetch(
-            `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`,
+            `https://built-it.onrender.com/available-slots?date=${date}&docId=${doctorId}`,
             { headers: { Authorization: "Bearer " + token } }
           );
           const data = await response.json();
@@ -41,35 +46,41 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
         `${followupDate}T${followupTime.split("T")[1]}`
       ).toISOString();
       console.log(selectedAppointment);
-      const response = await fetch("http://localhost:3000/request-to-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          doctorId: localStorage.getItem("userid"),
-          userId: userId,
-          dateTime: datetime,
-          reason: reason,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it.onrender.com/request-to-user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            doctorId: localStorage.getItem("userid"),
+            userId: userId,
+            dateTime: datetime,
+            reason: reason,
+          }),
+        }
+      );
       const data = await response.json();
       CustomToast("Follow-up appointment scheduled", "blue");
 
       if (data["message"] === "Appointment requested successfully") {
-        const notif = await fetch("http://localhost:3000/send-notification", {
-          method: "POST",
-          headers: {
-            "Content-type": "Application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userId: userId,
-            message: "Doctor has requested an appointment with you",
-            userType: "user",
-          }),
-        });
+        const notif = await fetch(
+          "https://built-it.onrender.com/send-notification",
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "Application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify({
+              userId: userId,
+              message: "Doctor has requested an appointment with you",
+              userType: "user",
+            }),
+          }
+        );
         setFollowupDate("");
         setFollowupTime("");
         setReason("");

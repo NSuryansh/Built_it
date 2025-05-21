@@ -10,7 +10,19 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/SessionExpired";
 import { TimeChange } from "../../components/Time_Change";
 import CustomToast from "../../components/CustomToast";
-import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -41,7 +53,7 @@ const DoctorAppointment = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`,
+        `https://built-it.onrender.com/available-slots?date=${date}&docId=${doctorId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -177,18 +189,21 @@ const DoctorAppointment = () => {
 
   const sendNotif = async (appointment) => {
     try {
-      const res = await fetch("http://localhost:3000/send-notification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          userid: appointment["user_id"],
-          message: `Your appointment request has been accepted!`,
-          userType: "user",
-        }),
-      });
+      const res = await fetch(
+        "https://built-it.onrender.com/send-notification",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            userid: appointment["user_id"],
+            message: `Your appointment request has been accepted!`,
+            userType: "user",
+          }),
+        }
+      );
 
       if (!res.ok) {
         console.error("Failed to send notification");
@@ -211,11 +226,14 @@ const DoctorAppointment = () => {
     if (!docId) return;
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
-      const res = await fetch(`http://localhost:3000/reqApp?docId=${docId}`, {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const res = await fetch(
+        `https://built-it.onrender.com/reqApp?docId=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
       const res2 = await fetch(
-        `http://localhost:3000/currentdocappt?doctorId=${docId}`,
+        `https://built-it.onrender.com/currentdocappt?doctorId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const resp2 = await res2.json();
@@ -241,7 +259,7 @@ const DoctorAppointment = () => {
     const fetchPastAppointments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/pastdocappt?doctorId=${docId}`,
+          `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -303,7 +321,7 @@ const DoctorAppointment = () => {
 
   const acceptApp = async (appointment) => {
     appointment.dateTime = new Date(appointment.dateTime);
-    const res = await fetch("http://localhost:3000/book", {
+    const res = await fetch("https://built-it.onrender.com/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -342,7 +360,7 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    const res = await fetch("http://localhost:3000/deleteApp", {
+    const res = await fetch("https://built-it.onrender.com/deleteApp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -370,7 +388,7 @@ const DoctorAppointment = () => {
       newTime: format(newTime, "dd-MMM-yy hh:mm a"),
       email: appointment["user"]["email"],
     };
-    const res = await fetch("http://localhost:3000/reschedule", {
+    const res = await fetch("https://built-it.onrender.com/reschedule", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -524,12 +542,16 @@ const DoctorAppointment = () => {
                               Reschedule
                             </button>
                           )}
-                            <button
-                              onClick={() => navigate(`/doctor/history?username=${appointment.user.username}`)}
-                              className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
-                            >
-                              Check History
-                            </button>
+                          <button
+                            onClick={() =>
+                              navigate(
+                                `/doctor/history?username=${appointment.user.username}`
+                              )
+                            }
+                            className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                          >
+                            Check History
+                          </button>
                         </div>
                         {selectedAppointment === appointment.id && (
                           <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-blue-200">
@@ -702,11 +724,15 @@ const DoctorAppointment = () => {
                             </button>
                           )}
                           <button
-                              onClick={() => navigate(`/doctor/history?username=${appointment.user.username}`)}
-                              className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
-                            >
-                              Check History
-                            </button>
+                            onClick={() =>
+                              navigate(
+                                `/doctor/history?username=${appointment.user.username}`
+                              )
+                            }
+                            className="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+                          >
+                            Check History
+                          </button>
                         </div>
                         {selectedAppointment === appointment.id && (
                           <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-blue-200">

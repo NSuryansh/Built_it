@@ -38,7 +38,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setisLoading] = useState(false);
-  const [showBiometricModal, setShowBiometricModal] = useState(false)
+  const [showBiometricModal, setShowBiometricModal] = useState(false);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -71,7 +71,7 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch("http://localhost:3000/login", {
+    const response = await fetch("https://built-it.onrender.com/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -104,50 +104,61 @@ const Login = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch("http://localhost:3000/forgotPassword", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
+    const response = await fetch(
+      "https://built-it.onrender.com/forgotPassword",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    );
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
   };
 
   const base64urlToBase64 = (base64url) => {
-    let base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+    let base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
     while (base64.length % 4 !== 0) {
-      base64 += '=';
+      base64 += "=";
     }
     return base64;
-  }
-  const bufferToBase64url=(buffer)=> {
+  };
+  const bufferToBase64url = (buffer) => {
     return btoa(String.fromCharCode(...new Uint8Array(buffer)))
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
-  }
+  };
 
   const handleBiometricLogin = async () => {
-    console.log(username, "usduse")
-    const data = await fetch('http://localhost:3000/generateBioAuthOptions', {
-      method: 'POST',
-      body: JSON.stringify({
-        emailId: username
-      }),
-      headers: { 'Content-type': 'application/json' }
-    }).then((res) => res.json());
-    const options = data.options
-    console.log(options)
-    options.challenge = Uint8Array.from(atob(base64urlToBase64(options.challenge)), c => c.charCodeAt(0));
+    console.log(username, "usduse");
+    const data = await fetch(
+      "https://built-it.onrender.com/generateBioAuthOptions",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          emailId: username,
+        }),
+        headers: { "Content-type": "application/json" },
+      }
+    ).then((res) => res.json());
+    const options = data.options;
+    console.log(options);
+    options.challenge = Uint8Array.from(
+      atob(base64urlToBase64(options.challenge)),
+      (c) => c.charCodeAt(0)
+    );
     options.allowCredentials = options.allowCredentials.map((cred) => ({
       ...cred,
-      id: Uint8Array.from(atob(base64urlToBase64(cred.id)), c => c.charCodeAt(0)),
+      id: Uint8Array.from(atob(base64urlToBase64(cred.id)), (c) =>
+        c.charCodeAt(0)
+      ),
     }));
 
     const assertion = await navigator.credentials.get({ publicKey: options });
@@ -158,7 +169,9 @@ const Login = () => {
       type: assertion.type,
       response: {
         clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
-        authenticatorData: bufferToBase64url(assertion.response.authenticatorData),
+        authenticatorData: bufferToBase64url(
+          assertion.response.authenticatorData
+        ),
         signature: bufferToBase64url(assertion.response.signature),
         userHandle: assertion.response.userHandle
           ? bufferToBase64url(assertion.response.userHandle)
@@ -166,24 +179,24 @@ const Login = () => {
       },
     };
 
-    const res = await fetch('http://localhost:3000/verifyBioLogin', {
-      method: 'POST',
+    const res = await fetch("https://built-it.onrender.com/verifyBioLogin", {
+      method: "POST",
       // body: JSON.stringify({
       //   emailId: username
       // }),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...response,
-        emailId: username
+        emailId: username,
       }),
     }).then((res) => res.json());
-    console.log(res)
-    if(res.success===true){
+    console.log(res);
+    if (res.success === true) {
       localStorage.setItem("token", res["token"]);
       navigate("/dashboard");
     }
     setShowBiometricModal(false);
-  }
+  };
 
   return (
     <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">

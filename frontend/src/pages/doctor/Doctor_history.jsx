@@ -1,5 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {Users, Search, Calendar as CalendarIcon, Clock as ClockIcon } from "lucide-react";
+import {
+  Users,
+  Search,
+  Calendar as CalendarIcon,
+  Clock as ClockIcon,
+} from "lucide-react";
 import Footer from "../../components/Footer";
 import DoctorNavbar from "../../components/doctor/Navbar_doctor";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -23,8 +28,7 @@ const History = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [searchParams] = useSearchParams();
   const [searchUsername, setSearchUsername] = useState("");
-  
- 
+
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
@@ -32,14 +36,14 @@ const History = () => {
     };
     verifyAuth();
     getPastAppointments();
-    setSearchUsername(searchParams.get("username"))
+    setSearchUsername(searchParams.get("username"));
   }, []);
 
   useEffect(() => {
-    if(searchUsername){
-      setSearchTerm(searchUsername)
+    if (searchUsername) {
+      setSearchTerm(searchUsername);
     }
-  }, [searchUsername])
+  }, [searchUsername]);
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -49,7 +53,7 @@ const History = () => {
     try {
       const docId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/pastdocappt?doctorId=${docId}`,
+        `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -66,15 +70,14 @@ const History = () => {
     if (searchTerm.trim() === "") {
       setFilteredUsers(allUsers);
     } else {
-      
-    console.log(searchTerm)
+      console.log(searchTerm);
       setFilteredUsers(searchUsers(searchTerm));
     }
   }, [searchTerm, allUsers]);
 
   const searchUsers = (searchTerm) => {
     const lowerSearchTerm = searchTerm.toLowerCase();
-    
+
     return allUsers.filter(
       (item) =>
         item.user.username.toLowerCase().includes(lowerSearchTerm) ||

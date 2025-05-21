@@ -39,9 +39,12 @@ const Calendar = ({ onDateSelect }) => {
   useEffect(() => {
     const PastEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/getPastEvents", {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          "https://built-it.onrender.com/getPastEvents",
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const data = await response.json();
         setPastEvents(
           data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd"))
@@ -55,10 +58,10 @@ const Calendar = ({ onDateSelect }) => {
   }, []);
 
   // Fetch future events
-  useEffect( () => {
+  useEffect(() => {
     const FutureEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/events", {
+        const response = await fetch("https://built-it.onrender.com/events", {
           headers: { Authorization: "Bearer " + token },
         });
         const data = await response.json();

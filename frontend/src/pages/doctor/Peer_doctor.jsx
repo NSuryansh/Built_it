@@ -76,7 +76,7 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/chatContacts?userId=${userId}&userType=doc`,
+        `https://built-it.onrender.com/chatContacts?userId=${userId}&userType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       if (!response.ok) throw new Error("Failed to fetch users");
@@ -108,7 +108,7 @@ const DoctorPeer = () => {
       return [];
     }
   }
-   useEffect(() => {
+  useEffect(() => {
     const getContacts = async () => {
       if (isAuthenticated && userId) {
         const user = await fetchContacts(userId);
@@ -123,7 +123,6 @@ const DoctorPeer = () => {
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-
   // Update the recipient id from the selected doctor in userList
   useEffect(() => {
     if (userList.length > 0 && selectedChat !== null) {
@@ -135,10 +134,10 @@ const DoctorPeer = () => {
   useEffect(() => {
     // console.log(showMessages, "JSA");
     const filteredMessages = showMessages.filter((msg) => {
-      if(msg.senderType === "doctor"){
-      return (msg.senderId === userId);
-      }else{
-        return (msg.recipientId === userId)
+      if (msg.senderType === "doctor") {
+        return msg.senderId === userId;
+      } else {
+        return msg.recipientId === userId;
       }
     });
     setEditedMessages(filteredMessages);
@@ -156,7 +155,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3000/", {
+    socketRef.current = io("https://built-it.onrender.com/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -203,7 +202,7 @@ const DoctorPeer = () => {
         { decryptedText: decrypted, senderId, senderType },
       ]);
     };
-    
+
     socketRef.current.on("receiveMessage", handleReceiveMessage);
     return () => {
       socketRef.current.off("receiveMessage", handleReceiveMessage);
@@ -260,9 +259,7 @@ const DoctorPeer = () => {
     if (message.trim()) {
       setShowMessages((prev) => [
         ...prev,
-        { decryptedText: message, senderId: userId,
-          senderType: "doc",
-        },
+        { decryptedText: message, senderId: userId, senderType: "doc" },
       ]);
 
       const { encryptedText, iv } = await encryptMessage(message, aesKey);
@@ -283,7 +280,7 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
+        `https://built-it.onrender.com/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();

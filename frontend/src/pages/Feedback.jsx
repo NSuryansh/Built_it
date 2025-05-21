@@ -98,12 +98,12 @@ const FeedbackPage = () => {
   const getAppointmentById = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/getAppointmentById?id=${appointmentId}`,
+        `https://built-it.onrender.com/getAppointmentById?id=${appointmentId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await res.json();
       const res2 = await fetch(
-        `http://localhost:3000/getDoc?docId=${data.doc_id}`,
+        `https://built-it.onrender.com/getDoc?docId=${data.doc_id}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data2 = await res2.json();
@@ -140,7 +140,7 @@ const FeedbackPage = () => {
   const submitFeedback = async () => {
     setisSubmitting(true);
     try {
-      const res = await fetch("http://localhost:3000/setFeedback", {
+      const res = await fetch("https://built-it.onrender.com/setFeedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

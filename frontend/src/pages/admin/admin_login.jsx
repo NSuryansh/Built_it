@@ -125,7 +125,7 @@ const AdminLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch("http://localhost:3000/adminLogin", {
+    const response = await fetch("https://built-it.onrender.com/adminLogin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -153,16 +153,19 @@ const AdminLogin = () => {
       CustomToast("Please enter an email", "green");
       return;
     }
-    const response = await fetch("http://localhost:3000/forgotAdminPassword", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
+    const response = await fetch(
+      "https://built-it.onrender.com/forgotAdminPassword",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    );
     const res = await response.json();
     CustomToast(res.message, "green");
     setShowForgotModal(false);

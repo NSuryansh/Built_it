@@ -40,9 +40,12 @@ const Book = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors?user_type=user", {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const res = await fetch(
+          "https://built-it.onrender.com/getdoctors?user_type=user",
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const data = await res.json();
         setDoctors(data);
       } catch (err) {
@@ -105,7 +108,7 @@ const Book = () => {
     const user_id = localStorage.getItem("userid");
 
     try {
-      const res = await fetch("http://localhost:3000/requests", {
+      const res = await fetch("https://built-it.onrender.com/requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

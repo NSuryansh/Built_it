@@ -48,7 +48,7 @@ const Peer = () => {
     // const now = new Date();
     // const hours = now.getHours();
     // return hours >= 20 && hours < 24; // Restrict chat from 8 PM (20:00) to 11 PM (23:00)
-    return false
+    return false;
   };
 
   // Filter doctors based on search query
@@ -93,9 +93,12 @@ const Peer = () => {
     const fetchDocotors = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3000/getdoctors?user_type=user", {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          "https://built-it.onrender.com/getdoctors?user_type=user",
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
         // console.log("Doctors data:", data); // Debug: Log doctor data to check phone field
@@ -110,7 +113,7 @@ const Peer = () => {
   // async function fetchContacts(userId) {
   //   try {
   //     const response = await fetch(
-  //       `http://localhost:3000/chatContacts?userId=${userId}`,
+  //       `https://built-it.onrender.com/chatContacts?userId=${userId}`,
   //       { headers: { Authorization: "Bearer " + token } }
   //     );
   //     const contacts = await response.json();
@@ -167,7 +170,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3000/", {
+    socketRef.current = io("https://built-it.onrender.com/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -274,11 +277,11 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
+        `https://built-it.onrender.com/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
-      console.log(messages,"messgaes")
+      console.log(messages, "messgaes");
       const decrypted_api_messages = await Promise.all(
         messages.map(async (msg) => {
           const isUser = msg["senderType"] === "user";
@@ -295,7 +298,7 @@ const Peer = () => {
           };
         })
       );
-      console.log(decrypted_api_messages, "messgaesjpoas")
+      console.log(decrypted_api_messages, "messgaesjpoas");
       setMessagesApi(decrypted_api_messages);
       const filteredMessages = decrypted_api_messages.filter((msg) => {
         return (
@@ -323,10 +326,10 @@ const Peer = () => {
     // console.log(showMessages, "hal");
     const filteredMessages = showMessages.filter((msg) => {
       // console.log(msg, "msg")
-      if(msg.senderType === "user"){
-      return (msg.senderId === userId);
-      }else{
-        return (msg.recipientId === userId)
+      if (msg.senderType === "user") {
+        return msg.senderId === userId;
+      } else {
+        return msg.recipientId === userId;
       }
     });
     // console.log(filteredMessages, "filtered")
@@ -464,13 +467,12 @@ const Peer = () => {
               <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
                 {isChatDisabled() ? (
                   <div className="text-center text-gray-600">
-                    <p className="mb-2">
-                      Chat is disabled from 8 PM to 11 PM.
-                    </p>
+                    <p className="mb-2">Chat is disabled from 8 PM to 11 PM.</p>
                     <p>
                       For emergencies, please contact:{" "}
                       <strong>
-                        {docList[selectedChat]?.mobile || "No emergency contact available"}
+                        {docList[selectedChat]?.mobile ||
+                          "No emergency contact available"}
                       </strong>
                     </p>
                     {/* Note: If the phone number is not displaying, check the console for the 'Doctors data' log. Ensure the backend returns a 'mobile' field for each doctor. If the field is named differently (e.g., 'phone_number'), replace 'mobile' with the correct field name in docList[selectedChat]?.mobile */}
@@ -571,10 +573,11 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                    msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                    }`}
+                  }`}
                 />
               ))}
               <div ref={messagesEndRef} />
@@ -582,13 +585,12 @@ const Peer = () => {
             <div className="border-t border-gray-200 p-4 bg-white shadow-sm">
               {isChatDisabled() ? (
                 <div className="text-center text-gray-600">
-                  <p className="mb-2">
-                    Chat is disabled from 8 PM to 11 PM.
-                  </p>
+                  <p className="mb-2">Chat is disabled from 8 PM to 11 PM.</p>
                   <p>
                     For emergencies, please contact:{" "}
                     <strong>
-                      {docList[selectedChat]?.mobile || "No emergency contact available"}
+                      {docList[selectedChat]?.mobile ||
+                        "No emergency contact available"}
                     </strong>
                     {docList[selectedChat]?.mobile && (
                       <a

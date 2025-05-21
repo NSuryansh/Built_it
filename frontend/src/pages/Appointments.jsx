@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Rating from "@mui/material/Rating";
 import { Button } from "@mui/material";
-import { User, Calendar, CalendarClock, History, Clock, FileText, CheckCircle } from "lucide-react";
+import {
+  User,
+  Calendar,
+  CalendarClock,
+  History,
+  Clock,
+  FileText,
+  CheckCircle,
+} from "lucide-react";
 import Navbar from "../components/Navbar";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { checkAuth } from "../utils/profile";
@@ -31,7 +39,7 @@ const UserAppointments = () => {
   async function getPrevApp() {
     try {
       const res = await fetch(
-        `http://localhost:3000/pastuserappt?userId=${user_id}`,
+        `https://built-it.onrender.com/pastuserappt?userId=${user_id}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const resp = await res.json();
@@ -45,7 +53,7 @@ const UserAppointments = () => {
   async function getCurrApp() {
     try {
       const res = await fetch(
-        `http://localhost:3000/currentuserappt?userId=${user_id}`,
+        `https://built-it.onrender.com/currentuserappt?userId=${user_id}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -85,7 +93,7 @@ const UserAppointments = () => {
   // Only handles submitting data, not the event
   const submitRating = async (appointmentId, ratingValue, docId) => {
     try {
-      const res = await fetch("http://localhost:3000/setRating", {
+      const res = await fetch("https://built-it.onrender.com/setRating", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +103,7 @@ const UserAppointments = () => {
           id: appointmentId,
           stars: ratingValue,
           doctorId: docId,
-          userId: user_id
+          userId: user_id,
         }),
       });
 

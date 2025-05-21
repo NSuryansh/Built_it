@@ -1,6 +1,26 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {Calendar, Users, Clock, Search, User, Stethoscope, CalendarClock, CheckCircle2, Clock3, CheckCircle, AlertCircle} from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis,  CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  Calendar,
+  Users,
+  Clock,
+  Search,
+  User,
+  Stethoscope,
+  CalendarClock,
+  CheckCircle2,
+  Clock3,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import AdminNavbar from "../../components/admin/admin_navbar";
 import Footer from "../../components/Footer";
 import { format } from "date-fns";
@@ -34,9 +54,12 @@ const AdminAppointments = () => {
 
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/getdoctors?user_type=admin", {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const res = await fetch(
+          "https://built-it.onrender.com/getdoctors?user_type=admin",
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const data = await res.json();
         const formattedData = data.map((doc) => ({
           id: doc.id,
@@ -52,9 +75,12 @@ const AdminAppointments = () => {
 
     const fetchAppointments = async () => {
       try {
-        const res = await fetch("http://localhost:3000/all-appointments", {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const res = await fetch(
+          "https://built-it.onrender.com/all-appointments",
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const data = await res.json();
         const formattedCurData = data.appts.map((appt) => ({
           id: appt.id,
