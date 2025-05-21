@@ -122,9 +122,9 @@ const Login = () => {
   const handleBiometricLogin = async () => {
     const options = await fetch('http://localhost:3000/generateBioAuthOptions', {
       method: 'POST',
-      body:{
+      body:JSON.stringify({
         emailId: username
-      },
+      }),
       headers: {'Content-type': 'application/json'}
     }).then((res) => res.json());
   
@@ -152,9 +152,9 @@ const Login = () => {
   
     const res = await fetch('http://localhost:3000/verifyBioLogin', {
       method: 'POST',
-      body: {
+      body: JSON.stringify({
         emailId: username
-      },
+      }),
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(response),
     }).then((res) => res.json());
