@@ -417,9 +417,9 @@ app.post("/verifyBioLogin", async (req, res) => {
     expectedChallenge: user.challenge,
     expectedOrigin: "http://localhost:5173",
     expectedRPID: "localhost",
-    authenticator: {
-      credentialID: credential.credentialID,
-      credentialPublicKey: credential.publicKey,
+    credential: {
+      credentialID: Buffer.from(credential.credentialID),
+      credentialPublicKey: Buffer.from(credential.publicKey),
       counter: credential.counter,
       credentialDeviceType: credential.deviceType,
       credentialBackedUp: credential.backedUp
