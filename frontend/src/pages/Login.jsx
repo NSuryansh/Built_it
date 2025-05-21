@@ -177,6 +177,11 @@ const Login = () => {
         emailId: username
       }),
     }).then((res) => res.json());
+    console.log(res)
+    if(res.success===true){
+      localStorage.setItem("token", res["token"]);
+      navigate("/dashboard");
+    }
     setShowBiometricModal(false);
   }
 

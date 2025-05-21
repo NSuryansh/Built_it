@@ -419,7 +419,7 @@ app.post("/verifyBioLogin", async (req, res) => {
     expectedRPID: "localhost",
     credential: {
       credentialID: Buffer.from(credential.credentialID),
-      credentialPublicKey: Buffer.from(credential.publicKey),
+      publicKey: Buffer.from(credential.publicKey),
       counter: credential.counter,
       credentialDeviceType: credential.deviceType,
       credentialBackedUp: credential.backedUp
@@ -429,7 +429,7 @@ app.post("/verifyBioLogin", async (req, res) => {
   if (!verification.verified) {
     return res.status(403).json({ success: false, error: "Verification failed" });
   }
-
+  console.log(verification)
   await prisma.authenticator.update({
     where: { id: credential.id },
     data: {
