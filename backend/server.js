@@ -13,6 +13,7 @@ import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
 import multer from "multer";
+import base64url from 'base64url'
 import { send } from "@emailjs/browser";
 import admin from "firebase-admin";
 import { authorizeRoles } from "./authMiddleware.js";
@@ -230,21 +231,34 @@ io.on("connection", (socket) => {
 });
 
 const biometricOptions = async (user) => {
-  const options = generateRegistrationOptions({
-    rpname: "Vitality",
+  const options = await generateRegistrationOptions({
+    rpName: "Vitality",
     rpID: "localhost",
-    userID: user.id,
-    userName: user.email
+    userID: Number(user.id),
+    userName: user.email,
+    userDisplayName: user.email
   })
+  console.log(options)
   const addChallenge = await prisma.user.update({
     where: {
       id: Number(user.id)
     },
     data: {
-      challenge: options.challenge
+      challenge: base64url.encode(options.challenge)
     }
   })
-  return options
+  return {
+    ...options,
+    challenge: base64url.encode(options.challenge),
+    user: {
+      ...options.user,
+      id: base64url.encode(options.user.id),
+    },
+    excludeCredentials: options.excludeCredentials.map((cred) => ({
+      ...cred,
+      id: base64url.encode(cred.id),
+    })),
+  }
 }
 
 app.post("/signup", async (req, res) => {
@@ -281,18 +295,28 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/generateOptions", authorizeRoles("user"), async (req, res) => {
+app.post("/generateOptions",  async (req, res) => {
   const user = req.body["user"]
-  if (user.id !== req.user.id) {
-    return res.status(403).json({ error: "Access denied" })
-  }
-  const options = biometricOptions(user)
+  console.log('hello')
+  // if (user.id !== req.user.id) {
+  //   return res.status(403).json({ error: "Access denied" })
+  // }
+  const options = await biometricOptions(user)
   return res.json({ options: options })
 })
 
-app.post("verifyBioRegistration", async (req, res) => {
+const base64urlToBuffer =(base64url)=> {
+  const base64 = base64url
+    .replace(/-/g, '+')
+    .replace(/_/g, '/')
+    .padEnd(base64url.length + (4 - base64url.length % 4) % 4, '=');
+  return Buffer.from(base64, 'base64');
+}
+
+app.post("/verifyBioRegistration", async (req, res) => {
   try {
     const emailId = req.body["emailId"]
+    console.log(emailId)
     const user = await prisma.user.findUnique({
       where: {
         email: emailId
@@ -301,7 +325,7 @@ app.post("verifyBioRegistration", async (req, res) => {
     const verification = await verifyRegistrationResponse({
       response: req.body,
       expectedChallenge: user.challenge,
-      expectedOrigin: origin,
+      expectedOrigin: "http://localhost:5173",
       expectedRPID: "localhost",
       // authenticator: {
       //     credentialID: credential.credentialID,
@@ -311,13 +335,14 @@ app.post("verifyBioRegistration", async (req, res) => {
       //     credentialBackedUp: credential.backedUp
       // },
     })
+    console.log(verification)
 
     if (verification.verified && verification.registrationInfo) {
       await prisma.authenticator.create({
         data: {
-          credentialID: verification.registrationInfo.credentialID,
-          publicKey: verification.registrationInfo.credentialPublicKey,
-          counter: verification.registrationInfo.counter,
+          credentialID: base64urlToBuffer(verification.registrationInfo.credential.id),
+          publicKey: Buffer.from(verification.registrationInfo.credential.publicKey),
+          counter: verification.registrationInfo.credential.counter,
           deviceType: verification.registrationInfo.credentialDeviceType,
           backedUp: verification.registrationInfo.credentialBackedUp,
           transports: req.body.response?.transports || [],
@@ -327,44 +352,45 @@ app.post("verifyBioRegistration", async (req, res) => {
     }
     return res.status(200).json({ success: true });
   } catch (e) {
+    console.log(e)
     return res.status(400).json({ error: e })
   }
 })
 
-app.post("/generateBioAuthOptions", authorizeRoles("user"), async (req, res) => {
+app.post("/generateBioAuthOptions",  async (req, res) => {
   const emailId = req.body["emailId"]
   const user = await prisma.user.findUnique({
     where: { email: emailId },
     include: { credentials: true }
   });
-  if (user.id !== req.user.userId) {
-    return res.status(403).json({ error: "Access denied" })
-  }
+  // if (user.id !== req.user.userId) {
+  //   return res.status(403).json({ error: "Access denied" })
+  // }
 
   if (!user || user.credentials.length === 0) {
     return res.status(404).json({ error: "No credentials found" });
   }
 
-  const options = generateAuthenticationOptions({
+  const options = await generateAuthenticationOptions({
     allowCredentials: user.credentials.map(cred => ({
-      id: cred.credentialID,
+      id: base64url.encode(Buffer.from(cred.credentialID)),
       type: 'public-key',
       transports: cred.transports || [],
     })),
     userVerification: 'preferred',
   })
-
+  console.log(options)
   await prisma.user.update({
     where: { id: user.id },
     data: { challenge: options.challenge }
   })
 
-  res.json(options)
+  res.json({options: options})
 })
 
 app.post("/verifyBioLogin", async (req, res) => {
-  const { emailId } = req.body;
-
+  const emailId = req.body["emailId"];
+  console.log(emailId, "hiihihih")
   const user = await prisma.user.findUnique({
     where: { email: emailId },
     include: {
@@ -375,22 +401,24 @@ app.post("/verifyBioLogin", async (req, res) => {
   if (!user || user.credentials.length === 0) {
     return res.status(404).json({ error: "User or credentials not found" });
   }
-
+  console.log(req.body)
+  console.log(user.credentials)
   const credential = user.credentials.find(c =>
     base64url.encode(Buffer.from(c.credentialID)) === req.body.id
   );
-
+  console.log(credential)
   if (!credential) {
     return res.status(400).json({ error: "Credential not recognized" });
   }
-
+  const encodedCredentialId = base64url.encode(Buffer.from(credential.credentialID))
+  console.log(encodedCredentialId)
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
     expectedOrigin: "http://localhost:5173",
     expectedRPID: "localhost",
     authenticator: {
-      credentialID: credential.credentialID,
+      credentialID: encodedCredentialId,
       credentialPublicKey: credential.publicKey,
       counter: credential.counter,
       credentialDeviceType: credential.deviceType,

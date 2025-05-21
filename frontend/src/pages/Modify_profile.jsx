@@ -20,6 +20,11 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
     alt_mobile,
   });
 
+  function bufferToBase64Url(buffer) {
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("user");
@@ -31,6 +36,65 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   const handleClosePopup = () => {
     navigate("/login");
   };
+
+  const handleBiometricSetup = async()=>{
+    try {
+      console.log(window.location.origin)
+      console.log("hi")
+      const data = await fetch('http://localhost:3000/generateOptions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user: {
+            id: localStorage.getItem("userid"),
+            email: localStorage.getItem("user_email")
+          }
+        }),
+      }).then(res => res.json());
+      const options = data.options
+      console.log(options)
+      options.challenge = Uint8Array.from(atob(options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+      options.user.id = Uint8Array.from(atob(options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+      options.excludeCredentials = options.excludeCredentials.map((cred) => ({
+        ...cred,
+        id: Uint8Array.from(atob(cred.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)),
+      }));
+      
+      const credential = await navigator.credentials.create({ publicKey: options });
+      const credentialID = bufferToBase64Url(credential.rawId);
+  
+      const credentialResponse = {
+        id: credentialID,
+        rawId: credentialID,
+        type: credential.type,
+        response: {
+          attestationObject: bufferToBase64Url(credential.response.attestationObject),
+          clientDataJSON: bufferToBase64Url(credential.response.clientDataJSON),
+        },
+        emailId: localStorage.getItem("user_email"), 
+        transports: credential.response.getTransports?.() || [], 
+      };
+
+      console.log(credentialResponse)
+  
+      const verifyRes = await fetch('http://localhost:3000/verifyBioRegistration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentialResponse),
+      });
+      console.log(verifyRes)
+  
+      const result = await verifyRes.json();
+      if (result.success) {
+        alert("Biometric registration successful!");
+      } else {
+        alert("Registration failed: " + result.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error during biometric registration");
+    }
+  }
 
   if (isAuthenticated === null) {
     return (
@@ -194,7 +258,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
               </div>
 
               <div className="realtive flex items-center">
-                <Fingerprint className="h-5 w-5 mr-2"/> <span>Input for biometric</span>
+                <Fingerprint className="h-5 w-5 mr-2"/> <button onClick={handleBiometricSetup}>Input for biometric</button>
               </div>
 
               {/* Buttons */}

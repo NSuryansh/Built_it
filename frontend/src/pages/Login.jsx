@@ -119,23 +119,34 @@ const Login = () => {
     setShowForgotModal(false);
   };
 
+  const base64urlToBase64 = (base64url) => {
+    let base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4 !== 0) {
+      base64 += '=';
+    }
+    return base64;
+  }
+
+
   const handleBiometricLogin = async () => {
-    const options = await fetch('http://localhost:3000/generateBioAuthOptions', {
+    console.log(username, "usduse")
+    const data = await fetch('http://localhost:3000/generateBioAuthOptions', {
       method: 'POST',
-      body:JSON.stringify({
+      body: JSON.stringify({
         emailId: username
       }),
-      headers: {'Content-type': 'application/json'}
+      headers: { 'Content-type': 'application/json' }
     }).then((res) => res.json());
-  
-    options.challenge = Uint8Array.from(atob(options.challenge), c => c.charCodeAt(0));
+    const options = data.options
+    console.log(options)
+    options.challenge = Uint8Array.from(atob(base64urlToBase64(options.challenge)), c => c.charCodeAt(0));
     options.allowCredentials = options.allowCredentials.map((cred) => ({
       ...cred,
-      id: Uint8Array.from(atob(cred.id), c => c.charCodeAt(0)),
+      id: Uint8Array.from(atob(base64urlToBase64(cred.id)), c => c.charCodeAt(0)),
     }));
-  
+
     const assertion = await navigator.credentials.get({ publicKey: options });
-  
+
     const response = {
       id: assertion.id,
       rawId: btoa(String.fromCharCode(...new Uint8Array(assertion.rawId))),
@@ -149,14 +160,17 @@ const Login = () => {
           : null,
       },
     };
-  
+
     const res = await fetch('http://localhost:3000/verifyBioLogin', {
       method: 'POST',
+      // body: JSON.stringify({
+      //   emailId: username
+      // }),
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        ...response,
         emailId: username
       }),
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(response),
     }).then((res) => res.json());
     setShowBiometricModal(false);
   }
@@ -231,12 +245,12 @@ const Login = () => {
         </div>
 
         <button
-        onClick={() => setShowBiometricModal(true)}
+          onClick={() => setShowBiometricModal(true)}
           disabled={isLoading}
           className="w-full flex justify-center items-center py-3 px-4 bg-[var(--custom-orange-100)] text-[var(--custom-orange-600)] rounded-lg hover:bg-[var(--custom-orange-200)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] "
         >
           <div className="flex items-center">
-            <Fingerprint className="h-5 w-5 mr-2"/>
+            <Fingerprint className="h-5 w-5 mr-2" />
             <span>Login with Biometric</span>
           </div>
         </button>
@@ -349,7 +363,7 @@ const Login = () => {
                 Cancel
               </button>
               <button
-                onClick={()=>handleBiometricLogin()}
+                onClick={() => handleBiometricLogin()}
                 className="px-4 py-2 text-sm bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded hover:bg-[var(--custom-orange-500)] transition-colors"
               >
                 Submit
