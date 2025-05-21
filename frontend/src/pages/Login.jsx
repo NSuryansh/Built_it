@@ -120,6 +120,44 @@ const Login = () => {
   };
 
   const handleBiometricLogin = async () => {
+    const options = await fetch('http://localhost:3000/generateBioAuthOptions', {
+      method: 'POST',
+      body:{
+        emailId: username
+      },
+      headers: {'Content-type': 'application/json'}
+    }).then((res) => res.json());
+  
+    options.challenge = Uint8Array.from(atob(options.challenge), c => c.charCodeAt(0));
+    options.allowCredentials = options.allowCredentials.map((cred) => ({
+      ...cred,
+      id: Uint8Array.from(atob(cred.id), c => c.charCodeAt(0)),
+    }));
+  
+    const assertion = await navigator.credentials.get({ publicKey: options });
+  
+    const response = {
+      id: assertion.id,
+      rawId: btoa(String.fromCharCode(...new Uint8Array(assertion.rawId))),
+      type: assertion.type,
+      response: {
+        clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(assertion.response.clientDataJSON))),
+        authenticatorData: btoa(String.fromCharCode(...new Uint8Array(assertion.response.authenticatorData))),
+        signature: btoa(String.fromCharCode(...new Uint8Array(assertion.response.signature))),
+        userHandle: assertion.response.userHandle
+          ? btoa(String.fromCharCode(...new Uint8Array(assertion.response.userHandle)))
+          : null,
+      },
+    };
+  
+    const res = await fetch('http://localhost:3000/verifyBioLogin', {
+      method: 'POST',
+      body: {
+        emailId: username
+      },
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(response),
+    }).then((res) => res.json());
     setShowBiometricModal(false);
   }
 
@@ -311,7 +349,7 @@ const Login = () => {
                 Cancel
               </button>
               <button
-                onClick={handleBiometricLogin}
+                onClick={()=>handleBiometricLogin()}
                 className="px-4 py-2 text-sm bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded hover:bg-[var(--custom-orange-500)] transition-colors"
               >
                 Submit
