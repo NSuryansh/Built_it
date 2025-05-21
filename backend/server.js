@@ -332,8 +332,9 @@ app.post("verifyBioRegistration", async (req, res) => {
 })
 
 app.post("/generateBioAuthOptions", authorizeRoles("user"), async (req, res) => {
+  const emailId = req.body["emailId"]
   const user = await prisma.user.findUnique({
-    where: { email: req.body.email },
+    where: { email: emailId },
     include: { credentials: true }
   });
   if (user.id !== req.user.userId) {
