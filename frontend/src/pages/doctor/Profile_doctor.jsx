@@ -293,7 +293,7 @@ const DoctorProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 overflow-hidden">
       <DoctorNavbar />
       <ToastContainer />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 lg:py-10 space-y-12 relative">
+      <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 lg:py-10 space-y-12 relative">
         {/* Floating Decorative Elements */}
         <div className="absolute top-0 left-0 w-72 h-72 bg-indigo-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
@@ -339,7 +339,7 @@ const DoctorProfile = () => {
         </div>
 
         {/* Profile Card */}
-        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-indigo-100/30 transition-all duration-500 hover:shadow-indigo-200/20 animate-fade-in-up">
+        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-3 md:p-8 border border-indigo-100/30 transition-all duration-500 hover:shadow-indigo-200/20 animate-fade-in-up">
           <div className="w-full flex justify-between flex-col md:flex-row gap-4 md:gap-8">
             <div className="flex flex-col md:flex-row items-center md:space-x-8">
               <div
