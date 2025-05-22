@@ -414,7 +414,7 @@ const DoctorProfile = () => {
                           email: e.target.value,
                         })
                       }
-                      className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                      className="w-4/5 sm:w-full bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                     />
                   ) : (
                     <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
@@ -435,7 +435,7 @@ const DoctorProfile = () => {
                           phone: e.target.value,
                         })
                       }
-                      className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                      className="w-4/5 sm:w-full bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                     />
                   ) : (
                     <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
@@ -446,7 +446,7 @@ const DoctorProfile = () => {
                 <div className="flex items-start group">
                   <MapPin className="h-5 w-5 text-blue-600 mr-3 mt-1 transition-transform group-hover:scale-125" />
                   {isEditing ? (
-                    <div className="flex-1 space-y-4">
+                    <div className="w-4/5 sm:w-full space-y-4">
                       <input
                         type="text"
                         value={editedProfile.address}
@@ -507,7 +507,7 @@ const DoctorProfile = () => {
                               specialization: e.target.value,
                             })
                           }
-                          className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                          className="w-4/5 sm:w-full bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                         />
                       ) : (
                         <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
@@ -527,7 +527,7 @@ const DoctorProfile = () => {
                               experience: e.target.value,
                             })
                           }
-                          className="flex-1 bg-white border border-indigo-200 rounded-xl px-4 py-2 focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                          className="w-4/5 sm:w-full bg-white border border-indigo-200 rounded-xl px-4 py-2 focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                         />
                       ) : (
                         <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
