@@ -344,8 +344,9 @@ const DoctorProfile = () => {
             <div className="flex flex-col md:flex-row items-center md:space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
-                  }`}
+                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
+                  isEditing ? "cursor-pointer" : ""
+                }`}
               >
                 {profileImage ? (
                   <img
@@ -374,24 +375,9 @@ const DoctorProfile = () => {
                 />
               </div>
               <div className="mt-4 md:md-0">
-                {isEditing ? (
-                  <input
-                    type="text"
-                    disabled
-                    value={editedProfile.name}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        name: e.target.value,
-                      })
-                    }
-                    className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-extrabold text-gray-900 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
-                  />
-                ) : (
-                  <h2 className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-extrabold bg-blue-600 bg-clip-text text-transparent">
-                    {profile.name}
-                  </h2>
-                )}
+                <h2 className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-extrabold bg-blue-600 bg-clip-text text-transparent">
+                  {profile.name}
+                </h2>
                 <p className="text-xl text-blue-600 font-semibold mt-2 tracking-wide">
                   {profile.specialization}
                 </p>
@@ -563,7 +549,7 @@ const DoctorProfile = () => {
                         {editedProfile.availability.map((slot, index) => (
                           <div
                             key={index}
-                            className="flex items-center space-x-4"
+                            className="flex flex-col space-y-4"
                           >
                             <input
                               type="time"
@@ -582,14 +568,14 @@ const DoctorProfile = () => {
                             />
                             {index ===
                               editedProfile.availability.length - 1 && (
-                                <button
-                                  onClick={handleAddSlot}
-                                  className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
-                                >
-                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                  Add Slot
-                                </button>
-                              )}
+                              <button
+                                onClick={handleAddSlot}
+                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
+                              >
+                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                Add Slot
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -697,14 +683,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                              <button
-                                onClick={handleAddCertification}
-                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Certification
-                              </button>
-                            )}
+                            <button
+                              onClick={handleAddCertification}
+                              className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
+                            >
+                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                              Add Certification
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
