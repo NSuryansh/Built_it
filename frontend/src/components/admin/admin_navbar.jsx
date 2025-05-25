@@ -3,6 +3,7 @@ import { Bell, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import LogoutModal from "../LogoutModal";
 
 const AdminNavbar = () => {
   const location = useLocation().pathname;
@@ -16,6 +17,7 @@ const AdminNavbar = () => {
     { name: "User", link: "/admin/User" },
   ];
   const navigate = useNavigate();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const userType = localStorage.getItem("user_type");
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("user_email");
@@ -26,7 +28,12 @@ const AdminNavbar = () => {
 
   const handleLogout = () => {
     localStorage.clear();
+    setShowLogoutModal(false);
     navigate("/admin/login");
+  };
+
+  const handleCancel = () => {
+    setShowLogoutModal(false);
   };
 
   const useOutsideAlerter = (ref) => {
@@ -65,9 +72,7 @@ const AdminNavbar = () => {
               )}
             </button>
             {isOpen && (
-              <div
-                className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4"
-              >
+              <div className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
                     <li
@@ -145,7 +150,7 @@ const AdminNavbar = () => {
 
                   <div className="flex gap-2">
                     <button
-                      onClick={handleLogout}
+                      onClick={() => setShowLogoutModal(true)}
                       className="flex-1 bg-green-200 hover:bg-green-300 text-green-900 rounded px-4 py-2 text-sm font-medium transition-colors"
                     >
                       Logout
@@ -157,6 +162,13 @@ const AdminNavbar = () => {
           </div>
         </div>
       </div>
+      {showLogoutModal && (
+        <LogoutModal
+          handleLogout={handleLogout}
+          handleCancel={handleCancel}
+          theme="green"
+        />
+      )}
     </nav>
   );
 };

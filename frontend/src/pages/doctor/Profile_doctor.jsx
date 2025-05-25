@@ -293,7 +293,7 @@ const DoctorProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 overflow-hidden">
       <DoctorNavbar />
       <ToastContainer />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 lg:py-10 space-y-12 relative">
+      <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 lg:py-10 space-y-12 relative">
         {/* Floating Decorative Elements */}
         <div className="absolute top-0 left-0 w-72 h-72 bg-indigo-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
@@ -339,13 +339,14 @@ const DoctorProfile = () => {
         </div>
 
         {/* Profile Card */}
-        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-indigo-100/30 transition-all duration-500 hover:shadow-indigo-200/20 animate-fade-in-up">
+        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-3 md:p-8 border border-indigo-100/30 transition-all duration-500 hover:shadow-indigo-200/20 animate-fade-in-up">
           <div className="w-full flex justify-between flex-col md:flex-row gap-4 md:gap-8">
             <div className="flex flex-col md:flex-row items-center md:space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
-                  }`}
+                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center shadow-xl overflow-hidden group ${
+                  isEditing ? "cursor-pointer" : ""
+                }`}
               >
                 {profileImage ? (
                   <img
@@ -374,24 +375,9 @@ const DoctorProfile = () => {
                 />
               </div>
               <div className="mt-4 md:md-0">
-                {isEditing ? (
-                  <input
-                    type="text"
-                    disabled
-                    value={editedProfile.name}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        name: e.target.value,
-                      })
-                    }
-                    className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-extrabold text-gray-900 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
-                  />
-                ) : (
-                  <h2 className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-extrabold bg-blue-600 bg-clip-text text-transparent">
-                    {profile.name}
-                  </h2>
-                )}
+                <h2 className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-extrabold bg-blue-600 bg-clip-text text-transparent">
+                  {profile.name}
+                </h2>
                 <p className="text-xl text-blue-600 font-semibold mt-2 tracking-wide">
                   {profile.specialization}
                 </p>
@@ -428,7 +414,7 @@ const DoctorProfile = () => {
                           email: e.target.value,
                         })
                       }
-                      className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                      className="w-4/5 sm:w-full bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                     />
                   ) : (
                     <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
@@ -449,7 +435,7 @@ const DoctorProfile = () => {
                           phone: e.target.value,
                         })
                       }
-                      className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                      className="w-4/5 sm:w-full bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                     />
                   ) : (
                     <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
@@ -460,7 +446,7 @@ const DoctorProfile = () => {
                 <div className="flex items-start group">
                   <MapPin className="h-5 w-5 text-blue-600 mr-3 mt-1 transition-transform group-hover:scale-125" />
                   {isEditing ? (
-                    <div className="flex-1 space-y-4">
+                    <div className="w-4/5 sm:w-full space-y-4">
                       <input
                         type="text"
                         value={editedProfile.address}
@@ -521,7 +507,7 @@ const DoctorProfile = () => {
                               specialization: e.target.value,
                             })
                           }
-                          className="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                          className="w-4/5 sm:w-full bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                         />
                       ) : (
                         <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
@@ -541,7 +527,7 @@ const DoctorProfile = () => {
                               experience: e.target.value,
                             })
                           }
-                          className="flex-1 bg-white border border-indigo-200 rounded-xl px-4 py-2 focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
+                          className="w-4/5 sm:w-full bg-white border border-indigo-200 rounded-xl px-4 py-2 focus:ring-4 focus:ring-indigo-300 transition-all duration-300"
                         />
                       ) : (
                         <span className="text-gray-700 group-hover:text-blue-600 transition-colors">
@@ -563,7 +549,7 @@ const DoctorProfile = () => {
                         {editedProfile.availability.map((slot, index) => (
                           <div
                             key={index}
-                            className="flex items-center space-x-4"
+                            className="flex flex-col space-y-4"
                           >
                             <input
                               type="time"
@@ -582,14 +568,14 @@ const DoctorProfile = () => {
                             />
                             {index ===
                               editedProfile.availability.length - 1 && (
-                                <button
-                                  onClick={handleAddSlot}
-                                  className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
-                                >
-                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                  Add Slot
-                                </button>
-                              )}
+                              <button
+                                onClick={handleAddSlot}
+                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold transition-colors"
+                              >
+                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                Add Slot
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -697,14 +683,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                              <button
-                                onClick={handleAddCertification}
-                                className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Certification
-                              </button>
-                            )}
+                            <button
+                              onClick={handleAddCertification}
+                              className="group flex items-center text-blue-600 hover:text-blue-600 text-sm font-semibold mt-3 transition-colors"
+                            >
+                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                              Add Certification
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

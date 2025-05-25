@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import DoctorNotificationPanel from "./DoctorNotificationPanel";
+import LogoutModal from "../LogoutModal";
 
 const DoctorNavbar = () => {
   const location = useLocation().pathname;
@@ -15,9 +16,10 @@ const DoctorNavbar = () => {
     { name: "Appointments", link: "/doctor/appointments" },
     { name: "Peer", link: "/doctor/peer" },
     { name: "Profile", link: "/doctor/profile" },
-    { name: "History", link: "/doctor/history"}
+    { name: "History", link: "/doctor/history" },
   ];
   const navigate = useNavigate();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const userType = localStorage.getItem("user_type");
   const username = localStorage.getItem("username");
@@ -28,16 +30,17 @@ const DoctorNavbar = () => {
   };
 
   const handleBellClick = () => {
-    // if (!isAuthenticated) {
-    //   CustomToast("Please login first!");
-    //   return;
-    // }
     setShowNotifications(!showNotifications);
   };
 
   const handleLogout = () => {
     localStorage.clear();
+    setShowLogoutModal(false);
     navigate("/doctor/login");
+  };
+
+  const handleCancel = () => {
+    setShowLogoutModal(false);
   };
 
   const useOutsideAlerter = (ref) => {
@@ -168,7 +171,7 @@ const DoctorNavbar = () => {
 
                       <div className="flex gap-2">
                         <button
-                          onClick={handleLogout}
+                          onClick={() => setShowLogoutModal(true)}
                           className="flex-1 bg-blue-200 hover:bg-blue-300 text-blue-900 rounded px-4 py-2 text-sm font-medium transition-colors"
                         >
                           Logout
@@ -189,6 +192,13 @@ const DoctorNavbar = () => {
           </div>
         </div>
       </div>
+      {showLogoutModal && (
+        <LogoutModal
+          handleLogout={handleLogout}
+          handleCancel={handleCancel}
+          theme="blue"
+        />
+      )}
     </nav>
   );
 };

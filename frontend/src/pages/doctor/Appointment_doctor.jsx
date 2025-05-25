@@ -518,7 +518,7 @@ const DoctorAppointment = () => {
                             <span>{appointment.reason}</span>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-5">
+                        <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
                           {completedNotes[appointment.id] !== undefined ? (
                             <button
                               onClick={() => deleteApp(appointment)}
@@ -708,7 +708,7 @@ const DoctorAppointment = () => {
                             <span>{appointment.reason}</span>
                           </div>
                         </div>
-                        <div className="flex space-x-5">
+                        <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
                           <button
                             onClick={() => acceptApp(appointment)}
                             className="px-6 py-2.5 bg-blue-500 text-white font-semibold rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-105 transition-all duration-300"
