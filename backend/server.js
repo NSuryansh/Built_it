@@ -1037,7 +1037,6 @@ app.post("/requests", authorizeRoles("user", "doc"), async (req, res) => {
 
 app.get(
   "/getdoctors",
-  authorizeRoles("user", "doc", "admin"),
   async (req, res) => {
     const user_type = req.query["user_type"];
     try {
