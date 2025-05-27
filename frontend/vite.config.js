@@ -12,8 +12,8 @@ export default defineConfig({
       manifest: {
         icons: [
           {
-            src: "https://res.cloudinary.com/dt7a9meug/image/upload/v1745488000/final-logo_l1fg7i.jpg",
-            sizes: "144x144",
+            src: "https://res.cloudinary.com/dt7a9meug/image/upload/v1748338565/CompressJPEG.Online_img_512x512_ztlsln.png",
+            sizes: "512x512",
             type: "image/png",
             // purpose:"any maskable"
           }
