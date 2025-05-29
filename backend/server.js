@@ -1686,7 +1686,7 @@ app.post("/forgotPassword", authorizeRoles("user"), async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `https://built-it-1.onrender.com//reset-password?token=${token}`;
+    const resetLink = `https://built-it-frontend.onrender.com/reset-password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(user.email, subject, message);
@@ -1808,7 +1808,7 @@ app.post("/forgotAdminPassword", authorizeRoles("admin"), async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `https://built-it-1.onrender.com/admin/reset_password?token=${token}`;
+    const resetLink = `https://built-it-frontend.onrender.com/admin/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(admin.email, subject, message);
