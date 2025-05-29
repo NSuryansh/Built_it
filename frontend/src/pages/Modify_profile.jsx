@@ -41,19 +41,16 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
     try {
       console.log(window.location.origin);
       console.log("hi");
-      const data = await fetch(
-        "https://built-it.onrender.com/generateOptions",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user: {
-              id: localStorage.getItem("userid"),
-              email: localStorage.getItem("user_email"),
-            },
-          }),
-        }
-      ).then((res) => res.json());
+      const data = await fetch("http://localhost:3000/generateOptions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user: {
+            id: localStorage.getItem("userid"),
+            email: localStorage.getItem("user_email"),
+          },
+        }),
+      }).then((res) => res.json());
       const options = data.options;
       console.log(options);
       options.challenge = Uint8Array.from(
@@ -94,7 +91,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
       console.log(credentialResponse);
 
       const verifyRes = await fetch(
-        "https://built-it.onrender.com/verifyBioRegistration",
+        "http://localhost:3000/verifyBioRegistration",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -137,7 +134,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   const onSave = async (dataToSend) => {
     try {
-      const response = await fetch("https://built-it.onrender.com/modifyUser", {
+      const response = await fetch("http://localhost:3000/modifyUser", {
         method: "PUT", // Use PUT to modify user details
         headers: {
           "Content-Type": "application/json",
@@ -220,7 +217,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   placeholder={
                     localStorage.getItem("user_email") || "Your email"
                   }
-                  onChange={() => { }}
+                  onChange={() => {}}
                 />
                 <label
                   htmlFor="email"

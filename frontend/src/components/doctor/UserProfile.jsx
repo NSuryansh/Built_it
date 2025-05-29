@@ -26,7 +26,7 @@ const UserProfile = () => {
       const getUserById = async () => {
         try {
           const response = await fetch(
-            `https://built-it.onrender.com/getUserById?userId=${userId}`,
+            `http://localhost:3000/getUserById?userId=${userId}`,
             {
               headers: {
                 Authorization: "Bearer " + token,
@@ -51,7 +51,7 @@ const UserProfile = () => {
     if (roomNumber != "") {
       try {
         const response = await fetch(
-          `https://built-it.onrender.com/changeRoomNo?user_Id=${userId}&roomNo=${roomNumber}`,
+          `http://localhost:3000/changeRoomNo?user_Id=${userId}&roomNo=${roomNumber}`,
           { method: "POST", headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();

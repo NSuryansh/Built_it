@@ -45,7 +45,7 @@ const DoctorsList = () => {
   const fetchDoctors = async () => {
     try {
       const res = await fetch(
-        "https://built-it.onrender.com/getdoctors?user_type=admin",
+        "http://localhost:3000/getdoctors?user_type=admin",
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -68,7 +68,7 @@ const DoctorsList = () => {
     console.log(doctor.id);
     console.log(doctor);
     try {
-      const res = await fetch("https://built-it.onrender.com/toggleDoc", {
+      const res = await fetch("http://localhost:3000/toggleDoc", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -164,8 +164,9 @@ const DoctorsList = () => {
             <div className="flex gap-4">
               <button
                 onClick={handleRefresh}
-                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${isRefreshing ? "animate-spin" : ""
-                  }`}
+                className={`p-3 bg-white hover:scale-105 shadow-sm hover:shadow-md hover:bg-white/80 rounded-xl transition-all duration-300 text-green-700 ${
+                  isRefreshing ? "animate-spin" : ""
+                }`}
                 title="Refresh List"
               >
                 <RefreshCw size={24} />
@@ -252,10 +253,11 @@ const DoctorsList = () => {
                     <div className="flex items-center justify-center gap-5">
                       <button
                         onClick={() => handleToggleDocPopup(doctor, true)}
-                        className={`p-2 ${doctor.isInactive
+                        className={`p-2 ${
+                          doctor.isInactive
                             ? "text-green-600 hover:text-green-700"
                             : "text-red-600 hover:text-red-700"
-                          } transition-colors rounded-full hover:bg-red-50 group relative`}
+                        } transition-colors rounded-full hover:bg-red-50 group relative`}
                         title="Set Doctor Inactive"
                       >
                         {doctor.isInactive ? (
@@ -318,10 +320,11 @@ const DoctorsList = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={() => handleToggleDocPopup(doctor, true)}
-                    className={`p-2 ${doctor.isInactive
+                    className={`p-2 ${
+                      doctor.isInactive
                         ? "text-green-600 hover:text-green-700"
                         : "text-red-600 hover:text-red-700"
-                      } transition-colors rounded-full hover:bg-red-50`}
+                    } transition-colors rounded-full hover:bg-red-50`}
                   >
                     {doctor.isInactive ? (
                       <UserPlus size={20} />

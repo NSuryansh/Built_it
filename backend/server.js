@@ -67,7 +67,7 @@ app.use(cors());
 
 const io = new Server(server, {
   cors: {
-    origin: "https://built-it-frontend.onrender.com",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -198,7 +198,7 @@ io.on("connection", (socket) => {
         } else {
           senderId = userId;
         }
-        console.log(senderId, ",mesgaerh");
+        // console.log(senderId, ",mesgaerh");
         socket.to(room).emit("receiveMessage", {
           id: message.id,
           senderId,
@@ -233,12 +233,12 @@ io.on("connection", (socket) => {
 const biometricOptions = async (user) => {
   const options = await generateRegistrationOptions({
     rpName: "Vitality",
-    rpID: "built-it-frontend.onrender.com",
+    rpID: "localhost:5173",
     userID: Number(user.id),
     userName: user.email,
     userDisplayName: user.email
   })
-  console.log(options)
+  // console.log(options)
   const addChallenge = await prisma.user.update({
     where: {
       id: Number(user.id)
@@ -297,7 +297,7 @@ app.post("/signup", async (req, res) => {
 
 app.post("/generateOptions",  async (req, res) => {
   const user = req.body["user"]
-  console.log('hello')
+  // console.log('hello')
   // if (user.id !== req.user.id) {
   //   return res.status(403).json({ error: "Access denied" })
   // }
@@ -316,7 +316,7 @@ const base64urlToBuffer =(base64url)=> {
 app.post("/verifyBioRegistration", async (req, res) => {
   try {
     const emailId = req.body["emailId"]
-    console.log(emailId)
+    // console.log(emailId)
     const user = await prisma.user.findUnique({
       where: {
         email: emailId
@@ -325,8 +325,8 @@ app.post("/verifyBioRegistration", async (req, res) => {
     const verification = await verifyRegistrationResponse({
       response: req.body,
       expectedChallenge: user.challenge,
-      expectedOrigin: "https://built-it-frontend.onrender.com",
-      expectedRPID: "built-it-frontend.onrender.com",
+      expectedOrigin: "http://localhost:5173",
+      expectedRPID: "localhost",
       // authenticator: {
       //     credentialID: credential.credentialID,
       //     credentialPublicKey: credential.publicKey,
@@ -335,7 +335,7 @@ app.post("/verifyBioRegistration", async (req, res) => {
       //     credentialBackedUp: credential.backedUp
       // },
     })
-    console.log(verification)
+    // console.log(verification)
 
     if (verification.verified && verification.registrationInfo) {
       await prisma.authenticator.create({
@@ -379,7 +379,7 @@ app.post("/generateBioAuthOptions",  async (req, res) => {
     })),
     userVerification: 'preferred',
   })
-  console.log(options)
+  // console.log(options)
   await prisma.user.update({
     where: { id: user.id },
     data: { challenge: options.challenge }
@@ -390,7 +390,7 @@ app.post("/generateBioAuthOptions",  async (req, res) => {
 
 app.post("/verifyBioLogin", async (req, res) => {
   const emailId = req.body["emailId"];
-  console.log(emailId, "hiihihih")
+  // console.log(emailId, "hiihihih")
   const user = await prisma.user.findUnique({
     where: { email: emailId },
     include: {
@@ -401,22 +401,22 @@ app.post("/verifyBioLogin", async (req, res) => {
   if (!user || user.credentials.length === 0) {
     return res.status(404).json({ error: "User or credentials not found" });
   }
-  console.log(req.body)
-  console.log(user.credentials)
+  // console.log(req.body)
+  // console.log(user.credentials)
   const credential = user.credentials.find(c =>
     base64url.encode(Buffer.from(c.credentialID)) === req.body.id
   );
-  console.log(credential)
+  // console.log(credential)
   if (!credential) {
     return res.status(400).json({ error: "Credential not recognized" });
   }
   const encodedCredentialId = base64url.encode(Buffer.from(credential.credentialID))
-  console.log(credential.counter)
+  // console.log(credential.counter)
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
-    expectedOrigin: "https://built-it-frontend.onrender.com",
-    expectedRPID: "built-it-frontend.onrender.com",
+    expectedOrigin: "http://localhost:5173",
+    expectedRPID: "localhost",
     credential: {
       credentialID: Buffer.from(credential.credentialID),
       publicKey: Buffer.from(credential.publicKey),
@@ -429,7 +429,7 @@ app.post("/verifyBioLogin", async (req, res) => {
   if (!verification.verified) {
     return res.status(403).json({ success: false, error: "Verification failed" });
   }
-  console.log(verification)
+  // console.log(verification)
   await prisma.authenticator.update({
     where: { id: credential.id },
     data: {
@@ -627,7 +627,7 @@ app.get(
 );
 
 app.get("/getAppointmentById", authorizeRoles("user"), async (req, res) => {
-  console.log(req.headers.authorization);
+  // console.log(req.headers.authorization);
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "Unauthorized token" });
@@ -1686,7 +1686,7 @@ app.post("/forgotPassword", authorizeRoles("user"), async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `https://built-it-1.onrender.com//reset-password?token=${token}`;
+    const resetLink = `http://localhost:5173/reset-password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(user.email, subject, message);
@@ -1747,7 +1747,7 @@ app.post("/forgotDoctorPassword", authorizeRoles("doc"), async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `https://built-it-frontend.onrender.com/doctor/reset_password?token=${token}`;
+    const resetLink = `http://localhost:5173/doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(doctor.email, subject, message);
@@ -1808,7 +1808,7 @@ app.post("/forgotAdminPassword", authorizeRoles("admin"), async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `https://built-it-1.onrender.com/admin/reset_password?token=${token}`;
+    const resetLink = `https://localhost:5173/admin/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(admin.email, subject, message);

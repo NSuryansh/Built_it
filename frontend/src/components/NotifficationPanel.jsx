@@ -15,7 +15,7 @@ const NotificationPanel = () => {
   const deleteRequest = async (id) => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/deleteRequest?id=${id}&userId=${userId}`,
+        `http://localhost:3000/deleteRequest?id=${id}&userId=${userId}`,
         {
           method: "DELETE",
           headers: { Authorization: "Bearer " + token },
@@ -31,7 +31,7 @@ const NotificationPanel = () => {
   const getRequests = async () => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/getRequests?userId=${userId}`,
+        `http://localhost:3000/getRequests?userId=${userId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -55,27 +55,24 @@ const NotificationPanel = () => {
 
   const confirmAppointment = async (notif) => {
     try {
-      const res = await fetch(
-        `https://built-it.onrender.com/accept-booking-by-user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userId: userId,
-            doctorId: notif.doctor_id,
-            dateTime: new Date(TimeChange(new Date(notif.dateTime).getTime())),
-            reason: notif.reason,
-            id: notif.id,
-          }),
-        }
-      );
+      const res = await fetch(`http://localhost:3000/accept-booking-by-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userId: userId,
+          doctorId: notif.doctor_id,
+          dateTime: new Date(TimeChange(new Date(notif.dateTime).getTime())),
+          reason: notif.reason,
+          id: notif.id,
+        }),
+      });
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
-        await fetch("https://built-it.onrender.com/send-notification", {
+        await fetch("http://localhost:3000/send-notification", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

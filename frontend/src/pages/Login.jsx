@@ -71,7 +71,7 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch("https://built-it.onrender.com/login", {
+    const response = await fetch("http://localhost:3000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -104,19 +104,16 @@ const Login = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch(
-      "https://built-it.onrender.com/forgotPassword",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/forgotPassword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
@@ -138,16 +135,13 @@ const Login = () => {
 
   const handleBiometricLogin = async () => {
     console.log(username, "usduse");
-    const data = await fetch(
-      "https://built-it.onrender.com/generateBioAuthOptions",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          emailId: username,
-        }),
-        headers: { "Content-type": "application/json" },
-      }
-    ).then((res) => res.json());
+    const data = await fetch("http://localhost:3000/generateBioAuthOptions", {
+      method: "POST",
+      body: JSON.stringify({
+        emailId: username,
+      }),
+      headers: { "Content-type": "application/json" },
+    }).then((res) => res.json());
     const options = data.options;
     console.log(options);
     options.challenge = Uint8Array.from(
@@ -179,7 +173,7 @@ const Login = () => {
       },
     };
 
-    const res = await fetch("https://built-it.onrender.com/verifyBioLogin", {
+    const res = await fetch("http://localhost:3000/verifyBioLogin", {
       method: "POST",
       // body: JSON.stringify({
       //   emailId: username

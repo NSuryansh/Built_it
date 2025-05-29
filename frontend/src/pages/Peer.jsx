@@ -94,7 +94,7 @@ const Peer = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "https://built-it.onrender.com/getdoctors?user_type=user",
+          "http://localhost:3000/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -113,7 +113,7 @@ const Peer = () => {
   // async function fetchContacts(userId) {
   //   try {
   //     const response = await fetch(
-  //       `https://built-it.onrender.com/chatContacts?userId=${userId}`,
+  //       `http://localhost:3000/chatContacts?userId=${userId}`,
   //       { headers: { Authorization: "Bearer " + token } }
   //     );
   //     const contacts = await response.json();
@@ -170,7 +170,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -277,7 +277,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
+        `http://localhost:3000/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
@@ -573,10 +573,11 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                    msg.senderId === userId
                       ? "bg-gradient-to-r from-orange-400 to-cyan-400 ml-auto text-white"
                       : "bg-gray-100 text-gray-800"
-                    }`}
+                  }`}
                 />
               ))}
               <div ref={messagesEndRef} />

@@ -111,20 +111,17 @@ export default function App() {
     if (fcmToken) {
       console.log("FCM Token:", fcmToken);
 
-      const res = await fetch(
-        "https://built-it.onrender.com/save-subscription",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userid: userid,
-            subscription: fcmToken,
-            userType: userType,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/save-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userid: userid,
+          subscription: fcmToken,
+          userType: userType,
+        }),
+      });
     }
 
     // return subscription;

@@ -64,7 +64,7 @@ const AdminDoctorProfile = () => {
       try {
         const doctorId = search.split("=")[1];
         const response = await fetch(
-          `https://built-it.onrender.com/getDoc?docId=${doctorId}`,
+          `http://localhost:3000/getDoc?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -125,7 +125,7 @@ const AdminDoctorProfile = () => {
 
   const referralSub = async () => {
     try {
-      const response = await fetch("https://built-it.onrender.com/referrals", {
+      const response = await fetch("http://localhost:3000/referrals", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -145,7 +145,7 @@ const AdminDoctorProfile = () => {
         return false;
       }
       CustomToast("Referral created successfully", "green");
-      await fetch("https://built-it.onrender.com/send-notification", {
+      await fetch("http://localhost:3000/send-notification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -221,10 +221,11 @@ const AdminDoctorProfile = () => {
                 </h1>
                 <div className="flex">
                   <p className="text-yellow-200 text-xl font-medium italic">
-                    {`${doctor.field} (${doctor.avgRating != 0.0
+                    {`${doctor.field} (${
+                      doctor.avgRating != 0.0
                         ? parseFloat(doctor.avgRating).toPrecision(2)
                         : "Unrated"
-                      }`}
+                    }`}
                   </p>
                   {doctor.avgRating != 0.0 && (
                     <div className="flex">

@@ -62,11 +62,11 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `https://built-it.onrender.com/getDoc?docId=${doctorId}`,
+          `http://localhost:3000/getDoc?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const response2 = await fetch(
-          `https://built-it.onrender.com/general-slots?docId=${doctorId}`,
+          `http://localhost:3000/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -202,7 +202,7 @@ const DoctorProfile = () => {
       );
       formData.append("image", file);
 
-      const response = await fetch(`https://built-it.onrender.com/modifyDoc`, {
+      const response = await fetch(`http://localhost:3000/modifyDoc`, {
         method: "PUT",
         headers: { Authorization: "Bearer " + token },
         body: formData,
@@ -221,7 +221,7 @@ const DoctorProfile = () => {
       }
 
       const response2 = await fetch(
-        `https://built-it.onrender.com/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+        `http://localhost:3000/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
         {
           method: "PUT",
           headers: { Authorization: "Bearer " + token },
@@ -547,10 +547,7 @@ const DoctorProfile = () => {
                     {isEditing ? (
                       <div className="space-y-4">
                         {editedProfile.availability.map((slot, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-col space-y-4"
-                          >
+                          <div key={index} className="flex flex-col space-y-4">
                             <input
                               type="time"
                               value={slot}

@@ -55,7 +55,7 @@ const AdminAppointments = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "https://built-it.onrender.com/getdoctors?user_type=admin",
+          "http://localhost:3000/getdoctors?user_type=admin",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -75,12 +75,9 @@ const AdminAppointments = () => {
 
     const fetchAppointments = async () => {
       try {
-        const res = await fetch(
-          "https://built-it.onrender.com/all-appointments",
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        );
+        const res = await fetch("http://localhost:3000/all-appointments", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await res.json();
         const formattedCurData = data.appts.map((appt) => ({
           id: appt.id,
@@ -442,10 +439,11 @@ const AdminAppointments = () => {
                     <div className="flex h-fit self-center items-center gap-2 px-4 py-2 rounded-lg bg-white shadow-sm border border-gray-100">
                       {getStatusIcon(appointment.status)}
                       <span
-                        className={`text-sm font-medium ${appointment.status === "Pending"
+                        className={`text-sm font-medium ${
+                          appointment.status === "Pending"
                             ? "text-yellow-600"
                             : "text-green-600"
-                          }`}
+                        }`}
                       >
                         {appointment.status}
                       </span>

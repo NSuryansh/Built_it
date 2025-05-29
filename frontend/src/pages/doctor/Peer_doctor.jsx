@@ -76,7 +76,7 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/chatContacts?userId=${userId}&userType=doc`,
+        `http://localhost:3000/chatContacts?userId=${userId}&userType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       if (!response.ok) throw new Error("Failed to fetch users");
@@ -155,7 +155,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -280,7 +280,7 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `https://built-it.onrender.com/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
+        `http://localhost:3000/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();

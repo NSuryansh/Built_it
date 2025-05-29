@@ -26,10 +26,11 @@ const StarRating = ({ value, onChange, label }) => {
             className="focus:outline-none transition-all duration-150"
           >
             <Star
-              className={`w-8 h-8 ${star <= value
+              className={`w-8 h-8 ${
+                star <= value
                   ? "fill-[var(--custom-orange-500)] text-[var(--custom-orange-500)]"
                   : "text-gray-300"
-                } transition-all duration-200 hover:scale-110`}
+              } transition-all duration-200 hover:scale-110`}
             />
           </button>
         ))}
@@ -97,12 +98,12 @@ const FeedbackPage = () => {
   const getAppointmentById = async () => {
     try {
       const res = await fetch(
-        `https://built-it.onrender.com/getAppointmentById?id=${appointmentId}`,
+        `http://localhost:3000/getAppointmentById?id=${appointmentId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await res.json();
       const res2 = await fetch(
-        `https://built-it.onrender.com/getDoc?docId=${data.doc_id}`,
+        `http://localhost:3000/getDoc?docId=${data.doc_id}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data2 = await res2.json();
@@ -139,7 +140,7 @@ const FeedbackPage = () => {
   const submitFeedback = async () => {
     setisSubmitting(true);
     try {
-      const res = await fetch("https://built-it.onrender.com/setFeedback", {
+      const res = await fetch("http://localhost:3000/setFeedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
