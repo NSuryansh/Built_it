@@ -189,7 +189,7 @@ const Navbar = () => {
             </button>
             {showNotifications && isAuthenticated && <NotificationPanel />}
 
-            {isAuthenticated ? (
+            {location != "/" ? (
               <>
                 <button
                   onClick={() => {
