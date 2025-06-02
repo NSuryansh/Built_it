@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
-import { Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+"use client";
 
+import React, { useState } from "react";
+import {
+  format,
+  addMonths,
+  subMonths,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isSameDay,
+  isToday,
+} from "date-fns";
+import { Clock, ChevronLeft, ChevronRight } from "lucide-react";
 
-export function DateTimePicker({ selected, onSelect, appointmentId }) {
+export const DateTimePicker = ({ selected, onSelect }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState('12:00');
+  const [selectedTime, setSelectedTime] = useState("12:00");
 
   const handleDateSelect = (date) => {
-    const [hours, minutes] = selectedTime.split(':').map(Number);
+    const [hours, minutes] = selectedTime.split(":").map(Number);
     const newDate = new Date(date);
     newDate.setHours(hours, minutes);
     onSelect?.(newDate);
@@ -17,7 +27,7 @@ export function DateTimePicker({ selected, onSelect, appointmentId }) {
   const handleTimeChange = (e) => {
     setSelectedTime(e.target.value);
     if (selected) {
-      const [hours, minutes] = e.target.value.split(':').map(Number);
+      const [hours, minutes] = e.target.value.split(":").map(Number);
       const newDate = new Date(selected);
       newDate.setHours(hours, minutes);
       onSelect?.(newDate);
@@ -26,7 +36,7 @@ export function DateTimePicker({ selected, onSelect, appointmentId }) {
 
   const daysInMonth = eachDayOfInterval({
     start: startOfMonth(currentMonth),
-    end: endOfMonth(currentMonth)
+    end: endOfMonth(currentMonth),
   });
 
   const weeks = [];
@@ -64,7 +74,7 @@ export function DateTimePicker({ selected, onSelect, appointmentId }) {
             <ChevronLeft className="h-5 w-5 text-gray-600" />
           </button>
           <h2 className="text-lg font-semibold text-gray-900">
-            {format(currentMonth, 'MMMM yyyy')}
+            {format(currentMonth, "MMMM yyyy")}
           </h2>
           <button
             onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
@@ -75,13 +85,16 @@ export function DateTimePicker({ selected, onSelect, appointmentId }) {
         </div>
 
         <div className="grid grid-cols-7 gap-1">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div
+              key={day}
+              className="text-center text-sm font-medium text-gray-500 py-2"
+            >
               {day}
             </div>
           ))}
-          
-          {weeks.map((week, weekIndex) => (
+
+          {weeks.map((week, weekIndex) =>
             week.map((day, dayIndex) => {
               const isEmptyDay = day.getTime() === 0;
               const isSelectedDay = selected && isSameDay(day, selected);
@@ -94,16 +107,28 @@ export function DateTimePicker({ selected, onSelect, appointmentId }) {
                   disabled={isEmptyDay}
                   className={`
                     h-10 text-sm rounded-lg flex items-center justify-center
-                    ${isEmptyDay ? 'text-gray-300 cursor-default' : 'hover:bg-gray-100'}
-                    ${isSelectedDay ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}
-                    ${isTodayDate && !isSelectedDay ? 'bg-gray-100 font-semibold' : ''}
+                    ${
+                      isEmptyDay
+                        ? "text-gray-300 cursor-default"
+                        : "hover:bg-gray-100"
+                    }
+                    ${
+                      isSelectedDay
+                        ? "bg-blue-500 text-white hover:bg-blue-600"
+                        : ""
+                    }
+                    ${
+                      isTodayDate && !isSelectedDay
+                        ? "bg-gray-100 font-semibold"
+                        : ""
+                    }
                   `}
                 >
-                  {!isEmptyDay && format(day, 'd')}
+                  {!isEmptyDay && format(day, "d")}
                 </button>
               );
             })
-          ))}
+          )}
         </div>
       </div>
 
@@ -124,10 +149,13 @@ export function DateTimePicker({ selected, onSelect, appointmentId }) {
       {selected && (
         <div className="rounded-md bg-gray-50 px-4 py-3">
           <p className="text-sm text-gray-600">
-            Selected: <span className="font-medium text-gray-900">{format(selected, 'PPP p')}</span>
+            Selected:{" "}
+            <span className="font-medium text-gray-900">
+              {format(selected, "PPP p")}
+            </span>
           </p>
         </div>
       )}
     </div>
   );
-}
+};

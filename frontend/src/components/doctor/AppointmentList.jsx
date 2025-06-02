@@ -1,11 +1,13 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { CalendarClock, FileText, Clock } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "next/navigation";
 
 const AppointmentList = ({ onFollowUp }) => {
   const [expandedId, setExpandedId] = useState(null);
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
   const token = localStorage.getItem("token");
   const [appointments, setappointments] = useState([]);
@@ -19,7 +21,7 @@ const AppointmentList = ({ onFollowUp }) => {
       try {
         console.log(token);
         const response = await fetch(
-          `http://localhost:3000/getAppointmentForDoctorUser?userId=${userId}&docId=${localStorage.getItem(
+          `http://localhost:3000/doc/getAppointmentForDoctorUser?userId=${userId}&docId=${localStorage.getItem(
             "userid"
           )}`,
           {

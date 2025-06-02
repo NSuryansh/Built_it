@@ -1,9 +1,15 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
-import { CalendarClock, X, Calendar as CalendarIcon } from "lucide-react";
+import {
+  CalendarClock,
+  X,
+  Calendar as CalendarIcon,
+  Loader,
+} from "lucide-react";
 import { format } from "date-fns";
-import CustomToast from "../CustomToast";
-import PacmanLoader from "react-spinners/PacmanLoader";
-import { useSearchParams } from "react-router-dom";
+import CustomToast from "../common/CustomToast";
+import { useSearchParams } from "next/navigation";
 
 const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
   const [followupDate, setFollowupDate] = useState("");
@@ -13,7 +19,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
   const [isScheduling, setisScheduling] = useState(false);
   const minDate = format(new Date(), "yyyy-MM-dd");
   const token = localStorage.getItem("token");
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
 
   useEffect(() => {
@@ -22,7 +28,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
         try {
           const doctorId = localStorage.getItem("userid");
           const response = await fetch(
-            `http://localhost:3000/available-slots?date=${date}&docId=${doctorId}`,
+            `http://localhost:3000/common/available-slots?date=${date}&docId=${doctorId}`,
             { headers: { Authorization: "Bearer " + token } }
           );
           const data = await response.json();
@@ -42,7 +48,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
         `${followupDate}T${followupTime.split("T")[1]}`
       ).toISOString();
       console.log(selectedAppointment);
-      const response = await fetch("http://localhost:3000/request-to-user", {
+      const response = await fetch("http://localhost:3000/doc/request-to-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +65,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
       CustomToast("Follow-up appointment scheduled", "blue");
 
       if (data["message"] === "Appointment requested successfully") {
-        const notif = await fetch("http://localhost:3000/send-notification", {
+        const notif = await fetch("http://localhost:3000/common/send-notification", {
           method: "POST",
           headers: {
             "Content-type": "Application/json",
@@ -179,7 +185,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
               disabled={!followupDate || !followupTime || isScheduling}
               className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-500 text-white font-medium rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
             >
-              {isScheduling ? <PacmanLoader /> : "Schedule Follow-up"}
+              {isScheduling ? <Loader /> : "Schedule Follow-up"}
             </button>
           </div>
         </div>

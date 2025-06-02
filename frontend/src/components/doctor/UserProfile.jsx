@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import {
   User as UserIcon,
@@ -6,16 +8,16 @@ import {
   Book,
   PhoneCallIcon,
 } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import PacmanLoader from "react-spinners/PacmanLoader";
-import CustomToast from "../CustomToast";
+import CustomToast from "../common/CustomToast";
+import { useRouter, useSearchParams } from "next/navigation";
+import CustomLoader from "../common/CustomLoader";
 
 const UserProfile = () => {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
   const token = localStorage.getItem("token");
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const router = useRouter();
   const [fetched, setfetched] = useState(null);
   const [roomNumber, setRoomNumber] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +28,7 @@ const UserProfile = () => {
       const getUserById = async () => {
         try {
           const response = await fetch(
-            `http://localhost:3000/getUserById?userId=${userId}`,
+            `http://localhost:3000/doc/getUserById?userId=${userId}`,
             {
               headers: {
                 Authorization: "Bearer " + token,
@@ -39,19 +41,19 @@ const UserProfile = () => {
           setfetched(true);
         } catch (error) {
           setfetched(false);
-          navigate("/doctor/history");
+          router.push("/doctor/history");
           CustomToast("User not found", "blue");
         }
       };
       getUserById();
     }
-  }, [userId, navigate]);
+  }, [userId, router]);
 
   const handleSaveRoom = async () => {
     if (roomNumber != "") {
       try {
         const response = await fetch(
-          `http://localhost:3000/changeRoomNo?user_Id=${userId}&roomNo=${roomNumber}`,
+          `http://localhost:3000/doc/changeRoomNo?user_Id=${userId}&roomNo=${roomNumber}`,
           { method: "POST", headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -69,14 +71,7 @@ const UserProfile = () => {
   };
 
   if (fetched === null) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
-        <PacmanLoader color="#004ba8" radius={6} height={20} width={5} />
-        <p className="mt-6 text-gray-700 font-medium animate-pulse">
-          Loading...
-        </p>
-      </div>
-    );
+    return <CustomLoader color="blue" text={"Loading your dashboard..."} />;
   }
 
   return (

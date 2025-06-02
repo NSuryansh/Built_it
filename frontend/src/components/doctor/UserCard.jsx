@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  User as UserIcon,
-  CalendarClock,
-  Stethoscope,
-  ArrowRight,
-} from "lucide-react";
-import { Link } from "react-router-dom";
+import { User as UserIcon, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const UserCard = ({ userWithAppointments }) => {
   const user = userWithAppointments;
@@ -26,7 +21,7 @@ const UserCard = ({ userWithAppointments }) => {
 
         <div className="flex justify-center md:justify-end items-center mt-2 md:mt-0">
           <Link
-            to={`/doctor/user?userId=${user.user.id}`}
+            href={`/doctor/user?userId=${user.user.id}`}
             className="inline-flex items-center justify-center p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all group-hover:shadow-md"
             aria-label={`View ${user.user.username}'s details`}
           >
