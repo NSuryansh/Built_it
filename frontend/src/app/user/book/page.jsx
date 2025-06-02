@@ -5,10 +5,10 @@ import { checkAuth } from "@/utils/profile";
 import Navbar from "@/components/user/Navbar";
 import Footer from "@/components/common/Footer";
 import { ToastContainer } from "react-toastify";
-import DoctorSelectionStep from "@/app/user/book/components/DoctorSelection";
-import BookingFormStep from "@/app/user/book/components/BookingForm";
+import DoctorSelectionStep from "@/components/user/DoctorSelection";
+import BookingFormStep from "@/components/user/BookingForm";
 import CustomLoader from "@/components/common/CustomLoader";
-import { fetchDoctors, handleSubmit } from "./controller";
+import CustomToast from "@/components/common/CustomToast";
 
 const Book = () => {
   // step 1: select a doctor; step 2: booking form
@@ -35,9 +35,26 @@ const Book = () => {
     verifyAuth();
   }, []);
 
+  const fetchDoctors = async (setDoctors) => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(
+        "http://localhost:3000/user_admin/getdoctors?user_type=user",
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      const data = await res.json();
+      setDoctors(data);
+    } catch (err) {
+      console.error("Error fetching doctors:", err);
+      CustomToast("Error while fetching data");
+    }
+  };
+
   // Fetch doctors list from backend
   useEffect(() => {
-    fetchDoctors(setDoctors);
+    fetchDoctors();
   }, []);
 
   // Populate formData fields if authenticated; allow manual input if not authenticated.
@@ -64,6 +81,69 @@ const Book = () => {
   if (isAuthenticated === null) {
     return <CustomLoader text="Loading your wellness journey..." />;
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setisLoading(true);
+
+    const lowerCaseEmail = formData.email.toLowerCase();
+    const [address, domain] = lowerCaseEmail.split("@");
+
+    if (domain != "iiti.ac.in") {
+      CustomToast("Please book with your institute email id");
+      return;
+    }
+
+    let numfound = false;
+    for (let i = 0; i < address.length; i++) {
+      if (address[i] >= "0" && address[i] <= "9") {
+        numfound = true;
+      } else if (numfound === true) {
+        CustomToast("Please enter a valid email address");
+        return;
+      }
+    }
+
+    const payload = {
+      doctorId: selectedDoctor.id,
+      doctorName: selectedDoctor.name,
+      ...formData,
+    };
+    const user_id = localStorage.getItem("userid");
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch("http://localhost:3000/user_doc/requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userId: user_id,
+          doctorId: selectedDoctor.id,
+          dateTime: formData.date,
+          reason: formData.note,
+        }),
+      });
+      const respData = await res.json();
+      // alert("Booking Confirmed!");
+      CustomToast("Appointment Requested");
+      setStep(1);
+      setSelectedDoctor(null);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        note: "",
+        date: "",
+      });
+      setisLoading(false);
+    } catch (err) {
+      setisLoading(false);
+      console.error("Error submitting booking request:", err);
+      CustomToast("Error while booking appointment");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 flex flex-col overflow-hidden">
@@ -115,17 +195,7 @@ const Book = () => {
                 <BookingFormStep
                   formData={formData}
                   handleChange={handleChange}
-                  onSubmit={(e) =>
-                    handleSubmit(
-                      e,
-                      setisLoading,
-                      formData,
-                      setStep,
-                      setFormData,
-                      setSelectedDoctor,
-                      selectedDoctor
-                    )
-                  }
+                  onSubmit={handleSubmit}
                   onBack={() => setStep(1)}
                   selectedDoctor={selectedDoctor}
                   isAuthenticated={isAuthenticated}
