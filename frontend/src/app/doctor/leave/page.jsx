@@ -124,21 +124,21 @@ const DoctorLeave = () => {
   }
 
   return (
-    <div className="min-h-screen bg-custom-gray-50">
+    <div className="min-h-screen bg-[var(--custom-gray-50)]">
       <DoctorNavbar />
       <ToastContainer />
       <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-custom-white rounded-xl shadow-lg p-8">
+        <div className="bg-[var(--custom-white)] rounded-xl shadow-lg p-8">
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center">
               <button
                 onClick={handleBack}
-                className="mr-4 text-custom-blue-600 hover:text-custom-blue-800 transition-colors"
+                className="mr-4 text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-800)] transition-colors"
                 aria-label="Go back to history"
               >
                 <ArrowLeft className="w-6 h-6" />
               </button>
-              <h1 className="text-3xl font-bold text-custom-blue-900">
+              <h1 className="text-3xl font-bold text-[var(--custom-blue-900)]">
                 Leave Management
               </h1>
             </div>
@@ -153,23 +153,23 @@ const DoctorLeave = () => {
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
-                <User className="w-12 h-12 rounded-full text-custom-blue-600 transform transition-all duration-300 group-hover:scale-110" />
+                <User className="w-12 h-12 rounded-full text-[var(--custom-blue-600)] transform transition-all duration-300 group-hover:scale-110" />
               )}
               <div className="ml-4">
-                <h2 className="text-xl font-semibold text-custom-blue-800">
+                <h2 className="text-xl font-semibold text-[var(--custom-blue-800)]">
                   Dr. {name}
                 </h2>
-                <p className="text-custom-blue-600">{desc}</p>
+                <p className="text-[var(--custom-blue-600)]">{desc}</p>
               </div>
             </div>
           </div>
 
-          <div className="mb-8 p-4 bg-custom-blue-50 rounded-lg border border-custom-blue-100">
-            <div className="flex items-center text-custom-blue-800">
+          <div className="mb-8 p-4 bg-[var(--custom-blue-50)] rounded-lg border border-[var(--custom-blue-100)]">
+            <div className="flex items-center text-[var(--custom-blue-800)]">
               <Clock className="w-5 h-5 mr-2" />
               <h3 className="font-medium">Request Leave</h3>
             </div>
-            <p className="mt-2 text-sm text-custom-blue-600">
+            <p className="mt-2 text-sm text-[var(--custom-blue-600)]">
               Please select your leave duration by specifying start and end
               times.
             </p>
@@ -179,7 +179,7 @@ const DoctorLeave = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-custom-blue-900 mb-2">
+                  <label className="block text-sm font-medium text-[var(--custom-blue-900)] mb-2">
                     Start Date
                   </label>
                   <input
@@ -190,12 +190,12 @@ const DoctorLeave = () => {
                       handleInputChange(e);
                       fetchAvailableSlots(e.target.value, true);
                     }}
-                    className="w-full p-2 border border-custom-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent"
+                    className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-custom-blue-900 mb-2">
+                  <label className="block text-sm font-medium text-[var(--custom-blue-900)] mb-2">
                     Start Slot
                   </label>
                   <select
@@ -203,7 +203,7 @@ const DoctorLeave = () => {
                     onChange={(e) => {
                       setstartSelectedSlot(e.target.value);
                     }}
-                    className="w-full p-2 border border-custom-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent"
+                    className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
                     required
                   >
                     <option value="">Choose a slot</option>
@@ -218,7 +218,7 @@ const DoctorLeave = () => {
 
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-custom-blue-900 mb-2">
+                  <label className="block text-sm font-medium text-[var(--custom-blue-900)] mb-2">
                     End Date
                   </label>
                   <input
@@ -229,12 +229,12 @@ const DoctorLeave = () => {
                       handleInputChange(e);
                       fetchAvailableSlots(e.target.value, false);
                     }}
-                    className="w-full p-2 border border-custom-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent"
+                    className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-custom-blue-900 mb-2">
+                  <label className="block text-sm font-medium text-[var(--custom-blue-900)] mb-2">
                     End Slot
                   </label>
                   <select
@@ -242,7 +242,7 @@ const DoctorLeave = () => {
                     onChange={(e) => {
                       setEndSelectedSlot(e.target.value);
                     }}
-                    className="w-full p-2 border border-custom-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent"
+                    className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
                     required
                   >
                     <option value="">Choose a slot</option>
@@ -257,14 +257,14 @@ const DoctorLeave = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-custom-blue-900 mb-2">
+              <label className="block text-sm font-medium text-[var(--custom-blue-900)] mb-2">
                 Reason for Leave
               </label>
               <textarea
                 name="reason"
                 value={leaveDetails.reason}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-custom-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent h-32 resize-none"
+                className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent h-32 resize-none"
                 placeholder="Please provide a reason for your leave request..."
                 required
               />
@@ -272,7 +272,7 @@ const DoctorLeave = () => {
 
             <button
               type="submit"
-              className="w-full bg-custom-blue-600 text-custom-white py-3 px-6 rounded-lg font-medium hover:bg-custom-blue-700 transition-colors"
+              className="w-full bg-[var(--custom-blue-600)] text-[var(--custom-white)] py-3 px-6 rounded-lg font-medium hover:bg-[var(--custom-blue-700)] transition-colors"
             >
               Submit
             </button>

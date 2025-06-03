@@ -22,7 +22,7 @@ const EmergencyCallButton = ({ phoneNumber }) => {
         onClick={handleCall}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-custom-orange-400 to-custom-purple-500 text-custom-white transform transition-all duration-300 ease-out ${
+        className={`relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-[var(--custom-orange-400)] to-[var(--custom-purple-500)] text-[var(--custom-white)] transform transition-all duration-300 ease-out ${
           isHovered ? "scale-110 shadow-[0_6px_25px_rgba(255,147,51,0.6)]" : ""
         } ${
           isClicked ? "scale-95 shadow-[0_2px_10px_rgba(255,147,51,0.3)]" : ""
@@ -38,7 +38,7 @@ const EmergencyCallButton = ({ phoneNumber }) => {
 
       <div
         className={`absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg
-        bg-custom-gray-900/90 text-custom-white text-sm font-medium transform transition-all duration-200
+        bg-[var(--custom-gray-900)]/90 text-[var(--custom-white)] text-sm font-medium transform transition-all duration-200
         ${
           isHovered
             ? "opacity-100 translate-y-0"

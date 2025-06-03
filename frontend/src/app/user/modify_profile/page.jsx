@@ -159,17 +159,17 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   };
 
   return (
-    <div className="bg-custom-orange-50">
-      <Navbar className="bg-custom-orange-50" />
+    <div className="bg-[var(--custom-orange-50)]">
+      <Navbar className="bg-[var(--custom-orange-50)]" />
       <ToastContainer />
       <div className="min-h-screen py-16 flex items-center justify-center">
-        <div className="max-w-2xl w-full mx-auto bg-custom-orange-50 md:bg-custom-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-none md:shadow-xl md:border border-custom-orange-100 overflow-hidden">
+        <div className="max-w-2xl w-full mx-auto bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-none md:shadow-xl md:border border-[var(--custom-orange-100)] overflow-hidden">
           <div className="px-10 py-12">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-extrabold text-custom-orange-900 tracking-tight">
+              <h2 className="text-4xl font-extrabold text-[var(--custom-orange-900)] tracking-tight">
                 Modify Profile
               </h2>
-              <p className="mt-3 text-custom-orange-600">
+              <p className="mt-3 text-[var(--custom-orange-600)]">
                 Update your profile information
               </p>
             </div>
@@ -180,7 +180,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 <input
                   type="text"
                   id="username"
-                  className="peer w-full rounded-lg border border-custom-orange-300 px-5 py-4 text-custom-orange-900 bg-transparent focus:border-custom-orange-600 focus:ring-2 focus:ring-custom-orange-200 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
                   placeholder={
                     localStorage.getItem("username") || "Your username"
                   }
@@ -193,7 +193,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 />
                 <label
                   htmlFor="username"
-                  className="absolute left-5 top-4 text-custom-orange-500 text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-custom-orange-700 peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-custom-orange-700 bg-custom-orange-50 md:bg-custom-white bg-opacity-90 px-2"
+                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 px-2"
                 >
                   Username
                 </label>
@@ -205,7 +205,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   type="email"
                   id="email"
                   value={localStorage.getItem("user_email") || "Your email"}
-                  className="peer w-full cursor-not-allowed rounded-lg border border-custom-orange-300 px-5 py-4 text-custom-orange-900 bg-transparent focus:border-custom-orange-600 focus:ring-2 focus:ring-custom-orange-200 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="peer w-full cursor-not-allowed rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
                   placeholder={
                     localStorage.getItem("user_email") || "Your email"
                   }
@@ -213,7 +213,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 />
                 <label
                   htmlFor="email"
-                  className="absolute left-5 top-4 text-custom-orange-500 text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-custom-orange-700 peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-custom-orange-700 bg-custom-orange-50 md:bg-custom-white bg-opacity-90 px-2"
+                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 px-2"
                 >
                   Email
                 </label>
@@ -224,7 +224,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 <input
                   type="tel"
                   id="mobile"
-                  className="peer w-full rounded-lg border border-custom-orange-300 px-5 py-4 text-custom-orange-900 bg-transparent focus:border-custom-orange-600 focus:ring-2 focus:ring-custom-orange-200 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
                   placeholder={
                     localStorage.getItem("user_mobile") || "Your phone number"
                   }
@@ -234,7 +234,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 />
                 <label
                   htmlFor="mobile"
-                  className="absolute left-5 top-4 text-custom-orange-500 text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-custom-orange-700 peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-custom-orange-700 bg-custom-orange-50 md:bg-custom-white bg-opacity-90 px-2"
+                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 px-2"
                 >
                   Phone Number
                 </label>
@@ -245,7 +245,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 <input
                   type="tel"
                   id="alt_mobile"
-                  className="peer w-full rounded-lg border border-custom-orange-300 px-5 py-4 text-custom-orange-900 bg-transparent focus:border-custom-orange-600 focus:ring-2 focus:ring-custom-orange-200 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
                   placeholder={
                     localStorage.getItem("user_alt_mobile") ||
                     "Your emergency contact"
@@ -259,7 +259,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 />
                 <label
                   htmlFor="alt_mobile"
-                  className="absolute left-5 top-4 text-custom-orange-500 text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-custom-orange-700 peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-custom-orange-700 bg-custom-orange-50 md:bg-custom-white bg-opacity-90 px-2"
+                  className="absolute left-5 top-4 text-[var(--custom-orange-500)] text-sm transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-lg peer-focus:top-[-1rem] peer-focus:text-sm peer-focus:text-[var(--custom-orange-700)] peer-valid:top-[-1rem] peer-valid:text-sm peer-valid:text-[var(--custom-orange-700)] bg-[var(--custom-orange-50)] md:bg-[var(--custom-white)] bg-opacity-90 px-2"
                 >
                   Emergency Contact Number
                 </label>
@@ -276,14 +276,14 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
               <div className="flex gap-6 pt-6">
                 <button
                   type="submit"
-                  className="flex-1 bg-gradient-to-r from-custom-orange-500 to-custom-orange-600 text-custom-white rounded-xl px-8 py-4  font-semibold hover:from-custom-orange-600 hover:to-custom-orange-700 hover:shadow-lg transition-all duration-300 shadow-md"
+                  className="flex-1 bg-gradient-to-r from-[var(--custom-orange-500)] to-[var(--custom-orange-600)] text-[var(--custom-white)] rounded-xl px-8 py-4  font-semibold hover:from-[var(--custom-orange-600)] hover:to-[var(--custom-orange-700)] hover:shadow-lg transition-all duration-300 shadow-md"
                 >
                   Save
                 </button>
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="flex-1 bg-custom-white text-custom-orange-700 rounded-xl px-8 py-4 font-semibold border border-custom-orange-300 hover:bg-custom-orange-50 hover:shadow-md transition-all duration-300"
+                  className="flex-1 bg-[var(--custom-white)] text-[var(--custom-orange-700)] rounded-xl px-8 py-4 font-semibold border border-[var(--custom-orange-300)] hover:bg-[var(--custom-orange-50)] hover:shadow-md transition-all duration-300"
                 >
                   Cancel
                 </button>

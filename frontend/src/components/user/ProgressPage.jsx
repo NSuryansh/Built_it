@@ -46,19 +46,19 @@ const ProgressPage = ({ isLandingPage }) => {
   };
 
   return (
-    <div className="bg-custom-white h-full rounded-2xl shadow-lg">
+    <div className="bg-[var(--custom-white)] h-full rounded-2xl shadow-lg">
       <div
         className={
           isLandingPage
-            ? "rounded-2xl p-4 sm:p-8 md:p-4 bg-custom-white"
-            : "p-4 bg-custom-peach"
+            ? "rounded-2xl p-4 sm:p-8 md:p-4 bg-[var(--custom-white)]"
+            : "p-4 bg-[var(--custom-peach)]"
         }
       >
         <h2
           className={
             isLandingPage
-              ? "text-2xl font-bold text-custom-black"
-              : "text-2xl font-bold text-custom-orange-500"
+              ? "text-2xl font-bold text-[var(--custom-black)]"
+              : "text-2xl font-bold text-[var(--custom-orange-500)]"
           }
         >
           {isLandingPage ? "Your Happiness Score" : "Your Feelings"}
@@ -82,10 +82,12 @@ const ProgressPage = ({ isLandingPage }) => {
           />
 
           <div className="mt-8 text-center">
-            <div className="text-6xl font-bold text-custom-gray-800 mb-2">
+            <div className="text-6xl font-bold text-[var(--custom-gray-800)] mb-2">
               {calculateHappinessScore()}
             </div>
-            <div className="text-custom-gray-600">Your Happiness Score</div>
+            <div className="text-[var(--custom-gray-600)]">
+              Your Happiness Score
+            </div>
           </div>
         </div>
       </div>

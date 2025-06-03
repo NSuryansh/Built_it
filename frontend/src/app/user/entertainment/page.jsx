@@ -51,23 +51,25 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
   const filteredItems = getFilteredItems();
 
   return (
-    <div className="mb-4 md:mb-8 bg-custom-white rounded-2xl shadow-md overflow-hidden">
+    <div className="mb-4 md:mb-8 bg-[var(--custom-white)] rounded-2xl shadow-md overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 md:p-6 hover:bg-custom-gray-100 transition-colors duration-300"
+        className="w-full flex items-center justify-between p-4 md:p-6 hover:bg-[var(--custom-gray-100)] transition-colors duration-300"
       >
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-full bg-custom-gray-100">
-            <Icon className="w-7 h-7 text-custom-orange-600" />
+          <div className="p-3 rounded-full bg-[var(--custom-gray-100)]">
+            <Icon className="w-7 h-7 text-[var(--custom-orange-600)]" />
           </div>
-          <h2 className="text-2xl font-bold text-custom-gray-800">{title}</h2>
+          <h2 className="text-2xl font-bold text-[var(--custom-gray-800)]">
+            {title}
+          </h2>
         </div>
         <div
           className={`transform transition-transform duration-300 ${
             isOpen ? "rotate-180" : ""
           }`}
         >
-          <ChevronDown className="w-6 h-6 text-custom-gray-500" />
+          <ChevronDown className="w-6 h-6 text-[var(--custom-gray-500)]" />
         </div>
       </button>
 
@@ -84,8 +86,8 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-2.5 md:px-5 py-[5px] md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 ${
                   selectedCategory === category
-                    ? "bg-custom-orange-700 text-custom-white shadow-md scale-105"
-                    : "bg-custom-gray-100 text-custom-gray-700 hover:bg-custom-gray-200 hover:scale-105"
+                    ? "bg-[var(--custom-orange-700)] text-[var(--custom-white)] shadow-md scale-105"
+                    : "bg-[var(--custom-gray-100)] text-[var(--custom-gray-700)] hover:bg-[var(--custom-gray-200)] hover:scale-105"
                 }`}
               >
                 {category}
@@ -112,15 +114,15 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
                   />
                 </div>
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t from-custom-black/90 via-custom-black/40 to-transparent flex items-end transition-opacity duration-300 ${
+                  className={`absolute inset-0 bg-gradient-to-t from-[var(--custom-black)]/90 via-[var(--custom-black)]/40 to-transparent flex items-end transition-opacity duration-300 ${
                     hoveredItem === index ? "opacity-100" : "opacity-90"
                   }`}
                 >
                   <div className="p-2 sm:p-4 md:p-6 w-full transform transition-transform duration-300 group-hover:translate-y-0">
-                    <h3 className="text-sm sm:text-md md:text-lg font-semibold md:font-bold text-custom-white mb-1 md:mb-2 group-hover:text-indigo-300 transition-colors duration-300">
+                    <h3 className="text-sm sm:text-md md:text-lg font-semibold md:font-bold text-[var(--custom-white)] mb-1 md:mb-2 group-hover:text-[var(--custom-purple-300)] transition-colors duration-300">
                       {item.title}
                     </h3>
-                    <span className="sm:inline-block hidden px-2 md:px-3 py-1 rounded-full bg-custom-white/20 text-xs md:text-sm text-custom-white backdrop-blur-sm">
+                    <span className="sm:inline-block hidden px-2 md:px-3 py-1 rounded-full bg-[var(--custom-white)]/20 text-xs md:text-sm text-[var(--custom-white)] backdrop-blur-sm">
                       {item.category}
                     </span>
                   </div>
@@ -136,14 +138,14 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
 
 function Entertainment() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-custom-orange-100 via-custom-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--custom-orange-100)] via-[var(--custom-white)] to-indigo-50">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-4 lg:py-16 sm:px-6 lg:px-8">
         <div className="text-center mb-8 md:mb-16">
-          <h1 className="text-[34px] lg:text-5xl font-bold text-custom-gray-900 mb-2 lg:mb-4 tracking-tight">
+          <h1 className="text-[34px] lg:text-5xl font-bold text-[var(--custom-gray-900)] mb-2 lg:mb-4 tracking-tight">
             Entertainment Hub
           </h1>
-          <p className="text-sm lg:text-lg text-custom-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm lg:text-lg text-[var(--custom-gray-600)] max-w-2xl mx-auto">
             Discover and explore your favorite movies, books, music, and games
             all in one place
           </p>

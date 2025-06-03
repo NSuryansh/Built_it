@@ -122,35 +122,35 @@ const DoctorNotificationPanel = () => {
   };
 
   return (
-    <div className="absolute top-14 right-5 w-80 bg-custom-white shadow-xl border rounded-lg p-4 z-50">
+    <div className="absolute top-14 right-5 w-80 bg-[var(--custom-white)] shadow-xl border rounded-lg p-4 z-50">
       <ToastContainer />
       {referrals.length > 0 ? (
         <div className="space-y-3 max-h-80 overflow-auto">
-          <h2 className="text-sm font-semibold text-custom-gray-800 mb-2">
+          <h2 className="text-sm font-semibold text-[var(--custom-gray-800)] mb-2">
             Referrals
           </h2>
           {referrals.map((referral) => (
             <div
               key={referral.id}
-              className="flex justify-between items-center p-3 bg-custom-gray-50 rounded-lg shadow-sm"
+              className="flex justify-between items-center p-3 bg-[var(--custom-gray-50)] rounded-lg shadow-sm"
             >
               <div>
-                <p className="font-semibold text-custom-gray-900 text-md">
+                <p className="font-semibold text-[var(--custom-gray-900)] text-md">
                   {referral.username}
                 </p>
-                <p className="text-sm text-custom-gray-600">
+                <p className="text-sm text-[var(--custom-gray-600)]">
                   {referral.referred_by} has referred them beacuse of{" "}
                   {referral.reason}
                 </p>
                 <div className="flex gap-2">
                   {referral.inChat === "Yes" ? (
-                    <div className="text-custom-green-600 hover:bg-custom-green-100 px-2 p-1 rounded-full transition">
+                    <div className="text-[var(--custom-green-600)] hover:bg-[var(--custom-green-100)] px-2 p-1 rounded-full transition">
                       Chat
                     </div>
                   ) : (
                     <button
                       onClick={() => handleAccept(referral)}
-                      className="text-custom-red-600 hover:bg-custom-red-100 px-2 p-1 rounded-full transition"
+                      className="text-[var(--custom-red-600)] hover:bg-[var(--custom-red-100)] px-2 p-1 rounded-full transition"
                     >
                       Chat
                     </button>
@@ -163,32 +163,32 @@ const DoctorNotificationPanel = () => {
       ) : null}
       {notifications.length > 0 ? (
         <div className="space-y-3 max-h-80 mt-4 overflow-auto">
-          <h2 className="text-sm font-semibold text-custom-gray-800 mb-2">
+          <h2 className="text-sm font-semibold text-[var(--custom-gray-800)] mb-2">
             Care Alerts
           </h2>
           {notifications.map((notif) => (
             <div
               key={notif.userId}
-              className="flex justify-between items-center p-3 bg-custom-gray-50 rounded-lg shadow-sm"
+              className="flex justify-between items-center p-3 bg-[var(--custom-gray-50)] rounded-lg shadow-sm"
             >
               <div>
-                <p className="font-semibold text-custom-gray-900 text-md">
+                <p className="font-semibold text-[var(--custom-gray-900)] text-md">
                   {notif.username}
                 </p>
-                <p className="text-sm text-custom-gray-600">
+                <p className="text-sm text-[var(--custom-gray-600)]">
                   {notif.inChat === "Yes"
                     ? "Already in chat flagged for potential support."
                     : "Not in chat flagged for potential support."}
                 </p>
                 <div className="flex gap-2">
                   {notif.inChat === "Yes" ? (
-                    <div className="text-custom-green-600 hover:bg-custom-green-100 px-2 p-1 rounded-full transition">
+                    <div className="text-[var(--custom-green-600)] hover:bg-[var(--custom-green-100)] px-2 p-1 rounded-full transition">
                       Chat
                     </div>
                   ) : (
                     <button
                       onClick={() => handleAccept(notif)}
-                      className="text-custom-red-600 hover:bg-custom-red-100 px-2 p-1 rounded-full transition"
+                      className="text-[var(--custom-red-600)] hover:bg-[var(--custom-red-100)] px-2 p-1 rounded-full transition"
                     >
                       Chat
                     </button>
@@ -200,7 +200,9 @@ const DoctorNotificationPanel = () => {
         </div>
       ) : null}
       {notifications.length === 0 && referrals.length === 0 ? (
-        <p className="text-sm text-custom-gray-500">No new notifications</p>
+        <p className="text-sm text-[var(--custom-gray-500)]">
+          No new notifications
+        </p>
       ) : null}
     </div>
   );

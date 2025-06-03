@@ -74,7 +74,7 @@ const DoctorNavbar = () => {
                 toggleMenu();
                 setShowDetails(false);
               }}
-              className="p-2 rounded-full hover:bg-custom-gray-100"
+              className="p-2 rounded-full hover:bg-[var(--custom-gray-100)]"
             >
               {isOpen ? (
                 <AiOutlineClose size={24} />
@@ -83,19 +83,19 @@ const DoctorNavbar = () => {
               )}
             </button>
             {isOpen && (
-              <div className="absolute top-16 min-w-40 w-[40%] bg-custom-white rounded-2xl shadow-md p-4">
+              <div className="absolute top-16 min-w-40 w-[40%] bg-[var(--custom-white)] rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
                     <li
-                      className="py-2 border-b text-center border-custom-gray-200"
+                      className="py-2 border-b text-center border-[var(--custom-gray-200)]"
                       key={i}
                     >
                       <button
                         onClick={() => router.push(item.link)}
                         className={` transition-colors ${
                           location == item.link
-                            ? "underline underline-offset-4 text-custom-blue-500 decoration-2"
-                            : "hover:text-custom-blue-500 focus:text-custom-blue-500"
+                            ? "underline underline-offset-4 text-[var(--custom-blue-500)] decoration-2"
+                            : "hover:text-[var(--custom-blue-500)] focus:text-[var(--custom-blue-500)]"
                         }`}
                       >
                         {item.name}
@@ -123,8 +123,8 @@ const DoctorNavbar = () => {
                 onClick={() => router.push(item.link)}
                 className={`transition-colors ${
                   location == item.link
-                    ? "underline underline-offset-4 text-custom-blue-500 decoration-2"
-                    : "hover:text-custom-blue-500 focus:text-custom-blue-500"
+                    ? "underline underline-offset-4 text-[var(--custom-blue-500)] decoration-2"
+                    : "hover:text-[var(--custom-blue-500)] focus:text-[var(--custom-blue-500)]"
                 }`}
               >
                 {item.name}
@@ -159,23 +159,25 @@ const DoctorNavbar = () => {
                 </button>
 
                 <div
-                  className={`user-details drop-shadow-xs absolute border-2 border-custom-blue-700 rounded-lg top-12 right-5 list-none z-1 ${
+                  className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-blue-700)] rounded-lg top-12 right-5 list-none z-1 ${
                     showDetails ? "opacity-100 visible" : "opacity-0 invisible"
                   }`}
                 >
-                  <div className="w-64 bg-custom-blue-100 rounded-lg shadow-lg p-6">
+                  <div className="w-64 bg-[var(--custom-blue-100)] rounded-lg shadow-lg p-6">
                     <div className="space-y-4">
                       <div className="text-center space-y-1">
-                        <h3 className="text-lg font-semibold text-custom-blue-900">
+                        <h3 className="text-lg font-semibold text-[var(--custom-blue-900)]">
                           {username}
                         </h3>
-                        <p className="text-sm text-custom-blue-700">{email}</p>
+                        <p className="text-sm text-[var(--custom-blue-700)]">
+                          {email}
+                        </p>
                       </div>
 
                       <div className="flex gap-2">
                         <button
                           onClick={() => setShowLogoutModal(true)}
-                          className="flex-1 bg-custom-blue-200 hover:bg-custom-blue-300 text-custom-blue-900 rounded px-4 py-2 text-sm font-medium transition-colors"
+                          className="flex-1 bg-[var(--custom-blue-200)] hover:bg-[var(--custom-blue-300)] text-[var(--custom-blue-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
                         >
                           Logout
                         </button>
@@ -187,7 +189,7 @@ const DoctorNavbar = () => {
             ) : (
               <button
                 onClick={() => router.replace("/doctor/login")}
-                className="px-4 py-2 bg-custom-blue-200 hover:bg-custom-blue-300 text-custom-blue-900 rounded font-medium"
+                className="px-4 py-2 bg-[var(--custom-blue-200)] hover:bg-[var(--custom-blue-300)] text-[var(--custom-blue-900)] rounded font-medium"
               >
                 Login
               </button>

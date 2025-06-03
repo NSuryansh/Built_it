@@ -83,16 +83,16 @@ const BookingFormStep = ({
   };
 
   return (
-    <div className="bg-gradient-to-b mx-auto from-custom-orange-50 to-custom-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-custom-orange-200 shadow-xl">
+    <div className="bg-gradient-to-b mx-auto from-[var(--custom-orange-50)] to-[var(--custom-white)] w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
-        <Stethoscope className="w-8 h-8 text-custom-orange-500" />
-        <h2 className="text-center text-3xl font-bold text-custom-orange-500 uppercase">
+        <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
+        <h2 className="text-center text-3xl font-bold text-[var(--custom-orange-500)] uppercase">
           Booking Details
         </h2>
       </div>
 
       <div className="mb-8 text-center">
-        <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-custom-orange-100 rounded-full">
+        <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--custom-orange-100)] rounded-full">
           {selectedDoctor.img != "" ? (
             <img
               src={selectedDoctor.img}
@@ -100,9 +100,9 @@ const BookingFormStep = ({
               className="w-8 h-8 object-cover rounded-full"
             />
           ) : (
-            <User className="w-5 h-5  text-custom-orange-700" />
+            <User className="w-5 h-5  text-[var(--custom-orange-700)]" />
           )}
-          <span className="text-custom-orange-800 font-medium">
+          <span className="text-[var(--custom-orange-800)] font-medium">
             {selectedDoctor.name}
           </span>
         </div>
@@ -114,7 +114,7 @@ const BookingFormStep = ({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="group">
-            <label className="flex items-center gap-2 text-custom-orange-800 font-medium mb-2">
+            <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
               <User className="w-4 h-4" />
               Full Name
               {isAuthenticated}
@@ -124,8 +124,8 @@ const BookingFormStep = ({
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-custom-orange-200 focus:border-custom-orange-400 focus:ring-2 focus:ring-custom-orange-200 transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-[var(--custom-gray-200)] cursor-not-allowed" : ""
               }`}
               placeholder="Enter your full name"
               required
@@ -134,7 +134,7 @@ const BookingFormStep = ({
           </div>
 
           <div className="group">
-            <label className="flex items-center gap-2 text-custom-orange-800 font-medium mb-2">
+            <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
               <Mail className="w-4 h-4" />
               Email Address
               {isAuthenticated}
@@ -144,8 +144,8 @@ const BookingFormStep = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-custom-orange-200 focus:border-custom-orange-400 focus:ring-2 focus:ring-custom-orange-200 transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-[var(--custom-gray-200)] cursor-not-allowed" : ""
               }`}
               placeholder="Enter your email"
               required
@@ -154,7 +154,7 @@ const BookingFormStep = ({
           </div>
 
           <div className="group">
-            <label className="flex items-center gap-2 text-custom-orange-800 font-medium mb-2">
+            <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
               <Phone className="w-4 h-4" />
               Phone Number
               {isAuthenticated}
@@ -164,8 +164,8 @@ const BookingFormStep = ({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-custom-orange-200 focus:border-custom-orange-400 focus:ring-2 focus:ring-custom-orange-200 transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated ? "bg-[var(--custom-gray-200)] cursor-not-allowed" : ""
               }`}
               placeholder="Enter your phone number"
               required
@@ -174,7 +174,7 @@ const BookingFormStep = ({
           </div>
 
           <div className="group space-y-4">
-            <label className="flex items-center gap-2 text-custom-orange-800 font-medium">
+            <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium">
               <Calendar className="w-4 h-4" />
               <Clock className="w-4 h-4" />
               Preferred Date & Time
@@ -198,7 +198,7 @@ const BookingFormStep = ({
                     handleDateChange(newDate);
                     fetchAvailableSlots(newDate);
                   }}
-                  className="w-full px-4 py-3 rounded-lg border-2 border-custom-orange-200 focus:border-custom-orange-400 focus:ring-2 focus:ring-custom-orange-200 transition-all duration-200 outline-none bg-custom-white"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                   required
                 >
                   <option value="">Select Date</option>
@@ -231,7 +231,7 @@ const BookingFormStep = ({
                     });
                     handleTimeChange(e);
                   }}
-                  className="w-full px-4 py-3 rounded-lg border-2 border-custom-orange-200 focus:border-custom-orange-400 focus:ring-2 focus:ring-custom-orange-200 transition-all duration-200 outline-none bg-custom-white"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                 >
                   <option value="">Select Time</option>
                   {Array.isArray(slots) &&
@@ -247,7 +247,7 @@ const BookingFormStep = ({
         </div>
 
         <div className="group">
-          <label className="flex items-center gap-2 text-custom-orange-800 font-medium mb-2">
+          <label className="flex items-center gap-2 text-[var(--custom-orange-800)] font-medium mb-2">
             <FileText className="w-4 h-4" />
             Brief Note about Your Problem
           </label>
@@ -255,17 +255,17 @@ const BookingFormStep = ({
             name="note"
             value={formData.note}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-lg border-2 border-custom-orange-200 focus:border-custom-orange-400 focus:ring-2 focus:ring-custom-orange-200 transition-all duration-200 outline-none min-h-[150px] resize-y"
+            className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none min-h-[150px] resize-y"
             placeholder="Please describe your symptoms or concerns..."
             required
           />
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between gap-4 pt-6 border-t border-custom-orange-200">
+        <div className="flex flex-col sm:flex-row justify-between gap-4 pt-6 border-t border-[var(--custom-orange-200)]">
           <button
             type="button"
             onClick={onBack}
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-custom-white border-2 border-custom-orange-400 text-custom-orange-600 font-semibold hover:bg-custom-orange-50 transition-colors duration-200"
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[var(--custom-white)] border-2 border-[var(--custom-orange-400)] text-[var(--custom-orange-600)] font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Doctors
@@ -275,7 +275,7 @@ const BookingFormStep = ({
             disabled={isLoading}
             onClick={sendNotif}
             type="submit"
-            className="flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-custom-orange-500 text-custom-white font-semibold hover:bg-custom-orange-600 transform hover:scale-[1.02] transition-all duration-200"
+            className="flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-[var(--custom-orange-500)] text-[var(--custom-white)] font-semibold hover:bg-[var(--custom-orange-600)] transform hover:scale-[1.02] transition-all duration-200"
           >
             {isLoading ? (
               <div>

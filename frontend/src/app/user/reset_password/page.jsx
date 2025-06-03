@@ -56,31 +56,31 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-custom-orange-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">
       <ToastContainer />
-      <div className="bg-custom-white rounded-2xl shadow-xl w-full max-w-md p-8">
+      <div className="bg-[var(--custom-white)] rounded-2xl shadow-xl w-full max-w-md p-8">
         <div className="flex justify-center mb-8">
-          <div className="bg-custom-orange-100 p-3 rounded-full">
-            <KeyRound className="w-8 h-8 text-custom-orange-500" />
+          <div className="bg-[var(--custom-orange-100)] p-3 rounded-full">
+            <KeyRound className="w-8 h-8 text-[var(--custom-orange-500)]" />
           </div>
         </div>
 
-        <h1 className="text-3xl font-bold text-center text-custom-orange-900 mb-2">
+        <h1 className="text-3xl font-bold text-center text-[var(--custom-orange-900)] mb-2">
           Reset Password
         </h1>
-        <p className="text-center text-custom-orange-700 mb-8">
+        <p className="text-center text-[var(--custom-orange-700)] mb-8">
           Enter your new password below
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-custom-orange-900 text-sm font-medium mb-2">
+            <label className="block text-[var(--custom-orange-900)] text-sm font-medium mb-2">
               New Password
             </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full px-4 py-3 rounded-lg border border-custom-orange-200 focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 rounded-lg border border-[var(--custom-orange-200)] focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent transition-colors"
                 placeholder="Enter new password"
                 value={formData.password}
                 onChange={(e) =>
@@ -89,7 +89,7 @@ const ResetPassword = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-custom-gray-500 hover:text-custom-orange-900"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-500)] hover:text-[var(--custom-orange-900)]"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -98,13 +98,13 @@ const ResetPassword = () => {
           </div>
 
           <div>
-            <label className="block text-custom-orange-900 text-sm font-medium mb-2">
+            <label className="block text-[var(--custom-orange-900)] text-sm font-medium mb-2">
               Confirm New Password
             </label>
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                className="w-full px-4 py-3 rounded-lg border border-custom-orange-200 focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 rounded-lg border border-[var(--custom-orange-200)] focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent transition-colors"
                 placeholder="Confirm new password"
                 value={formData.confirmPassword}
                 onChange={(e) =>
@@ -113,7 +113,7 @@ const ResetPassword = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-custom-gray-500 hover:text-custom-orange-900"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-500)] hover:text-[var(--custom-orange-900)]"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -122,12 +122,12 @@ const ResetPassword = () => {
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
+            <div className="text-[var(--custom-red-500)] text-sm text-center">{error}</div>
           )}
 
           <button
             type="submit"
-            className="w-full bg-custom-orange-400 hover:bg-custom-orange-500 text-custom-white font-medium py-3 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+            className="w-full bg-[var(--custom-orange-400)] hover:bg-[var(--custom-orange-500)] text-[var(--custom-white)] font-medium py-3 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             Reset Password
           </button>

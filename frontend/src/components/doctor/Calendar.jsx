@@ -113,27 +113,27 @@ const DoctorCalendar = ({ onDateSelect }) => {
   const todayString = format(new Date(), "yyyy-MM-dd");
 
   return (
-    <div className="bg-custom-white mx-auto max-w-md rounded-xl shadow-sm p-6">
+    <div className="bg-[var(--custom-white)] mx-auto max-w-md rounded-xl shadow-sm p-6">
       {/* Header with month navigation */}
       <div className="flex items-center justify-center mb-6">
         {/* <div className="flex items-center"> */}
-        {/* <h2 className="text-xl font-semibold text-custom-gray-900">Calendar</h2> */}
+        {/* <h2 className="text-xl font-semibold text-[var(--custom-gray-900)]">Calendar</h2> */}
         {/* </div> */}
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
-            className="p-2 hover:bg-custom-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-[var(--custom-gray-100)] rounded-lg transition-colors"
           >
-            <ChevronLeft className="w-5 h-5 text-custom-gray-600" />
+            <ChevronLeft className="w-5 h-5 text-[var(--custom-gray-600)]" />
           </button>
-          <span className="text-sm font-medium text-custom-gray-900">
+          <span className="text-sm font-medium text-[var(--custom-gray-900)]">
             {format(currentMonth, "MMMM yyyy")}
           </span>
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, 30))}
-            className="p-2 hover:bg-custom-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-[var(--custom-gray-100)] rounded-lg transition-colors"
           >
-            <ChevronRight className="w-5 h-5 text-custom-gray-600" />
+            <ChevronRight className="w-5 h-5 text-[var(--custom-gray-600)]" />
           </button>
         </div>
       </div>
@@ -143,7 +143,10 @@ const DoctorCalendar = ({ onDateSelect }) => {
         {/* Weekday headers */}
         <div className="grid grid-cols-7 text-center">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-            <div key={day} className="text-xs font-medium text-custom-gray-500">
+            <div
+              key={day}
+              className="text-xs font-medium text-[var(--custom-gray-500)]"
+            >
               {day}
             </div>
           ))}
@@ -172,31 +175,35 @@ const DoctorCalendar = ({ onDateSelect }) => {
                   text-sm font-medium rounded-md transition-all duration-200
                   ${
                     !isSameMonth(dayItem, currentMonth)
-                      ? "text-custom-gray-400"
-                      : "text-custom-gray-900"
+                      ? "text-[var(--custom-gray-400)]"
+                      : "text-[var(--custom-gray-900)]"
                   }
                   ${isToday ? "ring-2 ring-black ring-offset-1 font-bold" : ""}
-                  ${isSelected && !isToday ? "ring-2 ring-custom-blue-500" : ""}
+                  ${
+                    isSelected && !isToday
+                      ? "ring-2 ring-[var(--custom-blue-500)]"
+                      : ""
+                  }
                   ${
                     isPastAppointment
-                      ? "bg-custom-red-500 text-custom-white hover:bg-custom-red-600"
+                      ? "bg-[var(--custom-red-500)] text-[var(--custom-white)] hover:bg-[var(--custom-red-600)]"
                       : ""
                   }
                   ${
                     isFutureAppointment
-                      ? "bg-custom-blue-500 text-custom-white hover:bg-custom-blue-600"
+                      ? "bg-[var(--custom-blue-500)] text-[var(--custom-white)] hover:bg-[var(--custom-blue-600)]"
                       : ""
                   }
                   ${
                     !isPastAppointment && !isFutureAppointment
-                      ? "hover:bg-custom-gray-100"
+                      ? "hover:bg-[var(--custom-gray-100)]"
                       : ""
                   }
                 `}
               >
                 {format(dayItem, "d")}
                 {(isPastAppointment || isFutureAppointment) && (
-                  <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-custom-white" />
+                  <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-[var(--custom-white)]" />
                 )}
               </button>
             );
@@ -205,14 +212,18 @@ const DoctorCalendar = ({ onDateSelect }) => {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center space-x-6 pt-4 mt-4 border-t border-custom-gray-100">
+      <div className="flex items-center justify-center space-x-6 pt-4 mt-4 border-t border-[var(--custom-gray-100)]">
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 bg-custom-red-500 rounded-full"></span>
-          <span className="text-xs text-custom-gray-600">Past Appts</span>
+          <span className="w-3 h-3 bg-[var(--custom-red-500)] rounded-full"></span>
+          <span className="text-xs text-[var(--custom-gray-600)]">
+            Past Appts
+          </span>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 bg-custom-blue-500 rounded-full"></span>
-          <span className="text-xs text-custom-gray-600">Upcoming Appts</span>
+          <span className="w-3 h-3 bg-[var(--custom-blue-500)] rounded-full"></span>
+          <span className="text-xs text-[var(--custom-gray-600)]">
+            Upcoming Appts
+          </span>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ const CircularLoader = ({
           height: size,
         }}
       />
-      {text && <p className="mt-4 text-orange-800 font-medium">{text}</p>}
+      {text && <p className="mt-4 text-[var(--custom-orange-800)] font-medium">{text}</p>}
     </div>
   );
 };
@@ -194,26 +194,26 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-custom-orange-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">
       <ToastContainer />
-      <div className="max-w-md w-full space-y-2 bg-custom-white p-8 rounded-xl shadow-lg">
+      <div className="max-w-md w-full space-y-2 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
         <div className="text-center">
           <div className="flex justify-center">
-            <div className="p-3 bg-custom-orange-100 rounded-full">
-              <Lock className="h-8 w-8 text-custom-orange-500" />
+            <div className="p-3 bg-[var(--custom-orange-100)] rounded-full">
+              <Lock className="h-8 w-8 text-[var(--custom-orange-500)]" />
             </div>
           </div>
-          <h2 className="mt-4 text-3xl font-bold text-custom-orange-900">
+          <h2 className="mt-4 text-3xl font-bold text-[var(--custom-orange-900)]">
             User Login
           </h2>
-          {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
+          {error && <p className="mt-2 text-[var(--custom-red-600)] text-sm">{error}</p>}
         </div>
 
         <div className="space-y-4">
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-custom-orange-900"
+              className="block text-sm font-medium text-[var(--custom-orange-900)]"
             >
               Username
             </label>
@@ -222,7 +222,7 @@ const Login = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+              className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
               placeholder="username"
               required
             />
@@ -231,7 +231,7 @@ const Login = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-custom-orange-900"
+              className="block text-sm font-medium text-[var(--custom-orange-900)]"
             >
               Password
             </label>
@@ -241,13 +241,13 @@ const Login = () => {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+                className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
                 placeholder="••••••••"
                 required
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-custom-orange-900"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-500)] hover:text-[var(--custom-orange-900)]"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -255,7 +255,7 @@ const Login = () => {
             </div>
             <button
               onClick={() => setShowForgotModal(true)}
-              className="mt-1 text-sm text-custom-orange-600 hover:text-custom-orange-700 transition-colors"
+              className="mt-1 text-sm text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)] transition-colors"
             >
               Forgot Password?
             </button>
@@ -265,7 +265,7 @@ const Login = () => {
         <button
           onClick={() => setShowBiometricModal(true)}
           disabled={isLoading}
-          className="w-full flex justify-center items-center py-3 px-4 bg-custom-orange-100 text-custom-orange-600 rounded-lg hover:bg-custom-orange-200 transition-colors focus:outline-none focus:ring-2 focus:ring-custom-orange-500 "
+          className="w-full flex justify-center items-center py-3 px-4 bg-[var(--custom-orange-100)] text-[var(--custom-orange-600)] rounded-lg hover:bg-[var(--custom-orange-200)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] "
         >
           <div className="flex items-center">
             <Fingerprint className="h-5 w-5 mr-2" />
@@ -276,7 +276,7 @@ const Login = () => {
         <button
           disabled={isLoading}
           onClick={handlelogin}
-          className="w-full flex justify-center items-center mt-3 py-3 px-4 bg-custom-orange-400 text-custom-white rounded-lg hover:bg-custom-orange-500 transition-colors focus:outline-none focus:ring-2 focus:ring-custom-orange-500 focus:ring-offset-2 min-h-[48px]"
+          className="w-full flex justify-center items-center mt-3 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2 min-h-[48px]"
         >
           {isLoading ? (
             <div className="flex items-center justify-center w-[24px] h-[24px]">
@@ -291,17 +291,17 @@ const Login = () => {
             <>Login</>
           )}
         </button>
-        <p className="mt-4 text-sm text-center text-custom-black">
+        <p className="mt-4 text-sm text-center text-[var(--custom-black)]">
           If not registered{" "}
           <button
             onClick={() => router.push("/user/signup")}
-            className="underline font-bold text-custom-orange-500"
+            className="underline font-bold text-[var(--custom-orange-500)]"
           >
             click here
           </button>
         </p>
 
-        <div className="flex justify-center mt-2 items-center text-custom-gray-500">
+        <div className="flex justify-center mt-2 items-center text-[var(--custom-gray-500)]">
           <hr className="flex-1/3" />
           <div className="flex-1/3 text-center">OR</div>
           <hr className="flex-1/3" />
@@ -311,14 +311,14 @@ const Login = () => {
             Login as a&nbsp;
             <button
               onClick={() => router.push("/doctor/login")}
-              className="underline font-bold text-custom-orange-500"
+              className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Doctor
             </button>
             &nbsp;or&nbsp;
             <button
               onClick={() => router.push("/admin/login")}
-              className="underline font-bold text-custom-orange-500"
+              className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Admin
             </button>
@@ -329,8 +329,8 @@ const Login = () => {
       {/* Forgot Password Modal */}
       {showForgotModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-25 backdrop-blur-sm">
-          <div className="bg-custom-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h3 className="text-xl font-bold text-custom-orange-900 mb-4">
+          <div className="bg-[var(--custom-white)] p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 className="text-xl font-bold text-[var(--custom-orange-900)] mb-4">
               Reset Password
             </h3>
             <p className="mb-4 text-sm">Please enter your email address:</p>
@@ -339,18 +339,18 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your.email@example.com"
-              className="w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
             />
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setShowForgotModal(false)}
-                className="mr-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                className="mr-2 px-4 py-2 text-sm text-[var(--custom-gray-600)] hover:text-[var(--custom-gray-800)]"
               >
                 Cancel
               </button>
               <button
                 onClick={handleForgotPassword}
-                className="px-4 py-2 text-sm bg-custom-orange-400 text-custom-white rounded hover:bg-custom-orange-500 transition-colors"
+                className="px-4 py-2 text-sm bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded hover:bg-[var(--custom-orange-500)] transition-colors"
               >
                 Submit
               </button>
@@ -361,8 +361,8 @@ const Login = () => {
 
       {showBiometricModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-25 backdrop-blur-sm">
-          <div className="bg-custom-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h3 className="text-xl font-bold text-custom-orange-900 mb-4">
+          <div className="bg-[var(--custom-white)] p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 className="text-xl font-bold text-[var(--custom-orange-900)] mb-4">
               Biometric Login
             </h3>
             <p className="mb-4 text-sm">Please enter your username:</p>
@@ -371,18 +371,18 @@ const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="username"
-              className="w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
             />
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setShowBiometricModal(false)}
-                className="mr-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                className="mr-2 px-4 py-2 text-sm text-[var(--custom-gray-600)] hover:text-[var(--custom-gray-800)]"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleBiometricLogin()}
-                className="px-4 py-2 text-sm bg-custom-orange-400 text-custom-white rounded hover:bg-custom-orange-500 transition-colors"
+                className="px-4 py-2 text-sm bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded hover:bg-[var(--custom-orange-500)] transition-colors"
               >
                 Submit
               </button>

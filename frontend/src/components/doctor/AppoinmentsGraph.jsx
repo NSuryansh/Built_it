@@ -26,19 +26,19 @@ const PastAppointmentGraphs = ({
   return (
     <div className="mt-10 lg:mt-20">
       <div className="w-full">
-        <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-custom-blue-600 mb-2">
+        <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)] mb-2">
           Past Appointments
         </h1>
-        <p className="text-center sm:text-left text-md sm:text-lg text-custom-gray-600 tracking-wide font-light mb-8">
+        <p className="text-center sm:text-left text-md sm:text-lg text-[var(--custom-gray-600)] tracking-wide font-light mb-8">
           Analyze your appointment history by time period and student category
         </p>
       </div>
 
-      <div className="bg-custom-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-custom-blue-100 p-6 sm:p-8">
+      <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
           <div className="flex items-center">
             <select
-              className="form-select px-4 py-2 rounded-lg border-2 border-custom-blue-200 focus:border-custom-blue-400 focus:ring-2 focus:ring-custom-blue-200 transition-all duration-200 outline-none bg-custom-white"
+              className="form-select px-4 py-2 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
               onChange={handleGraphTypeChange}
               defaultValue="pie"
             >
@@ -50,7 +50,7 @@ const PastAppointmentGraphs = ({
           {!isBar && (
             <div className="flex items-center mt-4 sm:mt-0">
               <select
-                className="form-select px-4 py-2 rounded-lg border-2 border-custom-blue-200 focus:border-custom-blue-400 focus:ring-2 focus:ring-custom-blue-200 transition-all duration-200 outline-none bg-custom-white"
+                className="form-select px-4 py-2 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                 value={selectedTimePeriod}
                 onChange={handleTimePeriodChange}
               >

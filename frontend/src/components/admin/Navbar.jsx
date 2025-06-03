@@ -63,7 +63,7 @@ const AdminNavbar = () => {
                 setShowDetails(false);
                 toggleMenu();
               }}
-              className="p-2 rounded-full hover:bg-custom-gray-100"
+              className="p-2 rounded-full hover:bg-[var(--custom-gray-100)]"
             >
               {isOpen ? (
                 <AiOutlineClose size={24} />
@@ -72,18 +72,18 @@ const AdminNavbar = () => {
               )}
             </button>
             {isOpen && (
-              <div className="absolute top-16 min-w-40 w-[40%] bg-custom-white rounded-2xl shadow-md p-4">
+              <div className="absolute top-16 min-w-40 w-[40%] bg-[var(--custom-white)] rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
                     <li
-                      className="py-2 border-b text-center border-custom-gray-200"
+                      className="py-2 border-b text-center border-[var(--custom-gray-200)]"
                       key={i}
                     >
                       <button
                         onClick={() => router.push(item.link)}
-                        className={`hover:text-custom-green-500 focus:text-custom-green-500 transition-colors ${
+                        className={`hover:text-[var(--custom-green-500)] focus:text-[var(--custom-green-500)] transition-colors ${
                           location == item.link
-                            ? "underline underline-offset-4 text-custom-admin-text-green decoration-2"
+                            ? "underline underline-offset-4 text-[var(--custom-admin-text-green)] decoration-2"
                             : ""
                         }`}
                       >
@@ -112,8 +112,8 @@ const AdminNavbar = () => {
                 onClick={() => router.push(item.link)}
                 className={`transition-colors ${
                   location == item.link
-                    ? "underline underline-offset-4 text-custom-admin-text-green decoration-2"
-                    : "hover:text-custom-green-500 focus:text-custom-green-500"
+                    ? "underline underline-offset-4 text-[var(--custom-admin-text-green)] decoration-2"
+                    : "hover:text-[var(--custom-green-500)] focus:text-[var(--custom-green-500)]"
                 }`}
               >
                 {item.name}
@@ -135,23 +135,25 @@ const AdminNavbar = () => {
             </button>
 
             <div
-              className={`user-details drop-shadow-xs absolute border-2 border-custom-green-700 rounded-lg top-12 right-5 list-none z-1 ${
+              className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-green-700)] rounded-lg top-12 right-5 list-none z-1 ${
                 showDetails ? "opacity-100 visible" : "opacity-0 invisible"
               }`}
             >
-              <div className="w-64 bg-custom-green-100 rounded-lg shadow-lg p-6">
+              <div className="w-64 bg-[var(--custom-green-100)] rounded-lg shadow-lg p-6">
                 <div className="space-y-4">
                   <div className="text-center space-y-1">
-                    <h3 className="text-lg font-semibold text-custom-green-900">
+                    <h3 className="text-lg font-semibold text-[var(--custom-green-900)]">
                       {username}
                     </h3>
-                    <p className="text-sm text-custom-green-700">{email}</p>
+                    <p className="text-sm text-[var(--custom-green-700)]">
+                      {email}
+                    </p>
                   </div>
 
                   <div className="flex gap-2">
                     <button
                       onClick={() => setShowLogoutModal(true)}
-                      className="flex-1 bg-custom-green-200 hover:bg-custom-green-300 text-custom-green-900 rounded px-4 py-2 text-sm font-medium transition-colors"
+                      className="flex-1 bg-[var(--custom-green-200)] hover:bg-[var(--custom-green-300)] text-[var(--custom-green-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
                     >
                       Logout
                     </button>

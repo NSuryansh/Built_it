@@ -334,24 +334,24 @@ const DoctorPeer = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-custom-white via-custom-gray-50 to-custom-gray-100 text-custom-gray-900">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-[var(--custom-white)] via-[var(--custom-gray-50)] to-[var(--custom-gray-100)] text-[var(--custom-gray-900)]">
       <DoctorNavbar />
       <ToastContainer />
       {/* Desktop Layout */}
       <div className="md:flex h-[calc(100vh-64px)] hidden max-[333px]:overflow-hidden">
-        <div className="md:w-4/12 lg:w-3/12 bg-custom-white border-r border-custom-gray-200 flex flex-col transition-all duration-300">
+        <div className="md:w-4/12 lg:w-3/12 bg-[var(--custom-white)] border-r border-[var(--custom-gray-200)] flex flex-col transition-all duration-300">
           {userList.length > 0 ? (
             <>
-              <div className="p-4 border-b border-custom-gray-200">
+              <div className="p-4 border-b border-[var(--custom-gray-200)]">
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Search users..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-custom-gray-50 border border-custom-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-custom-gray-900 placeholder-custom-gray-500 transition-all duration-200"
+                    className="w-full pl-10 pr-4 py-3 bg-[var(--custom-gray-50)] border border-[var(--custom-gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--custom-blue-400)] text-[var(--custom-gray-900)] placeholder-[var(--custom-gray-500)] transition-all duration-200"
                   />
-                  <Search className="absolute left-3 top-[14px] h-5 w-5 text-blue-500" />
+                  <Search className="absolute left-3 top-[14px] h-5 w-5 text-[var(--custom-blue-500)]" />
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto">
@@ -373,31 +373,33 @@ const DoctorPeer = () => {
             </>
           ) : (
             <div className="text-center p-6 flex flex-col items-center justify-center h-full">
-              <UserCircle2 className="w-16 h-16 text-blue-500 mb-4 animate-pulse" />
-              <h3 className="text-xl font-bold text-custom-gray-900 drop-shadow-sm">
+              <UserCircle2 className="w-16 h-16 text-[var(--custom-blue-500)] mb-4 animate-pulse" />
+              <h3 className="text-xl font-bold text-[var(--custom-gray-900)] drop-shadow-sm">
                 No Conversations Yet
               </h3>
-              <p className="text-custom-gray-600 mt-2">Start chatting with a user.</p>
+              <p className="text-[var(--custom-gray-600)] mt-2">
+                Start chatting with a user.
+              </p>
             </div>
           )}
         </div>
-        <div className="flex flex-col h-full flex-1 bg-gradient-to-b from-custom-gray-50 to-custom-white">
+        <div className="flex flex-col h-full flex-1 bg-gradient-to-b from-[var(--custom-gray-50)] to-[var(--custom-white)]">
           {selectedChat !== null ? (
             <>
-              <div className="p-4 flex items-center justify-between border-b border-custom-gray-200 bg-custom-white shadow-sm">
+              <div className="p-4 flex items-center justify-between border-b border-[var(--custom-gray-200)] bg-[var(--custom-white)] shadow-sm">
                 <div className="flex items-center space-x-3">
-                  <User className="w-8 h-8 text-blue-500" />
+                  <User className="w-8 h-8 text-[var(--custom-blue-500)]" />
                   <div>
-                    <h2 className="text-xl font-bold text-custom-gray-900 drop-shadow-sm">
+                    <h2 className="text-xl font-bold text-[var(--custom-gray-900)] drop-shadow-sm">
                       {userList[selectedChat]?.name}
                     </h2>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedChat(null)} // Closes chat on desktop
-                  className="p-2 hover:bg-custom-gray-100 rounded-full transition-colors duration-200"
+                  className="p-2 hover:bg-[var(--custom-gray-100)] rounded-full transition-colors duration-200"
                 >
-                  <X className="w-6 h-6 text-custom-gray-500" />
+                  <X className="w-6 h-6 text-[var(--custom-gray-500)]" />
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
@@ -411,7 +413,7 @@ const DoctorPeer = () => {
                 ))}
                 <div ref={messagesEndRef} />
               </div>
-              <div className="border-t border-custom-gray-200 p-4 bg-custom-white shadow-sm">
+              <div className="border-t border-[var(--custom-gray-200)] p-4 bg-[var(--custom-white)] shadow-sm">
                 <ChatInput
                   message={message}
                   setMessage={setMessage}
@@ -423,11 +425,11 @@ const DoctorPeer = () => {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center p-6">
-                <MessageSquare className="w-16 h-16 text-blue-500 mx-auto mb-4 animate-bounce" />
-                <h3 className="text-xl font-bold text-custom-gray-900 drop-shadow-sm">
+                <MessageSquare className="w-16 h-16 text-[var(--custom-blue-500)] mx-auto mb-4 animate-bounce" />
+                <h3 className="text-xl font-bold text-[var(--custom-gray-900)] drop-shadow-sm">
                   Select a Conversation
                 </h3>
-                <p className="text-custom-gray-600 mt-2">
+                <p className="text-[var(--custom-gray-600)] mt-2">
                   Choose a user to start chatting.
                 </p>
               </div>
@@ -462,15 +464,15 @@ const DoctorPeer = () => {
           )
         ) : (
           <div className="flex flex-col h-full">
-            <div className="p-4 flex w-full justify-between border-b border-custom-gray-200 bg-custom-white">
-              <h2 className="text-2xl font-bold text-custom-gray-800">
+            <div className="p-4 flex w-full justify-between border-b border-[var(--custom-gray-200)] bg-[var(--custom-white)]">
+              <h2 className="text-2xl font-bold text-[var(--custom-gray-800)]">
                 {userList[selectedChat]?.name || "Select a chat"}
               </h2>
               <button onClick={() => setShowChatList(true)}>
                 <AiOutlineCloseCircle />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-custom-white">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[var(--custom-white)]">
               {showMessages.map((msg, index) => (
                 <ChatMessage
                   key={index}
@@ -481,7 +483,7 @@ const DoctorPeer = () => {
               ))}
               <div ref={messagesEndRef} />
             </div>
-            <div className="flex-none border-t border-custom-gray-200">
+            <div className="flex-none border-t border-[var(--custom-gray-200)]">
               <ChatInput
                 message={message}
                 setMessage={setMessage}

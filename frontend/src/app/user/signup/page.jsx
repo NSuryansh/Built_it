@@ -302,19 +302,21 @@ const SignUp = () => {
     }
   }
   return (
-    <div className="min-h-screen bg-custom-orange-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--custom-orange-50)] flex items-center justify-center p-4">
       <ToastContainer />
-      <div className="max-w-md w-full space-y-2 bg-custom-white p-8 rounded-xl shadow-lg">
+      <div className="max-w-md w-full space-y-2 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
         <div className="text-center">
           <div className="flex justify-center">
-            <div className="p-3 bg-custom-orange-100 rounded-full">
-              <UserPlus className="h-8 w-8 text-custom-orange-500" />
+            <div className="p-3 bg-[var(--custom-orange-100)] rounded-full">
+              <UserPlus className="h-8 w-8 text-[var(--custom-orange-500)]" />
             </div>
           </div>
-          <h2 className="mt-4 text-3xl font-bold text-custom-orange-900">
+          <h2 className="mt-4 text-3xl font-bold text-[var(--custom-orange-900)]">
             Sign Up
           </h2>
-          {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
+          {error && (
+            <p className="mt-2 text-[var(--custom-red-600)] text-sm">{error}</p>
+          )}
         </div>
 
         {/* If OTP has not been sent, show the signup form */}
@@ -324,7 +326,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="username"
-                  className="block text-sm font-medium text-custom-orange-900"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
                   Username
                 </label>
@@ -335,7 +337,7 @@ const SignUp = () => {
                   onChange={handleChange}
                   placeholder="Username"
                   id="username"
-                  className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
                   required
                 />
               </div>
@@ -343,7 +345,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-custom-orange-900"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
                   Email
                 </label>
@@ -354,7 +356,7 @@ const SignUp = () => {
                   value={formData.email}
                   onChange={handleChange}
                   id="email"
-                  className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
                   required
                 />
               </div>
@@ -362,7 +364,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="department"
-                  className="block text-sm font-medium text-custom-orange-900"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
                   Department
                 </label>
@@ -371,7 +373,7 @@ const SignUp = () => {
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent bg-custom-white"
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent bg-[var(--custom-white)]"
                   required
                 >
                   <option value="">Select a department</option>
@@ -404,7 +406,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="mobile"
-                  className="block text-sm font-medium text-custom-orange-900"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
                   Phone Number
                 </label>
@@ -415,7 +417,7 @@ const SignUp = () => {
                   placeholder="Phone Number"
                   value={formData.mobile}
                   onChange={handleChange}
-                  className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
                   required
                 />
               </div>
@@ -423,7 +425,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="altNo"
-                  className="block text-sm font-medium text-custom-orange-900"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
                   Emergency Contact Number
                 </label>
@@ -433,7 +435,7 @@ const SignUp = () => {
                   name="altNo"
                   value={formData.altNo}
                   onChange={handleChange}
-                  className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
                   placeholder="Emergency Contact Number"
                   required
                 />
@@ -442,7 +444,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="gender"
-                  className="block text-sm font-medium text-custom-orange-900"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
                   Gender
                 </label>
@@ -451,7 +453,7 @@ const SignUp = () => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent bg-custom-white"
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent bg-[var(--custom-white)]"
                   required
                 >
                   <option value="">Select gender</option>
@@ -464,7 +466,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-custom-orange-900"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
                   Password
                 </label>
@@ -475,13 +477,13 @@ const SignUp = () => {
                     value={formData.password}
                     onChange={handleChange}
                     id="password"
-                    className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+                    className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
                     placeholder="••••••••"
                     required
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-custom-gray-500 hover:text-custom-blue-900"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-500)] hover:text-[var(--custom-blue-900)]"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -498,7 +500,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-custom-orange-900"
+                  className="block text-sm font-medium text-[var(--custom-orange-900)]"
                 >
                   Confirm Password
                 </label>
@@ -509,13 +511,13 @@ const SignUp = () => {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+                    className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
                     placeholder="••••••••"
                     required
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-custom-gray-500 hover:text-custom-orange-900"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-500)] hover:text-[var(--custom-orange-900)]"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -531,7 +533,7 @@ const SignUp = () => {
             <button
               onClick={handleInitialSignup}
               disabled={isLoading}
-              className="w-full flex justify-center items-center mt-6 py-3 px-4 bg-custom-orange-400 text-custom-white rounded-lg hover:bg-custom-orange-500 transition-colors focus:outline-none focus:ring-2 focus:ring-custom-orange-500 focus:ring-offset-2"
+              className="w-full flex justify-center items-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
             >
               {isLoading ? <Loader /> : <>Signup</>}
             </button>
@@ -548,13 +550,13 @@ const SignUp = () => {
               placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border border-custom-orange-200 rounded-lg focus:ring-2 focus:ring-custom-orange-500 focus:border-transparent"
+              className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
             />
             <button
               onClick={handleOTPVerification}
               disabled={isLoading}
               type="button"
-              className="w-full flex items-center justify-center mt-6 py-3 px-4 bg-custom-orange-400 text-custom-white rounded-lg hover:bg-custom-orange-500 transition-colors focus:outline-none focus:ring-2 focus:ring-custom-orange-500 focus:ring-offset-2"
+              className="w-full flex items-center justify-center mt-6 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2"
             >
               {isLoading ? <Loader /> : <>Verify OTP &amp; Complete Signup</>}
             </button>
@@ -565,7 +567,7 @@ const SignUp = () => {
           Already have an account?{" "}
           <button
             onClick={() => router.push("/user/login")}
-            className="underline font-bold text-custom-orange-500"
+            className="underline font-bold text-[var(--custom-orange-500)]"
           >
             Login here
           </button>

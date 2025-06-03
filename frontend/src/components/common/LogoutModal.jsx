@@ -3,50 +3,53 @@ import { LogOut } from "lucide-react";
 const LogoutModal = ({ handleLogout, handleCancel, theme = "orange" }) => {
   const themes = {
     orange: {
-      iconColor: "text-custom-orange-500",
-      titleColor: "text-custom-orange-800",
-      messageColor: "text-custom-orange-600",
+      iconColor: "text-[var(--custom-orange-500)]",
+      titleColor: "text-[var(--custom-orange-800)]",
+      messageColor: "text-[var(--custom-orange-600)]",
       primaryButtonBg:
-        "bg-gradient-to-r from-custom-orange-500 to-custom-orange-600",
+        "bg-gradient-to-r from-[var(--custom-orange-500)] to-[var(--custom-orange-600)]",
       primaryButtonHover:
-        "hover:from-custom-orange-600 hover:to-custom-orange-700",
-      secondaryButtonBg: "bg-custom-white",
-      secondaryButtonText: "text-custom-orange-600",
-      secondaryButtonHover: "hover:bg-custom-orange-50",
-      secondaryButtonBorder: "border-custom-orange-200",
-      borderColor: "border-custom-orange-200/50",
-      bgGradient: "bg-gradient-to-br from-custom-orange-50 to-custom-white",
+        "hover:from-[var(--custom-orange-600)] hover:to-[var(--custom-orange-700)]",
+      secondaryButtonBg: "bg-[var(--custom-white)]",
+      secondaryButtonText: "text-[var(--custom-orange-600)]",
+      secondaryButtonHover: "hover:bg-[var(--custom-orange-50)]",
+      secondaryButtonBorder: "border-[var(--custom-orange-200)]",
+      borderColor: "border-[var(--custom-orange-200)]/50",
+      bgGradient:
+        "bg-gradient-to-br from-[var(--custom-orange-50)] to-[var(--custom-white)]",
       backdropGradient: "bg-opacity-30",
     },
     blue: {
-      iconColor: "text-custom-blue-500",
-      titleColor: "text-custom-blue-800",
-      messageColor: "text-custom-blue-600",
+      iconColor: "text-[var(--custom-blue-500)]",
+      titleColor: "text-[var(--custom-blue-800)]",
+      messageColor: "text-[var(--custom-blue-600)]",
       primaryButtonBg:
-        "bg-gradient-to-r from-custom-blue-500 to-custom-blue-600",
-      primaryButtonHover: "hover:from-custom-blue-600 hover:to-custom-blue-700",
-      secondaryButtonBg: "bg-custom-white",
-      secondaryButtonText: "text-custom-blue-600",
-      secondaryButtonHover: "hover:bg-custom-blue-50",
-      secondaryButtonBorder: "border-custom-blue-200",
-      borderColor: "border-custom-blue-200/50",
-      bgGradient: "bg-gradient-to-br from-custom-blue-50 to-custom-white",
+        "bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-600)]",
+      primaryButtonHover:
+        "hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-700)]",
+      secondaryButtonBg: "bg-[var(--custom-white)]",
+      secondaryButtonText: "text-[var(--custom-blue-600)]",
+      secondaryButtonHover: "hover:bg-[var(--custom-blue-50)]",
+      secondaryButtonBorder: "border-[var(--custom-blue-200)]",
+      borderColor: "border-[var(--custom-blue-200)]/50",
+      bgGradient:
+        "bg-gradient-to-br from-[var(--custom-blue-50)] to-[var(--custom-white)]",
       backdropGradient: "bg-opacity-30",
     },
     green: {
-      iconColor: "text-custom-green-700",
-      titleColor: "text-custom-green-700",
-      messageColor: "text-custom-green-700",
+      iconColor: "text-[var(--custom-green-700)]",
+      titleColor: "text-[var(--custom-green-700)]",
+      messageColor: "text-[var(--custom-green-700)]",
       primaryButtonBg:
-        "bg-gradient-to-r from-custom-green-700 to-custom-green-600",
+        "bg-gradient-to-r from-[var(--custom-green-700)] to-[var(--custom-green-600)]",
       primaryButtonHover:
-        "hover:from-custom-green-700 hover:to-custom-green-700",
-      secondaryButtonBg: "bg-custom-white",
-      secondaryButtonText: "text-custom-green-600",
-      secondaryButtonHover: "hover:bg-custom-green-50",
-      secondaryButtonBorder: "border-custom-green-200",
-      borderColor: "border-custom-green-200/50",
-      bgGradient: "bg-gradient-to-br from-custom-green-50 to-amber-50",
+        "hover:from-[var(--custom-green-700)] hover:to-[var(--custom-green-700)]",
+      secondaryButtonBg: "bg-[var(--custom-white)]",
+      secondaryButtonText: "text-[var(--custom-green-600)]",
+      secondaryButtonHover: "hover:bg-[var(--custom-green-50)]",
+      secondaryButtonBorder: "border-[var(--custom-green-200)]",
+      borderColor: "border-[var(--custom-green-200)]/50",
+      bgGradient: "bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-yellow-50)]",
       backdropGradient: "bg-opacity-30",
     },
   };
@@ -95,13 +98,13 @@ const LogoutModal = ({ handleLogout, handleCancel, theme = "orange" }) => {
           </button>
           <button
             onClick={handleLogout}
-            className={`${currentTheme.primaryButtonBg} ${currentTheme.primaryButtonHover} px-8 py-3 rounded-full text-custom-white font-semibold text-sm uppercase tracking-wide shadow-lg transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 flex-1`}
+            className={`${currentTheme.primaryButtonBg} ${currentTheme.primaryButtonHover} px-8 py-3 rounded-full text-[var(--custom-white)] font-semibold text-sm uppercase tracking-wide shadow-lg transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 flex-1`}
           >
             Logout
           </button>
         </div>
 
-        <p className="text-xs text-custom-gray-500 mt-6">
+        <p className="text-xs text-[var(--custom-gray-500)] mt-6">
           You'll be securely logged out.
         </p>
       </div>

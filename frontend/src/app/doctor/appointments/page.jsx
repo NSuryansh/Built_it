@@ -102,20 +102,20 @@ const DoctorAppointment = () => {
     ];
 
     return (
-      <div className="mt-12 bg-custom-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-custom-blue-100 p-6 sm:p-8">
+      <div className="mt-12 bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-custom-blue-600 mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[var(--custom-blue-600)] mb-2">
               Past Appointments Analytics
             </h2>
-            <p className="text-custom-gray-600">
+            <p className="text-[var(--custom-gray-600)]">
               View distribution of students by academic program
             </p>
           </div>
           <div className="mt-4 sm:mt-0">
             <select
               onChange={handleGraphTypeChange}
-              className="px-4 py-2 rounded-lg border-2 border-custom-blue-200 focus:border-custom-blue-400 focus:ring-2 focus:ring-custom-blue-200 transition-all duration-200 outline-none bg-custom-white"
+              className="px-4 py-2 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
             >
               <option value="pie">Pie Chart</option>
               <option value="bar">Bar Chart</option>
@@ -127,9 +127,9 @@ const DoctorAppointment = () => {
           {timePeriods.map((period) => (
             <div
               key={period}
-              className="bg-custom-white/50 backdrop-blur-sm rounded-xl p-4 border border-custom-blue-100 shadow-md"
+              className="bg-[var(--custom-white)]/50 backdrop-blur-sm rounded-xl p-4 border border-[var(--custom-blue-100)] shadow-md"
             >
-              <h3 className="text-xl font-semibold text-custom-blue-600 mb-4 text-center">
+              <h3 className="text-xl font-semibold text-[var(--custom-blue-600)] mb-4 text-center">
                 {period}
               </h3>
               <div className="h-64">
@@ -466,51 +466,51 @@ const DoctorAppointment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-custom-white via-custom-purple-50 to-custom-teal-50">
+    <div className="min-h-screen bg-gradient-to-b from-[var(--custom-white)] via-[var(--custom-purple-50)] to-[var(--custom-teal-50)]">
       <DoctorNavbar />
       <div className="container mx-auto px-4 sm:px-8 lg:px-4 xl:px-16 py-5 md:py-10 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
           <div className="space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
-                <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-custom-blue-600">
+                <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
                   Current Appointments
                 </h1>
-                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-custom-gray-600 tracking-wide font-light">
+                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-[var(--custom-gray-600)] tracking-wide font-light">
                   Seamlessly manage your upcoming appointments
                 </p>
               </div>
             </div>
 
             {curr.length > 0 ? (
-              <div className="bg-custom-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-custom-blue-100 overflow-y-scroll overflow-x-hidden max-h-150">
+              <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-scroll overflow-x-hidden max-h-150">
                 {curr.map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="p-4 sm:p-8 border-b border-custom-blue-100 hover:bg-custom-blue-50/50 transition-all duration-500"
+                    className="p-4 sm:p-8 border-b border-[var(--custom-blue-100)] hover:bg-[var(--custom-blue-50)]/50 transition-all duration-500"
                   >
                     <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-7">
-                      <div className="h-16 w-16 rounded-full bg-custom-blue-100 flex items-center justify-center shadow-lg shrink-0">
-                        <User className="h-8 w-8 text-custom-blue-600" />
+                      <div className="h-16 w-16 rounded-full bg-[var(--custom-blue-100)] flex items-center justify-center shadow-lg shrink-0">
+                        <User className="h-8 w-8 text-[var(--custom-blue-600)]" />
                       </div>
                       <div className="flex-1 mt-4 sm:mt-0 scale-90 sm:scale-100 space-y-6">
                         <div className="space-y-4">
-                          <div className="flex items-center text-lg text-custom-gray-800">
-                            <CircleUser className="h-6 w-6 mr-4 text-custom-blue-600" />
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <CircleUser className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             <span className="font-semibold tracking-tight">
                               {appointment.user.username}
                             </span>
                           </div>
-                          <div className="flex items-center text-lg text-custom-gray-800">
-                            <Clock className="h-6 w-6 mr-4 text-custom-blue-600" />
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             {format(appointment.dateTime, "dd MMM h:mm a")}
                           </div>
-                          <div className="flex items-center text-lg text-custom-gray-800">
-                            <Phone className="h-6 w-6 mr-4 text-custom-blue-600" />
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             {appointment.user.mobile}
                           </div>
-                          <div className="flex items-start text-lg text-custom-gray-800">
-                            <FileText className="h-6 w-6 mr-4 mt-1 text-custom-blue-600" />
+                          <div className="flex items-start text-lg text-[var(--custom-gray-800)]">
+                            <FileText className="h-6 w-6 mr-4 mt-1 text-[var(--custom-blue-600)]" />
                             <span>{appointment.reason}</span>
                           </div>
                         </div>
@@ -518,14 +518,14 @@ const DoctorAppointment = () => {
                           {completedNotes[appointment.id] !== undefined ? (
                             <button
                               onClick={() => deleteApp(appointment)}
-                              className="px-6 py-2.5 bg-custom-red-500 text-custom-white font-semibold rounded-full shadow-lg hover:bg-custom-red-600 transform hover:scale-105 transition-all duration-300"
+                              className="px-6 py-2.5 bg-[var(--custom-red-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-red-600)] transform hover:scale-105 transition-all duration-300"
                             >
                               Done
                             </button>
                           ) : (
                             <button
                               onClick={() => handleMarkAsDone(appointment.id)}
-                              className="px-6 py-2.5 bg-custom-blue-500 text-custom-white font-semibold rounded-full shadow-lg hover:bg-custom-blue-600 transform hover:scale-105 transition-all duration-300"
+                              className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
                             >
                               Mark as Done
                             </button>
@@ -533,7 +533,7 @@ const DoctorAppointment = () => {
                           {selectedAppointment !== appointment.id && (
                             <button
                               onClick={() => handleReschedule(appointment)}
-                              className="px-6 py-2.5 bg-custom-gray-200 text-custom-gray-800 font-semibold rounded-full shadow-lg hover:bg-custom-gray-300 transform hover:scale-105 transition-all duration-300"
+                              className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                             >
                               Reschedule
                             </button>
@@ -544,14 +544,14 @@ const DoctorAppointment = () => {
                                 `/doctor/history?username=${appointment.user.username}`
                               )
                             }
-                            className="px-6 py-2.5 bg-custom-gray-200 text-custom-gray-800 font-semibold rounded-full shadow-lg hover:bg-custom-gray-300 transform hover:scale-105 transition-all duration-300"
+                            className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                           >
                             Check History
                           </button>
                         </div>
                         {selectedAppointment === appointment.id && (
-                          <div className="mt-6 bg-custom-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-custom-blue-200">
-                            <h2 className="text-xl font-semibold mb-4 text-custom-blue-600">
+                          <div className="mt-6 bg-[var(--custom-white)]/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-[var(--custom-blue-200)]">
+                            <h2 className="text-xl font-semibold mb-4 text-[var(--custom-blue-600)]">
                               Select Date and Time
                             </h2>
                             <div>
@@ -565,7 +565,7 @@ const DoctorAppointment = () => {
                                   handleDateChange(newDate);
                                   fetchAvailableSlots(newDate);
                                 }}
-                                className="w-full px-4 py-3 rounded-lg border-2 border-custom-blue-200 focus:border-custom-blue-400 focus:ring-2 focus:ring-custom-blue-200 transition-all duration-200 outline-none bg-custom-white"
+                                className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                                 required
                               >
                                 <option value="">Select Date</option>
@@ -598,7 +598,7 @@ const DoctorAppointment = () => {
                                     selectedDate.split("T")[0];
                                   handleTimeChange(e);
                                 }}
-                                className="w-full px-4 py-3 rounded-lg border-2 border-custom-blue-200 focus:border-custom-blue-400 focus:ring-2 focus:ring-custom-blue-200 transition-all duration-200 outline-none bg-custom-white"
+                                className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                               >
                                 <option value="">Select Time</option>
                                 {Array.isArray(slots) &&
@@ -618,7 +618,7 @@ const DoctorAppointment = () => {
                               <button
                                 disabled={isRescheduling}
                                 onClick={() => handleReschedule(appointment)}
-                                className="px-6 mt-4 py-2.5 bg-custom-gray-200 text-custom-gray-800 font-semibold rounded-full shadow-lg hover:bg-custom-gray-300 transform hover:scale-105 transition-all duration-300"
+                                className="px-6 mt-4 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                               >
                                 {isRescheduling ? (
                                   <Loader className="mx-auto" />
@@ -634,7 +634,7 @@ const DoctorAppointment = () => {
                             <input
                               type="text"
                               placeholder="Enter completion notes..."
-                              className="w-full p-4 bg-custom-white/50 backdrop-blur-sm border border-custom-blue-200 rounded-xl focus:ring-2 focus:ring-custom-blue-300 focus:border-custom-blue-400 transition-all duration-300 text-custom-gray-800 placeholder-custom-gray-500"
+                              className="w-full p-4 bg-[var(--custom-white)]/50 backdrop-blur-sm border border-[var(--custom-blue-200)] rounded-xl focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300 text-[var(--custom-gray-800)] placeholder-[var(--custom-gray-500)]"
                               value={note}
                               onChange={handleNoteChange}
                             />
@@ -646,14 +646,14 @@ const DoctorAppointment = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col bg-custom-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-custom-blue-100 items-center justify-center py-8 px-4">
-                <div className="h-24 w-24 rounded-full bg-custom-blue-50 flex items-center justify-center mb-6">
-                  <Clock className="h-12 w-12 text-custom-blue-400" />
+              <div className="flex flex-col bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-md border border-[var(--custom-blue-100)] items-center justify-center py-8 px-4">
+                <div className="h-24 w-24 rounded-full bg-[var(--custom-blue-50)] flex items-center justify-center mb-6">
+                  <Clock className="h-12 w-12 text-[var(--custom-blue-400)]" />
                 </div>
-                <h3 className="text-xl font-semibold text-custom-gray-800 mb-2">
+                <h3 className="text-xl font-semibold text-[var(--custom-gray-800)] mb-2">
                   No Current Appointments
                 </h3>
-                <p className="text-custom-gray-600 text-center max-w-md">
+                <p className="text-[var(--custom-gray-600)] text-center max-w-md">
                   No appointments scheduled at the moment.
                 </p>
               </div>
@@ -663,58 +663,58 @@ const DoctorAppointment = () => {
           <div className="mt-5 lg:mt-0 space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
-                <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-custom-blue-600">
+                <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
                   Incoming Requests
                 </h1>
-                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-custom-gray-600 tracking-wide font-light">
+                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-[var(--custom-gray-600)] tracking-wide font-light">
                   Review and accept new appointment requests with ease
                 </p>
               </div>
             </div>
 
             {appointments.length > 0 ? (
-              <div className="bg-custom-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-custom-blue-100 overflow-y-scroll overflow-x-hidden max-h-150">
+              <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-scroll overflow-x-hidden max-h-150">
                 {appointments.map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="p-4 sm:p-8 border-b border-custom-blue-100 hover:bg-custom-blue-50/50 transition-all duration-500"
+                    className="p-4 sm:p-8 border-b border-[var(--custom-blue-100)] hover:bg-custom-blue-50/50 transition-all duration-500"
                   >
                     <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-7">
-                      <div className="h-16 w-16 rounded-full bg-custom-blue-100 flex items-center justify-center shadow-lg shrink-0">
-                        <User className="h-8 w-8 text-custom-blue-600" />
+                      <div className="h-16 w-16 rounded-full bg-[var(--custom-blue-100)] flex items-center justify-center shadow-lg shrink-0">
+                        <User className="h-8 w-8 text-[var(--custom-blue-600)]" />
                       </div>
                       <div className="flex-1 mt-4 sm:mt-0 scale-90 sm:scale-100 space-y-6">
                         <div className="space-y-4">
-                          <div className="flex items-center text-lg text-custom-gray-800">
-                            <CircleUser className="h-6 w-6 mr-4 text-custom-blue-600" />
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <CircleUser className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             <span className="font-semibold tracking-tight">
                               {appointment.user.username}
                             </span>
                           </div>
-                          <div className="flex items-center text-lg text-custom-gray-800">
-                            <Clock className="h-6 w-6 mr-4 text-custom-blue-600" />
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             {format(appointment.dateTime, "dd MMM h:mm a")}
                           </div>
-                          <div className="flex items-center text-lg text-custom-gray-800">
-                            <Phone className="h-6 w-6 mr-4 text-custom-blue-600" />
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             {appointment.user.mobile}
                           </div>
-                          <div className="flex items-start text-lg text-custom-gray-800">
-                            <FileText className="h-6 w-6 mr-4 mt-1 text-custom-blue-600" />
+                          <div className="flex items-start text-lg text-[var(--custom-gray-800)]">
+                            <FileText className="h-6 w-6 mr-4 mt-1 text-[var(--custom-blue-600)]" />
                             <span>{appointment.reason}</span>
                           </div>
                         </div>
                         <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
                           <button
                             onClick={() => acceptApp(appointment)}
-                            className="px-6 py-2.5 bg-custom-blue-500 text-custom-white font-semibold rounded-full shadow-lg hover:bg-custom-blue-600 transform hover:scale-105 transition-all duration-300"
+                            className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
                           >
                             Accept
                           </button>
                           {selectedAppointment !== appointment.id && (
                             <button
                               onClick={() => handleReschedule(appointment)}
-                              className="px-6 py-2.5 bg-custom-gray-200 text-custom-gray-800 font-semibold rounded-full shadow-lg hover:bg-custom-gray-300 transform hover:scale-105 transition-all duration-300"
+                              className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                             >
                               Reschedule
                             </button>
@@ -725,14 +725,14 @@ const DoctorAppointment = () => {
                                 `/doctor/history?username=${appointment.user.username}`
                               )
                             }
-                            className="px-6 py-2.5 bg-custom-gray-200 text-custom-gray-800 font-semibold rounded-full shadow-lg hover:bg-custom-gray-300 transform hover:scale-105 transition-all duration-300"
+                            className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                           >
                             Check History
                           </button>
                         </div>
                         {selectedAppointment === appointment.id && (
-                          <div className="mt-6 bg-custom-white/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-custom-blue-200">
-                            <h2 className="text-xl font-semibold mb-4 text-custom-blue-600">
+                          <div className="mt-6 bg-[var(--custom-white)]/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-[var(--custom-blue-200)]">
+                            <h2 className="text-xl font-semibold mb-4 text-[var(--custom-blue-600)]">
                               Select Date and Time
                             </h2>
                             <div>
@@ -746,7 +746,7 @@ const DoctorAppointment = () => {
                                   handleDateChange(newDate);
                                   fetchAvailableSlots(newDate);
                                 }}
-                                className="w-full px-4 py-3 rounded-lg border-2 border-custom-blue-200 focus:border-custom-blue-400 focus:ring-2 focus:ring-custom-blue-200 transition-all duration-200 outline-none bg-custom-white"
+                                className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                                 required
                               >
                                 <option value="">Select Date</option>
@@ -779,7 +779,7 @@ const DoctorAppointment = () => {
                                     selectedDate.split("T")[0];
                                   handleTimeChange(e);
                                 }}
-                                className="w-full px-4 py-3 rounded-lg border-2 border-custom-blue-200 focus:border-custom-blue-400 focus:ring-2 focus:ring-custom-blue-200 transition-all duration-200 outline-none bg-custom-white"
+                                className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                               >
                                 <option value="">Select Time</option>
                                 {Array.isArray(slots) &&
@@ -799,7 +799,7 @@ const DoctorAppointment = () => {
                               <button
                                 disabled={isRescheduling}
                                 onClick={() => handleReschedule(appointment)}
-                                className="px-6 mt-4 py-2.5 bg-custom-gray-200 text-custom-gray-800 font-semibold rounded-full shadow-lg hover:bg-custom-gray-300 transform hover:scale-105 transition-all duration-300"
+                                className="px-6 mt-4 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                               >
                                 {isRescheduling ? (
                                   <Loader className="mx-auto" />
@@ -816,14 +816,14 @@ const DoctorAppointment = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col bg-custom-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-custom-blue-100 items-center justify-center py-8 px-4">
-                <div className="h-24 w-24 rounded-full bg-custom-blue-50 flex items-center justify-center mb-6">
-                  <Clock className="h-12 w-12 text-custom-blue-400" />
+              <div className="flex flex-col bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-md border border-[var(--custom-blue-100)] items-center justify-center py-8 px-4">
+                <div className="h-24 w-24 rounded-full bg-[var(--custom-blue-50)] flex items-center justify-center mb-6">
+                  <Clock className="h-12 w-12 text-[var(--custom-blue-400)]" />
                 </div>
-                <h3 className="text-xl font-semibold text-custom-gray-800 mb-2">
+                <h3 className="text-xl font-semibold text-[var(--custom-gray-800)] mb-2">
                   No Incoming Requests
                 </h3>
-                <p className="text-custom-gray-600 text-center max-w-md">
+                <p className="text-[var(--custom-gray-600)] text-center max-w-md">
                   You don't have any requests at the moment.
                 </p>
               </div>

@@ -6,7 +6,7 @@ const ChatInput = ({ message, setMessage, handleSubmit, isDoc = false }) => {
     <>
       <form
         onSubmit={handleSubmit}
-        className="border-t border-custom-gray-200 p-4 bg-custom-white"
+        className="border-t border-[var(--custom-gray-200)] p-4 bg-[var(--custom-white)]"
       >
         <div className="flex items-center gap-3">
           <input
@@ -16,16 +16,16 @@ const ChatInput = ({ message, setMessage, handleSubmit, isDoc = false }) => {
               setMessage(e.target.value);
             }}
             placeholder="Type a message..."
-            className={`flex-1 w-[95%] rounded-full border border-custom-gray-200 px-4 py-2 focus:outline-none focus:border-${
-              isDoc ? "custom-blue-500" : "custom-orange-500"
+            className={`flex-1 w-[95%] rounded-full border border-[var(--custom-gray-200)] px-4 py-2 focus:outline-none focus:border-${
+              isDoc ? "[var(--custom-blue-500)]" : "[var(--custom-orange-500)]"
             }`}
           />
           <button
             type="submit"
-            className={`p-2 cursor-pointer text-custom-white bg-gradient-to-r ${
+            className={`p-2 cursor-pointer text-[var(--custom-white)] bg-gradient-to-r ${
               isDoc
-                ? "from-custom-blue-500 to-cyan-500"
-                : "from-custom-orange-500 to-pink-500"
+                ? "from-[var(--custom-blue-500)] to-cyan-500"
+                : "from-[var(--custom-orange-500)] to-pink-500"
             } rounded-full hover:opacity-90 transition-opacity`}
           >
             <Send className="w-5 h-5" />

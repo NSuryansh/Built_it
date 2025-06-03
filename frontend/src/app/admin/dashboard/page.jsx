@@ -212,24 +212,24 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-custom-green-50 to-custom-teal-50">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-[var(--custom-green-50)] to-custom-teal-50">
       <AdminNavbar />
       <ToastContainer />
 
       <main className="flex-grow p-6 md:p-8 max-w-7xl mx-auto w-full">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-custom-green-900 mb-4 md:mb-0">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--custom-green-900)] mb-4 md:mb-0">
             Dashboard Overview
           </h1>
 
           <div className="flex items-center gap-4">
             <button
               onClick={handleRefresh}
-              className="p-2 rounded-full hover:bg-custom-green-100 transition-colors"
+              className="p-2 rounded-full hover:bg-[var(--custom-green-100)] transition-colors"
               title="Refresh data"
             >
               <RefreshCw
-                className={`w-5 h-5 text-custom-green-700 ${
+                className={`w-5 h-5 text-[var(--custom-green-700)] ${
                   isLoading ? "animate-spin" : ""
                 }`}
               />
@@ -240,15 +240,15 @@ const AdminDashboard = () => {
                 <select
                   onChange={handleGraphTypeChange}
                   value={isPie ? "pie" : "bar"}
-                  className="appearance-none bg-custom-white pl-8 pr-4 py-2 rounded-lg border border-custom-green-200 text-custom-green-800 focus:outline-none focus:ring-2 focus:ring-custom-green-500 cursor-pointer"
+                  className="appearance-none bg-[var(--custom-white)] pl-8 pr-4 py-2 rounded-lg border border-[var(--custom-green-200)] text-[var(--custom-green-800)] focus:outline-none focus:ring-2 focus:ring-[var(--custom-green-500)] cursor-pointer"
                 >
                   <option value="pie">Pie Charts</option>
                   <option value="bar">Bar Graph</option>
                 </select>
                 {isPie ? (
-                  <PieChartIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-custom-green-600" />
+                  <PieChartIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--custom-green-600)]" />
                 ) : (
-                  <BarChart3 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-custom-green-600" />
+                  <BarChart3 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--custom-green-600)]" />
                 )}
               </div>
 
@@ -260,7 +260,7 @@ const AdminDashboard = () => {
                       ? "Acad Program"
                       : "Gender Ratio"
                   }
-                  className="appearance-none bg-custom-white px-4 py-2 rounded-lg border border-custom-green-200 text-custom-green-800 focus:outline-none focus:ring-2 focus:ring-custom-green-500 cursor-pointer"
+                  className="appearance-none bg-[var(--custom-white)] px-4 py-2 rounded-lg border border-[var(--custom-green-200)] text-[var(--custom-green-800)] focus:outline-none focus:ring-2 focus:ring-[var(--custom-green-500)] cursor-pointer"
                 >
                   <option value="Acad Program">Academic Program</option>
                   <option value="Gender Ratio">Gender Ratio</option>
@@ -270,12 +270,12 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-custom-white rounded-2xl shadow-xl p-6 transition-all duration-300 hover:shadow-2xl">
+        <div className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-6 transition-all duration-300 hover:shadow-2xl">
           {selectedView === "academic" ? (
             // Academic Program View
             isPie ? (
               <div className="space-y-8">
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-custom-green-800 mb-6">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-[var(--custom-green-800)] mb-6">
                   Appointments Distribution by Academic Program
                 </h2>
 
@@ -290,9 +290,9 @@ const AdminDashboard = () => {
                     return (
                       <div
                         key={doc}
-                        className="bg-gradient-to-br from-custom-green-50 to-custom-teal-50 p-6 rounded-xl"
+                        className="bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-teal-50)] p-6 rounded-xl"
                       >
-                        <h3 className="text-xl font-semibold mb-4 text-custom-green-900 text-center">
+                        <h3 className="text-xl font-semibold mb-4 text-[var(--custom-green-900)] text-center">
                           Dr. {doc}
                         </h3>
                         <ResponsiveContainer width="100%" height={300}>
@@ -327,7 +327,7 @@ const AdminDashboard = () => {
               </div>
             ) : (
               <div className="space-y-6">
-                <h2 className="text-2xl font-semibold text-custom-green-800 mb-6">
+                <h2 className="text-2xl font-semibold text-[var(--custom-green-800)] mb-6">
                   Appointments Distribution Overview
                 </h2>
                 <div className="h-[500px]">
@@ -378,7 +378,7 @@ const AdminDashboard = () => {
           ) : // Gender Ratio View
           isPie ? (
             <div className="space-y-8">
-              <h2 className="text-2xl font-semibold text-custom-green-800 mb-6">
+              <h2 className="text-2xl font-semibold text-[var(--custom-green-800)] mb-6">
                 Gender Ratio of Appointments
               </h2>
 
@@ -393,9 +393,9 @@ const AdminDashboard = () => {
                   return (
                     <div
                       key={doc}
-                      className="bg-gradient-to-br from-custom-green-50 to-custom-teal-50 p-6 rounded-xl"
+                      className="bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-teal-50)] p-6 rounded-xl"
                     >
-                      <h3 className="text-xl font-semibold mb-4 text-custom-green-900 text-center">
+                      <h3 className="text-xl font-semibold mb-4 text-[var(--custom-green-900)] text-center">
                         Dr. {doc}
                       </h3>
                       <ResponsiveContainer width="100%" height={300}>
@@ -430,7 +430,7 @@ const AdminDashboard = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-custom-green-800 mb-6">
+              <h2 className="text-2xl font-semibold text-[var(--custom-green-800)] mb-6">
                 Gender Ratio Overview
               </h2>
               <div className="h-[500px]">

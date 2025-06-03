@@ -38,17 +38,17 @@ const Stress = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-custom-orange-50 to-custom-red-50">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--custom-orange-50)] to-[var(--custom-red-50)]">
       <Navbar />
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-custom-yellow-400 to-custom-orange-500 text-custom-white py-16">
+      <div className="relative overflow-hidden bg-gradient-to-r from-[var(--custom-yellow-400)] to-[var(--custom-orange-500)] text-[var(--custom-white)] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4">
               Your Mental Wellness Journey
             </h1>
-            <p className="text-md md:text-xl text-center text-custom-red-100 max-w-3xl mx-auto">
+            <p className="text-md md:text-xl text-center text-[var(--custom-red-100)] max-w-3xl mx-auto">
               Discover resources, techniques, and exercises to help manage
               stress and improve your mental well-being
             </p>
@@ -60,8 +60,8 @@ const Stress = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         {/* Articles Section */}
-        <section className="bg-custom-white rounded-2xl shadow-xl p-8 mb-12 transform transition-all duration-500 hover:shadow-2xl">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
+        <section className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8 mb-12 transform transition-all duration-500 hover:shadow-2xl">
+          <h2 className="text-2xl md:text-3xl font-bold text-[var(--custom-gray-900)] mb-8 text-center">
             Expert Resources
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -73,31 +73,31 @@ const Stress = () => {
                   href={article.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group block bg-gradient-to-br from-custom-white to-custom-orange-50 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  className="group block bg-gradient-to-br from-[var(--custom-white)] to-[var(--custom-orange-50)] rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
                   <div className="p-6">
                     <div className="flex flex-col sm:flex-row items-start gap-4 mb-4">
-                      <div className="p-3 self-center sm:self-start rounded-lg bg-gradient-to-br from-custom-yellow-100 to-custom-orange-500 text-custom-white">
+                      <div className="p-3 self-center sm:self-start rounded-lg bg-gradient-to-br from-[var(--custom-yellow-100)]to-[var(--custom-orange-500)] text-[var(--custom-white)]">
                         <Icon className="w-6 h-6" />
                       </div>
                       <div className="flex">
                         <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-gray-900 group-hover:text-custom-red-500 transition-colors duration-300">
+                          <h3 className="text-xl font-semibold text-[var(--custom-gray-900)] group-hover:text-[var(--custom-red-500)] transition-colors duration-300">
                             {article.title}
                           </h3>
-                          <p className="text-sm text-gray-600 mt-2">
+                          <p className="text-sm text-[var(--custom-gray-600)] mt-2">
                             {article.description}
                           </p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-custom-red-500 transform group-hover:translate-x-1 transition-all duration-300" />
+                        <ChevronRight className="w-5 h-5 text-[var(--custom-gray-400)] group-hover:text-[var(--custom-red-500)] transform group-hover:translate-x-1 transition-all duration-300" />
                       </div>
                     </div>
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between text-sm border-t border-gray-100 pt-4 mt-4">
-                      <span className="flex items-center text-custom-red-500">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between text-sm border-t border-[var(--custom-gray-100)] pt-4 mt-4">
+                      <span className="flex items-center text-[var(--custom-red-500)]">
                         <Building className="w-4 h-4 mr-2" />
                         {article.source}
                       </span>
-                      <span className="flex items-center text-gray-500">
+                      <span className="flex items-center text-[var(--custom-gray-500)]">
                         <Clock className="w-4 h-4 mr-2" />
                         {article.readTime}
                       </span>
@@ -114,17 +114,17 @@ const Stress = () => {
           {videoSections.map((section, index) => (
             <section
               key={index}
-              className="bg-custom-white rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:shadow-2xl"
+              className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:shadow-2xl"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 rounded-lg bg-gradient-to-br from-custom-yellow-100 to-custom-orange-500 text-custom-white">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-[var(--custom-yellow-100)]to-[var(--custom-orange-500)] text-[var(--custom-white)]">
                   <Youtube className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="text-2xl font-bold text-[var(--custom-gray-900)]">
                     {section.title}
                   </h2>
-                  <p className="text-gray-600 mt-1">{section.description}</p>
+                  <p className="text-[var(--custom-gray-600)] mt-1">{section.description}</p>
                 </div>
               </div>
               <VideoSection videos={section.videos} />
