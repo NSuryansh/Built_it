@@ -96,32 +96,32 @@ const History = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-custom-blue-50 via-custom-white to-custom-teal-50">
       <ToastContainer />
       <DoctorNavbar />
 
       <main className="max-w-7xl xl:min-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 overflow-hidden">
+        <div className="bg-custom-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-custom-blue-100/50 overflow-hidden">
           <div className="p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-100 rounded-xl">
-                  <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+                <div className="p-2 bg-custom-blue-100 rounded-xl">
+                  <Users className="h-5 w-5 sm:h-6 sm:w-6 text-custom-blue-600" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-violet-500">
+                <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-custom-blue-500 to-custom-purple-500">
                   Patient Directory
                 </h2>
               </div>
               <div className="relative w-full sm:w-64 md:w-96">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-custom-gray-400" />
                 </div>
                 <input
                   type="text"
                   placeholder="Search patients by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-black transition-all duration-200 placeholder-gray-400 text-sm sm:text-base"
+                  className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-custom-gray-200 focus:outline-none focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent bg-custom-white/50 backdrop-black transition-all duration-200 placeholder-custom-gray-400 text-sm sm:text-base"
                 />
               </div>
             </div>
@@ -129,8 +129,8 @@ const History = () => {
 
           <div className="px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8 space-y-4">
             {filteredUsers.length === 0 ? (
-              <div className="text-center py-12 bg-gray-50 rounded-xl">
-                <p className="text-gray-500">
+              <div className="text-center py-12 bg-custom-gray-50 rounded-xl">
+                <p className="text-custom-gray-500">
                   No patients match your search criteria
                 </p>
               </div>

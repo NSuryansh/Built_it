@@ -161,7 +161,7 @@ const DoctorLanding = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-custom-gray-50 to-custom-blue-50">
       <DoctorNavbar className="shadow-sm" />
       <ToastContainer position="top-right" />
 
@@ -174,47 +174,47 @@ const DoctorLanding = () => {
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <motion.div
-            className="mb-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
+            className="mb-8 bg-custom-white rounded-2xl p-6 shadow-sm border border-custom-gray-100"
             variants={itemVariants}
           >
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-lg font-semibold text-blue-800 mb-1">
+                <h1 className="text-lg font-semibold text-custom-blue-800 mb-1">
                   {greeting},
                 </h1>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-800 mb-2">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-custom-blue-800 mb-2">
                   Dr. {localStorage.getItem("username")}
                 </h2>
-                <p className="text-gray-600 flex items-center">
+                <p className="text-custom-gray-600 flex items-center">
                   <Clock className="h-4 w-4 mr-2" />
                   {format(new Date(), "EEEE, dd MMM yyyy")}
                 </p>
               </div>
               <div className="hidden md:flex items-center space-x-4">
                 <motion.div
-                  className="flex items-center p-3 bg-blue-50 rounded-xl"
+                  className="flex items-center p-3 bg-custom-blue-50 rounded-xl"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <Calendar className="h-6 w-6 text-blue-600" />
+                  <Calendar className="h-6 w-6 text-custom-blue-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-blue-900">
+                    <p className="text-sm font-medium text-custom-blue-900">
                       Upcoming Appointments
                     </p>
-                    <p className="text-2xl font-bold text-blue-600">
+                    <p className="text-2xl font-bold text-custom-blue-600">
                       {appointments.length}
                     </p>
                   </div>
                 </motion.div>
                 <motion.div
-                  className="flex items-center p-3 bg-green-50 rounded-xl"
+                  className="flex items-center p-3 bg-custom-green-50 rounded-xl"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <Activity className="h-6 w-6 text-green-600" />
+                  <Activity className="h-6 w-6 text-custom-green-600" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-green-900">
+                    <p className="text-sm font-medium text-custom-green-900">
                       Upcoming Events
                     </p>
-                    <p className="text-2xl font-bold text-green-600">
+                    <p className="text-2xl font-bold text-custom-green-600">
                       {events.length}
                     </p>
                   </div>
@@ -226,9 +226,9 @@ const DoctorLanding = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Calendar Card */}
             <motion.div className="lg:col-span-1" variants={itemVariants}>
-              <div className="bg-white rounded-2xl shadow-sm p-6 h-full border border-gray-100 hover:shadow-lg transition-shadow duration-300">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex justify-center items-center">
-                  <CalendarIcon className="h-5 w-5 mr-2 text-blue-600" />
+              <div className="bg-custom-white rounded-2xl shadow-sm p-6 h-full border border-custom-gray-100 hover:shadow-lg transition-shadow duration-300">
+                <h2 className="text-xl font-semibold text-custom-gray-900 mb-4 flex justify-center items-center">
+                  <CalendarIcon className="h-5 w-5 mr-2 text-custom-blue-600" />
                   Calendar
                 </h2>
                 <DoctorCalendar className="w-full" />
@@ -237,15 +237,15 @@ const DoctorLanding = () => {
 
             {/* Appointments Card */}
             <motion.div className="lg:col-span-2" variants={itemVariants}>
-              <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+              <div className="bg-custom-white rounded-2xl shadow-sm p-6 border border-custom-gray-100 hover:shadow-lg transition-shadow duration-300">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                    <Bell className="h-5 w-5 mr-2 text-blue-600" />
+                  <h2 className="text-xl font-semibold text-custom-gray-900 flex items-center">
+                    <Bell className="h-5 w-5 mr-2 text-custom-blue-600" />
                     Upcoming Appointments
                   </h2>
                   <Link
                     href="/doctor/appointments"
-                    className="flex items-center px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all duration-300 font-medium"
+                    className="flex items-center px-4 py-2 bg-custom-blue-50 text-custom-blue-600 rounded-lg hover:bg-custom-blue-100 transition-all duration-300 font-medium"
                   >
                     View All <ChevronRight className="h-4 w-4 ml-1" />
                   </Link>
@@ -261,24 +261,24 @@ const DoctorLanding = () => {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ delay: index * 0.1 }}
-                          className="flex items-center p-4 bg-white border border-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-blue-200 group"
+                          className="flex items-center p-4 bg-custom-white border border-custom-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-custom-blue-200 group"
                         >
-                          <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
-                            <User className="h-6 w-6 text-blue-600" />
+                          <div className="h-12 w-12 rounded-full bg-custom-blue-50 flex items-center justify-center flex-shrink-0 group-hover:bg-custom-blue-100 transition-colors">
+                            <User className="h-6 w-6 text-custom-blue-600" />
                           </div>
                           <div className="ml-4 flex-1 min-w-0">
-                            <h3 className="font-medium text-gray-900 truncate group-hover:text-blue-700 transition-colors">
+                            <h3 className="font-medium text-custom-gray-900 truncate group-hover:text-custom-blue-700 transition-colors">
                               {appointment.patientName}
                             </h3>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-custom-gray-600">
                               {appointment.type}
                             </p>
                           </div>
                           <div className="ml-4 text-right flex-shrink-0">
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-sm font-medium text-custom-gray-900">
                               {appointment.time}
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-custom-gray-600">
                               {appointment.date}
                             </p>
                           </div>
@@ -287,14 +287,14 @@ const DoctorLanding = () => {
                     </AnimatePresence>
                   </div>
                 ) : (
-                  <div className="flex flex-col bg-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-blue-100 items-center justify-center py-8 px-4">
-                    <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center mb-6">
-                      <Clock className="h-12 w-12 text-blue-400" />
+                  <div className="flex flex-col bg-custom-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-custom-blue-100 items-center justify-center py-8 px-4">
+                    <div className="h-24 w-24 rounded-full bg-custom-blue-50 flex items-center justify-center mb-6">
+                      <Clock className="h-12 w-12 text-custom-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    <h3 className="text-lg font-semibold text-custom-gray-800 mb-2">
                       No Current Appointments
                     </h3>
-                    <p className="text-gray-600 text-center max-w-md">
+                    <p className="text-custom-gray-600 text-center max-w-md">
                       You don't have any appointments scheduled at the moment.
                     </p>
                   </div>
@@ -304,10 +304,10 @@ const DoctorLanding = () => {
 
             {/* Events Card */}
             <motion.div className="lg:col-span-3" variants={itemVariants}>
-              <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+              <div className="bg-custom-white rounded-2xl shadow-sm p-6 border border-custom-gray-100 hover:shadow-lg transition-shadow duration-300">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                    <CalendarIcon className="h-5 w-5 mr-2 text-blue-600" />
+                  <h2 className="text-xl font-semibold text-custom-gray-900 flex items-center">
+                    <CalendarIcon className="h-5 w-5 mr-2 text-custom-blue-600" />
                     Upcoming Events
                   </h2>
                 </div>
@@ -322,23 +322,23 @@ const DoctorLanding = () => {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ delay: index * 0.1 }}
-                          className="p-4 bg-white border border-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-blue-200 group"
+                          className="p-4 bg-custom-white border border-custom-gray-100 rounded-xl hover:shadow-md transition-all cursor-pointer hover:border-custom-blue-200 group"
                         >
                           <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-medium text-gray-900 truncate group-hover:text-blue-700 transition-colors">
+                            <h3 className="font-medium text-custom-gray-900 truncate group-hover:text-custom-blue-700 transition-colors">
                               {event.title}
                             </h3>
-                            <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full group-hover:bg-blue-100 transition-colors">
+                            <span className="px-2 py-1 bg-custom-blue-50 text-custom-blue-700 text-xs font-medium rounded-full group-hover:bg-custom-blue-100 transition-colors">
                               {event.type}
                             </span>
                           </div>
-                          <div className="space-y-2 text-sm text-gray-600">
+                          <div className="space-y-2 text-sm text-custom-gray-600">
                             <div className="flex items-center">
-                              <CalendarIcon className="h-4 w-4 mr-2 text-blue-500" />
+                              <CalendarIcon className="h-4 w-4 mr-2 text-custom-blue-500" />
                               <span>{event.date}</span>
                             </div>
                             <div className="flex items-center">
-                              <MapPin className="h-4 w-4 mr-2 text-blue-500" />
+                              <MapPin className="h-4 w-4 mr-2 text-custom-blue-500" />
                               <span className="truncate">{event.location}</span>
                             </div>
                           </div>
@@ -347,14 +347,14 @@ const DoctorLanding = () => {
                     </AnimatePresence>
                   </div>
                 ) : (
-                  <div className="flex flex-col bg-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-blue-100 items-center justify-center py-8 px-4">
-                    <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center mb-6">
-                      <Clock className="h-12 w-12 text-blue-400" />
+                  <div className="flex flex-col bg-custom-white/80 backdrop-blur-lg rounded-3xl shadow-md border border-custom-blue-100 items-center justify-center py-8 px-4">
+                    <div className="h-24 w-24 rounded-full bg-custom-blue-50 flex items-center justify-center mb-6">
+                      <Clock className="h-12 w-12 text-custom-blue-400" />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    <h3 className="text-xl font-semibold text-custom-gray-800 mb-2">
                       No Upcoming Events
                     </h3>
-                    <p className="text-gray-600 text-center max-w-md">
+                    <p className="text-custom-gray-600 text-center max-w-md">
                       There are no upcoming events scheduled.
                     </p>
                   </div>

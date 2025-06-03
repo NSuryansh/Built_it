@@ -26,7 +26,7 @@ const CircularLoader = ({
           height: size,
         }}
       />
-      {text && <p className="mt-4 text-blue-800 font-medium">{text}</p>}
+      {text && <p className="mt-4 text-custom-blue-800 font-medium">{text}</p>}
     </div>
   );
 };
@@ -119,19 +119,19 @@ const DoctorLogin = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-blue-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-custom-blue-50 flex items-center justify-center p-4">
         <ToastContainer />
-        <div className="max-w-md w-full space-y-2 bg-[var(--custom-white)] p-8 rounded-xl shadow-lg">
+        <div className="max-w-md w-full space-y-2 bg-custom-white p-8 rounded-xl shadow-lg">
           <div className="text-center">
             <div className="flex justify-center">
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Lock className="h-8 w-8 text-blue-600" />
+              <div className="p-3 bg-custom-blue-100 rounded-full">
+                <Lock className="h-8 w-8 text-custom-blue-600" />
               </div>
             </div>
-            <h2 className="mt-4 text-3xl font-bold text-blue-900">
+            <h2 className="mt-4 text-3xl font-bold text-custom-blue-900">
               Doctor Login
             </h2>
-            {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
+            {error && <p className="mt-2 text-custom-red-600 text-sm">{error}</p>}
           </div>
 
           <form className="mt-8 space-y-6" onSubmit={handlelogin}>
@@ -139,7 +139,7 @@ const DoctorLogin = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-blue-900"
+                  className="block text-sm font-medium text-custom-blue-900"
                 >
                   Email
                 </label>
@@ -149,7 +149,7 @@ const DoctorLogin = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={handleEnterKey}
-                  className="mt-1 w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="mt-1 w-full px-4 py-2 border border-custom-blue-200 rounded-lg focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent"
                   placeholder="doctor@example.com"
                   required
                 />
@@ -158,7 +158,7 @@ const DoctorLogin = () => {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-blue-900"
+                  className="block text-sm font-medium text-custom-blue-900"
                 >
                   Password
                 </label>
@@ -169,13 +169,13 @@ const DoctorLogin = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={handleEnterKey}
-                    className="mt-1 w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="mt-1 w-full px-4 py-2 border border-custom-blue-200 rounded-lg focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent"
                     placeholder="••••••••"
                     required
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-900"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-custom-blue-900"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -184,7 +184,7 @@ const DoctorLogin = () => {
                 <button
                   type="button"
                   onClick={() => setShowForgotModal(true)}
-                  className="mt-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                  className="mt-1 text-sm text-custom-blue-600 hover:text-custom-blue-700 transition-colors"
                 >
                   Forgot Password?
                 </button>
@@ -195,7 +195,7 @@ const DoctorLogin = () => {
               onKeyDown={handleEnterKey}
               disabled={isLoading}
               type="submit"
-              className="w-full py-3 px-4 bg-blue-600 text-[var(--custom-white)] rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center min-h-[48px]"
+              className="w-full py-3 px-4 bg-custom-blue-600 text-custom-white rounded-lg hover:bg-custom-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-custom-blue-500 focus:ring-offset-2 flex items-center justify-center min-h-[48px]"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center w-[24px] h-[24px]">
@@ -221,14 +221,14 @@ const DoctorLogin = () => {
               Login as a&nbsp;
               <button
                 onClick={() => router.push("/user/login")}
-                className="underline font-bold text-blue-500"
+                className="underline font-bold text-custom-blue-500"
               >
                 User
               </button>
               &nbsp;or&nbsp;
               <button
                 onClick={() => router.push("/admin/login")}
-                className="underline font-bold text-blue-500"
+                className="underline font-bold text-custom-blue-500"
               >
                 Admin
               </button>
@@ -236,9 +236,9 @@ const DoctorLogin = () => {
           </div>
         </div>
         {showForgotModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white z-50">
-            <div className="bg-[var(--custom-white)] p-6 rounded-lg shadow-lg max-w-sm w-full">
-              <h3 className="text-xl font-bold text-blue-900 mb-4">
+          <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-custom-blue-50 to-custom-white z-50">
+            <div className="bg-custom-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <h3 className="text-xl font-bold text-custom-blue-900 mb-4">
                 Reset Password
               </h3>
               <p className="mb-4 text-sm">Please enter your email address:</p>
@@ -247,7 +247,7 @@ const DoctorLogin = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your.email@example.com"
-                className="w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-custom-blue-200 rounded-lg focus:ring-2 focus:ring-custom-blue-500 focus:border-transparent"
               />
               <div className="mt-4 flex justify-end">
                 <button
@@ -258,7 +258,7 @@ const DoctorLogin = () => {
                 </button>
                 <button
                   onClick={handleForgotPassword}
-                  className="px-4 py-2 text-sm bg-blue-400 text-[var(--custom-white)] rounded hover:bg-blue-500 transition-colors"
+                  className="px-4 py-2 text-sm bg-custom-blue-400 text-custom-white rounded hover:bg-custom-blue-500 transition-colors"
                 >
                   Submit
                 </button>
