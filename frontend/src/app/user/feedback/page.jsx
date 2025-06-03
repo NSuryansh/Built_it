@@ -223,8 +223,8 @@ const FeedbackPage = () => {
       {submitted ? (
         <div className="bg-custom-white rounded-2xl shadow-xl p-10 text-center">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-10 h-10 text-green-600" />
+            <div className="w-16 h-16 bg-custom-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-10 h-10 text-custom-green-600" />
             </div>
           </div>
           <h2 className="text-2xl font-bold text-custom-gray-800 mb-4">

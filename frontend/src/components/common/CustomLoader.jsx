@@ -8,10 +8,10 @@ const CustomLoader = ({ color, text }) => {
   const loaderText = text || "Loading your wellness journey...";
   const backColorProps =
     color === "green"
-      ? "from-emerald-50 to-teal-50"
+      ? "from-custom-green-50 to-custom-teal-50"
       : color === "blue"
-      ? "from-gray-50 to-blue-50"
-      : "from-[var(--custom-orange-50)] to-red-50";
+      ? "from-custom-gray-50 to-custom-blue-50"
+      : "from-custom-orange-50 to-custom-red-50";
 
   return (
     <div
@@ -28,7 +28,7 @@ const CustomLoader = ({ color, text }) => {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="mt-4 text-gray-600 font-medium"
+        className="mt-4 text-custom-gray-600 font-medium"
       >
         {loaderText}
       </p>

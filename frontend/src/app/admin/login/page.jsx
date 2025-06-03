@@ -252,7 +252,7 @@ const AdminLogin = () => {
             )}
           </button>
         </form>
-        <div className="flex justify-center mt-4 mb-2 items-center text-login-light-text">
+        <div className="flex justify-center mt-4 mb-2 items-center text-custom-gray-500">
           <hr className="flex-1/3" />
           <div className="flex-1/3 text-center">OR</div>
           <hr className="flex-1/3" />

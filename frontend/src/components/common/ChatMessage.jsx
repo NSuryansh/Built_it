@@ -22,16 +22,16 @@ const ChatMessage = ({ message, isSent, isDoc = false }) => {
           isSent
             ? `bg-gradient-to-r ${
                 isDoc
-                  ? "from-blue-500 to-cyan-500"
-                  : "from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)]"
-              } text-[var(--custom-white)]`
-            : "bg-[var(--mp-custom-gray-200)] text-[var(--mp-custom-gray-800)]"
+                  ? "from-custom-blue-500 to-cyan-500"
+                  : "from-custom-orange-500 to-pink-500"
+              } text-custom-white`
+            : "bg-custom-gray-200 text-custom-gray-800"
         }`}
       >
         <p className="text-sm">{message}</p>
       </div>
     </div>
   );
-}
+};
 
 export default ChatMessage;

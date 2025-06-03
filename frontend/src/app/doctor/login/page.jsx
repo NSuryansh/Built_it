@@ -131,7 +131,9 @@ const DoctorLogin = () => {
             <h2 className="mt-4 text-3xl font-bold text-custom-blue-900">
               Doctor Login
             </h2>
-            {error && <p className="mt-2 text-custom-red-600 text-sm">{error}</p>}
+            {error && (
+              <p className="mt-2 text-custom-red-600 text-sm">{error}</p>
+            )}
           </div>
 
           <form className="mt-8 space-y-6" onSubmit={handlelogin}>
@@ -211,7 +213,7 @@ const DoctorLogin = () => {
               )}
             </button>
           </form>
-          <div className="flex justify-center mt-4 mb-2 items-center text-[var(--login-light-text)]">
+          <div className="flex justify-center mt-4 mb-2 items-center text-[var(--custom-gray-500)]">
             <hr className="flex-1/3" />
             <div className="flex-1/3 text-center">OR</div>
             <hr className="flex-1/3" />

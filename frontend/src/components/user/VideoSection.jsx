@@ -6,7 +6,7 @@ const VideoSection = ({ videos }) => {
       {videos.map((videoUrl, index) => (
         <div
           key={index}
-          className="relative aspect-video rounded-lg overflow-hidden border-2 border-pink-300 shadow-lg hover:border-pink-400 transition-all"
+          className="relative aspect-video rounded-lg overflow-hidden border-2 border-custom-purple-300 shadow-lg hover:border-custom-purple-400 transition-all"
         >
           <iframe
             src={videoUrl}

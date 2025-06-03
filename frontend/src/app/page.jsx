@@ -48,10 +48,10 @@ const App = () => {
         <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center flex flex-col items-center">
-              <h1 className="lg:text-5xl md:text-4xl text-3xl font-bold text-gray-900 mb-6">
+              <h1 className="lg:text-5xl md:text-4xl text-3xl font-bold text-custom-gray-900 mb-6">
                 Find Peace - Get Support - Thrive
               </h1>
-              <p className="md:text-xl sm:text-md text-gray-600 mb-8 max-w-3xl mx-auto">
+              <p className="md:text-xl sm:text-md text-custom-gray-600 mb-8 max-w-3xl mx-auto">
                 At Vitality we provide a safe space for your mental wellness
                 journey. Whether you are seeking mindfulness techniques,
                 emotional support, or expert guidance, we are here to help.
@@ -78,7 +78,7 @@ const App = () => {
                 <h3 className="text-xl font-semibold mb-4">
                   Mental Health Support
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-custom-gray-600">
                   Access professional counseling and therapy services from the
                   comfort of your home.
                 </p>
@@ -90,7 +90,7 @@ const App = () => {
                 <h3 className="text-xl font-semibold mb-4">
                   Community Connection
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-custom-gray-600">
                   Join support groups and connect with others who understand
                   your journey.
                 </p>
@@ -102,7 +102,7 @@ const App = () => {
                 <h3 className="text-xl font-semibold mb-4">
                   Wellness Resources
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-custom-gray-600">
                   Access guided meditations, exercises, and tools for your
                   mental wellness.
                 </p>

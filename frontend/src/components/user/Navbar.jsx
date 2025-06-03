@@ -107,7 +107,7 @@ const Navbar = () => {
         location === "/user/appointments" ||
         location === "/user/events"
           ? "bg-transparent"
-          : "bg-[var(--custom-orange-100)]"
+          : "bg-custom-orange-100"
       } z-20`}
     >
       <ToastContainer />
@@ -120,7 +120,7 @@ const Navbar = () => {
                 setShowNotifications(false);
                 toggleMenu();
               }}
-              className="p-2 rounded-full hover:bg-orange-300"
+              className="p-2 rounded-full hover:bg-custom-orange-300"
             >
               {isOpen ? (
                 <AiOutlineClose size={24} />
@@ -129,19 +129,19 @@ const Navbar = () => {
               )}
             </button>
             {isOpen && (
-              <div className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4">
+              <div className="absolute top-16 min-w-40 w-[40%] bg-custom-white rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
                     <li
-                      className="py-2 border-b text-center border-gray-200"
+                      className="py-2 border-b text-center border-custom-gray-200"
                       key={i}
                     >
                       <button
                         onClick={() => router.push(item.link)}
-                        className={`hover:text-custom-orange-500 focus:text-custom-orange-500 transition-colors ${
+                        className={` transition-colors ${
                           location === item.link
-                            ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
-                            : ""
+                            ? "underline underline-offset-4 text-custom-orange-500 decoration-2"
+                            : "hover:text-custom-orange-500 focus:text-custom-orange-500"
                         }`}
                       >
                         {item.name}
@@ -169,7 +169,7 @@ const Navbar = () => {
                 onClick={() => router.push(item.link)}
                 className={`hover:text-custom-orange-500 focus:text-custom-orange-500 transition-colors ${
                   location === item.link
-                    ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
+                    ? "underline underline-offset-4 text-custom-orange-500 decoration-2"
                     : ""
                 }`}
               >
@@ -210,19 +210,21 @@ const Navbar = () => {
                       : "opacity-0 translate-y-2 pointer-events-none"
                   }`}
                 >
-                  <div className="w-80 bg-white rounded-2xl shadow-lg overflow-hidden border-[#FFE4CC] border-2">
-                    <div className="bg-[#FFF5EB] px-6 py-4">
+                  <div className="w-80 bg-custom-white rounded-2xl shadow-lg overflow-hidden border-custom-orange-100 border-2">
+                    <div className="bg-custom-orange-50 px-6 py-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-[#FFE4CC] rounded-full flex items-center justify-center">
-                          <span className="text-lg font-semibold text-[#FF6B35]">
+                        <div className="w-12 h-12 bg-custom-orange-100 rounded-full flex items-center justify-center">
+                          <span className="text-lg font-semibold text-custom-orange-500">
                             {username.charAt(0)}
                           </span>
                         </div>
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-800">
+                          <h3 className="text-lg font-semibold text-custom-gray-800">
                             {username}
                           </h3>
-                          <p className="text-sm text-gray-600">{email}</p>
+                          <p className="text-sm text-custom-gray-600">
+                            {email}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -231,18 +233,18 @@ const Navbar = () => {
                     <div className="px-6 py-4 space-y-4">
                       <div className="space-y-3">
                         <div className="space-y-1">
-                          <label className="text-xs font-medium text-gray-500">
+                          <label className="text-xs font-medium text-custom-gray-500">
                             Phone Number
                           </label>
-                          <p className="text-sm font-medium text-gray-800">
+                          <p className="text-sm font-medium text-custom-gray-800">
                             {phoneNumber}
                           </p>
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs font-medium text-gray-500">
+                          <label className="text-xs font-medium text-custom-gray-500">
                             Emergency Contact
                           </label>
-                          <p className="text-sm font-medium text-gray-800">
+                          <p className="text-sm font-medium text-custom-gray-800">
                             {altPhoneNumber}
                           </p>
                         </div>
@@ -254,20 +256,20 @@ const Navbar = () => {
                           onClick={() => {
                             router.push("/user/appointments");
                           }}
-                          className="w-full px-4 py-2 text-sm font-medium text-white bg-[#fe855a] rounded-lg hover:bg-[#FF6B35] transition-colors duration-200"
+                          className="w-full px-4 py-2 text-sm font-medium text-custom-white bg-custom-orange-400 rounded-lg hover:bg-custom-orange-500 transition-colors duration-200"
                         >
                           Appointments
                         </button>
                         <div className="grid grid-cols-2 gap-2">
                           <button
                             onClick={() => router.push("/user/modify_profile")}
-                            className="px-4 py-2 text-sm font-medium text-[#FF6B35] bg-[#FFF5EB] rounded-lg hover:bg-[#FFE4CC] transition-colors duration-200"
+                            className="px-4 py-2 text-sm font-medium text-custom-orange-500 bg-custom-orange-50 rounded-lg hover:bg-custom-orange-100 transition-colors duration-200"
                           >
                             Modify Profile
                           </button>
                           <button
                             onClick={() => setShowLogoutModal(true)}
-                            className="px-4 py-2 text-sm font-medium text-[#FF6B35] bg-[#FFF5EB] rounded-lg hover:bg-[#FFE4CC] transition-colors duration-200"
+                            className="px-4 py-2 text-sm font-medium text-custom-orange-500 bg-custom-orange-50 rounded-lg hover:bg-custom-orange-100 transition-colors duration-200"
                           >
                             Logout
                           </button>
@@ -280,7 +282,7 @@ const Navbar = () => {
             ) : (
               <button
                 onClick={() => router.push("/user/login")}
-                className="px-4 py-2 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded font-medium"
+                className="px-4 py-2 bg-custom-orange-200 hover:bg-custom-orange-300 text-custom-orange-900 rounded font-medium"
               >
                 Login
               </button>

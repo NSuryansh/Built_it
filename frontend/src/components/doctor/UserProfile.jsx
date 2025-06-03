@@ -75,14 +75,14 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-blue-100/50 overflow-hidden">
+    <div className="bg-custom-white rounded-xl shadow-sm border border-custom-blue-100/50 overflow-hidden">
       <div className="py-6 px-6 sm:px-8 sm:py-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-custom-gray-900">
               {user.username}
             </h2>
-            <p className="text-sm text-gray-500 mt-1">Patient ID: {user.id}</p>
+            <p className="text-sm text-custom-gray-500 mt-1">Patient ID: {user.id}</p>
           </div>
           <div className="">
             {isEditing ? (
@@ -92,12 +92,12 @@ const UserProfile = () => {
                   value={roomNumber}
                   onChange={(e) => setRoomNumber(e.target.value)}
                   placeholder="Room #"
-                  className="border border-gray-300 rounded px-2 py-1 text-sm w-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border border-custom-gray-300 rounded px-2 py-1 text-sm w-24 focus:outline-none focus:ring-2 focus:ring-custom-blue-500"
                   autoFocus
                 />
                 <button
                   onClick={handleSaveRoom}
-                  className="bg-blue-500 text-white rounded px-3 py-1 text-sm hover:bg-blue-600 transition-colors duration-200"
+                  className="bg-custom-blue-500 text-custom-white rounded px-3 py-1 text-sm hover:bg-custom-blue-600 transition-colors duration-200"
                 >
                   Done
                 </button>
@@ -105,18 +105,18 @@ const UserProfile = () => {
             ) : (
               <div className="flex items-center">
                 {roomNumber && (
-                  <span className="text-sm text-gray-700 mr-2">
+                  <span className="text-sm text-custom-gray-700 mr-2">
                     Room: <span className="font-medium">{roomNumber}</span>
                   </span>
                 )}
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="text-blue-500 hover:text-blue-700 text-sm"
+                  className="text-custom-blue-500 hover:text-custom-blue-700 text-sm"
                 >
                   {roomNumber ? "Edit" : "Add Room #"}
                 </button>
                 {isSaved && (
-                  <span className="ml-2 text-green-500 text-xs animate-fade-in-out">
+                  <span className="ml-2 text-custom-green-500 text-xs animate-fade-in-out">
                     Saved!
                   </span>
                 )}
@@ -127,18 +127,18 @@ const UserProfile = () => {
 
         <div className="mt-8">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <UserIcon className="h-5 w-5 mr-2 text-blue-500" />
+            <h3 className="text-lg font-semibold text-custom-gray-900 mb-4 flex items-center">
+              <UserIcon className="h-5 w-5 mr-2 text-custom-blue-500" />
               Personal Information
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-blue-50/50 rounded-lg p-3">
-                <p className="text-xs text-gray-500 mb-1">Roll No.</p>
+              <div className="bg-custom-blue-50/50 rounded-lg p-3">
+                <p className="text-xs text-custom-gray-500 mb-1">Roll No.</p>
                 <p className="font-medium">{user.rollNo}</p>
               </div>
-              <div className="bg-blue-50/50 rounded-lg p-3">
-                <p className="text-xs text-gray-500 mb-1">Gender</p>
+              <div className="bg-custom-blue-50/50 rounded-lg p-3">
+                <p className="text-xs text-custom-gray-500 mb-1">Gender</p>
                 <p className="font-medium">{user.gender}</p>
               </div>
             </div>
@@ -146,34 +146,34 @@ const UserProfile = () => {
             <div className="space-y-3">
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0">
                 <div className="flex items-center w-full sm:w-1/2">
-                  <Mail className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                  <Mail className="h-5 w-5 text-custom-blue-500 mr-3 mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Email</p>
+                    <p className="text-xs text-custom-gray-500 mb-0.5">Email</p>
                     <p className="font-medium">{user.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center w-full sm:w-1/2">
-                  <Phone className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                  <Phone className="h-5 w-5 text-custom-blue-500 mr-3 mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Phone</p>
+                    <p className="text-xs text-custom-gray-500 mb-0.5">Phone</p>
                     <p className="font-medium">{user.mobile}</p>
                   </div>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0">
                 <div className="flex items-center w-full sm:w-1/2">
-                  <PhoneCallIcon className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                  <PhoneCallIcon className="h-5 w-5 text-custom-blue-500 mr-3 mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">
+                    <p className="text-xs text-custom-gray-500 mb-0.5">
                       Alternate Number
                     </p>
                     <p className="font-medium">{user.alt_mobile}</p>
                   </div>
                 </div>
                 <div className="flex items-center w-full sm:w-1/2">
-                  <Book className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                  <Book className="h-5 w-5 text-custom-blue-500 mr-3 mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">
+                    <p className="text-xs text-custom-gray-500 mb-0.5">
                       Academic Program
                     </p>
                     <p className="font-medium">{user.acadProg}</p>

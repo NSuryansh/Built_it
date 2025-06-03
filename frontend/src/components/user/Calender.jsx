@@ -40,9 +40,12 @@ const Calendar = ({ onDateSelect }) => {
   useEffect(() => {
     const PastEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/common/getPastEvents", {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          "http://localhost:3000/common/getPastEvents",
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const data = await response.json();
         setPastEvents(
           data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd"))
@@ -88,22 +91,22 @@ const Calendar = ({ onDateSelect }) => {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="p-4 sm:p-8 md:p-4 lg:p-6 bg-white rounded-xl shadow-lg max-w-md w-full">
+      <div className="p-4 sm:p-8 md:p-4 lg:p-6 bg-custom-white rounded-xl shadow-lg max-w-md w-full">
         <div className="flex justify-between items-center mb-6">
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
-            className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
+            className="p-2 rounded-lg bg-custom-gray-200 hover:bg-custom-gray-300 transition-all"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+            <ChevronLeft className="w-5 h-5 text-custom-gray-700" />
           </button>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-custom-gray-900">
             {format(currentMonth, "MMMM yyyy")}
           </h2>
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, 30))}
-            className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all"
+            className="p-2 rounded-lg bg-custom-gray-200 hover:bg-custom-gray-300 transition-all"
           >
-            <ChevronRight className="w-5 h-5 text-gray-700" />
+            <ChevronRight className="w-5 h-5 text-custom-gray-700" />
           </button>
         </div>
 
@@ -111,7 +114,7 @@ const Calendar = ({ onDateSelect }) => {
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayLabel) => (
             <div
               key={dayLabel}
-              className="font-medium text-gray-500 text-center"
+              className="font-medium text-custom-gray-500 text-center"
             >
               {dayLabel}
             </div>
@@ -133,24 +136,24 @@ const Calendar = ({ onDateSelect }) => {
                   transition-all duration-200 text-sm font-medium
                   ${
                     isSameMonth(dayItem, currentMonth)
-                      ? "text-gray-900"
-                      : "text-gray-400"
+                      ? "text-custom-gray-900"
+                      : "text-custom-gray-400"
                   }
                   ${
                     isPastEvent && !isToday
-                      ? "bg-red-500 text-white hover:bg-red-600"
+                      ? "bg-custom-red-500 text-custom-white hover:bg-custom-red-600"
                       : isFutureEvent && !isToday
-                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      ? "bg-custom-blue-500 text-custom-white hover:bg-custom-blue-600"
                       : ""
                   }
                   ${
                     isToday && isPastEvent
-                      ? "ring-2 ring-black text-white bg-blue-500 hover:bg-blue-600 ring-offset-2 font-bold"
+                      ? "ring-2 ring-black text-custom-white bg-custom-blue-500 hover:bg-custom-blue-600 ring-offset-2 font-bold"
                       : ""
                   }
                   ${
                     !isToday && !isPastEvent && !isFutureEvent
-                      ? "hover:bg-gray-100"
+                      ? "hover:bg-custom-gray-100"
                       : ""
                   }
                   ${
@@ -160,7 +163,7 @@ const Calendar = ({ onDateSelect }) => {
                   }
                   ${
                     isSameDay(dayItem, selectedDate) && !isToday
-                      ? "ring-2 ring-blue-600"
+                      ? "ring-2 ring-custom-blue-600"
                       : ""
                   }
                 `}
@@ -174,7 +177,7 @@ const Calendar = ({ onDateSelect }) => {
               >
                 {format(dayItem, "d")}
                 {(isPastEvent || isFutureEvent) && (
-                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white" />
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-custom-white" />
                 )}
               </button>
             );
@@ -183,19 +186,21 @@ const Calendar = ({ onDateSelect }) => {
 
         <div className="mt-6 flex gap-4 justify-center text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <span className="text-gray-600">Past Events</span>
+            <div className="w-3 h-3 bg-custom-red-500 rounded-full"></div>
+            <span className="text-custom-gray-600">Past Events</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-            <span className="text-gray-600">Future Events</span>
+            <div className="w-3 h-3 bg-custom-blue-500 rounded-full"></div>
+            <span className="text-custom-gray-600">Future Events</span>
           </div>
         </div>
 
         <a href={linkAcadCalender} target="_blank">
           <div className="flex gap-2 w-[100%] justify-center mx-auto mt-3 items-center">
             <Link size={15} />
-            <div className="text-sm text-gray-600">Academic Calendar</div>
+            <div className="text-sm text-custom-gray-600">
+              Academic Calendar
+            </div>
           </div>
         </a>
       </div>
