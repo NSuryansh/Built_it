@@ -96,7 +96,7 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
   }
 });
 
-adminRouter.post("/login", authorizeRoles("admin"), async (req, res) => {
+adminRouter.post("/login", async (req, res) => {
   // console.log(req.body);
   const emailId = req.body["email"];
   const password = req.body["password"];

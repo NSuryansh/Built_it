@@ -10,7 +10,7 @@ const Footer = ({ color }) => {
             <h2
               className={`text-xl font-bold ${
                 color === "orange"
-                  ? "text-[var(--custom-primary-orange)]"
+                  ? "text-custom-orange-500"
                   : color === "green"
                   ? "text-[var(--custom-primary-green)]"
                   : "text-[var(--custom-primary-blue)]"
@@ -35,7 +35,7 @@ const Footer = ({ color }) => {
                 rel="noopener noreferrer"
                 className={`flex items-center space-x-2 text-sm text-gray-500 hover:${
                   color === "orange"
-                    ? "text-[var(--custom-primary-orange)]"
+                    ? "text-custom-orange-500"
                     : color === "green"
                     ? "text-[var(--custom-primary-green)]"
                     : "text-[var(--custom-primary-blue)]"
@@ -50,7 +50,7 @@ const Footer = ({ color }) => {
                 rel="noopener noreferrer"
                 className={`flex items-center space-x-2 text-sm text-gray-500 hover:${
                   color === "orange"
-                    ? "text-[var(--custom-primary-orange)]"
+                    ? "text-custom-orange-500"
                     : color === "green"
                     ? "text-[var(--custom-primary-green)]"
                     : "text-[var(--custom-primary-blue)]"
@@ -77,7 +77,7 @@ const Footer = ({ color }) => {
                   href="mailto:counselling@iiti.ac.in"
                   className={`hover:${
                     color === "orange"
-                      ? "text-[var(--custom-primary-orange)]"
+                      ? "text-custom-orange-500"
                       : color === "green"
                       ? "text-[var(--custom-primary-green)]"
                       : "text-[var(--custom-primary-blue)]"

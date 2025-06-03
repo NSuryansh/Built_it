@@ -138,7 +138,7 @@ const Navbar = () => {
                     >
                       <button
                         onClick={() => router.push(item.link)}
-                        className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
+                        className={`hover:text-custom-orange-500 focus:text-custom-orange-500 transition-colors ${
                           location === item.link
                             ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                             : ""
@@ -167,7 +167,7 @@ const Navbar = () => {
               <button
                 key={i}
                 onClick={() => router.push(item.link)}
-                className={`hover:text-[var(--custom-primary-orange)] focus:text-[var(--custom-primary-orange)] transition-colors ${
+                className={`hover:text-custom-orange-500 focus:text-custom-orange-500 transition-colors ${
                   location === item.link
                     ? "underline underline-offset-4 text-[var(--landing-bg-orange)] decoration-2"
                     : ""

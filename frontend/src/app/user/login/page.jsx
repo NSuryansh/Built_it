@@ -292,7 +292,7 @@ const Login = () => {
           If not registered{" "}
           <button
             onClick={() => router.push("/user/signup")}
-            className="underline font-bold text-[var(--custom-primary-orange)]"
+            className="underline font-bold text-custom-orange-500"
           >
             click here
           </button>
@@ -308,14 +308,14 @@ const Login = () => {
             Login as a&nbsp;
             <button
               onClick={() => router.push("/doctor/login")}
-              className="underline font-bold text-[var(--custom-primary-orange)]"
+              className="underline font-bold text-custom-orange-500"
             >
               Doctor
             </button>
             &nbsp;or&nbsp;
             <button
               onClick={() => router.push("/admin/login")}
-              className="underline font-bold text-[var(--custom-primary-orange)]"
+              className="underline font-bold text-custom-orange-500"
             >
               Admin
             </button>

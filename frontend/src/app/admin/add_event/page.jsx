@@ -78,8 +78,7 @@ const AddEvent = () => {
   };
 
   if (isAuthenticated === null) {
-        return <CustomLoader color='green' text={'Loading your dashboard...'} />
-
+    return <CustomLoader color="green" text={"Loading your dashboard..."} />;
   }
 
   if (!isAuthenticated) {
@@ -87,18 +86,18 @@ const AddEvent = () => {
   }
 
   return (
-    <div className="bg-gradient-to-b from-green-50 to-white min-h-screen">
+    <div className="bg-gradient-to-b from-custom-green-50 to-custom-white min-h-screen">
       <AdminNavbar />
       <ToastContainer />
       <div className="space-y-10 px-4 sm:px-6 lg:px-8 py-6 w-full mx-auto flex flex-col justify-center items-center">
-        <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-900 to-green-600 tracking-tight">
+        <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-custom-green-900 to-custom-green-600 tracking-tight">
           Add New Event
         </h1>
 
-        <div className="bg-white p-8 w-full rounded-3xl shadow-2xl max-w-2xl border border-green-100/50 transform hover:shadow-3xl transition-all duration-300">
+        <div className="bg-custom-white p-8 w-full rounded-3xl shadow-2xl max-w-2xl border border-custom-green-100/50 transform hover:shadow-3xl transition-all duration-300">
           {error && (
-            <p className="text-red-600 mb-6 bg-red-50/80 p-4 rounded-xl text-sm flex items-center gap-2 shadow-sm">
-              <AlertCircle size={18} className="text-red-500" />
+            <p className="text-custom-red-600 mb-6 bg-custom-red-50/80 p-4 rounded-xl text-sm flex items-center gap-2 shadow-sm">
+              <AlertCircle size={18} className="text-custom-red-500" />
               {error}
             </p>
           )}
@@ -106,9 +105,9 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="title"
-                className="text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-custom-green-900 flex items-center gap-2"
               >
-                <Calendar size={16} className="text-green-600" />
+                <Calendar size={16} className="text-custom-green-600" />
                 Event Title
               </label>
               <input
@@ -116,7 +115,7 @@ const AddEvent = () => {
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-5 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-400 focus:border-transparent bg-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-gray-800 placeholder-gray-400"
+                className="w-full px-5 py-3 border border-custom-green-200 rounded-xl focus:ring-2 focus:ring-custom-green-400 focus:border-transparent bg-custom-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-custom-gray-800 placeholder-custom-gray-400"
                 required
                 placeholder="Enter event title"
               />
@@ -126,9 +125,9 @@ const AddEvent = () => {
               <div className="space-y-3">
                 <label
                   htmlFor="date"
-                  className="text-sm font-medium text-green-900 flex items-center gap-2"
+                  className="text-sm font-medium text-custom-green-900 flex items-center gap-2"
                 >
-                  <Clock size={16} className="text-green-600" />
+                  <Clock size={16} className="text-custom-green-600" />
                   Date
                 </label>
                 <input
@@ -136,7 +135,7 @@ const AddEvent = () => {
                   id="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-5 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-400 focus:border-transparent bg-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-gray-800"
+                  className="w-full px-5 py-3 border border-custom-green-200 rounded-xl focus:ring-2 focus:ring-custom-green-400 focus:border-transparent bg-custom-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-custom-gray-800"
                   required
                 />
               </div>
@@ -144,9 +143,9 @@ const AddEvent = () => {
               <div className="space-y-3">
                 <label
                   htmlFor="time"
-                  className="text-sm font-medium text-green-900 flex items-center gap-2"
+                  className="text-sm font-medium text-custom-green-900 flex items-center gap-2"
                 >
-                  <Clock size={16} className="text-green-600" />
+                  <Clock size={16} className="text-custom-green-600" />
                   Time
                 </label>
                 <input
@@ -154,7 +153,7 @@ const AddEvent = () => {
                   id="time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="w-full px-5 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-400 focus:border-transparent bg-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-gray-800"
+                  className="w-full px-5 py-3 border border-custom-green-200 rounded-xl focus:ring-2 focus:ring-custom-green-400 focus:border-transparent bg-custom-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-custom-gray-800"
                   required
                 />
               </div>
@@ -163,9 +162,9 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="location"
-                className="text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-custom-green-900 flex items-center gap-2"
               >
-                <MapPin size={16} className="text-green-600" />
+                <MapPin size={16} className="text-custom-green-600" />
                 Location
               </label>
               <input
@@ -173,7 +172,7 @@ const AddEvent = () => {
                 id="location"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-5 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-400 focus:border-transparent bg-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-gray-800 placeholder-gray-400"
+                className="w-full px-5 py-3 border border-custom-green-200 rounded-xl focus:ring-2 focus:ring-custom-green-400 focus:border-transparent bg-custom-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-custom-gray-800 placeholder-gray-400"
                 required
                 placeholder="Enter event location"
               />
@@ -182,9 +181,9 @@ const AddEvent = () => {
             <div className="space-y-3">
               <label
                 htmlFor="description"
-                className="text-sm font-medium text-green-900 flex items-center gap-2"
+                className="text-sm font-medium text-custom-green-900 flex items-center gap-2"
               >
-                <FileText size={16} className="text-green-600" />
+                <FileText size={16} className="text-custom-green-600" />
                 Description
               </label>
               <textarea
@@ -192,7 +191,7 @@ const AddEvent = () => {
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-5 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-400 focus:border-transparent bg-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-gray-800 placeholder-gray-400 resize-y"
+                className="w-full px-5 py-3 border border-custom-green-200 rounded-xl focus:ring-2 focus:ring-custom-green-400 focus:border-transparent bg-custom-green-50/30 transition-all duration-200 shadow-md hover:shadow-lg text-custom-gray-800 placeholder-gray-400 resize-y"
                 required
                 placeholder="Describe your event..."
               ></textarea>
@@ -202,14 +201,14 @@ const AddEvent = () => {
               <button
                 type="button"
                 onClick={() => router.push("/admin/event_list")}
-                className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-50 text-green-900 rounded-xl hover:from-gray-200 hover:to-gray-100 transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-custom-gray-100 to-custom-gray-50 text-custom-green-900 rounded-xl hover:from-custom-gray-200 hover:to-custom-gray-100 transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center gap-2"
               >
                 <X size={18} />
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl hover:from-green-700 hover:to-green-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-custom-green-600 to-custom-green-500 text-custom-white rounded-xl hover:from-custom-green-700 hover:to-custom-green-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center gap-2"
               >
                 <Plus size={18} />
                 Add Event

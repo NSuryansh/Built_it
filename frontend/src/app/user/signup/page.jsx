@@ -565,7 +565,7 @@ const SignUp = () => {
           Already have an account?{" "}
           <button
             onClick={() => router.push("/user/login")}
-            className="underline font-bold text-[var(--custom-primary-orange)]"
+            className="underline font-bold text-custom-orange-500"
           >
             Login here
           </button>
