@@ -44,25 +44,25 @@ const UserDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--custom-blue-50)] to-[var(--custom-purple-50)]">
       <ToastContainer position="top-right" autoClose={3000} />
       <DoctorNavbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <button
-          onClick={() => navigate("/doctor/history")}
-          className="flex items-center text-blue-600 hover:text-blue-800 transition-colors mb-4"
+          onClick={() => router.push("/doctor/history")}
+          className="flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-800)] transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
           <span>Back to Patient List</span>
         </button>
 
         <div className="space-y-6">
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 p-4 sm:p-6 lg:p-8">
+          <div className="bg-[var(--custom-white)]/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-[var(--custom-blue-100)]/50 p-4 sm:p-6 lg:p-8">
             <UserProfile user={userWithAppointments} />
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-blue-100/50 p-4 sm:p-6 lg:p-8">
+          <div className="bg-[var(--custom-white)]/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-[var(--custom-blue-100)]/50 p-4 sm:p-6 lg:p-8">
             <AppointmentList onFollowUp={handleFollowup} />
           </div>
         </div>
