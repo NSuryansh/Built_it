@@ -55,33 +55,36 @@ export function DateTimePicker({ selected, onSelect, appointmentId }) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-gray-200 p-4">
+      <div className="rounded-lg border border-[var(--custom-gray-200)] p-4">
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-[var(--custom-gray-100)] rounded-full transition-colors"
           >
-            <ChevronLeft className="h-5 w-5 text-gray-600" />
+            <ChevronLeft className="h-5 w-5 text-[var(--custom-gray-600)]" />
           </button>
-          <h2 className="text-lg font-semibold text-gray-900">
-            {format(currentMonth, 'MMMM yyyy')}
+          <h2 className="text-lg font-semibold text-[var(--custom-gray-900)]">
+            {format(currentMonth, "MMMM yyyy")}
           </h2>
           <button
             onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-[var(--custom-gray-100)] rounded-full transition-colors"
           >
-            <ChevronRight className="h-5 w-5 text-gray-600" />
+            <ChevronRight className="h-5 w-5 text-[var(--custom-gray-600)]" />
           </button>
         </div>
 
         <div className="grid grid-cols-7 gap-1">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div
+              key={day}
+              className="text-center text-sm font-medium text-[var(--custom-gray-500)] py-2"
+            >
               {day}
             </div>
           ))}
-          
-          {weeks.map((week, weekIndex) => (
+
+          {weeks.map((week, weekIndex) =>
             week.map((day, dayIndex) => {
               const isEmptyDay = day.getTime() === 0;
               const isSelectedDay = selected && isSameDay(day, selected);
@@ -94,37 +97,52 @@ export function DateTimePicker({ selected, onSelect, appointmentId }) {
                   disabled={isEmptyDay}
                   className={`
                     h-10 text-sm rounded-lg flex items-center justify-center
-                    ${isEmptyDay ? 'text-gray-300 cursor-default' : 'hover:bg-gray-100'}
-                    ${isSelectedDay ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}
-                    ${isTodayDate && !isSelectedDay ? 'bg-gray-100 font-semibold' : ''}
+                    ${
+                      isEmptyDay
+                        ? "text-[var(--custom-gray-300)] cursor-default"
+                        : "hover:bg-[var(--custom-gray-100)]"
+                    }
+                    ${
+                      isSelectedDay
+                        ? "bg-[var(--custom-blue-500)] text-white hover:bg-[var(--custom-blue-600)]"
+                        : ""
+                    }
+                    ${
+                      isTodayDate && !isSelectedDay
+                        ? "bg-[var(--custom-gray-100)] font-semibold"
+                        : ""
+                    }
                   `}
                 >
-                  {!isEmptyDay && format(day, 'd')}
+                  {!isEmptyDay && format(day, "d")}
                 </button>
               );
             })
-          ))}
+          )}
         </div>
       </div>
 
       <div className="flex items-center space-x-2">
         <div className="relative flex-1">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <Clock className="h-4 w-4 text-gray-500" />
+            <Clock className="h-4 w-4 text-[var(--custom-gray-500)]" />
           </div>
           <input
             type="time"
             value={selectedTime}
             onChange={handleTimeChange}
-            className="block w-full rounded-md border border-gray-200 pl-10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full rounded-md border border-[var(--custom-gray-200)] pl-10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-[var(--custom-blue-500)]"
           />
         </div>
       </div>
 
       {selected && (
-        <div className="rounded-md bg-gray-50 px-4 py-3">
-          <p className="text-sm text-gray-600">
-            Selected: <span className="font-medium text-gray-900">{format(selected, 'PPP p')}</span>
+        <div className="rounded-md bg-[var(--custom-gray-50)] px-4 py-3">
+          <p className="text-sm text-[var(--custom-gray-600)]">
+            Selected:{" "}
+            <span className="font-medium text-[var(--custom-gray-900)]">
+              {format(selected, "PPP p")}
+            </span>
           </p>
         </div>
       )}

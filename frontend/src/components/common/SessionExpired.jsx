@@ -1,34 +1,46 @@
 const SessionExpired = ({ handleClosePopup, theme = "orange" }) => {
   const themes = {
     orange: {
-      iconColor: "text-orange-500",
-      titleColor: "text-orange-800",
-      messageColor: "text-orange-600",
-      buttonBg: "bg-gradient-to-r from-orange-500 to-orange-600",
-      buttonHover: "hover:from-orange-600 hover:to-orange-700",
-      borderColor: "border-orange-200/50",
-      bgGradient: "bg-gradient-to-br from-orange-50 to-white",
-      backdropGradient: "bg-gradient-to-br from-amber-50 to-orange-200", // Orange backdrop
+      iconColor: "text-[var(--custom-orange-500)]",
+      titleColor: "text-[var(--custom-orange-800)]",
+      messageColor: "text-[var(--custom-orange-600)]",
+      buttonBg:
+        "bg-gradient-to-r from-[var(--custom-orange-500)] to-[var(--custom-orange-600)]",
+      buttonHover:
+        "hover:from-[var(--custom-orange-600)] hover:to-[var(--custom-orange-700)]",
+      borderColor: "border-[var(--custom-orange-200)]/50",
+      bgGradient:
+        "bg-gradient-to-br from-[var(--custom-orange-50)] to-[var(--custom-white)]",
+      backdropGradient:
+        "bg-gradient-to-br from-amber-50 to-[var(--custom-orange-200)]", // Orange backdrop
     },
     blue: {
-      iconColor: "text-blue-500",
-      titleColor: "text-blue-800",
-      messageColor: "text-blue-600",
-      buttonBg: "bg-gradient-to-r from-blue-500 to-blue-600",
-      buttonHover: "hover:from-blue-600 hover:to-blue-700",
-      borderColor: "border-blue-200/50",
-      bgGradient: "bg-gradient-to-br from-blue-50 to-white",
-      backdropGradient: "bg-gradient-to-br from-blue-50 to-blue-200", // Blue backdrop
+      iconColor: "text-[var(--custom-blue-500)]",
+      titleColor: "text-[var(--custom-blue-800)]",
+      messageColor: "text-[var(--custom-blue-600)]",
+      buttonBg:
+        "bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-600)]",
+      buttonHover:
+        "hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-700)]",
+      borderColor: "border-custom-blue-200/50",
+      bgGradient:
+        "bg-gradient-to-br from-[var(--custom-blue-50)] to-[var(--custom-white)]",
+      backdropGradient:
+        "bg-gradient-to-br from-[var(--custom-blue-50)] to-[var(--custom-blue-200)]", // Blue backdrop
     },
     green: {
-      iconColor: "text-green-700",
-      titleColor: "text-green-700",
-      messageColor: "text-green-700",
-      buttonBg: "bg-gradient-to-r from-green-700 to-green-600",
-      buttonHover: "hover:from-green-700 hover:to-green-700",
-      borderColor: "border-green-200/50",
-      bgGradient: "bg-gradient-to-br from-green-50 to-amber-50",
-      backdropGradient: "bg-gradient-to-br from-green-50 to-green-200", // Green backdrop
+      iconColor: "text-[var(--custom-green-700)]",
+      titleColor: "text-[var(--custom-green-700)]",
+      messageColor: "text-[var(--custom-green-700)]",
+      buttonBg:
+        "bg-gradient-to-r from-[var(--custom-green-700)] to-[var(--custom-green-600)]",
+      buttonHover:
+        "hover:from-[var(--custom-green-700)] hover:to-[var(--custom-green-700)]",
+      borderColor: "border-[var(--custom-green-200)]/50",
+      bgGradient:
+        "bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-yellow-50)]",
+      backdropGradient:
+        "bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-green-200)]", // Green backdrop
     },
   };
 
@@ -71,19 +83,20 @@ const SessionExpired = ({ handleClosePopup, theme = "orange" }) => {
         <p
           className={`text-base ${currentTheme.messageColor} mb-8 leading-relaxed font-medium`}
         >
-          Your session has timed out for security reasons. Please log in again to continue your journey.
+          Your session has timed out for security reasons. Please log in again
+          to continue your journey.
         </p>
 
         {/* Button with Enhanced Styling */}
         <button
           onClick={handleClosePopup}
-          className={`${currentTheme.buttonBg} ${currentTheme.buttonHover} px-8 py-3 rounded-full text-white font-semibold text-sm uppercase tracking-wide shadow-lg transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95`}
+          className={`${currentTheme.buttonBg} ${currentTheme.buttonHover} px-8 py-3 rounded-full text-[var(--custom-white)] font-semibold text-sm uppercase tracking-wide shadow-lg transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95`}
         >
           Back to Login
         </button>
 
         {/* Subtle Footer Note */}
-        <p className="text-xs text-gray-500 mt-6">
+        <p className="text-xs text-[var(--custom-gray-500)] mt-6">
           Need help? Contact support anytime.
         </p>
       </div>

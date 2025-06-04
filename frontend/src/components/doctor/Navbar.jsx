@@ -71,7 +71,7 @@ const DoctorNavbar = () => {
                 toggleMenu();
                 setShowDetails(false);
               }}
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-2 rounded-full hover:bg-[var(--custom-gray-100)]"
             >
               {isOpen ? (
                 <AiOutlineClose size={24} />
@@ -80,19 +80,19 @@ const DoctorNavbar = () => {
               )}
             </button>
             {isOpen && (
-              <div className="absolute top-16 min-w-40 w-[40%] bg-white rounded-2xl shadow-md p-4">
+              <div className="absolute top-16 min-w-40 w-[40%] bg-[var(--custom-white)] rounded-2xl shadow-md p-4">
                 <ul>
                   {links.map((item, i) => (
                     <li
-                      className="py-2 border-b text-center border-gray-200"
+                      className="py-2 border-b text-center border-[var(--custom-gray-200)]"
                       key={i}
                     >
                       <button
-                        onClick={() => navigate(item.link)}
-                        className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                        onClick={() => router.push(item.link)}
+                        className={` transition-colors ${
                           location == item.link
-                            ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
-                            : ""
+                            ? "underline underline-offset-4 text-[var(--custom-blue-500)] decoration-2"
+                            : "hover:text-[var(--custom-blue-500)] focus:text-[var(--custom-blue-500)]"
                         }`}
                       >
                         {item.name}
@@ -105,7 +105,7 @@ const DoctorNavbar = () => {
           </div>
           <div className="flex">
             <img
-              src="/assets/logo.svg"
+              src="/logo.svg"
               alt="logo"
               width={25}
               height={25}
@@ -117,11 +117,11 @@ const DoctorNavbar = () => {
             {links.map((item, i) => (
               <button
                 key={i}
-                onClick={() => navigate(item.link)}
-                className={`hover:text-[var(--custom-primary-blue)] focus:text-[var(--custom-primary-blue)] transition-colors ${
+                onClick={() => router.push(item.link)}
+                className={`transition-colors ${
                   location == item.link
-                    ? "underline underline-offset-4 text-[var(--landing-bg-blue)] decoration-2"
-                    : ""
+                    ? "underline underline-offset-4 text-[var(--custom-blue-500)] decoration-2"
+                    : "hover:text-[var(--custom-blue-500)] focus:text-[var(--custom-blue-500)]"
                 }`}
               >
                 {item.name}
@@ -156,23 +156,25 @@ const DoctorNavbar = () => {
                 </button>
 
                 <div
-                  className={`user-details drop-shadow-xs absolute border-2 border-blue-700 rounded-lg top-12 right-5 list-none z-1 ${
+                  className={`user-details drop-shadow-xs absolute border-2 border-[var(--custom-blue-700)] rounded-lg top-12 right-5 list-none z-1 ${
                     showDetails ? "opacity-100 visible" : "opacity-0 invisible"
                   }`}
                 >
-                  <div className="w-64 bg-blue-100 rounded-lg shadow-lg p-6">
+                  <div className="w-64 bg-[var(--custom-blue-100)] rounded-lg shadow-lg p-6">
                     <div className="space-y-4">
                       <div className="text-center space-y-1">
-                        <h3 className="text-lg font-semibold text-blue-900">
+                        <h3 className="text-lg font-semibold text-[var(--custom-blue-900)]">
                           {username}
                         </h3>
-                        <p className="text-sm text-blue-700">{email}</p>
+                        <p className="text-sm text-[var(--custom-blue-700)]">
+                          {email}
+                        </p>
                       </div>
 
                       <div className="flex gap-2">
                         <button
                           onClick={() => setShowLogoutModal(true)}
-                          className="flex-1 bg-blue-200 hover:bg-blue-300 text-blue-900 rounded px-4 py-2 text-sm font-medium transition-colors"
+                          className="flex-1 bg-[var(--custom-blue-200)] hover:bg-[var(--custom-blue-300)] text-[var(--custom-blue-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
                         >
                           Logout
                         </button>
@@ -183,8 +185,8 @@ const DoctorNavbar = () => {
               </>
             ) : (
               <button
-                onClick={() => navigate("/user/login")}
-                className="px-4 py-2 bg-blue-200)] hover:bg-blue-300)] text-blue-900)] rounded font-medium"
+                onClick={() => router.replace("/doctor/login")}
+                className="px-4 py-2 bg-[var(--custom-blue-200)] hover:bg-[var(--custom-blue-300)] text-[var(--custom-blue-900)] rounded font-medium"
               >
                 Login
               </button>

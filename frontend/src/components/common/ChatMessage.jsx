@@ -22,10 +22,10 @@ export default function ChatMessage({ message, isSent, isDoc = false }) {
           isSent
             ? `bg-gradient-to-r ${
                 isDoc
-                  ? "from-blue-500 to-cyan-500"
-                  : "from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)]"
+                  ? "from-[var(--custom-blue-500)] to-cyan-500"
+                  : "from-[var(--custom-orange-500)] to-pink-500"
               } text-[var(--custom-white)]`
-            : "bg-[var(--mp-custom-gray-200)] text-[var(--mp-custom-gray-800)]"
+            : "bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)]"
         }`}
       >
         <p className="text-sm">{message}</p>

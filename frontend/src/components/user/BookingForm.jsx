@@ -82,7 +82,7 @@ const BookingFormStep = ({
   };
 
   return (
-    <div className="bg-gradient-to-b mx-auto from-[var(--custom-orange-50)] to-white w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
+    <div className="bg-gradient-to-b mx-auto from-[var(--custom-orange-50)] to-[var(--custom-white)] w-full max-w-[1200px] p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] shadow-xl">
       <div className="flex items-center justify-center gap-3 mb-8">
         <Stethoscope className="w-8 h-8 text-[var(--custom-orange-500)]" />
         <h2 className="text-center text-3xl font-bold text-[var(--custom-orange-500)] uppercase">
@@ -124,7 +124,7 @@ const BookingFormStep = ({
               value={formData.name}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                isAuthenticated ? "bg-[var(--custom-gray-200)] cursor-not-allowed" : ""
               }`}
               placeholder="Enter your full name"
               required
@@ -144,7 +144,7 @@ const BookingFormStep = ({
               value={formData.email}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                isAuthenticated ? "bg-[var(--custom-gray-200)] cursor-not-allowed" : ""
               }`}
               placeholder="Enter your email"
               required
@@ -164,7 +164,7 @@ const BookingFormStep = ({
               value={formData.phone}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
-                isAuthenticated ? "bg-gray-200 cursor-not-allowed" : ""
+                isAuthenticated ? "bg-[var(--custom-gray-200)] cursor-not-allowed" : ""
               }`}
               placeholder="Enter your phone number"
               required
@@ -197,7 +197,7 @@ const BookingFormStep = ({
                     handleDateChange(newDate);
                     fetchAvailableSlots(newDate);
                   }}
-                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-white"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                   required
                 >
                   <option value="">Select Date</option>
@@ -230,7 +230,7 @@ const BookingFormStep = ({
                     });
                     handleTimeChange(e);
                   }}
-                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-white"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                 >
                   <option value="">Select Time</option>
                   {Array.isArray(slots) &&
@@ -264,7 +264,7 @@ const BookingFormStep = ({
           <button
             type="button"
             onClick={onBack}
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white border-2 border-[var(--custom-orange-400)] text-[var(--custom-orange-600)] font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-200"
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[var(--custom-white)] border-2 border-[var(--custom-orange-400)] text-[var(--custom-orange-600)] font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Doctors
@@ -274,7 +274,7 @@ const BookingFormStep = ({
             disabled={isLoading}
             onClick={sendNotif}
             type="submit"
-            className="flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-[var(--custom-orange-500)] text-white font-semibold hover:bg-[var(--custom-orange-600)] transform hover:scale-[1.02] transition-all duration-200"
+            className="flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-[var(--custom-orange-500)] text-[var(--custom-white)] font-semibold hover:bg-[var(--custom-orange-600)] transform hover:scale-[1.02] transition-all duration-200"
           >
             {isLoading ? (
               <div>

@@ -34,14 +34,14 @@ const ProgressBar = ({ label, value }) => {
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-lg font-medium text-[var(--mp-custom-gray-600)]">
+        <span className="text-lg font-medium text-[var(--custom-gray-600)]">
           {label}
         </span>
-        <span className="text-lg font-medium text-[var(--mp-custom-gray-600)]">
+        <span className="text-lg font-medium text-[var(--custom-gray-600)]">
           {value} / 10
         </span>
       </div>
-      <div className="relative h-2 bg-[var(--mp-custom-gray-200)] rounded-lg overflow-hidden">
+      <div className="relative h-2 bg-[var(--custom-gray-200)] rounded-lg overflow-hidden">
         <div
           className="absolute top-0 left-0 h-full transition-all duration-1000 ease-out rounded-lg"
           style={{

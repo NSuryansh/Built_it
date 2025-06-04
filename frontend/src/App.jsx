@@ -170,13 +170,13 @@ export default function App() {
         <Route path="/user/mood" element={<Mood />} />
         <Route path="/user/book" element={<Book />} />
         <Route path="/user/stress" element={<Stress />} />
-        <Route path="/user/entertaiment" element={<Entertainment />} />
-        <Route path="/user/entertaiment/dinogame" element={<Dinogame />} />
+        <Route path="/user/entertainment" element={<Entertainment />} />
+        <Route path="/user/entertainment/dinogame" element={<Dinogame />} />
         <Route path="/user/events" element={<Events />} />
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/signup" element={<SignUp />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/modify_profile" element={<ModifyProfile />} />
+        <Route path="/user/reset_password" element={<ResetPassword />} />
+        <Route path="/user/modify_profile" element={<ModifyProfile />} />
         <Route path="/user/appointments" element={<UserAppointments />} />
         <Route path="/user/feedback" element={<FeedbackPage />} />
         <Route path="/user/dashboard" element={<Dashboard />} />
