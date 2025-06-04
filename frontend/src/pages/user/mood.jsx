@@ -222,21 +222,21 @@ export default function Mood() {
       <Navbar />
       <ToastContainer />
       <div className="flex-1 h-full flex overflow-hidden">
-        <div className="flex-1 hidden sm:block overflow-y-auto border-r border-[var(--mp-custom-gray-200)]">
+        <div className="flex-1 hidden sm:block overflow-y-auto border-r border-[var(--custom-gray-200)]">
           <ProgressPage />
         </div>
         <div className="sm:w-3/5 w-full flex flex-col">
-          <div className="p-4 border-b border-[var(--mp-custom-gray-200)] bg-[var(--mp-custom-white)]">
-            <h2 className="text-2xl font-bold text-[var(--mp-custom-gray-800)]">
+          <div className="p-4 border-b border-[var(--custom-gray-200)] bg-[var(--custom-white)]">
+            <h2 className="text-2xl font-bold text-[var(--custom-gray-800)]">
               Calm Bot
             </h2>
           </div>
-          <div className="w-full px-3 flex justify-center items-center text-gray-400 text-xs font-light mt-3">
+          <div className="w-full px-3 flex justify-center items-center text-[var(--custom-gray-400)] text-xs font-light mt-3">
             <InfoIcon size={12} className="mr-1 !w-4 !h-4" />
             This chatbot is for informational purposes only and does not provide
             medical advice, diagnosis, or treatment.
           </div>
-          <div className="flex-1 overflow-y-auto flex flex-col p-4 bg-[var(--mp-custom-white)]">
+          <div className="flex-1 overflow-y-auto flex flex-col p-4 bg-[var(--custom-white)]">
             {chats.map((msg, index) => (
               <ChatMessage
                 message={msg.message}
@@ -264,8 +264,8 @@ export default function Mood() {
               onClick={isRecording ? stopRecording : startRecording}
               className={`p-2 rounded-full transition-colors bg-gradient-to-r ${
                 isRecording
-                  ? "to-[var(--peer-custom-orange-500)] from-[var(--peer-custom-pink-500)] text-white"
-                  : "from-[var(--peer-custom-orange-500)] to-[var(--peer-custom-pink-500)] text-white"
+                  ? "to-[var(--custom-orange-500)] from-[var(--custom-purple-500)] text-[var(--custom-white)]"
+                  : "from-[var(--custom-orange-500)] to-[var(--custom-purple-500)] text-[var(--custom-white)]"
               }`}
               title={isRecording ? "Stop Recording" : "Start Recording"}
             >

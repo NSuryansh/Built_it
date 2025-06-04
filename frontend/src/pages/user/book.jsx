@@ -144,33 +144,29 @@ const Book = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 flex flex-col overflow-hidden">
-      {/* Navbar with subtle shadow */}
+    <div className="min-h-screen bg-gradient-to-br from-[var(--custom-orange-50)] via-[var(--custom-orange-100)] to-[var(--custom-orange-200)] flex flex-col overflow-hidden">
       <Navbar />
+      <ToastContainer />
 
-      {/* Toast Container with custom styling */}
-      <ToastContainer
-        className="z-50"
-        toastClassName="rounded-xl shadow-lg bg-white/90 text-gray-800"
-      />
-
-      {/* Main Content */}
       <div className="flex-1 flex justify-center items-center px-2 sm:px-6 md:px-10 py-12">
-        <div className="w-full max-w-full bg-white/70 backdrop-blur-lg rounded-xl md:rounded-3xl shadow-lg px-2 py-6 md:p-10 border border-orange-200/50 transition-all duration-500 hover:shadow-3xl">
-          {/* Step Indicator */}
+        <div className="w-full max-w-full bg-[var(--custom-white)]/70 backdrop-blur-lg rounded-xl md:rounded-3xl shadow-lg px-2 py-6 md:p-10 border border-[var(--custom-orange-200)]/50 transition-all duration-500 hover:shadow-3xl">
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-4">
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${
-                  step === 1 ? "bg-orange-500 scale-110" : "bg-gray-300"
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${
+                  step === 1
+                    ? "bg-[var(--custom-orange-500)] scale-110"
+                    : "bg-[var(--custom-gray-300)]"
                 }`}
               >
                 1
               </div>
-              <div className="w-16 h-1 bg-gray-300 rounded-full" />
+              <div className="w-16 h-1 bg-[var(--custom-gray-300)] rounded-full" />
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white transition-all duration-300 ${
-                  step === 2 ? "bg-orange-500 scale-110" : "bg-gray-300"
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${
+                  step === 2
+                    ? "bg-[var(--custom-orange-500)] scale-110"
+                    : "bg-[var(--custom-gray-300)]"
                 }`}
               >
                 2
@@ -178,11 +174,10 @@ const Book = () => {
             </div>
           </div>
 
-          {/* Conditional Steps */}
           {step === 1 && (
             <div className="min-h-[40.5rem] flex items-center justify-center animate-fade-in">
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                <h2 className="text-3xl font-bold text-[var(--custom-gray-900)] mb-6">
                   Select Your Buddy
                 </h2>
                 <DoctorSelectionStep
@@ -196,7 +191,7 @@ const Book = () => {
           {step === 2 && (
             <div className="min-h-[40.5rem] flex items-center justify-center animate-fade-in">
               <div className="text-center w-full">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                <h2 className="text-3xl font-bold text-[var(--custom-gray-900)] mb-6">
                   Book Your Appointment
                 </h2>
                 <BookingFormStep
@@ -215,11 +210,7 @@ const Book = () => {
         </div>
       </div>
 
-      {/* Footer with matching theme */}
-      <Footer
-        color="orange"
-        className="bg-orange-600/90 text-white shadow-inner"
-      />
+      <Footer color="orange" />
     </div>
   );
 };

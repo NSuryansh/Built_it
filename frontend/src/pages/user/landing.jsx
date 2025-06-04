@@ -45,16 +45,16 @@ const Landing = () => {
         <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center flex flex-col items-center">
-              <h1 className="lg:text-5xl md:text-4xl text-3xl font-bold text-gray-900 mb-6">
+              <h1 className="lg:text-5xl md:text-4xl text-3xl font-bold text-[var(--custom-gray-900)] mb-6">
                 Find Peace - Get Support - Thrive
               </h1>
-              <p className="md:text-xl sm:text-md text-gray-600 mb-8 max-w-3xl mx-auto">
+              <p className="md:text-xl sm:text-md text-[var(--custom-gray-600)] mb-8 max-w-3xl mx-auto">
                 At Vitality we provide a safe space for your mental wellness
                 journey. Whether you are seeking mindfulness techniques,
                 emotional support, or expert guidance, we are here to help.
               </p>
               <Link
-                to="/user/signup"
+                href="/user/signup"
                 className="bg-[var(--custom-orange-500)] text-[var(--custom-white)] px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[var(--custom-orange-600)] w-fit transition-colors duration-300 flex items-center"
               >
                 Get Started
@@ -75,7 +75,7 @@ const Landing = () => {
                 <h3 className="text-xl font-semibold mb-4">
                   Mental Health Support
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-[var(--custom-gray-600)]">
                   Access professional counseling and therapy services from the
                   comfort of your home.
                 </p>
@@ -87,7 +87,7 @@ const Landing = () => {
                 <h3 className="text-xl font-semibold mb-4">
                   Community Connection
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-[var(--custom-gray-600)]">
                   Join support groups and connect with others who understand
                   your journey.
                 </p>
@@ -99,7 +99,7 @@ const Landing = () => {
                 <h3 className="text-xl font-semibold mb-4">
                   Wellness Resources
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-[var(--custom-gray-600)]">
                   Access guided meditations, exercises, and tools for your
                   mental wellness.
                 </p>
@@ -108,7 +108,6 @@ const Landing = () => {
           </div>
         </div>
 
-        {/* CTA Section */}
         <div className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto bg-[var(--custom-orange-500)] rounded-2xl overflow-hidden shadow-xl">
             <div className="flex flex-col md:flex-row items-center px-8 py-16 justify-evenly text-center">
@@ -120,14 +119,14 @@ const Landing = () => {
                   Take the first step towards better mental health. Our team of
                   professionals is here to support you every step of the way.
                 </p>
-                <Link to="/user/book">
+                <Link href="/user/book">
                   <button className="bg-[var(--custom-white)] text-[var(--custom-orange-500)] px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-300">
                     Book Free Consultation
                   </button>
                 </Link>
               </div>
               <img
-                src="/assets/qr-code.svg"
+                src="/qr-code.svg"
                 className="w-[250px] mt-16 md:mt-0"
                 alt="qr-code"
               />

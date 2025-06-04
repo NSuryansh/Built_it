@@ -75,36 +75,6 @@ const UserAppointments = () => {
     );
   }
 
-  // Only handles submitting data, not the event
-  const submitRating = async (appointmentId, ratingValue, docId) => {
-    try {
-      const res = await fetch("https://built-it.onrender.com/setRating", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          id: appointmentId,
-          stars: ratingValue,
-          doctorId: docId,
-          userId: user_id,
-        }),
-      });
-
-      if (res.ok) {
-        setSubmittedRatings((prev) => ({
-          ...prev,
-          [appointmentId]: true,
-        }));
-      } else {
-        console.error("Failed to submit rating");
-      }
-    } catch (error) {
-      console.error("Error submitting rating:", error);
-    }
-  };
-
   const NoAppointmentsMessage = ({ message }) => (
     <div className="flex flex-col items-center justify-center py-8">
       <Calendar className="h-12 w-12 text-gray-400 mb-3" />
@@ -117,14 +87,13 @@ const UserAppointments = () => {
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid gap-8">
-          {/* Upcoming Appointments Section */}
-          <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
+          <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
             <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
                 <Calendar className="w-6 h-6 text-[var(--custom-orange-600)]" />
                 Upcoming Appointments
               </h2>
-              <span className="px-4 py-1 mt-4 sm:mt-0 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-full text-sm font-semibold shadow-sm">
+              <span className="px-4 py-1 mt-4 sm:mt-0 bg-gradient-to-r from-[var(--custom-gray-100)] to-[var(--custom-gray-200)] text-[var(--custom-gray-700)] rounded-full text-sm font-semibold shadow-sm">
                 {upcomingAppointments.length} Total
               </span>
             </div>
@@ -147,15 +116,13 @@ const UserAppointments = () => {
               )}
             </div>
           </div>
-
-          {/* Previous Appointments Section */}
-          <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
+          <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
             <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
                 <History className="w-6 h-6 text-[var(--custom-orange-600)]" />
                 Previous Appointments
               </h2>
-              <span className="px-4 py-1 mt-4 sm:mt-0 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-full text-sm font-semibold shadow-sm">
+              <span className="px-4 py-1 mt-4 sm:mt-0 bg-gradient-to-r from-[var(--custom-gray-100)] to-[var(--custom-gray-200)] text-[var(--custom-gray-700)] rounded-full text-sm font-semibold shadow-sm">
                 {previousAppointments.length} Total
               </span>
             </div>

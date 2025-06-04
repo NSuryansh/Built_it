@@ -93,7 +93,7 @@ const Events = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-rose-50">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--custom-orange-100)] via-[var(--custom-orange-50)] to-rose-50">
       <Navbar />
 
       <main className="pt-10 md:pt-20 pb-12 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -104,13 +104,13 @@ const Events = () => {
           className="mb-12 flex justify-center"
         >
           <div className="relative w-full max-w-3xl">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-orange-500" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-[var(--custom-orange-500)]" />
             <input
               type="text"
               placeholder="Search events by title, description, or venue..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-full border border-gray-200 focus:border-orange-400 focus:ring-4 focus:ring-orange-100 bg-white/90 text-gray-800 placeholder-gray-400 focus:outline-none transition-all duration-300 text-base shadow-sm hover:shadow-md"
+              className="w-full pl-12 pr-4 py-4 rounded-full border border-[var(--custom-gray-200)] focus:border-[var(--custom-orange-400)] focus:ring-4 focus:ring-[var(--custom-orange-100)] bg-[var(--custom-white)]/90 text-[var(--custom-gray-800)] placeholder-[var(--custom-gray-400)] focus:outline-none transition-all duration-300 text-base shadow-sm hover:shadow-md"
             />
           </div>
         </motion.div>
@@ -124,32 +124,32 @@ const Events = () => {
           >
             <div className="flex items-center mb-10">
               <div className="relative">
-                <CalendarCheck className="h-9 w-9 text-orange-500" />
-                <div className="absolute -top-1 -right-1 h-3.5 w-3.5 bg-emerald-400 rounded-full animate-pulse border-2 border-white" />
+                <CalendarCheck className="h-9 w-9 text-[var(--custom-orange-500)]" />
+                <div className="absolute -top-1 -right-1 h-3.5 w-3.5 bg-[var(--custom-green-400)] rounded-full animate-pulse border-2 border-[var(--custom-white)]" />
               </div>
-              <h2 className="ml-4 text-3xl font-semibold text-gray-900 tracking-tight">
+              <h2 className="ml-4 text-3xl font-semibold text-[var(--custom-gray-900)] tracking-tight">
                 Upcoming Events
               </h2>
             </div>
-            <div className="bg-white/95 rounded-2xl shadow-lg p-8 border border-gray-100 transition-all duration-300 hover:shadow-xl max-h-[500px] overflow-y-auto">
+            <div className="bg-[var(--custom-white)]/95 rounded-2xl shadow-lg p-8 border border-[var(--custom-gray-100)] transition-all duration-300 hover:shadow-xl max-h-[500px] overflow-y-auto">
               <table className="min-w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-[var(--custom-gray-50)]">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider rounded-tl-xl">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-[var(--custom-gray-600)] uppercase tracking-wider rounded-tl-xl">
                       Event
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-[var(--custom-gray-600)] uppercase tracking-wider">
                       Date
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-[var(--custom-gray-600)] uppercase tracking-wider">
                       Details
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider rounded-tr-xl">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-[var(--custom-gray-600)] uppercase tracking-wider rounded-tr-xl">
                       Venue
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[var(--custom-gray-100)]">
                   <AnimatePresence>
                     {filterEvents(currentEvents).length > 0 ? (
                       filterEvents(currentEvents).map((event) => (
@@ -158,30 +158,30 @@ const Events = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
-                          className="hover:bg-orange-50/50 transition-colors duration-200"
+                          className="hover:bg-[var(--custom-orange-50)]/50 transition-colors duration-200"
                         >
                           <td className="px-6 py-5 whitespace-nowrap">
                             <div className="flex items-center">
-                              <div className="h-2.5 w-2.5 bg-emerald-400 rounded-full mr-3 transition-transform duration-200" />
-                              <span className="text-sm font-medium text-gray-900">
+                              <div className="h-2.5 w-2.5 bg-[var(--custom-green-400)] rounded-full mr-3 transition-transform duration-200" />
+                              <span className="text-sm font-medium text-[var(--custom-gray-900)]">
                                 {event.title}
                               </span>
                             </div>
                           </td>
-                          <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
+                          <td className="px-6 py-5 whitespace-nowrap text-sm text-[var(--custom-gray-600)]">
                             <div className="flex items-center">
-                              <Clock className="h-4 w-4 mr-2 text-orange-500" />
+                              <Clock className="h-4 w-4 mr-2 text-[var(--custom-orange-500)]" />
                               {format(event.dateTime, "dd MMM h:mm a")}
                             </div>
                           </td>
                           <td className="px-6 py-5 max-w-sm">
-                            <p className="text-sm text-gray-600 line-clamp-2">
+                            <p className="text-sm text-[var(--custom-gray-600)] line-clamp-2">
                               {event.description}
                             </p>
                           </td>
-                          <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
+                          <td className="px-6 py-5 whitespace-nowrap text-sm text-[var(--custom-gray-600)]">
                             <div className="flex items-center">
-                              <MapPin className="h-4 w-4 mr-2 text-orange-500" />
+                              <MapPin className="h-4 w-4 mr-2 text-[var(--custom-orange-500)]" />
                               {event.venue}
                             </div>
                           </td>
@@ -203,30 +203,30 @@ const Events = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex items-center mb-10">
-              <CalendarX className="h-9 w-9 text-gray-500" />
-              <h2 className="ml-4 text-3xl font-semibold text-gray-900 tracking-tight">
+              <CalendarX className="h-9 w-9 text-[var(--custom-gray-500)]" />
+              <h2 className="ml-4 text-3xl font-semibold text-[var(--custom-gray-900)] tracking-tight">
                 Past Events
               </h2>
             </div>
-            <div className="bg-white/95 rounded-2xl shadow-lg p-8 border border-gray-100 transition-all duration-300 hover:shadow-xl max-h-[500px] overflow-y-auto">
+            <div className="bg-[var(--custom-white)]/95 rounded-2xl shadow-lg p-8 border border-[var(--custom-gray-100)] transition-all duration-300 hover:shadow-xl max-h-[500px] overflow-y-auto">
               <table className="min-w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-[var(--custom-gray-50)]">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider rounded-tl-xl">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-[var(--custom-gray-600)] uppercase tracking-wider rounded-tl-xl">
                       Event
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-[var(--custom-gray-600)] uppercase tracking-wider">
                       Date
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-[var(--custom-gray-600)] uppercase tracking-wider">
                       Venue
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider rounded-tr-xl">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-[var(--custom-gray-600)] uppercase tracking-wider rounded-tr-xl">
                       Resources
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[var(--custom-gray-100)]">
                   <AnimatePresence>
                     {filterEvents(pastEvents).length > 0 ? (
                       filterEvents(pastEvents).map((event) => (
@@ -235,20 +235,20 @@ const Events = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
-                          className="hover:bg-orange-50/50 transition-colors duration-200"
+                          className="hover:bg-[var(--custom-orange-50)]/50 transition-colors duration-200"
                         >
-                          <td className="px-6 py-5 whitespace-nowrap text-sm font-medium text-gray-900">
+                          <td className="px-6 py-5 whitespace-nowrap text-sm font-medium text-[var(--custom-gray-900)]">
                             {event.title}
                           </td>
-                          <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
+                          <td className="px-6 py-5 whitespace-nowrap text-sm text-[var(--custom-gray-600)]">
                             <div className="flex items-center">
-                              <Clock className="h-4 w-4 mr-2 text-gray-400" />
+                              <Clock className="h-4 w-4 mr-2 text-[var(--custom-gray-400)]" />
                               {format(event.dateTime, "dd MMM h:mm a")}
                             </div>
                           </td>
-                          <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
+                          <td className="px-6 py-5 whitespace-nowrap text-sm text-[var(--custom-gray-600)]">
                             <div className="flex items-center">
-                              <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                              <MapPin className="h-4 w-4 mr-2 text-[var(--custom-gray-400)]" />
                               {event.venue}
                             </div>
                           </td>
@@ -258,13 +258,13 @@ const Events = () => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => window.open(event.url, "_blank")}
-                                className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md"
+                                className="inline-flex items-center px-4 py-2 bg-[var(--custom-orange-500)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-600)] transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md"
                               >
                                 <Download className="h-4 w-4 mr-2" />
                                 Resources
                               </motion.button>
                             ) : (
-                              <span className="text-gray-400 text-sm italic">
+                              <span className="text-[var(--custom-gray-400)] text-sm italic">
                                 Not available
                               </span>
                             )}
@@ -290,10 +290,10 @@ const Events = () => {
           >
             <div className="flex items-center mb-8">
               <div className="relative">
-                <CalendarCheck className="h-8 w-8 text-orange-500" />
-                <div className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-400 rounded-full animate-pulse border-2 border-white" />
+                <CalendarCheck className="h-8 w-8 text-[var(--custom-orange-500)]" />
+                <div className="absolute -top-1 -right-1 h-3 w-3 bg-[var(--custom-green-400)] rounded-full animate-pulse border-2 border-[var(--custom-white)]" />
               </div>
-              <h2 className="ml-3 text-2xl font-semibold text-gray-900 tracking-tight">
+              <h2 className="ml-3 text-2xl font-semibold text-[var(--custom-gray-900)] tracking-tight">
                 Upcoming Events
               </h2>
             </div>
@@ -306,24 +306,24 @@ const Events = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      className="bg-white/95 rounded-xl shadow-md p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                      className="bg-[var(--custom-white)]/95 rounded-xl shadow-md p-6 border border-[var(--custom-gray-100)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
                       <div className="flex items-center mb-4">
-                        <div className="h-2.5 w-2.5 bg-emercld-400 rounded-full mr-3" />
-                        <h3 className="text-lg font-medium text-gray-900">
+                        <div className="h-2.5 w-2.5 bg-[var(--custom-green-400)] rounded-full mr-3" />
+                        <h3 className="text-lg font-medium text-[var(--custom-gray-900)]">
                           {event.title}
                         </h3>
                       </div>
-                      <div className="space-y-3 text-sm text-gray-600">
+                      <div className="space-y-3 text-sm text-[var(--custom-gray-600)]">
                         <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-2 text-orange-500" />
+                          <Clock className="h-4 w-4 mr-2 text-[var(--custom-orange-500)]" />
                           {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
                         </div>
-                        <p className="text-gray-600 line-clamp-3">
+                        <p className="text-[var(--custom-gray-600)] line-clamp-3">
                           {event.description}
                         </p>
                         <div className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-2 text-orange-500" />
+                          <MapPin className="h-4 w-4 mr-2 text-[var(--custom-orange-500)]" />
                           {event.venue}
                         </div>
                       </div>
@@ -334,10 +334,10 @@ const Events = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-white/95 rounded-xl shadow-md p-6 text-center border border-gray-100"
+                    className="bg-[var(--custom-white)]/95 rounded-xl shadow-md p-6 text-center border border-[var(--custom-gray-100)]"
                   >
-                    <CalendarX className="h-12 w-12 text-gray-300 mx-auto mb-4 animate-pulse" />
-                    <p className="text-gray-500 text-sm italic">
+                    <CalendarX className="h-12 w-12 text-[var(--custom-gray-300)] mx-auto mb-4 animate-pulse" />
+                    <p className="text-[var(--custom-gray-500)] text-sm italic">
                       No upcoming events scheduled
                     </p>
                   </motion.div>
@@ -352,8 +352,8 @@ const Events = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex items-center mb-8">
-              <CalendarX className="h-8 w-8 text-gray-500" />
-              <h2 className="ml-3 text-2xl font-semibold text-gray-900 tracking-tight">
+              <CalendarX className="h-8 w-8 text-[var(--custom-gray-500)]" />
+              <h2 className="ml-3 text-2xl font-semibold text-[var(--custom-gray-900)] tracking-tight">
                 Past Events
               </h2>
             </div>
@@ -366,18 +366,18 @@ const Events = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      className="bg-white/95 rounded-xl shadow-md p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                      className="bg-[var(--custom-white)]/95 rounded-xl shadow-md p-6 border border-[var(--custom-gray-100)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                      <h3 className="text-lg font-medium text-[var(--custom-gray-900)] mb-4">
                         {event.title}
                       </h3>
-                      <div className="space-y-3 text-sm text-gray-600">
+                      <div className="space-y-3 text-sm text-[var(--custom-gray-600)]">
                         <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-2 text-gray-400" />
+                          <Clock className="h-4 w-4 mr-2 text-[var(--custom-gray-400)]" />
                           {format(event.dateTime, "dd-MMM-yyyy h:mm a")}
                         </div>
                         <div className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                          <MapPin className="h-4 w-4 mr-2 text-[var(--custom-gray-400)]" />
                           {event.venue}
                         </div>
                         <div className="pt-2">
@@ -386,13 +386,13 @@ const Events = () => {
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
                               onClick={() => window.open(event.url, "_blank")}
-                              className="w-full flex items-center justify-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md"
+                              className="w-full flex items-center justify-center px-4 py-2 bg-[var(--custom-orange-500)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-600)] transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md"
                             >
                               <Download className="h-4 w-4 mr-2" />
                               Download Content
                             </motion.button>
                           ) : (
-                            <span className="text-gray-400 text-sm italic block text-center">
+                            <span className="text-[var(--custom-gray-400)] text-sm italic block text-center">
                               Content not available
                             </span>
                           )}
@@ -405,10 +405,10 @@ const Events = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-white/95 rounded-xl shadow-md p-6 text-center border border-gray-100"
+                    className="bg-[var(--custom-white)]/95 rounded-xl shadow-md p-6 text-center border border-[var(--custom-gray-100)]"
                   >
-                    <CalendarX className="h-12 w-12 text-gray-300 mx-auto mb-4 animate-pulse" />
-                    <p className="text-gray-500 text-sm italic">
+                    <CalendarX className="h-12 w-12 text-[var(--custom-gray-300)] mx-auto mb-4 animate-pulse" />
+                    <p className="text-[var(--custom-gray-500)] text-sm italic">
                       No past events to display
                     </p>
                   </motion.div>

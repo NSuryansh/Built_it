@@ -206,7 +206,7 @@ const Login = () => {
           <h2 className="mt-4 text-3xl font-bold text-[var(--custom-orange-900)]">
             User Login
           </h2>
-          {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
+          {error && <p className="mt-2 text-[var(--custom-red-600)] text-sm">{error}</p>}
         </div>
 
         <div className="space-y-4">
@@ -247,7 +247,7 @@ const Login = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[var(--custom-orange-900)]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-500)] hover:text-[var(--custom-orange-900)]"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -291,17 +291,17 @@ const Login = () => {
             <>Login</>
           )}
         </button>
-        <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
+        <p className="mt-4 text-sm text-center text-[var(--custom-black)]">
           If not registered{" "}
           <button
-            onClick={() => navigate("/user/signup")}
-            className="underline font-bold text-[var(--custom-primary-orange)]"
+            onClick={() => router.push("/user/signup")}
+            className="underline font-bold text-[var(--custom-orange-500)]"
           >
             click here
           </button>
         </p>
 
-        <div className="flex justify-center mt-2 items-center text-[var(--login-light-text)]">
+        <div className="flex justify-center mt-2 items-center text-[var(--custom-gray-500)]">
           <hr className="flex-1/3" />
           <div className="flex-1/3 text-center">OR</div>
           <hr className="flex-1/3" />
@@ -310,15 +310,15 @@ const Login = () => {
           <p className="w-full text-center">
             Login as a&nbsp;
             <button
-              onClick={() => navigate("/doctor/login")}
-              className="underline font-bold text-[var(--custom-primary-orange)]"
+              onClick={() => router.push("/doctor/login")}
+              className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Doctor
             </button>
             &nbsp;or&nbsp;
             <button
-              onClick={() => navigate("/admin/login")}
-              className="underline font-bold text-[var(--custom-primary-orange)]"
+              onClick={() => router.push("/admin/login")}
+              className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Admin
             </button>
@@ -344,7 +344,7 @@ const Login = () => {
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setShowForgotModal(false)}
-                className="mr-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                className="mr-2 px-4 py-2 text-sm text-[var(--custom-gray-600)] hover:text-[var(--custom-gray-800)]"
               >
                 Cancel
               </button>
@@ -376,7 +376,7 @@ const Login = () => {
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setShowBiometricModal(false)}
-                className="mr-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                className="mr-2 px-4 py-2 text-sm text-[var(--custom-gray-600)] hover:text-[var(--custom-gray-800)]"
               >
                 Cancel
               </button>
