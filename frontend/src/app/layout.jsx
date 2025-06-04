@@ -11,6 +11,7 @@ const poppins = Poppins({
 export const metadata = {
   title: "Vitality",
   description: "Find Peace - Get Support - Thrive",
+  manifest: '/manifest.webmanifest'
 };
 
 export default function RootLayout({ children }) {
