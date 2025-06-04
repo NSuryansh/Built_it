@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
-import { all } from "axios";
 
 dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -13,8 +12,8 @@ export function authorizeRoles(...allowedRoles) {
 
     try {
       const decoded = jwt.verify(token, SECRET_KEY);
-      console.log(allowedRoles)
-      console.log(decoded)
+      // console.log(allowedRoles)
+      // console.log(decoded)
       if (!allowedRoles.includes(decoded.role)) {
         return res.status(403).json({ error: "Access denied" });
       }
