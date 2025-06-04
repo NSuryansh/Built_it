@@ -221,7 +221,7 @@ const EventsList = () => {
   }
 
   return (
-    <div className="flex bg-gradient-to-br from-emerald-50 to-teal-50 flex-col min-h-screen">
+    <div className="flex bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-teal-50)] flex-col min-h-screen">
       <AdminNavbar />
       <ToastContainer />
 
@@ -229,17 +229,17 @@ const EventsList = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div>
-            <h1 className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-bold text-emerald-900 mb-2">
+            <h1 className="text-2xl text-center md:text-start md:text-3xl lg:text-4xl font-bold text-[var(--custom-green-900)] mb-2">
               Events Dashboard
             </h1>
-            <p className="text-emerald-600">
+            <p className="text-[var(--custom-green-600)]">
               Manage and track your upcoming events
             </p>
           </div>
 
           <Link
-            to="/admin/add_event"
-            className="group flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 md:px-6 md:py-3 rounded-full hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-emerald-200 mt-4 md:mt-0"
+            href="/admin/add_event"
+            className="group flex items-center gap-2 bg-[var(--custom-green-600)] text-[var(--custom-white)] px-3 py-1.5 md:px-6 md:py-3 rounded-full hover:bg-[var(--custom-green-700)] transition-all duration-300 shadow-lg hover:shadow-[var(--custom-green-200)] mt-4 md:mt-0"
           >
             <Calendar className="w-5 h-5" />
             <span>Create Event</span>
@@ -248,11 +248,11 @@ const EventsList = () => {
         </div>
 
         {/* Search and Filter Section */}
-        <div className="bg-white rounded-2xl shadow-md mb-8 overflow-hidden">
-          <div className="p-6 border-b border-gray-100">
+        <div className="bg-[var(--custom-white)] rounded-2xl shadow-md mb-8 overflow-hidden">
+          <div className="p-6 border-b border-[var(--custom-gray-100)]">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <Filter className="w-5 h-5 text-emerald-600" />
+              <h2 className="text-lg font-semibold text-[var(--custom-gray-900)] flex items-center gap-2">
+                <Filter className="w-5 h-5 text-[var(--custom-green-600)]" />
                 Filters
               </h2>
               <button
@@ -262,7 +262,7 @@ const EventsList = () => {
                   }
                   setShowFilters(!showFilters);
                 }}
-                className="text-emerald-600 hover:text-emerald-700 font-medium text-sm"
+                className="text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)] font-medium text-sm"
               >
                 {showFilters ? "Hide Filters" : "Show Filters"}
               </button>
@@ -270,20 +270,20 @@ const EventsList = () => {
 
             <div className="flex flex-col gap-6 justify-between items-center sm:flex-row">
               <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-400)] w-5 h-5" />
                 <input
                   type="text"
                   placeholder="Search events..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-[var(--custom-gray-200)] focus:border-[var(--custom-green-500)] focus:ring-2 focus:ring-[var(--custom-green-200)] outline-none transition-all"
                 />
               </div>
-              <div className="bg-white p-2 md:p-4 flex justify-center gap-4 items-center rounded-2xl border-2 border-emerald-500">
-                <h3 className="text-emerald-600 font-semibold text-nowrap text-lg">
+              <div className="bg-[var(--custom-white)] p-2 md:p-4 flex justify-center gap-4 items-center rounded-2xl border-2 border-[var(--custom-green-500)]">
+                <h3 className="text-[var(--custom-green-600)] font-semibold text-nowrap text-lg">
                   Total Events
                 </h3>
-                <p className="text-3xl font-bold text-emerald-600">
+                <p className="text-3xl font-bold text-[var(--custom-green-600)]">
                   {dateFilteredEvents.length}
                 </p>
               </div>
@@ -291,17 +291,17 @@ const EventsList = () => {
           </div>
 
           {showFilters && (
-            <div className="p-6 bg-gray-50 space-y-4">
+            <div className="p-6 bg-[var(--custom-gray-50)] space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                    <CalendarDays className="w-4 h-4 text-emerald-600" />
+                  <label className="text-sm font-medium text-[var(--custom-gray-700)] mb-2 flex items-center gap-2">
+                    <CalendarDays className="w-4 h-4 text-[var(--custom-green-600)]" />
                     Time Period
                   </label>
                   <select
                     value={dateFilter}
                     onChange={(e) => setDateFilter(e.target.value)}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"
+                    className="w-full px-4 py-2 rounded-lg border border-[var(--custom-gray-200)] focus:border-[var(--custom-green-500)] focus:ring-2 focus:ring-[var(--custom-green-200)] outline-none"
                   >
                     <option value="all">All Time</option>
                     <option value="7days">Last 7 Days</option>
@@ -319,11 +319,11 @@ const EventsList = () => {
           {dateFilteredEvents.map((event) => (
             <div
               key={event.id}
-              className="group bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+              className="group bg-[var(--custom-white)] p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-[var(--custom-gray-100)]"
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">
+                  <h2 className="text-xl font-semibold text-[var(--custom-gray-900)] group-hover:text-[var(--custom-green-700)] transition-colors">
                     {event.title}
                   </h2>
                 </div>
@@ -331,7 +331,7 @@ const EventsList = () => {
                 {!isEventPast(event.date) ? (
                   <button
                     onClick={() => handleDeletePopup(event.id, true)}
-                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-300"
+                    className="p-2 text-[var(--custom-gray-400)] hover:text-[var(--custom-red-600)] hover:bg-[var(--custom-red-50)] rounded-full transition-all duration-300"
                   >
                     <Trash2 size={20} />
                   </button>
@@ -340,20 +340,24 @@ const EventsList = () => {
 
               <div className="mt-6 grid sm:grid-cols-2 gap-6">
                 <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-emerald-500" />
+                  <Clock className="w-5 h-5 text-[var(--custom-green-500)]" />
                   <div>
-                    <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-sm text-[var(--custom-gray-500)]">
+                      Date
+                    </p>
+                    <p className="font-medium text-[var(--custom-gray-900)]">
                       {event.formattedDate}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-emerald-500" />
+                  <MapPin className="w-5 h-5 text-[var(--custom-green-500)]" />
                   <div>
-                    <p className="text-sm text-gray-500">Location</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-sm text-[var(--custom-gray-500)]">
+                      Location
+                    </p>
+                    <p className="font-medium text-[var(--custom-gray-900)]">
                       {event.location}
                     </p>
                   </div>
@@ -361,10 +365,12 @@ const EventsList = () => {
               </div>
 
               {/* Document Link Section */}
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="mt-4 pt-4 border-t border-[var(--custom-gray-100)]">
                 <div className="flex items-center gap-2 mb-2">
-                  <LinkIcon className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm text-gray-500">Event Document</span>
+                  <LinkIcon className="w-4 h-4 text-[var(--custom-green-500)]" />
+                  <span className="text-sm text-[var(--custom-gray-500)]">
+                    Event Document
+                  </span>
                 </div>
 
                 {editingLinkId === event.id ? (
@@ -374,12 +380,12 @@ const EventsList = () => {
                       value={newLink}
                       onChange={(e) => setNewLink(e.target.value)}
                       placeholder="Enter google drive link"
-                      className="flex-1 text-sm border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 outline-none"
+                      className="flex-1 text-sm border rounded-lg px-3 py-2 focus:ring-2 focus:ring-[var(--custom-green-200)] focus:border-[var(--custom-green-500)] outline-none"
                     />
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleLinkSubmit(event.id)}
-                        className="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors text-sm"
+                        className="bg-[var(--custom-green-500)] text-[var(--custom-white)] px-4 py-2 rounded-lg hover:bg-[var(--custom-green-600)] transition-colors text-sm"
                       >
                         Save
                       </button>
@@ -388,7 +394,7 @@ const EventsList = () => {
                           setEditingLinkId(null);
                           setNewLink("");
                         }}
-                        className="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors text-sm"
+                        className="bg-[var(--custom-gray-200)] text-[var(--custom-gray-600)] px-4 py-2 rounded-lg hover:bg-[var(--custom-gray-300)] transition-colors text-sm"
                       >
                         Cancel
                       </button>
@@ -402,7 +408,7 @@ const EventsList = () => {
                           href={event.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                          className="text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)] text-sm font-medium"
                         >
                           View Document
                         </a>
@@ -411,7 +417,7 @@ const EventsList = () => {
                             setEditingLinkId(event.id);
                             setNewLink(event.link);
                           }}
-                          className="text-gray-400 hover:text-gray-600 text-sm"
+                          className="text-[var(--custom-gray-400)] hover:text-[var(--custom-gray-600)] text-sm"
                         >
                           (Edit)
                         </button>
@@ -422,7 +428,7 @@ const EventsList = () => {
                           setEditingLinkId(event.id);
                           setNewLink("");
                         }}
-                        className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                        className="text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)] text-sm font-medium"
                       >
                         + Add Document Link
                       </button>

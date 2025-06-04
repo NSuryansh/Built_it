@@ -65,21 +65,21 @@ const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig }) => {
   };
   return (
     <div className="hidden md:block p-4">
-      <div className="overflow-x-auto rounded-xl bg-white">
-        <table className="min-w-full divide-y divide-gray-100">
-          <thead className="bg-gray-50">
+      <div className="overflow-x-auto rounded-xl bg-[var(--custom-white)]">
+        <table className="min-w-full divide-y divide-[var(--custom-gray-100)]">
+          <thead className="bg-[var(--custom-gray-50)]">
             <tr>
               {["User", "Degree", "Doctors", "Appointments"].map(
                 (header, idx) => (
                   <th
                     key={header}
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
+                    className="px-6 py-4 text-left text-sm font-semibold text-[var(--custom-gray-600)] uppercase tracking-wider"
                     onClick={header === "Appointments" ? handleSort : undefined}
                   >
                     <div
                       className={`flex items-center gap-2 ${
                         header === "Appointments"
-                          ? "cursor-pointer hover:text-[var(--custom-primary-green-700)]"
+                          ? "cursor-pointer hover:text-[var(--custom-green-700)]"
                           : ""
                       }`}
                     >
@@ -93,32 +93,32 @@ const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig }) => {
               )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-[var(--custom-gray-100)]">
             {filteredAndSortedUsers.map((user) => (
               <tr
                 key={user.id}
-                className="hover:bg-[var(--custom-primary-green-50)] transition-all duration-200 group"
+                className="hover:bg-[var(--custom-green-50)] transition-all duration-200 group"
               >
                 <td className="px-6 py-5 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900 group-hover:text-[var(--custom-primary-green-900)]">
+                  <div className="text-sm font-medium text-[var(--custom-gray-900)] group-hover:text-[var(--custom-green-900)]">
                     {user.username}
                   </div>
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap">
-                  <div className="text-sm text-gray-600">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--custom-primary-green-100)] text-[var(--custom-primary-green-800)]">
+                  <div className="text-sm text-[var(--custom-gray-600)]">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--custom-green-100)] text-[var(--custom-green-800)]">
                       {user.acadProg}
                     </span>
                   </div>
                 </td>
                 <td className="px-6 py-5">
-                  <div className="text-sm text-gray-600 max-w-md truncate">
+                  <div className="text-sm text-[var(--custom-gray-600)] max-w-md truncate">
                     {user.doctors.map((doc) => doc.name).join(", ")}
                   </div>
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap">
-                  <div className="text-sm font-semibold text-[var(--custom-primary-green-900)]">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--custom-primary-green-100)]">
+                  <div className="text-sm font-semibold text-[var(--custom-green-900)]">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--custom-green-100)]">
                       {user.appointmentCount}
                     </span>
                   </div>
@@ -137,34 +137,36 @@ const MobileLayout = ({ filteredAndSortedUsers }) => (
     {filteredAndSortedUsers.map((user) => (
       <div
         key={user.id}
-        className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:border-[var(--custom-primary-green-200)] transition-all duration-200"
+        className="bg-[var(--custom-white)] rounded-xl shadow-sm border border-[var(--custom-gray-200)] overflow-hidden hover:border-[var(--custom-green-200)] transition-all duration-200"
       >
         <div className="p-4 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-[var(--custom-primary-green-100)] p-2 rounded-full">
-                <User className="h-5 w-5 text-[var(--custom-primary-green-700)]" />
+              <div className="bg-[var(--custom-green-100)] p-2 rounded-full">
+                <User className="h-5 w-5 text-[var(--custom-green-700)]" />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900">{user.username}</h3>
+                <h3 className="font-medium text-[var(--custom-gray-900)]">
+                  {user.username}
+                </h3>
                 <div className="mt-1">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--custom-primary-green-100)] text-[var(--custom-primary-green-800)]">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--custom-green-100)] text-[var(--custom-green-800)]">
                     {user.acadProg}
                   </span>
                 </div>
               </div>
             </div>
             <div className="flex items-center">
-              <div className="bg-[var(--custom-primary-green-100)] px-3 py-1 rounded-full">
-                <span className="text-sm font-semibold text-[var(--custom-primary-green-900)]">
+              <div className="bg-[var(--custom-green-100)] px-3 py-1 rounded-full">
+                <span className="text-sm font-semibold text-[var(--custom-green-900)]">
                   {user.appointmentCount}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-gray-100">
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <div className="pt-3 border-t border-[var(--custom-gray-100)]">
+            <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-600)]">
               <GraduationCap className="h-4 w-4" />
               <span className="truncate">
                 {user.doctors.map((doc) => doc.name).join(", ")}
@@ -309,24 +311,24 @@ const AdminUser = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-10">
+    <div className="min-h-screen bg-gradient-to-b from-[var(--custom-green-50)] to-[var(--custom-green-100)]">
       <AdminNavbar />
       <div className="max-w-7xl mx-auto py-8 md:py-16 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-[var(--custom-primary-green-100)]">
+        <div className="bg-[var(--custom-white)] rounded-3xl shadow-xl overflow-hidden border border-[var(--custom-green-100)]">
           {/* Header Section */}
-          <div className="bg-gradient-to-r from-white to-emerald-100 px-5 py-8 md:px-8 md:py-10 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-[var(--custom-white)] to-[var(--custom-teal-100)] px-5 py-8 md:px-8 md:py-10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
-              <svg viewBox="0 0 200 200" className="fill-white">
+              <svg viewBox="0 0 200 200" className="fill-[var(--custom-white)]">
                 <path d="M0 0 L200 200 M200 0 L0 200" strokeWidth="20" />
               </svg>
             </div>
             <div className="flex items-center relative">
-              <Users className="h-14 w-14 text-green-700 flex-shrink-0" />
+              <Users className="h-14 w-14 text-[var(--custom-green-700)] flex-shrink-0" />
               <div className="ml-6">
-                <h1 className="text-green-700 text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
+                <h1 className="text-[var(--custom-green-700)] text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
                   Users Overview
                 </h1>
-                <p className="text-emerald-700 mt-1 text-lg opacity-90">
+                <p className="text-[var(--custom-teal-700)] mt-1 text-lg opacity-90">
                   Administrative Dashboard
                 </p>
               </div>
