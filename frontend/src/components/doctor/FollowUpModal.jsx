@@ -6,7 +6,7 @@ import {
   Loader,
 } from "lucide-react";
 import { format } from "date-fns";
-import CustomToast from "../CustomToast";
+import CustomToast from "../common/CustomToast";
 import { useSearchParams } from "react-router-dom";
 
 const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {

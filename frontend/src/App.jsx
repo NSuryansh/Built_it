@@ -1,44 +1,43 @@
-import Peer from "./pages/Peer";
-import Entertainment from "./pages/Entertainment";
-import Mood from "./pages/Mood";
-import Book from "./pages/Book";
-import Landing from "./pages/Landing";
-import Dinogame from "./pages/dino";
-import Landing_user from "./pages/Landing_user";
-import Login from "./pages/Login";
-import SignUp from "./pages/Signup";
 import { Route, Routes } from "react-router-dom";
-import DoctorLogin from "./pages/doctor/Login_doctor";
-import DoctorLeave from "./pages/doctor/Leave_doctor";
-import DoctorLanding from "./pages/doctor/Landing_doctor";
-import DoctorAppointment from "./pages/doctor/Appointment_doctor";
-import DoctorPeer from "./pages/doctor/Peer_doctor";
-import DoctorProfile from "./pages/doctor/Profile_doctor";
-import AdminDashboard from "./pages/admin/admin_dashboard";
-import User from "./pages/admin/admin_user_list";
-import AdminLogin from "./pages/admin/admin_login";
-import DoctorsList from "./pages/admin/admin_doctor_list";
-import EventsList from "./pages/admin/admin_event_list";
-import AddEvent from "./pages/admin/admin_add_event";
-import AddDoctor from "./pages/admin/admin_add_doctor";
-import Appointments from "./pages/Appointments";
-import AdminDoctorProfile from "./pages/admin/admin_doctor_profile";
-import Stress from "./pages/stress";
-import Events from "./pages/Events";
-import ModifyProfile from "./pages/Modify_profile";
-import ResetPassword from "./pages/ResetPassword";
-import DoctorResetPassword from "./pages/doctor/ResetPassword_doctor";
-import AdminResetPassword from "./pages/admin/admin_reset_password";
 import { useEffect, useState } from "react";
-import AdminAppointments from "./pages/admin/admin_appointments";
-import DoctorBook from "./pages/doctor/Doctor_book";
-import History from "./pages/doctor/Doctor_history";
-import ErrorBoundaryFallback from "./components/ErrorBoundaryFallback";
 import { messaging, getToken } from "./firebase";
 import { getMessaging, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
-import UserDetail from "./pages/doctor/Doctor_user_detail";
-import FeedbackPage from "./pages/Feedback";
+import Landing from "./pages/user/Landing";
+import Peer from "./pages/user/Peer";
+import Mood from "./pages/user/Mood";
+import { Book, User } from "lucide-react";
+import Stress from "./pages/user/stress";
+import Entertainment from "./pages/user/Entertainment";
+import Dinogame from "./pages/user/dino";
+import Events from "./pages/user/Events";
+import Login from "./pages/user/Login";
+import SignUp from "./pages/user/SignUp";
+import ResetPassword from "./pages/user/reset_password";
+import ModifyProfile from "./pages/user/Modify_profile";
+import UserAppointments from "./pages/user/Appointments";
+import FeedbackPage from "./pages/user/Feedback";
+import Dashboard from "./pages/user/dashboard";
+import DoctorLogin from "./pages/doctor/login";
+import DoctorResetPassword from "./pages/doctor/reset_password";
+import DoctorLanding from "./pages/doctor/landing";
+import DoctorProfile from "./pages/doctor/profile";
+import DoctorAppointment from "./pages/doctor/appointments";
+import DoctorPeer from "./pages/doctor/peer";
+import DoctorLeave from "./pages/doctor/leave";
+import DoctorBook from "./pages/doctor/book";
+import History from "./pages/doctor/history";
+import UserDetail from "./pages/doctor/user";
+import AdminLogin from "./pages/admin/login";
+import AdminResetPassword from "./pages/admin/reset_password";
+import AdminDashboard from "./pages/admin/dashboard";
+import DoctorsList from "./pages/admin/doctor_list";
+import AdminDoctorProfile from "./pages/admin/doctor_profile";
+import EventsList from "./pages/admin/event_list";
+import AddEvent from "./pages/admin/add_event";
+import AddDoctor from "./pages/admin/add_doctor";
+import AdminAppointments from "./pages/admin/appointments";
+import ErrorBoundaryFallback from "./pages/easter_egg/error_boundary_fallback";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -177,9 +176,9 @@ export default function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/modify_profile" element={<ModifyProfile />} />
-        <Route path="/appointments" element={<Appointments />} />
+        <Route path="/appointments" element={<UserAppointments />} />
         <Route path="/feedback" element={<FeedbackPage />} />
-        <Route path="/dashboard" element={<Landing_user />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />
         <Route
           path="/doctor/reset_password"
