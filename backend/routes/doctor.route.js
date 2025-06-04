@@ -60,7 +60,7 @@ docRouter.post("/forgotPassword", async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `http://localhost:4000/doctor/reset_password?token=${token}`;
+    const resetLink = `http://localhost:5173/doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(doctor.email, subject, message);

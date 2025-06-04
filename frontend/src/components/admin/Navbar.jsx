@@ -97,7 +97,7 @@ const AdminNavbar = () => {
           </div>
           <div className="flex">
             <img
-              src="/assests/logo.svg"
+              src="/assets/logo.svg"
               alt="logo"
               width={25}
               height={25}
