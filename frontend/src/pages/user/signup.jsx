@@ -36,7 +36,7 @@ const SignUp = () => {
       const userAuthStatus = await checkAuth("user");
       if (userAuthStatus) {
         setIsAuthenticated(userAuthStatus);
-        navigate("/dashboard");
+        navigate("/user/dashboard");
       } else {
         setIsAuthenticated(false);
       }
@@ -292,7 +292,7 @@ const SignUp = () => {
       console.log("Signup successful:", data);
       CustomToast("Signup successful");
       setisLoading(false);
-      navigate("/login");
+      navigate("/user/login");
     } catch (error) {
       setisLoading(false);
       console.error("Signup error:", error);
@@ -562,7 +562,7 @@ const SignUp = () => {
         <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
           Already have an account?{" "}
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/user/login")}
             className="underline font-bold text-[var(--custom-primary-orange)]"
           >
             Login here

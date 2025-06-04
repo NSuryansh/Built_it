@@ -14,7 +14,7 @@ const Landing = () => {
       const userAuthStatus = await checkAuth("user");
       if (userAuthStatus) {
         setIsAuthenticated(userAuthStatus);
-        navigate("/dashboard");
+        navigate("/user/dashboard");
       } else {
         const docAuthStatus = await checkAuth("doc");
         if (docAuthStatus) {
@@ -54,7 +54,7 @@ const Landing = () => {
                 emotional support, or expert guidance, we are here to help.
               </p>
               <Link
-                to="/signup"
+                to="/user/signup"
                 className="bg-[var(--custom-orange-500)] text-[var(--custom-white)] px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[var(--custom-orange-600)] w-fit transition-colors duration-300 flex items-center"
               >
                 Get Started
@@ -120,7 +120,7 @@ const Landing = () => {
                   Take the first step towards better mental health. Our team of
                   professionals is here to support you every step of the way.
                 </p>
-                <Link to="/book">
+                <Link to="/user/book">
                   <button className="bg-[var(--custom-white)] text-[var(--custom-orange-500)] px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-300">
                     Book Free Consultation
                   </button>

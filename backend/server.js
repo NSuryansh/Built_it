@@ -13,11 +13,16 @@ import { error } from "console";
 import axios from "axios";
 import webpush from "web-push";
 import multer from "multer";
-import base64url from 'base64url'
+import base64url from "base64url";
 import { send } from "@emailjs/browser";
 import admin from "firebase-admin";
 import { authorizeRoles } from "./authMiddleware.js";
-import { generateRegistrationOptions, verifyRegistrationResponse, generateAuthenticationOptions, verifyAuthenticationResponse } from "@simplewebauthn/server"
+import {
+  generateRegistrationOptions,
+  verifyRegistrationResponse,
+  generateAuthenticationOptions,
+  verifyAuthenticationResponse,
+} from "@simplewebauthn/server";
 // import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
@@ -236,17 +241,17 @@ const biometricOptions = async (user) => {
     rpID: "built-it-frontend.onrender.com",
     userID: Number(user.id),
     userName: user.email,
-    userDisplayName: user.email
-  })
-  console.log(options)
+    userDisplayName: user.email,
+  });
+  console.log(options);
   const addChallenge = await prisma.user.update({
     where: {
-      id: Number(user.id)
+      id: Number(user.id),
     },
     data: {
-      challenge: base64url.encode(options.challenge)
-    }
-  })
+      challenge: base64url.encode(options.challenge),
+    },
+  });
   return {
     ...options,
     challenge: base64url.encode(options.challenge),
@@ -258,8 +263,8 @@ const biometricOptions = async (user) => {
       ...cred,
       id: base64url.encode(cred.id),
     })),
-  }
-}
+  };
+};
 
 app.post("/signup", async (req, res) => {
   const username = req.body["username"];
@@ -295,33 +300,33 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/generateOptions",  async (req, res) => {
-  const user = req.body["user"]
-  console.log('hello')
+app.post("/generateOptions", async (req, res) => {
+  const user = req.body["user"];
+  console.log("hello");
   // if (user.id !== req.user.id) {
   //   return res.status(403).json({ error: "Access denied" })
   // }
-  const options = await biometricOptions(user)
-  return res.json({ options: options })
-})
+  const options = await biometricOptions(user);
+  return res.json({ options: options });
+});
 
-const base64urlToBuffer =(base64url)=> {
+const base64urlToBuffer = (base64url) => {
   const base64 = base64url
-    .replace(/-/g, '+')
-    .replace(/_/g, '/')
-    .padEnd(base64url.length + (4 - base64url.length % 4) % 4, '=');
-  return Buffer.from(base64, 'base64');
-}
+    .replace(/-/g, "+")
+    .replace(/_/g, "/")
+    .padEnd(base64url.length + ((4 - (base64url.length % 4)) % 4), "=");
+  return Buffer.from(base64, "base64");
+};
 
 app.post("/verifyBioRegistration", async (req, res) => {
   try {
-    const emailId = req.body["emailId"]
-    console.log(emailId)
+    const emailId = req.body["emailId"];
+    console.log(emailId);
     const user = await prisma.user.findUnique({
       where: {
-        email: emailId
-      }
-    })
+        email: emailId,
+      },
+    });
     const verification = await verifyRegistrationResponse({
       response: req.body,
       expectedChallenge: user.challenge,
@@ -334,34 +339,38 @@ app.post("/verifyBioRegistration", async (req, res) => {
       //     credentialDeviceType: credential.deviceType,
       //     credentialBackedUp: credential.backedUp
       // },
-    })
-    console.log(verification)
+    });
+    console.log(verification);
 
     if (verification.verified && verification.registrationInfo) {
       await prisma.authenticator.create({
         data: {
-          credentialID: base64urlToBuffer(verification.registrationInfo.credential.id),
-          publicKey: Buffer.from(verification.registrationInfo.credential.publicKey),
+          credentialID: base64urlToBuffer(
+            verification.registrationInfo.credential.id
+          ),
+          publicKey: Buffer.from(
+            verification.registrationInfo.credential.publicKey
+          ),
           counter: verification.registrationInfo.credential.counter,
           deviceType: verification.registrationInfo.credentialDeviceType,
           backedUp: verification.registrationInfo.credentialBackedUp,
           transports: req.body.response?.transports || [],
-          user: { connect: { id: user.id } }
-        }
-      })
+          user: { connect: { id: user.id } },
+        },
+      });
     }
     return res.status(200).json({ success: true });
   } catch (e) {
-    console.log(e)
-    return res.status(400).json({ error: e })
+    console.log(e);
+    return res.status(400).json({ error: e });
   }
-})
+});
 
-app.post("/generateBioAuthOptions",  async (req, res) => {
-  const emailId = req.body["emailId"]
+app.post("/generateBioAuthOptions", async (req, res) => {
+  const emailId = req.body["emailId"];
   const user = await prisma.user.findUnique({
     where: { email: emailId },
-    include: { credentials: true }
+    include: { credentials: true },
   });
   // if (user.id !== req.user.userId) {
   //   return res.status(403).json({ error: "Access denied" })
@@ -372,46 +381,48 @@ app.post("/generateBioAuthOptions",  async (req, res) => {
   }
 
   const options = await generateAuthenticationOptions({
-    allowCredentials: user.credentials.map(cred => ({
+    allowCredentials: user.credentials.map((cred) => ({
       id: base64url.encode(Buffer.from(cred.credentialID)),
-      type: 'public-key',
+      type: "public-key",
       transports: cred.transports || [],
     })),
-    userVerification: 'preferred',
-  })
-  console.log(options)
+    userVerification: "preferred",
+  });
+  console.log(options);
   await prisma.user.update({
     where: { id: user.id },
-    data: { challenge: options.challenge }
-  })
+    data: { challenge: options.challenge },
+  });
 
-  res.json({options: options})
-})
+  res.json({ options: options });
+});
 
 app.post("/verifyBioLogin", async (req, res) => {
   const emailId = req.body["emailId"];
-  console.log(emailId, "hiihihih")
+  console.log(emailId, "hiihihih");
   const user = await prisma.user.findUnique({
     where: { email: emailId },
     include: {
       credentials: true,
-    }
+    },
   });
 
   if (!user || user.credentials.length === 0) {
     return res.status(404).json({ error: "User or credentials not found" });
   }
-  console.log(req.body)
-  console.log(user.credentials)
-  const credential = user.credentials.find(c =>
-    base64url.encode(Buffer.from(c.credentialID)) === req.body.id
+  console.log(req.body);
+  console.log(user.credentials);
+  const credential = user.credentials.find(
+    (c) => base64url.encode(Buffer.from(c.credentialID)) === req.body.id
   );
-  console.log(credential)
+  console.log(credential);
   if (!credential) {
     return res.status(400).json({ error: "Credential not recognized" });
   }
-  const encodedCredentialId = base64url.encode(Buffer.from(credential.credentialID))
-  console.log(credential.counter)
+  const encodedCredentialId = base64url.encode(
+    Buffer.from(credential.credentialID)
+  );
+  console.log(credential.counter);
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
@@ -422,19 +433,21 @@ app.post("/verifyBioLogin", async (req, res) => {
       publicKey: Buffer.from(credential.publicKey),
       counter: credential.counter,
       credentialDeviceType: credential.deviceType,
-      credentialBackedUp: credential.backedUp
+      credentialBackedUp: credential.backedUp,
     },
   });
 
   if (!verification.verified) {
-    return res.status(403).json({ success: false, error: "Verification failed" });
+    return res
+      .status(403)
+      .json({ success: false, error: "Verification failed" });
   }
-  console.log(verification)
+  console.log(verification);
   await prisma.authenticator.update({
     where: { id: credential.id },
     data: {
       counter: verification.authenticationInfo.newCounter,
-    }
+    },
   });
   const token = jwt.sign(
     {
@@ -447,7 +460,7 @@ app.post("/verifyBioLogin", async (req, res) => {
     {
       expiresIn: "1h",
     }
-  )
+  );
   return res.json({ success: true, token });
 });
 
@@ -1035,26 +1048,23 @@ app.post("/requests", authorizeRoles("user", "doc"), async (req, res) => {
   }
 });
 
-app.get(
-  "/getdoctors",
-  async (req, res) => {
-    const user_type = req.query["user_type"];
-    try {
-      let doctors = [];
-      if (user_type === "user") {
-        doctors = await prisma.doctor.findMany({
-          where: { isInactive: false },
-        });
-      } else if (user_type === "admin") {
-        doctors = await prisma.doctor.findMany();
-      }
-      res.json(doctors);
-    } catch (e) {
-      console.error(e);
-      res.status(0).json({ message: "Error fetching doctors" });
+app.get("/getdoctors", async (req, res) => {
+  const user_type = req.query["user_type"];
+  try {
+    let doctors = [];
+    if (user_type === "user") {
+      doctors = await prisma.doctor.findMany({
+        where: { isInactive: false },
+      });
+    } else if (user_type === "admin") {
+      doctors = await prisma.doctor.findMany();
     }
+    res.json(doctors);
+  } catch (e) {
+    console.error(e);
+    res.status(0).json({ message: "Error fetching doctors" });
   }
-);
+});
 
 app.post("/docLogin", async (req, res) => {
   // console.log(req.body);
@@ -1230,7 +1240,7 @@ app.post("/addEvent", authorizeRoles("admin"), async (req, res) => {
   }
 });
 
-app.post("/notifications", async (req, res) => { });
+app.post("/notifications", async (req, res) => {});
 
 app.get("/notifications", async (req, res) => {
   try {
@@ -1562,7 +1572,7 @@ app.get("/getUserFeelings", authorizeRoles("user"), async (req, res) => {
     return res.status(400).json({ error: "User ID is required" });
   }
   if (userId !== req.user.userId) {
-    return res.status(403).json({ error: "Access denied" })
+    return res.status(403).json({ error: "Access denied" });
   }
   try {
     const feelings = await prisma.feelings.findUnique({
@@ -1854,9 +1864,9 @@ app.post("/setFeedback", authorizeRoles("user"), async (req, res) => {
   const stars = req.body["stars"];
   const id = Number(req.body["id"]);
   const docId = req.body["doctorId"];
-  const userId = req.body["userId"]
+  const userId = req.body["userId"];
   if (userId !== req.user.userId) {
-    return res.status(403).json({ error: "Access denied" })
+    return res.status(403).json({ error: "Access denied" });
   }
   const question1 = req.body["question1"];
   const question2 = req.body["question2"];
@@ -1909,166 +1919,176 @@ app.post("/setFeedback", authorizeRoles("user"), async (req, res) => {
   }
 });
 
-app.post("/save-subscription", authorizeRoles("user", "doc", "admin"), async (req, res) => {
-  try {
-    // console.log("HELLLLLOOOOOOO");
-    const { userid, subscription, userType } = req.body;
-    // console.log(userid);
-    // console.log(subscription);
-    if (!userid || !subscription) {
-      return res.status(400).json({ error: "Missing userId or subscription" });
+app.post(
+  "/save-subscription",
+  authorizeRoles("user", "doc", "admin"),
+  async (req, res) => {
+    try {
+      // console.log("HELLLLLOOOOOOO");
+      const { userid, subscription, userType } = req.body;
+      // console.log(userid);
+      // console.log(subscription);
+      if (!userid || !subscription) {
+        return res
+          .status(400)
+          .json({ error: "Missing userId or subscription" });
+      }
+
+      // console.log(userType, " userType");
+
+      // const { endpoint, keys } = subscription;
+      // console.log("hi");
+      if (userType == "user") {
+        // const existingSub = await prisma.subscription.findMany({
+        //   where: { userId: Number(userid)
+        //    },
+        // });
+        // console.log("ECISTIING subscription");
+        try {
+          // if (existingSub) {
+          //   await prisma.subscription.updateMany({
+          //     where: { userId: Number(userid)} ,
+          //     data: {
+          //       endpoint: endpoint,
+          //       authKey: keys.auth,
+          //       p256dhKey: keys.p256dh,
+          //     },
+          //   });
+          // } else {
+          // Create a new subscription
+          const subs = await prisma.subscription.upsert({
+            where: {
+              // OR: [
+              //   {
+              // userId: Number(userid),
+              endpoint: subscription,
+              //   }
+              // ]
+            },
+            update: {
+              userId: Number(userid),
+              endpoint: subscription,
+              // authKey: keys.auth,
+              // p256dhKey: keys.p256dh,
+            },
+            create: {
+              userId: Number(userid),
+              endpoint: subscription,
+              // authKey: keys.auth,
+              // p256dhKey: keys.p256dh,
+            },
+          });
+          // console.log(subs);
+          // }
+        } catch (e) {
+          console.error(e);
+          res.json(e);
+        }
+      } else if (userType == "doc") {
+        try {
+          const subs = await prisma.subscription.upsert({
+            where: {
+              // OR: [
+              //   {
+              // userId: Number(userid),
+              endpoint: subscription,
+              //   }
+              // ]
+            },
+            update: {
+              doctorId: Number(userid),
+              endpoint: subscription,
+              // authKey: keys.auth,
+              // p256dhKey: keys.p256dh,
+            },
+            create: {
+              doctorId: Number(userid),
+              endpoint: subscription,
+              // authKey: keys.auth,
+              // p256dhKey: keys.p256dh,
+            },
+          });
+          // console.log(subs);
+          res.json({ success: true });
+        } catch (e) {
+          console.error(e);
+          res.json(e);
+        }
+      }
+    } catch (error) {
+      console.error("Error saving subscription:", error);
+      res.status(500).json({ error: "Error saving subscription" });
     }
+  }
+);
 
-    // console.log(userType, " userType");
+app.post(
+  "/send-notification",
+  authorizeRoles("user", "admin", "doc"),
+  async (req, res) => {
+    try {
+      const { userid, message, userType } = req.body;
+      if (!userid || !message) {
+        return res.status(400).json({ error: "Missing userId or message" });
+      }
+      // console.log("heyyyy");
+      // Fetch the subscription from the database
+      var subscription;
+      if (userType == "user") {
+        subscription = await prisma.subscription.findMany({
+          where: { userId: userid },
+        });
+      } else if (userType == "doc") {
+        subscription = await prisma.subscription.findMany({
+          where: {
+            doctorId: userid,
+          },
+        });
+      }
 
-    // const { endpoint, keys } = subscription;
-    // console.log("hi");
-    if (userType == "user") {
-      // const existingSub = await prisma.subscription.findMany({
-      //   where: { userId: Number(userid)
-      //    },
+      // console.log(subscription);
+
+      if (!subscription) {
+        return res.status(404).json({ error: "User subscription not found" });
+      }
+
+      // const payload = JSON.stringify({
+      //   title: "New Message",
+      //   body: message,
       // });
-      // console.log("ECISTIING subscription");
-      try {
-        // if (existingSub) {
-        //   await prisma.subscription.updateMany({
-        //     where: { userId: Number(userid)} ,
-        //     data: {
-        //       endpoint: endpoint,
-        //       authKey: keys.auth,
-        //       p256dhKey: keys.p256dh,
-        //     },
-        //   });
-        // } else {
-        // Create a new subscription
-        const subs = await prisma.subscription.upsert({
-          where: {
-            // OR: [
-            //   {
-            // userId: Number(userid),
-            endpoint: subscription,
-            //   }
-            // ]
-          },
-          update: {
-            userId: Number(userid),
-            endpoint: subscription,
-            // authKey: keys.auth,
-            // p256dhKey: keys.p256dh,
-          },
-          create: {
-            userId: Number(userid),
-            endpoint: subscription,
-            // authKey: keys.auth,
-            // p256dhKey: keys.p256dh,
-          },
-        });
-        // console.log(subs);
-        // }
-      } catch (e) {
-        console.error(e);
-        res.json(e);
+      for (const sub of subscription) {
+        try {
+          // await webpush.sendNotification(
+          //   {
+          //     endpoint: sub.endpoint,
+          //     keys: {
+          //       auth: sub.authKey,
+          //       p256dh: sub.p256dhKey,
+          //     },
+          //   },
+          //   payload
+          // );
+          const payload = {
+            token: sub.endpoint,
+            notification: {
+              title: "Vitality",
+              body: message,
+            },
+          };
+          const response = await admin.messaging().send(payload);
+        } catch (err) {
+          console.error("Failed to send to one subscription:", err);
+        }
       }
-    } else if (userType == "doc") {
-      try {
-        const subs = await prisma.subscription.upsert({
-          where: {
-            // OR: [
-            //   {
-            // userId: Number(userid),
-            endpoint: subscription,
-            //   }
-            // ]
-          },
-          update: {
-            doctorId: Number(userid),
-            endpoint: subscription,
-            // authKey: keys.auth,
-            // p256dhKey: keys.p256dh,
-          },
-          create: {
-            doctorId: Number(userid),
-            endpoint: subscription,
-            // authKey: keys.auth,
-            // p256dhKey: keys.p256dh,
-          },
-        });
-        // console.log(subs);
-        res.json({ success: true });
-      } catch (e) {
-        console.error(e);
-        res.json(e);
-      }
+      res.send({ success: true });
+
+      // res.json({ success: true });
+    } catch (error) {
+      console.error("Push error:", error);
+      res.status(500).json({ error: "Failed to send push notification" });
     }
-  } catch (error) {
-    console.error("Error saving subscription:", error);
-    res.status(500).json({ error: "Error saving subscription" });
   }
-});
-
-app.post("/send-notification", authorizeRoles("user", "admin", "doc"), async (req, res) => {
-  try {
-    const { userid, message, userType } = req.body;
-    if (!userid || !message) {
-      return res.status(400).json({ error: "Missing userId or message" });
-    }
-    // console.log("heyyyy");
-    // Fetch the subscription from the database
-    var subscription;
-    if (userType == "user") {
-      subscription = await prisma.subscription.findMany({
-        where: { userId: userid },
-      });
-    } else if (userType == "doc") {
-      subscription = await prisma.subscription.findMany({
-        where: {
-          doctorId: userid,
-        },
-      });
-    }
-
-    // console.log(subscription);
-
-    if (!subscription) {
-      return res.status(404).json({ error: "User subscription not found" });
-    }
-
-    // const payload = JSON.stringify({
-    //   title: "New Message",
-    //   body: message,
-    // });
-    for (const sub of subscription) {
-      try {
-        // await webpush.sendNotification(
-        //   {
-        //     endpoint: sub.endpoint,
-        //     keys: {
-        //       auth: sub.authKey,
-        //       p256dh: sub.p256dhKey,
-        //     },
-        //   },
-        //   payload
-        // );
-        const payload = {
-          token: sub.endpoint,
-          notification: {
-            title: "Vitality",
-            body: message,
-          },
-        };
-        const response = await admin.messaging().send(payload);
-      } catch (err) {
-        console.error("Failed to send to one subscription:", err);
-      }
-    }
-    res.send({ success: true });
-
-    // res.json({ success: true });
-  } catch (error) {
-    console.error("Push error:", error);
-    res.status(500).json({ error: "Failed to send push notification" });
-  }
-});
+);
 
 // app.post("/node-chat", async (req, res) => {
 //   try {
@@ -2094,7 +2114,7 @@ app.post("/send-notification", authorizeRoles("user", "admin", "doc"), async (re
 app.get("/general-slots", authorizeRoles("doc"), async (req, res) => {
   const { docId } = req.query;
   if (docId !== req.user.userId.toString()) {
-    return res.status(403).json({ error: "Access denied" })
+    return res.status(403).json({ error: "Access denied" });
   }
   const doctor_id = Number(docId);
 
@@ -2109,94 +2129,98 @@ app.get("/general-slots", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-app.get("/available-slots", authorizeRoles("user", "doc", "admin"), async (req, res) => {
-  const { docId, date } = req.query;
-  const doctor_id = Number(docId);
+app.get(
+  "/available-slots",
+  authorizeRoles("user", "doc", "admin"),
+  async (req, res) => {
+    const { docId, date } = req.query;
+    const doctor_id = Number(docId);
 
-  if (!date) {
-    return res.status(400).json({ error: "Please provide a valid date." });
-  }
+    if (!date) {
+      return res.status(400).json({ error: "Please provide a valid date." });
+    }
 
-  const selectedDate = new Date(date + "T00:00:00Z");
+    const selectedDate = new Date(date + "T00:00:00Z");
 
-  try {
-    const bookedSlots = await prisma.appointments.findMany({
-      where: {
-        doctor_id,
-        dateTime: {
-          gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)),
-          lt: new Date(selectedDate.setUTCHours(23, 59, 59, 999)),
-        },
-      },
-      select: { dateTime: true },
-    });
-    const doctorLeaves = await prisma.doctorLeave.findMany({
-      where: {
-        doctor_id: doctor_id,
-        OR: [
-          {
-            date_start: {
-              lte: new Date(selectedDate.setUTCHours(23, 59, 59, 999)),
-            },
-            date_end: { gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)) },
+    try {
+      const bookedSlots = await prisma.appointments.findMany({
+        where: {
+          doctor_id,
+          dateTime: {
+            gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)),
+            lt: new Date(selectedDate.setUTCHours(23, 59, 59, 999)),
           },
-        ],
-      },
-      select: { date_start: true, date_end: true },
-    });
+        },
+        select: { dateTime: true },
+      });
+      const doctorLeaves = await prisma.doctorLeave.findMany({
+        where: {
+          doctor_id: doctor_id,
+          OR: [
+            {
+              date_start: {
+                lte: new Date(selectedDate.setUTCHours(23, 59, 59, 999)),
+              },
+              date_end: { gte: new Date(selectedDate.setUTCHours(0, 0, 0, 0)) },
+            },
+          ],
+        },
+        select: { date_start: true, date_end: true },
+      });
 
-    let availableSlots = await prisma.slots.findMany({
-      where: { doctor_id: doctor_id },
-    });
+      let availableSlots = await prisma.slots.findMany({
+        where: { doctor_id: doctor_id },
+      });
 
-    const bookedTimes = bookedSlots.map((b) => {
-      const dateObj = new Date(b.dateTime);
-      return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes();
-    });
+      const bookedTimes = bookedSlots.map((b) => {
+        const dateObj = new Date(b.dateTime);
+        return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes();
+      });
 
-    // console.log(bookedSlots);
+      // console.log(bookedSlots);
 
-    const leavePeriods = doctorLeaves.map((leave) => ({
-      start: new Date(leave.date_start).getTime(),
-      end: new Date(leave.date_end).getTime(),
-    }));
+      const leavePeriods = doctorLeaves.map((leave) => ({
+        start: new Date(leave.date_start).getTime(),
+        end: new Date(leave.date_end).getTime(),
+      }));
 
-    availableSlots = availableSlots.filter((slot) => {
-      const slotTime = new Date(slot.starting_time);
-      const slotMinutes =
-        slotTime.getUTCHours() * 60 + slotTime.getUTCMinutes();
+      availableSlots = availableSlots.filter((slot) => {
+        const slotTime = new Date(slot.starting_time);
+        const slotMinutes =
+          slotTime.getUTCHours() * 60 + slotTime.getUTCMinutes();
 
-      return !bookedTimes.includes(slotMinutes);
-    });
+        return !bookedTimes.includes(slotMinutes);
+      });
 
-    availableSlots = availableSlots.filter((slot) => {
-      const slotDateTime = new Date(selectedDate);
-      const slotTime = new Date(slot.starting_time);
+      availableSlots = availableSlots.filter((slot) => {
+        const slotDateTime = new Date(selectedDate);
+        const slotTime = new Date(slot.starting_time);
 
-      slotDateTime.setUTCHours(
-        slotTime.getUTCHours(),
-        slotTime.getUTCMinutes(),
-        0,
-        0
-      );
-      const slotTimestamp = slotDateTime.getTime();
+        slotDateTime.setUTCHours(
+          slotTime.getUTCHours(),
+          slotTime.getUTCMinutes(),
+          0,
+          0
+        );
+        const slotTimestamp = slotDateTime.getTime();
 
-      return !leavePeriods.some(
-        (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end
-      );
-    });
-    // console.log(availableSlots);
-    res.json({ availableSlots });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Couldn't fetch the slots" });
+        return !leavePeriods.some(
+          (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end
+        );
+      });
+      // console.log(availableSlots);
+      res.json({ availableSlots });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Couldn't fetch the slots" });
+    }
   }
-});
+);
 
 app.put("/modifySlots", authorizeRoles("doc"), async (req, res) => {
   const { slotsArray, doctorId } = req.query;
   if (doctorId !== req.user.userId.toString()) {
-    return res.status(403).json({ error: "Access denied" })
+    return res.status(403).json({ error: "Access denied" });
   }
   // console.log(slotsArray);
   const slots = slotsArray.split(",");
@@ -2351,113 +2375,118 @@ app.post("/otpcheck", async (req, res) => {
 //   }
 // });
 
-app.put("/modifyDoc", authorizeRoles("doc"), upload.single("image"), async (req, res) => {
-  try {
-    const { id, address, city, experience, educ, certifi } = req.body;
-    if (id !== req.user.userId.toString()) {
-      return res.status(403).json({ error: "Access denied" })
-    }
-    // console.log(req.body);
-    const file = req.file;
-    // console.log(file);
-    // console.log(image)
-    var url = null;
-    if (file) {
-      url = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream((error, result) => {
-          if (error) return reject(error);
-          resolve(result.secure_url);
-        });
-        stream.end(file.buffer);
-      });
-      // console.log(url);
-    }
-
-    // const doc_id = Number(id);
-    // console.log(req.query);
-    const certifications = certifi.split(",");
-    const education = educ.split(",");
-    const doctorId = Number(id);
-    const doc_id = doctorId;
-    if (isNaN(doctorId) || doctorId <= 0) {
-      return res.status(400).json({ error: "Invalid doctor ID" });
-    }
-
-    const orConditions = [];
-    if (address) orConditions.push({ address });
-    if (city) orConditions.push({ city });
-    if (experience) orConditions.push({ experience });
-
-    const existingDoctor = await prisma.doctor.findUnique({
-      where: {
-        id: doctorId,
-      },
-    });
-    // console.log(existingDoctor);
-    if (existingDoctor && existingDoctor.id !== doctorId) {
-      return res
-        .status(400)
-        .json({ error: "The updated field is already in use" });
-    }
-    // console.log(url);
-    const updatedData = {};
-    if (address?.trim()) updatedData.address = address;
-    if (city?.trim()) updatedData.city = city;
-    if (experience?.trim()) updatedData.experience = experience;
-    if (url) updatedData.img = url;
-    // console.log(updatedData);
-    if (Object.keys(updatedData).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "No valid fields provided for update." });
-    }
-
+app.put(
+  "/modifyDoc",
+  authorizeRoles("doc"),
+  upload.single("image"),
+  async (req, res) => {
     try {
-      const updatedDoctor = await prisma.doctor.update({
-        where: { id: doctorId },
-        data: updatedData,
-      });
+      const { id, address, city, experience, educ, certifi } = req.body;
+      if (id !== req.user.userId.toString()) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      // console.log(req.body);
+      const file = req.file;
+      // console.log(file);
+      // console.log(image)
+      var url = null;
+      if (file) {
+        url = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream((error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url);
+          });
+          stream.end(file.buffer);
+        });
+        // console.log(url);
+      }
 
-      // console.log(updatedDoctor);
+      // const doc_id = Number(id);
+      // console.log(req.query);
+      const certifications = certifi.split(",");
+      const education = educ.split(",");
+      const doctorId = Number(id);
+      const doc_id = doctorId;
+      if (isNaN(doctorId) || doctorId <= 0) {
+        return res.status(400).json({ error: "Invalid doctor ID" });
+      }
 
-      const certificate = await prisma.docCertification.deleteMany({
+      const orConditions = [];
+      if (address) orConditions.push({ address });
+      if (city) orConditions.push({ city });
+      if (experience) orConditions.push({ experience });
+
+      const existingDoctor = await prisma.doctor.findUnique({
         where: {
-          doctor_id: doc_id,
+          id: doctorId,
         },
       });
-      for (const certif of certifications) {
-        await prisma.docCertification.create({
-          data: {
+      // console.log(existingDoctor);
+      if (existingDoctor && existingDoctor.id !== doctorId) {
+        return res
+          .status(400)
+          .json({ error: "The updated field is already in use" });
+      }
+      // console.log(url);
+      const updatedData = {};
+      if (address?.trim()) updatedData.address = address;
+      if (city?.trim()) updatedData.city = city;
+      if (experience?.trim()) updatedData.experience = experience;
+      if (url) updatedData.img = url;
+      // console.log(updatedData);
+      if (Object.keys(updatedData).length === 0) {
+        return res
+          .status(400)
+          .json({ error: "No valid fields provided for update." });
+      }
+
+      try {
+        const updatedDoctor = await prisma.doctor.update({
+          where: { id: doctorId },
+          data: updatedData,
+        });
+
+        // console.log(updatedDoctor);
+
+        const certificate = await prisma.docCertification.deleteMany({
+          where: {
             doctor_id: doc_id,
-            certification: certif,
           },
         });
-      }
-      const edu = await prisma.docEducation.deleteMany({
-        where: {
-          doctor_id: doc_id,
-        },
-      });
-      for (const educ of education) {
-        await prisma.docEducation.create({
-          data: {
+        for (const certif of certifications) {
+          await prisma.docCertification.create({
+            data: {
+              doctor_id: doc_id,
+              certification: certif,
+            },
+          });
+        }
+        const edu = await prisma.docEducation.deleteMany({
+          where: {
             doctor_id: doc_id,
-            education: educ,
           },
         });
+        for (const educ of education) {
+          await prisma.docEducation.create({
+            data: {
+              doctor_id: doc_id,
+              education: educ,
+            },
+          });
+        }
+        res.json({ message: "Doctor updated successfully", updatedDoctor });
+      } catch (error) {
+        if (error.code === "P2025") {
+          return res.status(404).json({ error: "Doctor not found" });
+        }
+        throw error;
       }
-      res.json({ message: "Doctor updated successfully", updatedDoctor });
     } catch (error) {
-      if (error.code === "P2025") {
-        return res.status(404).json({ error: "Doctor not found" });
-      }
-      throw error;
+      console.error("Error updating Doctor: ", error);
+      res.status(500).json({ error: error.message || "Internal Server Error" });
     }
-  } catch (error) {
-    console.error("Error updating Doctor: ", error);
-    res.status(500).json({ error: error.message || "Internal Server Error" });
   }
-});
+);
 
 app.post("/emerApp", async (req, res) => {
   const { name, email, phone, dateTime, reason, docId } = req.body;
@@ -2527,7 +2556,7 @@ app.get("/all-appointments", authorizeRoles("admin"), async (req, res) => {
 app.post("/add-slot", authorizeRoles("doc"), async (req, res) => {
   const doctorId = req.body["doctorId"];
   if (doctorId !== req.user.userId) {
-    return res.status(403).json({ error: "Access denied" })
+    return res.status(403).json({ error: "Access denied" });
   }
   const startTime = req.body["startTime"];
   // console.log(req.body);
@@ -2601,7 +2630,7 @@ app.post("/referrals", authorizeRoles("admin"), async (req, res) => {
 app.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   const { doctor_id } = req.query;
   if (doctor_id !== req.user.userId) {
-    return res.status(403).json({ error: "Access denied" })
+    return res.status(403).json({ error: "Access denied" });
   }
   try {
     const data = await prisma.referrals.findMany({
@@ -2625,7 +2654,7 @@ app.post("/request-to-user", authorizeRoles("doc"), async (req, res) => {
   const userId = Number(req.body["userId"]);
   const doctorId = Number(req.body["doctorId"]);
   if (doctorId.toString() !== req.user.userId.toString()) {
-    return res.status(403).json({ error: "Access denied" })
+    return res.status(403).json({ error: "Access denied" });
   }
   const dateTime = req.body["dateTime"];
   const reason = req.body["reason"];
@@ -2665,61 +2694,67 @@ app.post("/request-to-user", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-app.post("/accept-booking-by-user", authorizeRoles("user"), async (req, res) => {
-  const userId = Number(req.body["userId"]);
-  const doctorId = Number(req.body["doctorId"]);
-  if (userId.toString() !== req.user.userId) {
-    return res.status(403).json({ error: "Access denied" })
-  }
-  const dateTime = req.body["dateTime"];
-  const date = new Date();
-  const newDate = new Date(dateTime);
-  var userTimezoneOffset = date.getTimezoneOffset() * 60000;
-  const some = new Date(newDate.getTime() - userTimezoneOffset);
-  const reason = req.body["reason"];
-  const appId = req.body["id"];
-  // console.log(req.body);
-  try {
-    // Check if user exists
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+app.post(
+  "/accept-booking-by-user",
+  authorizeRoles("user"),
+  async (req, res) => {
+    const userId = Number(req.body["userId"]);
+    const doctorId = Number(req.body["doctorId"]);
+    if (userId.toString() !== req.user.userId) {
+      return res.status(403).json({ error: "Access denied" });
     }
+    const dateTime = req.body["dateTime"];
+    const date = new Date();
+    const newDate = new Date(dateTime);
+    var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+    const some = new Date(newDate.getTime() - userTimezoneOffset);
+    const reason = req.body["reason"];
+    const appId = req.body["id"];
+    // console.log(req.body);
+    try {
+      // Check if user exists
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-    // Check if doctor exists
-    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
-    if (!doctor) {
-      return res.status(404).json({ message: "Doctor not found" });
+      // Check if doctor exists
+      const doctor = await prisma.doctor.findUnique({
+        where: { id: doctorId },
+      });
+      if (!doctor) {
+        return res.status(404).json({ message: "Doctor not found" });
+      }
+
+      const result = await prisma.$transaction(async (prisma) => {
+        // Create appointment
+        const appointment = await prisma.appointments.create({
+          data: {
+            user_id: userId,
+            doctor_id: doctorId,
+            dateTime: some,
+            reason: reason,
+            isDoctor: true,
+          },
+        });
+        // console.log(appointment);
+        //Remove from requests table
+        const reqDel = await prisma.requests.delete({
+          where: { id: parseInt(appId) },
+        });
+        // console.log(reqDel);
+        return { appointment, reqDel };
+      });
+      res.json({
+        message: "Appointment accepted and booked with student successfully",
+        result,
+      });
+    } catch (error) {
+      console.error(error);
+      res.json({ message: "Internal Server Error" });
     }
-
-    const result = await prisma.$transaction(async (prisma) => {
-      // Create appointment
-      const appointment = await prisma.appointments.create({
-        data: {
-          user_id: userId,
-          doctor_id: doctorId,
-          dateTime: some,
-          reason: reason,
-          isDoctor: true,
-        },
-      });
-      // console.log(appointment);
-      //Remove from requests table
-      const reqDel = await prisma.requests.delete({
-        where: { id: parseInt(appId) },
-      });
-      // console.log(reqDel);
-      return { appointment, reqDel };
-    });
-    res.json({
-      message: "Appointment accepted and booked with student successfully",
-      result,
-    });
-  } catch (error) {
-    console.error(error);
-    res.json({ message: "Internal Server Error" });
   }
-});
+);
 
 // app.post("/rating", async (req, res) => {
 //   const stars = req.body["stars"];

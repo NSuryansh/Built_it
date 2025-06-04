@@ -220,7 +220,7 @@ const DoctorLogin = () => {
             <p className="w-full text-center">
               Login as a&nbsp;
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/user/login")}
                 className="underline font-bold text-blue-500"
               >
                 User

@@ -19,13 +19,13 @@ const Navbar = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const links = [
-    { name: "Home", link: "/dashboard" },
-    { name: "Mood", link: "/mood" },
-    { name: "Peer", link: "/peer" },
-    { name: "Book", link: "/book" },
-    { name: "Stress", link: "/stress" },
-    { name: "Events", link: "/events" },
-    { name: "Entertainment", link: "/entertainment" },
+    { name: "Home", link: "/user/dashboard" },
+    { name: "Mood", link: "/user/mood" },
+    { name: "Peer", link: "/user/peer" },
+    { name: "Book", link: "/user/book" },
+    { name: "Stress", link: "/user/stress" },
+    { name: "Events", link: "/user/events" },
+    { name: "Entertainment", link: "/user/entertaiment" },
   ];
 
   // Retrieve usertype from localStorage
@@ -50,7 +50,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     setShowLogoutModal(false);
-    navigate("/login");
+    navigate("/user/login");
   };
 
   const handleCancel = () => {
@@ -69,7 +69,7 @@ const Navbar = () => {
     if (isAuthenticated) {
       return;
     } else {
-      navigate("/login");
+      navigate("/user/login");
     }
   };
 
@@ -95,15 +95,15 @@ const Navbar = () => {
     <nav
       ref={ref}
       className={`${
-        location === "/peer" ||
-        location === "/mood" ||
-        location === "/book" ||
+        location === "/user/peer" ||
+        location === "/user/mood" ||
+        location === "/user/book" ||
         location === "/modify_profile" ||
         location === "/movies" ||
-        location === "/entertainment" ||
-        location === "/dashboard" ||
-        location === "/appointments" ||
-        location === "/events"
+        location === "/user/entertaiment" ||
+        location === "/user/dashboard" ||
+        location === "/user/appointments" ||
+        location === "/user/events"
           ? "bg-transparent"
           : "bg-[var(--custom-orange-100)]"
       } z-20`}
@@ -250,7 +250,7 @@ const Navbar = () => {
                       <div className="space-y-2">
                         <button
                           onClick={() => {
-                            navigate("/appointments");
+                            navigate("/user/appointments");
                           }}
                           className="w-full px-4 py-2 text-sm font-medium text-white bg-[#fe855a] rounded-lg hover:bg-[#FF6B35] transition-colors duration-200"
                         >
@@ -277,7 +277,7 @@ const Navbar = () => {
               </>
             ) : (
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/user/login")}
                 className="px-4 py-2 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded font-medium"
               >
                 Login

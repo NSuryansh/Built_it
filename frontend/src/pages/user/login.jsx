@@ -45,7 +45,7 @@ const Login = () => {
       const userAuthStatus = await checkAuth("user");
       if (userAuthStatus) {
         setIsAuthenticated(userAuthStatus);
-        navigate("/dashboard");
+        navigate("/user/dashboard");
       } else {
         setIsAuthenticated(false);
       }
@@ -87,7 +87,7 @@ const Login = () => {
 
     if (res["message"] === "Login successful") {
       localStorage.setItem("token", res["token"]);
-      navigate("/dashboard");
+      navigate("/user/dashboard");
     } else {
       CustomToast(res["message"]);
     }
@@ -188,7 +188,7 @@ const Login = () => {
     console.log(res);
     if (res.success === true) {
       localStorage.setItem("token", res["token"]);
-      navigate("/dashboard");
+      navigate("/user/dashboard");
     }
     setShowBiometricModal(false);
   };
@@ -294,7 +294,7 @@ const Login = () => {
         <p className="mt-4 text-sm text-center text-[var(--login-text-color)]">
           If not registered{" "}
           <button
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate("/user/signup")}
             className="underline font-bold text-[var(--custom-primary-orange)]"
           >
             click here

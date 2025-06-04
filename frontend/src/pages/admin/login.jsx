@@ -262,7 +262,7 @@ const AdminLogin = () => {
           <p className="w-full text-center">
             Login as a&nbsp;
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/user/login")}
               className="underline font-bold text-[var(--custom-primary-green)]"
             >
               User

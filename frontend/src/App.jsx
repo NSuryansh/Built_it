@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 import Landing from "./pages/user/Landing";
 import Peer from "./pages/user/Peer";
 import Mood from "./pages/user/Mood";
-import { Book, User } from "lucide-react";
+import Book from "./pages/user/Book";
 import Stress from "./pages/user/stress";
 import Entertainment from "./pages/user/Entertainment";
 import Dinogame from "./pages/user/dino";
@@ -38,6 +38,7 @@ import AddEvent from "./pages/admin/add_event";
 import AddDoctor from "./pages/admin/add_doctor";
 import AdminAppointments from "./pages/admin/appointments";
 import ErrorBoundaryFallback from "./pages/easter_egg/error_boundary_fallback";
+import AdminUser from "./pages/admin/user";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -165,20 +166,20 @@ export default function App() {
     <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/peer" element={<Peer />} />
-        <Route path="/mood" element={<Mood />} />
-        <Route path="/book" element={<Book />} />
-        <Route path="/stress" element={<Stress />} />
-        <Route path="/entertainment" element={<Entertainment />} />
-        <Route path="/entertainment/dinogame" element={<Dinogame />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/user/peer" element={<Peer />} />
+        <Route path="/user/mood" element={<Mood />} />
+        <Route path="/user/book" element={<Book />} />
+        <Route path="/user/stress" element={<Stress />} />
+        <Route path="/user/entertaiment" element={<Entertainment />} />
+        <Route path="/user/entertaiment/dinogame" element={<Dinogame />} />
+        <Route path="/user/events" element={<Events />} />
+        <Route path="/user/login" element={<Login />} />
+        <Route path="/user/signup" element={<SignUp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/modify_profile" element={<ModifyProfile />} />
-        <Route path="/appointments" element={<UserAppointments />} />
-        <Route path="/feedback" element={<FeedbackPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/user/appointments" element={<UserAppointments />} />
+        <Route path="/user/feedback" element={<FeedbackPage />} />
+        <Route path="/user/dashboard" element={<Dashboard />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />
         <Route
           path="/doctor/reset_password"
@@ -200,7 +201,7 @@ export default function App() {
         <Route path="/admin/event_list" element={<EventsList />} />
         <Route path="/admin/add_event" element={<AddEvent />} />
         <Route path="/admin/add_doctor" element={<AddDoctor />} />
-        <Route path="/admin/User" element={<User />} />
+        <Route path="/admin/user" element={<AdminUser />} />
         <Route path="/admin/appointments" element={<AdminAppointments />} />
         <Route
           path="/easter_egg"

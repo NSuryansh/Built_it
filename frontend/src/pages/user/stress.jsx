@@ -22,7 +22,7 @@ const Stress = () => {
   }, []);
 
   const handleClosePopup = () => {
-    navigate("/login");
+    navigate("/user/login");
   };
 
   if (isAuthenticated === null) {

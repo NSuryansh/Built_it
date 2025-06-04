@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/common/CustomToast";
-import Navbar from "../../components/common/Navbar";
+import Navbar from "../../components/user/Navbar";
 import Footer from "../../components/common/Footer";
 import CustomLoader from "../../components/common/CustomLoader";
 import DoctorSelectionStep from "../../components/user/DoctorSelection";

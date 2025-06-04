@@ -169,7 +169,7 @@ const Calendar = ({ onDateSelect }) => {
                 onClick={() => {
                   setSelectedDate(dayItem);
                   if (isPastEvent || isFutureEvent) {
-                    navigate("/events");
+                    navigate("/user/events");
                   }
                   onDateSelect && onDateSelect(dayItem);
                 }}

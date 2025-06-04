@@ -113,7 +113,7 @@ const FeedbackPage = () => {
     } catch (e) {
       CustomToast("Error fetching appointment");
       setisFetching(false);
-      navigate("/appointments");
+      navigate("/user/appointments");
     }
   };
 
@@ -161,7 +161,7 @@ const FeedbackPage = () => {
       if (res.ok) {
         setSubmitted(true);
         setTimeout(() => {
-          navigate("/appointments");
+          navigate("/user/appointments");
         }, 3000);
       } else {
         console.error("Failed to submit rating");
@@ -238,7 +238,7 @@ const FeedbackPage = () => {
       ) : (
         <>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/user/appointments")}
             className="flex items-center text-[var(--custom-orange-600)] mb-6 hover:text-[var(--custom-orange-700)] transition duration-200"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />

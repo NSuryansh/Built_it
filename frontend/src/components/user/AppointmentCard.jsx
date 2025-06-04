@@ -12,7 +12,7 @@ const AppointmentCard = ({
 
   const handleAppointmentClick = () => {
     if (upcoming === false && feedbackSubmitted === false) {
-      navigate(`/feedback?id=${appointment.id}`);
+      navigate(`/user/feedback?id=${appointment.id}`);
     }
   };
 
@@ -71,7 +71,7 @@ const AppointmentCard = ({
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate(`/feedback/${appointment.id}`);
+                  navigate(`/user/feedback/${appointment.id}`);
                 }}
                 className="bg-[var(--custom-orange-500)] text-white px-4 py-2 rounded-md text-sm font-semibold 
                   hover:-translate-y-[1.5px] transition-all duration-200 flex items-center gap-2"

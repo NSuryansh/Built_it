@@ -74,7 +74,7 @@ export default function Mood() {
   }, []);
 
   const handleClosePopup = () => {
-    navigate("/login");
+    navigate("/user/login");
   };
 
   const handleSubmit = async (e) => {

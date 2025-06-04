@@ -34,7 +34,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   }, []);
 
   const handleClosePopup = () => {
-    navigate("/login");
+    navigate("/user/login");
   };
 
   const handleBiometricSetup = async () => {
@@ -161,7 +161,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   const onCancel = (e) => {
     e.preventDefault();
-    navigate("/dashboard");
+    navigate("/user/dashboard");
   };
 
   return (

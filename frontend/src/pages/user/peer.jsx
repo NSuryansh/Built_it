@@ -337,7 +337,7 @@ const Peer = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
   const handleClosePopup = () => {
-    navigate("/login");
+    navigate("/user/login");
   };
 
   useEffect(() => {
