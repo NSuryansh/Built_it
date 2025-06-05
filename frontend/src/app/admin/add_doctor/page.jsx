@@ -53,7 +53,7 @@ const AddDoctor = () => {
           reg_id: regId,
           desc: desc,
           address: "<Please Change>",
-          city: "<Please Change>",
+          office_address: "<Please Change>",
           experience: "<Please Change>",
           img: "",
         }),

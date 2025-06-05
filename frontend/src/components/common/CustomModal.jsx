@@ -1,6 +1,13 @@
 import { LogOut } from "lucide-react";
 
-const LogoutModal = ({ handleLogout, handleCancel, theme = "orange" }) => {
+const CustomModal = ({
+  handleLogout,
+  handleCancel,
+  theme = "orange",
+  title = "Confirm Logout",
+  text = "Are you sure you want to log out of your account? You'll need to log in again to access your data.",
+  buttonText = "Logout",
+}) => {
   const themes = {
     orange: {
       iconColor: "text-[var(--custom-orange-500)]",
@@ -49,7 +56,8 @@ const LogoutModal = ({ handleLogout, handleCancel, theme = "orange" }) => {
       secondaryButtonHover: "hover:bg-[var(--custom-green-50)]",
       secondaryButtonBorder: "border-[var(--custom-green-200)]",
       borderColor: "border-[var(--custom-green-200)]/50",
-      bgGradient: "bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-yellow-50)]",
+      bgGradient:
+        "bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-yellow-50)]",
       backdropGradient: "bg-opacity-30",
     },
   };
@@ -79,14 +87,13 @@ const LogoutModal = ({ handleLogout, handleCancel, theme = "orange" }) => {
         <h2
           className={`text-2xl font-extrabold ${currentTheme.titleColor} mb-3 bg-clip-text bg-gradient-to-r ${currentTheme.primaryButtonBg} text-transparent`}
         >
-          Confirm Logout
+          {title}
         </h2>
 
         <p
           className={`text-base ${currentTheme.messageColor} mb-8 leading-relaxed font-medium`}
         >
-          Are you sure you want to log out of your account? You'll need to log
-          in again to access your data.
+          {text}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -100,16 +107,18 @@ const LogoutModal = ({ handleLogout, handleCancel, theme = "orange" }) => {
             onClick={handleLogout}
             className={`${currentTheme.primaryButtonBg} ${currentTheme.primaryButtonHover} px-8 py-3 rounded-full text-[var(--custom-white)] font-semibold text-sm uppercase tracking-wide shadow-lg transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 flex-1`}
           >
-            Logout
+            {buttonText}
           </button>
         </div>
 
-        <p className="text-xs text-[var(--custom-gray-500)] mt-6">
-          You'll be securely logged out.
-        </p>
+        {title === "Confirm Logout" && (
+          <p className="text-xs text-[var(--custom-gray-500)] mt-6">
+            You'll be securely logged out.
+          </p>
+        )}
       </div>
     </div>
   );
 };
 
-export default LogoutModal;
+export default CustomModal;

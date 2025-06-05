@@ -24,14 +24,16 @@ import { TimeChange } from "@/components/common/TimeChange";
 import { useRouter } from "next/navigation";
 import CustomLoader from "@/components/common/CustomLoader";
 import Link from "next/link";
+import CustomModal from "@/components/common/CustomModal";
 
-const DoctorLanding = () => {
+const DoctorDashboard = () => {
   const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [greeting, setGreeting] = useState("");
   const [newAppoinments, setNewAppoinments] = useState([]);
   const router = useRouter();
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -46,6 +48,13 @@ const DoctorLanding = () => {
       setIsAuthenticated(authStatus);
     };
     verifyAuth();
+  }, []);
+
+  useEffect(() => {
+    const isProfileDone = localStorage.getItem("isProfileDone");
+    if (!isProfileDone) {
+      setShowCustomModal(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -366,8 +375,18 @@ const DoctorLanding = () => {
       </motion.div>
 
       <Footer color={"blue"} className="mt-8" />
+      {showCustomModal && (
+        <CustomModal
+          handleLogout={() => router.push("/doctor/profile")}
+          handleCancel={() => setShowCustomModal(false)}
+          title="Complete Your Profile"
+          text="Please complete your profile for better functionality."
+          buttonText="Complete Profile"
+          theme="blue"
+        />
+      )}
     </div>
   );
 };
 
-export default DoctorLanding;
+export default DoctorDashboard;

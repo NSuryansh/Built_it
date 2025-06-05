@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Bell, User } from "lucide-react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import DoctorNotificationPanel from "./NotificationPanel";
-import LogoutModal from "../common/LogoutModal";
+import CustomModal from "../common/CustomModal";
 import { usePathname, useRouter } from "next/navigation";
 
 const DoctorNavbar = () => {
@@ -13,14 +13,14 @@ const DoctorNavbar = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const links = [
-    { name: "Home", link: "/doctor/landing" },
+    { name: "Home", link: "/doctor/dashboard" },
     { name: "Appointments", link: "/doctor/appointments" },
     { name: "Peer", link: "/doctor/peer" },
     { name: "Profile", link: "/doctor/profile" },
     { name: "History", link: "/doctor/history" },
   ];
   const router = useRouter();
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
   const userType = localStorage.getItem("user_type");
   const username = localStorage.getItem("username");
@@ -35,7 +35,7 @@ const DoctorNavbar = () => {
   };
 
   const handleLogout = () => {
-    setShowLogoutModal(false);
+    setShowCustomModal(false);
     router.replace("/doctor/login");
     setTimeout(() => {
       localStorage.clear();
@@ -43,7 +43,7 @@ const DoctorNavbar = () => {
   };
 
   const handleCancel = () => {
-    setShowLogoutModal(false);
+    setShowCustomModal(false);
   };
 
   const useOutsideAlerter = (ref) => {
@@ -176,7 +176,7 @@ const DoctorNavbar = () => {
 
                       <div className="flex gap-2">
                         <button
-                          onClick={() => setShowLogoutModal(true)}
+                          onClick={() => setShowCustomModal(true)}
                           className="flex-1 bg-[var(--custom-blue-200)] hover:bg-[var(--custom-blue-300)] text-[var(--custom-blue-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
                         >
                           Logout
@@ -197,8 +197,8 @@ const DoctorNavbar = () => {
           </div>
         </div>
       </div>
-      {showLogoutModal && (
-        <LogoutModal
+      {showCustomModal && (
+        <CustomModal
           handleLogout={handleLogout}
           handleCancel={handleCancel}
           theme="blue"

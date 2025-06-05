@@ -22,7 +22,7 @@ const App = () => {
         const docAuthStatus = await checkAuth("doc");
         if (docAuthStatus) {
           setIsAuthenticated(docAuthStatus);
-          router.push("/doctor/landing");
+          router.push("/doctor/dashboard");
         } else {
           const adminAuthStatus = await checkAuth("admin");
           if (adminAuthStatus) {

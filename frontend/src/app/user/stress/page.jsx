@@ -77,7 +77,7 @@ const Stress = () => {
                 >
                   <div className="p-6">
                     <div className="flex flex-col sm:flex-row items-start gap-4 mb-4">
-                      <div className="p-3 self-center sm:self-start rounded-lg bg-gradient-to-br from-[var(--custom-yellow-100)]to-[var(--custom-orange-500)] text-[var(--custom-white)]">
+                      <div className="p-3 self-center sm:self-start rounded-lg bg-gradient-to-br from-[var(--custom-yellow-100)] to-[var(--custom-orange-500)] text-[var(--custom-white)]">
                         <Icon className="w-6 h-6" />
                       </div>
                       <div className="flex">
@@ -117,7 +117,7 @@ const Stress = () => {
               className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:shadow-2xl"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 rounded-lg bg-gradient-to-br from-[var(--custom-yellow-100)]to-[var(--custom-orange-500)] text-[var(--custom-white)]">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-[var(--custom-yellow-100)] to-[var(--custom-orange-500)] text-[var(--custom-white)]">
                   <Youtube className="w-6 h-6" />
                 </div>
                 <div>

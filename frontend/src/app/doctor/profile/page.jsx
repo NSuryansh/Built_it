@@ -36,7 +36,7 @@ const DoctorProfile = () => {
     email: "<Please change>",
     phone: "<Please change>",
     address: "<Please change>",
-    city: "<Please change>",
+    office_address: "<Please change>",
     specialization: "<Please change>",
     experience: "<Please change>",
     education: ["<Add>"],
@@ -125,7 +125,7 @@ const DoctorProfile = () => {
           specialization: data.doctor.desc,
           experience: data.doctor.experience,
           address: data.doctor.address,
-          city: data.doctor.city,
+          office_address: data.doctor.office_address,
           certifications: certifications,
           education: educations,
           availability: slots.length === 0 ? ["<Add>"] : slots,
@@ -139,7 +139,7 @@ const DoctorProfile = () => {
           specialization: data.doctor.desc,
           experience: data.doctor.experience,
           address: data.doctor.address,
-          city: data.doctor.city,
+          office_address: data.doctor.office_address,
           certifications: certifications,
           education: educations,
           availability: slots.length === 0 ? ["<Add>"] : slots,
@@ -194,7 +194,7 @@ const DoctorProfile = () => {
       const formData = new FormData();
       formData.append("id", doctorId);
       formData.append("address", editedProfile.address);
-      formData.append("city", editedProfile.city);
+      formData.append("office_address", editedProfile.office_address);
       formData.append("experience", editedProfile.experience);
       formData.append(
         "educ",
@@ -456,28 +456,28 @@ const DoctorProfile = () => {
                           })
                         }
                         className="w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300 placeholder-[var(--custom-gray-400)]"
-                        placeholder="Street Address"
+                        placeholder="Address"
                       />
                       <input
                         type="text"
-                        value={editedProfile.city}
+                        value={editedProfile.office_address}
                         onChange={(e) =>
                           setEditedProfile({
                             ...editedProfile,
-                            city: e.target.value,
+                            office_address: e.target.value,
                           })
                         }
                         className="w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300 placeholder-[var(--custom-gray-400)]"
-                        placeholder="City, State ZIP"
+                        placeholder="Office Address"
                       />
                     </div>
                   ) : (
                     <div>
                       <p className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
-                        {profile.address},
+                        {profile.address}
                       </p>
                       <p className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
-                        {profile.city}
+                        {profile.office_address}
                       </p>
                     </div>
                   )}
