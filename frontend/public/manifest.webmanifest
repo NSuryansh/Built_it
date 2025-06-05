@@ -1,0 +1,17 @@
+{
+    "name": "Vitality",
+    "short_name": "Vitality",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "lang": "en",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "https://res.cloudinary.com/dt7a9meug/image/upload/v1748338565/CompressJPEG.Online_img_512x512_ztlsln.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
