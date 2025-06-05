@@ -91,13 +91,95 @@
   --custom-blue-800: var(--color-blue-800);
   --custom-blue-900: var(--color-blue-900);
   --custom-blue-950: var(--color-blue-950);
-
   --custom-admin-text-green: #00b6aa;
-
   --custom-peach: #ffddc0;
+}
 
-  --color-dark-white: var(--color-black);
-  --color-dark-black: var(--color-white);
+.dark{
+  --custom-white: #000000;
+  --custom-black: #ffffff;
+
+  --custom-orange-50: #1f1205;
+  --custom-orange-100: #291805;
+  --custom-orange-200: #432305;
+  --custom-orange-300: #5b2c05;
+  --custom-orange-400: #7a3c06;
+  --custom-orange-500: #9a4c0e;
+  --custom-orange-600: #b85c1a;
+  --custom-orange-700: #d66c2a;
+  --custom-orange-800: #f47c3a;
+  --custom-orange-900: #ff8c4a;
+  --custom-orange-950: #ff9c5a;
+
+  --custom-gray-50: #030712;
+  --custom-gray-100: #111827;
+  --custom-gray-200: #1f2937;
+  --custom-gray-300: #374151;
+  --custom-gray-400: #4b5563;
+  --custom-gray-500: #6b7280;
+  --custom-gray-600: #9ca3af;
+  --custom-gray-700: #d1d5db;
+  --custom-gray-800: #e5e7eb;
+  --custom-gray-900: #f3f4f6;
+  --custom-gray-950: #f9fafb;
+
+  --custom-yellow-50: #1f1c05;
+  --custom-yellow-100: #2a2505;
+  --custom-yellow-200: #3a3205;
+  --custom-yellow-300: #4a3f05;
+  --custom-yellow-400: #5a4c05;
+  --custom-yellow-500: #6a5905;
+  --custom-yellow-600: #7a6605;
+  --custom-yellow-700: #8a7305;
+  --custom-yellow-800: #9a8005;
+
+  --custom-purple-50: #1a0f2f;
+  --custom-purple-100: #220f3f;
+  --custom-purple-200: #2a0f4f;
+  --custom-purple-300: #320f5f;
+  --custom-purple-400: #3a0f6f;
+  --custom-purple-500: #420f7f;
+  --custom-purple-600: #4a0f8f;
+  --custom-purple-700: #520f9f;
+  --custom-purple-800: #5a0faf;
+  --custom-purple-900: #620fbf;
+  --custom-purple-950: #6a0fcf;
+
+  --custom-red-50: #2f0f0f;
+  --custom-red-100: #3f0f0f;
+  --custom-red-500: #7f0f0f;
+  --custom-red-600: #8f0f0f;
+  --custom-red-700: #9f0f0f;
+
+  --custom-teal-50: #0f2f2f;
+  --custom-teal-100: #0f3f3f;
+  --custom-teal-200: #0f4f4f;
+  --custom-teal-300: #0f5f5f;
+  --custom-teal-400: #0f6f6f;
+  --custom-teal-500: #0f7f7f;
+  --custom-teal-600: #0f8f8f;
+  --custom-teal-700: #0f9f9f;
+  --custom-teal-800: #0fafaf;
+  --custom-teal-900: #0fbfbf;
+  --custom-teal-950: #0fcfcf;
+
+  --custom-green-50: #0f2f0f;
+  --custom-green-100: #0f3f0f;
+  --custom-green-200: #0f4f0f;
+  --custom-green-300: #0f5f0f;
+  --custom-green-400: #0f6f0f;
+  --custom-green-500: #0f7f0f;
+  --custom-green-600: #0f8f0f;
+  --custom-green-700: #0f9f0f;
+  --custom-green-800: #0faf0f;
+  --custom-green-900: #0fbf0f;
+  --custom-green-950: #0fcf0f;
+
+  --custom-blue-50: #0f1f2f;
+  --custom-blue-100: #0f2f3f;
+  --custom-blue-200: #0f3f4f;
+  --custom-blue-300: #0f4f5f;
+  --custom-blue-400: #0f5f6f;
 }
 
 html {
