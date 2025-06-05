@@ -29,13 +29,13 @@ import { HashLoader } from "react-spinners";
 const DoctorProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
-    name: "<Please change>",
-    email: "<Please change>",
-    phone: "<Please change>",
-    address: "<Please change>",
-    office_address: "<Please change>",
-    specialization: "<Please change>",
-    experience: "<Please change>",
+    name: "<Please Change>",
+    email: "<Please Change>",
+    phone: "<Please Change>",
+    address: "<Please Change>",
+    office_address: "<Please Change>",
+    specialization: "<Please Change>",
+    experience: "<Please Change>",
     education: ["<Add>"],
     availability: ["<Add>"],
     certifications: ["<Add>"],
@@ -202,6 +202,20 @@ const DoctorProfile = () => {
         filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"]
       );
       formData.append("image", file);
+      
+      if (
+        editedProfile.address !== "<Please Change>" &&
+        editedProfile.office_address !== "<Please Change>" &&
+        editedProfile.experience !== null &&
+        filteredEducation.length > 0 &&
+        filteredEducation != ["<Add>"] &&
+        filteredCertifications.length > 0 &&
+        filteredCertifications != ["<Add>"]
+      ) {
+        formData.append("isProfileDone", true);
+      } else {
+        formData.append("isProfileDone", false);
+      }
 
       const response = await fetch(`http://localhost:3000/doc/modifyDoc`, {
         method: "PUT",
@@ -220,17 +234,18 @@ const DoctorProfile = () => {
         const newDate = TimeChange(date.getTime());
         dates.push(newDate);
       }
-
-      const response2 = await fetch(
-        `http://localhost:3000/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
-        {
-          method: "PUT",
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
+      if (dates.length !== 0) {
+        const response2 = await fetch(
+          `http://localhost:3000/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+          {
+            method: "PUT",
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
+        const data2 = await response2.json();
+      }
 
       const data = await response.json();
-      const data2 = await response2.json();
 
       // Update profile with filtered data
       setProfile({
@@ -380,7 +395,7 @@ const DoctorProfile = () => {
               </div>
             </div>
             <Link
-              href="/doctor/leave"
+              to="/doctor/leave"
               className="group relative flex self-end md:self-center items-center h-fit w-fit px-3 py-1.5 sm:px-6 sm:py-3 bg-[var(--custom-blue-600)] text-[var(--custom-white)] text-sm font-semibold rounded-full shadow-xl hover:shadow-[var(--custom-blue-500)]/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
               <span className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>

@@ -181,7 +181,7 @@ const AdminDoctorProfile = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 lg:py-14">
         {/* Back Button */}
         <Link
-          href="/admin/doctor_list"
+          to="/admin/doctor_list"
           className="mb-12 inline-flex items-center gap-3 px-6 py-3 font-semibold text-[var(--custom-white)] bg-gradient-to-r from-[var(--custom-green-500)] to-[var(--custom-green-700)] rounded-full hover:bg-gradient-to-l hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
         >
           <ArrowLeft className="w-5 h-5" />

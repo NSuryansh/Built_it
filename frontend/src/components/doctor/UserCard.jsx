@@ -26,7 +26,7 @@ const UserCard = ({ userWithAppointments }) => {
 
         <div className="flex justify-center md:justify-end items-center mt-2 md:mt-0">
           <Link
-            href={`/doctor/user?userId=${user.user.id}`}
+            to={`/doctor/user?userId=${user.user.id}`}
             className="inline-flex items-center justify-center p-2 rounded-lg bg-[var(--custom-blue-100)] text-[var(--custom-blue-600)] hover:bg-[var(--custom-blue-600)] hover:text-[var(--custom-white)] transition-all group-hover:shadow-md"
             aria-label={`View ${user.user.username}'s details`}
           >

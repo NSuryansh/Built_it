@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 import webpush from "web-push";
 import admin from "firebase-admin";
@@ -66,17 +65,6 @@ const io = new Server(server, {
   },
   transports: ["websocket", "polling"],
 });
-
-cloudinary.config({
-  cloud_name: "dt7a9meug",
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-async function uploadImage(path) {
-  const results = await cloudinary.uploader.upload(path);
-  return results["url"];
-}
 
 const users = new Map();
 io.on("connection", (socket) => {

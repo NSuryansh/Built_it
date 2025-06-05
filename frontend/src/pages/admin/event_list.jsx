@@ -237,7 +237,7 @@ const EventsList = () => {
           </div>
 
           <Link
-            href="/admin/add_event"
+            to="/admin/add_event"
             className="group flex items-center gap-2 bg-[var(--custom-green-600)] text-[var(--custom-white)] px-3 py-1.5 md:px-6 md:py-3 rounded-full hover:bg-[var(--custom-green-700)] transition-all duration-300 shadow-lg hover:shadow-[var(--custom-green-200)] mt-4 md:mt-0"
           >
             <Calendar className="w-5 h-5" />

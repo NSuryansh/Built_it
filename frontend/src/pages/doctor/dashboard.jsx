@@ -15,7 +15,7 @@ import SessionExpired from "../../components/common/SessionExpired";
 import Footer from "../../components/common/Footer";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import DoctorCalendar from "../../components/doctor/Calendar";
 import CustomToast from "../../components/common/CustomToast";
@@ -33,8 +33,7 @@ const DoctorDashboard = () => {
   const token = localStorage.getItem("token");
   const isProfileDone = localStorage.getItem("isProfileDone");
   const [showCustomModal, setShowCustomModal] = useState(false);
-  console.log("isProfileDone", isProfileDone);
-  
+
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good Morning");
@@ -51,10 +50,10 @@ const DoctorDashboard = () => {
   }, []);
 
   useEffect(() => {
-    if (!isProfileDone) {
+    if (isProfileDone === "false" || !isProfileDone) {
       setShowCustomModal(true);
     }
-  }, []);
+  }, [isProfileDone]);
 
   useEffect(() => {
     const docId = localStorage.getItem("userid");
@@ -250,7 +249,7 @@ const DoctorDashboard = () => {
                     Upcoming Appointments
                   </h2>
                   <Link
-                    href="/doctor/appointments"
+                    to="/doctor/appointments"
                     className="flex items-center px-4 py-2 bg-[var(--custom-blue-50)] text-[var(--custom-blue-600)] rounded-lg hover:bg-[var(--custom-blue-100)] transition-all duration-300 font-medium"
                   >
                     View All <ChevronRight className="h-4 w-4 ml-1" />

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authorizeRoles } from "../middlewares/auth.middleware.js";
 import { prisma } from "../server.js";
+import { v2 as cloudinary } from "cloudinary";
 import jwt from "jsonwebtoken";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
@@ -11,6 +12,17 @@ dotenv.config();
 const docRouter = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
+
+cloudinary.config({
+  cloud_name: "dt7a9meug",
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+async function uploadImage(path) {
+  const results = await cloudinary.uploader.upload(path);
+  return results["url"];
+}
 
 docRouter.post("/login", async (req, res) => {
   // console.log(req.body);
@@ -465,7 +477,16 @@ docRouter.put(
   upload.single("image"),
   async (req, res) => {
     try {
-      const { id, address, office_address, experience, educ, certifi } = req.body;
+      const {
+        id,
+        address,
+        office_address,
+        experience,
+        educ,
+        certifi,
+        isProfileDone,
+      } = req.body;
+
       if (id !== req.user.userId.toString()) {
         return res.status(403).json({ error: "Access denied" });
       }
@@ -498,7 +519,7 @@ docRouter.put(
       const orConditions = [];
       if (address) orConditions.push({ address });
       if (office_address) orConditions.push({ office_address });
-      if (experience) orConditions.push({ experience });
+      if (experience != "null") orConditions.push({ experience });
 
       const existingDoctor = await prisma.doctor.findUnique({
         where: {
@@ -513,10 +534,12 @@ docRouter.put(
       }
       // console.log(url);
       const updatedData = {};
-      if (address?.trim()) updatedData.address = address;
-      if (office_address?.trim()) updatedData.office_address = office_address;
-      if (experience?.trim()) updatedData.experience = experience;
+      if (address?.trim()) updatedData.address = address.trim();
+      if (office_address?.trim()) updatedData.office_address = office_address.trim();
+      if (experience != null) updatedData.experience = experience.trim();
       if (url) updatedData.img = url;
+      if (isProfileDone) updatedData.isProfileDone = isProfileDone;
+      updatedData.isProfileDone = isProfileDone === "true";
       // console.log(updatedData);
       if (Object.keys(updatedData).length === 0) {
         return res

@@ -162,7 +162,7 @@ const DoctorsList = () => {
                 <RefreshCw size={24} />
               </button>
               <Link
-                href="/admin/add_doctor"
+                to="/admin/add_doctor"
                 className="inline-flex items-center gap-2 bg-[var(--custom-white)] text-[var(--custom-green-700)] font-semibold px-3 py-1.5 md:px-6 md:py-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-102 hover:bg-[var(--custom-white)]/80"
               >
                 <UserPlus size={20} />
@@ -269,7 +269,7 @@ const DoctorsList = () => {
                         </span>
                       </button>
                       <Link
-                        href={`/admin/doctor_profile?id=${doctor.id}`}
+                        to={`/admin/doctor_profile?id=${doctor.id}`}
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--custom-green-100)] text-[var(--custom-green-700)] hover:bg-[var(--custom-green-200)] transition-colors duration-300"
                         title="View Profile"
                       >
@@ -339,7 +339,7 @@ const DoctorsList = () => {
                   <span>{doctor.email}</span>
                 </div>
                 <Link
-                  href={`/admin/doctor_profile?id=${doctor.id}`}
+                  to={`/admin/doctor_profile?id=${doctor.id}`}
                   className="block w-full text-center py-3 mt-4 rounded-xl bg-[var(--custom-green-100)] text-[var(--custom-green-700)] font-semibold hover:bg-[var(--custom-green-200)] transition-all duration-300"
                 >
                   View Full Profile

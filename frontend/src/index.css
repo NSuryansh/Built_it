@@ -125,8 +125,8 @@ button {
 }
 
 .custom-toast.blue {
-  background-color: var(--custom-primary-blue-100) !important;
-  color: var(--custom-primary-blue-900) !important;
+  background-color: var(--custom-blue-100) !important;
+  color: var(--custom-blue-900) !important;
   font-family: inherit;
   border-radius: 0.5rem;
   padding: 1rem;
@@ -135,8 +135,8 @@ button {
 }
 
 .custom-toast.green {
-  background-color: var(--custom-primary-green-100) !important;
-  color: var(--custom-primary-green-900) !important;
+  background-color: var(--custom-green-100) !important;
+  color: var(--custom-green-900) !important;
   font-family: inherit;
   border-radius: 0.5rem;
   padding: 1rem;
