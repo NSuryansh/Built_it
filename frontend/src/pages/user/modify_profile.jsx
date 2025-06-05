@@ -42,7 +42,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
       console.log(window.location.origin);
       console.log("hi");
       const data = await fetch(
-        "https://built-it.onrender.com/generateOptions",
+        "http://localhost:3000/user/generateOptions",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -94,7 +94,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
       console.log(credentialResponse);
 
       const verifyRes = await fetch(
-        "https://built-it.onrender.com/verifyBioRegistration",
+        "http://localhost:3000/user/verifyBioRegistration",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -132,7 +132,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   const onSave = async (dataToSend) => {
     try {
-      const response = await fetch("https://built-it.onrender.com/modifyUser", {
+      const response = await fetch("http://localhost:3000/user/modifyUser", {
         method: "PUT", // Use PUT to modify user details
         headers: {
           "Content-Type": "application/json",

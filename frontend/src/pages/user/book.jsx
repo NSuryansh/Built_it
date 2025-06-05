@@ -39,7 +39,7 @@ const Book = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "https://built-it.onrender.com/getdoctors?user_type=user",
+          "http://localhost:3000/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -106,7 +106,7 @@ const Book = () => {
     const user_id = localStorage.getItem("userid");
 
     try {
-      const res = await fetch("https://built-it.onrender.com/requests", {
+      const res = await fetch("http://localhost:3000/user_doc/requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

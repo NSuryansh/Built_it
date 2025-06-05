@@ -40,7 +40,7 @@ const Calendar = ({ onDateSelect }) => {
     const PastEvents = async () => {
       try {
         const response = await fetch(
-          "https://built-it.onrender.com/getPastEvents",
+          "http://localhost:3000/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -61,7 +61,7 @@ const Calendar = ({ onDateSelect }) => {
   useEffect(() => {
     const FutureEvents = async () => {
       try {
-        const response = await fetch("https://built-it.onrender.com/events", {
+        const response = await fetch("http://localhost:3000/common/events", {
           headers: { Authorization: "Bearer " + token },
         });
         const data = await response.json();
@@ -169,7 +169,7 @@ const Calendar = ({ onDateSelect }) => {
                 onClick={() => {
                   setSelectedDate(dayItem);
                   if (isPastEvent || isFutureEvent) {
-                    router.push("/user/events");
+                    navigate("/user/events");
                   }
                   onDateSelect && onDateSelect(dayItem);
                 }}

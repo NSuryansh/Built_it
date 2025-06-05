@@ -31,13 +31,13 @@ const DoctorCalendar = ({ onDateSelect }) => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`,
+          `http://localhost:3000/doc/pastdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
         );
         const response = await fetch(
-          `https://built-it.onrender.com/currentdocappt?doctorId=${docId}`,
+          `http://localhost:3000/doc/currentdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -166,7 +166,7 @@ const DoctorCalendar = ({ onDateSelect }) => {
                 onClick={() => {
                   setSelectedDate(dayItem);
                   if (isPastAppointment || isFutureAppointment) {
-                    router.push("/doctor/appointments");
+                    navigate("/doctor/appointments");
                   }
                 }}
                 className={`

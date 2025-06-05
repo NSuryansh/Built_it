@@ -55,7 +55,7 @@ const AdminAppointments = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "https://built-it.onrender.com/getdoctors?user_type=admin",
+          "http://localhost:3000/user_admin/getdoctors?user_type=admin",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -75,12 +75,9 @@ const AdminAppointments = () => {
 
     const fetchAppointments = async () => {
       try {
-        const res = await fetch(
-          "https://built-it.onrender.com/all-appointments",
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        );
+        const res = await fetch("http://localhost:3000/admin/all-appointments", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await res.json();
         const formattedCurData = data.appts.map((appt) => ({
           id: appt.id,

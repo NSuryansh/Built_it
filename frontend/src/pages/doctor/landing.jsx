@@ -53,7 +53,7 @@ const DoctorLanding = () => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch(
-          `https://built-it.onrender.com/currentdocappt?doctorId=${docId}`,
+          `http://localhost:3000/doc/currentdocappt?doctorId=${docId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -90,7 +90,7 @@ const DoctorLanding = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("https://built-it.onrender.com/events", {
+        const response = await fetch("http://localhost:3000/common/events", {
           headers: { Authorization: "Bearer " + token },
         });
         const data = await response.json();

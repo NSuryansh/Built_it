@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   Calendar,
@@ -18,7 +18,6 @@ import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/common/CustomToast";
 import { subDays, isWithinInterval, startOfToday } from "date-fns";
-import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/common/SessionExpired";
 import DeletePopup from "../../components/admin/DeletePopup";
 import CustomLoader from "../../components/common/CustomLoader";
@@ -41,7 +40,7 @@ const EventsList = () => {
     // if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
-      const response = await fetch(`https://built-it.onrender.com/events`, {
+      const response = await fetch(`http://localhost:3000/admin/events`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -80,7 +79,7 @@ const EventsList = () => {
   const handleLinkSubmit = async (eventId) => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/uploadURL?id=${eventId}&url=${newLink}`,
+        `http://localhost:3000/admin/uploadURL?id=${eventId}&url=${newLink}`,
         { method: "PUT", headers: { Authorization: "Bearer " + token } }
       );
       CustomToast("URL uploaded successfully", "green");
@@ -110,11 +109,11 @@ const EventsList = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("https://built-it.onrender.com/events", {
+        const response = await fetch("http://localhost:3000/common/events", {
           headers: { Authorization: "Bearer " + token },
         });
         const response2 = await fetch(
-          "https://built-it.onrender.com/getPastEvents",
+          "http://localhost:3000/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
           }

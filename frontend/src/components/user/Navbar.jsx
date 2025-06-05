@@ -135,7 +135,7 @@ const Navbar = () => {
                       key={i}
                     >
                       <button
-                        onClick={() => router.push(item.link)}
+                        onClick={() => navigate(item.link)}
                         className={` transition-colors ${
                           location === item.link
                             ? "underline underline-offset-4 text-[var(--custom-orange-500)] decoration-2"
@@ -152,7 +152,7 @@ const Navbar = () => {
           </div>
           <div className="flex">
             <img
-              src="/logo.svg"
+              src="/assets/logo.svg"
               alt="logo"
               width={25}
               height={25}
@@ -164,7 +164,7 @@ const Navbar = () => {
             {links.map((item, i) => (
               <button
                 key={i}
-                onClick={() => router.push(item.link)}
+                onClick={() => navigate(item.link)}
                 className={`hover:text-[var(--custom-orange-500)] focus:text-[var(--custom-orange-500)] transition-colors ${
                   location === item.link
                     ? "underline underline-offset-4 text-[var(--custom-orange-500)] decoration-2"
@@ -252,7 +252,7 @@ const Navbar = () => {
                       <div className="space-y-2">
                         <button
                           onClick={() => {
-                            router.push("/user/appointments");
+                            navigate("/user/appointments");
                           }}
                           className="w-full px-4 py-2 text-sm font-medium text-[var(--custom-white)] bg-[var(--custom-orange-400)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors duration-200"
                         >
@@ -260,7 +260,7 @@ const Navbar = () => {
                         </button>
                         <div className="grid grid-cols-2 gap-2">
                           <button
-                            onClick={() => router.push("/user/modify_profile")}
+                            onClick={() => navigate("/user/modify_profile")}
                             className="px-4 py-2 text-sm font-medium text-[var(--custom-orange-500)] bg-[var(--custom-orange-50)] rounded-lg hover:bg-[var(--custom-orange-100)] transition-colors duration-200"
                           >
                             Modify Profile
@@ -279,7 +279,7 @@ const Navbar = () => {
               </>
             ) : (
               <button
-                onClick={() => router.push("/user/login")}
+                onClick={() => navigate("/user/login")}
                 className="px-4 py-2 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded font-medium"
               >
                 Login

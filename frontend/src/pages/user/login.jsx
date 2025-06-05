@@ -66,7 +66,7 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch("https://built-it.onrender.com/login", {
+    const response = await fetch("http://localhost:3000/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,19 +99,16 @@ const Login = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch(
-      "https://built-it.onrender.com/forgotPassword",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/user/forgotPassword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
@@ -134,7 +131,7 @@ const Login = () => {
   const handleBiometricLogin = async () => {
     console.log(username, "usduse");
     const data = await fetch(
-      "https://built-it.onrender.com/generateBioAuthOptions",
+      "http://localhost:3000/user/generateBioAuthOptions",
       {
         method: "POST",
         body: JSON.stringify({
@@ -174,7 +171,7 @@ const Login = () => {
       },
     };
 
-    const res = await fetch("https://built-it.onrender.com/verifyBioLogin", {
+    const res = await fetch("http://localhost:3000/user/verifyBioLogin", {
       method: "POST",
       // body: JSON.stringify({
       //   emailId: username
@@ -206,7 +203,9 @@ const Login = () => {
           <h2 className="mt-4 text-3xl font-bold text-[var(--custom-orange-900)]">
             User Login
           </h2>
-          {error && <p className="mt-2 text-[var(--custom-red-600)] text-sm">{error}</p>}
+          {error && (
+            <p className="mt-2 text-[var(--custom-red-600)] text-sm">{error}</p>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -294,7 +293,7 @@ const Login = () => {
         <p className="mt-4 text-sm text-center text-[var(--custom-black)]">
           If not registered{" "}
           <button
-            onClick={() => router.push("/user/signup")}
+            onClick={() => navigate("/user/signup")}
             className="underline font-bold text-[var(--custom-orange-500)]"
           >
             click here
@@ -310,14 +309,14 @@ const Login = () => {
           <p className="w-full text-center">
             Login as a&nbsp;
             <button
-              onClick={() => router.push("/doctor/login")}
+              onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Doctor
             </button>
             &nbsp;or&nbsp;
             <button
-              onClick={() => router.push("/admin/login")}
+              onClick={() => navigate("/admin/login")}
               className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Admin

@@ -52,7 +52,7 @@ const DoctorAppointment = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       const response = await fetch(
-        `https://built-it.onrender.com/available-slots?date=${date}&docId=${doctorId}`,
+        `http://localhost:3000/common/available-slots?date=${date}&docId=${doctorId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -189,7 +189,7 @@ const DoctorAppointment = () => {
   const sendNotif = async (appointment) => {
     try {
       const res = await fetch(
-        "https://built-it.onrender.com/send-notification",
+        "http://localhost:3000/common/send-notification",
         {
           method: "POST",
           headers: {
@@ -226,13 +226,13 @@ const DoctorAppointment = () => {
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
       const res = await fetch(
-        `https://built-it.onrender.com/reqApp?docId=${docId}`,
+        `http://localhost:3000/doc/reqApp?docId=${docId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
       );
       const res2 = await fetch(
-        `https://built-it.onrender.com/currentdocappt?doctorId=${docId}`,
+        `http://localhost:3000/doc/currentdocappt?doctorId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const resp2 = await res2.json();
@@ -258,7 +258,7 @@ const DoctorAppointment = () => {
     const fetchPastAppointments = async () => {
       try {
         const response = await fetch(
-          `https://built-it.onrender.com/pastdocappt?doctorId=${docId}`,
+          `http://localhost:3000/doc/pastdocappt?doctorId=${docId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -320,7 +320,7 @@ const DoctorAppointment = () => {
 
   const acceptApp = async (appointment) => {
     appointment.dateTime = new Date(appointment.dateTime);
-    const res = await fetch("https://built-it.onrender.com/book", {
+    const res = await fetch("http://localhost:3000/doc/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -359,7 +359,7 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    const res = await fetch("https://built-it.onrender.com/deleteApp", {
+    const res = await fetch("http://localhost:3000/doc/deleteApp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -387,7 +387,7 @@ const DoctorAppointment = () => {
       newTime: format(newTime, "dd-MMM-yy hh:mm a"),
       email: appointment["user"]["email"],
     };
-    const res = await fetch("https://built-it.onrender.com/reschedule", {
+    const res = await fetch("http://localhost:3000/doc/reschedule", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -538,7 +538,7 @@ const DoctorAppointment = () => {
                           )}
                           <button
                             onClick={() =>
-                              router.push(
+                              navigate(
                                 `/doctor/history?username=${appointment.user.username}`
                               )
                             }
@@ -719,7 +719,7 @@ const DoctorAppointment = () => {
                           )}
                           <button
                             onClick={() =>
-                              router.push(
+                              navigate(
                                 `/doctor/history?username=${appointment.user.username}`
                               )
                             }

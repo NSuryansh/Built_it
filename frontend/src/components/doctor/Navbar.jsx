@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bell, User } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 import DoctorNotificationPanel from "./NotificationPanel";
 import LogoutModal from "../common/LogoutModal";
 
@@ -88,7 +87,7 @@ const DoctorNavbar = () => {
                       key={i}
                     >
                       <button
-                        onClick={() => router.push(item.link)}
+                        onClick={() => navigate(item.link)}
                         className={` transition-colors ${
                           location == item.link
                             ? "underline underline-offset-4 text-[var(--custom-blue-500)] decoration-2"
@@ -105,7 +104,7 @@ const DoctorNavbar = () => {
           </div>
           <div className="flex">
             <img
-              src="/logo.svg"
+              src="/assets/logo.svg"
               alt="logo"
               width={25}
               height={25}
@@ -117,7 +116,7 @@ const DoctorNavbar = () => {
             {links.map((item, i) => (
               <button
                 key={i}
-                onClick={() => router.push(item.link)}
+                onClick={() => navigate(item.link)}
                 className={`transition-colors ${
                   location == item.link
                     ? "underline underline-offset-4 text-[var(--custom-blue-500)] decoration-2"
@@ -185,7 +184,7 @@ const DoctorNavbar = () => {
               </>
             ) : (
               <button
-                onClick={() => router.replace("/doctor/login")}
+                onClick={() => navigate("/doctor/login")}
                 className="px-4 py-2 bg-[var(--custom-blue-200)] hover:bg-[var(--custom-blue-300)] text-[var(--custom-blue-900)] rounded font-medium"
               >
                 Login

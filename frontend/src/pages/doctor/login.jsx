@@ -65,7 +65,7 @@ const DoctorLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch("https://built-it.onrender.com/docLogin", {
+    const response = await fetch("http://localhost:3000/doc/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,19 +93,16 @@ const DoctorLogin = () => {
       CustomToast("Please enter an email", "blue");
       return;
     }
-    const response = await fetch(
-      "https://built-it.onrender.com/forgotDoctorPassword",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/doc/forgotPassword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
     const res = await response.json();
     CustomToast(res.message, "blue");
     setShowForgotModal(false);
@@ -224,14 +221,14 @@ const DoctorLogin = () => {
             <p className="w-full text-center">
               Login as a&nbsp;
               <button
-                onClick={() => router.push("/user/login")}
+                onClick={() => navigate("/user/login")}
                 className="underline font-bold text-[var(--custom-blue-500)]"
               >
                 User
               </button>
               &nbsp;or&nbsp;
               <button
-                onClick={() => router.push("/admin/login")}
+                onClick={() => navigate("/admin/login")}
                 className="underline font-bold text-[var(--custom-blue-500)]"
               >
                 Admin

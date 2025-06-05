@@ -100,12 +100,12 @@ const FeedbackPage = () => {
   const getAppointmentById = async () => {
     try {
       const res = await fetch(
-        `https://built-it.onrender.com/getAppointmentById?id=${appointmentId}`,
+        `http://localhost:3000/user/getAppointmentById?id=${appointmentId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await res.json();
       const res2 = await fetch(
-        `https://built-it.onrender.com/getDoc?docId=${data.doc_id}`,
+        `http://localhost:3000/common/getDoc?docId=${data.doc_id}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data2 = await res2.json();
@@ -142,7 +142,7 @@ const FeedbackPage = () => {
   const submitFeedback = async () => {
     setisSubmitting(true);
     try {
-      const res = await fetch("https://built-it.onrender.com/setFeedback", {
+      const res = await fetch("http://localhost:3000/user/setFeedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -240,7 +240,7 @@ const FeedbackPage = () => {
       ) : (
         <>
           <button
-            onClick={() => router.push("/user/appointments")}
+            onClick={() => navigate("/user/appointments")}
             className="flex items-center text-[var(--custom-orange-600)] mb-6 hover:text-[var(--custom-orange-700)] transition duration-200"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />

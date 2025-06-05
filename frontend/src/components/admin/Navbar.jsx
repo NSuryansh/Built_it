@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bell, User } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 import LogoutModal from "../common/LogoutModal";
 
 const AdminNavbar = () => {
@@ -80,7 +79,7 @@ const AdminNavbar = () => {
                       key={i}
                     >
                       <button
-                        onClick={() => router.push(item.link)}
+                        onClick={() => navigate(item.link)}
                         className={`hover:text-[var(--custom-green-500)] focus:text-[var(--custom-green-500)] transition-colors ${
                           location == item.link
                             ? "underline underline-offset-4 text-[var(--custom-admin-text-green)] decoration-2"
@@ -97,7 +96,7 @@ const AdminNavbar = () => {
           </div>
           <div className="flex">
             <img
-              src="/logo.svg"
+              src="/assets/logo.svg"
               alt="logo"
               width={25}
               height={25}
@@ -109,7 +108,7 @@ const AdminNavbar = () => {
             {links.map((item, i) => (
               <button
                 key={i}
-                onClick={() => router.push(item.link)}
+                onClick={() => navigate(item.link)}
                 className={`transition-colors ${
                   location == item.link
                     ? "underline underline-offset-4 text-[var(--custom-admin-text-green)] decoration-2"

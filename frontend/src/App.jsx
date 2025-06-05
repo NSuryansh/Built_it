@@ -3,20 +3,20 @@ import { useEffect, useState } from "react";
 import { messaging, getToken } from "./firebase";
 import { getMessaging, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
-import Landing from "./pages/user/Landing";
-import Peer from "./pages/user/Peer";
+import Landing from "./pages/user/landing";
+import Peer from "./pages/user/peer";
 import Mood from "./pages/user/Mood";
-import Book from "./pages/user/Book";
+import Book from "./pages/user/book";
 import Stress from "./pages/user/stress";
-import Entertainment from "./pages/user/Entertainment";
+import Entertainment from "./pages/user/entertainment";
 import Dinogame from "./pages/user/dino";
-import Events from "./pages/user/Events";
-import Login from "./pages/user/Login";
-import SignUp from "./pages/user/SignUp";
+import Events from "./pages/user/events";
+import Login from "./pages/user/login";
+import SignUp from "./pages/user/signup";
 import ResetPassword from "./pages/user/reset_password";
-import ModifyProfile from "./pages/user/Modify_profile";
-import UserAppointments from "./pages/user/Appointments";
-import FeedbackPage from "./pages/user/Feedback";
+import ModifyProfile from "./pages/user/modify_profile";
+import UserAppointments from "./pages/user/appointments";
+import FeedbackPage from "./pages/user/feedback";
 import Dashboard from "./pages/user/dashboard";
 import DoctorLogin from "./pages/doctor/login";
 import DoctorResetPassword from "./pages/doctor/reset_password";
@@ -111,20 +111,17 @@ export default function App() {
     if (fcmToken) {
       console.log("FCM Token:", fcmToken);
 
-      const res = await fetch(
-        "https://built-it.onrender.com/save-subscription",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userid: userid,
-            subscription: fcmToken,
-            userType: userType,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/common/save-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userid: userid,
+          subscription: fcmToken,
+          userType: userType,
+        }),
+      });
     }
 
     // return subscription;

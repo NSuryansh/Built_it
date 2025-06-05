@@ -50,7 +50,7 @@ const UserDetail = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <button
-          onClick={() => router.push("/doctor/history")}
+          onClick={() => navigate("/doctor/history")}
           className="flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-800)] transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />

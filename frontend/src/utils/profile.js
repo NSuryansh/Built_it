@@ -18,16 +18,7 @@ export const checkAuth = async (userType) => {
     return false;
   }
   try {
-    let user = "";
-    if (userType === "user") {
-      user = "profile";
-    } else if (userType === "doc") {
-      user = "docprofile";
-    } else {
-      user = "adminprofile";
-    }
-    // console("HAHAHAHAHAHAh")
-    const response = await fetch(`https://built-it.onrender.com/${user}`, {
+    const response = await fetch(`http://localhost:3000/${userType}/profile`, {
       method: "GET",
       headers: { Authorization: "Bearer " + token },
     });

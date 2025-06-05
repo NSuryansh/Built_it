@@ -54,17 +54,14 @@ const SignUp = () => {
 
   async function sendOTP() {
     try {
-      const response = await fetch(
-        "https://built-it.onrender.com/otpGenerate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({ email: formData.email }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/user/otpGenerate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
@@ -79,7 +76,7 @@ const SignUp = () => {
 
   async function verifyOTP() {
     try {
-      const response = await fetch("https://built-it.onrender.com/otpcheck", {
+      const response = await fetch("http://localhost:3000/user/otpcheck", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -216,7 +213,7 @@ const SignUp = () => {
     setisLoading(true);
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/check-user?username=${formData.username}`,
+        `http://localhost:3000/user/check-user?username=${formData.username}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -269,7 +266,7 @@ const SignUp = () => {
         rollNo,
         gender,
       } = formData;
-      const response = await fetch("https://built-it.onrender.com/signup", {
+      const response = await fetch("http://localhost:3000/user/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -564,7 +561,7 @@ const SignUp = () => {
         <p className="mt-4 text-sm text-center text-cus">
           Already have an account?{" "}
           <button
-            onClick={() => router.push("/user/login")}
+            onClick={() => navigate("/user/login")}
             className="underline font-bold text-[var(--custom-orange-500)]"
           >
             Login here

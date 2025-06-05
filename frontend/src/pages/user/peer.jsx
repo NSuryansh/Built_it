@@ -3,7 +3,7 @@ import { MessageSquare, Search, X, UserCircle2, User } from "lucide-react";
 import ChatList from "../../components/common/ChatList";
 import ChatMessage from "../../components/common/ChatMessage";
 import ChatInput from "../../components/common/ChatInput";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { decryptMessage } from "../../utils/decryptMessage";
 import SessionExpired from "../../components/common/SessionExpired";
@@ -12,7 +12,6 @@ import { encryptMessage } from "../../utils/encryptMessage";
 import { checkAuth } from "../../utils/profile";
 import Navbar from "../../components/user/Navbar";
 import { ToastContainer } from "react-toastify";
-import { useSearchParams } from "react-router-dom";
 import CustomToast from "../../components/common/CustomToast";
 import CustomLoader from "../../components/common/CustomLoader";
 
@@ -94,7 +93,7 @@ const Peer = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "https://built-it.onrender.com/getdoctors?user_type=user",
+          "http://localhost:3000/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -113,7 +112,7 @@ const Peer = () => {
   // async function fetchContacts(userId) {
   //   try {
   //     const response = await fetch(
-  //       `https://built-it.onrender.com/chatContacts?userId=${userId}`,
+  //       `http://localhost:3000/chatContacts?userId=${userId}`,
   //       { headers: { Authorization: "Bearer " + token } }
   //     );
   //     const contacts = await response.json();
@@ -170,7 +169,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -277,7 +276,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
+        `http://localhost:3000/user_doc/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();

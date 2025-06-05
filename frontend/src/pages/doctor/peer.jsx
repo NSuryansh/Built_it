@@ -2,16 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import ChatList from "../../components/common/ChatList";
 import ChatMessage from "../../components/common/ChatMessage";
 import ChatInput from "../../components/common/ChatInput";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { decryptMessage } from "../../utils/decryptMessage";
 import { generateAESKey } from "../../utils/aeskey";
 import { encryptMessage } from "../../utils/encryptMessage";
 import { checkAuth } from "../../utils/profile";
-import HashLoader from "react-spinners/HashLoader";
 import { ToastContainer } from "react-toastify";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { useSearchParams } from "react-router-dom";
 import CustomToast from "../../components/common/CustomToast";
 import SessionExpired from "../../components/common/SessionExpired";
 import DoctorNavbar from "../../components/doctor/Navbar";
@@ -77,7 +75,7 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/chatContacts?userId=${userId}&userType=doc`,
+        `http://localhost:3000/user_doc/chatContacts?userId=${userId}&userType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       if (!response.ok) throw new Error("Failed to fetch users");
@@ -156,7 +154,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it.onrender.com/", {
+    socketRef.current = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -281,7 +279,7 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `https://built-it.onrender.com/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
+        `http://localhost:3000/user_doc/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();

@@ -13,6 +13,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import CustomLoader from "../../components/common/CustomLoader";
+import { HashLoader } from "react-spinners";
 
 export default function Mood() {
   const [message, setMessage] = useState("");

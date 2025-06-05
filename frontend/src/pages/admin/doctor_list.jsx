@@ -45,7 +45,7 @@ const DoctorsList = () => {
   const fetchDoctors = async () => {
     try {
       const res = await fetch(
-        "https://built-it.onrender.com/getdoctors?user_type=admin",
+        "http://localhost:3000/user_admin/getdoctors?user_type=admin",
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -68,7 +68,7 @@ const DoctorsList = () => {
     console.log(doctor.id);
     console.log(doctor);
     try {
-      const res = await fetch("https://built-it.onrender.com/toggleDoc", {
+      const res = await fetch("http://localhost:3000/admin/toggleDoc", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

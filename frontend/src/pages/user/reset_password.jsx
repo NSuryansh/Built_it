@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { KeyRound, Eye, EyeOff } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/common/CustomToast";
 
@@ -29,20 +28,17 @@ const ResetPassword = () => {
     }
     const token = searchParams.get("token");
 
-    const response = await fetch(
-      `https://built-it.onrender.com/resetPassword`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + jwt_token,
-        },
-        body: JSON.stringify({
-          password: formData.password,
-          token: token,
-        }),
-      }
-    );
+    const response = await fetch(`http://localhost:3000/user/resetPassword`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + jwt_token,
+      },
+      body: JSON.stringify({
+        password: formData.password,
+        token: token,
+      }),
+    });
     const res = await response.json();
     CustomToast("Password updated successfully!");
     setTimeout(() => {
@@ -117,7 +113,9 @@ const ResetPassword = () => {
           </div>
 
           {error && (
-            <div className="text-[var(--custom-red-500)] text-sm text-center">{error}</div>
+            <div className="text-[var(--custom-red-500)] text-sm text-center">
+              {error}
+            </div>
           )}
 
           <button

@@ -126,7 +126,7 @@ const Landing = () => {
                 </Link>
               </div>
               <img
-                src="/qr-code.svg"
+                src="/assets/qr-code.svg"
                 className="w-[250px] mt-16 md:mt-0"
                 alt="qr-code"
               />
