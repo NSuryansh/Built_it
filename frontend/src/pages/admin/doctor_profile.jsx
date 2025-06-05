@@ -11,7 +11,6 @@ import {
   Clock,
   AlignCenterVertical as Certificate,
   FileText,
-  X,
   StarIcon,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/Navbar";
@@ -89,7 +88,7 @@ const AdminDoctorProfile = () => {
             email: data.doctor.email,
             phone: data.doctor.mobile,
             address: data.doctor.address,
-            officeAddress: data.doctor.office_address,
+            office_address: data.doctor.office_address,
           },
           experience:
             data.doctor.experience != null
@@ -199,7 +198,7 @@ const AdminDoctorProfile = () => {
                   <img
                     src={profileImage}
                     alt="Profile"
-                    className="w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover shadow-xl group-hover:scale-[1.15] transition-transform duration-500 ease-out"
+                    className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-[var(--custom-yellow-300)] object-cover shadow-xl group-hover:scale-[1.15] transition-transform duration-500 ease-out"
                   />
                 ) : (
                   <User className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-[6px] border-[var(--custom-yellow-400)] text-[var(--custom-yellow-400)] transform transition-all duration-300 group-hover:scale-110" />
@@ -249,6 +248,7 @@ const AdminDoctorProfile = () => {
                   { icon: Mail, label: doctor.contact.email },
                   { icon: Phone, label: doctor.contact.phone },
                   { icon: MapPin, label: doctor.contact.address },
+                  { icon: MapPin, label: doctor.contact.office_address },
                 ].map((info, index) => (
                   <div
                     key={index}
@@ -273,7 +273,7 @@ const AdminDoctorProfile = () => {
                     key={index}
                     className="flex items-center space-x-[15px] text-[var(--custom-gray-800)] bg-[var(--custom-white)]/70 backdrop-blur-md p-[20px] rounded-xl shadow-md hover:shadow-xl hover:bg-[var(--custom-yellow-50)] transition-all duration-[300ms]"
                   >
-                    <span className="w-[10px] h-[10px] bg-coral-500 rounded-full"></span>
+                    <GraduationCap className="w-[25px] h-[25px]" />
                     <span className="text-lg">{edu}</span>
                   </li>
                 ))}

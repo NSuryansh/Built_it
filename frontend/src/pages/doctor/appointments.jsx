@@ -337,11 +337,13 @@ const DoctorAppointment = () => {
 
     const resp = await res.json();
     const docName = localStorage.getItem("username");
+    const office_address = localStorage.getItem("office_address");
 
     var params = {
       doctor: docName,
       dateTime: format(appointment.dateTime, "dd-MMM-yyyy hh:mm a"),
       email: appointment.user.email,
+      office_address: office_address,
     };
     emailjs
       .send("service_coucldi", "template_9at0fnv", params, "5rqHkmhJJfAxWBFNo")
