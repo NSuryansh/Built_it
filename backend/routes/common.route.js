@@ -51,7 +51,6 @@ commonRouter.get(
 
 commonRouter.post(
   "/save-subscription",
-  authorizeRoles("user", "doc", "admin"),
   async (req, res) => {
     try {
       // console.log("HELLLLLOOOOOOO");

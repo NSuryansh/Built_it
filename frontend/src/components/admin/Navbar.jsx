@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Bell, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import LogoutModal from "../common/LogoutModal";
+import CustomModal from "../common/CustomModal";
 
 const AdminNavbar = () => {
   const location = useLocation().pathname;
@@ -16,7 +16,7 @@ const AdminNavbar = () => {
     { name: "User", link: "/admin/User" },
   ];
   const navigate = useNavigate();
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showCustomModal, setShowCustomModal] = useState(false);
   const userType = localStorage.getItem("user_type");
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("user_email");
@@ -27,12 +27,12 @@ const AdminNavbar = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    setShowLogoutModal(false);
+    setShowCustomModal(false);
     navigate("/admin/login");
   };
 
   const handleCancel = () => {
-    setShowLogoutModal(false);
+    setShowCustomModal(false);
   };
 
   const useOutsideAlerter = (ref) => {
@@ -151,7 +151,7 @@ const AdminNavbar = () => {
 
                   <div className="flex gap-2">
                     <button
-                      onClick={() => setShowLogoutModal(true)}
+                      onClick={() => setShowCustomModal(true)}
                       className="flex-1 bg-[var(--custom-green-200)] hover:bg-[var(--custom-green-300)] text-[var(--custom-green-900)] rounded px-4 py-2 text-sm font-medium transition-colors"
                     >
                       Logout
@@ -163,8 +163,8 @@ const AdminNavbar = () => {
           </div>
         </div>
       </div>
-      {showLogoutModal && (
-        <LogoutModal
+      {showCustomModal && (
+        <CustomModal
           handleLogout={handleLogout}
           handleCancel={handleCancel}
           theme="green"

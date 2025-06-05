@@ -79,7 +79,7 @@ model Doctor {
   address        String?
   office_address String?
   experience     String?
-  isProfileDone  Boolean            @default(true)
+  isProfileDone  Boolean            @default(false)
   avgRating      Decimal            @default(0)
   isInactive     Boolean            @default(false)
   certificaition DocCertification[]

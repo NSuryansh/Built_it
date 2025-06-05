@@ -15,12 +15,13 @@ import SessionExpired from "../../components/common/SessionExpired";
 import Footer from "../../components/common/Footer";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import DoctorCalendar from "../../components/doctor/Calendar";
 import CustomToast from "../../components/common/CustomToast";
 import { TimeChange } from "../../components/common/TimeChange";
 import CustomLoader from "../../components/common/CustomLoader";
+import CustomModal from "../../components/common/CustomModal";
 
 const DoctorDashboard = () => {
   const [appointments, setAppointments] = useState([]);
@@ -30,7 +31,10 @@ const DoctorDashboard = () => {
   const [newAppoinments, setNewAppoinments] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
+  const isProfileDone = localStorage.getItem("isProfileDone");
+  const [showCustomModal, setShowCustomModal] = useState(false);
+  console.log("isProfileDone", isProfileDone);
+  
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good Morning");
@@ -44,6 +48,12 @@ const DoctorDashboard = () => {
       setIsAuthenticated(authStatus);
     };
     verifyAuth();
+  }, []);
+
+  useEffect(() => {
+    if (!isProfileDone) {
+      setShowCustomModal(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -362,6 +372,16 @@ const DoctorDashboard = () => {
       </motion.div>
 
       <Footer color={"blue"} className="mt-8" />
+      {showCustomModal && (
+        <CustomModal
+          handleLogout={() => navigate("/doctor/profile")}
+          handleCancel={() => setShowCustomModal(false)}
+          title="Complete Your Profile"
+          text="Please complete your profile for better functionality."
+          buttonText="Complete Profile"
+          theme="blue"
+        />
+      )}
     </div>
   );
 };

@@ -6,7 +6,7 @@ import NotificationPanel from "./NotificationPanel";
 import { checkAuth } from "../../utils/profile";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../common/CustomToast";
-import LogoutModal from "../common/LogoutModal";
+import CustomModal from "../common/CustomModal";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const ref = useRef(null);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
   const links = [
     { name: "Home", link: "/user/dashboard" },
@@ -49,12 +49,12 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    setShowLogoutModal(false);
+    setShowCustomModal(false);
     navigate("/user/login");
   };
 
   const handleCancel = () => {
-    setShowLogoutModal(false);
+    setShowCustomModal(false);
   };
 
   const handleBellClick = () => {
@@ -266,7 +266,7 @@ const Navbar = () => {
                             Modify Profile
                           </button>
                           <button
-                            onClick={() => setShowLogoutModal(true)}
+                            onClick={() => setShowCustomModal(true)}
                             className="px-4 py-2 text-sm font-medium text-[var(--custom-orange-500)] bg-[var(--custom-orange-50)] rounded-lg hover:bg-[var(--custom-orange-100)] transition-colors duration-200"
                           >
                             Logout
@@ -288,8 +288,8 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      {showLogoutModal && (
-        <LogoutModal handleLogout={handleLogout} handleCancel={handleCancel} />
+      {showCustomModal && (
+        <CustomModal handleLogout={handleLogout} handleCancel={handleCancel} />
       )}
     </nav>
   );
