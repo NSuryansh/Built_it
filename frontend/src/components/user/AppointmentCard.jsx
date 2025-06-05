@@ -30,17 +30,23 @@ const AppointmentCard = ({
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4">
         <div className="flex items-center space-x-5">
-          <div className="bg-[var(--custom-white)] p-3 rounded-full shadow-md">
+          <div className="bg-[var(--custom-white)] p-1 rounded-full shadow-md">
             {upcoming ? (
               appointment.doctor.img != null ? (
-                <img src={appointment.doctor.img} className="h-7 w-7" />
+                <img
+                  src={appointment.doctor.img}
+                  className="w-10 h-10 object-cover rounded-full"
+                />
               ) : (
                 <User className="h-7 w-7 text-[var(--custom-gray-600)]" />
               )
             ) : appointment.doc.img != null ? (
-              <img src={appointment.doc.img} className="h-7 w-7" />
+              <img
+                src={appointment.doc.img}
+                className="h-10 w-10 object-cover rounded-full"
+              />
             ) : (
-              <User className="h-7 w-7 text-[var(--custom-gray-600)]" />
+              <User className="h-10 w-10 text-[var(--custom-gray-600)]" />
             )}
           </div>
           <div>
