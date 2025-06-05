@@ -1,4 +1,4 @@
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 
 const CustomModal = ({
   handleLogout,
@@ -79,9 +79,17 @@ const CustomModal = ({
           <div
             className={`absolute inset-0 rounded-full ${currentTheme.iconColor} opacity-10 animate-pulse`}
           ></div>
-          <LogOut
-            className={`w-10 h-10 ${currentTheme.iconColor} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}
-          />
+          {
+            (title === "Confirm Logout" ? (
+              <LogOut
+                className={`w-10 h-10 ${currentTheme.iconColor} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}
+              />
+            ) : (
+              <User
+                className={`w-10 h-10 ${currentTheme.iconColor} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}
+              />
+            ))
+          }
         </div>
 
         <h2

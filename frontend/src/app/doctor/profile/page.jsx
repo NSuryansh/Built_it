@@ -32,13 +32,13 @@ import CustomLoader from "@/components/common/CustomLoader";
 const DoctorProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
-    name: "<Please change>",
-    email: "<Please change>",
-    phone: "<Please change>",
-    address: "<Please change>",
-    office_address: "<Please change>",
-    specialization: "<Please change>",
-    experience: "<Please change>",
+    name: "<Please Change>",
+    email: "<Please Change>",
+    phone: "<Please Change>",
+    address: "<Please Change>",
+    office_address: "<Please Change>",
+    specialization: "<Please Change>",
+    experience: "<Please Change>",
     education: ["<Add>"],
     availability: ["<Add>"],
     certifications: ["<Add>"],
@@ -206,6 +206,20 @@ const DoctorProfile = () => {
       );
       formData.append("image", file);
 
+      if (
+        editedProfile.address !== "<Please Change>" &&
+        editedProfile.office_address !== "<Please Change>" &&
+        editedProfile.experience !== null &&
+        filteredEducation.length > 0 &&
+        filteredEducation != ["<Add>"] &&
+        filteredCertifications.length > 0 &&
+        filteredCertifications != ["<Add>"]
+      ) {
+        formData.append("isProfileDone", true);
+      } else {
+        formData.append("isProfileDone", false);
+      }
+
       const response = await fetch(`http://localhost:3000/doc/modifyDoc`, {
         method: "PUT",
         headers: { Authorization: "Bearer " + token },
@@ -224,16 +238,18 @@ const DoctorProfile = () => {
         dates.push(newDate);
       }
 
-      const response2 = await fetch(
-        `http://localhost:3000/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
-        {
-          method: "PUT",
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
+      if (dates.length !== 0) {
+        const response2 = await fetch(
+          `http://localhost:3000/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+          {
+            method: "PUT",
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
+        const data2 = await response2.json();
+      }
 
       const data = await response.json();
-      const data2 = await response2.json();
 
       // Update profile with filtered data
       setProfile({
