@@ -61,6 +61,7 @@ const Book = () => {
   useEffect(() => {
     const checkPreviousBooking = async () => {
       const userId = localStorage.getItem("userid");
+      const token = localStorage.getItem("token");
       if (!userId) return;
 
       try {
