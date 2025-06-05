@@ -7,7 +7,6 @@ import Footer from "../../components/common/Footer";
 import CustomLoader from "../../components/common/CustomLoader";
 import DoctorSelectionStep from "../../components/user/DoctorSelection";
 import BookingFormStep from "../../components/user/BookingForm";
-import { use } from "react";
 
 const Book = () => {
   // step 1: select a doctor; step 2: booking form
@@ -79,7 +78,9 @@ const Book = () => {
         CustomToast("Error while checking previous bookings");
       }
     };
-    checkPreviousBooking();
+    if (isAuthenticated) {
+      checkPreviousBooking();
+    }
   }, []);
 
   // Populate formData fields if authenticated; allow manual input if not authenticated.
