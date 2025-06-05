@@ -1,6 +1,6 @@
-import { Mail, Phone, User } from "lucide-react";
+import { Mail, MapPin, Phone, User } from "lucide-react";
 
-const DoctorSelectionStep = ({ doctors, onSelect }) => {
+const DoctorSelectionStep = ({ doctors, onSelect, selectable }) => {
   return (
     <div className="bg-[var(--custom-orange-100)] w-full p-2 sm:p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] flex items-center justify-center shadow-md">
       {doctors.length > 0 ? (
@@ -8,8 +8,14 @@ const DoctorSelectionStep = ({ doctors, onSelect }) => {
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
-              className="group w-full bg-[var(--custom-white)] max-w-md hover:bg-[var(--custom-orange-50)] p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-[var(--custom-orange-100)] hover:border-[var(--custom-orange-200)]"
-              onClick={() => onSelect(doctor)}
+              className={`group w-full bg-[var(--custom-white)] max-w-md hover:bg-[var(--custom-orange-50)] p-6 rounded-2xl shadow-sm transition-all duration-300 transform border border-[var(--custom-orange-100)] hover:border-[var(--custom-orange-200)] ${
+                selectable
+                  ? "hover:-translate-y-1 cursor-pointer hover:shadow-md"
+                  : "cursor-not-allowed"
+              }`}
+              onClick={() => {
+                if (selectable) onSelect(doctor);
+              }}
             >
               <div className="flex w-full flex-col justify-center items-center sm:flex-row gap-3 sm:gap-6">
                 <div className="flex flex-col items-center">

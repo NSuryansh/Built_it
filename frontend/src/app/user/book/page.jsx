@@ -15,6 +15,7 @@ const Book = () => {
   const [step, setStep] = useState(1);
   const [doctors, setDoctors] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [doctorSelectable, setdoctorSelectable] = useState(true);
   const [isLoading, setisLoading] = useState(false);
   const [formData, setFormData] = useState({
     // booking details provided by the user
@@ -55,6 +56,32 @@ const Book = () => {
   // Fetch doctors list from backend
   useEffect(() => {
     fetchDoctors();
+  }, []);
+
+  useEffect(() => {
+    const checkPreviousBooking = async () => {
+      const userId = localStorage.getItem("userid");
+      if (!userId) return;
+
+      try {
+        const res = await fetch(
+          `http://localhost:3000/user/isUpcomingAppointment?userId=${userId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
+        const data = await res.json();
+        console.log("Previous booking check response:", data);
+        if (data.hasUpcomingAppointment) {
+          setdoctorSelectable(false);
+          CustomToast("You already have an upcoming appointment");
+        }
+      } catch (err) {
+        console.error("Error checking previous bookings:", err);
+        CustomToast("Error while checking previous bookings");
+      }
+    };
+    checkPreviousBooking();
   }, []);
 
   // Populate formData fields if authenticated; allow manual input if not authenticated.
@@ -185,7 +212,7 @@ const Book = () => {
                 <DoctorSelectionStep
                   doctors={doctors}
                   onSelect={handleDoctorSelect}
-                  className="cursor-pointer"
+                  selectable={doctorSelectable}
                 />
               </div>
             </div>
