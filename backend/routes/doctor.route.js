@@ -465,7 +465,7 @@ docRouter.put(
   upload.single("image"),
   async (req, res) => {
     try {
-      const { id, address, city, experience, educ, certifi } = req.body;
+      const { id, address, office_address, experience, educ, certifi } = req.body;
       if (id !== req.user.userId.toString()) {
         return res.status(403).json({ error: "Access denied" });
       }
@@ -497,7 +497,7 @@ docRouter.put(
 
       const orConditions = [];
       if (address) orConditions.push({ address });
-      if (city) orConditions.push({ city });
+      if (office_address) orConditions.push({ office_address });
       if (experience) orConditions.push({ experience });
 
       const existingDoctor = await prisma.doctor.findUnique({
@@ -514,7 +514,7 @@ docRouter.put(
       // console.log(url);
       const updatedData = {};
       if (address?.trim()) updatedData.address = address;
-      if (city?.trim()) updatedData.city = city;
+      if (office_address?.trim()) updatedData.office_address = office_address;
       if (experience?.trim()) updatedData.experience = experience;
       if (url) updatedData.img = url;
       // console.log(updatedData);

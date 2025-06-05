@@ -45,7 +45,7 @@ const DoctorLogin = () => {
       const docAuthStatus = await checkAuth("doc");
       if (docAuthStatus) {
         setIsAuthenticated(docAuthStatus);
-        navigate("/doctor/landing");
+        navigate("/doctor/dashboard");
       } else {
         setIsAuthenticated(false);
       }
@@ -81,7 +81,7 @@ const DoctorLogin = () => {
     if (res["message"] === "Login successful") {
       localStorage.setItem("token", res["token"]);
       setisLoading(false);
-      navigate("/doctor/landing");
+      navigate("/doctor/dashboard");
     } else {
       setisLoading(false);
       CustomToast(res["message"], "blue");

@@ -11,7 +11,7 @@ const DoctorNavbar = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const links = [
-    { name: "Home", link: "/doctor/landing" },
+    { name: "Home", link: "/doctor/dashboard" },
     { name: "Appointments", link: "/doctor/appointments" },
     { name: "Peer", link: "/doctor/peer" },
     { name: "Profile", link: "/doctor/profile" },

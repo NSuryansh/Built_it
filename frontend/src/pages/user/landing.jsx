@@ -19,7 +19,7 @@ const Landing = () => {
         const docAuthStatus = await checkAuth("doc");
         if (docAuthStatus) {
           setIsAuthenticated(docAuthStatus);
-          navigate("/doctor/landing");
+          navigate("/doctor/dashboard");
         } else {
           const adminAuthStatus = await checkAuth("admin");
           if (adminAuthStatus) {

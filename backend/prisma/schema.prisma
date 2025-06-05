@@ -77,8 +77,9 @@ model Doctor {
   img            String?
   id             Int                @id @default(autoincrement())
   address        String?
-  city           String?
+  office_address String?
   experience     String?
+  isProfileDone  Boolean            @default(true)
   avgRating      Decimal            @default(0)
   isInactive     Boolean            @default(false)
   certificaition DocCertification[]

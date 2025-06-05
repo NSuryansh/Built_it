@@ -22,7 +22,7 @@ import CustomToast from "../../components/common/CustomToast";
 import { TimeChange } from "../../components/common/TimeChange";
 import CustomLoader from "../../components/common/CustomLoader";
 
-const DoctorLanding = () => {
+const DoctorDashboard = () => {
   const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -366,4 +366,4 @@ const DoctorLanding = () => {
   );
 };
 
-export default DoctorLanding;
+export default DoctorDashboard;

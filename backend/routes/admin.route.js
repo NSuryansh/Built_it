@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 dotenv.config();
 
-const adminRouter = Router();   
+const adminRouter = Router();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 adminRouter.put("/uploadURL", authorizeRoles("admin"), async (req, res) => {
@@ -69,7 +69,7 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
     reg_id,
     desc,
     address,
-    city,
+    office_address,
     experenice,
     img,
   } = req.body;
@@ -84,7 +84,7 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
         password: hashedPassword,
         reg_id: reg_id,
         address: address,
-        city: city,
+        office_address: office_address,
         experience: experenice,
         desc: desc,
         img: img,

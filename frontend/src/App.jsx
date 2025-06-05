@@ -20,7 +20,7 @@ import FeedbackPage from "./pages/user/feedback";
 import Dashboard from "./pages/user/dashboard";
 import DoctorLogin from "./pages/doctor/login";
 import DoctorResetPassword from "./pages/doctor/reset_password";
-import DoctorLanding from "./pages/doctor/landing";
+import DoctorDashboard from "./pages/doctor/dashboard";
 import DoctorProfile from "./pages/doctor/profile";
 import DoctorAppointment from "./pages/doctor/appointments";
 import DoctorPeer from "./pages/doctor/peer";
@@ -111,17 +111,20 @@ export default function App() {
     if (fcmToken) {
       console.log("FCM Token:", fcmToken);
 
-      const res = await fetch("http://localhost:3000/common/save-subscription", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userid: userid,
-          subscription: fcmToken,
-          userType: userType,
-        }),
-      });
+      const res = await fetch(
+        "http://localhost:3000/common/save-subscription",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userid: userid,
+            subscription: fcmToken,
+            userType: userType,
+          }),
+        }
+      );
     }
 
     // return subscription;
@@ -182,7 +185,7 @@ export default function App() {
           path="/doctor/reset_password"
           element={<DoctorResetPassword />}
         />
-        <Route path="/doctor/landing" element={<DoctorLanding />} />
+        <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/doctor/appointments" element={<DoctorAppointment />} />
         <Route path="/doctor/peer" element={<DoctorPeer />} />

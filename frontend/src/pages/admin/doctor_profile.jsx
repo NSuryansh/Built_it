@@ -88,7 +88,8 @@ const AdminDoctorProfile = () => {
           contact: {
             email: data.doctor.email,
             phone: data.doctor.mobile,
-            address: data.doctor.address + " " + data.doctor.city,
+            address: data.doctor.address,
+            officeAddress: data.doctor.office_address,
           },
           experience:
             data.doctor.experience != null
