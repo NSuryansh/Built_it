@@ -831,4 +831,39 @@ userRouter.post(
   }
 );
 
+userRouter.get(
+  "/isUpcomingAppointment",
+  authorizeRoles("user"),
+  async (req, res) => {
+    const userId = Number(req.query["userId"]);
+    if (userId !== req.user.userId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    try {
+      const upcomingAppointment = await prisma.appointments.findFirst({
+        where: {
+          user_id: userId,
+          dateTime: {
+            gte: new Date(),
+          },
+        },
+        orderBy: {
+          dateTime: "asc",
+        },
+      });
+
+      if (upcomingAppointment) {
+        res.json({
+          hasUpcomingAppointment: true,
+        });
+      } else {
+        res.json({ hasUpcomingAppointment: false });
+      }
+    } catch (error) {
+      console.error("Error checking for upcoming appointment:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
 export default userRouter;
