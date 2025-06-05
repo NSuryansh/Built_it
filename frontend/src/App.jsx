@@ -5,7 +5,7 @@ import { getMessaging, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
 import Landing from "./pages/user/landing";
 import Peer from "./pages/user/peer";
-import Mood from "./pages/user/Mood";
+import Mood from "./pages/user/mood";
 import Book from "./pages/user/book";
 import Stress from "./pages/user/stress";
 import Entertainment from "./pages/user/entertainment";
@@ -112,7 +112,7 @@ export default function App() {
       console.log("FCM Token:", fcmToken);
 
       const res = await fetch(
-        "http://localhost:3000/common/save-subscription",
+        "https://built-it.onrender.com/common/save-subscription",
         {
           method: "POST",
           headers: {

@@ -17,7 +17,7 @@ const DoctorNotificationPanel = () => {
       if (docId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/user_doc/chatContacts?userId=${docId}`,
+            `https://built-it.onrender.com/user_doc/chatContacts?userId=${docId}`,
             { headers: { Authorization: "Bearer " + token } }
           );
           const contacts = await response.json();
@@ -36,9 +36,12 @@ const DoctorNotificationPanel = () => {
     const getUsers = async () => {
       if (chats) {
         try {
-          const response = await fetch("http://localhost:3000/doc/getFeelings", {
-            headers: { Authorization: "Bearer " + token },
-          });
+          const response = await fetch(
+            "https://built-it.onrender.com/doc/getFeelings",
+            {
+              headers: { Authorization: "Bearer " + token },
+            }
+          );
           if (!response.ok) throw new Error("Failed to fetch feelings");
           const data = await response.json();
           // console.log(data, "hello")
@@ -80,7 +83,7 @@ const DoctorNotificationPanel = () => {
     const getReferrals = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/doc/get-referrals?doctor_id=${docId}`,
+          `https://built-it.onrender.com/doc/get-referrals?doctor_id=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }

@@ -63,7 +63,7 @@ const AdminDoctorProfile = () => {
       try {
         const doctorId = search.split("=")[1];
         const response = await fetch(
-          `http://localhost:3000/common/getDoc?docId=${doctorId}`,
+          `https://built-it.onrender.com/common/getDoc?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -125,19 +125,22 @@ const AdminDoctorProfile = () => {
 
   const referralSub = async () => {
     try {
-      const response = await fetch("http://localhost:3000/admin/referrals", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          roll_no: String(referralData.rollNo),
-          doctor_id: search.split("=")[1],
-          referred_by: referralData.referredBy,
-          reason: referralData.reason,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it.onrender.com/admin/referrals",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            roll_no: String(referralData.rollNo),
+            doctor_id: search.split("=")[1],
+            referred_by: referralData.referredBy,
+            reason: referralData.reason,
+          }),
+        }
+      );
       const data = await response.json();
 
       if (data.message === "User with given roll number not found") {
@@ -145,7 +148,7 @@ const AdminDoctorProfile = () => {
         return false;
       }
       CustomToast("Referral created successfully", "green");
-      await fetch("http://localhost:3000/common/send-notification", {
+      await fetch("https://built-it.onrender.com/common/send-notification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

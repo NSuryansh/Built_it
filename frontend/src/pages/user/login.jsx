@@ -66,7 +66,7 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch("http://localhost:3000/user/login", {
+    const response = await fetch("https://built-it.onrender.com/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,16 +99,19 @@ const Login = () => {
       CustomToast("Please enter an email");
       return;
     }
-    const response = await fetch("http://localhost:3000/user/forgotPassword", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
+    const response = await fetch(
+      "https://built-it.onrender.com/user/forgotPassword",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      }
+    );
     const res = await response.json();
     CustomToast(res.message);
     setShowForgotModal(false);
@@ -131,7 +134,7 @@ const Login = () => {
   const handleBiometricLogin = async () => {
     console.log(username, "usduse");
     const data = await fetch(
-      "http://localhost:3000/user/generateBioAuthOptions",
+      "https://built-it.onrender.com/user/generateBioAuthOptions",
       {
         method: "POST",
         body: JSON.stringify({
@@ -171,17 +174,20 @@ const Login = () => {
       },
     };
 
-    const res = await fetch("http://localhost:3000/user/verifyBioLogin", {
-      method: "POST",
-      // body: JSON.stringify({
-      //   emailId: username
-      // }),
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...response,
-        emailId: username,
-      }),
-    }).then((res) => res.json());
+    const res = await fetch(
+      "https://built-it.onrender.com/user/verifyBioLogin",
+      {
+        method: "POST",
+        // body: JSON.stringify({
+        //   emailId: username
+        // }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...response,
+          emailId: username,
+        }),
+      }
+    ).then((res) => res.json());
     console.log(res);
     if (res.success === true) {
       localStorage.setItem("token", res["token"]);

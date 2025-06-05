@@ -63,7 +63,7 @@ userRouter.post("/signup", async (req, res) => {
 const biometricOptions = async (user) => {
   const options = await generateRegistrationOptions({
     rpName: "Vitality",
-    rpID: "localhost:5173",
+    rpID: "built-it-frontend.onrender.com",
     userID: Number(user.id),
     userName: user.email,
     userDisplayName: user.email,
@@ -169,8 +169,8 @@ userRouter.post("/verifyBioLogin", authorizeRoles("user"), async (req, res) => {
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
-    expectedOrigin: "http://localhost:5173",
-    expectedRPID: "localhost",
+    expectedOrigin: "https://built-it-frontend.onrender.com",
+    expectedRPID: "Vitality",
     credential: {
       credentialID: Buffer.from(credential.credentialID),
       publicKey: Buffer.from(credential.publicKey),
@@ -339,8 +339,8 @@ userRouter.post(
       const verification = await verifyRegistrationResponse({
         response: req.body,
         expectedChallenge: user.challenge,
-        expectedOrigin: "http://localhost:5173",
-        expectedRPID: "localhost",
+        expectedOrigin: "https://built-it-frontend.onrender.com",
+        expectedRPID: "built-it-frontend.onrender.com",
         // authenticator: {
         //     credentialID: credential.credentialID,
         //     credentialPublicKey: credential.publicKey,
@@ -556,7 +556,7 @@ userRouter.post("/forgotPassword", async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `http://localhost:5173/user/reset_password?token=${token}`;
+    const resetLink = `https://built-it.onrender.com/user/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(user.email, subject, message);

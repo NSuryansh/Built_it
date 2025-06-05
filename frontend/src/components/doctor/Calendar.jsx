@@ -31,13 +31,13 @@ const DoctorCalendar = ({ onDateSelect }) => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/doc/pastdocappt?doctorId=${docId}`,
+          `https://built-it.onrender.com/doc/pastdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
         );
         const response = await fetch(
-          `http://localhost:3000/doc/currentdocappt?doctorId=${docId}`,
+          `https://built-it.onrender.com/doc/currentdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }

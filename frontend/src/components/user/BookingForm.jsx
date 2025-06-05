@@ -32,7 +32,7 @@ const BookingFormStep = ({
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `http://localhost:3000/common/available-slots?date=${date}&docId=${doctorId}`,
+        `https://built-it.onrender.com/common/available-slots?date=${date}&docId=${doctorId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -55,18 +55,21 @@ const BookingFormStep = ({
   //to get notifs for incoming requests
   const sendNotif = async () => {
     try {
-      const res = await fetch("http://localhost:3000/common/send-notification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          userid: selectedDoctor.id,
-          message: `You have a new incoming appointment request!`,
-          userType: "doc",
-        }),
-      });
+      const res = await fetch(
+        "https://built-it.onrender.com/common/send-notification",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            userid: selectedDoctor.id,
+            message: `You have a new incoming appointment request!`,
+            userType: "doc",
+          }),
+        }
+      );
 
       if (res.ok) {
         console.log("HALLELUJAH");
