@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../../utils/profile";
 import PasswordStrengthBar from "react-password-strength-bar";
 import CustomToast from "../../components/common/CustomToast";
-
+import CustomLoader from "../../components/common/CustomLoader";
 const SignUp = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
