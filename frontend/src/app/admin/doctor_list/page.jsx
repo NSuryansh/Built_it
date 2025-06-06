@@ -30,6 +30,8 @@ const DoctorsList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [fetched, setfetched] = useState(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [minRating, setMinRating] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -65,7 +67,6 @@ const DoctorsList = () => {
 
   const handleToggleDoc = async (doctor) => {
     const token = localStorage.getItem("token");
-
     try {
       const res = await fetch("http://localhost:3000/admin/toggleDoc", {
         method: "POST",
@@ -81,11 +82,12 @@ const DoctorsList = () => {
       const resp = await res.json();
       await fetchDoctors();
       if (res.ok) {
-        if (doctor.isInactive) {
-          CustomToast("Doctor activated successfully", "green");
-        } else {
-          CustomToast("Doctor deactivated successfully", "green");
-        }
+        CustomToast(
+          doctor.isInactive
+            ? "Doctor activated successfully"
+            : "Doctor deactivated successfully",
+          "green"
+        );
       } else {
         CustomToast("Error updating doctor", "green");
       }
@@ -97,12 +99,8 @@ const DoctorsList = () => {
   };
 
   const handleToggleDocPopup = (doctor, isOpen) => {
-    if (isOpen == true) {
-      setToggleDocPopupOpen(true);
-      setSelectedDoc(doctor);
-    } else {
-      setToggleDocPopupOpen(false);
-    }
+    setToggleDocPopupOpen(isOpen);
+    if (isOpen) setSelectedDoc(doctor);
   };
 
   const handleClosePopup = () => {
@@ -115,11 +113,17 @@ const DoctorsList = () => {
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
+  const handleRatingFilter = (rating) => {
+    setMinRating(rating);
+    setIsFilterOpen(false);
+  };
+
   const filteredDoctors = doctors.filter(
     (doctor) =>
-      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
+      (doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doctor.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doctor.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      parseFloat(doctor.avgRating) >= minRating
   );
 
   if (isAuthenticated === null || fetched === null) {
@@ -187,10 +191,39 @@ const DoctorsList = () => {
                 className="w-full pl-12 pr-4 py-3 rounded-xl border border-[var(--custom-gray-200)] focus:ring-2 focus:ring-[var(--custom-green-500)] focus:border-transparent transition-all duration-300"
               />
             </div>
-            <button className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--custom-gray-200)] hover:border-[var(--custom-green-500)] hover:bg-[var(--custom-green-50)] transition-all duration-300">
-              <Filter size={20} className="text-[var(--custom-gray-500)]" />
-              <span className="text-[var(--custom-gray-700)]">Filters</span>
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--custom-gray-200)] hover:border-[var(--custom-green-500)] hover:bg-[var(--custom-green-50)] transition-all duration-300"
+              >
+                <Filter size={20} className="text-[var(--custom-gray-500)]" />
+                <span className="text-[var(--custom-gray-700)]">
+                  Filter{minRating > 0 ? ` (Rating ≥ ${minRating})` : ""}
+                </span>
+              </button>
+              {isFilterOpen && (
+                <div className="absolute top-14 right-0 w-48 bg-[var(--custom-white)] rounded-xl shadow-xl border border-[var(--custom-gray-200)] p-4 z-10">
+                  <h3 className="text-sm font-semibold text-[var(--custom-gray-700)] mb-3">
+                    Filter by Minimum Rating
+                  </h3>
+                  <div className="space-y-2">
+                    {[0, 1, 2, 3, 4].map((rating) => (
+                      <button
+                        key={rating}
+                        onClick={() => handleRatingFilter(rating)}
+                        className={`w-full text-left px-3 py-2 rounded-lg ${
+                          minRating === rating
+                            ? "bg-[var(--custom-green-100)] text-[var(--custom-green-700)]"
+                            : "text-[var(--custom-gray-600)] hover:bg-[var(--custom-green-50)]"
+                        } transition-all duration-200`}
+                      >
+                        {rating === 0 ? "All Ratings" : `≥ ${rating} Stars`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -223,7 +256,6 @@ const DoctorsList = () => {
                         <div className="font-semibold text-[var(--custom-gray-900)]">
                           {doctor.name}
                         </div>
-                        {/* <div className="text-xs text-[var(--custom-gray-500)]">ID: {doctor.id}</div> */}
                       </div>
                     </div>
                   </td>
@@ -319,7 +351,7 @@ const DoctorsList = () => {
                     onClick={() => handleToggleDocPopup(doctor, true)}
                     className={`p-2 ${
                       doctor.isInactive
-                        ? "text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)]"
+                        ? "text-[var(--custom-green- blown-out hover:text-[var(--custom-green-700)]"
                         : "text-[var(--custom-red-600)] hover:text-[var(--custom-red-700)]"
                     } transition-colors rounded-full hover:bg-custom-red-50`}
                   >
