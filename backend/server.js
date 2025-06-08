@@ -1855,7 +1855,7 @@ app.post("/setFeedback", authorizeRoles("user"), async (req, res) => {
   const id = Number(req.body["id"]);
   const docId = req.body["doctorId"];
   const userId = req.body["userId"]
-  if (userId !== req.user.userId) {
+  if (Number(userId) !== Number(req.user.userId)) {
     return res.status(403).json({ error: "Access denied" })
   }
   const question1 = req.body["question1"];
