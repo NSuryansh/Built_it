@@ -18,19 +18,13 @@ export const checkAuth = async (userType) => {
     return false;
   }
   try {
-    let user = "";
-    if (userType === "user") {
-      user = "profile";
-    } else if (userType === "doc") {
-      user = "docprofile";
-    } else {
-      user = "adminprofile";
-    }
-    // console("HAHAHAHAHAHAh")
-    const response = await fetch(`https://built-it.onrender.com/${user}`, {
-      method: "GET",
-      headers: { Authorization: "Bearer " + token },
-    });
+    const response = await fetch(
+      `https://built-it.onrender.com/${userType}/profile`,
+      {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
 
     if (!response.ok) {
       return false;
@@ -55,7 +49,8 @@ export const checkAuth = async (userType) => {
       localStorage.setItem("reg_id", res2["doctor"]["reg_id"]);
       localStorage.setItem("desc", res2["doctor"]["desc"]);
       localStorage.setItem("address", res2["doctor"]["address"]);
-      localStorage.setItem("city", res2["doctor"]["city"]);
+      localStorage.setItem("isProfileDone", res2["doctor"]["isProfileDone"]);
+      localStorage.setItem("office_address", res2["doctor"]["office_address"]);
       localStorage.setItem("experience", res2["doctor"]["experience"]);
       localStorage.setItem("user_type", userType);
     } else {

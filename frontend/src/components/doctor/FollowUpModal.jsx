@@ -6,7 +6,7 @@ import {
   Loader,
 } from "lucide-react";
 import { format } from "date-fns";
-import CustomToast from "../CustomToast";
+import CustomToast from "../common/CustomToast";
 import { useSearchParams } from "react-router-dom";
 
 const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
@@ -26,7 +26,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
         try {
           const doctorId = localStorage.getItem("userid");
           const response = await fetch(
-            `https://built-it.onrender.com/available-slots?date=${date}&docId=${doctorId}`,
+            `https://built-it.onrender.com/common/available-slots?date=${date}&docId=${doctorId}`,
             { headers: { Authorization: "Bearer " + token } }
           );
           const data = await response.json();
@@ -47,7 +47,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
       ).toISOString();
       console.log(selectedAppointment);
       const response = await fetch(
-        "https://built-it.onrender.com/request-to-user",
+        "https://built-it.onrender.com/doc/request-to-user",
         {
           method: "POST",
           headers: {
@@ -67,7 +67,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
 
       if (data["message"] === "Appointment requested successfully") {
         const notif = await fetch(
-          "https://built-it.onrender.com/send-notification",
+          "https://built-it.onrender.com/common/send-notification",
           {
             method: "POST",
             headers: {
@@ -99,23 +99,23 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-[var(--custom-black)]/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 animate-in fade-in slide-in-from-bottom-4 duration-300 border border-blue-100"
+        className="bg-[var(--custom-white)] rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 sm:p-8 transform scale-95 animate-in fade-in slide-in-from-bottom-4 duration-300 border border-[var(--custom-blue-100)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6 sm:mb-8">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-br from-blue-100 to-violet-100 rounded-xl">
-              <CalendarClock className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+            <div className="p-2 bg-gradient-to-br from-[var(--custom-blue-100)] to-[var(--custom-purple-100)] rounded-xl">
+              <CalendarClock className="h-5 w-5 sm:h-6 sm:w-6 text-[var(--custom-blue-600)]" />
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-blue-500">
+            <h3 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-[var(--custom-blue-500)]">
               Schedule Follow-up
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1.5 sm:p-2 hover:bg-gray-100 rounded-full"
+            className="text-[var(--custom-gray-400)] hover:text-[var(--custom-gray-600)] transition-colors p-1.5 sm:p-2 hover:bg-[var(--custom-gray-100)] rounded-full"
           >
             <X className="h-5 w-5" />
           </button>
@@ -123,12 +123,12 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
 
         <div className="space-y-5 sm:space-y-6">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-[var(--custom-gray-700)]">
               Date
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <CalendarIcon className="h-5 w-5 text-gray-400" />
+                <CalendarIcon className="h-5 w-5 text-[var(--custom-gray-400)]" />
               </div>
               <input
                 type="date"
@@ -138,13 +138,13 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
                   setFollowupDate(e.target.value);
                   setFollowupTime("");
                 }}
-                className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
+                className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-[var(--custom-gray-200)] focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-none transition-all duration-200 text-sm sm:text-base"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-[var(--custom-gray-700)]">
               Time
             </label>
             <div className="relative">
@@ -152,7 +152,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
                 value={followupTime}
                 onChange={(e) => setFollowupTime(e.target.value)}
                 disabled={!followupDate}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-white disabled:bg-gray-100 disabled:text-gray-400"
+                className="w-full px-4 py-2.5 rounded-xl border border-[var(--custom-gray-200)] focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent transition-all duration-200 outline-none bg-[var(--custom-white)] disabled:bg-[var(--custom-gray-100)] disabled:text-[var(--custom-gray-400)]"
               >
                 <option value="">Select Time</option>
                 {slots.map((slot) => (
@@ -165,7 +165,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-[var(--custom-gray-700)]">
               Reason
             </label>
             <input
@@ -173,21 +173,21 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="Enter reason for follow-up"
-              className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-none transition-all duration-200 text-sm sm:text-base"
+              className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-[var(--custom-gray-200)] focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-none transition-all duration-200 text-sm sm:text-base"
             />
           </div>
 
           <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 mt-6 sm:mt-8">
             <button
               onClick={onClose}
-              className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium text-sm sm:text-base"
+              className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 border border-[var(--custom-gray-200)] text-[var(--custom-gray-700)] rounded-xl hover:bg-[var(--custom-gray-50)] transition-all duration-200 font-medium text-sm sm:text-base"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmitFollowup}
               disabled={!followupDate || !followupTime || isScheduling}
-              className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-500 text-white font-medium rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
+              className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-medium rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 text-sm sm:text-base"
             >
               {isScheduling ? <Loader /> : "Schedule Follow-up"}
             </button>
