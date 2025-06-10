@@ -59,8 +59,6 @@ const Events = () => {
           ease: "power3.out",
         }
       );
-
-      // Upcoming Events Animation (Desktop)
       if (upcomingEventsRef.current) {
         const upcomingEventRows = upcomingEventsRef.current.querySelectorAll("tbody .event-row");
         upcomingEventRows.forEach((row, index) => {
@@ -82,7 +80,6 @@ const Events = () => {
             }
           );
         });
-        // Animate NoEventsMessage if present
         const noEventsMessage = upcomingEventsRef.current.querySelector("tbody .no-events");
         if (noEventsMessage) {
           gsap.fromTo(
@@ -103,8 +100,6 @@ const Events = () => {
           );
         }
       }
-
-      // Past Events Animation (Desktop)
       if (pastEventsRef.current) {
         const pastEventRows = pastEventsRef.current.querySelectorAll("tbody .event-row");
         pastEventRows.forEach((row, index) => {
@@ -126,7 +121,6 @@ const Events = () => {
             }
           );
         });
-        // Animate NoEventsMessage if present
         const noEventsMessage = pastEventsRef.current.querySelector("tbody .no-events");
         if (noEventsMessage) {
           gsap.fromTo(
