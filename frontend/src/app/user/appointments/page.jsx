@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 import AppointmentCard from "@/components/user/AppointmentCard";
 import { Calendar, History } from "lucide-react";
 import CustomToast from "@/components/common/CustomToast";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 const UserAppointments = () => {
   const [previousAppointments, setpreviousAppointments] = useState([]);
@@ -64,6 +67,122 @@ const UserAppointments = () => {
     getCurrApp();
   }, []);
 
+  
+  useEffect(() => {
+
+    const animationTimeout = setTimeout(() => {
+     
+      const mainContainer = document.querySelector(".main-container");
+      if (mainContainer) {
+        
+        gsap.fromTo(
+          mainContainer,
+          { opacity: 0, scale: 0.95 },
+          { opacity: 1, scale: 1, duration:0.5,stagger:0.5, ease: "power2.out" }
+        );
+      } else {
+        console.warn("Main container not found");
+      }
+      const sectionCards = document.querySelectorAll(".section-card");
+      if (sectionCards.length > 0) {
+       
+        sectionCards.forEach((card, index) => {
+          gsap.fromTo(
+            card,
+            { opacity: 0, x: index === 0 ? -400 : 400 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              stagger: 0.5,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 90%",
+                toggleActions: "play none none none",
+               
+              },
+            }
+          );
+        });
+      } else {
+        console.warn("No section cards found");
+      }
+      const headers = document.querySelectorAll(".section-header");
+      if (headers.length > 0) {
+       
+        gsap.fromTo(
+          headers,
+          { opacity: 0, x: -300 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.65,
+            ease: "power2.out",
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: headers,
+              start: "top 80%",
+             
+            },
+          }
+        );
+      } else {
+        console.warn("No section headers found");
+      }
+      const appointmentCards = document.querySelectorAll(".appointment-card");
+      if (appointmentCards.length > 0) {
+      
+        gsap.fromTo(
+          appointmentCards,
+          { opacity: 0, y: 150 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            stagger: 0.5,
+            scrollTrigger: {
+              trigger: appointmentCards,
+              start: "top 80%",
+              toggleActions: "play none none none",
+            
+            },
+          }
+        );
+      } 
+
+     
+      const noAppointments = document.querySelectorAll(".no-appointments-message");
+      if (noAppointments.length > 0) {
+       
+        gsap.fromTo(
+          noAppointments,
+          { opacity: 0, scale: 0.8 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.7)",
+            stagger: 0.5,
+            scrollTrigger: {
+              trigger: noAppointments,
+              start: "top 80%",
+              toggleActions: "play none none none",
+              
+            },
+          }
+        );
+      } 
+      
+      ScrollTrigger.refresh();
+    }, 30); 
+    return () => {
+      clearTimeout(animationTimeout);
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [upcomingAppointments, previousAppointments]); 
+
   const handleClosePopup = () => {
     router.replace("/user/login");
   };
@@ -79,7 +198,7 @@ const UserAppointments = () => {
   }
 
   const NoAppointmentsMessage = ({ message }) => (
-    <div className="flex flex-col items-center justify-center py-8">
+    <div className="flex flex-col items-center justify-center py-8 no-appointments-message">
       <Calendar className="h-12 w-12 text-[var(--custom-gray-400)] mb-3" />
       <p className="text-lg text-[var(--custom-gray-500)] font-medium">
         {message}
@@ -90,10 +209,10 @@ const UserAppointments = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[var(--custom-orange-50)] to-[var(--custom-orange-100)]">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 main-container">
         <div className="grid gap-8">
-          <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
-            <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
+          <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl section-card">
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-8 section-header">
               <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
                 <Calendar className="w-6 h-6 text-[var(--custom-orange-600)]" />
                 Upcoming Appointments
@@ -107,11 +226,12 @@ const UserAppointments = () => {
               {upcomingAppointments.length > 0 ? (
                 <div className="space-y-6">
                   {upcomingAppointments.map((appointment) => (
-                    <AppointmentCard
-                      key={appointment.id}
-                      appointment={appointment}
-                      feedbackSubmitted={appointment.stars !== null}
-                    />
+                    <div className="appointment-card" key={appointment.id}>
+                      <AppointmentCard
+                        appointment={appointment}
+                        feedbackSubmitted={appointment.stars !== null}
+                      />
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -121,8 +241,8 @@ const UserAppointments = () => {
               )}
             </div>
           </div>
-          <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
-            <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
+          <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl section-card">
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-8 section-header">
               <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
                 <History className="w-6 h-6 text-[var(--custom-orange-600)]" />
                 Previous Appointments
@@ -136,12 +256,13 @@ const UserAppointments = () => {
               {previousAppointments.length > 0 ? (
                 <div className="space-y-6">
                   {previousAppointments.map((appointment) => (
-                    <AppointmentCard
-                      key={appointment.id}
-                      appointment={appointment}
-                      feedbackSubmitted={appointment.stars !== null}
-                      upcoming={false}
-                    />
+                    <div className="appointment-card" key={appointment.id}>
+                      <AppointmentCard
+                        appointment={appointment}
+                        feedbackSubmitted={appointment.stars !== null}
+                        upcoming={false}
+                      />
+                    </div>
                   ))}
                 </div>
               ) : (
