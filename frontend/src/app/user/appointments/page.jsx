@@ -78,7 +78,7 @@ const UserAppointments = () => {
         gsap.fromTo(
           mainContainer,
           { opacity: 0, scale: 0.95 },
-          { opacity: 1, scale: 1, duration:0.5,stagger:0.5, ease: "power2.out" }
+          { opacity: 1, scale: 1, duration:0.5, ease: "power2.out" }
         );
       } else {
         console.warn("Main container not found");
@@ -89,7 +89,7 @@ const UserAppointments = () => {
         sectionCards.forEach((card, index) => {
           gsap.fromTo(
             card,
-            { opacity: 0, x: index === 0 ? -400 : 400 },
+            { opacity: 0, x: index === 0 ? -20 : 20 },
             {
               opacity: 1,
               x: 0,
@@ -176,11 +176,8 @@ const UserAppointments = () => {
       } 
       
       ScrollTrigger.refresh();
-    }, 30); 
-    return () => {
-      clearTimeout(animationTimeout);
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
+    }, 0); 
+   
   }, [upcomingAppointments, previousAppointments]); 
 
   const handleClosePopup = () => {
