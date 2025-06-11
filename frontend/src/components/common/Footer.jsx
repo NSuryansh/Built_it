@@ -15,7 +15,7 @@ const Footer = ({ color }) => {
                   : "text-[var(--custom-blue-500)]"
               }`}
             >
-              Vitality
+              IITI CalmConnect
             </h2>
             <p className="mt-2 text-sm text-[var(--custom-gray-500)]">
               A sanctuary for students at IIT Indore, promoting mental wellness,

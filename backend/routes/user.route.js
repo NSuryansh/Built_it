@@ -62,7 +62,7 @@ userRouter.post("/signup", async (req, res) => {
 
 const biometricOptions = async (user) => {
   const options = await generateRegistrationOptions({
-    rpName: "Vitality",
+    rpName: "IITI CalmConnect",
     rpID: "built-it-frontend.onrender.com",
     userID: Number(user.id),
     userName: user.email,
@@ -170,7 +170,7 @@ userRouter.post("/verifyBioLogin", authorizeRoles("user"), async (req, res) => {
     response: req.body,
     expectedChallenge: user.challenge,
     expectedOrigin: "https://built-it-frontend.onrender.com",
-    expectedRPID: "Vitality",
+    expectedRPID: "IITI CalmConnect",
     credential: {
       credentialID: Buffer.from(credential.credentialID),
       publicKey: Buffer.from(credential.publicKey),
@@ -690,7 +690,7 @@ userRouter.post("/otpGenerate", async (req, res) => {
 
     // console.log(otpgen);
     const subject = "OTP Verification";
-    const message = `Use the following OTP to verify signup for Vitality: ${otp}`;
+    const message = `Use the following OTP to verify signup for IITI CalmConnect: ${otp}`;
     sendEmail(email, subject, message);
     res.json({
       message: "OTP sent to your mail!",

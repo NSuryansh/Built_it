@@ -12,15 +12,15 @@ export default defineConfig({
       manifest: {
         icons: [
           {
-            src: "https://res.cloudinary.com/dch8pqtvm/image/upload/v1749132051/final-logo_imtzuy.png",
+            src: "https://res.cloudinary.com/ignitia/image/upload/v1749132051/final-logo_imtzuy.png",
             sizes: "512x512",
             type: "image/png",
             // purpose:"any maskable"
           }
         ],
         theme_color: "#ffffff",
-        name: "Vitality",
-        short_name: "Vitality"
+        name: "IITI CalmConnect",
+        short_name: "CalmConnect",
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB

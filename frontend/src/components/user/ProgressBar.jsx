@@ -19,21 +19,20 @@ const ProgressBar = ({ label, value }) => {
     );
   }
 
-  const getBarColor = (val) => {
-    const isStress = label === 'Stress';
-    if (isStress) {
-      if (val <= 2.5) return '#EF4444'; // Red
-      if (val <= 5) return '#EAB308'; // Yellow
-      if (val <= 7.5) return '#3B82F6'; // Blue
-      return '#22C55E'; // Green
-    }
-    if (val <= 2.5) return '#22C55E'; // Green
-    if (val <= 5) return '#3B82F6'; // Blue
-    if (val <= 7.5) return '#EAB308'; // Yellow
-    return '#EF4444'; // Red
+  const getBarColor = (value) => {
+    console.log(label)
+ if(label === "Stress" || label ){
+    if (value <= 2.5) return "#EF4444";
+    if (value <= 5 && value>2.5) return "#EAB308";   
+    if (value <= 7.5 && value>5) return "#3B82F6"; 
+    return "#22C55E";                
+    }else{
+      if (value <= 2.5) return "#22C55E";
+    if (value <= 5 && value>2.5) return "#3B82F6";   
+    if (value <= 7.5 && value>5) return "#EAB308"; 
+    return "#EF4444";   
+    }       
   };
-
-  const barColor = getBarColor(clampedValue);
 
   return (
     <div className="mb-6">
