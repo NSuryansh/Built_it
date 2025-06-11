@@ -200,7 +200,7 @@ commonRouter.post(
           const payload = {
             token: sub.endpoint,
             notification: {
-              title: "Vitality",
+              title: "IITI CalmConnect",
               body: message,
             },
           };

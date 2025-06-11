@@ -49,7 +49,7 @@ const Landing = () => {
                 Find Peace - Get Support - Thrive
               </h1>
               <p className="md:text-xl sm:text-md text-[var(--custom-gray-600)] mb-8 max-w-3xl mx-auto">
-                At Vitality we provide a safe space for your mental wellness
+                At CalmConnect we provide a safe space for your mental wellness
                 journey. Whether you are seeking mindfulness techniques,
                 emotional support, or expert guidance, we are here to help.
               </p>
