@@ -4,7 +4,7 @@ import { prisma } from "../server.js";
 
 const userAdminRouter = Router();
 
-userAdminRouter.get("/getdoctors", authorizeRoles("user", "admin"), async (req, res) => {
+userAdminRouter.get("/getdoctors", async (req, res) => {
   const user_type = req.query["user_type"];
   try {
     let doctors = [];

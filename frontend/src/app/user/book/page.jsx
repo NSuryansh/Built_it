@@ -76,7 +76,7 @@ const Book = () => {
           }
         );
         const data = await res.json();
-       
+
         if (data.hasUpcomingAppointment) {
           setdoctorSelectable(false);
           CustomToast("You already have an upcoming appointment");
@@ -86,7 +86,9 @@ const Book = () => {
         CustomToast("Error checking previous bookings");
       }
     };
-    checkPreviousBooking();
+    if (isAuthenticated) {
+      checkPreviousBooking();
+    }
   }, []);
 
   useEffect(() => {
@@ -102,8 +104,6 @@ const Book = () => {
 
   useEffect(() => {
     if (isAuthenticated && contentRef.current) {
-      
-
       gsap.fromTo(
         stepIndicatorRef.current.children[0].children,
         { opacity: 0, y: -30, scale: 0.8 },
@@ -120,7 +120,7 @@ const Book = () => {
         const doctorCards = contentRef.current.querySelectorAll(
           "[class*='doctor'], [class*='card'], [class*='profile'], [class*='item']"
         );
-        
+
         doctorCards.forEach((card, index) => {
           const isOdd = index % 2 !== 0;
           gsap.fromTo(
@@ -146,7 +146,7 @@ const Book = () => {
         const formContainers = contentRef.current.querySelectorAll(
           "form > div, [class*='form'] > div, [class*='group'], [class*='field'], [class*='container']"
         );
-        
+
         formContainers.forEach((container, index) => {
           const isOdd = index % 2 !== 0;
           gsap.fromTo(
@@ -275,7 +275,10 @@ const Book = () => {
           </div>
 
           {step === 1 && (
-            <div ref={contentRef} className="min-h-[40.5rem] flex items-center justify-center animate-fade-in">
+            <div
+              ref={contentRef}
+              className="min-h-[40.5rem] flex items-center justify-center animate-fade-in"
+            >
               <div className="text-center">
                 <h2 className="text-3xl font-bold text-[var(--custom-gray-900)] mb-6">
                   Select Your Buddy
@@ -289,7 +292,10 @@ const Book = () => {
             </div>
           )}
           {step === 2 && (
-            <div ref={contentRef} className="min-h-[40.5rem] flex items-center justify-center animate-fade-in">
+            <div
+              ref={contentRef}
+              className="min-h-[40.5rem] flex items-center justify-center animate-fade-in"
+            >
               <div className="text-center w-full">
                 <h2 className="text-3xl font-bold text-[var(--custom-gray-900)] mb-6">
                   Book Your Appointment

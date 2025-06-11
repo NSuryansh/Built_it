@@ -151,6 +151,7 @@ const FeedbackPage = () => {
           Authorization: "Bearer " + token,
         },
         body: JSON.stringify({
+          userId: localStorage.getItem("userid"),
           id: appointmentId,
           stars: rating,
           doctorId: doc.id,
