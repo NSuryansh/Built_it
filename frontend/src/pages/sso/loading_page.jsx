@@ -31,8 +31,6 @@ const LoadingPage = () => {
           setTimeout(() => {
             window.location.href = "https://hms-sso.vercel.app";
           }, 2000);
-          // https://built-it-frontend.onrender.com/sso?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNzZTI0MDAyMTAwOEBpaXRpLmFjLmluIiwibmFtZSI6IkthcnRpa2V5IFJhZ2hhdiIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMSXJFc1U2d1QxRllaUDdJOWE5TXNEOXVrbUY2SXlMYld0LUo2WXVGVmctMXJxQ3c9czk2LWMiLCJpYXQiOjE3NTAwNzY3OTcsImV4cCI6MTc1MDA3OTc5N30.BNWgsLZNnlSMPW2C88PYnwFYisjVwokkuXpEKLiC6t0
-          // https://built-it-frontend.onrender.com/sso?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNzZTI0MDAyMTAwOEBpaXRpLmFjLmluIiwibmFtZSI6IkthcnRpa2V5IFJhZ2hhdiIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMSXJFc1U2d1QxRllaUDdJOWE5TXNEOXVrbUY2SXlMYld0LUo2WXVGVmctMXJxQ3c9czk2LWMiLCJpYXQiOjE3NTAwNzY4MTgsImV4cCI6MTc1MDA3OTgxOH0.erLXz6aZjP8NfqsUDyNuEj1FpkQt8-kkW7_VVnzf-fc
         } else {
           const response = await fetch(
             `https://built-it.onrender.com/sso?token=${token}`,
@@ -40,7 +38,7 @@ const LoadingPage = () => {
               method: "POST",
             }
           );
-          const data = response.json();
+          const data = await response.json();
           console.log(data);
           if (data.success) {
             if (data.role === "user") {
