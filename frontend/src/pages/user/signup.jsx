@@ -571,7 +571,9 @@ const SignUp = () => {
         <p className="mt-4 text-sm text-center text-cus">
           Already have an account?{" "}
           <button
-            onClick={() => window.location.href = "https://hms-sso.vercel.app";}
+            onClick={() =>
+              (window.location.href = "https://hms-sso.vercel.app")
+            }
             className="underline font-bold text-[var(--custom-orange-500)]"
           >
             Login here

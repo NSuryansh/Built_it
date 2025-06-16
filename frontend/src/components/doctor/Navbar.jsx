@@ -184,7 +184,7 @@ const DoctorNavbar = () => {
               </>
             ) : (
               <button
-                onClick={() => window.location.href = "https://hms-sso.vercel.app";}
+                onClick={() => window.location.href = "https://hms-sso.vercel.app"}
                 className="px-4 py-2 bg-[var(--custom-blue-200)] hover:bg-[var(--custom-blue-300)] text-[var(--custom-blue-900)] rounded font-medium"
               >
                 Login
