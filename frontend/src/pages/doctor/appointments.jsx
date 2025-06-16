@@ -430,7 +430,7 @@ const DoctorAppointment = () => {
   };
 
   const handleClosePopup = () => {
-    navigate("https://hms-sso.vercel.app/");
+    window.location.href = "https://hms-sso.vercel.app";
   };
 
   const handleDateSelect = (date) => {

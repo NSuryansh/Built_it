@@ -66,7 +66,7 @@ const AddDoctor = () => {
   };
 
   const handleClosePopup = () => {
-    navigate("https://hms-sso.vercel.app/");
+    window.location.href = "https://hms-sso.vercel.app";
   };
 
   if (isAuthenticated === null) {

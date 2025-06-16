@@ -299,7 +299,7 @@ const SignUp = () => {
       console.log("Signup successful:", data);
       CustomToast("Signup successful");
       setisLoading(false);
-      navigate("https://hms-sso.vercel.app/");
+      window.location.href = "https://hms-sso.vercel.app";
     } catch (error) {
       setisLoading(false);
       console.error("Signup error:", error);
