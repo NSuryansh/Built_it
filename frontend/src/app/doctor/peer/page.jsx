@@ -322,7 +322,7 @@ const DoctorPeer = () => {
   }
 
   const handleClosePopup = () => {
-    router.push("/doctor/login");
+    router.push("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null) {

@@ -67,25 +67,20 @@ const UserAppointments = () => {
     getCurrApp();
   }, []);
 
-  
   useEffect(() => {
-
     const animationTimeout = setTimeout(() => {
-     
       const mainContainer = document.querySelector(".main-container");
       if (mainContainer) {
-        
         gsap.fromTo(
           mainContainer,
           { opacity: 0, scale: 0.95 },
-          { opacity: 1, scale: 1, duration:0.5, ease: "power2.out" }
+          { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }
         );
       } else {
         console.warn("Main container not found");
       }
       const sectionCards = document.querySelectorAll(".section-card");
       if (sectionCards.length > 0) {
-       
         sectionCards.forEach((card, index) => {
           gsap.fromTo(
             card,
@@ -100,7 +95,6 @@ const UserAppointments = () => {
                 trigger: card,
                 start: "top 90%",
                 toggleActions: "play none none none",
-               
               },
             }
           );
@@ -110,7 +104,6 @@ const UserAppointments = () => {
       }
       const headers = document.querySelectorAll(".section-header");
       if (headers.length > 0) {
-       
         gsap.fromTo(
           headers,
           { opacity: 0, x: -300 },
@@ -123,7 +116,6 @@ const UserAppointments = () => {
             scrollTrigger: {
               trigger: headers,
               start: "top 80%",
-             
             },
           }
         );
@@ -132,7 +124,6 @@ const UserAppointments = () => {
       }
       const appointmentCards = document.querySelectorAll(".appointment-card");
       if (appointmentCards.length > 0) {
-      
         gsap.fromTo(
           appointmentCards,
           { opacity: 0, y: 150 },
@@ -146,16 +137,15 @@ const UserAppointments = () => {
               trigger: appointmentCards,
               start: "top 80%",
               toggleActions: "play none none none",
-            
             },
           }
         );
-      } 
+      }
 
-     
-      const noAppointments = document.querySelectorAll(".no-appointments-message");
+      const noAppointments = document.querySelectorAll(
+        ".no-appointments-message"
+      );
       if (noAppointments.length > 0) {
-       
         gsap.fromTo(
           noAppointments,
           { opacity: 0, scale: 0.8 },
@@ -169,19 +159,17 @@ const UserAppointments = () => {
               trigger: noAppointments,
               start: "top 80%",
               toggleActions: "play none none none",
-              
             },
           }
         );
-      } 
-      
+      }
+
       ScrollTrigger.refresh();
-    }, 0); 
-   
-  }, [upcomingAppointments, previousAppointments]); 
+    }, 0);
+  }, [upcomingAppointments, previousAppointments]);
 
   const handleClosePopup = () => {
-    router.replace("/user/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null) {

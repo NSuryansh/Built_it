@@ -51,7 +51,7 @@ const ResetPassword = () => {
     const res = await response.json();
     CustomToast("Password updated successfully!");
     setTimeout(() => {
-      router.replace("/user/login");
+      router.replace("https://hms-sso.vercel.app/");
     }, 2000);
   };
 
@@ -122,7 +122,9 @@ const ResetPassword = () => {
           </div>
 
           {error && (
-            <div className="text-[var(--custom-red-500)] text-sm text-center">{error}</div>
+            <div className="text-[var(--custom-red-500)] text-sm text-center">
+              {error}
+            </div>
           )}
 
           <button

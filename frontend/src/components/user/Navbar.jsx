@@ -49,7 +49,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setShowCustomModal(false);
-    router.replace("/user/login");
+    router.replace("https://hms-sso.vercel.app/");
     setTimeout(() => {
       localStorage.clear();
     }, 100);
@@ -71,7 +71,7 @@ const Navbar = () => {
     if (isAuthenticated) {
       return;
     } else {
-      router.push("/user/login");
+      router.push("https://hms-sso.vercel.app/");
     }
   };
 
@@ -282,7 +282,7 @@ const Navbar = () => {
               </>
             ) : (
               <button
-                onClick={() => router.push("/user/login")}
+                onClick={() => router.push("https://hms-sso.vercel.app/")}
                 className="px-4 py-2 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded font-medium"
               >
                 Login

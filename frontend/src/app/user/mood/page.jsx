@@ -77,7 +77,7 @@ const Mood = () => {
   }, []);
 
   const handleClosePopup = () => {
-    router.replace("/user/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   const handleSubmit = async (e) => {

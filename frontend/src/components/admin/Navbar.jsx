@@ -29,7 +29,7 @@ const AdminNavbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     setShowCustomModal(false);
-    router.replace("/admin/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   const handleCancel = () => {

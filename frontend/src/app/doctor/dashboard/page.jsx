@@ -142,7 +142,7 @@ const DoctorDashboard = () => {
   }
 
   const handleClosePopup = () => {
-    router.replace("/doctor/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   if (!isAuthenticated) {

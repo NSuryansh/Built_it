@@ -299,7 +299,7 @@ const AdminUser = () => {
   }, [usersData, userCounts, searchTerm, filterDegree, sortConfig]);
 
   const handleClosePopup = () => {
-    router.replace("/admin/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null || fetched === null) {

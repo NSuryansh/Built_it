@@ -78,7 +78,9 @@ const Stress = () => {
           );
 
           // subpart - video
-          const videoElements = section.querySelectorAll(".videos-container > *");
+          const videoElements = section.querySelectorAll(
+            ".videos-container > *"
+          );
           videoElements.forEach((video, index) => {
             const isOdd = index % 2 !== 0;
             gsap.fromTo(
@@ -99,10 +101,11 @@ const Stress = () => {
           });
         }
       });
-    }}, [isAuthenticated]);
+    }
+  }, [isAuthenticated]);
 
   const handleClosePopup = () => {
-    router.replace("/user/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null) {
@@ -134,9 +137,7 @@ const Stress = () => {
         </div>
       </div>
 
-  
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        
         <section
           ref={articlesRef}
           className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8 mb-12 transform transition-all duration-500 hover:shadow-2xl"
@@ -189,7 +190,6 @@ const Stress = () => {
           </div>
         </section>
 
-        
         <div className="space-y-12 mb-16">
           {videoSections.map((section, index) => (
             <section
@@ -205,7 +205,9 @@ const Stress = () => {
                   <h2 className="text-2xl font-bold text-[var(--custom-gray-900)]">
                     {section.title}
                   </h2>
-                  <p className="text-[var(--custom-gray-600)] mt-1">{section.description}</p>
+                  <p className="text-[var(--custom-gray-600)] mt-1">
+                    {section.description}
+                  </p>
                 </div>
               </div>
               <div className="videos-container">

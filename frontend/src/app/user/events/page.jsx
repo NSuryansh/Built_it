@@ -60,7 +60,8 @@ const Events = () => {
         }
       );
       if (upcomingEventsRef.current) {
-        const upcomingEventRows = upcomingEventsRef.current.querySelectorAll("tbody .event-row");
+        const upcomingEventRows =
+          upcomingEventsRef.current.querySelectorAll("tbody .event-row");
         upcomingEventRows.forEach((row, index) => {
           const isOdd = index % 2 !== 0;
           gsap.fromTo(
@@ -80,7 +81,8 @@ const Events = () => {
             }
           );
         });
-        const noEventsMessage = upcomingEventsRef.current.querySelector("tbody .no-events");
+        const noEventsMessage =
+          upcomingEventsRef.current.querySelector("tbody .no-events");
         if (noEventsMessage) {
           gsap.fromTo(
             noEventsMessage,
@@ -101,7 +103,8 @@ const Events = () => {
         }
       }
       if (pastEventsRef.current) {
-        const pastEventRows = pastEventsRef.current.querySelectorAll("tbody .event-row");
+        const pastEventRows =
+          pastEventsRef.current.querySelectorAll("tbody .event-row");
         pastEventRows.forEach((row, index) => {
           const isOdd = index % 2 !== 0;
           gsap.fromTo(
@@ -121,7 +124,8 @@ const Events = () => {
             }
           );
         });
-        const noEventsMessage = pastEventsRef.current.querySelector("tbody .no-events");
+        const noEventsMessage =
+          pastEventsRef.current.querySelector("tbody .no-events");
         if (noEventsMessage) {
           gsap.fromTo(
             noEventsMessage,
@@ -142,7 +146,9 @@ const Events = () => {
       }
 
       // Upcoming Events Animation (Mobile)
-      const mobileUpcomingEvents = document.querySelectorAll(".upcoming-mobile-events .event-card");
+      const mobileUpcomingEvents = document.querySelectorAll(
+        ".upcoming-mobile-events .event-card"
+      );
       mobileUpcomingEvents.forEach((event, index) => {
         const isOdd = index % 2 !== 0;
         gsap.fromTo(
@@ -163,7 +169,9 @@ const Events = () => {
         );
       });
       // Animate NoEventsMessage for mobile upcoming events
-      const mobileUpcomingNoEvents = document.querySelector(".upcoming-mobile-events .no-events");
+      const mobileUpcomingNoEvents = document.querySelector(
+        ".upcoming-mobile-events .no-events"
+      );
       if (mobileUpcomingNoEvents) {
         gsap.fromTo(
           mobileUpcomingNoEvents,
@@ -172,7 +180,7 @@ const Events = () => {
             opacity: 1,
             y: 0,
             duration: 1,
-            stagger:0.5,
+            stagger: 0.5,
             ease: "power3.out",
             scrollTrigger: {
               trigger: mobileUpcomingNoEvents,
@@ -184,7 +192,9 @@ const Events = () => {
       }
 
       // Past Events Animation (Mobile)
-      const mobilePastEvents = document.querySelectorAll(".past-mobile-events .event-card");
+      const mobilePastEvents = document.querySelectorAll(
+        ".past-mobile-events .event-card"
+      );
       mobilePastEvents.forEach((event, index) => {
         const isOdd = index % 2 !== 0;
         gsap.fromTo(
@@ -205,7 +215,9 @@ const Events = () => {
         );
       });
       // Animate NoEventsMessage for mobile past events
-      const mobilePastNoEvents = document.querySelector(".past-mobile-events .no-events");
+      const mobilePastNoEvents = document.querySelector(
+        ".past-mobile-events .no-events"
+      );
       if (mobilePastNoEvents) {
         gsap.fromTo(
           mobilePastNoEvents,
@@ -227,7 +239,7 @@ const Events = () => {
   }, [isAuthenticated, currentEvents, pastEvents, searchTerm]);
 
   const handleClosePopup = () => {
-    router.replace("/user/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null) {

@@ -226,14 +226,14 @@ const DoctorLogin = () => {
             <p className="w-full text-center">
               Login as a&nbsp;
               <button
-                onClick={() => router.push("/user/login")}
+                onClick={() => router.push("https://hms-sso.vercel.app/")}
                 className="underline font-bold text-[var(--custom-blue-500)]"
               >
                 User
               </button>
               &nbsp;or&nbsp;
               <button
-                onClick={() => router.push("/admin/login")}
+                onClick={() => router.push("https://hms-sso.vercel.app/")}
                 className="underline font-bold text-[var(--custom-blue-500)]"
               >
                 Admin

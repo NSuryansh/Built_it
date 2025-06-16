@@ -337,7 +337,7 @@ const Peer = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
   const handleClosePopup = () => {
-    router.replace("/user/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   useEffect(() => {

@@ -44,7 +44,7 @@ const DoctorResetPassword = () => {
     const res = await response.json();
     CustomToast("Password updated successfully!", "blue");
     setTimeout(() => {
-      router.replace("/doctor/login");
+      router.replace("https://hms-sso.vercel.app/");
     }, 2000);
   };
 

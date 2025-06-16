@@ -25,7 +25,7 @@ const Landing_user = () => {
   }, []);
 
   const handleClosePopup = () => {
-    router.replace("/user/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null) {

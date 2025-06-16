@@ -36,7 +36,7 @@ const DoctorNavbar = () => {
 
   const handleLogout = () => {
     setShowCustomModal(false);
-    router.replace("/doctor/login");
+    router.replace("https://hms-sso.vercel.app/");
     setTimeout(() => {
       localStorage.clear();
     }, 100);
@@ -188,7 +188,7 @@ const DoctorNavbar = () => {
               </>
             ) : (
               <button
-                onClick={() => router.replace("/doctor/login")}
+                onClick={() => router.replace("https://hms-sso.vercel.app/")}
                 className="px-4 py-2 bg-[var(--custom-blue-200)] hover:bg-[var(--custom-blue-300)] text-[var(--custom-blue-900)] rounded font-medium"
               >
                 Login

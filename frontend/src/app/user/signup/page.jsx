@@ -294,7 +294,7 @@ const SignUp = () => {
       console.log("Signup successful:", data);
       CustomToast("Signup successful");
       setisLoading(false);
-      router.replace("/user/login");
+      router.replace("https://hms-sso.vercel.app/");
     } catch (error) {
       setisLoading(false);
       console.error("Signup error:", error);
@@ -566,7 +566,7 @@ const SignUp = () => {
         <p className="mt-4 text-sm text-center text-cus">
           Already have an account?{" "}
           <button
-            onClick={() => router.push("/user/login")}
+            onClick={() => router.push("https://hms-sso.vercel.app/")}
             className="underline font-bold text-[var(--custom-orange-500)]"
           >
             Login here

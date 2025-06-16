@@ -107,7 +107,7 @@ const DoctorLeave = () => {
   };
 
   const handleClosePopup = () => {
-    router.replace("/doctor/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   // Handler for back button

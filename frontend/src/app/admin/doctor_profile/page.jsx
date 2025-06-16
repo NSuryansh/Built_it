@@ -116,7 +116,7 @@ const AdminDoctorProfile = () => {
   }, []);
 
   const handleClosePopup = () => {
-    router.replace("/admin/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   const handleReferralSubmit = (e) => {

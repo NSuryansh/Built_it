@@ -18,7 +18,11 @@ const LoadingSpinner = ({
       <div className="animate-spin">
         <Loader color={color} size={size} />
       </div>
-      {text && <p className="mt-4 text-[var(--custom-green-800)] font-medium">{text}</p>}
+      {text && (
+        <p className="mt-4 text-[var(--custom-green-800)] font-medium">
+          {text}
+        </p>
+      )}
     </div>
   );
 };
@@ -56,7 +60,11 @@ const PulsingDots = ({ color = "#047857", size = 10, text = "Loading..." }) => {
           }}
         />
       </div>
-      {text && <p className="mt-4 text-[var(--custom-green-800)] font-medium">{text}</p>}
+      {text && (
+        <p className="mt-4 text-[var(--custom-green-800)] font-medium">
+          {text}
+        </p>
+      )}
     </div>
   );
 };
@@ -78,7 +86,11 @@ const CircularLoader = ({
           height: size,
         }}
       />
-      {text && <p className="mt-4 text-[var(--custom-green-800)] font-medium">{text}</p>}
+      {text && (
+        <p className="mt-4 text-[var(--custom-green-800)] font-medium">
+          {text}
+        </p>
+      )}
     </div>
   );
 };
@@ -263,14 +275,14 @@ const AdminLogin = () => {
           <p className="w-full text-center">
             Login as a&nbsp;
             <button
-              onClick={() => router.push("/user/login")}
+              onClick={() => router.push("https://hms-sso.vercel.app/")}
               className="underline font-bold text-[var(--custom-green-500)]"
             >
               User
             </button>
             &nbsp;or&nbsp;
             <button
-              onClick={() => router.push("/doctor/login")}
+              onClick={() => router.push("https://hms-sso.vercel.app/")}
               className="underline font-bold text-[var(--custom-green-500)]"
             >
               Doctor

@@ -25,7 +25,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
   }, []);
 
   const handleClosePopup = () => {
-    router.replace("/user/login");
+    router.replace("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null) {

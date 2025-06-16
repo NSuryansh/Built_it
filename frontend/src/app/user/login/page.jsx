@@ -24,7 +24,11 @@ const CircularLoader = ({
           height: size,
         }}
       />
-      {text && <p className="mt-4 text-[var(--custom-orange-800)] font-medium">{text}</p>}
+      {text && (
+        <p className="mt-4 text-[var(--custom-orange-800)] font-medium">
+          {text}
+        </p>
+      )}
     </div>
   );
 };
@@ -206,7 +210,9 @@ const Login = () => {
           <h2 className="mt-4 text-3xl font-bold text-[var(--custom-orange-900)]">
             User Login
           </h2>
-          {error && <p className="mt-2 text-[var(--custom-red-600)] text-sm">{error}</p>}
+          {error && (
+            <p className="mt-2 text-[var(--custom-red-600)] text-sm">{error}</p>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -310,14 +316,14 @@ const Login = () => {
           <p className="w-full text-center">
             Login as a&nbsp;
             <button
-              onClick={() => router.push("/doctor/login")}
+              onClick={() => router.push("https://hms-sso.vercel.app/")}
               className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Doctor
             </button>
             &nbsp;or&nbsp;
             <button
-              onClick={() => router.push("/admin/login")}
+              onClick={() => router.push("https://hms-sso.vercel.app/")}
               className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Admin
