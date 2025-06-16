@@ -399,19 +399,26 @@ app.post("/sso", async (req, res) => {
       const email = data.user.email;
       const user = await prisma.user.findUnique({ where: { email: email } });
       console.log("User check done");
+      console.log(user);
       if (user) {
+        console.log("In user block");
         return res
           .status(200)
           .json({ success: true, role: "user", username: user.username });
       }
-      const doc = await prisma.doc.findUnique({ where: { email: email } });
+      console.log("out of user block");
+      const doc = await prisma.doctor.findUnique({ where: { email: email } });
       console.log("Doc check done");
+      console.log(doc);
       if (doc) {
+        console.log("In doc block");
         return res.status(200).json({ success: true, role: "doc" });
       }
       const admin = await prisma.admin.findUnique({ where: { email: email } });
       console.log("Admin check done");
+      console.log(admin);
       if (admin) {
+        console.log("In admin block");
         return res.status(200).json({ success: true, role: "admin" });
       }
       return res.status(200).json({ success: true, role: "none" });

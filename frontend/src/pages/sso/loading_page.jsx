@@ -108,7 +108,7 @@ const LoadingPage = () => {
       }
     };
     checkLogin();
-  });
+  }, []);
 
   useEffect(() => {
     if (userFound === null) {
@@ -483,7 +483,7 @@ const LoadingPage = () => {
                   whileHover={{ y: -5, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() =>
-                    !option.isRestricted ? navigate("/user/register") : null
+                    !option.isRestricted ? navigate("/user/signup") : null
                   }
                   className={`bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group border border-white border-opacity-50 ${
                     option.isRestricted ? "relative" : ""
@@ -522,9 +522,9 @@ const LoadingPage = () => {
                   <motion.button
                     className={`inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r ${option.color} ${option.hoverColor} text-white rounded-lg font-medium transition-all duration-300 group-hover:shadow-lg`}
                     whileHover={{ x: 5 }}
-                    disabled={isRestricted}
+                    disabled={option.isRestricted}
                     onClick={() => {
-                      navigate("/user/register");
+                      navigate("/user/signup");
                     }}
                   >
                     <span>{option.buttonText}</span>

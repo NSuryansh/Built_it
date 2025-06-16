@@ -315,14 +315,18 @@ const Login = () => {
           <p className="w-full text-center">
             Login as a&nbsp;
             <button
-              onClick={() => window.location.href = "https://hms-sso.vercel.app"}
+              onClick={() =>
+                (window.location.href = "https://hms-sso.vercel.app")
+              }
               className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Doctor
             </button>
             &nbsp;or&nbsp;
             <button
-              onClick={() => window.location.href = "https://hms-sso.vercel.app"}
+              onClick={() =>
+                (window.location.href = "https://hms-sso.vercel.app")
+              }
               className="underline font-bold text-[var(--custom-orange-500)]"
             >
               Admin
