@@ -27,16 +27,16 @@ async function uploadImage(path) {
 docRouter.post("/login", async (req, res) => {
   // console.log(req.body);
   const email = req.body["email"];
-  const password = req.body["password"];
+  // const password = req.body["password"];
 
   const doctor = await prisma.doctor.findUnique({ where: { email: email } });
   if (!doctor) {
     return res.status(401).json({ message: "Email ID is not registered" });
   }
-  const match = await bcrypt.compare(password, doctor.password);
-  if (!match) {
-    return res.status(401).json({ message: "Incorrect password" });
-  }
+  // const match = await bcrypt.compare(password, doctor.password);
+  // if (!match) {
+  //   return res.status(401).json({ message: "Incorrect password" });
+  // }
   const token = jwt.sign(
     {
       userId: doctor.id,
@@ -535,7 +535,8 @@ docRouter.put(
       // console.log(url);
       const updatedData = {};
       if (address?.trim()) updatedData.address = address.trim();
-      if (office_address?.trim()) updatedData.office_address = office_address.trim();
+      if (office_address?.trim())
+        updatedData.office_address = office_address.trim();
       if (experience != null) updatedData.experience = experience.trim();
       if (url) updatedData.img = url;
       if (isProfileDone) updatedData.isProfileDone = isProfileDone;

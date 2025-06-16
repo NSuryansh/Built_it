@@ -39,6 +39,7 @@ import AddDoctor from "./pages/admin/add_doctor";
 import AdminAppointments from "./pages/admin/appointments";
 import ErrorBoundaryFallback from "./pages/easter_egg/error_boundary_fallback";
 import AdminUser from "./pages/admin/user";
+import LoadingPage from "./pages/sso/loading_page";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -166,6 +167,7 @@ export default function App() {
     <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/sso" element={<LoadingPage />} />
         <Route path="/user/peer" element={<Peer />} />
         <Route path="/user/mood" element={<Mood />} />
         <Route path="/user/book" element={<Book />} />
