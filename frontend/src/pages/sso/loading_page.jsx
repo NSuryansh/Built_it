@@ -11,7 +11,7 @@ import {
   Mail,
   Lock,
 } from "lucide-react";
-import CustomToast from "@/components/common/CustomToast";
+import CustomToast from "../../components/common/CustomToast";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const LoadingPage = () => {
