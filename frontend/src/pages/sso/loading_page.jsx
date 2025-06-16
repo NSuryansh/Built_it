@@ -257,7 +257,7 @@ const LoadingPage = () => {
                   }}
                   className="relative"
                 >
-                  <div className="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg">
                     <img
                       src="/assets/logo.svg"
                       className="w-8 h-8 text-white"
@@ -449,7 +449,7 @@ const LoadingPage = () => {
               className="mb-12"
             >
               <div className="flex items-center justify-center mb-6">
-                <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-lg">
                   <img src="/assets/logo.svg" className="w-6 h-6 text-white" />
                 </div>
               </div>
