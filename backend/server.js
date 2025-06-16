@@ -393,23 +393,24 @@ app.post("/sso", async (req, res) => {
       }
     );
     const data = await response.json();
-    if (data.success) {
-      console.log('Going in');
+    console.log(data);
+    if (data.success === true || data.success === "true") {
+      console.log("Going in");
       const email = data.user.email;
       const user = await prisma.user.findUnique({ where: { email: email } });
-      console.log('User check done');
+      console.log("User check done");
       if (user) {
         return res
           .status(200)
           .json({ success: true, role: "user", username: user.username });
       }
       const doc = await prisma.doc.findUnique({ where: { email: email } });
-      console.log('Doc check done');
+      console.log("Doc check done");
       if (doc) {
         return res.status(200).json({ success: true, role: "doc" });
       }
       const admin = await prisma.admin.findUnique({ where: { email: email } });
-      console.log('Admin check done');
+      console.log("Admin check done");
       if (admin) {
         return res.status(200).json({ success: true, role: "admin" });
       }
