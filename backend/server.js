@@ -393,6 +393,7 @@ app.post("/sso", async (req, res) => {
       }
     );
     const data = await response.json();
+    console.log(data);
     if (data.success) {
       const email = data.user.email;
       const user = await prisma.user.findUnique({ where: { email: email } });
