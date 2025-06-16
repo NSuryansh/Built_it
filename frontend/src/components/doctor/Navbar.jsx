@@ -35,7 +35,7 @@ const DoctorNavbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     setShowCustomModal(false);
-    navigate("/doctor/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   const handleCancel = () => {

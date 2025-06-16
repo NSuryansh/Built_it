@@ -23,7 +23,7 @@ const Dashboard = () => {
   }, []);
 
   const handleClosePopup = () => {
-    navigate("/user/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null) {

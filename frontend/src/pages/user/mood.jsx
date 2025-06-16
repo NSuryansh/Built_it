@@ -75,7 +75,7 @@ export default function Mood() {
   }, []);
 
   const handleClosePopup = () => {
-    navigate("/user/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   const handleSubmit = async (e) => {

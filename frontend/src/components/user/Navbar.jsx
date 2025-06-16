@@ -50,7 +50,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     setShowCustomModal(false);
-    navigate("/user/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   const handleCancel = () => {
@@ -69,7 +69,7 @@ const Navbar = () => {
     if (isAuthenticated) {
       return;
     } else {
-      navigate("/user/login");
+      navigate("https://hms-sso.vercel.app/");
     }
   };
 

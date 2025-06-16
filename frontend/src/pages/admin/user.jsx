@@ -302,7 +302,7 @@ const AdminUser = () => {
   }, [usersData, userCounts, searchTerm, filterDegree, sortConfig]);
 
   const handleClosePopup = () => {
-    navigate("/admin/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null || fetched === null) {

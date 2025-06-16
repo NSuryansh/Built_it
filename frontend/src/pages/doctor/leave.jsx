@@ -108,7 +108,7 @@ const DoctorLeave = () => {
   };
 
   const handleClosePopup = () => {
-    navigate("/doctor/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   // Handler for back button

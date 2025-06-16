@@ -34,7 +34,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   }, []);
 
   const handleClosePopup = () => {
-    navigate("/user/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   const handleBiometricSetup = async () => {

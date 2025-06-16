@@ -22,7 +22,7 @@ const Stress = () => {
   }, []);
 
   const handleClosePopup = () => {
-    navigate("/user/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null) {
@@ -122,7 +122,9 @@ const Stress = () => {
                   <h2 className="text-2xl font-bold text-[var(--custom-gray-900)]">
                     {section.title}
                   </h2>
-                  <p className="text-[var(--custom-gray-600)] mt-1">{section.description}</p>
+                  <p className="text-[var(--custom-gray-600)] mt-1">
+                    {section.description}
+                  </p>
                 </div>
               </div>
               <VideoSection videos={section.videos} />

@@ -214,7 +214,7 @@ const EventsList = () => {
   };
 
   const handleClosePopup = () => {
-    navigate("/admin/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   if (isAuthenticated === null || fetched === null) {

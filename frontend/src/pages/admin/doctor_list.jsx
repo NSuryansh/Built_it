@@ -107,7 +107,7 @@ const DoctorsList = () => {
   };
 
   const handleClosePopup = () => {
-    navigate("/admin/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   const handleRefresh = async () => {

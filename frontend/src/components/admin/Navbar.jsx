@@ -28,7 +28,7 @@ const AdminNavbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     setShowCustomModal(false);
-    navigate("/admin/login");
+    navigate("https://hms-sso.vercel.app/");
   };
 
   const handleCancel = () => {

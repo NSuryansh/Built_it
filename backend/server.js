@@ -384,7 +384,13 @@ app.post("/sso", async (req, res) => {
   try {
     const response = await fetch(
       "http://hms-sso-auhnefccahd9fnef.centralindia-01.azurewebsites.net/api/auth/verify-sso-token",
-      { method: "POST" }
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+        }),
+      }
     );
     const data = await response.json();
     if (data.success) {
