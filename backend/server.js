@@ -379,4 +379,34 @@ app.delete("/deletenotifs", async (req, res) => {
 //   }
 // });
 
+app.post("/sso", async (req, res) => {
+  const { token } = req.query;
+  try {
+    const response = await fetch(
+      "http://hms-sso-auhnefccahd9fnef.centralindia-01.azurewebsites.net/api/auth/verify-sso-token",
+      { method: "POST" }
+    );
+    const data = await response.json();
+    if (data.success) {
+      const email = data.user.email;
+      const user = await prisma.user.findUnique({ where: { email: email } });
+      if (user) {
+        return res
+          .status(200)
+          .json({ success: true, role: "user", username: user.username });
+      }
+      const doc = await prisma.doc.findUnique({ where: { email: email } });
+      if (doc) {
+        return res.status(200).json({ success: true, role: "doc" });
+      }
+      const admin = await prisma.admin.findUnique({ where: { email: email } });
+      if (admin) {
+        return res.status(200).json({ success: true, role: "admin" });
+      }
+      return res.status(200).json({ success: true, role: "none" });
+    }
+    res.status(400).json({ success: false, message: "User not logged in" });
+  } catch (error) {}
+});
+
 server.listen(port, () => console.log("Server running on port 3000"));
