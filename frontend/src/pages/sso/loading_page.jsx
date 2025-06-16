@@ -39,6 +39,7 @@ const LoadingPage = () => {
             }
           );
           const data = await response.json();
+          console.log(response.data);
           console.log(data);
           if (data.success) {
             if (data.role === "user") {
