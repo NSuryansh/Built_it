@@ -53,8 +53,19 @@ const LoadingPage = () => {
                 }),
               });
               const res = await response.json();
-              setUserFound(true);
-              navigate("/user/dashboard");
+              if (res.success) {
+                localStorage.setItem("userid", res.user.id);
+
+                subscribeToPush(res.user.id);
+              }
+
+              if (res["message"] === "Login successful") {
+                localStorage.setItem("token", res["token"]);
+                setUserFound(true);
+                navigate("/user/dashboard");
+              } else {
+                CustomToast(res["message"]);
+              }
             } else if (data.role === "doc") {
               const response = await fetch("http://localhost:3000/doc/login", {
                 method: "POST",
@@ -66,8 +77,13 @@ const LoadingPage = () => {
                 }),
               });
               const res = await response.json();
-              setUserFound(true);
-              navigate("/doc/dashboard");
+              if (res["message"] === "Login successful") {
+                localStorage.setItem("token", res["token"]);
+                setUserFound(true);
+                navigate("/doctor/dashboard");
+              } else {
+                CustomToast(res["message"], "blue");
+              }
             } else if (data.role === "admin") {
               const response = await fetch(
                 "http://localhost:3000/admin/login",
@@ -82,8 +98,13 @@ const LoadingPage = () => {
                 }
               );
               const res = await response.json();
-              setUserFound(true);
-              navigate("/admin/dashboard");
+              if (res["message"] === "Login successful") {
+                localStorage.setItem("token", res["token"]);
+                setUserFound(true);
+                navigate("/admin/dashboard");
+              } else {
+                CustomToast(res["message"], "green");
+              }
             } else {
               setUserFound(false);
             }
@@ -247,16 +268,16 @@ const LoadingPage = () => {
               className="mb-8"
             >
               <div className="flex items-center justify-center mb-4">
-                <motion.div
-                  animate={{
-                    rotate: [0, 5, -5, 0],
-                    scale: [1, 1.05, 1],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                <div
+                  // animate={{
+                  //   rotate: [0, 5, -5, 0],
+                  //   scale: [1, 1.05, 1],
+                  // }}
+                  // transition={{
+                  //   duration: 4,
+                  //   repeat: Infinity,
+                  //   ease: "easeInOut",
+                  // }}
                   className="relative"
                 >
                   <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg">
@@ -266,9 +287,8 @@ const LoadingPage = () => {
                     />
                   </div>
 
-                  {/* Pulse rings */}
                   <motion.div
-                    animate={{ scale: [1, 2, 1], opacity: [0.6, 0, 0.6] }}
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.6, 0, 0.6] }}
                     transition={{
                       duration: 2,
                       repeat: Infinity,
@@ -277,7 +297,7 @@ const LoadingPage = () => {
                     className="absolute inset-0 border-2 border-orange-400 rounded-xl"
                   />
                   <motion.div
-                    animate={{ scale: [1, 2.5, 1], opacity: [0.4, 0, 0.4] }}
+                    animate={{ scale: [1, 1.8, 1], opacity: [0.4, 0, 0.4] }}
                     transition={{
                       duration: 2,
                       repeat: Infinity,
@@ -286,7 +306,7 @@ const LoadingPage = () => {
                     }}
                     className="absolute inset-0 border-2 border-orange-300 rounded-xl"
                   />
-                </motion.div>
+                </div>
               </div>
 
               <motion.h1

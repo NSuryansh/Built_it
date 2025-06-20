@@ -1,7 +1,7 @@
 export const checkAuth = async (userType) => {
   function isTokenExpired(token) {
     if (token === null) return true;
-
+    console.log(token);
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const currentTime = Math.floor(Date.now() / 1000);
