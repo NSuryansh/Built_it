@@ -59,7 +59,7 @@ app.use("/common", commonRouter);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://built-it-frontend.onrender.com",
+    origin: "*",
     methods: ["GET", "POST"],
     credentials: true,
   },
