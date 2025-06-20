@@ -33,7 +33,7 @@ const LoadingPage = () => {
           }, 2000);
         } else {
           const response = await fetch(
-            `http://localhost:3000/sso?token=${token}`,
+            `https://built-it.onrender.com/sso?token=${token}`,
             {
               method: "POST",
             }
@@ -43,15 +43,18 @@ const LoadingPage = () => {
           console.log(data);
           if (data.success) {
             if (data.role === "user") {
-              const response = await fetch("http://localhost:3000/user/login", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  username: data.username,
-                }),
-              });
+              const response = await fetch(
+                "https://built-it.onrender.com/user/login",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    username: data.username,
+                  }),
+                }
+              );
               const res = await response.json();
               if (res.success) {
                 localStorage.setItem("userid", res.user.id);
@@ -67,15 +70,18 @@ const LoadingPage = () => {
                 CustomToast(res["message"]);
               }
             } else if (data.role === "doc") {
-              const response = await fetch("http://localhost:3000/doc/login", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  email: data.email,
-                }),
-              });
+              const response = await fetch(
+                "https://built-it.onrender.com/doc/login",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    email: data.email,
+                  }),
+                }
+              );
               const res = await response.json();
               if (res["message"] === "Login successful") {
                 localStorage.setItem("token", res["token"]);
@@ -86,7 +92,7 @@ const LoadingPage = () => {
               }
             } else if (data.role === "admin") {
               const response = await fetch(
-                "http://localhost:3000/admin/login",
+                "https://built-it.onrender.com/admin/login",
                 {
                   method: "POST",
                   headers: {

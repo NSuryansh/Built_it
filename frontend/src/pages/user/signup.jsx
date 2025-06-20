@@ -55,14 +55,17 @@ const SignUp = () => {
 
   async function sendOTP() {
     try {
-      const response = await fetch("http://localhost:3000/user/otpGenerate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({ email: formData.email }),
-      });
+      const response = await fetch(
+        "https://built-it.onrender.com/user/otpGenerate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({ email: formData.email }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         setOtpSent(true);
@@ -77,17 +80,20 @@ const SignUp = () => {
 
   async function verifyOTP() {
     try {
-      const response = await fetch("http://localhost:3000/user/otpcheck", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          otp: otp,
-          email: formData.email,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it.onrender.com/user/otpcheck",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            otp: otp,
+            email: formData.email,
+          }),
+        }
+      );
       console.log(response);
       const res = await response.json();
       console.log(res);
@@ -214,7 +220,7 @@ const SignUp = () => {
     setisLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:3000/user/check-user?username=${formData.username}`,
+        `https://built-it.onrender.com/user/check-user?username=${formData.username}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -267,25 +273,28 @@ const SignUp = () => {
         rollNo,
         gender,
       } = formData;
-      const response = await fetch("http://localhost:3000/user/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          mobile: mobile,
-          password: password,
-          altNo: altNo,
-          publicKey: publicKeyPEM,
-          department: department,
-          acadProg: acadProg,
-          rollNo: rollNo,
-          gender: gender,
-        }),
-      });
+      const response = await fetch(
+        "https://built-it.onrender.com/user/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            mobile: mobile,
+            password: password,
+            altNo: altNo,
+            publicKey: publicKeyPEM,
+            department: department,
+            acadProg: acadProg,
+            rollNo: rollNo,
+            gender: gender,
+          }),
+        }
+      );
       const data = await response.json();
       console.log("Signup successful:", data);
       CustomToast("Signup successful");

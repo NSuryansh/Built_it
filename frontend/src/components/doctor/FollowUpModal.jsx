@@ -26,7 +26,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
         try {
           const doctorId = localStorage.getItem("userid");
           const response = await fetch(
-            `http://localhost:3000/common/available-slots?date=${date}&docId=${doctorId}`,
+            `https://built-it.onrender.com/common/available-slots?date=${date}&docId=${doctorId}`,
             { headers: { Authorization: "Bearer " + token } }
           );
           const data = await response.json();
@@ -47,7 +47,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
       ).toISOString();
       console.log(selectedAppointment);
       const response = await fetch(
-        "http://localhost:3000/doc/request-to-user",
+        "https://built-it.onrender.com/doc/request-to-user",
         {
           method: "POST",
           headers: {
@@ -67,7 +67,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
 
       if (data["message"] === "Appointment requested successfully") {
         const notif = await fetch(
-          "http://localhost:3000/common/send-notification",
+          "https://built-it.onrender.com/common/send-notification",
           {
             method: "POST",
             headers: {

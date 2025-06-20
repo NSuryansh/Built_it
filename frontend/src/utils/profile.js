@@ -18,10 +18,13 @@ export const checkAuth = async (userType) => {
     return false;
   }
   try {
-    const response = await fetch(`http://localhost:3000/${userType}/profile`, {
-      method: "GET",
-      headers: { Authorization: "Bearer " + token },
-    });
+    const response = await fetch(
+      `https://built-it.onrender.com/${userType}/profile`,
+      {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
 
     if (!response.ok) {
       return false;

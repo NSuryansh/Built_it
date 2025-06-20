@@ -40,16 +40,19 @@ const EventsList = () => {
     // if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/events`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          id: id,
-        }),
-      });
+      const response = await fetch(
+        `https://built-it.onrender.com/admin/events`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            id: id,
+          }),
+        }
+      );
 
       if (response.ok) {
         setEvents((prevEvents) =>
@@ -79,7 +82,7 @@ const EventsList = () => {
   const handleLinkSubmit = async (eventId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/admin/uploadURL?id=${eventId}&url=${newLink}`,
+        `https://built-it.onrender.com/admin/uploadURL?id=${eventId}&url=${newLink}`,
         { method: "PUT", headers: { Authorization: "Bearer " + token } }
       );
       CustomToast("URL uploaded successfully", "green");
@@ -109,11 +112,14 @@ const EventsList = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:3000/common/events", {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          "https://built-it.onrender.com/common/events",
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const response2 = await fetch(
-          "http://localhost:3000/common/getPastEvents",
+          "https://built-it.onrender.com/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
           }

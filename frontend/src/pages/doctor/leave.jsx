@@ -37,7 +37,7 @@ const DoctorLeave = () => {
   const fetchAvailableSlots = async (date, start) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/common/available-slots?date=${date}&docId=${docId}`,
+        `https://built-it.onrender.com/common/available-slots?date=${date}&docId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -81,18 +81,21 @@ const DoctorLeave = () => {
 
     const setLeave = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/doc/addLeave`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            doc_id: docId,
-            start: startDate,
-            end: endDate,
-          }),
-        });
+        const response = await fetch(
+          `https://built-it.onrender.com/doc/addLeave`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify({
+              doc_id: docId,
+              start: startDate,
+              end: endDate,
+            }),
+          }
+        );
         console.log(response.json());
         navigate("/doctor/profile");
         CustomToast("Leave added successfully", "blue");

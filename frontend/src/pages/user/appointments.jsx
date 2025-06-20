@@ -29,7 +29,7 @@ const UserAppointments = () => {
   async function getPrevApp() {
     try {
       const res = await fetch(
-        `http://localhost:3000/user/pastuserappt?userId=${user_id}`,
+        `https://built-it.onrender.com/user/pastuserappt?userId=${user_id}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const resp = await res.json();
@@ -43,7 +43,7 @@ const UserAppointments = () => {
   async function getCurrApp() {
     try {
       const res = await fetch(
-        `http://localhost:3000/user/currentuserappt?userId=${user_id}`,
+        `https://built-it.onrender.com/user/currentuserappt?userId=${user_id}`,
         {
           headers: { Authorization: "Bearer " + token },
         }

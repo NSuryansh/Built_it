@@ -113,7 +113,7 @@ export default function App() {
       console.log("FCM Token:", fcmToken);
 
       const res = await fetch(
-        "http://localhost:3000/common/save-subscription",
+        "https://built-it.onrender.com/common/save-subscription",
         {
           method: "POST",
           headers: {

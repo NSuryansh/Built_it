@@ -17,7 +17,7 @@ const DoctorNotificationPanel = () => {
       if (docId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/user_doc/chatContacts?userId=${docId}`,
+            `https://built-it.onrender.com/user_doc/chatContacts?userId=${docId}`,
             { headers: { Authorization: "Bearer " + token } }
           );
           const contacts = await response.json();
@@ -37,7 +37,7 @@ const DoctorNotificationPanel = () => {
       if (chats) {
         try {
           const response = await fetch(
-            "http://localhost:3000/doc/getFeelings",
+            "https://built-it.onrender.com/doc/getFeelings",
             {
               headers: { Authorization: "Bearer " + token },
             }
@@ -83,7 +83,7 @@ const DoctorNotificationPanel = () => {
     const getReferrals = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/doc/get-referrals?doctor_id=${docId}`,
+          `https://built-it.onrender.com/doc/get-referrals?doctor_id=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }

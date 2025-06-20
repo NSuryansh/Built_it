@@ -49,9 +49,12 @@ const AdminDashboard = () => {
     const fetchAppointments = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/admin/pastApp", {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          "https://built-it.onrender.com/admin/pastApp",
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const data = await response.json();
         if (response.ok) {
           const result = {};
@@ -143,9 +146,12 @@ const AdminDashboard = () => {
   const handleRefresh = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/admin/pastApp", {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const response = await fetch(
+        "https://built-it.onrender.com/admin/pastApp",
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         const result = {};

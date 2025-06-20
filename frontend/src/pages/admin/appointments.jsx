@@ -55,7 +55,7 @@ const AdminAppointments = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/user_admin/getdoctors?user_type=admin",
+          "https://built-it.onrender.com/user_admin/getdoctors?user_type=admin",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -76,7 +76,7 @@ const AdminAppointments = () => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/admin/all-appointments",
+          "https://built-it.onrender.com/admin/all-appointments",
           {
             headers: { Authorization: "Bearer " + token },
           }
