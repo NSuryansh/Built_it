@@ -15,7 +15,7 @@ const NotificationPanel = () => {
   const deleteRequest = async (id) => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/user/deleteRequest?id=${id}&userId=${userId}`,
+        `http://localhost:3000/user/deleteRequest?id=${id}&userId=${userId}`,
         {
           method: "DELETE",
           headers: { Authorization: "Bearer " + token },
@@ -31,7 +31,7 @@ const NotificationPanel = () => {
   const getRequests = async () => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/user/getRequests?userId=${userId}`,
+        `http://localhost:3000/user/getRequests?userId=${userId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -56,7 +56,7 @@ const NotificationPanel = () => {
   const confirmAppointment = async (notif) => {
     try {
       const res = await fetch(
-        `https://built-it.onrender.com/user/accept-booking-by-user`,
+        `http://localhost:3000/user/accept-booking-by-user`,
         {
           method: "POST",
           headers: {
@@ -75,7 +75,7 @@ const NotificationPanel = () => {
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
-        await fetch("https://built-it.onrender.com/common/send-notification", {
+        await fetch("http://localhost:3000/common/send-notification", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

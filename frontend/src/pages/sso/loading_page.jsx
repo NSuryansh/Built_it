@@ -33,7 +33,7 @@ const LoadingPage = () => {
           }, 2000);
         } else {
           const response = await fetch(
-            `https://built-it.onrender.com/sso?token=${token}`,
+            `http://localhost:3000/sso?token=${token}`,
             {
               method: "POST",
             }
@@ -43,40 +43,34 @@ const LoadingPage = () => {
           console.log(data);
           if (data.success) {
             if (data.role === "user") {
-              const response = await fetch(
-                "https://built-it.onrender.com/user/login",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    username: data.username,
-                  }),
-                }
-              );
+              const response = await fetch("http://localhost:3000/user/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  username: data.username,
+                }),
+              });
               const res = await response.json();
               setUserFound(true);
               navigate("/user/dashboard");
             } else if (data.role === "doc") {
-              const response = await fetch(
-                "https://built-it.onrender.com/doc/login",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    email: data.email,
-                  }),
-                }
-              );
+              const response = await fetch("http://localhost:3000/doc/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  email: data.email,
+                }),
+              });
               const res = await response.json();
               setUserFound(true);
               navigate("/doc/dashboard");
             } else if (data.role === "admin") {
               const response = await fetch(
-                "https://built-it.onrender.com/admin/login",
+                "http://localhost:3000/admin/login",
                 {
                   method: "POST",
                   headers: {

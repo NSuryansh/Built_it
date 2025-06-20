@@ -63,11 +63,11 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `https://built-it.onrender.com/common/getDoc?docId=${doctorId}`,
+          `http://localhost:3000/common/getDoc?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const response2 = await fetch(
-          `https://built-it.onrender.com/doc/general-slots?docId=${doctorId}`,
+          `http://localhost:3000/doc/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -217,14 +217,11 @@ const DoctorProfile = () => {
         formData.append("isProfileDone", false);
       }
 
-      const response = await fetch(
-        `https://built-it.onrender.com/doc/modifyDoc`,
-        {
-          method: "PUT",
-          headers: { Authorization: "Bearer " + token },
-          body: formData,
-        }
-      );
+      const response = await fetch(`http://localhost:3000/doc/modifyDoc`, {
+        method: "PUT",
+        headers: { Authorization: "Bearer " + token },
+        body: formData,
+      });
 
       const filteredAvailability = editedProfile.availability.filter(
         (slot) => slot.trim() !== "" && slot !== "<Add>"
@@ -239,7 +236,7 @@ const DoctorProfile = () => {
       }
       if (dates.length !== 0) {
         const response2 = await fetch(
-          `https://built-it.onrender.com/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+          `http://localhost:3000/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
           {
             method: "PUT",
             headers: { Authorization: "Bearer " + token },

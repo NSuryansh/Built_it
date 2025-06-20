@@ -204,12 +204,9 @@ const AdminUser = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          "https://built-it.onrender.com/doc_admin/getUsers",
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        );
+        const res = await fetch("http://localhost:3000/doc_admin/getUsers", {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await res.json();
         setUsersData(data);
 
@@ -219,13 +216,13 @@ const AdminUser = () => {
             try {
               const [countRes, doctorRes] = await Promise.all([
                 fetch(
-                  `https://built-it.onrender.com/admin/appointments-count?id=${userId}`,
+                  `http://localhost:3000/admin/appointments-count?id=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
                   }
                 ),
                 fetch(
-                  `https://built-it.onrender.com/admin/user-doctors?userId=${userId}`,
+                  `http://localhost:3000/admin/user-doctors?userId=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
                   }
