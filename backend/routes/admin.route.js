@@ -460,4 +460,25 @@ adminRouter.get("/user-doctors", authorizeRoles("admin"), async (req, res) => {
   }
 });
 
+adminRouter.post("/signup", async (req, res) => {
+  const { email, password, name, mobile } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const admin = await prisma.admin.findUnique({ where: { email: email } });
+  if (admin) {
+    return res.status(400).json({ message: "Admin already exists" });
+  }
+
+  const newAdmin = await prisma.admin.create({
+    data: {
+      name,
+      email,
+      mobile,
+      password: hashedPassword,
+    },
+  });
+
+  res.json({ message: "Register successful" });
+});
+
 export default adminRouter;
