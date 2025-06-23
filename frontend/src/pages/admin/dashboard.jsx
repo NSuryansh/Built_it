@@ -207,7 +207,7 @@ const AdminDashboard = () => {
   }
 
   const handleClosePopup = () => {
-    window.location.href = "https://hms-sso.vercel.app";
+    navigate("/admin/login");
   };
 
   if (!isAuthenticated) {

@@ -323,7 +323,7 @@ const DoctorPeer = () => {
   // Fetch messages using the selected doctor's id from userList
 
   const handleClosePopup = () => {
-    window.location.href = "https://hms-sso.vercel.app";
+    navigate("/doctor/login");
   };
 
   if (isAuthenticated === null) {

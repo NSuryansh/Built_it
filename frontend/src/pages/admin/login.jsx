@@ -276,18 +276,14 @@ const AdminLogin = () => {
           <p className="w-full text-center">
             Login as a&nbsp;
             <button
-              onClick={() =>
-                (window.location.href = "https://hms-sso.vercel.app")
-              }
+              onClick={() => navigate("/user/login")}
               className="underline font-bold text-[var(--custom-green-500)]"
             >
               User
             </button>
             &nbsp;or&nbsp;
             <button
-              onClick={() =>
-                (window.location.href = "https://hms-sso.vercel.app")
-              }
+              onClick={() => navigate("/user/login")}
               className="underline font-bold text-[var(--custom-green-500)]"
             >
               Doctor

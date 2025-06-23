@@ -382,16 +382,13 @@ app.delete("/deletenotifs", async (req, res) => {
 app.post("/sso", async (req, res) => {
   const { token } = req.query;
   try {
-    const response = await fetch(
-      "https://hms-sso-auhnefccahd9fnef.centralindia-01.azurewebsites.net/api/auth/verify-sso-token",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token,
-        }),
-      }
-    );
+    const response = await fetch("https://hms.iiti.ac.in/api/sso/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token,
+      }),
+    });
     const data = await response.json();
     console.log(data);
     if (data.success === true || data.success === "true") {

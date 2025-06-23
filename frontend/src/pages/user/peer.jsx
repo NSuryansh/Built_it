@@ -336,7 +336,7 @@ const Peer = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
   const handleClosePopup = () => {
-    window.location.href = "https://hms-sso.vercel.app";
+    navigate("/user/login");
   };
 
   useEffect(() => {

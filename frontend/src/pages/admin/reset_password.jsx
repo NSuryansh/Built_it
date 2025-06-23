@@ -45,7 +45,7 @@ const AdminResetPassword = () => {
     const res = await response.json();
     CustomToast("Password updated successfully!", "green");
     setTimeout(() => {
-      window.location.href = "https://hms-sso.vercel.app";
+      navigate("/admin/login");
     }, 2000);
   };
 

@@ -299,7 +299,7 @@ const SignUp = () => {
       console.log("Signup successful:", data);
       CustomToast("Signup successful");
       setisLoading(false);
-      window.location.href = "https://hms-sso.vercel.app";
+      navigate("/user/login");
     } catch (error) {
       setisLoading(false);
       console.error("Signup error:", error);
@@ -571,9 +571,7 @@ const SignUp = () => {
         <p className="mt-4 text-sm text-center text-cus">
           Already have an account?{" "}
           <button
-            onClick={() =>
-              (window.location.href = "https://hms-sso.vercel.app")
-            }
+            onClick={() => navigate("/user/login")}
             className="underline font-bold text-[var(--custom-orange-500)]"
           >
             Login here

@@ -23,7 +23,7 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
   }, []);
 
   const handleClosePopup = () => {
-    window.location.href = "https://hms-sso.vercel.app";
+    navigate("/user/login");
   };
 
   if (isAuthenticated === null) {

@@ -50,7 +50,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     setShowCustomModal(false);
-    window.location.href = "https://hms-sso.vercel.app";
+    navigate("/user/login");
   };
 
   const handleCancel = () => {
@@ -69,7 +69,7 @@ const Navbar = () => {
     if (isAuthenticated) {
       return;
     } else {
-      window.location.href = "https://hms-sso.vercel.app";
+      navigate("/user/login");
     }
   };
 
@@ -280,7 +280,7 @@ const Navbar = () => {
               </>
             ) : (
               <button
-                onClick={() => window.location.href = "https://hms-sso.vercel.app"}
+                onClick={() => navigate("/user/login")}
                 className="px-4 py-2 bg-[var(--custom-orange-200)] hover:bg-[var(--custom-orange-300)] text-[var(--custom-orange-900)] rounded font-medium"
               >
                 Login

@@ -29,7 +29,7 @@ const LoadingPage = () => {
         if (!token) {
           CustomToast("No token to verify");
           setTimeout(() => {
-            window.location.href = "https://hms-sso.vercel.app";
+            navigate("/user/login");
           }, 2000);
         } else {
           const response = await fetch(
@@ -117,14 +117,14 @@ const LoadingPage = () => {
           } else {
             CustomToast("Not logged in");
             setTimeout(() => {
-              window.location.href = "https://hms-sso.vercel.app";
+              navigate("/user/login");
             }, 2000);
           }
         }
       } catch (error) {
         CustomToast("Some error occured");
         setTimeout(() => {
-          window.location.href = "https://hms-sso.vercel.app";
+          navigate("/user/login");
         }, 2000);
       }
     };

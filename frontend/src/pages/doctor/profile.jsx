@@ -173,7 +173,7 @@ const DoctorProfile = () => {
   };
 
   const handleClosePopup = () => {
-    window.location.href = "https://hms-sso.vercel.app";
+    navigate("/doctor/login");
   };
 
   const handleSave = async () => {

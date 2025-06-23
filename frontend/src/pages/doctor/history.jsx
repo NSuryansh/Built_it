@@ -84,7 +84,7 @@ const History = () => {
   };
 
   const handleClosePopup = () => {
-    window.location.href = "https://hms-sso.vercel.app";
+    navigate("/doctor/login");
   };
 
   if (isAuthenticated === null || fetched === null) {
