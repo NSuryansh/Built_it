@@ -99,16 +99,16 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
 adminRouter.post("/login", async (req, res) => {
   // console.log(req.body);
   const emailId = req.body["email"];
-  // const password = req.body["password"];
+  const password = req.body["password"];
 
   const admin = await prisma.admin.findUnique({ where: { email: emailId } });
   if (!admin) {
     return res.status(401).json({ message: "User doesn't exist" });
   }
-  // const match = await bcrypt.compare(password, admin.password);
-  // if (!match) {
-  //   return res.status(401).json({ message: "Incorrect password" });
-  // }
+  const match = await bcrypt.compare(password, admin.password);
+  if (!match) {
+    return res.status(401).json({ message: "Incorrect password" });
+  }
   const token = jwt.sign(
     {
       userId: admin.id,

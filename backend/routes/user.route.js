@@ -279,17 +279,16 @@ userRouter.put("/modifyUser", authorizeRoles("user"), async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
   const username = req.body["username"];
-  // const password = req.body["password"];
+  const password = req.body["password"];
 
   const user = await prisma.user.findUnique({ where: { username: username } });
   if (!user) {
     return res.status(401).json({ message: "User doesn't exist" });
   }
-  // const match = await bcrypt.compare(password, user.password);
-  // if (!match) {
-  //   return res.status(401).json({ message: "Incorrect password" });
-  // }
-  console.log(user);
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
+    return res.status(401).json({ message: "Incorrect password" });
+  }
   const token = jwt.sign(
     {
       userId: user.id,
@@ -302,7 +301,6 @@ userRouter.post("/login", async (req, res) => {
       expiresIn: "1h",
     }
   );
-  console.log(token);
 
   res.json({ message: "Login successful", token });
 });

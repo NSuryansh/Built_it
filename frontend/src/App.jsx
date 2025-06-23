@@ -175,14 +175,14 @@ export default function App() {
         <Route path="/user/entertainment" element={<Entertainment />} />
         <Route path="/user/entertainment/dinogame" element={<Dinogame />} />
         <Route path="/user/events" element={<Events />} />
-        {/* <Route path="/user/login" element={<Login />} /> */}
+        <Route path="/user/login" element={<Login />} />
         <Route path="/user/signup" element={<SignUp />} />
         <Route path="/user/reset_password" element={<ResetPassword />} />
         <Route path="/user/modify_profile" element={<ModifyProfile />} />
         <Route path="/user/appointments" element={<UserAppointments />} />
         <Route path="/user/feedback" element={<FeedbackPage />} />
         <Route path="/user/dashboard" element={<Dashboard />} />
-        {/* <Route path="/doctor/login" element={<DoctorLogin />} /> */}
+        <Route path="/doctor/login" element={<DoctorLogin />} />
         <Route
           path="/doctor/reset_password"
           element={<DoctorResetPassword />}
@@ -195,7 +195,7 @@ export default function App() {
         <Route path="/doctor/book" element={<DoctorBook />} />
         <Route path="/doctor/history" element={<History />} />
         <Route path="/doctor/user" element={<UserDetail />} />
-        {/* <Route path="/admin/login" element={<AdminLogin />} /> */}
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/reset_password" element={<AdminResetPassword />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/doctor_list" element={<DoctorsList />} />
