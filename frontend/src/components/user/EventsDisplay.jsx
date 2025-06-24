@@ -10,9 +10,12 @@ const EventsDisplay = () => {
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch("https://built-it.onrender.com/common/events", {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const res = await fetch(
+        "https://built-it.onrender.com/api/common/events",
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
       const resp = await res.json();
       setEvents(resp);
     };

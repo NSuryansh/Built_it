@@ -40,7 +40,7 @@ const Calendar = ({ onDateSelect }) => {
     const PastEvents = async () => {
       try {
         const response = await fetch(
-          "https://built-it.onrender.com/common/getPastEvents",
+          "https://built-it.onrender.com/api/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -62,7 +62,7 @@ const Calendar = ({ onDateSelect }) => {
     const FutureEvents = async () => {
       try {
         const response = await fetch(
-          "https://built-it.onrender.com/common/events",
+          "https://built-it.onrender.com/api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
           }

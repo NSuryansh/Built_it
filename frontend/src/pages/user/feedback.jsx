@@ -100,12 +100,12 @@ const FeedbackPage = () => {
   const getAppointmentById = async () => {
     try {
       const res = await fetch(
-        `https://built-it.onrender.com/user/getAppointmentById?id=${appointmentId}`,
+        `https://built-it.onrender.com/api/user/getAppointmentById?id=${appointmentId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await res.json();
       const res2 = await fetch(
-        `https://built-it.onrender.com/common/getDoc?docId=${data.doc_id}`,
+        `https://built-it.onrender.com/api/common/getDoc?docId=${data.doc_id}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data2 = await res2.json();
@@ -143,7 +143,7 @@ const FeedbackPage = () => {
     setisSubmitting(true);
     try {
       const res = await fetch(
-        "https://built-it.onrender.com/user/setFeedback",
+        "https://built-it.onrender.com/api/user/setFeedback",
         {
           method: "POST",
           headers: {

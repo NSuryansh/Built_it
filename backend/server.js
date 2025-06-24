@@ -18,6 +18,7 @@ import commonRouter from "./routes/common.route.js";
 export const prisma = new PrismaClient();
 export const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const server = createServer(app);
 const port = 3000;
 dotenv.config();
@@ -49,13 +50,13 @@ admin.initializeApp({
 });
 
 app.use(cors());
-app.use("/user", userRouter);
-app.use("/doc", docRouter);
-app.use("/admin", adminRouter);
-app.use("/user_doc", userDocRouter);
-app.use("/user_admin", userAdminRouter);
-app.use("/doc_admin", docAdminRouter);
-app.use("/common", commonRouter);
+app.use("/api/user", userRouter);
+app.use("/api/doc", docRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/user_doc", userDocRouter);
+app.use("/api/user_admin", userAdminRouter);
+app.use("/api/doc_admin", docAdminRouter);
+app.use("/api/common", commonRouter);
 
 const io = new Server(server, {
   cors: {

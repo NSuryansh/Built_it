@@ -29,7 +29,7 @@ const DoctorResetPassword = () => {
     const token = searchParams.get("token");
 
     const response = await fetch(
-      `https://built-it.onrender.com/doc/resetPassword`,
+      `https://built-it.onrender.com/api/doc/resetPassword`,
       {
         method: "POST",
         headers: {

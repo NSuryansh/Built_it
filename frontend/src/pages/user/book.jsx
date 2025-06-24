@@ -40,7 +40,7 @@ const Book = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "https://built-it.onrender.com/user_admin/getdoctors?user_type=user",
+          "https://built-it.onrender.com/api/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -62,7 +62,7 @@ const Book = () => {
 
       try {
         const res = await fetch(
-          `https://built-it.onrender.com/user/isUpcomingAppointment?userId=${userId}`,
+          `https://built-it.onrender.com/api/user/isUpcomingAppointment?userId=${userId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -136,7 +136,7 @@ const Book = () => {
 
     try {
       const res = await fetch(
-        "https://built-it.onrender.com/user_doc/requests",
+        "https://built-it.onrender.com/api/user_doc/requests",
         {
           method: "POST",
           headers: {

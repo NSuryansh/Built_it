@@ -15,7 +15,7 @@ const NotificationPanel = () => {
   const deleteRequest = async (id) => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/user/deleteRequest?id=${id}&userId=${userId}`,
+        `https://built-it.onrender.com/api/user/deleteRequest?id=${id}&userId=${userId}`,
         {
           method: "DELETE",
           headers: { Authorization: "Bearer " + token },
@@ -31,7 +31,7 @@ const NotificationPanel = () => {
   const getRequests = async () => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/user/getRequests?userId=${userId}`,
+        `https://built-it.onrender.com/api/user/getRequests?userId=${userId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -56,7 +56,7 @@ const NotificationPanel = () => {
   const confirmAppointment = async (notif) => {
     try {
       const res = await fetch(
-        `https://built-it.onrender.com/user/accept-booking-by-user`,
+        `https://built-it.onrender.com/api/user/accept-booking-by-user`,
         {
           method: "POST",
           headers: {
@@ -75,18 +75,21 @@ const NotificationPanel = () => {
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
-        await fetch("https://built-it.onrender.com/common/send-notification", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userType: "doc",
-            userid: userId,
-            message: "User accepted the appointment!",
-          }),
-        });
+        await fetch(
+          "https://built-it.onrender.com/api/common/send-notification",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify({
+              userType: "doc",
+              userid: userId,
+              message: "User accepted the appointment!",
+            }),
+          }
+        );
         getRequests();
       } else {
         console.error("Failed to confirm appointment");

@@ -205,7 +205,7 @@ const AdminUser = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          "https://built-it.onrender.com/doc_admin/getUsers",
+          "https://built-it.onrender.com/api/doc_admin/getUsers",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -219,13 +219,13 @@ const AdminUser = () => {
             try {
               const [countRes, doctorRes] = await Promise.all([
                 fetch(
-                  `https://built-it.onrender.com/admin/appointments-count?id=${userId}`,
+                  `https://built-it.onrender.com/api/admin/appointments-count?id=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
                   }
                 ),
                 fetch(
-                  `https://built-it.onrender.com/admin/user-doctors?userId=${userId}`,
+                  `https://built-it.onrender.com/api/admin/user-doctors?userId=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
                   }
