@@ -50,7 +50,7 @@ const AdminDashboard = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          "https://built-it.onrender.com/admin/pastApp",
+          "https://built-it.onrender.com/api/admin/pastApp",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        "https://built-it.onrender.com/admin/pastApp",
+        "https://built-it.onrender.com/api/admin/pastApp",
         {
           headers: { Authorization: "Bearer " + token },
         }

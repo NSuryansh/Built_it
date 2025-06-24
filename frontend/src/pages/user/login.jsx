@@ -66,17 +66,20 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch("https://built-it.onrender.com/user/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    });
+    const response = await fetch(
+      "https://built-it.onrender.com/api/user/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      }
+    );
     const res = await response.json();
 
     if (res.success) {
@@ -100,7 +103,7 @@ const Login = () => {
       return;
     }
     const response = await fetch(
-      "https://built-it.onrender.com/user/forgotPassword",
+      "https://built-it.onrender.com/api/user/forgotPassword",
       {
         method: "POST",
         headers: {
@@ -134,7 +137,7 @@ const Login = () => {
   const handleBiometricLogin = async () => {
     console.log(username, "usduse");
     const data = await fetch(
-      "https://built-it.onrender.com/user/generateBioAuthOptions",
+      "https://built-it.onrender.com/api/user/generateBioAuthOptions",
       {
         method: "POST",
         body: JSON.stringify({
@@ -175,7 +178,7 @@ const Login = () => {
     };
 
     const res = await fetch(
-      "https://built-it.onrender.com/user/verifyBioLogin",
+      "https://built-it.onrender.com/api/user/verifyBioLogin",
       {
         method: "POST",
         // body: JSON.stringify({

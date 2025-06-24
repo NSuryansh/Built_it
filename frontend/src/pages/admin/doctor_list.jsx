@@ -45,7 +45,7 @@ const DoctorsList = () => {
   const fetchDoctors = async () => {
     try {
       const res = await fetch(
-        "https://built-it.onrender.com/user_admin/getdoctors?user_type=admin",
+        "https://built-it.onrender.com/api/user_admin/getdoctors?user_type=admin",
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -68,17 +68,20 @@ const DoctorsList = () => {
     console.log(doctor.id);
     console.log(doctor);
     try {
-      const res = await fetch("https://built-it.onrender.com/admin/toggleDoc", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          doctorID: doctor.id,
-          isInactive: doctor.isInactive,
-        }),
-      });
+      const res = await fetch(
+        "https://built-it.onrender.com/api/admin/toggleDoc",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            doctorID: doctor.id,
+            isInactive: doctor.isInactive,
+          }),
+        }
+      );
       const resp = await res.json();
       await fetchDoctors();
       if (res.ok) {

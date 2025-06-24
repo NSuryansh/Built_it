@@ -19,7 +19,7 @@ const AppointmentList = ({ onFollowUp }) => {
       try {
         console.log(token);
         const response = await fetch(
-          `https://built-it.onrender.com/doc/getAppointmentForDoctorUser?userId=${userId}&docId=${localStorage.getItem(
+          `https://built-it.onrender.com/api/doc/getAppointmentForDoctorUser?userId=${userId}&docId=${localStorage.getItem(
             "userid"
           )}`,
           {

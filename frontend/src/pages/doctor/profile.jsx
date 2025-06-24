@@ -63,11 +63,11 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `https://built-it.onrender.com/common/getDoc?docId=${doctorId}`,
+          `https://built-it.onrender.com/api/common/getDoc?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const response2 = await fetch(
-          `https://built-it.onrender.com/doc/general-slots?docId=${doctorId}`,
+          `https://built-it.onrender.com/api/doc/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -218,7 +218,7 @@ const DoctorProfile = () => {
       }
 
       const response = await fetch(
-        `https://built-it.onrender.com/doc/modifyDoc`,
+        `https://built-it.onrender.com/api/doc/modifyDoc`,
         {
           method: "PUT",
           headers: { Authorization: "Bearer " + token },
@@ -239,7 +239,7 @@ const DoctorProfile = () => {
       }
       if (dates.length !== 0) {
         const response2 = await fetch(
-          `https://built-it.onrender.com/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+          `https://built-it.onrender.com/api/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
           {
             method: "PUT",
             headers: { Authorization: "Bearer " + token },

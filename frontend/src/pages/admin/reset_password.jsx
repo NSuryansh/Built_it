@@ -29,7 +29,7 @@ const AdminResetPassword = () => {
     const token = searchParams.get("token");
 
     const response = await fetch(
-      `https://built-it.onrender.com/admin/resetPassword`,
+      `https://built-it.onrender.com/api/admin/resetPassword`,
       {
         method: "POST",
         headers: {

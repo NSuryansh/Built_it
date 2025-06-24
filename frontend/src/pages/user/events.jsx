@@ -52,7 +52,7 @@ const Events = () => {
   }
 
   async function getCurrEvents() {
-    const res = await fetch("https://built-it.onrender.com/common/events", {
+    const res = await fetch("https://built-it.onrender.com/api/common/events", {
       headers: { Authorization: "Bearer " + token },
     });
     const resp = await res.json();
@@ -61,7 +61,7 @@ const Events = () => {
 
   async function getPastEvents() {
     const res = await fetch(
-      "https://built-it.onrender.com/common/getPastEvents",
+      "https://built-it.onrender.com/api/common/getPastEvents",
       {
         headers: { Authorization: "Bearer " + token },
       }
