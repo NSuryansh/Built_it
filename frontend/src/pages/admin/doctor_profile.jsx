@@ -63,7 +63,7 @@ const AdminDoctorProfile = () => {
       try {
         const doctorId = search.split("=")[1];
         const response = await fetch(
-          `https://built-it.onrender.com/api/common/getDoc?docId=${doctorId}`,
+          `http://localhost:3000/api/common/getDoc?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -126,7 +126,7 @@ const AdminDoctorProfile = () => {
   const referralSub = async () => {
     try {
       const response = await fetch(
-        "https://built-it.onrender.com/api/admin/referrals",
+        "http://localhost:3000/api/admin/referrals",
         {
           method: "POST",
           headers: {
@@ -149,7 +149,7 @@ const AdminDoctorProfile = () => {
       }
       CustomToast("Referral created successfully", "green");
       await fetch(
-        "https://built-it.onrender.com/api/common/send-notification",
+        "http://localhost:3000/api/common/send-notification",
         {
           method: "POST",
           headers: {

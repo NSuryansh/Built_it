@@ -56,7 +56,7 @@ const SignUp = () => {
   async function sendOTP() {
     try {
       const response = await fetch(
-        "https://built-it.onrender.com/api/user/otpGenerate",
+        "http://localhost:3000/api/user/otpGenerate",
         {
           method: "POST",
           headers: {
@@ -81,7 +81,7 @@ const SignUp = () => {
   async function verifyOTP() {
     try {
       const response = await fetch(
-        "https://built-it.onrender.com/api/user/otpcheck",
+        "http://localhost:3000/api/user/otpcheck",
         {
           method: "POST",
           headers: {
@@ -220,7 +220,7 @@ const SignUp = () => {
     setisLoading(true);
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/api/user/check-user?username=${formData.username}`,
+        `http://localhost:3000/api/user/check-user?username=${formData.username}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -274,7 +274,7 @@ const SignUp = () => {
         gender,
       } = formData;
       const response = await fetch(
-        "https://built-it.onrender.com/api/user/signup",
+        "http://localhost:3000/api/user/signup",
         {
           method: "POST",
           headers: {

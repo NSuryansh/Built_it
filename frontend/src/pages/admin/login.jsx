@@ -138,7 +138,7 @@ const AdminLogin = () => {
     setError("");
     setisLoading(true);
     const response = await fetch(
-      "https://built-it.onrender.com/api/admin/login",
+      "http://localhost:3000/api/admin/login",
       {
         method: "POST",
         headers: {
@@ -169,7 +169,7 @@ const AdminLogin = () => {
       return;
     }
     const response = await fetch(
-      "https://built-it.onrender.com/api/admin/forgotPassword",
+      "http://localhost:3000/api/admin/forgotPassword",
       {
         method: "POST",
         headers: {

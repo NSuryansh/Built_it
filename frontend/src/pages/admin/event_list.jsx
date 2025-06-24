@@ -41,7 +41,7 @@ const EventsList = () => {
 
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/api/admin/events`,
+        `http://localhost:3000/api/admin/events`,
         {
           method: "POST",
           headers: {
@@ -82,7 +82,7 @@ const EventsList = () => {
   const handleLinkSubmit = async (eventId) => {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/api/admin/uploadURL?id=${eventId}&url=${newLink}`,
+        `http://localhost:3000/api/admin/uploadURL?id=${eventId}&url=${newLink}`,
         { method: "PUT", headers: { Authorization: "Bearer " + token } }
       );
       CustomToast("URL uploaded successfully", "green");
@@ -113,13 +113,13 @@ const EventsList = () => {
     const fetchEvents = async () => {
       try {
         const response = await fetch(
-          "https://built-it.onrender.com/api/common/events",
+          "http://localhost:3000/api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
           }
         );
         const response2 = await fetch(
-          "https://built-it.onrender.com/api/common/getPastEvents",
+          "http://localhost:3000/api/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
           }

@@ -38,7 +38,7 @@ const AddDoctor = () => {
 
     try {
       const res = await fetch(
-        "https://built-it.onrender.com/api/admin/addDoc",
+        "http://localhost:3000/api/admin/addDoc",
         {
           method: "POST",
           headers: {

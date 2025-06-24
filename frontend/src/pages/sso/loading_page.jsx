@@ -33,7 +33,7 @@ const LoadingPage = () => {
           }, 2000);
         } else {
           const response = await fetch(
-            `https://built-it.onrender.com/api/sso?token=${token}`,
+            `http://localhost:3000/api/sso?token=${token}`,
             {
               method: "POST",
             }
@@ -44,7 +44,7 @@ const LoadingPage = () => {
           if (data.success) {
             if (data.role === "user") {
               const response = await fetch(
-                "https://built-it.onrender.com/api/user/login",
+                "http://localhost:3000/api/user/login",
                 {
                   method: "POST",
                   headers: {
@@ -71,7 +71,7 @@ const LoadingPage = () => {
               }
             } else if (data.role === "doc") {
               const response = await fetch(
-                "https://built-it.onrender.com/api/doc/login",
+                "http://localhost:3000/api/doc/login",
                 {
                   method: "POST",
                   headers: {
@@ -92,7 +92,7 @@ const LoadingPage = () => {
               }
             } else if (data.role === "admin") {
               const response = await fetch(
-                "https://built-it.onrender.com/api/admin/login",
+                "http://localhost:3000/api/admin/login",
                 {
                   method: "POST",
                   headers: {

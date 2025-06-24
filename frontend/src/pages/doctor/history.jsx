@@ -50,7 +50,7 @@ const History = () => {
     try {
       const docId = localStorage.getItem("userid");
       const response = await fetch(
-        `https://built-it.onrender.com/api/doc/pastdocappt?doctorId=${docId}`,
+        `http://localhost:3000/api/doc/pastdocappt?doctorId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();

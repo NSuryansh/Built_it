@@ -32,7 +32,7 @@ const BookingFormStep = ({
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `https://built-it.onrender.com/api/common/available-slots?date=${date}&docId=${doctorId}`,
+        `http://localhost:3000/api/common/available-slots?date=${date}&docId=${doctorId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -56,7 +56,7 @@ const BookingFormStep = ({
   const sendNotif = async () => {
     try {
       const res = await fetch(
-        "https://built-it.onrender.com/api/common/send-notification",
+        "http://localhost:3000/api/common/send-notification",
         {
           method: "POST",
           headers: {

@@ -67,7 +67,7 @@ const Login = () => {
     }
     setError("");
     const response = await fetch(
-      "https://built-it.onrender.com/api/user/login",
+      "http://localhost:3000/api/user/login",
       {
         method: "POST",
         headers: {
@@ -103,7 +103,7 @@ const Login = () => {
       return;
     }
     const response = await fetch(
-      "https://built-it.onrender.com/api/user/forgotPassword",
+      "http://localhost:3000/api/user/forgotPassword",
       {
         method: "POST",
         headers: {
@@ -137,7 +137,7 @@ const Login = () => {
   const handleBiometricLogin = async () => {
     console.log(username, "usduse");
     const data = await fetch(
-      "https://built-it.onrender.com/api/user/generateBioAuthOptions",
+      "http://localhost:3000/api/user/generateBioAuthOptions",
       {
         method: "POST",
         body: JSON.stringify({
@@ -178,7 +178,7 @@ const Login = () => {
     };
 
     const res = await fetch(
-      "https://built-it.onrender.com/api/user/verifyBioLogin",
+      "http://localhost:3000/api/user/verifyBioLogin",
       {
         method: "POST",
         // body: JSON.stringify({

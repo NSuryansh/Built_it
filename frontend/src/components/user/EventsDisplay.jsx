@@ -11,7 +11,7 @@ const EventsDisplay = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       const res = await fetch(
-        "https://built-it.onrender.com/api/common/events",
+        "http://localhost:3000/api/common/events",
         {
           headers: { Authorization: "Bearer " + token },
         }

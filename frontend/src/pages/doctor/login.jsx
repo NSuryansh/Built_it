@@ -66,7 +66,7 @@ const DoctorLogin = () => {
     setError("");
     setisLoading(true);
     const response = await fetch(
-      "https://built-it.onrender.com/api/doc/login",
+      "http://localhost:3000/api/doc/login",
       {
         method: "POST",
         headers: {
@@ -97,7 +97,7 @@ const DoctorLogin = () => {
       return;
     }
     const response = await fetch(
-      "https://built-it.onrender.com/api/doc/forgotPassword",
+      "http://localhost:3000/api/doc/forgotPassword",
       {
         method: "POST",
         headers: {

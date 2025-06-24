@@ -43,7 +43,7 @@ const AddEvent = () => {
 
     try {
       const response = await fetch(
-        "https://built-it.onrender.com/api/admin/addEvent",
+        "http://localhost:3000/api/admin/addEvent",
         {
           method: "POST",
           headers: {

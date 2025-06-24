@@ -93,7 +93,7 @@ const Peer = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "https://built-it.onrender.com/api/user_admin/getdoctors?user_type=user",
+          "http://localhost:3000/api/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -112,7 +112,7 @@ const Peer = () => {
   // async function fetchContacts(userId) {
   //   try {
   //     const response = await fetch(
-  //       `https://built-it.onrender.com/api/chatContacts?userId=${userId}`,
+  //       `http://localhost:3000/api/chatContacts?userId=${userId}`,
   //       { headers: { Authorization: "Bearer " + token } }
   //     );
   //     const contacts = await response.json();
@@ -169,7 +169,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("https://built-it.onrender.com/api/", {
+    socketRef.current = io("http://localhost:3000/api/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -276,7 +276,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `https://built-it.onrender.com/api/user_doc/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
+        `http://localhost:3000/api/user_doc/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
