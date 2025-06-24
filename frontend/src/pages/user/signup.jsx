@@ -183,11 +183,11 @@ const SignUp = () => {
       return;
     }
 
-    if (passwordScore < 2) {
-      setError("Please set a strong password");
-      CustomToast("Please set a strong password");
-      return;
-    }
+    // if (passwordScore < 2) {
+    //   setError("Please set a strong password");
+    //   CustomToast("Please set a strong password");
+    //   return;
+    // }
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       CustomToast("Passwords do not match");
@@ -495,12 +495,12 @@ const SignUp = () => {
                   </button>
                 </div>
               </div>
-              <PasswordStrengthBar
+              {/* <PasswordStrengthBar
                 onChangeScore={(score) => {
                   setpasswordScore(score);
                 }}
                 password={formData.password}
-              />
+              /> */}
 
               <div>
                 <label
