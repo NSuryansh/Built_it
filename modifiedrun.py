@@ -250,7 +250,7 @@ def analyze_user():
     print(request)
     if request.method=='POST':
         data_id = request.get_json()
-        user_id = int(data_id.get('user_id'))
+        user_id = data_id.get('user_id')
         print(user_id, "userof")
         try:
             # Load and filter CSV data

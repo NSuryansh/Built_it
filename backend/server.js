@@ -1,4 +1,6 @@
 import express from "express";
+import axios from "axios";
+
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import { Server } from "socket.io";
@@ -424,5 +426,62 @@ app.post("/sso", async (req, res) => {
     res.status(400).json({ success: false, message: "User not logged in" });
   } catch (error) {}
 });
+// Base URL of your Flask service
+const PYTHON_BASE = process.env.PYTHON_BASE || "http://localhost:5000";
+
+// 1) POST /chat → forwards to Flask /chatWithBot
+app.post("/chat", async (req, res) => {
+  try {
+    const { data } = await axios.post(
+      `${PYTHON_BASE}/chatWithBot`,
+      req.body,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    res.json(data);
+  } catch (err) {
+    console.error("Error calling Flask /chatWithBot:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 2) POST /scores → forwards to Flask /analyze
+app.post("/scores", async (req, res) => {
+  try {
+    const { data } = await axios.post(
+      `${PYTHON_BASE}/analyze`,
+      req.body,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    res.json(data);
+  } catch (err) {
+    console.error("Error calling Flask /analyze:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 3) POST /emotion → forwards multipart‐form audio upload to Flask /emotion
+import multer from "multer";
+const upload = multer();
+app.post(
+  "/emotion",
+  upload.single("audio"),
+  async (req, res) => {
+    try {
+      // build form-data for Python
+      const form = new FormData();
+      form.append("audio", req.file.buffer, { filename: "audio.wav" });
+      const { data } = await axios.post(
+        `${PYTHON_BASE}/emotion`,
+        form,
+        { headers: form.getHeaders() }
+      );
+      res.json(data);
+    } catch (err) {
+      console.error("Error calling Flask /emotion:", err.message);
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
 
 server.listen(port, () => console.log("Server running on port 3000"));
