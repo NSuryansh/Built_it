@@ -91,7 +91,7 @@ export default function Mood() {
 
     try {
       const response = await fetch(
-        "/chatWithBot",
+        "/api/chat",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
