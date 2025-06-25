@@ -1,7 +1,7 @@
 import React from "react";
 
 const ProgressBar = ({ label, value }) => {
-  if (value > 10) {
+  if (value > 10 || value < 0) {
     return (
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
