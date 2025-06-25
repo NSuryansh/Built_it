@@ -258,11 +258,12 @@ def analyze_user():
         
         print(user_id, "user id")
         print(type(user_id), "user id type")
+        print(type(data[user_id]))
         try:
             # Load and filter CSV data
             data = pd.read_csv('tmp/memory.csv', dtype={'user_id': str})
             print(data, "dara")
-            user_data = data[data['user_id'] == user_id]
+            user_data = data[data['user_id'] == int(user_id)]
             print(user_data, "AEEE HALLLLLo")
             if user_data.empty:
                 print("User data is empty")
