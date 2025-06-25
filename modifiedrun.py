@@ -281,39 +281,7 @@ def analyze_user():
     if request.method=='OPTIONS':
         print("HALALALLALA options")
         return '', 200
-
-    lookup_id = str(request.get_json().get('user_id','')).strip()
-
-    try:
-        # try reading with a header
-        data = pd.read_csv('tmp/memory.csv', dtype=str)
-        cols = [c.strip() for c in data.columns]
-        if 'user_id' not in cols:
-            raise ValueError("no user_id in header")
-        data.columns = cols
-
-    except (FileNotFoundError):
-        return jsonify({"error":"Data file missing"}), 500
-
-    except ValueError:
-        # fallback: force the four‐column layout
-        data = pd.read_csv(
-            'tmp/memory.csv',
-            header=None,
-            names=['user_id','session_id','prompt','timestamp'],
-            dtype=str
-        )
-
-    # normalize and filter
-    data['user_id'] = data['user_id'].str.strip()
-    user_data = data[data['user_id'] == lookup_id]
-
-    if user_data.empty:
-        return jsonify({"error":"User not found"}), 404
-
-    prompts = user_data['prompt'].tolist()
-    result  = analyze_mental_health(prompts, lookup_id)
-    return jsonify(result['metrics_json'])
+    
 @app.route('/emotion', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def classify_emotion():
