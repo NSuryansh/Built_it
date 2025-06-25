@@ -223,6 +223,8 @@ def chat_handler():
             print("HIHI")
             data = request.get_json()
             user_id = data.get("user_id", "default_user")
+            print(type(user_id), "user id type")
+
             print("USER ID:", user_id)
             message = data["message"]
             message=message+"Reply in 2-3 sentences only and avoid lengthy explanations. Provide detailed information only when explicitly requested."
@@ -254,6 +256,7 @@ def analyze_user():
         user_id = data_id.get('user_id')
         
         print(user_id, "user id")
+        print(type(user_id), "user id type")
         try:
             # Load and filter CSV data
             data = pd.read_csv('tmp/memory.csv')
@@ -261,6 +264,7 @@ def analyze_user():
             user_data = data[data['user_id'] == user_id]
             # print(user_data, "AEEE HALLLLLo")
             if user_data.empty:
+                print("User data is empty")
                 return jsonify({"error": "User not found"}), 404
                 
             # Get prompts and calculate metrics
