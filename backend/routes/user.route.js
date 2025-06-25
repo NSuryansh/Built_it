@@ -563,7 +563,7 @@ userRouter.post("/forgotPassword", async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `http://localhost:3000/api/user/reset_password?token=${token}`;
+    const resetLink = `https://wellness.iiti.ac.in/api/user/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(user.email, subject, message);

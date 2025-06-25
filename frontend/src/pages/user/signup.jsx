@@ -56,7 +56,7 @@ const SignUp = () => {
   async function sendOTP() {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/user/otpGenerate",
+        "/api/user/otpGenerate",
         {
           method: "POST",
           headers: {
@@ -81,7 +81,7 @@ const SignUp = () => {
   async function verifyOTP() {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/user/otpcheck",
+        "/api/user/otpcheck",
         {
           method: "POST",
           headers: {
@@ -220,7 +220,7 @@ const SignUp = () => {
     setisLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:3000/api/user/check-user?username=${formData.username}`,
+        `/api/user/check-user?username=${formData.username}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -274,7 +274,7 @@ const SignUp = () => {
         gender,
       } = formData;
       const response = await fetch(
-        "http://localhost:3000/api/user/signup",
+        "/api/user/signup",
         {
           method: "POST",
           headers: {

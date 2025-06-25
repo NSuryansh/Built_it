@@ -55,7 +55,7 @@ const AdminAppointments = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/api/user_admin/getdoctors?user_type=admin",
+          "/api/user_admin/getdoctors?user_type=admin",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -76,7 +76,7 @@ const AdminAppointments = () => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/api/admin/all-appointments",
+          "/api/admin/all-appointments",
           {
             headers: { Authorization: "Bearer " + token },
           }

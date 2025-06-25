@@ -40,7 +40,7 @@ const Calendar = ({ onDateSelect }) => {
     const PastEvents = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/common/getPastEvents",
+          "/api/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -62,7 +62,7 @@ const Calendar = ({ onDateSelect }) => {
     const FutureEvents = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/common/events",
+          "/api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
           }

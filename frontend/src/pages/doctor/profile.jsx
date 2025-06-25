@@ -63,11 +63,11 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `http://localhost:3000/api/common/getDoc?docId=${doctorId}`,
+          `/api/common/getDoc?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const response2 = await fetch(
-          `http://localhost:3000/api/doc/general-slots?docId=${doctorId}`,
+          `/api/doc/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -218,7 +218,7 @@ const DoctorProfile = () => {
       }
 
       const response = await fetch(
-        `http://localhost:3000/api/doc/modifyDoc`,
+        `/api/doc/modifyDoc`,
         {
           method: "PUT",
           headers: { Authorization: "Bearer " + token },
@@ -239,7 +239,7 @@ const DoctorProfile = () => {
       }
       if (dates.length !== 0) {
         const response2 = await fetch(
-          `http://localhost:3000/api/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+          `/api/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
           {
             method: "PUT",
             headers: { Authorization: "Bearer " + token },

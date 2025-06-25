@@ -45,7 +45,7 @@ const DoctorsList = () => {
   const fetchDoctors = async () => {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/user_admin/getdoctors?user_type=admin",
+        "/api/user_admin/getdoctors?user_type=admin",
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -69,7 +69,7 @@ const DoctorsList = () => {
     console.log(doctor);
     try {
       const res = await fetch(
-        "http://localhost:3000/api/admin/toggleDoc",
+        "/api/admin/toggleDoc",
         {
           method: "POST",
           headers: {

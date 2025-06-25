@@ -75,7 +75,7 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/user_doc/chatContacts?userId=${userId}&userType=doc`,
+        `/api/user_doc/chatContacts?userId=${userId}&userType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       if (!response.ok) throw new Error("Failed to fetch users");
@@ -154,7 +154,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("http://localhost:3000/api/", {
+    socketRef.current = io("/api/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -279,7 +279,7 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `http://localhost:3000/api/user_doc/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
+        `/api/user_doc/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
