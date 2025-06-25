@@ -260,7 +260,7 @@ def analyze_user():
         print(type(user_id), "user id type")
         try:
             # Load and filter CSV data
-            data = pd.read_csv('tmp/memory.csv')
+            data = pd.read_csv('tmp/memory.csv', dtype={'user_id': str})
             print(data, "dara")
             user_data = data[data['user_id'] == user_id]
             print(user_data, "AEEE HALLLLLo")
