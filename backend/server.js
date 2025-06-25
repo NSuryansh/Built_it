@@ -415,7 +415,7 @@ app.post("/sso", async (req, res) => {
 const PYTHON_BASE = process.env.PYTHON_BASE || "https://cd5d-58-84-62-158.ngrok-free.app";
 
 // 1) POST /chat → forwards to Flask /chatWithBot
-app.post("/chat", async (req, res) => {
+app.post("/api/chat", async (req, res) => {
   try {
     const { data } = await axios.post(
       `${PYTHON_BASE}/chatWithBot`,
@@ -430,7 +430,7 @@ app.post("/chat", async (req, res) => {
 });
 
 // 2) POST /scores → forwards to Flask /analyze
-app.post("/scores", async (req, res) => {
+app.post("/api/scores", async (req, res) => {
   try {
     const { data } = await axios.post(
       `${PYTHON_BASE}/analyze`,
