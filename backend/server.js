@@ -62,7 +62,7 @@ app.use("/api/common", commonRouter);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://built-it-frontend.onrender.com",
+    origin: "https://wellness.iiti.ac.in",
     methods: ["GET", "POST"],
     credentials: true,
   },

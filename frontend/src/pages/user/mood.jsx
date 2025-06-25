@@ -91,7 +91,7 @@ export default function Mood() {
 
     try {
       const response = await fetch(
-        "https://built-it-python-895c.onrender.com/chatWithBot",
+        "http://localhost:3000/chatWithBot",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -149,7 +149,7 @@ export default function Mood() {
 
     try {
       const response = await fetch(
-        "https://built-it-python-895c.onrender.com/analyze",
+        "http://localhost:3000/analyze",
         {
           method: "POST",
           body: formData,

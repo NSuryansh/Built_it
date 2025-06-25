@@ -72,7 +72,7 @@ docRouter.post("/forgotPassword", async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `https://built-it-frontend.onrender.com/doctor/reset_password?token=${token}`;
+    const resetLink = `https://wellness.iiti.ac.in/doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(doctor.email, subject, message);
