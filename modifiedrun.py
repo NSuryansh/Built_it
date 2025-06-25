@@ -253,6 +253,7 @@ def analyze_user():
     print(request)
     if request.method=='POST':
         data_id = request.get_json()
+        # print(data_id, "data id")
         user_id = data_id.get('user_id')
         
         print(user_id, "user id")
@@ -260,9 +261,9 @@ def analyze_user():
         try:
             # Load and filter CSV data
             data = pd.read_csv('tmp/memory.csv')
-            # print(data, "dara")
+            print(data, "dara")
             user_data = data[data['user_id'] == user_id]
-            # print(user_data, "AEEE HALLLLLo")
+            print(user_data, "AEEE HALLLLLo")
             if user_data.empty:
                 print("User data is empty")
                 return jsonify({"error": "User not found"}), 404
