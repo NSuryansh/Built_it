@@ -138,7 +138,7 @@ const AdminLogin = () => {
     setError("");
     setisLoading(true);
     const response = await fetch(
-      "http://localhost:3000/api/admin/login",
+      "/api/admin/login",
       {
         method: "POST",
         headers: {
@@ -169,7 +169,7 @@ const AdminLogin = () => {
       return;
     }
     const response = await fetch(
-      "http://localhost:3000/api/admin/forgotPassword",
+      "/api/admin/forgotPassword",
       {
         method: "POST",
         headers: {

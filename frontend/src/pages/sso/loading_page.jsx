@@ -33,7 +33,7 @@ const LoadingPage = () => {
           }, 2000);
         } else {
           const response = await fetch(
-            `http://localhost:3000/api/sso?token=${token}`,
+            `/api/sso?token=${token}`,
             {
               method: "POST",
             }
@@ -44,7 +44,7 @@ const LoadingPage = () => {
           if (data.success) {
             if (data.role === "user") {
               const response = await fetch(
-                "http://localhost:3000/api/user/login",
+                "/api/user/login",
                 {
                   method: "POST",
                   headers: {
@@ -71,7 +71,7 @@ const LoadingPage = () => {
               }
             } else if (data.role === "doc") {
               const response = await fetch(
-                "http://localhost:3000/api/doc/login",
+                "/api/doc/login",
                 {
                   method: "POST",
                   headers: {
@@ -92,7 +92,7 @@ const LoadingPage = () => {
               }
             } else if (data.role === "admin") {
               const response = await fetch(
-                "http://localhost:3000/api/admin/login",
+                "/api/admin/login",
                 {
                   method: "POST",
                   headers: {

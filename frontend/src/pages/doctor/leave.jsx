@@ -37,7 +37,7 @@ const DoctorLeave = () => {
   const fetchAvailableSlots = async (date, start) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/common/available-slots?date=${date}&docId=${docId}`,
+        `/api/common/available-slots?date=${date}&docId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -82,7 +82,7 @@ const DoctorLeave = () => {
     const setLeave = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/doc/addLeave`,
+          `/api/doc/addLeave`,
           {
             method: "POST",
             headers: {

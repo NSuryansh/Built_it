@@ -62,7 +62,7 @@ const DoctorDashboard = () => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/doc/currentdocappt?doctorId=${docId}`,
+          `/api/doc/currentdocappt?doctorId=${docId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -100,7 +100,7 @@ const DoctorDashboard = () => {
     const fetchEvents = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/common/events",
+          "/api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
           }

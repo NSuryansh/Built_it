@@ -205,7 +205,7 @@ const AdminUser = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/api/doc_admin/getUsers",
+          "/api/doc_admin/getUsers",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -219,13 +219,13 @@ const AdminUser = () => {
             try {
               const [countRes, doctorRes] = await Promise.all([
                 fetch(
-                  `http://localhost:3000/api/admin/appointments-count?id=${userId}`,
+                  `/api/admin/appointments-count?id=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
                   }
                 ),
                 fetch(
-                  `http://localhost:3000/api/admin/user-doctors?userId=${userId}`,
+                  `/api/admin/user-doctors?userId=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
                   }

@@ -52,7 +52,7 @@ const DoctorAppointment = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/api/common/available-slots?date=${date}&docId=${doctorId}`,
+        `/api/common/available-slots?date=${date}&docId=${doctorId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -189,7 +189,7 @@ const DoctorAppointment = () => {
   const sendNotif = async (appointment) => {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/common/send-notification",
+        "/api/common/send-notification",
         {
           method: "POST",
           headers: {
@@ -226,13 +226,13 @@ const DoctorAppointment = () => {
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
       const res = await fetch(
-        `http://localhost:3000/api/doc/reqApp?docId=${docId}`,
+        `/api/doc/reqApp?docId=${docId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
       );
       const res2 = await fetch(
-        `http://localhost:3000/api/doc/currentdocappt?doctorId=${docId}`,
+        `/api/doc/currentdocappt?doctorId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const resp2 = await res2.json();
@@ -258,7 +258,7 @@ const DoctorAppointment = () => {
     const fetchPastAppointments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/doc/pastdocappt?doctorId=${docId}`,
+          `/api/doc/pastdocappt?doctorId=${docId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
         const data = await response.json();
@@ -320,7 +320,7 @@ const DoctorAppointment = () => {
 
   const acceptApp = async (appointment) => {
     appointment.dateTime = new Date(appointment.dateTime);
-    const res = await fetch("http://localhost:3000/api/doc/book", {
+    const res = await fetch("/api/doc/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -361,7 +361,7 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
+    const res = await fetch("/api/doc/deleteApp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -390,7 +390,7 @@ const DoctorAppointment = () => {
       email: appointment["user"]["email"],
     };
     const res = await fetch(
-      "http://localhost:3000/api/doc/reschedule",
+      "/api/doc/reschedule",
       {
         method: "POST",
         headers: {

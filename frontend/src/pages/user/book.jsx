@@ -40,7 +40,7 @@ const Book = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/api/user_admin/getdoctors?user_type=user",
+          "/api/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -62,7 +62,7 @@ const Book = () => {
 
       try {
         const res = await fetch(
-          `http://localhost:3000/api/user/isUpcomingAppointment?userId=${userId}`,
+          `/api/user/isUpcomingAppointment?userId=${userId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -136,7 +136,7 @@ const Book = () => {
 
     try {
       const res = await fetch(
-        "http://localhost:3000/api/user_doc/requests",
+        "/api/user_doc/requests",
         {
           method: "POST",
           headers: {

@@ -38,7 +38,7 @@ const AddDoctor = () => {
 
     try {
       const res = await fetch(
-        "http://localhost:3000/api/admin/addDoc",
+        "/api/admin/addDoc",
         {
           method: "POST",
           headers: {

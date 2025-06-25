@@ -15,7 +15,7 @@ const DoctorBook = ({ onBookAppointment }) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("http://localhost:3000", {
+      const res = await fetch("", {
         headers: { Authorization: "Bearer " + token },
       });
     };

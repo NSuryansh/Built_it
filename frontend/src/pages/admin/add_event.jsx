@@ -43,7 +43,7 @@ const AddEvent = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/admin/addEvent",
+        "/api/admin/addEvent",
         {
           method: "POST",
           headers: {
