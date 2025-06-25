@@ -223,6 +223,9 @@ def chat_handler():
             print("HIHI")
             data = request.get_json()
             user_id = data.get("user_id", "default_user")
+            print(type(user_id), "user id type")
+
+            print("USER ID:", user_id)
             message = data["message"]
             message=message+"Reply in 2-3 sentences only and avoid lengthy explanations. Provide detailed information only when explicitly requested."
             agent = create_mental_agent(user_id)
@@ -244,8 +247,8 @@ def chat_handler():
         return '', 200
 
 
-@app.route('/analyze', methods=['POST','OPTIONS'])
-@cross_origin()
+@app.route("/analyze", methods=["POST", "OPTIONS"])
+@cross_origin()  
 def analyze_user():
     print(request)
     if request.method=='POST':
@@ -253,15 +256,14 @@ def analyze_user():
         # print(data_id, "data id")
         user_id = data_id.get('user_id')
         
-        # print(user_id, "user id")
-        # print(type(user_id), "user id type")
-        # print(type(data[user_id]))
+        print(user_id, "user id")
+        print(type(user_id), "user id type")
         try:
             # Load and filter CSV data
             data = pd.read_csv('tmp/memory.csv', dtype={'user_id': str})
-            # print(data, "dara")
+            print(data, "dara")
             user_data = data[data['user_id'] == int(user_id)]
-            # print(user_data, "AEEE HALLLLLo")
+            print(user_data, "AEEE HALLLLLo")
             if user_data.empty:
                 print("User data is empty")
                 return jsonify({"error": "User not found"}), 404
