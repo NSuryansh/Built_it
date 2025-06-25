@@ -253,15 +253,15 @@ def analyze_user():
         # print(data_id, "data id")
         user_id = data_id.get('user_id')
         
-        print(user_id, "user id")
-        print(type(user_id), "user id type")
-        print(type(data[user_id]))
+        # print(user_id, "user id")
+        # print(type(user_id), "user id type")
+        # print(type(data[user_id]))
         try:
             # Load and filter CSV data
             data = pd.read_csv('tmp/memory.csv', dtype={'user_id': str})
-            print(data, "dara")
+            # print(data, "dara")
             user_data = data[data['user_id'] == int(user_id)]
-            print(user_data, "AEEE HALLLLLo")
+            # print(user_data, "AEEE HALLLLLo")
             if user_data.empty:
                 print("User data is empty")
                 return jsonify({"error": "User not found"}), 404

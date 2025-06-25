@@ -378,32 +378,32 @@ app.post("/sso", async (req, res) => {
       }),
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     if (data.success === true || data.success === "true") {
-      console.log("Going in");
+      // console.log("Going in");
       const email = data.user.email;
       const user = await prisma.user.findUnique({ where: { email: email } });
-      console.log("User check done");
-      console.log(user);
+      // console.log("User check done");
+      // console.log(user);
       if (user) {
-        console.log("In user block");
+        // console.log("In user block");
         return res
           .status(200)
           .json({ success: true, role: "user", username: user.username });
       }
-      console.log("out of user block");
+      // console.log("out of user block");
       const doc = await prisma.doctor.findUnique({ where: { email: email } });
-      console.log("Doc check done");
-      console.log(doc);
+      // console.log("Doc check done");
+      // console.log(doc);
       if (doc) {
-        console.log("In doc block");
+        // console.log("In doc block");
         return res.status(200).json({ success: true, role: "doc" });
       }
       const admin = await prisma.admin.findUnique({ where: { email: email } });
-      console.log("Admin check done");
-      console.log(admin);
+      // console.log("Admin check done");
+      // console.log(admin);
       if (admin) {
-        console.log("In admin block");
+        // console.log("In admin block");
         return res.status(200).json({ success: true, role: "admin" });
       }
       return res.status(200).json({ success: true, role: "none" });

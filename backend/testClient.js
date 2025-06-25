@@ -39,7 +39,7 @@ function decryptMessage(encryptedText, iv, authTag, key) {
 }
 
 socket.on("connect", () => {
-    console.log("Connected to WebSocket server");
+    // console.log("Connected to WebSocket server");
 
     const userId = 14;
     const recId = 15
@@ -57,11 +57,11 @@ socket.on("connect", () => {
         authTag
     });
 
-    console.log("Message sent:", { encryptedText, iv, authTag });
+    // console.log("Message sent:", { encryptedText, iv, authTag });
 });
 
 socket.on("receiveMessage", (data) => {
-    console.log(data)
+    // console.log(data)
     const { senderId, encryptedText, iv, encryptedAESKey } = data
     const decryptedMessage = decryptMessage(
         encryptedText,
@@ -69,11 +69,11 @@ socket.on("receiveMessage", (data) => {
         data.authTag, 
         encryptedAESKey
     )
-    console.log("Received message:", decryptedMessage);
+    // console.log("Received message:", decryptedMessage);
 });
 
 socket.on("disconnect", () => {
-    console.log("Disconnected from server");
+    // console.log("Disconnected from server");
 });
 
 socket.on("connect_error", (error) => {
