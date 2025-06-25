@@ -19,6 +19,7 @@ const ProgressPage = ({ isLandingPage }) => {
         }
 
         const data = await response.json();
+        console.log(data);
         setScores({
           mental_health_score: data.mental_health_score || 0,
           stress_score: 10 - data.stress_score || 0,

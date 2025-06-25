@@ -223,6 +223,7 @@ def chat_handler():
             print("HIHI")
             data = request.get_json()
             user_id = data.get("user_id", "default_user")
+            print("USER ID:", user_id)
             message = data["message"]
             message=message+"Reply in 2-3 sentences only and avoid lengthy explanations. Provide detailed information only when explicitly requested."
             agent = create_mental_agent(user_id)
@@ -251,7 +252,8 @@ def analyze_user():
     if request.method=='POST':
         data_id = request.get_json()
         user_id = data_id.get('user_id')
-        print(user_id, "userof")
+        
+        print(user_id, "user id")
         try:
             # Load and filter CSV data
             data = pd.read_csv('tmp/memory.csv')
