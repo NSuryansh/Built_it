@@ -412,7 +412,7 @@ app.post("/sso", async (req, res) => {
   } catch (error) {}
 });
 // Base URL of your Flask service
-const PYTHON_BASE = process.env.PYTHON_BASE || "https://cd5d-58-84-62-158.ngrok-free.app";
+const PYTHON_BASE = process.env.PYTHON_BASE || "https://fab5-58-84-62-158.ngrok-free.app";
 
 // 1) POST /chat → forwards to Flask /chatWithBot
 app.post("/api/chat", async (req, res) => {
