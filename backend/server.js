@@ -213,22 +213,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// app.post('/admin', async(req,res)=>{
-//   const name = req.body["name"]
-//   const email = req.body["email"]
-//   const password = req.body["password"]
-//   const mobile = req.body["mobile"]
-//   const hashedPassword = await bcrypt.hash(password, 10)
-//   const admin = await prisma.admin.create({
-//     data:{
-//       name: name,
-//       email: email,
-//       mobile: mobile,
-//       password: hashedPassword
-//     }
-//   })
-//   res.json(admin)
-// })
+
 
 app.post("/notifications", async (req, res) => {});
 
