@@ -154,7 +154,7 @@ docRouter.get(
 );
 
 docRouter.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
-  const { id, docId, docName, origTime, newTime, email, username } = req.body;
+  const { id, docId, username, docName, origTime, newTime, email} = req.body;
   if (docId !== req.user.userId) {
     return res.status(400).json({ error: "Access denied" });
   }
@@ -165,6 +165,8 @@ docRouter.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
       "Appointment Reschedule",
       `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
     );
+
+    
     const reschedule = await prisma.requests.delete({ where: { id: id } });
     res.json(reschedule);
   } catch (e) {
@@ -240,6 +242,12 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${some.getDate()}\nTime: ${some.getTime()}\nVenue: ${
         doctor.office_address
       }\n\nRegards\nIITI CalmConnect`
+    );
+
+    await sendEmail(
+      email,
+      "Appointment Reschedule",
+      `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
     );
 
     res.json({ message: "Appointment booked successfully", result });
