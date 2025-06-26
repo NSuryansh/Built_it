@@ -172,12 +172,8 @@ docRouter.post("/reschedule", async (req, res) => {
     res.json(reschedule);
   } catch (e) {
     if(e.code == 'P2025'){
-      // console.log(newTime);
-      // const date  = new Date();
-      // var userTimezoneOffset = date.getTimezoneOffset() * 60000;
-      const reschedule = await prisma.appointments.update({
-                  where: { id: id },
-                  data: { dateTime: new Date(newTime)},})
+      const reschedule = await prisma.appointments.delete({
+                  where: { id: id }})
       await sendEmail(
       email,
       "Appointment Reschedule",
