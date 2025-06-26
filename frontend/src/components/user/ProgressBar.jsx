@@ -17,7 +17,7 @@ const ProgressBar = ({ label, value }) => {
   }
 
   const getBarColor = (value) => {
-    console.log(label)
+    // console.log(label)
  if(label === "Stress" || label ){
     if (value <= 2.5) return "#EF4444";
     if (value <= 5 && value>2.5) return "#EAB308";   

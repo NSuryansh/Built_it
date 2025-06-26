@@ -250,28 +250,28 @@ def chat_handler():
 @app.route("/analyze", methods=["POST", "OPTIONS"])
 @cross_origin()  
 def analyze_user():
-    print(request)
+    # print(request)
     if request.method=='POST':
         data_id = request.get_json()
         # print(data_id, "data id")
         user_id = data_id.get('user_id')
         
-        print(user_id, "user id")
-        print(type(user_id), "user id type")
+        # print(user_id, "user id")
+        # print(type(user_id), "user id type")
         try:
             # Load and filter CSV data
             data = pd.read_csv('tmp/memory.csv', dtype={'user_id': str})
-            print(data, "dara")
+            # print(data, "dara")
             user_data = data[data['user_id'] == int(user_id)]
-            print(user_data, "AEEE HALLLLLo")
+            # print(user_data, "AEEE HALLLLLo")
             if user_data.empty:
-                print("User data is empty")
+                print("empty data")
                 return jsonify({"error": "User not found"}), 404
                 
             # Get prompts and calculate metrics
             prompts = user_data['prompt'].tolist()
             
-            print("HELEoooo")
+            # print("HELEoooo")
             result = analyze_mental_health(prompts, user_id)
             
             return jsonify(result['metrics_json'])
@@ -281,7 +281,7 @@ def analyze_user():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
     if request.method=='OPTIONS':
-        print("HALALALLALA options")
+        # print("HALALALLALA options")
         return '', 200
     
 @app.route('/emotion', methods=['POST', 'OPTIONS'])

@@ -437,10 +437,15 @@ app.post("/api/scores", async (req, res) => {
       req.body,
       { headers: { "Content-Type": "application/json" } }
     );
+
     res.json(data);
   } catch (err) {
-    console.error("Error calling Flask /analyze:", err.message);
-    res.status(500).json({ error: err.message });
+    if(err.response.data.error == 'User not found'){
+      res.status(200).json({error: err.response.data.error})
+    }else{
+    console.error("Error calling Flask /analyze:", err.response.data);
+    res.status(500).json({ error: err.response.data.error });
+    }
   }
 });
 
