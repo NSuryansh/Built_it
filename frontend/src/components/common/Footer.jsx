@@ -73,7 +73,7 @@ const Footer = ({ color }) => {
               <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
                 <Mail size={18} />
                 <a
-                  href="mailto:counselling@iiti.ac.in"
+                  href="mailto:counsellingcell@iiti.ac.in"
                   className={`hover:${
                     color === "orange"
                       ? "text-[var(--custom-orange-500)]"
@@ -82,7 +82,7 @@ const Footer = ({ color }) => {
                       : "text-[var(--custom-blue-500)]"
                   }`}
                 >
-                  counselling@iiti.ac.in
+                  counsellingcell@iiti.ac.in
                 </a>
               </div>
               <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
