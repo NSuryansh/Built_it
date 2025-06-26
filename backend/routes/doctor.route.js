@@ -153,7 +153,7 @@ docRouter.get(
   }
 );
 
-docRouter.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
+docRouter.post("/reschedule", async (req, res) => {
   const { id, docId, username, docName, origTime, newTime, email} = req.body;
   if (docId !== req.user.userId) {
     return res.status(400).json({ error: "Access denied" });
