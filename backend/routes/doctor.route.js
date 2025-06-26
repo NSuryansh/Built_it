@@ -174,7 +174,7 @@ docRouter.post("/reschedule", async (req, res) => {
     if(e.code == 'P2025'){
       const reschedule = await prisma.appointments.update({
                   where: { id: id },
-                  data: { dateTime: new Date(newTime)},})
+                  data: { dateTime: new Date(newTime + "+05:30")},})
       await sendEmail(
       email,
       "Appointment Reschedule",
