@@ -159,7 +159,7 @@ docRouter.post("/reschedule", async (req, res) => {
   // if (docId !== req.user.userId) {
   //   return res.status(400).json({ error: "Access denied" });
   // }
-  console.log(email, "mail");
+  console.log(id);
   try {
     await sendEmail(
       email,
