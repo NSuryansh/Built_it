@@ -188,21 +188,18 @@ const DoctorAppointment = () => {
 
   const sendNotif = async (appointment) => {
     try {
-      const res = await fetch(
-        "/api/common/send-notification",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userid: appointment["user_id"],
-            message: `Your appointment request has been accepted!`,
-            userType: "user",
-          }),
-        }
-      );
+      const res = await fetch("/api/common/send-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userid: appointment["user_id"],
+          message: `Your appointment request has been accepted!`,
+          userType: "user",
+        }),
+      });
 
       if (!res.ok) {
         console.error("Failed to send notification");
@@ -225,16 +222,12 @@ const DoctorAppointment = () => {
     if (!docId) return;
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
-      const res = await fetch(
-        `/api/doc/reqApp?docId=${docId}`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
-      const res2 = await fetch(
-        `/api/doc/currentdocappt?doctorId=${docId}`,
-        { headers: { Authorization: "Bearer " + token } }
-      );
+      const res = await fetch(`/api/doc/reqApp?docId=${docId}`, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      const res2 = await fetch(`/api/doc/currentdocappt?doctorId=${docId}`, {
+        headers: { Authorization: "Bearer " + token },
+      });
       const resp2 = await res2.json();
       const resp = await res.json();
       for (let i = 0; i < resp2.length; i++) {
@@ -257,10 +250,9 @@ const DoctorAppointment = () => {
 
     const fetchPastAppointments = async () => {
       try {
-        const response = await fetch(
-          `/api/doc/pastdocappt?doctorId=${docId}`,
-          { headers: { Authorization: "Bearer " + token } }
-        );
+        const response = await fetch(`/api/doc/pastdocappt?doctorId=${docId}`, {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await response.json();
         if (response.ok) {
           const periods = {
@@ -339,22 +331,22 @@ const DoctorAppointment = () => {
     const docName = localStorage.getItem("username");
     const office_address = localStorage.getItem("office_address");
 
-    var params = {
-      doctor: docName,
-      dateTime: format(appointment.dateTime, "dd-MMM-yyyy hh:mm a"),
-      email: appointment.user.email,
-      office_address: office_address,
-    };
-    emailjs
-      .send("service_coucldi", "template_9at0fnv", params, "5rqHkmhJJfAxWBFNo")
-      .then(
-        (response) => {
-          console.log("success", response.status);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    // var params = {
+    //   doctor: docName,
+    //   dateTime: format(appointment.dateTime, "dd-MMM-yyyy hh:mm a"),
+    //   email: appointment.user.email,
+    //   office_address: office_address,
+    // };
+    // emailjs
+    //   .send("service_coucldi", "template_9at0fnv", params, "5rqHkmhJJfAxWBFNo")
+    //   .then(
+    //     (response) => {
+    //       console.log("success", response.status);
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
 
     sendNotif(appointment);
     setFixed(!fixed);
@@ -381,51 +373,63 @@ const DoctorAppointment = () => {
   const emailParams = async (appointment, time) => {
     const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
-    var params = {
-      id: appointment["id"],
-      username: appointment["user"]["username"],
-      doctor: docName,
-      origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
-      newTime: format(newTime, "dd-MMM-yy hh:mm a"),
-      email: appointment["user"]["email"],
-    };
-    const res = await fetch(
-      "/api/doc/reschedule",
-      {
+    // var params = {
+    //   id: appointment["id"],
+    //   username: appointment["user"]["username"],
+    //   doctor: docName,
+    //   origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
+    //   newTime: format(newTime, "dd-MMM-yy hh:mm a"),
+    //   email: appointment["user"]["email"],
+    // };
+    try {
+      const res = await fetch("/api/doc/reschedule", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token,
         },
         body: JSON.stringify({
-          appId: appointment["id"],
-          userId: localStorage.getItem("userid"),
+          id: appointment["id"],
+          docId: localStorage.getItem("userid"),
+          username: appointment["user"]["username"],
+          docName: docName,
+          origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
+          newTime: format(newTime, "dd-MMM-yy hh:mm a"),
+          email: appointment["user"]["email"],
         }),
-      }
-    );
-    const resp = await res.json();
-    setFixed(!fixed);
-    if (res.status !== 400) {
-      emailjs
-        .send(
-          "service_coucldi",
-          "template_b96adyb",
-          params,
-          "5rqHkmhJJfAxWBFNo"
-        )
-        .then(
-          (response) => {
-            console.log("success", response.status);
-            CustomToast("Rescheduling request successfully sent", "blue");
-            setSelectedDate("");
-            setSelectedTime("");
-          },
-          (error) => {
-            console.log(error);
-            CustomToast("Error rescheduling appointment", "blue");
-          }
-        );
-    } else {
+      });
+      const resp = await res.json();
+      setFixed(!fixed);
+      // if (res.status !== 400) {
+      //   emailjs
+      //     .send(
+      //       "service_coucldi",
+      //       "template_b96adyb",
+      //       params,
+      //       "5rqHkmhJJfAxWBFNo"
+      //     )
+      //     .then(
+      //       (response) => {
+      //         console.log("success", response.status);
+      //         CustomToast("Rescheduling request successfully sent", "blue");
+      //         setSelectedDate("");
+      //         setSelectedTime("");
+      //       },
+      //       (error) => {
+      //         console.log(error);
+      //         CustomToast("Error rescheduling appointment", "blue");
+      //       }
+      //     );
+      // } else {
+      //   CustomToast("Error rescheduling appointment", "blue");
+      //   setSelectedDate("");
+      //   setSelectedTime("");
+      // }
+      CustomToast("Rescheduling request successfully sent", "blue");
+      setSelectedDate("");
+      setSelectedTime("");
+    } catch (error) {
+      console.error(error);
       CustomToast("Error rescheduling appointment", "blue");
       setSelectedDate("");
       setSelectedTime("");

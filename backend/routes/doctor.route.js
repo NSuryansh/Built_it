@@ -7,6 +7,7 @@ import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import { sendEmail } from "../utils/sendEmail.js";
 dotenv.config();
 
 const docRouter = Router();
@@ -153,13 +154,17 @@ docRouter.get(
 );
 
 docRouter.post("/reschedule", authorizeRoles("doc"), async (req, res) => {
-  const id = req.body["appId"];
-  const userId = req.body["userId"];
-  if (userId !== req.user.userId) {
+  const { id, docId, docName, origTime, newTime, email, username } = req.body;
+  if (docId !== req.user.userId) {
     return res.status(400).json({ error: "Access denied" });
   }
   // console.log(id);
   try {
+    await sendEmail(
+      email,
+      "Appointment Reschedule",
+      `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
+    );
     const reschedule = await prisma.requests.delete({ where: { id: id } });
     res.json(reschedule);
   } catch (e) {
@@ -226,6 +231,17 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
 
       return { appointment, reqDel };
     });
+
+    await sendEmail(
+      user.email,
+      "Appointment Scheduled",
+      `Dear ${user.username}, \n\nYour appointment with ${
+        doctor.name
+      } has been scheduled. The details of the appointment are given below: \n\nDate: ${some.getDate()}\nTime: ${some.getTime()}\nVenue: ${
+        doctor.office_address
+      }\n\nRegards\nIITI CalmConnect`
+    );
+
     res.json({ message: "Appointment booked successfully", result });
   } catch (error) {
     console.error(error);
