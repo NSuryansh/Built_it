@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
-import { DateTime } from "luxon";
 dotenv.config();
 
 const docRouter = Router();
@@ -173,10 +172,10 @@ docRouter.post("/reschedule", async (req, res) => {
     res.json(reschedule);
   } catch (e) {
     if(e.code == 'P2025'){
-      const istDate = DateTime.fromISO(newTime, { zone: 'Asia/Kolkata' }).toUTC().toJSDate();
+      console.log(newTime);
       const reschedule = await prisma.appointments.update({
                   where: { id: id },
-                  data: { dateTime: new Date(istDate)},})
+                  data: { dateTime: new Date(newTime + "+05:30")},})
       await sendEmail(
       email,
       "Appointment Reschedule",
