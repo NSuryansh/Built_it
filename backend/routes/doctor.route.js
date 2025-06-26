@@ -161,18 +161,29 @@ docRouter.post("/reschedule", async (req, res) => {
   // }
   console.log(id);
   try {
+
+    const reschedule = await prisma.requests.delete({ where: { id } });
     await sendEmail(
       email,
       "Appointment Reschedule",
       `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
     );
-
-    console.log("hiii")
-    const reschedule = await prisma.requests.delete({ where: { id: id } });
     console.log("he")
     res.json(reschedule);
   } catch (e) {
+    if(e.code == 'P2025'){
+      const reschedule = await prisma.appointments.update({
+                  where: { id: id },
+                  data: { dateTime: new Date(newTime)},})
+      await sendEmail(
+      email,
+      "Appointment Reschedule",
+      `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
+    );
+    res.json(reschedule);
+    }else{
     res.status(400).json(e);
+    }
   }
 });
 
