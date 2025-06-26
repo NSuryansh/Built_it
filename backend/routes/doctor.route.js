@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
+import { DateTime } from "luxon";
 dotenv.config();
 
 const docRouter = Router();
@@ -172,9 +173,10 @@ docRouter.post("/reschedule", async (req, res) => {
     res.json(reschedule);
   } catch (e) {
     if(e.code == 'P2025'){
+      const istDate = DateTime.fromISO(newTime, { zone: 'Asia/Kolkata' }).toUTC().toJSDate();
       const reschedule = await prisma.appointments.update({
                   where: { id: id },
-                  data: { dateTime: new Date(newTime + "+05:30")},})
+                  data: { dateTime: new Date(istDate)},})
       await sendEmail(
       email,
       "Appointment Reschedule",
@@ -255,12 +257,6 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${some.getDate()}\nTime: ${some.getTime()}\nVenue: ${
         doctor.office_address
       }\n\nRegards\nIITI CalmConnect`
-    );
-
-    await sendEmail(
-      email,
-      "Appointment Reschedule",
-      `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
     );
 
     res.json({ message: "Appointment booked successfully", result });
