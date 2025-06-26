@@ -154,11 +154,12 @@ docRouter.get(
 );
 
 docRouter.post("/reschedule", async (req, res) => {
+  console.log("hi")
   const { id, docId, username, docName, origTime, newTime, email} = req.body;
   if (docId !== req.user.userId) {
     return res.status(400).json({ error: "Access denied" });
   }
-  // console.log(id);
+  console.log(email, "mail");
   try {
     await sendEmail(
       email,
@@ -166,8 +167,9 @@ docRouter.post("/reschedule", async (req, res) => {
       `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
     );
 
-    
+    console.log("hiii")
     const reschedule = await prisma.requests.delete({ where: { id: id } });
+    console.log("he")
     res.json(reschedule);
   } catch (e) {
     res.status(400).json(e);
