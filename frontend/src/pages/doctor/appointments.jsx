@@ -382,6 +382,7 @@ const DoctorAppointment = () => {
     //   email: appointment["user"]["email"],
     // };
     try {
+      console.log("hello");
       const res = await fetch("/api/doc/reschedule", {
         method: "POST",
         headers: {
@@ -399,6 +400,7 @@ const DoctorAppointment = () => {
         }),
       });
       const resp = await res.json();
+      console.log(resp, "response");
       setFixed(!fixed);
       // if (res.status !== 400) {
       //   emailjs
