@@ -132,7 +132,7 @@ const DoctorLogin = () => {
               </div>
             </div>
             <h2 className="mt-4 text-3xl font-bold text-[var(--custom-blue-900)]">
-              Doctor Login
+              Therapist Login
             </h2>
             {error && (
               <p className="mt-2 text-[var(--custom-red-600)] text-sm">
@@ -157,7 +157,7 @@ const DoctorLogin = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={handleEnterKey}
                   className="mt-1 w-full px-4 py-2 border border-[var(--custom-blue-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
-                  placeholder="doctor@example.com"
+                  placeholder="therapist@example.com"
                   required
                 />
               </div>
