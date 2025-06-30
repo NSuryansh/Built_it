@@ -169,7 +169,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("/api/", {
+    socketRef.current = io("/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
