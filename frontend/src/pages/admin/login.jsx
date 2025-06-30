@@ -286,10 +286,10 @@ const AdminLogin = () => {
             </button>
             &nbsp;or&nbsp;
             <button
-              onClick={() => navigate("/user/login")}
+              onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-green-500)]"
             >
-              Doctor
+              Therapist
             </button>
           </p>
         </div>

@@ -321,7 +321,7 @@ const Login = () => {
               onClick={() => navigate("/doctor/login")}
               className="underline font-bold text-[var(--custom-orange-500)]"
             >
-              Doctor
+              Therapist
             </button>
             &nbsp;or&nbsp;
             <button
