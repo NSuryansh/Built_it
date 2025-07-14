@@ -68,7 +68,7 @@ const Footer = ({ color }) => {
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
                 <Phone size={18} />
-                <span>+91 731-660-3555</span>
+                <span>0731-660-5550</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
                 <Mail size={18} />
@@ -83,6 +83,21 @@ const Footer = ({ color }) => {
                   }`}
                 >
                   counsellingcell@iiti.ac.in
+                </a>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
+                <Mail size={18} />
+                <a
+                  href="mailto:shubhral@iiti.ac.in"
+                  className={`hover:${
+                    color === "orange"
+                      ? "text-[var(--custom-orange-500)]"
+                      : color === "green"
+                      ? "text-[var(--custom-green-500)]"
+                      : "text-[var(--custom-blue-500)]"
+                  }`}
+                >
+                  shubhra@iiti.ac.in
                 </a>
               </div>
               <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
