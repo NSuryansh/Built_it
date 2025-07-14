@@ -512,6 +512,7 @@ docRouter.put(
         address,
         office_address,
         experience,
+        additionalExperience,
         educ,
         certifi,
         isProfileDone,
@@ -552,6 +553,7 @@ docRouter.put(
       if (office_address) orConditions.push({ office_address });
       if (desc) orConditions.push({ desc });
       if (experience != "null") orConditions.push({ experience });
+      if (additionalExperience != "null") orConditions.push({ additionalExperience });
 
       const existingDoctor = await prisma.doctor.findUnique({
         where: {
@@ -571,6 +573,7 @@ docRouter.put(
         updatedData.office_address = office_address.trim();
       if (desc?.trim()) updatedData.desc = desc.trim();
       if (experience != null) updatedData.experience = experience.trim();
+
       if (url) updatedData.img = url;
       if (isProfileDone) updatedData.isProfileDone = isProfileDone;
       updatedData.isProfileDone = isProfileDone === "true";

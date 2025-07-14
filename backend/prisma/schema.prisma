@@ -79,6 +79,7 @@ model Doctor {
   address        String?
   office_address String?
   experience     String?
+  additionalExperience String?
   isProfileDone  Boolean            @default(false)
   avgRating      Decimal            @default(0)
   isInactive     Boolean            @default(false)
