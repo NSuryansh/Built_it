@@ -91,7 +91,9 @@ const DoctorProfile = () => {
           }
         } else if (Array.isArray(data.certifications)) {
           certifications = data.certifications
-            .map((cert) => (typeof cert === "object" ? cert.certification : cert))
+            .map((cert) =>
+              typeof cert === "object" ? cert.certification : cert
+            )
             .filter((cert) => cert !== "");
         }
         if (certifications.length === 0) {
@@ -135,7 +137,7 @@ const DoctorProfile = () => {
           phone: data.doctor.mobile,
           specialization: data.doctor.desc,
           experience: data.doctor.experience,
-          additionalExperience: data.doctor.additionalExperience ,
+          additionalExperience: data.doctor.additionalExperience,
           address: data.doctor.address,
           office_address: data.doctor.office_address,
           certifications: certifications,
@@ -193,7 +195,10 @@ const DoctorProfile = () => {
       formData.append("address", editedProfile.address);
       formData.append("office_address", editedProfile.office_address);
       formData.append("experience", editedProfile.experience);
-      formData.append("additionalExperience", editedProfile.additionalExperience || "");
+      formData.append(
+        "additionalExperience",
+        editedProfile.additionalExperience || ""
+      );
       formData.append("desc", editedProfile.specialization);
       formData.append(
         "educ",
@@ -202,8 +207,8 @@ const DoctorProfile = () => {
       formData.append(
         "certifi",
         filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"]
-      );  
-     formData.append("image", file);
+      );
+      formData.append("image", file);
 
       if (
         editedProfile.address !== "<Please Change>" &&
@@ -225,7 +230,6 @@ const DoctorProfile = () => {
         headers: { Authorization: "Bearer " + token },
         body: formData,
       });
-
 
       const filteredAvailability = editedProfile.availability.filter(
         (slot) => slot.trim() !== "" && slot !== "<Add>"
@@ -558,7 +562,8 @@ const DoctorProfile = () => {
                         />
                       ) : (
                         <span className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
-                          {profile.additionalExperience} of Additional Experience
+                          {profile.additionalExperience} of Additional
+                          Experience
                         </span>
                       )}
                     </div>
@@ -589,7 +594,8 @@ const DoctorProfile = () => {
                               }}
                               className="bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 text-sm w-40 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
                             />
-                            {index === editedProfile.availability.length - 1 && (
+                            {index ===
+                              editedProfile.availability.length - 1 && (
                               <button
                                 onClick={handleAddSlot}
                                 className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold transition-colors"
@@ -701,7 +707,8 @@ const DoctorProfile = () => {
                             }}
                             className="w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
                           />
-                          {index === editedProfile.certifications.length - 1 && (
+                          {index ===
+                            editedProfile.certifications.length - 1 && (
                             <button
                               onClick={handleAddCertification}
                               className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold mt-3 transition-colors"
