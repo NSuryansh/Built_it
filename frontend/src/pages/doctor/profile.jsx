@@ -62,10 +62,9 @@ const DoctorProfile = () => {
     const fetchData = async () => {
       try {
         const doctorId = localStorage.getItem("userid");
-        const response = await fetch(
-          `/api/common/getDoc?docId=${doctorId}`,
-          { headers: { Authorization: "Bearer " + token } }
-        );
+        const response = await fetch(`/api/common/getDoc?docId=${doctorId}`, {
+          headers: { Authorization: "Bearer " + token },
+        });
         const response2 = await fetch(
           `/api/doc/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
@@ -193,6 +192,7 @@ const DoctorProfile = () => {
       formData.append("address", editedProfile.address);
       formData.append("office_address", editedProfile.office_address);
       formData.append("experience", editedProfile.experience);
+      formData.append("desc", editedProfile.specialization);
       formData.append(
         "educ",
         filteredEducation.length > 0 ? filteredEducation : ["<Add>"]
@@ -217,14 +217,11 @@ const DoctorProfile = () => {
         formData.append("isProfileDone", false);
       }
 
-      const response = await fetch(
-        `/api/doc/modifyDoc`,
-        {
-          method: "PUT",
-          headers: { Authorization: "Bearer " + token },
-          body: formData,
-        }
-      );
+      const response = await fetch(`/api/doc/modifyDoc`, {
+        method: "PUT",
+        headers: { Authorization: "Bearer " + token },
+        body: formData,
+      });
 
       const filteredAvailability = editedProfile.availability.filter(
         (slot) => slot.trim() !== "" && slot !== "<Add>"
@@ -513,7 +510,6 @@ const DoctorProfile = () => {
                       {isEditing ? (
                         <input
                           type="text"
-                          disabled
                           value={editedProfile.specialization}
                           onChange={(e) =>
                             setEditedProfile({
@@ -521,7 +517,7 @@ const DoctorProfile = () => {
                               specialization: e.target.value,
                             })
                           }
-                          className="w-4/5 sm:w-full bg-[var(--custom-gray-100)] border border-[var(--custom-gray-300)] rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
+                          className="w-4/5 sm:w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
                         />
                       ) : (
                         <span className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
