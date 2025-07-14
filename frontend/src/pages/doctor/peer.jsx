@@ -75,7 +75,7 @@ const DoctorPeer = () => {
   async function fetchContacts(userId) {
     try {
       const response = await fetch(
-        `/api/user_doc/chatContacts?userId=${userId}&userType=doc`,
+        `http://localhost:3000/api/user_doc/chatContacts?userId=${userId}&userType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       if (!response.ok) throw new Error("Failed to fetch users");
@@ -279,7 +279,7 @@ const DoctorPeer = () => {
     try {
       // console.log(recipientId, "Fetching messages for recipient");
       const response = await fetch(
-        `/api/user_doc/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
+        `http://localhost:3000/api/user_doc/messages?userId=${recipientId}&recId=${userId}&userType=doc&recType=user`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();

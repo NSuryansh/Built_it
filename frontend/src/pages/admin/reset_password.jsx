@@ -29,7 +29,7 @@ const AdminResetPassword = () => {
     const token = searchParams.get("token");
 
     const response = await fetch(
-      `/api/admin/resetPassword`,
+      `http://localhost:3000/api/admin/resetPassword`,
       {
         method: "POST",
         headers: {

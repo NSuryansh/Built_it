@@ -90,17 +90,14 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "/api/chat",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: localStorage.getItem("userid"),
-            message,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: localStorage.getItem("userid"),
+          message,
+        }),
+      });
 
       const data = await response.json();
       const botMessage =
@@ -148,13 +145,10 @@ export default function Mood() {
     formData.append("audio", blob, "audio.wav");
 
     try {
-      const response = await fetch(
-        "/analyze",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("/analyze", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error(`Server responded with ${response.status}`);

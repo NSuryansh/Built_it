@@ -137,20 +137,17 @@ const AdminLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch(
-      "/api/admin/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3000/api/admin/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
     const res = await response.json();
 
     if (res["message"] === "Login successful") {
@@ -169,7 +166,7 @@ const AdminLogin = () => {
       return;
     }
     const response = await fetch(
-      "/api/admin/forgotPassword",
+      "http://localhost:3000/api/admin/forgotPassword",
       {
         method: "POST",
         headers: {

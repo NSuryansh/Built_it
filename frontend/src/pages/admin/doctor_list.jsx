@@ -45,7 +45,7 @@ const DoctorsList = () => {
   const fetchDoctors = async () => {
     try {
       const res = await fetch(
-        "/api/user_admin/getdoctors?user_type=admin",
+        "http://localhost:3000/api/user_admin/getdoctors?user_type=admin",
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -68,20 +68,17 @@ const DoctorsList = () => {
     console.log(doctor.id);
     console.log(doctor);
     try {
-      const res = await fetch(
-        "/api/admin/toggleDoc",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            doctorID: doctor.id,
-            isInactive: doctor.isInactive,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/api/admin/toggleDoc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          doctorID: doctor.id,
+          isInactive: doctor.isInactive,
+        }),
+      });
       const resp = await res.json();
       await fetchDoctors();
       if (res.ok) {

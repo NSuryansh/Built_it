@@ -63,8 +63,10 @@ const AdminDoctorProfile = () => {
       try {
         const doctorId = search.split("=")[1];
         const response = await fetch(
-          `/api/common/getDoc?docId=${doctorId}`,
-          { headers: { Authorization: "Bearer " + token } }
+          `http://localhost:3000/api/common/getDoc?docId=${doctorId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
         );
         const data = await response.json();
         let certifications = [];
@@ -126,7 +128,7 @@ const AdminDoctorProfile = () => {
   const referralSub = async () => {
     try {
       const response = await fetch(
-        "/api/admin/referrals",
+        "http://localhost:3000/api/admin/referrals",
         {
           method: "POST",
           headers: {
@@ -148,21 +150,18 @@ const AdminDoctorProfile = () => {
         return false;
       }
       CustomToast("Referral created successfully", "green");
-      await fetch(
-        "/api/common/send-notification",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userType: "doc",
-            userid: Number(search.split("=")[1]),
-            message: "A new referral has been added",
-          }),
-        }
-      );
+      await fetch("http://localhost:3000/api/common/send-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userType: "doc",
+          userid: Number(search.split("=")[1]),
+          message: "A new referral has been added",
+        }),
+      });
       return true;
     } catch (err) {
       console.error("Error adding event:", err);
