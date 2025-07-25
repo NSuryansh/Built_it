@@ -285,10 +285,10 @@ userRouter.put("/modifyUser", async (req, res) => {
 });
 
 userRouter.post("/login", async (req, res) => {
-  const username = req.body["username"];
+  const email = req.body["email"];
   const password = req.body["password"];
 
-  const user = await prisma.user.findUnique({ where: { username: username } });
+  const user = await prisma.user.findUnique({ where: { email: email } });
   if (!user) {
     return res.status(401).json({ message: "User doesn't exist" });
   }
