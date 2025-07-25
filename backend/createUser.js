@@ -51,7 +51,7 @@ const processCSV = async () => {
 
   for (const student of users) {
     const username = "anon" + crypto.randomBytes(3).toString("hex");
-    const hashedPassword = await bcrypt.hash(student.mobile, 10);
+    const hashedPassword = await bcrypt.hash(student.Contact_No, 10);
     const { publicKey, privateKey } = await generateKeyPair();
     const publicKeyPEM = await exportKeyToPEM(publicKey);
     const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
@@ -59,19 +59,19 @@ const processCSV = async () => {
       await prisma.user.create({
         data: {
           username: username,
-          email: student.email,
-          mobile: student.phoneNo,
+          email: student.Email,
+          mobile: student.Contact_No,
           password: hashedPassword,
-          alt_mobile: student.altNo,
+          alt_mobile: "",
           publicKey: publicKeyPEM, 
-          department: student.dept,
-          acadProg: student.acadProg,
-          rollNo: student.rollNo,
-          roomNo: student.roomNo,
-          gender: student.gender
+          department: student.Specialization,
+          acadProg: student.Program,
+          rollNo: student.Roll_Number,
+          roomNo: "",
+          gender: student.Gender
         },
       });
-      console.log("created user, rollNo: ", student.rollNo);
+      console.log("created user, rollNo: ", student.Roll_Number);
     } catch (error) {
       console.error(`error: `, error.message);
     }
