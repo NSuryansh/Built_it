@@ -2,6 +2,7 @@ import fs from "fs"
 import csv from "csv-parser"
 import bcrypt from "bcrypt"
 import { prisma } from "./server.js";
+import crypto from "crypto"
 
 // const prisma = new Prismalient()
 const csvFilePath = "./students_data/students.csv"
