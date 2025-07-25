@@ -58,7 +58,7 @@ const processCSV = async () => {
     try {
       await prisma.user.create({
         data: {
-          username,
+          username: username,
           email: student.email,
           mobile: student.phoneNo,
           password: hashedPassword,
