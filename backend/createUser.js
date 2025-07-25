@@ -55,7 +55,7 @@ const processCSV = async () => {
         data: {
           username: username,
           email: student.EmailId_insti,
-          mobile: student.Contact_No,
+          mobile: student.MobileNo,
           password: hashedPassword,
           alt_mobile: "",
           publicKey: publicKey, 
