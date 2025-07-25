@@ -73,7 +73,7 @@ const Login = () => {
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
-        email: username,
+        username: username,
         password: password,
       }),
     });
@@ -217,15 +217,15 @@ const Login = () => {
               htmlFor="username"
               className="block text-sm font-medium text-[var(--custom-orange-900)]"
             >
-              Email
+              Username
             </label>
             <input
               id="username"
-              type="email"
+              type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
-              placeholder="EmailId"
+              placeholder="Username"
               required
             />
           </div>
