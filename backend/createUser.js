@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 import {Prismalient} from "@prisma/client"
 
 const prisma = new Prismalient()
-const path = "students.csv"
+const csvFilePath = "../students_data/students.csv"
 
   async function generateKeyPair() {
     const keyPair = await window.crypto.subtle.generateKey(
