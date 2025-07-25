@@ -6,36 +6,23 @@ import { prisma } from "./server.js";
 // const prisma = new Prismalient()
 const csvFilePath = "./students_data/students.csv"
 // const prisma = new Prismalient()
+import { generateKeyPairSync } from "crypto";
 
-  async function generateKeyPair() {
-    const keyPair = await window.crypto.subtle.generateKey(
-      {
-        name: "RSA-OAEP",
-        modulusLength: 2048,
-        publicExponent: new Uint8Array([1, 0, 1]),
-        hash: "SHA-256",
-      },
-      true,
-      ["encrypt", "decrypt"]
-    );
-    return keyPair;
-  }
+function generateKeyPair() {
+  const { publicKey, privateKey } = generateKeyPairSync("rsa", {
+    modulusLength: 2048,
+    publicKeyEncoding: {
+      type: "spki",
+      format: "pem",
+    },
+    privateKeyEncoding: {
+      type: "pkcs8",
+      format: "pem",
+    },
+  });
 
-  async function exportKeyToPEM(key) {
-    const exported = await window.crypto.subtle.exportKey("spki", key);
-    const exportedAsBase64 = btoa(
-      String.fromCharCode(...new Uint8Array(exported))
-    );
-    return exportedAsBase64.match(/.{1,64}/g).join("\n");
-  }
-
-  async function exportPrivateKeyToPEM(privateKey) {
-    const exported = await window.crypto.subtle.exportKey("pkcs8", privateKey);
-    const exportedAsBase64 = btoa(
-      String.fromCharCode(...new Uint8Array(exported))
-    );
-    return exportedAsBase64.match(/.{1,64}/g).join("\n");
-  }
+  return { publicKey, privateKey };
+}
 
 const processCSV = async () => {
   const users = [];
@@ -53,9 +40,9 @@ const processCSV = async () => {
   for (const student of users) {
     const username = "anon" + crypto.randomBytes(3).toString("hex");
     const hashedPassword = await bcrypt.hash(student.Contact_No, 10);
-    const { publicKey, privateKey } = await generateKeyPair();
-    const publicKeyPEM = await exportKeyToPEM(publicKey);
-    const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
+    const { publicKey, privateKey } = generateKeyPair();
+    // const publicKeyPEM = await exportKeyToPEM(publicKey);
+    // const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
     try {
       await prisma.user.create({
         data: {
@@ -64,7 +51,7 @@ const processCSV = async () => {
           mobile: student.Contact_No,
           password: hashedPassword,
           alt_mobile: "",
-          publicKey: publicKeyPEM, 
+          publicKey: publicKey, 
           department: student.Specialization,
           acadProg: student.Program,
           rollNo: student.Roll_Number,
