@@ -154,34 +154,34 @@ docRouter.get(
 );
 
 docRouter.post("/reschedule", async (req, res) => {
-  console.log("hi")
-  const { id, docId, username, docName, origTime, newTime, email} = req.body;
+  console.log("hi");
+  const { id, docId, username, docName, origTime, newTime, email } = req.body;
   // if (docId !== req.user.userId) {
   //   return res.status(400).json({ error: "Access denied" });
   // }
   console.log(id);
   try {
-
     const reschedule = await prisma.requests.delete({ where: { id } });
     await sendEmail(
       email,
       "Appointment Reschedule",
       `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
     );
-    console.log("he")
+    console.log("he");
     res.json(reschedule);
   } catch (e) {
-    if(e.code == 'P2025'){
+    if (e.code == "P2025") {
       const reschedule = await prisma.appointments.delete({
-                  where: { id: id }})
+        where: { id: id },
+      });
       await sendEmail(
-      email,
-      "Appointment Reschedule",
-      `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
-    );
-    res.json(reschedule);
-    }else{
-    res.status(400).json(e);
+        email,
+        "Appointment Reschedule",
+        `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
+      );
+      res.json(reschedule);
+    } else {
+      res.status(400).json(e);
     }
   }
 });
@@ -512,11 +512,13 @@ docRouter.put(
         address,
         office_address,
         experience,
+        additionalExperience,
         educ,
         certifi,
         isProfileDone,
+        desc,
       } = req.body;
-
+      console.log(additionalExperience);
       if (id !== req.user.userId.toString()) {
         return res.status(403).json({ error: "Access denied" });
       }
@@ -549,7 +551,10 @@ docRouter.put(
       const orConditions = [];
       if (address) orConditions.push({ address });
       if (office_address) orConditions.push({ office_address });
+      if (desc) orConditions.push({ desc });
       if (experience != "null") orConditions.push({ experience });
+      if (additionalExperience != "null")
+        orConditions.push({ additionalExperience });
 
       const existingDoctor = await prisma.doctor.findUnique({
         where: {
@@ -567,7 +572,11 @@ docRouter.put(
       if (address?.trim()) updatedData.address = address.trim();
       if (office_address?.trim())
         updatedData.office_address = office_address.trim();
+      if (desc?.trim()) updatedData.desc = desc.trim();
       if (experience != null) updatedData.experience = experience.trim();
+      if (additionalExperience?.trim())
+        updatedData.additionalExperience = additionalExperience.trim();
+
       if (url) updatedData.img = url;
       if (isProfileDone) updatedData.isProfileDone = isProfileDone;
       updatedData.isProfileDone = isProfileDone === "true";

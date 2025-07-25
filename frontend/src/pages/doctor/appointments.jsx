@@ -52,7 +52,7 @@ const DoctorAppointment = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       const response = await fetch(
-        `/api/common/available-slots?date=${date}&docId=${doctorId}`,
+        `http://localhost:3000/api/common/available-slots?date=${date}&docId=${doctorId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -188,18 +188,21 @@ const DoctorAppointment = () => {
 
   const sendNotif = async (appointment) => {
     try {
-      const res = await fetch("/api/common/send-notification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          userid: appointment["user_id"],
-          message: `Your appointment request has been accepted!`,
-          userType: "user",
-        }),
-      });
+      const res = await fetch(
+        "http://localhost:3000/api/common/send-notification",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            userid: appointment["user_id"],
+            message: `Your appointment request has been accepted!`,
+            userType: "user",
+          }),
+        }
+      );
 
       if (!res.ok) {
         console.error("Failed to send notification");
@@ -222,12 +225,18 @@ const DoctorAppointment = () => {
     if (!docId) return;
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
-      const res = await fetch(`/api/doc/reqApp?docId=${docId}`, {
-        headers: { Authorization: "Bearer " + token },
-      });
-      const res2 = await fetch(`/api/doc/currentdocappt?doctorId=${docId}`, {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/doc/reqApp?docId=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      const res2 = await fetch(
+        `http://localhost:3000/api/doc/currentdocappt?doctorId=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
       const resp2 = await res2.json();
       const resp = await res.json();
       for (let i = 0; i < resp2.length; i++) {
@@ -250,9 +259,12 @@ const DoctorAppointment = () => {
 
     const fetchPastAppointments = async () => {
       try {
-        const response = await fetch(`/api/doc/pastdocappt?doctorId=${docId}`, {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          `http://localhost:3000/api/doc/pastdocappt?doctorId=${docId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const data = await response.json();
         if (response.ok) {
           const periods = {
@@ -312,7 +324,7 @@ const DoctorAppointment = () => {
 
   const acceptApp = async (appointment) => {
     appointment.dateTime = new Date(appointment.dateTime);
-    const res = await fetch("/api/doc/book", {
+    const res = await fetch("http://localhost:3000/api/doc/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -353,7 +365,7 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    const res = await fetch("/api/doc/deleteApp", {
+    const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -383,7 +395,7 @@ const DoctorAppointment = () => {
     // };
     try {
       console.log("hello");
-      const res = await fetch("/api/doc/reschedule", {
+      const res = await fetch("http://localhost:3000/api/doc/reschedule", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

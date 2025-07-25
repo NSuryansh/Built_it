@@ -40,7 +40,7 @@ const Book = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          "/api/user_admin/getdoctors?user_type=user",
+          "http://localhost:3000/api/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -62,7 +62,7 @@ const Book = () => {
 
       try {
         const res = await fetch(
-          `/api/user/isUpcomingAppointment?userId=${userId}`,
+          `http://localhost:3000/api/user/isUpcomingAppointment?userId=${userId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -135,22 +135,19 @@ const Book = () => {
     const user_id = localStorage.getItem("userid");
 
     try {
-      const res = await fetch(
-        "/api/user_doc/requests",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userId: user_id,
-            doctorId: selectedDoctor.id,
-            dateTime: formData.date,
-            reason: formData.note,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/api/user_doc/requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userId: user_id,
+          doctorId: selectedDoctor.id,
+          dateTime: formData.date,
+          reason: formData.note,
+        }),
+      });
       const respData = await res.json();
       // alert("Booking Confirmed!");
       CustomToast("Appointment Requested");

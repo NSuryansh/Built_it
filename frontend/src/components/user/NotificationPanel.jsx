@@ -15,7 +15,7 @@ const NotificationPanel = () => {
   const deleteRequest = async (id) => {
     try {
       const response = await fetch(
-        `/api/user/deleteRequest?id=${id}&userId=${userId}`,
+        `http://localhost:3000/api/user/deleteRequest?id=${id}&userId=${userId}`,
         {
           method: "DELETE",
           headers: { Authorization: "Bearer " + token },
@@ -31,7 +31,7 @@ const NotificationPanel = () => {
   const getRequests = async () => {
     try {
       const response = await fetch(
-        `/api/user/getRequests?userId=${userId}`,
+        `http://localhost:3000/api/user/getRequests?userId=${userId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -56,7 +56,7 @@ const NotificationPanel = () => {
   const confirmAppointment = async (notif) => {
     try {
       const res = await fetch(
-        `/api/user/accept-booking-by-user`,
+        `http://localhost:3000/api/user/accept-booking-by-user`,
         {
           method: "POST",
           headers: {
@@ -75,21 +75,18 @@ const NotificationPanel = () => {
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
-        await fetch(
-          "/api/common/send-notification",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + token,
-            },
-            body: JSON.stringify({
-              userType: "doc",
-              userid: userId,
-              message: "User accepted the appointment!",
-            }),
-          }
-        );
+        await fetch("http://localhost:3000/api/common/send-notification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            userType: "doc",
+            userid: userId,
+            message: "User accepted the appointment!",
+          }),
+        });
         getRequests();
       } else {
         console.error("Failed to confirm appointment");

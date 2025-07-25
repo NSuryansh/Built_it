@@ -31,13 +31,13 @@ const DoctorCalendar = ({ onDateSelect }) => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          `/api/doc/pastdocappt?doctorId=${docId}`,
+          `http://localhost:3000/api/doc/pastdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
         );
         const response = await fetch(
-          `/api/doc/currentdocappt?doctorId=${docId}`,
+          `http://localhost:3000/api/doc/currentdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }

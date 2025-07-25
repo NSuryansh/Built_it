@@ -36,6 +36,7 @@ const DoctorProfile = () => {
     office_address: "<Please Change>",
     specialization: "<Please Change>",
     experience: "<Please Change>",
+    additionalExperience: "<Please Change>",
     education: ["<Add>"],
     availability: ["<Add>"],
     certifications: ["<Add>"],
@@ -43,7 +44,7 @@ const DoctorProfile = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [editedProfile, setEditedProfile] = useState(profile);
-  const [fetched, setfetched] = useState(null);
+  const [fetched, setFetched] = useState(null);
   const fileInputRef = useRef(null);
   const [profileImage, setProfileImage] = useState(null);
   const [file, setfile] = useState(null);
@@ -63,21 +64,21 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          `/api/common/getDoc?docId=${doctorId}`,
-          { headers: { Authorization: "Bearer " + token } }
+          `http://localhost:3000/api/common/getDoc?docId=${doctorId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
         );
         const response2 = await fetch(
-          `/api/doc/general-slots?docId=${doctorId}`,
+          `http://localhost:3000/api/doc/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
+
         const data = await response.json();
         const data2 = await response2.json();
-        const slots = [];
-        data2.generalSlots.map((slot) => {
-          slots.push(
-            format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
-          );
-        });
+        const slots = data2.generalSlots.map((slot) =>
+          format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
+        );
 
         let certifications = [];
         if (typeof data.certifications === "string") {
@@ -121,6 +122,7 @@ const DoctorProfile = () => {
           phone: data.doctor.mobile,
           specialization: data.doctor.desc,
           experience: data.doctor.experience,
+          additionalExperience: data.doctor.additionalExperience,
           address: data.doctor.address,
           office_address: data.doctor.office_address,
           certifications: certifications,
@@ -135,17 +137,18 @@ const DoctorProfile = () => {
           phone: data.doctor.mobile,
           specialization: data.doctor.desc,
           experience: data.doctor.experience,
+          additionalExperience: data.doctor.additionalExperience,
           address: data.doctor.address,
           office_address: data.doctor.office_address,
           certifications: certifications,
           education: educations,
           availability: slots.length === 0 ? ["<Add>"] : slots,
         });
-        setfetched(true);
+        setFetched(true);
       } catch (error) {
         console.error("Error fetching data:", error);
         CustomToast("Error fetching data", "blue");
-        setfetched(false);
+        setFetched(false);
       }
     };
     fetchData();
@@ -180,7 +183,6 @@ const DoctorProfile = () => {
     setIsLoading(true);
     try {
       const doctorId = localStorage.getItem("userid");
-      // Filter out empty or "<Add>" entries from education and certifications
       const filteredEducation = editedProfile.education.filter(
         (edu) => edu.trim() !== "" && edu !== "<Add>"
       );
@@ -193,6 +195,11 @@ const DoctorProfile = () => {
       formData.append("address", editedProfile.address);
       formData.append("office_address", editedProfile.office_address);
       formData.append("experience", editedProfile.experience);
+      formData.append(
+        "additionalExperience",
+        editedProfile.additionalExperience || ""
+      );
+      formData.append("desc", editedProfile.specialization);
       formData.append(
         "educ",
         filteredEducation.length > 0 ? filteredEducation : ["<Add>"]
@@ -207,6 +214,7 @@ const DoctorProfile = () => {
         editedProfile.address !== "<Please Change>" &&
         editedProfile.office_address !== "<Please Change>" &&
         editedProfile.experience !== null &&
+        editedProfile.additionalExperience !== null &&
         filteredEducation.length > 0 &&
         filteredEducation != ["<Add>"] &&
         filteredCertifications.length > 0 &&
@@ -217,14 +225,11 @@ const DoctorProfile = () => {
         formData.append("isProfileDone", false);
       }
 
-      const response = await fetch(
-        `/api/doc/modifyDoc`,
-        {
-          method: "PUT",
-          headers: { Authorization: "Bearer " + token },
-          body: formData,
-        }
-      );
+      const response = await fetch(`http://localhost:3000/api/doc/modifyDoc`, {
+        method: "PUT",
+        headers: { Authorization: "Bearer " + token },
+        body: formData,
+      });
 
       const filteredAvailability = editedProfile.availability.filter(
         (slot) => slot.trim() !== "" && slot !== "<Add>"
@@ -239,7 +244,7 @@ const DoctorProfile = () => {
       }
       if (dates.length !== 0) {
         const response2 = await fetch(
-          `/api/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+          `http://localhost:3000/api/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
           {
             method: "PUT",
             headers: { Authorization: "Bearer " + token },
@@ -250,7 +255,6 @@ const DoctorProfile = () => {
 
       const data = await response.json();
 
-      // Update profile with filtered data
       setProfile({
         ...editedProfile,
         education: filteredEducation.length > 0 ? filteredEducation : ["<Add>"],
@@ -265,9 +269,9 @@ const DoctorProfile = () => {
       setIsLoading(false);
       CustomToast("Profile updated successfully", "blue");
     } catch (e) {
-      console.log(e);
+      console.error("Error updating profile:", e);
       setIsLoading(false);
-      CustomToast("Error updating profile", "blue");
+      CustomToast(`Error updating profile: ${e.message}`, "blue");
     }
     setIsEditing(false);
   };
@@ -308,11 +312,9 @@ const DoctorProfile = () => {
       <DoctorNavbar />
       <ToastContainer />
       <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 lg:py-10 space-y-12 relative">
-        {/* Floating Decorative Elements */}
         <div className="absolute top-0 left-0 w-72 h-72 bg-[var(--custom-blue-200)] rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--custom-blue-200)] rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
 
-        {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center animate-fade-in-down">
           <div>
             <h1 className="text-center text-3xl lg:text-4xl xl:text-5xl sm:text-start font-extrabold bg-[var(--custom-blue-950)] bg-clip-text text-[var(--custom-blue-800)]">
@@ -328,7 +330,7 @@ const DoctorProfile = () => {
               className="group relative mt-4 sm:mt-0 flex items-center px-3 py-1.5 sm:px-6 sm:py-3 bg-[var(--custom-blue-600)] text-[var(--custom-white)] text-sm font-semibold rounded-full shadow-xl hover:shadow-custom-blue-500/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
               <span className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <Edit2 className="h-5 w-5 mr-2 relative  group-hover:animate-spin-slow" />
+              <Edit2 className="h-5 w-5 mr-2 relative group-hover:animate-spin-slow" />
               <span className="relative">Edit Profile</span>
             </button>
           ) : (
@@ -339,7 +341,7 @@ const DoctorProfile = () => {
               >
                 <span className="absolute inset-0 bg-[var(--custom-blue-800)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 <Save className="h-5 w-5 mr-2 relative" />
-                <span className="relative ">Save Changes</span>
+                <span className="relative">Save Changes</span>
               </button>
               <button
                 onClick={handleCancel}
@@ -352,7 +354,6 @@ const DoctorProfile = () => {
           )}
         </div>
 
-        {/* Profile Card */}
         <div className="bg-[var(--custom-white)]/90 backdrop-blur-xl rounded-3xl shadow-2xl p-3 md:p-8 border border-[var(--custom-blue-100)]/30 transition-all duration-500 hover:shadow-[var(--custom-blue-200)]/20 animate-fade-in-up">
           <div className="w-full flex justify-between flex-col md:flex-row gap-4 md:gap-8">
             <div className="flex flex-col md:flex-row items-center md:space-x-8">
@@ -402,14 +403,12 @@ const DoctorProfile = () => {
               className="group relative flex self-end md:self-center items-center h-fit w-fit px-3 py-1.5 sm:px-6 sm:py-3 bg-[var(--custom-blue-600)] text-[var(--custom-white)] text-sm font-semibold rounded-full shadow-xl hover:shadow-[var(--custom-blue-500)]/30 transform hover:scale-105 transition-all duration-500 overflow-hidden"
             >
               <span className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <BriefcaseBusiness className="h-5 w-5 mr-2 relative  group-hover:animate-pulse" />
-              <span className="relative ">Take Leave</span>
+              <BriefcaseBusiness className="h-5 w-5 mr-2 relative group-hover:animate-pulse" />
+              <span className="relative">Take Leave</span>
             </Link>
           </div>
 
-          {/* Grid Layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6 md:mt-12">
-            {/* Contact Info */}
             <div className="bg-[var(--custom-white)]/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
               <div className="flex items-center text-[var(--custom-blue-600)] font-semibold text-lg md:text-2xl mb-5">
                 Contact Information
@@ -500,7 +499,6 @@ const DoctorProfile = () => {
               </div>
             </div>
 
-            {/* Professional Info */}
             <div className="bg-[var(--custom-white)]/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
               <div className="space-y-8">
                 <div>
@@ -513,7 +511,6 @@ const DoctorProfile = () => {
                       {isEditing ? (
                         <input
                           type="text"
-                          disabled
                           value={editedProfile.specialization}
                           onChange={(e) =>
                             setEditedProfile({
@@ -521,7 +518,7 @@ const DoctorProfile = () => {
                               specialization: e.target.value,
                             })
                           }
-                          className="w-4/5 sm:w-full bg-[var(--custom-gray-100)] border border-[var(--custom-gray-300)] rounded-xl px-4 py-2 cursor-not-allowed focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
+                          className="w-4/5 sm:w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
                         />
                       ) : (
                         <span className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
@@ -549,10 +546,30 @@ const DoctorProfile = () => {
                         </span>
                       )}
                     </div>
+                    <div className="flex items-center group">
+                      <Clock className="h-5 w-5 text-[var(--custom-blue-600)] mr-3 transition-transform group-hover:scale-125" />
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={editedProfile.additionalExperience}
+                          onChange={(e) =>
+                            setEditedProfile({
+                              ...editedProfile,
+                              additionalExperience: e.target.value,
+                            })
+                          }
+                          className="w-4/5 sm:w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
+                        />
+                      ) : (
+                        <span className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
+                          {profile.additionalExperience} of Additional
+                          Experience
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Availability */}
                 <div>
                   <div className="flex items-center text-[var(--custom-blue-600)] font-semibold text-lg md:text-2xl mb-5">
                     General Slots
@@ -612,7 +629,6 @@ const DoctorProfile = () => {
               </div>
             </div>
 
-            {/* Education */}
             <div className="bg-[var(--custom-white)]/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-left">
               <div className="flex items-center text-[var(--custom-blue-600)] font-semibold text-lg md:text-2xl mb-5">
                 Education
@@ -640,7 +656,7 @@ const DoctorProfile = () => {
                           {index === editedProfile.education.length - 1 && (
                             <button
                               onClick={handleAddEducation}
-                              className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)]  text-sm font-semibold mt-3 transition-colors"
+                              className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold mt-3 transition-colors"
                             >
                               <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
                               Add Education
@@ -665,7 +681,6 @@ const DoctorProfile = () => {
               </div>
             </div>
 
-            {/* Certifications */}
             <div className="bg-[var(--custom-white)]/70 backdrop-blur-lg p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-slide-in-right">
               <div className="flex items-center text-[var(--custom-blue-600)] font-semibold text-lg md:text-2xl mb-5">
                 Certifications
