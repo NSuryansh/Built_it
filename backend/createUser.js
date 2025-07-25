@@ -66,7 +66,7 @@ const processCSV = async () => {
           gender: gender
         },
       });
-      console.log("created user, rollNo: ", student.Roll_Number);
+      console.log("created user, rollNo: ", student.Roll_No);
     } catch (error) {
       console.error(`error: `, error.message);
     }
