@@ -1,7 +1,7 @@
 import fs from "fs"
 import csv from "csv-parser"
 import bcrypt from "bcrypt"
-import {Prismalient} from "@prisma/client"
+import { prisma } from "./server.js";
 
 const prisma = new Prismalient()
 const path = "students.csv"
