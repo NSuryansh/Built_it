@@ -37,7 +37,7 @@ const AddDoctor = () => {
     const { name, email, mobile, password, regId, desc } = formData;
 
     try {
-      const res = await fetch(" /api/admin/addDoc", {
+      const res = await fetch("/api/admin/addDoc", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -33,7 +33,7 @@ const LoadingPage = () => {
           }, 2000);
         } else {
           const response = await fetch(
-            ` /api/sso?token=${token}`,
+            `/api/sso?token=${token}`,
             {
               method: "POST",
             }
@@ -44,7 +44,7 @@ const LoadingPage = () => {
           if (data.success) {
             if (data.role === "user") {
               const response = await fetch(
-                " /api/user/login",
+                "/api/user/login",
                 {
                   method: "POST",
                   headers: {
@@ -71,7 +71,7 @@ const LoadingPage = () => {
               }
             } else if (data.role === "doc") {
               const response = await fetch(
-                " /api/doc/login",
+                "/api/doc/login",
                 {
                   method: "POST",
                   headers: {
@@ -92,7 +92,7 @@ const LoadingPage = () => {
               }
             } else if (data.role === "admin") {
               const response = await fetch(
-                " /api/admin/login",
+                "/api/admin/login",
                 {
                   method: "POST",
                   headers: {
@@ -371,9 +371,8 @@ const LoadingPage = () => {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className={`text-lg font-medium ${
-                  userFound === false ? "text-orange-600" : "text-gray-700"
-                }`}
+                className={`text-lg font-medium ${userFound === false ? "text-orange-600" : "text-gray-700"
+                  }`}
               >
                 {loadingText}
                 {userFound === null && (
@@ -505,9 +504,8 @@ const LoadingPage = () => {
                   onClick={() =>
                     !option.isRestricted ? navigate("/user/signup") : null
                   }
-                  className={`bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group border border-white border-opacity-50 ${
-                    option.isRestricted ? "relative" : ""
-                  }`}
+                  className={`bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group border border-white border-opacity-50 ${option.isRestricted ? "relative" : ""
+                    }`}
                 >
                   {/* Restricted badge */}
                   {option.isRestricted && (

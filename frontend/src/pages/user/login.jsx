@@ -100,7 +100,7 @@ const Login = () => {
       return;
     }
     const response = await fetch(
-      " /api/user/forgotPassword",
+      "/api/user/forgotPassword",
       {
         method: "POST",
         headers: {
@@ -134,7 +134,7 @@ const Login = () => {
   const handleBiometricLogin = async () => {
     console.log(username, "usduse");
     const data = await fetch(
-      " /api/user/generateBioAuthOptions",
+      "/api/user/generateBioAuthOptions",
       {
         method: "POST",
         body: JSON.stringify({
@@ -174,7 +174,7 @@ const Login = () => {
       },
     };
 
-    const res = await fetch(" /api/user/verifyBioLogin", {
+    const res = await fetch("/api/user/verifyBioLogin", {
       method: "POST",
       // body: JSON.stringify({
       //   emailId: username

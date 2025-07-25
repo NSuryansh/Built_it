@@ -42,7 +42,7 @@ const AddEvent = () => {
     const dateTime = new Date(`${date}T${time}`);
 
     try {
-      const response = await fetch(" /api/admin/addEvent", {
+      const response = await fetch("/api/admin/addEvent", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

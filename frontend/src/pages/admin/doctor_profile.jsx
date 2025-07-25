@@ -63,7 +63,7 @@ const AdminDoctorProfile = () => {
       try {
         const doctorId = search.split("=")[1];
         const response = await fetch(
-          ` /api/common/getDoc?docId=${doctorId}`,
+          `/api/common/getDoc?docId=${doctorId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -128,7 +128,7 @@ const AdminDoctorProfile = () => {
   const referralSub = async () => {
     try {
       const response = await fetch(
-        " /api/admin/referrals",
+        "/api/admin/referrals",
         {
           method: "POST",
           headers: {
@@ -150,7 +150,7 @@ const AdminDoctorProfile = () => {
         return false;
       }
       CustomToast("Referral created successfully", "green");
-      await fetch(" /api/common/send-notification", {
+      await fetch("/api/common/send-notification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -216,11 +216,10 @@ const AdminDoctorProfile = () => {
                 </h1>
                 <div className="flex">
                   <p className="text-[var(--custom-yellow-200)] text-xl font-medium italic">
-                    {`${doctor.field} (${
-                      doctor.avgRating != 0.0
+                    {`${doctor.field} (${doctor.avgRating != 0.0
                         ? parseFloat(doctor.avgRating).toPrecision(2)
                         : "Unrated"
-                    }`}
+                      }`}
                   </p>
                   {doctor.avgRating != 0.0 && (
                     <div className="flex">

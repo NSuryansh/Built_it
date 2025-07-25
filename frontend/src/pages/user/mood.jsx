@@ -90,7 +90,7 @@ export default function Mood() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(" /api/chat", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -257,11 +257,10 @@ export default function Mood() {
             <button
               type="button"
               onClick={isRecording ? stopRecording : startRecording}
-              className={`p-2 rounded-full transition-colors bg-gradient-to-r ${
-                isRecording
+              className={`p-2 rounded-full transition-colors bg-gradient-to-r ${isRecording
                   ? "to-[var(--custom-orange-500)] from-[var(--custom-purple-500)] text-[var(--custom-white)]"
                   : "from-[var(--custom-orange-500)] to-[var(--custom-purple-500)] text-[var(--custom-white)]"
-              }`}
+                }`}
               title={isRecording ? "Stop Recording" : "Start Recording"}
             >
               {isRecording ? (

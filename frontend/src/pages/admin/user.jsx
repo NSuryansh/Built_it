@@ -77,11 +77,10 @@ const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig }) => {
                     onClick={header === "Appointments" ? handleSort : undefined}
                   >
                     <div
-                      className={`flex items-center gap-2 ${
-                        header === "Appointments"
+                      className={`flex items-center gap-2 ${header === "Appointments"
                           ? "cursor-pointer hover:text-[var(--custom-green-700)]"
                           : ""
-                      }`}
+                        }`}
                     >
                       {header}
                       {header === "Appointments" && (
@@ -205,7 +204,7 @@ const AdminUser = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          " /api/doc_admin/getUsers",
+          "/api/doc_admin/getUsers",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -219,13 +218,13 @@ const AdminUser = () => {
             try {
               const [countRes, doctorRes] = await Promise.all([
                 fetch(
-                  ` /api/admin/appointments-count?id=${userId}`,
+                  `/api/admin/appointments-count?id=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
                   }
                 ),
                 fetch(
-                  ` /api/admin/user-doctors?userId=${userId}`,
+                  `/api/admin/user-doctors?userId=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
                   }

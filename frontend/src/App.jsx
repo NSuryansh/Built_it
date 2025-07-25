@@ -113,7 +113,7 @@ export default function App() {
       console.log("FCM Token:", fcmToken);
 
       const res = await fetch(
-        " /api/common/save-subscription",
+        "/api/common/save-subscription",
         {
           method: "POST",
           headers: {

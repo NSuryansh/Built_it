@@ -93,7 +93,7 @@ const Peer = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          " /api/user_admin/getdoctors?user_type=user",
+          "/api/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -112,7 +112,7 @@ const Peer = () => {
   // async function fetchContacts(userId) {
   //   try {
   //     const response = await fetch(
-  //       ` /api/chatContacts?userId=${userId}`,
+  //       `/api/chatContacts?userId=${userId}`,
   //       { headers: { Authorization: "Bearer " + token } }
   //     );
   //     const contacts = await response.json();
@@ -276,7 +276,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        ` /api/user_doc/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
+        `/api/user_doc/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
@@ -567,11 +567,10 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
-                    msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
                       ? "bg-gradient-to-r from-[var(--custom-orange-400)] to-[var(--custom-blue-400)] ml-auto text-[var(--custom-white)]"
                       : "bg-[var(--custom-gray-100)] text-[var(--custom-gray-800)]"
-                  }`}
+                    }`}
                 />
               ))}
               <div ref={messagesEndRef} />

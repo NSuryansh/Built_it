@@ -137,7 +137,7 @@ const AdminLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch(" /api/admin/login", {
+    const response = await fetch("/api/admin/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -166,7 +166,7 @@ const AdminLogin = () => {
       return;
     }
     const response = await fetch(
-      " /api/admin/forgotPassword",
+      "/api/admin/forgotPassword",
       {
         method: "POST",
         headers: {

@@ -40,7 +40,7 @@ const Book = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          " /api/user_admin/getdoctors?user_type=user",
+          "/api/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -62,7 +62,7 @@ const Book = () => {
 
       try {
         const res = await fetch(
-          ` /api/user/isUpcomingAppointment?userId=${userId}`,
+          `/api/user/isUpcomingAppointment?userId=${userId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -135,7 +135,7 @@ const Book = () => {
     const user_id = localStorage.getItem("userid");
 
     try {
-      const res = await fetch(" /api/user_doc/requests", {
+      const res = await fetch("/api/user_doc/requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -182,21 +182,19 @@ const Book = () => {
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-4">
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${
-                  step === 1
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${step === 1
                     ? "bg-[var(--custom-orange-500)] scale-110"
                     : "bg-[var(--custom-gray-300)]"
-                }`}
+                  }`}
               >
                 1
               </div>
               <div className="w-16 h-1 bg-[var(--custom-gray-300)] rounded-full" />
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${
-                  step === 2
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${step === 2
                     ? "bg-[var(--custom-orange-500)] scale-110"
                     : "bg-[var(--custom-gray-300)]"
-                }`}
+                  }`}
               >
                 2
               </div>

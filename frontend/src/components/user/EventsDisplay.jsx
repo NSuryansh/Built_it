@@ -10,7 +10,7 @@ const EventsDisplay = () => {
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch(" /api/common/events", {
+      const res = await fetch("/api/common/events", {
         headers: { Authorization: "Bearer " + token },
       });
       const resp = await res.json();
@@ -20,7 +20,7 @@ const EventsDisplay = () => {
     fetchEvents();
   }, []);
 
-  useEffect(() => {}, [events]);
+  useEffect(() => { }, [events]);
 
   return (
     <div className="space-y-4">

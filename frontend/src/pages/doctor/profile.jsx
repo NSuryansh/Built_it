@@ -64,13 +64,13 @@ const DoctorProfile = () => {
       try {
         const doctorId = localStorage.getItem("userid");
         const response = await fetch(
-          ` /api/common/getDoc?docId=${doctorId}`,
+          `/api/common/getDoc?docId=${doctorId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
         );
         const response2 = await fetch(
-          ` /api/doc/general-slots?docId=${doctorId}`,
+          `/api/doc/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
         );
 
@@ -225,7 +225,7 @@ const DoctorProfile = () => {
         formData.append("isProfileDone", false);
       }
 
-      const response = await fetch(` /api/doc/modifyDoc`, {
+      const response = await fetch(`/api/doc/modifyDoc`, {
         method: "PUT",
         headers: { Authorization: "Bearer " + token },
         body: formData,
@@ -244,7 +244,7 @@ const DoctorProfile = () => {
       }
       if (dates.length !== 0) {
         const response2 = await fetch(
-          ` /api/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+          `/api/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
           {
             method: "PUT",
             headers: { Authorization: "Bearer " + token },
@@ -359,9 +359,8 @@ const DoctorProfile = () => {
             <div className="flex flex-col md:flex-row items-center md:space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-[var(--custom-blue-100)] to-[var(--custom-blue-100)] flex items-center justify-center shadow-xl overflow-hidden group ${
-                  isEditing ? "cursor-pointer" : ""
-                }`}
+                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-[var(--custom-blue-100)] to-[var(--custom-blue-100)] flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
+                  }`}
               >
                 {profileImage ? (
                   <img
@@ -596,14 +595,14 @@ const DoctorProfile = () => {
                             />
                             {index ===
                               editedProfile.availability.length - 1 && (
-                              <button
-                                onClick={handleAddSlot}
-                                className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Slot
-                              </button>
-                            )}
+                                <button
+                                  onClick={handleAddSlot}
+                                  className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold transition-colors"
+                                >
+                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                  Add Slot
+                                </button>
+                              )}
                           </div>
                         ))}
                       </div>
@@ -709,14 +708,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                            <button
-                              onClick={handleAddCertification}
-                              className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold mt-3 transition-colors"
-                            >
-                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                              Add Certification
-                            </button>
-                          )}
+                              <button
+                                onClick={handleAddCertification}
+                                className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold mt-3 transition-colors"
+                              >
+                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                                Add Certification
+                              </button>
+                            )}
                         </div>
                       </div>
                     ))}

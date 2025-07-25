@@ -19,7 +19,7 @@ export const checkAuth = async (userType) => {
   }
   try {
     const response = await fetch(
-      ` /api/${userType}/profile`,
+      `/api/${userType}/profile`,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + token },

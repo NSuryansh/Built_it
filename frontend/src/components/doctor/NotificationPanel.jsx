@@ -17,7 +17,7 @@ const DoctorNotificationPanel = () => {
       if (docId) {
         try {
           const response = await fetch(
-            ` /api/user_doc/chatContacts?userId=${docId}`,
+            `/api/user_doc/chatContacts?userId=${docId}`,
             { headers: { Authorization: "Bearer " + token } }
           );
           const contacts = await response.json();
@@ -37,7 +37,7 @@ const DoctorNotificationPanel = () => {
       if (chats) {
         try {
           const response = await fetch(
-            " /api/doc/getFeelings",
+            "/api/doc/getFeelings",
             {
               headers: { Authorization: "Bearer " + token },
             }
@@ -83,7 +83,7 @@ const DoctorNotificationPanel = () => {
     const getReferrals = async () => {
       try {
         const response = await fetch(
-          ` /api/doc/get-referrals?doctor_id=${docId}`,
+          `/api/doc/get-referrals?doctor_id=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }

@@ -37,7 +37,7 @@ const DoctorLeave = () => {
   const fetchAvailableSlots = async (date, start) => {
     try {
       const response = await fetch(
-        ` /api/common/available-slots?date=${date}&docId=${docId}`,
+        `/api/common/available-slots?date=${date}&docId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -65,11 +65,11 @@ const DoctorLeave = () => {
     e.preventDefault();
     const startDate = new Date(
       new Date(leaveDetails.startDate).getTime() +
-        new Date(startSelectedSlot).getTime()
+      new Date(startSelectedSlot).getTime()
     );
     const endDate = new Date(
       new Date(leaveDetails.endDate).getTime() +
-        new Date(endSelectedSlot).getTime()
+      new Date(endSelectedSlot).getTime()
     );
     console.log(startDate, endDate);
 
@@ -81,7 +81,7 @@ const DoctorLeave = () => {
 
     const setLeave = async () => {
       try {
-        const response = await fetch(` /api/doc/addLeave`, {
+        const response = await fetch(`/api/doc/addLeave`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

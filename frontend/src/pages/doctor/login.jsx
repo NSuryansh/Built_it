@@ -65,7 +65,7 @@ const DoctorLogin = () => {
     }
     setError("");
     setisLoading(true);
-    const response = await fetch(" /api/doc/login", {
+    const response = await fetch("/api/doc/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +94,7 @@ const DoctorLogin = () => {
       return;
     }
     const response = await fetch(
-      " /api/doc/forgotPassword",
+      "/api/doc/forgotPassword",
       {
         method: "POST",
         headers: {

@@ -31,13 +31,13 @@ const DoctorCalendar = ({ onDateSelect }) => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          ` /api/doc/pastdocappt?doctorId=${docId}`,
+          `/api/doc/pastdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
         );
         const response = await fetch(
-          ` /api/doc/currentdocappt?doctorId=${docId}`,
+          `/api/doc/currentdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -172,31 +172,26 @@ const DoctorCalendar = ({ onDateSelect }) => {
                 className={`
                   relative aspect-square p-1 flex items-center justify-center
                   text-sm font-medium rounded-md transition-all duration-200
-                  ${
-                    !isSameMonth(dayItem, currentMonth)
-                      ? "text-[var(--custom-gray-400)]"
-                      : "text-[var(--custom-gray-900)]"
+                  ${!isSameMonth(dayItem, currentMonth)
+                    ? "text-[var(--custom-gray-400)]"
+                    : "text-[var(--custom-gray-900)]"
                   }
                   ${isToday ? "ring-2 ring-black ring-offset-1 font-bold" : ""}
-                  ${
-                    isSelected && !isToday
-                      ? "ring-2 ring-[var(--custom-blue-500)]"
-                      : ""
+                  ${isSelected && !isToday
+                    ? "ring-2 ring-[var(--custom-blue-500)]"
+                    : ""
                   }
-                  ${
-                    isPastAppointment
-                      ? "bg-[var(--custom-red-500)] text-[var(--custom-white)] hover:bg-[var(--custom-red-600)]"
-                      : ""
+                  ${isPastAppointment
+                    ? "bg-[var(--custom-red-500)] text-[var(--custom-white)] hover:bg-[var(--custom-red-600)]"
+                    : ""
                   }
-                  ${
-                    isFutureAppointment
-                      ? "bg-[var(--custom-blue-500)] text-[var(--custom-white)] hover:bg-[var(--custom-blue-600)]"
-                      : ""
+                  ${isFutureAppointment
+                    ? "bg-[var(--custom-blue-500)] text-[var(--custom-white)] hover:bg-[var(--custom-blue-600)]"
+                    : ""
                   }
-                  ${
-                    !isPastAppointment && !isFutureAppointment
-                      ? "hover:bg-[var(--custom-gray-100)]"
-                      : ""
+                  ${!isPastAppointment && !isFutureAppointment
+                    ? "hover:bg-[var(--custom-gray-100)]"
+                    : ""
                   }
                 `}
               >

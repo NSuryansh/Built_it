@@ -42,7 +42,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
       console.log(window.location.origin);
       console.log("hi");
       const data = await fetch(
-        " /api/user/generateOptions",
+        "/api/user/generateOptions",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -94,7 +94,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
       console.log(credentialResponse);
 
       const verifyRes = await fetch(
-        " /api/user/verifyBioRegistration",
+        "/api/user/verifyBioRegistration",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -133,7 +133,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
   const onSave = async (dataToSend) => {
     try {
       const response = await fetch(
-        " /api/user/modifyUser",
+        "/api/user/modifyUser",
         {
           method: "PUT", // Use PUT to modify user details
           headers: {
@@ -218,7 +218,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   placeholder={
                     localStorage.getItem("user_email") || "Your email"
                   }
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
                 <label
                   htmlFor="email"

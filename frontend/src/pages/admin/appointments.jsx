@@ -55,7 +55,7 @@ const AdminAppointments = () => {
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
-          " /api/user_admin/getdoctors?user_type=admin",
+          "/api/user_admin/getdoctors?user_type=admin",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -76,7 +76,7 @@ const AdminAppointments = () => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          " /api/admin/all-appointments",
+          "/api/admin/all-appointments",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -435,11 +435,10 @@ const AdminAppointments = () => {
                     <div className="flex h-fit self-center items-center gap-2 px-4 py-2 rounded-lg bg-[var(--custom-white)] shadow-sm border border-[var(--custom-gray-100)]">
                       {getStatusIcon(appointment.status)}
                       <span
-                        className={`text-sm font-medium ${
-                          appointment.status === "Pending"
+                        className={`text-sm font-medium ${appointment.status === "Pending"
                             ? "text-[var(--custom-yellow-600)]"
                             : "text-[var(--custom-green-600)]"
-                        }`}
+                          }`}
                       >
                         {appointment.status}
                       </span>

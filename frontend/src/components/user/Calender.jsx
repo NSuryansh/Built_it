@@ -40,7 +40,7 @@ const Calendar = ({ onDateSelect }) => {
     const PastEvents = async () => {
       try {
         const response = await fetch(
-          " /api/common/getPastEvents",
+          "/api/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -62,7 +62,7 @@ const Calendar = ({ onDateSelect }) => {
     const FutureEvents = async () => {
       try {
         const response = await fetch(
-          " /api/common/events",
+          "/api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -136,37 +136,31 @@ const Calendar = ({ onDateSelect }) => {
                 className={`
                   relative p-2 rounded-lg aspect-square flex items-center justify-center
                   transition-all duration-200 text-sm font-medium
-                  ${
-                    isSameMonth(dayItem, currentMonth)
-                      ? "text-[var(--custom-gray-900)]"
-                      : "text-[var(--custom-gray-400)]"
+                  ${isSameMonth(dayItem, currentMonth)
+                    ? "text-[var(--custom-gray-900)]"
+                    : "text-[var(--custom-gray-400)]"
                   }
-                  ${
-                    isPastEvent && !isToday
-                      ? "bg-[var(--custom-red-500)] text-[var(--custom-white)] hover:bg-[var(--custom-red-600)]"
-                      : isFutureEvent && !isToday
+                  ${isPastEvent && !isToday
+                    ? "bg-[var(--custom-red-500)] text-[var(--custom-white)] hover:bg-[var(--custom-red-600)]"
+                    : isFutureEvent && !isToday
                       ? "bg-[var(--custom-blue-500)] text-[var(--custom-white)] hover:bg-[var(--custom-blue-600)]"
                       : ""
                   }
-                  ${
-                    isToday && isPastEvent
-                      ? "ring-2 ring-black text-[var(--custom-white)] bg-[var(--custom-blue-500)] hover:bg-[var(--custom-blue-600)] ring-offset-2 font-bold"
-                      : ""
+                  ${isToday && isPastEvent
+                    ? "ring-2 ring-black text-[var(--custom-white)] bg-[var(--custom-blue-500)] hover:bg-[var(--custom-blue-600)] ring-offset-2 font-bold"
+                    : ""
                   }
-                  ${
-                    !isToday && !isPastEvent && !isFutureEvent
-                      ? "hover:bg-[var(--custom-gray-100)]"
-                      : ""
+                  ${!isToday && !isPastEvent && !isFutureEvent
+                    ? "hover:bg-[var(--custom-gray-100)]"
+                    : ""
                   }
-                  ${
-                    isToday && !isPastEvent
-                      ? "ring-2 ring-[var(--custom-black)] ring-offset-2 font-bold"
-                      : ""
+                  ${isToday && !isPastEvent
+                    ? "ring-2 ring-[var(--custom-black)] ring-offset-2 font-bold"
+                    : ""
                   }
-                  ${
-                    isSameDay(dayItem, selectedDate) && !isToday
-                      ? "ring-2 ring-[var(--custom-blue-600)]"
-                      : ""
+                  ${isSameDay(dayItem, selectedDate) && !isToday
+                    ? "ring-2 ring-[var(--custom-blue-600)]"
+                    : ""
                   }
                 `}
                 onClick={() => {

@@ -50,7 +50,7 @@ const AdminDashboard = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          " /api/admin/pastApp",
+          "/api/admin/pastApp",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -146,7 +146,7 @@ const AdminDashboard = () => {
   const handleRefresh = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(" /api/admin/pastApp", {
+      const response = await fetch("/api/admin/pastApp", {
         headers: { Authorization: "Bearer " + token },
       });
       const data = await response.json();
@@ -229,9 +229,8 @@ const AdminDashboard = () => {
               title="Refresh data"
             >
               <RefreshCw
-                className={`w-5 h-5 text-[var(--custom-green-700)] ${
-                  isLoading ? "animate-spin" : ""
-                }`}
+                className={`w-5 h-5 text-[var(--custom-green-700)] ${isLoading ? "animate-spin" : ""
+                  }`}
               />
             </button>
 
@@ -376,108 +375,108 @@ const AdminDashboard = () => {
               </div>
             )
           ) : // Gender Ratio View
-          isPie ? (
-            <div className="space-y-8">
-              <h2 className="text-2xl font-semibold text-[var(--custom-green-800)] mb-6">
-                Gender Ratio of Appointments
-              </h2>
+            isPie ? (
+              <div className="space-y-8">
+                <h2 className="text-2xl font-semibold text-[var(--custom-green-800)] mb-6">
+                  Gender Ratio of Appointments
+                </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {Object.keys(appointmentsUG).map((doc) => {
-                  const pieData = [
-                    { name: "Male", value: maleAppointments[doc] || 0 },
-                    { name: "Female", value: femaleAppointments[doc] || 0 },
-                    { name: "Others", value: othersAppointments[doc] || 0 },
-                  ];
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {Object.keys(appointmentsUG).map((doc) => {
+                    const pieData = [
+                      { name: "Male", value: maleAppointments[doc] || 0 },
+                      { name: "Female", value: femaleAppointments[doc] || 0 },
+                      { name: "Others", value: othersAppointments[doc] || 0 },
+                    ];
 
-                  return (
-                    <div
-                      key={doc}
-                      className="bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-teal-50)] p-6 rounded-xl"
-                    >
-                      <h3 className="text-xl font-semibold mb-4 text-[var(--custom-green-900)] text-center">
-                        Dr. {doc}
-                      </h3>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <PieChart>
-                          <Pie
-                            data={pieData}
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={100}
-                            innerRadius={60}
-                            fill="#8884d8"
-                            dataKey="value"
-                            label={({ name, percent }) =>
-                              `${name} ${(percent * 100).toFixed(0)}%`
-                            }
-                          >
-                            {pieData.map((entry, index) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={COLORS[index % COLORS.length]}
-                              />
-                            ))}
-                          </Pie>
-                          <Tooltip />
-                          <Legend verticalAlign="bottom" height={36} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                  );
-                })}
+                    return (
+                      <div
+                        key={doc}
+                        className="bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-teal-50)] p-6 rounded-xl"
+                      >
+                        <h3 className="text-xl font-semibold mb-4 text-[var(--custom-green-900)] text-center">
+                          Dr. {doc}
+                        </h3>
+                        <ResponsiveContainer width="100%" height={300}>
+                          <PieChart>
+                            <Pie
+                              data={pieData}
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={100}
+                              innerRadius={60}
+                              fill="#8884d8"
+                              dataKey="value"
+                              label={({ name, percent }) =>
+                                `${name} ${(percent * 100).toFixed(0)}%`
+                              }
+                            >
+                              {pieData.map((entry, index) => (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={COLORS[index % COLORS.length]}
+                                />
+                              ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend verticalAlign="bottom" height={36} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-[var(--custom-green-800)] mb-6">
-                Gender Ratio Overview
-              </h2>
-              <div className="h-[500px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={genderData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                    <XAxis
-                      dataKey="name"
-                      tick={{ fill: "#1F2937" }}
-                      axisLine={{ stroke: "#CBD5E1" }}
-                    />
-                    <YAxis
-                      tick={{ fill: "#1F2937" }}
-                      axisLine={{ stroke: "#CBD5E1" }}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "rgba(255, 255, 255, 0.95)",
-                        border: "1px solid #CBD5E1",
-                        borderRadius: "8px",
-                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                      }}
-                    />
-                    <Legend />
-                    <Bar
-                      dataKey="MALE"
-                      fill="#048A81"
-                      name="Male Appointments"
-                      radius={[4, 4, 0, 0]}
-                    />
-                    <Bar
-                      dataKey="FEMALE"
-                      fill="#FFB703"
-                      name="Female Appointments"
-                      radius={[4, 4, 0, 0]}
-                    />
-                    <Bar
-                      dataKey="OTHERS"
-                      fill="#FB8500"
-                      name="Others Appointments"
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+            ) : (
+              <div className="space-y-6">
+                <h2 className="text-2xl font-semibold text-[var(--custom-green-800)] mb-6">
+                  Gender Ratio Overview
+                </h2>
+                <div className="h-[500px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={genderData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                      <XAxis
+                        dataKey="name"
+                        tick={{ fill: "#1F2937" }}
+                        axisLine={{ stroke: "#CBD5E1" }}
+                      />
+                      <YAxis
+                        tick={{ fill: "#1F2937" }}
+                        axisLine={{ stroke: "#CBD5E1" }}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "rgba(255, 255, 255, 0.95)",
+                          border: "1px solid #CBD5E1",
+                          borderRadius: "8px",
+                          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                        }}
+                      />
+                      <Legend />
+                      <Bar
+                        dataKey="MALE"
+                        fill="#048A81"
+                        name="Male Appointments"
+                        radius={[4, 4, 0, 0]}
+                      />
+                      <Bar
+                        dataKey="FEMALE"
+                        fill="#FFB703"
+                        name="Female Appointments"
+                        radius={[4, 4, 0, 0]}
+                      />
+                      <Bar
+                        dataKey="OTHERS"
+                        fill="#FB8500"
+                        name="Others Appointments"
+                        radius={[4, 4, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </main>
 
