@@ -5,7 +5,7 @@ import { prisma } from "./server.js";
 import crypto from "crypto"
 
 // const prisma = new Prismalient()
-const csvFilePath = "./students_data/students.csv"
+const csvFilePath = "./students_data/2025_students.csv"
 // const prisma = new Prismalient()
 import { generateKeyPairSync } from "crypto";
 
@@ -40,7 +40,7 @@ const processCSV = async () => {
 
   for (const student of users) {
     const username = "anon" + crypto.randomBytes(3).toString("hex");
-    const hashedPassword = await bcrypt.hash(student.Contact_No, 10);
+    const hashedPassword = await bcrypt.hash(student.MobileNo, 10);
     const { publicKey, privateKey } = generateKeyPair();
     // const publicKeyPEM = await exportKeyToPEM(publicKey);
     // const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
@@ -54,14 +54,14 @@ const processCSV = async () => {
       await prisma.user.create({
         data: {
           username: username,
-          email: student.Email,
+          email: student.EmailId_insti,
           mobile: student.Contact_No,
           password: hashedPassword,
           alt_mobile: "",
           publicKey: publicKey, 
-          department: student.Specialization,
-          acadProg: student.Program,
-          rollNo: student.Roll_Number,
+          department: student.brnm,
+          acadProg: "B.Tech.",
+          rollNo: student.Roll_No,
           roomNo: "",
           gender: gender
         },
