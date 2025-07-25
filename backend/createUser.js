@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 import { prisma } from "./server.js";
 
 // const prisma = new Prismalient()
-const csvFilePath = "../students_data/students.csv"
+const csvFilePath = "./students_data/students.csv"
 // const prisma = new Prismalient()
 
   async function generateKeyPair() {
