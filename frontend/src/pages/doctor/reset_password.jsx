@@ -29,7 +29,7 @@ const DoctorResetPassword = () => {
     const token = searchParams.get("token");
 
     const response = await fetch(
-      `http://localhost:3000/api/doc/resetPassword`,
+      ` /api/doc/resetPassword`,
       {
         method: "POST",
         headers: {

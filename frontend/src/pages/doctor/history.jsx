@@ -50,7 +50,7 @@ const History = () => {
     try {
       const docId = localStorage.getItem("userid");
       const response = await fetch(
-        `http://localhost:3000/api/doc/pastdocappt?doctorId=${docId}`,
+        ` /api/doc/pastdocappt?doctorId=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();

@@ -32,7 +32,7 @@ const BookingFormStep = ({
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `http://localhost:3000/api/common/available-slots?date=${date}&docId=${doctorId}`,
+        ` /api/common/available-slots?date=${date}&docId=${doctorId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
@@ -56,7 +56,7 @@ const BookingFormStep = ({
   const sendNotif = async () => {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/common/send-notification",
+        " /api/common/send-notification",
         {
           method: "POST",
           headers: {

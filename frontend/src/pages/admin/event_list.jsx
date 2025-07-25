@@ -40,7 +40,7 @@ const EventsList = () => {
     // if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/events`, {
+      const response = await fetch(` /api/admin/events`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -79,7 +79,7 @@ const EventsList = () => {
   const handleLinkSubmit = async (eventId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/admin/uploadURL?id=${eventId}&url=${newLink}`,
+        ` /api/admin/uploadURL?id=${eventId}&url=${newLink}`,
         { method: "PUT", headers: { Authorization: "Bearer " + token } }
       );
       CustomToast("URL uploaded successfully", "green");
@@ -110,13 +110,13 @@ const EventsList = () => {
     const fetchEvents = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/common/events",
+          " /api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
           }
         );
         const response2 = await fetch(
-          "http://localhost:3000/api/common/getPastEvents",
+          " /api/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
           }

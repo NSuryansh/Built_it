@@ -19,7 +19,7 @@ export const checkAuth = async (userType) => {
   }
   try {
     const response = await fetch(
-      `http://localhost:3000/api/${userType}/profile`,
+      ` /api/${userType}/profile`,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + token },

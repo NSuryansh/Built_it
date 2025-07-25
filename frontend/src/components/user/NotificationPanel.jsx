@@ -15,7 +15,7 @@ const NotificationPanel = () => {
   const deleteRequest = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/user/deleteRequest?id=${id}&userId=${userId}`,
+        ` /api/user/deleteRequest?id=${id}&userId=${userId}`,
         {
           method: "DELETE",
           headers: { Authorization: "Bearer " + token },
@@ -31,7 +31,7 @@ const NotificationPanel = () => {
   const getRequests = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/user/getRequests?userId=${userId}`,
+        ` /api/user/getRequests?userId=${userId}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -56,7 +56,7 @@ const NotificationPanel = () => {
   const confirmAppointment = async (notif) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/user/accept-booking-by-user`,
+        ` /api/user/accept-booking-by-user`,
         {
           method: "POST",
           headers: {
@@ -75,7 +75,7 @@ const NotificationPanel = () => {
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
-        await fetch("http://localhost:3000/api/common/send-notification", {
+        await fetch(" /api/common/send-notification", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
