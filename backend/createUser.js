@@ -44,6 +44,12 @@ const processCSV = async () => {
     // const publicKeyPEM = await exportKeyToPEM(publicKey);
     // const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
     try {
+      const gender = "OTHER";
+      if(student.Gender == "M"){
+        gender = "MALE";
+      }else if(student.Gender =="F"){
+        gender = "FEMALE";
+      }
       await prisma.user.create({
         data: {
           username: username,
@@ -56,7 +62,7 @@ const processCSV = async () => {
           acadProg: student.Program,
           rollNo: student.Roll_Number,
           roomNo: "",
-          gender: student.Gender
+          gender: gender
         },
       });
       console.log("created user, rollNo: ", student.Roll_Number);
