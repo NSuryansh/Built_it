@@ -45,7 +45,7 @@ const processCSV = async () => {
     // const publicKeyPEM = await exportKeyToPEM(publicKey);
     // const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
     try {
-      const gender = "OTHER";
+      var gender = "OTHER";
       if(student.Gender == "M"){
         gender = "MALE";
       }else if(student.Gender =="F"){
