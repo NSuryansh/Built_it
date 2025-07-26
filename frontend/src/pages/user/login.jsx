@@ -367,12 +367,12 @@ const Login = () => {
             <h3 className="text-xl font-bold text-[var(--custom-orange-900)] mb-4">
               Biometric Login
             </h3>
-            <p className="mb-4 text-sm">Please enter your username:</p>
+            <p className="mb-4 text-sm">Please enter your email:</p>
             <input
               type="email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="username"
+              placeholder="example@iiti.ac.in"
               className="w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
             />
             <div className="mt-4 flex justify-end">
