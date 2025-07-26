@@ -102,13 +102,17 @@ userRouter.post(
   "/generateOptions",
   // authorizeRoles("user"),
   async (req, res) => {
-    const user = req.body["user"];
-    // console.log('hello')
-    // if (user.id !== req.user.id) {
-    //   return res.status(403).json({ error: "Access denied" })
-    // }
-    const options = await biometricOptions(user);
-    return res.json({ options: options });
+    try {
+      const user = req.body["user"];
+      // console.log('hello')
+      // if (user.id !== req.user.id) {
+      //   return res.status(403).json({ error: "Access denied" })
+      // }
+      const options = await biometricOptions(user);
+      return res.json({ options: options });
+    } catch (err) {
+      console.log(err)
+    }
   }
 );
 
@@ -147,7 +151,7 @@ userRouter.post(
   }
 );
 
-userRouter.post("/verifyBioLogin",  async (req, res) => {
+userRouter.post("/verifyBioLogin", async (req, res) => {
   const emailId = req.body["emailId"];
   // console.log(emailId, "hiihihih")
   const user = await prisma.user.findUnique({
