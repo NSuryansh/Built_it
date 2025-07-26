@@ -20,6 +20,9 @@ import { PrismaClient, Prisma } from '@prisma/client';
 dotenv.config();
 
 const userRouter = Router();
+if (!globalThis.crypto) {
+  globalThis.crypto = webcrypto;
+}
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
