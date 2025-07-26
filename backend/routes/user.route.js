@@ -93,7 +93,7 @@ const biometricOptions = async (user) => {
     challenge: base64url.encode(options.challenge),
     user: {
       ...options.user,
-      id: base64url.encode(options.user.id),
+      id: user.id,
     },
     excludeCredentials: options.excludeCredentials.map((cred) => ({
       ...cred,
