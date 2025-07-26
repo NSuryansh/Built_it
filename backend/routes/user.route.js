@@ -69,8 +69,8 @@ userRouter.post("/signup", async (req, res) => {
 
 const biometricOptions = async (user) => {
   const options = await generateRegistrationOptions({
-    rpName: "IITI CalmConnect",
-    rpID: "localhost",
+    rpName: "wellness",
+    rpID: "wellness.iiti.ac.in",
     userID: Number(user.id),
     userName: user.email,
     userDisplayName: user.email,
@@ -176,8 +176,8 @@ userRouter.post("/verifyBioLogin",  async (req, res) => {
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
-    expectedOrigin: "http://localhost:5174",
-    expectedRPID: "localhost",
+    expectedOrigin: "https://wellness.iiti.ac.in",
+    expectedRPID: "wellness.iiti.ac.in",
     credential: {
       credentialID: Buffer.from(credential.credentialID),
       publicKey: Buffer.from(credential.publicKey),
@@ -346,8 +346,8 @@ userRouter.post(
       const verification = await verifyRegistrationResponse({
         response: req.body,
         expectedChallenge: user.challenge,
-        expectedOrigin: "http://localhost:5174",
-        expectedRPID: "localhost",
+        expectedOrigin: "https://wellness.iiti.ac.in",
+        expectedRPID: "wellness.iiti.ac.in",
         // authenticator: {
         //     credentialID: credential.credentialID,
         //     credentialPublicKey: credential.publicKey,
