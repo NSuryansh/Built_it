@@ -4,6 +4,7 @@ import { prisma } from "../server.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import base64url from "base64url";
+import { webcrypto } from 'node:crypto';
 import {
   generateAuthenticationOptions,
   generateRegistrationOptions,
