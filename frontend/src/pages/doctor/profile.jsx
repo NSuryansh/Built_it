@@ -541,7 +541,7 @@ const DoctorProfile = () => {
                         />
                       ) : (
                         <span className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
-                          {profile.experience} of Experience
+                          {profile.experience}
                         </span>
                       )}
                     </div>

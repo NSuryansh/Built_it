@@ -47,7 +47,7 @@ const Footer = ({ color }) => {
                   counsellingcell@iiti.ac.in
                 </a>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
+              {/* <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
                 <Mail size={18} />
                 <a
                   href="mailto:shubhral@iiti.ac.in"
@@ -61,7 +61,7 @@ const Footer = ({ color }) => {
                 >
                   shubhra@iiti.ac.in
                 </a>
-              </div>
+              </div> */}
               <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
                 <MapPin size={18} />
                 <span>IIT Indore, Khandwa Road</span>
