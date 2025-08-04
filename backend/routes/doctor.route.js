@@ -251,7 +251,9 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
       "Appointment Scheduled",
       `Dear ${user.username}, \n\nYour appointment with ${
         doctor.name
-      } has been scheduled. The details of the appointment are given below: \n\nDate: ${some.getDate()}\nTime: ${some.getTime()}\nVenue: ${
+      } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
+        some
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
         doctor.office_address
       }\n\nRegards\nIITI CalmConnect`
     );
