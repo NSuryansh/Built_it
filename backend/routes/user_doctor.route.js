@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authorizeRoles } from "../middlewares/auth.middleware.js";
 import { prisma } from "../server.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 const userDocRouter = Router();
 
@@ -176,6 +177,18 @@ userDocRouter.post(
           reason: reason,
         },
       });
+
+      await sendEmail(
+        doctor.email,
+        "Appointment Requested",
+        `Dear ${doctor.name}, \n\nAn appointment has been requested by ${
+          user.username
+        }. The details of the request are given below: \n\nDate: ${new Date(
+          date
+        ).toDateString()}\nTime: ${new Date(
+          date
+        ).toTimeString()}\nReason: ${reason}\n\nRegards\nIITI CalmConnect`
+      );
 
       res.json({
         message: "Appointment request added successfully",
