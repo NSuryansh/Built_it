@@ -292,8 +292,8 @@ userRouter.put("/modifyUser", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-userRouter.post("/google-login", async(req, res)=>{
-const { token } = req.body;
+userRouter.post("/google-login", async (req, res) => {
+  const { token } = req.body;
 
   try {
     const ticket = await client.verifyIdToken({
@@ -308,9 +308,16 @@ const { token } = req.body;
     let user = await prisma.user.findUnique({ where: { email } });
 
     const appJwt = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      {
+        userId: user.id,
+        username: user.username,
+        email: user.email,
+        role: "user",
+      },
+      SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
     );
 
     res.json({ success: true, token: appJwt, user: user });
