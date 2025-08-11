@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
+import { sendEmail } from "../utils/sendEmail.js";
 dotenv.config();
 
 const adminRouter = Router();
@@ -134,6 +135,9 @@ adminRouter.post("/forgotPassword", async (req, res) => {
       },
     });
     // console.log(admin);
+    if (!admin) {
+      res.json({ message: "No user admin with this email" });
+    }
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const tokengen = await prisma.passwordResetToken.create({
@@ -144,7 +148,7 @@ adminRouter.post("/forgotPassword", async (req, res) => {
       },
     });
     // console.log(tokengen);
-    const resetLink = `https://wellness.iiti.ac.in/api/admin/reset_password?token=${token}`;
+    const resetLink = `https://wellness.iiti.ac.in/admin/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
     sendEmail(admin.email, subject, message);
@@ -267,22 +271,22 @@ adminRouter.post("/toggleDoc", authorizeRoles("admin"), async (req, res) => {
   }
 });
 
-adminRouter.post('/createAdmin', async(req,res)=>{
-  const name = req.body["name"]
-  const email = req.body["email"]
-  const password = req.body["password"]
-  const mobile = req.body["mobile"]
-  const hashedPassword = await bcrypt.hash(password, 10)
+adminRouter.post("/createAdmin", async (req, res) => {
+  const name = req.body["name"];
+  const email = req.body["email"];
+  const password = req.body["password"];
+  const mobile = req.body["mobile"];
+  const hashedPassword = await bcrypt.hash(password, 10);
   const admin = await prisma.admin.create({
-    data:{
+    data: {
       name: name,
       email: email,
       mobile: mobile,
-      password: hashedPassword
-    }
-  })
-  res.json(admin)
-})
+      password: hashedPassword,
+    },
+  });
+  res.json(admin);
+});
 
 adminRouter.get("/pastApp", authorizeRoles("admin"), async (req, res) => {
   const currDate = new Date();

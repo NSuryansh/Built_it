@@ -10,8 +10,9 @@ import {
   Calendar,
   Loader,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { format } from "date-fns";
+import { TimeChange } from "../common/TimeChange";
 
 const BookingFormStep = ({
   formData,
@@ -21,7 +22,6 @@ const BookingFormStep = ({
   selectedDoctor,
   isAuthenticated,
   isLoading,
-  setisLoading,
 }) => {
   const [slots, setAvailableSlots] = useState([]);
   const [date, setSelectedDate] = useState("");
@@ -36,6 +36,7 @@ const BookingFormStep = ({
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();
+      console.log(data.availableSlots);
       setAvailableSlots(data.availableSlots);
     } catch (error) {
       console.error("Error fetching available slots:", error);
@@ -55,21 +56,18 @@ const BookingFormStep = ({
   //to get notifs for incoming requests
   const sendNotif = async () => {
     try {
-      const res = await fetch(
-        "/api/common/send-notification",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userid: selectedDoctor.id,
-            message: `You have a new incoming appointment request!`,
-            userType: "doc",
-          }),
-        }
-      );
+      const res = await fetch("/api/common/send-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userid: selectedDoctor.id,
+          message: `You have a new incoming appointment request!`,
+          userType: "doc",
+        }),
+      });
 
       if (res.ok) {
         console.log("HALLELUJAH");
@@ -123,10 +121,11 @@ const BookingFormStep = ({
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated
                   ? "bg-[var(--custom-gray-200)] cursor-not-allowed"
                   : ""
-                }`}
+              }`}
               placeholder="Enter your full name"
               required
               disabled={isAuthenticated}
@@ -144,10 +143,11 @@ const BookingFormStep = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated
                   ? "bg-[var(--custom-gray-200)] cursor-not-allowed"
                   : ""
-                }`}
+              }`}
               placeholder="Enter your email"
               required
               disabled={isAuthenticated}
@@ -165,10 +165,11 @@ const BookingFormStep = ({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${isAuthenticated
+              className={`w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none ${
+                isAuthenticated
                   ? "bg-[var(--custom-gray-200)] cursor-not-allowed"
                   : ""
-                }`}
+              }`}
               placeholder="Enter your phone number"
               required
               disabled={isAuthenticated}
@@ -189,6 +190,7 @@ const BookingFormStep = ({
                   name="date"
                   value={formData.date.split("T")[0]}
                   onChange={(e) => {
+                    setAvailableSlots([]);
                     const newDate = e.target.value;
                     const currentTime = formData.date.split("T")[2] || "09:00";
                     handleChange({
@@ -239,7 +241,10 @@ const BookingFormStep = ({
                   {Array.isArray(slots) &&
                     slots.map((slot) => (
                       <option key={slot.id} value={slot.starting_time}>
-                        {slot.starting_time.split("T")[1].slice(0, 5)}
+                        {format(
+                          new Date(slot.starting_time).getTime(),
+                          "HH:mm"
+                        )}
                       </option>
                     ))}
                 </select>

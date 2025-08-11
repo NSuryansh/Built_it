@@ -49,107 +49,102 @@ commonRouter.get(
   }
 );
 
-commonRouter.post(
-  "/save-subscription",
-  async (req, res) => {
-    try {
-      // console.log("HELLLLLOOOOOOO");
-      const { userid, subscription, userType } = req.body;
-      // console.log(userid);
-      // console.log(subscription);
-      if (!userid || !subscription) {
-        return res
-          .status(400)
-          .json({ error: "Missing userId or subscription" });
-      }
-
-      // console.log(userType, " userType");
-
-      // const { endpoint, keys } = subscription;
-      // console.log("hi");
-      if (userType == "user") {
-        // const existingSub = await prisma.subscription.findMany({
-        //   where: { userId: Number(userid)
-        //    },
-        // });
-        // console.log("ECISTIING subscription");
-        try {
-          // if (existingSub) {
-          //   await prisma.subscription.updateMany({
-          //     where: { userId: Number(userid)} ,
-          //     data: {
-          //       endpoint: endpoint,
-          //       authKey: keys.auth,
-          //       p256dhKey: keys.p256dh,
-          //     },
-          //   });
-          // } else {
-          // Create a new subscription
-          const subs = await prisma.subscription.upsert({
-            where: {
-              // OR: [
-              //   {
-              // userId: Number(userid),
-              endpoint: subscription,
-              //   }
-              // ]
-            },
-            update: {
-              userId: Number(userid),
-              endpoint: subscription,
-              // authKey: keys.auth,
-              // p256dhKey: keys.p256dh,
-            },
-            create: {
-              userId: Number(userid),
-              endpoint: subscription,
-              // authKey: keys.auth,
-              // p256dhKey: keys.p256dh,
-            },
-          });
-          // console.log(subs);
-          // }
-        } catch (e) {
-          console.error(e);
-          res.json(e);
-        }
-      } else if (userType == "doc") {
-        try {
-          const subs = await prisma.subscription.upsert({
-            where: {
-              // OR: [
-              //   {
-              // userId: Number(userid),
-              endpoint: subscription,
-              //   }
-              // ]
-            },
-            update: {
-              doctorId: Number(userid),
-              endpoint: subscription,
-              // authKey: keys.auth,
-              // p256dhKey: keys.p256dh,
-            },
-            create: {
-              doctorId: Number(userid),
-              endpoint: subscription,
-              // authKey: keys.auth,
-              // p256dhKey: keys.p256dh,
-            },
-          });
-          // console.log(subs);
-          res.json({ success: true });
-        } catch (e) {
-          console.error(e);
-          res.json(e);
-        }
-      }
-    } catch (error) {
-      console.error("Error saving subscription:", error);
-      res.status(500).json({ error: "Error saving subscription" });
+commonRouter.post("/save-subscription", async (req, res) => {
+  try {
+    // console.log("HELLLLLOOOOOOO");
+    const { userid, subscription, userType } = req.body;
+    // console.log(userid);
+    // console.log(subscription);
+    if (!userid || !subscription) {
+      return res.status(400).json({ error: "Missing userId or subscription" });
     }
+
+    // console.log(userType, " userType");
+
+    // const { endpoint, keys } = subscription;
+    // console.log("hi");
+    if (userType == "user") {
+      // const existingSub = await prisma.subscription.findMany({
+      //   where: { userId: Number(userid)
+      //    },
+      // });
+      // console.log("ECISTIING subscription");
+      try {
+        // if (existingSub) {
+        //   await prisma.subscription.updateMany({
+        //     where: { userId: Number(userid)} ,
+        //     data: {
+        //       endpoint: endpoint,
+        //       authKey: keys.auth,
+        //       p256dhKey: keys.p256dh,
+        //     },
+        //   });
+        // } else {
+        // Create a new subscription
+        const subs = await prisma.subscription.upsert({
+          where: {
+            // OR: [
+            //   {
+            // userId: Number(userid),
+            endpoint: subscription,
+            //   }
+            // ]
+          },
+          update: {
+            userId: Number(userid),
+            endpoint: subscription,
+            // authKey: keys.auth,
+            // p256dhKey: keys.p256dh,
+          },
+          create: {
+            userId: Number(userid),
+            endpoint: subscription,
+            // authKey: keys.auth,
+            // p256dhKey: keys.p256dh,
+          },
+        });
+        // console.log(subs);
+        // }
+      } catch (e) {
+        console.error(e);
+        res.json(e);
+      }
+    } else if (userType == "doc") {
+      try {
+        const subs = await prisma.subscription.upsert({
+          where: {
+            // OR: [
+            //   {
+            // userId: Number(userid),
+            endpoint: subscription,
+            //   }
+            // ]
+          },
+          update: {
+            doctorId: Number(userid),
+            endpoint: subscription,
+            // authKey: keys.auth,
+            // p256dhKey: keys.p256dh,
+          },
+          create: {
+            doctorId: Number(userid),
+            endpoint: subscription,
+            // authKey: keys.auth,
+            // p256dhKey: keys.p256dh,
+          },
+        });
+        // console.log(subs);
+        res.json({ success: true });
+      } catch (e) {
+        console.error(e);
+        res.json(e);
+      }
+    }
+  } catch (error) {
+    console.error("Error saving subscription:", error);
+    res.status(500).json({ error: "Error saving subscription" });
   }
-);
+});
 
 commonRouter.post(
   "/send-notification",
@@ -231,6 +226,7 @@ commonRouter.get(
     }
 
     const selectedDate = new Date(date + "T00:00:00Z");
+    const day = selectedDate.getDay();
 
     try {
       const bookedSlots = await prisma.appointments.findMany({
@@ -259,7 +255,7 @@ commonRouter.get(
       });
 
       let availableSlots = await prisma.slots.findMany({
-        where: { doctor_id: doctor_id },
+        where: { doctor_id: doctor_id, day_of_week: day },
       });
 
       const bookedTimes = bookedSlots.map((b) => {
