@@ -394,8 +394,22 @@ const DoctorAppointment = () => {
           docId: localStorage.getItem("userid"),
           username: appointment["user"]["username"],
           docName: docName,
-          origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
-          newTime: format(newTime, "dd-MMM-yy hh:mm a"),
+          origTime: format(
+            new Date(
+              new Date(appointment["dateTime"]).setTime(
+                appointment["dateTime"].getTime() + 5.5 * 60 * 60 * 1000
+              )
+            ),
+            "dd-MMM-yy hh:mm a"
+          ),
+          newTime: format(
+            new Date(
+              new Date(newTime).setTime(
+                newTime.getTime() + 5.5 * 60 * 60 * 1000
+              )
+            ),
+            "dd-MMM-yy hh:mm a"
+          ),
           email: appointment["user"]["email"],
         }),
       });
@@ -807,9 +821,10 @@ const DoctorAppointment = () => {
                                       key={slot.id}
                                       value={slot.starting_time}
                                     >
-                                      {slot.starting_time
-                                        .split("T")[1]
-                                        .slice(0, 5)}
+                                      {format(
+                                        new Date(slot.starting_time).getTime(),
+                                        "HH:mm"
+                                      )}
                                     </option>
                                   ))}
                               </select>
