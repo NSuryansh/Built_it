@@ -69,15 +69,14 @@ const DoctorDashboard = () => {
 
         const formattedAppointments = data.map((appt) => {
           const dateObj = new Date(appt.dateTime);
-          const newDate = TimeChange(dateObj.getTime());
           return {
             id: appt.id,
             patientName: `${appt.user.username}`,
-            time: newDate.toLocaleTimeString([], {
+            time: dateObj.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             }),
-            date: newDate.toLocaleDateString(undefined, {
+            date: dateObj.toLocaleDateString(undefined, {
               year: "numeric",
               month: "long",
               day: "numeric",

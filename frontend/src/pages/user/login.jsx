@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Lock, Eye, EyeOff, Fingerprint } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { checkAuth } from "../../utils/profile";
+import { GoogleLogin } from "@react-oauth/google";
 import CustomToast from "../../components/common/CustomToast";
 import CustomLoader from "../../components/common/CustomLoader";
 
@@ -39,7 +40,28 @@ const Login = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setisLoading] = useState(false);
   const [showBiometricModal, setShowBiometricModal] = useState(false);
+  const handleGoogleResponse = async (response) => {
+    const googleIdToken = response.credential;
 
+    try {
+      const res = await fetch("/api/user/google-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: googleIdToken }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        navigate("/user/dashboard");
+      } else {
+        CustomToast(data.message || "Google login failed");
+      }
+    } catch (err) {
+      CustomToast("Something went wrong with Google login");
+    }
+  };
   useEffect(() => {
     const verifyAuth = async () => {
       const userAuthStatus = await checkAuth("user");
@@ -51,11 +73,43 @@ const Login = () => {
       }
     };
     verifyAuth();
+
+    // if (window.google) {
+    //   window.google.accounts.id.initialize({
+    //     client_id: "1042332428597-o0mn6raqjiqfg7datesv9cbq9u96oj5r.apps.googleusercontent.com",
+    //     callback: handleGoogleResponse,
+    //   });
+
+    //   window.google.accounts.id.renderButton(
+    //     document.getElementById("googleSignInDiv"),
+    //     { theme: "outline", size: "large", width: "100%" }
+    //   );
+    // }
   }, []);
 
   if (isAuthenticated === null) {
     return <CustomLoader text="Loading your wellness journey..." />;
   }
+
+  // useEffect(() => {
+  //   const initGoogle = () => {
+  //     if (window.google) {
+  //       window.google.accounts.id.initialize({
+  //         client_id: "1042332428597-o0mn6raqjiqfg7datesv9cbq9u96oj5r.apps.googleusercontent.com",
+  //         callback: handleGoogleResponse,
+  //       });
+  //       window.google.accounts.id.renderButton(
+  //         document.getElementById("googleSignInDiv"),
+  //         { theme: "outline", size: "large", width: "100%" }
+  //       );
+  //     } else {
+  //       setTimeout(initGoogle, 100); // retry in 100ms
+  //     }
+  //   };
+
+  //   initGoogle();
+  // }, []);
+
 
   const handlelogin = async (e) => {
     e.preventDefault();
@@ -263,7 +317,13 @@ const Login = () => {
             </button>
           </div>
         </div>
-
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+          {/* <h2>Or</h2> */}
+          <GoogleLogin
+            onSuccess={handleGoogleResponse}
+            // onError={handleGoogleFailure}
+          />
+        </div>
         <button
           onClick={() => setShowBiometricModal(true)}
           disabled={isLoading}

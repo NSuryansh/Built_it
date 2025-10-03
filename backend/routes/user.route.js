@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authorizeRoles } from "../middlewares/auth.middleware.js";
 import { prisma } from "../server.js";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 import bcrypt from "bcryptjs";
 import base64url from "base64url";
 import { webcrypto } from 'node:crypto';
@@ -23,7 +24,7 @@ const userRouter = Router();
 if (!globalThis.crypto) {
   globalThis.crypto = webcrypto;
 }
-
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const base64urlToBuffer = (base64url) => {
@@ -291,7 +292,39 @@ userRouter.put("/modifyUser", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+userRouter.post("/google-login", async (req, res) => {
+  const { token } = req.body;
 
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+
+    const email = payload.email;
+    const name = payload.name;
+
+    let user = await prisma.user.findUnique({ where: { email } });
+
+    const appJwt = jwt.sign(
+      {
+        userId: user.id,
+        username: user.username,
+        email: user.email,
+        role: "user",
+      },
+      SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    res.json({ success: true, token: appJwt, user: user });
+  } catch (err) {
+    res.status(401).json({ success: false, message: err.message });
+  }
+})
 userRouter.post("/login", async (req, res) => {
   const email = req.body["email"];
   const password = req.body["password"];

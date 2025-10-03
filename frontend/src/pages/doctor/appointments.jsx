@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { checkAuth } from "../../utils/profile";
 import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/common/SessionExpired";
-import { TimeChange } from "../../components/common/TimeChange";
+import { TimeChange, TimeReduce } from "../../components/common/TimeChange";
 import CustomToast from "../../components/common/CustomToast";
 import {
   BarChart,
@@ -188,21 +188,18 @@ const DoctorAppointment = () => {
 
   const sendNotif = async (appointment) => {
     try {
-      const res = await fetch(
-        "/api/common/send-notification",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userid: appointment["user_id"],
-            message: `Your appointment request has been accepted!`,
-            userType: "user",
-          }),
-        }
-      );
+      const res = await fetch("/api/common/send-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userid: appointment["user_id"],
+          message: `Your appointment request has been accepted!`,
+          userType: "user",
+        }),
+      });
 
       if (!res.ok) {
         console.error("Failed to send notification");
@@ -225,18 +222,12 @@ const DoctorAppointment = () => {
     if (!docId) return;
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
-      const res = await fetch(
-        `/api/doc/reqApp?docId=${docId}`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
-      const res2 = await fetch(
-        `/api/doc/currentdocappt?doctorId=${docId}`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
+      const res = await fetch(`/api/doc/reqApp?docId=${docId}`, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      const res2 = await fetch(`/api/doc/currentdocappt?doctorId=${docId}`, {
+        headers: { Authorization: "Bearer " + token },
+      });
       const resp2 = await res2.json();
       const resp = await res.json();
       for (let i = 0; i < resp2.length; i++) {
@@ -259,12 +250,9 @@ const DoctorAppointment = () => {
 
     const fetchPastAppointments = async () => {
       try {
-        const response = await fetch(
-          `/api/doc/pastdocappt?doctorId=${docId}`,
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        );
+        const response = await fetch(`/api/doc/pastdocappt?doctorId=${docId}`, {
+          headers: { Authorization: "Bearer " + token },
+        });
         const data = await response.json();
         if (response.ok) {
           const periods = {
@@ -406,8 +394,22 @@ const DoctorAppointment = () => {
           docId: localStorage.getItem("userid"),
           username: appointment["user"]["username"],
           docName: docName,
-          origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
-          newTime: format(newTime, "dd-MMM-yy hh:mm a"),
+          origTime: format(
+            new Date(
+              new Date(appointment["dateTime"]).setTime(
+                appointment["dateTime"].getTime() + 5.5 * 60 * 60 * 1000
+              )
+            ),
+            "dd-MMM-yy hh:mm a"
+          ),
+          newTime: format(
+            new Date(
+              new Date(newTime).setTime(
+                newTime.getTime() + 5.5 * 60 * 60 * 1000
+              )
+            ),
+            "dd-MMM-yy hh:mm a"
+          ),
           email: appointment["user"]["email"],
         }),
       });
@@ -524,7 +526,12 @@ const DoctorAppointment = () => {
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            {format(appointment.dateTime, "dd MMM h:mm a")}
+                            {format(
+                              TimeReduce(
+                                new Date(appointment.dateTime).getTime()
+                              ),
+                              "dd MMM h:mm a"
+                            )}
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
@@ -714,7 +721,12 @@ const DoctorAppointment = () => {
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            {format(appointment.dateTime, "dd MMM h:mm a")}
+                            {format(
+                              TimeReduce(
+                                new Date(appointment.dateTime).getTime()
+                              ),
+                              "dd MMM h:mm a"
+                            )}
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
@@ -809,9 +821,10 @@ const DoctorAppointment = () => {
                                       key={slot.id}
                                       value={slot.starting_time}
                                     >
-                                      {slot.starting_time
-                                        .split("T")[1]
-                                        .slice(0, 5)}
+                                      {format(
+                                        new Date(slot.starting_time).getTime(),
+                                        "HH:mm"
+                                      )}
                                     </option>
                                   ))}
                               </select>

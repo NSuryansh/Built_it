@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { messaging, getToken } from "./firebase";
 import { getMessaging, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
@@ -164,52 +165,54 @@ export default function App() {
   }, [type]);
 
   return (
-    <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/sso" element={<LoadingPage />} />
-        <Route path="/user/peer" element={<Peer />} />
-        <Route path="/user/mood" element={<Mood />} />
-        <Route path="/user/book" element={<Book />} />
-        <Route path="/user/stress" element={<Stress />} />
-        <Route path="/user/entertainment" element={<Entertainment />} />
-        <Route path="/user/entertainment/dinogame" element={<Dinogame />} />
-        <Route path="/user/events" element={<Events />} />
-        <Route path="/user/login" element={<Login />} />
-        <Route path="/user/signup" element={<SignUp />} />
-        <Route path="/user/reset_password" element={<ResetPassword />} />
-        <Route path="/user/modify_profile" element={<ModifyProfile />} />
-        <Route path="/user/appointments" element={<UserAppointments />} />
-        <Route path="/user/feedback" element={<FeedbackPage />} />
-        <Route path="/user/dashboard" element={<Dashboard />} />
-        <Route path="/doctor/login" element={<DoctorLogin />} />
-        <Route
-          path="/doctor/reset_password"
-          element={<DoctorResetPassword />}
-        />
-        <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-        <Route path="/doctor/profile" element={<DoctorProfile />} />
-        <Route path="/doctor/appointments" element={<DoctorAppointment />} />
-        <Route path="/doctor/peer" element={<DoctorPeer />} />
-        <Route path="/doctor/leave" element={<DoctorLeave />} />
-        <Route path="/doctor/book" element={<DoctorBook />} />
-        <Route path="/doctor/history" element={<History />} />
-        <Route path="/doctor/user" element={<UserDetail />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/reset_password" element={<AdminResetPassword />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/doctor_list" element={<DoctorsList />} />
-        <Route path="/admin/doctor_profile" element={<AdminDoctorProfile />} />
-        <Route path="/admin/event_list" element={<EventsList />} />
-        <Route path="/admin/add_event" element={<AddEvent />} />
-        <Route path="/admin/add_doctor" element={<AddDoctor />} />
-        <Route path="/admin/user" element={<AdminUser />} />
-        <Route path="/admin/appointments" element={<AdminAppointments />} />
-        <Route
-          path="/easter_egg"
-          element={<ErrorBoundaryFallback userType={userType} />}
-        />
-      </Routes>
-    </div>
+    <GoogleOAuthProvider clientId="1042332428597-o0mn6raqjiqfg7datesv9cbq9u96oj5r.apps.googleusercontent.com">
+      <div className={`min-h-screen h-full flex flex-col ${"bg-white"}`}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/sso" element={<LoadingPage />} />
+          <Route path="/user/peer" element={<Peer />} />
+          <Route path="/user/mood" element={<Mood />} />
+          <Route path="/user/book" element={<Book />} />
+          <Route path="/user/stress" element={<Stress />} />
+          <Route path="/user/entertainment" element={<Entertainment />} />
+          <Route path="/user/entertainment/dinogame" element={<Dinogame />} />
+          <Route path="/user/events" element={<Events />} />
+          <Route path="/user/login" element={<Login />} />
+          <Route path="/user/signup" element={<SignUp />} />
+          <Route path="/user/reset_password" element={<ResetPassword />} />
+          <Route path="/user/modify_profile" element={<ModifyProfile />} />
+          <Route path="/user/appointments" element={<UserAppointments />} />
+          <Route path="/user/feedback" element={<FeedbackPage />} />
+          <Route path="/user/dashboard" element={<Dashboard />} />
+          <Route path="/doctor/login" element={<DoctorLogin />} />
+          <Route
+            path="/doctor/reset_password"
+            element={<DoctorResetPassword />}
+          />
+          <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+          <Route path="/doctor/profile" element={<DoctorProfile />} />
+          <Route path="/doctor/appointments" element={<DoctorAppointment />} />
+          <Route path="/doctor/peer" element={<DoctorPeer />} />
+          <Route path="/doctor/leave" element={<DoctorLeave />} />
+          <Route path="/doctor/book" element={<DoctorBook />} />
+          <Route path="/doctor/history" element={<History />} />
+          <Route path="/doctor/user" element={<UserDetail />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/reset_password" element={<AdminResetPassword />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/doctor_list" element={<DoctorsList />} />
+          <Route path="/admin/doctor_profile" element={<AdminDoctorProfile />} />
+          <Route path="/admin/event_list" element={<EventsList />} />
+          <Route path="/admin/add_event" element={<AddEvent />} />
+          <Route path="/admin/add_doctor" element={<AddDoctor />} />
+          <Route path="/admin/user" element={<AdminUser />} />
+          <Route path="/admin/appointments" element={<AdminAppointments />} />
+          <Route
+            path="/easter_egg"
+            element={<ErrorBoundaryFallback userType={userType} />}
+          />
+        </Routes>
+      </div>
+    </GoogleOAuthProvider>
   );
 }

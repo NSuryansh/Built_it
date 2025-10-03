@@ -251,7 +251,21 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
       "Appointment Scheduled",
       `Dear ${user.username}, \n\nYour appointment with ${
         doctor.name
-      } has been scheduled. The details of the appointment are given below: \n\nDate: ${some.getDate()}\nTime: ${some.getTime()}\nVenue: ${
+      } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
+        some
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+        doctor.office_address
+      }\n\nRegards\nIITI CalmConnect`
+    );
+
+    await sendEmail(
+      doctor.email,
+      "Appointment Scheduled",
+      `Dear ${doctor.name}, \n\nYour appointment with ${
+        user.username
+      } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
+        some
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
         doctor.office_address
       }\n\nRegards\nIITI CalmConnect`
     );
@@ -477,9 +491,8 @@ docRouter.put("/modifySlots", authorizeRoles("doc"), async (req, res) => {
   if (doctorId !== req.user.userId.toString()) {
     return res.status(403).json({ error: "Access denied" });
   }
-  // console.log(slotsArray);
-  const slots = slotsArray.split(",");
-  // console.log(doctorId);
+  
+  const slots = JSON.parse(slotsArray);
   try {
     const delSlots = await prisma.slots.deleteMany({
       where: {
@@ -490,7 +503,8 @@ docRouter.put("/modifySlots", authorizeRoles("doc"), async (req, res) => {
       const newSlots = await prisma.slots.create({
         data: {
           doctor_id: Number(doctorId),
-          starting_time: new Date(slots[i]),
+          starting_time: new Date(slots[i].time),
+          day_of_week: slots[i].day_of_week,
         },
       });
     }

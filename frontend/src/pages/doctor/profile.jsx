@@ -13,6 +13,7 @@ import {
   X,
   Plus,
   BriefcaseBusiness,
+  Calendar,
 } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import Footer from "../../components/common/Footer";
@@ -38,7 +39,15 @@ const DoctorProfile = () => {
     experience: "<Please Change>",
     additionalExperience: "<Please Change>",
     education: ["<Add>"],
-    availability: ["<Add>"],
+    availability: {
+      Monday: [],
+      Tuesday: [],
+      Wednesday: [],
+      Thursday: [],
+      Friday: [],
+      Saturday: [],
+      Sunday: [],
+    },
     certifications: ["<Add>"],
   });
   const navigate = useNavigate();
@@ -50,6 +59,15 @@ const DoctorProfile = () => {
   const [file, setfile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const token = localStorage.getItem("token");
+  const DAYS_OF_WEEK = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -63,12 +81,9 @@ const DoctorProfile = () => {
     const fetchData = async () => {
       try {
         const doctorId = localStorage.getItem("userid");
-        const response = await fetch(
-          `/api/common/getDoc?docId=${doctorId}`,
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        );
+        const response = await fetch(`/api/common/getDoc?docId=${doctorId}`, {
+          headers: { Authorization: "Bearer " + token },
+        });
         const response2 = await fetch(
           `/api/doc/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
@@ -76,9 +91,21 @@ const DoctorProfile = () => {
 
         const data = await response.json();
         const data2 = await response2.json();
-        const slots = data2.generalSlots.map((slot) =>
-          format(TimeChange(new Date(slot.starting_time).getTime()), "H:mm")
-        );
+        let avail = {
+          Sunday: [],
+          Monday: [],
+          Tuesday: [],
+          Wednesday: [],
+          Thursday: [],
+          Friday: [],
+          Saturday: [],
+        };
+        data2.generalSlots.map((slot) => {
+          console.log(format(new Date(slot.starting_time).getTime(), "HH:mm"));
+          avail[DAYS_OF_WEEK[slot.day_of_week]].push(
+            format(new Date(slot.starting_time).getTime(), "HH:mm")
+          );
+        });
 
         let certifications = [];
         if (typeof data.certifications === "string") {
@@ -127,7 +154,7 @@ const DoctorProfile = () => {
           office_address: data.doctor.office_address,
           certifications: certifications,
           education: educations,
-          availability: slots.length === 0 ? ["<Add>"] : slots,
+          availability: avail,
         });
         setProfileImage(data.doctor.img);
         localStorage.setItem("docImage", data.doctor.img);
@@ -142,7 +169,7 @@ const DoctorProfile = () => {
           office_address: data.doctor.office_address,
           certifications: certifications,
           education: educations,
-          availability: slots.length === 0 ? ["<Add>"] : slots,
+          availability: avail,
         });
         setFetched(true);
       } catch (error) {
@@ -154,11 +181,43 @@ const DoctorProfile = () => {
     fetchData();
   }, []);
 
-  const handleAddSlot = () => {
+  const handleAddSlot = (day) => {
+    console.log(profile);
+    console.log(editedProfile);
+    const newAvailability = { ...editedProfile.availability };
+    if (!newAvailability[day]) {
+      newAvailability[day] = [];
+    }
+    newAvailability[day].push("09:00");
     setEditedProfile({
       ...editedProfile,
-      availability: [...editedProfile.availability, ""],
+      availability: newAvailability,
     });
+  };
+
+  const handleRemoveSlot = (day, slotIndex) => {
+    const newAvailability = { ...editedProfile.availability };
+    newAvailability[day].splice(slotIndex, 1);
+    setEditedProfile({
+      ...editedProfile,
+      availability: newAvailability,
+    });
+  };
+
+  const handleSlotTimeChange = (day, slotIndex, newTime) => {
+    const newAvailability = { ...editedProfile.availability };
+    newAvailability[day][slotIndex] = newTime;
+    setEditedProfile({
+      ...editedProfile,
+      availability: newAvailability,
+    });
+  };
+
+  const getTotalSlots = (availability) => {
+    return Object.values(availability).reduce(
+      (total, daySlots) => total + daySlots.length,
+      0
+    );
   };
 
   const handleAddEducation = () => {
@@ -225,35 +284,41 @@ const DoctorProfile = () => {
         formData.append("isProfileDone", false);
       }
 
-      const response = await fetch(`/api/doc/modifyDoc`, {
+      await fetch(`/api/doc/modifyDoc`, {
         method: "PUT",
         headers: { Authorization: "Bearer " + token },
         body: formData,
       });
 
-      const filteredAvailability = editedProfile.availability.filter(
-        (slot) => slot.trim() !== "" && slot !== "<Add>"
-      );
       let dates = [];
-      for (let i = 0; i < filteredAvailability.length; i++) {
-        const date = new Date(
-          "1970-01-01T" + filteredAvailability[i] + ":00.000Z"
-        );
-        const newDate = TimeChange(date.getTime());
-        dates.push(newDate);
+      for (let i = 0; i < DAYS_OF_WEEK.length; i++) {
+        for (
+          let j = 0;
+          j < editedProfile.availability[DAYS_OF_WEEK[i]].length;
+          j++
+        ) {
+          const date = new Date(
+            "1970-01-01T" +
+              editedProfile.availability[DAYS_OF_WEEK[i]][j] +
+              ":00.000Z"
+          );
+          const newDate = TimeChange(date.getTime());
+          console.log("inside");
+          dates.push({ time: newDate, day_of_week: i });
+        }
       }
+      console.log(dates);
       if (dates.length !== 0) {
-        const response2 = await fetch(
-          `/api/doc/modifySlots?slotsArray=${dates}&doctorId=${doctorId}`,
+        await fetch(
+          `/api/doc/modifySlots?slotsArray=${JSON.stringify(
+            dates
+          )}&doctorId=${doctorId}`,
           {
             method: "PUT",
             headers: { Authorization: "Bearer " + token },
           }
         );
-        const data2 = await response2.json();
       }
-
-      const data = await response.json();
 
       setProfile({
         ...editedProfile,
@@ -262,8 +327,8 @@ const DoctorProfile = () => {
           filteredCertifications.length > 0
             ? filteredCertifications
             : ["<Add>"],
-        availability:
-          filteredAvailability.length > 0 ? filteredAvailability : ["<Add>"],
+        // availability:
+        //   filteredAvailability.length > 0 ? filteredAvailability : ["<Add>"],
       });
 
       setIsLoading(false);
@@ -359,8 +424,9 @@ const DoctorProfile = () => {
             <div className="flex flex-col md:flex-row items-center md:space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-[var(--custom-blue-100)] to-[var(--custom-blue-100)] flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
-                  }`}
+                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-[var(--custom-blue-100)] to-[var(--custom-blue-100)] flex items-center justify-center shadow-xl overflow-hidden group ${
+                  isEditing ? "cursor-pointer" : ""
+                }`}
               >
                 {profileImage ? (
                   <img
@@ -568,63 +634,6 @@ const DoctorProfile = () => {
                     </div>
                   </div>
                 </div>
-
-                <div>
-                  <div className="flex items-center text-[var(--custom-blue-600)] font-semibold text-lg md:text-2xl mb-5">
-                    General Slots
-                  </div>
-                  <div className="space-y-4">
-                    {isEditing ? (
-                      <div className="space-y-4">
-                        {editedProfile.availability.map((slot, index) => (
-                          <div key={index} className="flex flex-col space-y-4">
-                            <input
-                              type="time"
-                              value={slot}
-                              onChange={(e) => {
-                                const newAvailability = [
-                                  ...editedProfile.availability,
-                                ];
-                                newAvailability[index] = e.target.value;
-                                setEditedProfile({
-                                  ...editedProfile,
-                                  availability: newAvailability,
-                                });
-                              }}
-                              className="bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 text-sm w-40 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
-                            />
-                            {index ===
-                              editedProfile.availability.length - 1 && (
-                                <button
-                                  onClick={handleAddSlot}
-                                  className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold transition-colors"
-                                >
-                                  <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                  Add Slot
-                                </button>
-                              )}
-                          </div>
-                        ))}
-                      </div>
-                    ) : profile.availability.length > 0 ? (
-                      <div className="flex flex-wrap gap-3">
-                        {profile.availability.map((slot, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center px-4 py-2 bg-[var(--custom-blue-100)] text-[var(--custom-blue-600)] rounded-full text-sm font-medium shadow-md border border-[var(--custom-blue-200)] transform hover:scale-110 hover:shadow-custom-blue-300/30 transition-all duration-300"
-                          >
-                            <Clock className="h-4 w-4 mr-2 animate-pulse" />
-                            {slot}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-[var(--custom-gray-400)] italic animate-fade-in">
-                        No slots added
-                      </div>
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -708,14 +717,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                              <button
-                                onClick={handleAddCertification}
-                                className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold mt-3 transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Certification
-                              </button>
-                            )}
+                            <button
+                              onClick={handleAddCertification}
+                              className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold mt-3 transition-colors"
+                            >
+                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                              Add Certification
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -735,6 +744,156 @@ const DoctorProfile = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="bg-white rounded-2xl shadow-xl border border-[var(--custom-blue-100)] p-8">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center text-[var(--custom-blue-600)] font-bold text-2xl md:text-3xl">
+              <Calendar className="h-8 w-8 mr-3" />
+              Weekly Availability
+            </div>
+          </div>
+
+          {/* Summary */}
+          <div className="bg-gradient-to-r from-[var(--custom-blue-50)] to-indigo-50 rounded-xl p-4 mb-8 border border-[var(--custom-blue-200)]">
+            <div className="text-[var(--custom-blue-800)] font-semibold">
+              Total Availability:{" "}
+              {getTotalSlots(
+                isEditing ? editedProfile.availability : profile.availability
+              )}{" "}
+              time slots across the week
+            </div>
+          </div>
+
+          {/* Days Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {DAYS_OF_WEEK.map((day) => {
+              const currentAvailability = isEditing
+                ? editedProfile.availability
+                : profile.availability;
+              const daySlots = currentAvailability[day] || [];
+
+              return (
+                <div
+                  key={day}
+                  className="bg-gradient-to-br from-gray-50 to-[var(--custom-blue-50)] rounded-xl p-6 border border-gray-200 hover:border-[var(--custom-blue-300)] transition-all duration-300 hover:shadow-lg"
+                >
+                  {/* Day Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-gray-800 flex items-center">
+                      <Calendar className="h-5 w-5 mr-2 text-[var(--custom-blue-600)]" />
+                      {day}
+                    </h3>
+                    <span className="bg-[var(--custom-blue-100)] text-[var(--custom-blue-700)] px-3 py-1 rounded-full text-sm font-semibold">
+                      {daySlots.length} slots
+                    </span>
+                  </div>
+
+                  {/* Slots Display/Edit */}
+                  <div className="space-y-3">
+                    {isEditing ? (
+                      <>
+                        {daySlots.map((slot, slotIndex) => (
+                          <div
+                            key={slotIndex}
+                            className="flex items-center space-x-2"
+                          >
+                            <input
+                              type="time"
+                              value={slot}
+                              onChange={(e) =>
+                                handleSlotTimeChange(
+                                  day,
+                                  slotIndex,
+                                  e.target.value
+                                )
+                              }
+                              className="flex-1 bg-white border border-[var(--custom-blue-200)] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300"
+                            />
+                            <button
+                              onClick={() => handleRemoveSlot(day, slotIndex)}
+                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-300"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                        <button
+                          onClick={() => handleAddSlot(day)}
+                          className="group flex items-center justify-center w-full py-3 border-2 border-dashed border-[var(--custom-blue-300)] hover:border-[var(--custom-blue-500)] text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-700)] rounded-lg font-semibold transition-all duration-300 hover:bg-[var(--custom-blue-50)]"
+                        >
+                          <Plus className="h-5 w-5 mr-2 transform group-hover:rotate-90 transition-transform duration-300" />
+                          Add Time Slot
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        {daySlots.length > 0 ? (
+                          <div className="space-y-2">
+                            {daySlots.map((slot, slotIndex) => (
+                              <div
+                                key={slotIndex}
+                                className="flex items-center justify-between bg-white px-4 py-3 rounded-lg border border-[var(--custom-blue-200)] shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-102"
+                              >
+                                <div className="flex items-center">
+                                  <Clock className="h-4 w-4 mr-2 text-[var(--custom-blue-500)]" />
+                                  <span className="font-medium text-gray-800">
+                                    {slot}
+                                  </span>
+                                </div>
+                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 text-gray-400">
+                            <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                            <div className="text-sm italic">
+                              No slots available
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Weekly Overview */}
+          {!isEditing && (
+            <div className="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200">
+              <h3 className="text-lg font-bold text-indigo-800 mb-4 flex items-center">
+                <Calendar className="h-5 w-5 mr-2" />
+                Weekly Overview
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {DAYS_OF_WEEK.map((day) => {
+                  const daySlots = profile.availability[day] || [];
+                  const hasSlots = daySlots.length > 0;
+
+                  return (
+                    <div
+                      key={day}
+                      className={`text-center p-3 rounded-lg border-2 transition-all duration-300 ${
+                        hasSlots
+                          ? "bg-green-50 border-green-200 text-green-800"
+                          : "bg-gray-50 border-gray-200 text-gray-500"
+                      }`}
+                    >
+                      <div className="font-semibold text-sm">
+                        {day.slice(0, 3)}
+                      </div>
+                      <div className="text-xs mt-1">
+                        {hasSlots ? `${daySlots.length} slots` : "Unavailable"}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {isLoading && (
