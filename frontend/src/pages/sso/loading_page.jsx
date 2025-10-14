@@ -321,7 +321,7 @@ const LoadingPage = () => {
                 transition={{ duration: 0.8, delay: 0.5 }}
                 className="text-3xl font-bold text-gray-800 mb-2"
               >
-                IITI CalmConnect
+                Calm Connect
               </motion.h1>
 
               <motion.p
@@ -482,7 +482,7 @@ const LoadingPage = () => {
               </div>
 
               <h1 className="text-3xl font-bold text-gray-800 mb-3">
-                Welcome to IITI CalmConnect
+                Welcome to Calm Connect
               </h1>
 
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">

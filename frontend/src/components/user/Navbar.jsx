@@ -158,7 +158,7 @@ const Navbar = () => {
               height={25}
               className="rounded-md mr-2"
             />
-            <div className="text-xl font-bold">IITI CalmConnect</div>
+            <div className="text-xl font-bold">Calm Connect</div>
           </div>
           <div className="hidden lg:flex space-x-8 items-center">
             {links.map((item, i) => (

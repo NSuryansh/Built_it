@@ -187,7 +187,7 @@ userDocRouter.post(
           date
         ).toDateString()}\nTime: ${new Date(
           date
-        ).toTimeString()}\nReason: ${reason}\n\nRegards\nIITI CalmConnect`
+        ).toTimeString()}\nReason: ${reason}\n\nRegards\nCalm Connect`
       );
 
       res.json({

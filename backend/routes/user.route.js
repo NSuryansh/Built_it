@@ -738,7 +738,7 @@ userRouter.post("/otpGenerate", async (req, res) => {
 
     // console.log(otpgen);
     const subject = "OTP Verification";
-    const message = `Use the following OTP to verify signup for IITI CalmConnect: ${otp}`;
+    const message = `Use the following OTP to verify signup for Calm Connect: ${otp}`;
     sendEmail(email, subject, message);
     res.json({
       message: "OTP sent to your mail!",

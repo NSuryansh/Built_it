@@ -1,4 +1,4 @@
-# IITI CalmConnect
+# Calm Connect
 
 A comprehensive Mental Health Wellness web application that connects users with certified doctors for consultations, live chat, and emotional support. The platform is designed with three distinct portals: **User**, **Doctor**, and **Admin**, supporting secure appointments, anonymous live chat, happiness tracking, and more.
 

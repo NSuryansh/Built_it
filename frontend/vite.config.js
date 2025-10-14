@@ -19,7 +19,7 @@ export default defineConfig({
           }
         ],
         theme_color: "#ffffff",
-        name: "IITI CalmConnect",
+        name: "Calm Connect",
         short_name: "CalmConnect",
       },
       workbox: {

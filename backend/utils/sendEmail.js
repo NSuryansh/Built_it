@@ -18,7 +18,7 @@ export const sendEmail = async (to, subject, text) => {
     // console.log(transporter);
 
     const info = await transporter.sendMail({
-      from: '"IITI CalmConnect" tanveeiii15@gmail.com',
+      from: '"Calm Connect" tanveeiii15@gmail.com',
       to,
       subject,
       text,

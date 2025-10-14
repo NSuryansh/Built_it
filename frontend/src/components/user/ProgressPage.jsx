@@ -5,52 +5,52 @@ import CustomToast from "../common/CustomToast";
 const ProgressPage = ({ isLandingPage }) => {
   const [scores, setScores] = useState({});
 
-  useEffect(() => {
-    const fetchScores = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/scores", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
-        });
-        const data = await response.json();
-        console.log(data.error);
-        if (data.error === "User not found") {
-          setScores({
-            mental_health_score: 11,
-            stress_score: 11,
-            academic_performance_score: 11,
-            sleep_quality_score: 11,
-          });
-        } else if (!response.ok) {
-          throw new Error(`HTTP error!!!!! status: ${response.status}`);
-        } else {
-          // const data = await response.json();
-          // console.log(data);
-          setScores({
-            mental_health_score: data.mental_health_score || 0,
-            stress_score: 10 - data.stress_score || 0,
-            academic_performance_score: data.academic_performance_score || 0,
-            sleep_quality_score: data.sleep_quality_score || 0,
-          });
-        }
-      } catch (error) {
-        console.log(error);
-        // if(data.error == "User not found"){
-        //     setScores({
-        //     mental_health_score: 0,
-        //     stress_score: 0,
-        //     academic_performance_score:  0,
-        //     sleep_quality_score: 0,
-        //   });}else{
-        console.error("Error in fetching scores: ", error.message);
-        CustomToast("Error while fetching scores");
-        // }
-      }
-    };
+  // useEffect(() => {
+  //   const fetchScores = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:3000/api/scores", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
+  //       });
+  //       const data = await response.json();
+  //       console.log(data.error);
+  //       if (data.error === "User not found") {
+  //         setScores({
+  //           mental_health_score: 11,
+  //           stress_score: 11,
+  //           academic_performance_score: 11,
+  //           sleep_quality_score: 11,
+  //         });
+  //       } else if (!response.ok) {
+  //         throw new Error(`HTTP error!!!!! status: ${response.status}`);
+  //       } else {
+  //         // const data = await response.json();
+  //         // console.log(data);
+  //         setScores({
+  //           mental_health_score: data.mental_health_score || 0,
+  //           stress_score: 10 - data.stress_score || 0,
+  //           academic_performance_score: data.academic_performance_score || 0,
+  //           sleep_quality_score: data.sleep_quality_score || 0,
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       // if(data.error == "User not found"){
+  //       //     setScores({
+  //       //     mental_health_score: 0,
+  //       //     stress_score: 0,
+  //       //     academic_performance_score:  0,
+  //       //     sleep_quality_score: 0,
+  //       //   });}else{
+  //       console.error("Error in fetching scores: ", error.message);
+  //       CustomToast("Error while fetching scores");
+  //       // }
+  //     }
+  //   };
 
-    fetchScores();
-  }, []);
+  //   fetchScores();
+  // }, []);
 
   const calculateHappinessScore = () => {
     const scoreValues = Object.values(scores);

@@ -165,7 +165,7 @@ docRouter.post("/reschedule", async (req, res) => {
     await sendEmail(
       email,
       "Appointment Reschedule",
-      `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
+      `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nCalm Connect`
     );
     console.log("he");
     res.json(reschedule);
@@ -177,7 +177,7 @@ docRouter.post("/reschedule", async (req, res) => {
       await sendEmail(
         email,
         "Appointment Reschedule",
-        `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nIITI CalmConnect`
+        `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nCalm Connect`
       );
       res.json(reschedule);
     } else {
@@ -255,7 +255,7 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
         some
       ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
         doctor.office_address
-      }\n\nRegards\nIITI CalmConnect`
+      }\n\nRegards\nCalm Connect`
     );
 
     await sendEmail(
@@ -267,7 +267,7 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
         some
       ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
         doctor.office_address
-      }\n\nRegards\nIITI CalmConnect`
+      }\n\nRegards\nCalm Connect`
     );
 
     res.json({ message: "Appointment booked successfully", result });

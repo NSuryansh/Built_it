@@ -52,25 +52,18 @@ const Dashboard = () => {
         {/* Main Container - Responsive Flex */}
         <div className="flex flex-col xl:flex-row gap-4 w-full">
           {/* Calendar Section - Holographic Glass */}
-          <div className="flex flex-col md:flex-row w-full xl:w-2/3 gap-4">
-            <div className="w-full h-fit min-h-[27rem] sm:min-h-[33.75rem]  md:min-h-[40.5rem] lg:min-h-[57.375] bg-[var(--custom-white)]/60 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(255,147,51,0.2),_inset_0_4px_12px_rgba(255,255,255,0.6)] p-4 lg:p-8 border border-[var(--custom-orange-200)]/40 transform hover:scale-[1.02] hover:shadow-[0_15px_50px_rgba(255,147,51,0.3)] hover:border-[var(--custom-orange-300)]/60 transition-all duration-200 ease-out group">
+          <div className="flex flex-col md:flex-row w-full xl:w-1/3 gap-4">
+            <div className="w-full h-fit bg-[var(--custom-white)]/60 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(255,147,51,0.2),_inset_0_4px_12px_rgba(255,255,255,0.6)] p-4 lg:p-8 border border-[var(--custom-orange-200)]/40 transform hover:scale-[1.02] hover:shadow-[0_15px_50px_rgba(255,147,51,0.3)] hover:border-[var(--custom-orange-300)]/60 transition-all duration-200 ease-out group">
               <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-[var(--custom-orange-500)] tracking-wide mb-4 drop-shadow-[0_2px_4px_rgba(255,147,51,0.4)] group-hover:text-[var(--custom-orange-600)] transition-colors duration-200">
                 Calendar
               </div>
               <Calendar />
             </div>
 
-            {/* Progress Section - Vibrant 3D Effect, No Scrollbar */}
-            <div className="w-full h-fit min-h-[27rem] sm:min-h-[33.75rem]  md:min-h-[40.5rem] lg:min-h-[57.375] bg-gradient-to-br from-[var(--custom-white)]/70 to-pink-50/70 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(236,72,153,0.2),_inset_0_4px_12px_rgba(255,255,255,0.6)] p-4 lg:p-8 overflow-y-hidden border border-[var(--custom-orange-200)]/40 transform hover:scale-[1.02] hover:shadow-[0_15px_50px_rgba(255,147,51,0.3)] hover:border-[var(--custom-orange-300)]/60 transition-all duration-200 ease-out group">
-              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-[var(--custom-orange-500)] tracking-wide mb-4 drop-shadow-[0_2px_4px_rgba(255,147,51,0.4)] group-hover:text-[var(--custom-orange-600)] transition-colors duration-200">
-                Your Progress
-              </div>
-              <ProgressPage isLandingPage={true} />
-            </div>
           </div>
 
           {/* Events Section - Luxurious Holography with Visible Scrollbar */}
-          <div className="w-full xl:w-1/3 min-h-[27rem] sm:min-h-[33.75rem]  md:min-h-[40.5rem] lg:min-h-[57.375] bg-[var(--custom-white)]/60 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(147,51,234,0.2),_inset_0_4px_12px_rgba(255,255,255,0.6)] p-4 sm:p-6 md:p-8 border overflow-hidden border-[var(--custom-orange-200)]/40 transform hover:scale-[1.02] hover:shadow-[0_15px_50px_rgba(255,147,51,0.3)] hover:border-[var(--custom-orange-300)]/60 transition-all duration-200 ease-out group">
+          <div className="w-full xl:w-2/3 min-h-[27rem] sm:min-h-[33.75rem] bg-[var(--custom-white)]/60 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(147,51,234,0.2),_inset_0_4px_12px_rgba(255,255,255,0.6)] p-4 sm:p-6 md:p-8 border overflow-hidden border-[var(--custom-orange-200)]/40 transform hover:scale-[1.02] hover:shadow-[0_15px_50px_rgba(255,147,51,0.3)] hover:border-[var(--custom-orange-300)]/60 transition-all duration-200 ease-out group">
             <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-[var(--custom-orange-500)] tracking-wide mb-4 drop-shadow-[0_2px_4px_rgba(255,147,51,0.4)] group-hover:text-[var(--custom-orange-600)] transition-colors duration-200">
               Upcoming Events
             </div>

@@ -24,9 +24,9 @@ const EventsDisplay = () => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-[var(--custom-gray-800)]">
+      {/* <h2 className="text-2xl font-bold text-[var(--custom-gray-800)]">
         Upcoming Events
-      </h2>
+      </h2> */}
 
       {events.length > 0 ? (
         events.map((event) => (
