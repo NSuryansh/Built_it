@@ -8,7 +8,7 @@ const ProgressPage = ({ isLandingPage }) => {
   useEffect(() => {
     const fetchScores = async () => {
       try {
-        const response = await fetch("/api/scores", {
+        const response = await fetch("http://localhost:3000/api/scores", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: localStorage.getItem("userid") }),

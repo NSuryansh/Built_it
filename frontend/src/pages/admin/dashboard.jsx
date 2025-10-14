@@ -50,7 +50,7 @@ const AdminDashboard = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          "/api/admin/pastApp",
+          "http://localhost:3000/api/admin/pastApp",
           {
             headers: { Authorization: "Bearer " + token },
           }
@@ -146,7 +146,7 @@ const AdminDashboard = () => {
   const handleRefresh = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/admin/pastApp", {
+      const response = await fetch("http://localhost:3000/api/admin/pastApp", {
         headers: { Authorization: "Bearer " + token },
       });
       const data = await response.json();

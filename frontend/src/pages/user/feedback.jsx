@@ -99,12 +99,12 @@ const FeedbackPage = () => {
   const getAppointmentById = async () => {
     try {
       const res = await fetch(
-        `/api/user/getAppointmentById?id=${appointmentId}`,
+        `http://localhost:3000/api/user/getAppointmentById?id=${appointmentId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await res.json();
       const res2 = await fetch(
-        `/api/common/getDoc?docId=${data.doc_id}`,
+        `http://localhost:3000/api/common/getDoc?docId=${data.doc_id}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
@@ -143,7 +143,7 @@ const FeedbackPage = () => {
   const submitFeedback = async () => {
     setisSubmitting(true);
     try {
-      const res = await fetch("/api/user/setFeedback", {
+      const res = await fetch("http://localhost:3000/api/user/setFeedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

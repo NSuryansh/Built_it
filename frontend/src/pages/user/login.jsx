@@ -44,7 +44,7 @@ const Login = () => {
     const googleIdToken = response.credential;
 
     try {
-      const res = await fetch("/api/user/google-login", {
+      const res = await fetch("http://localhost:3000/api/user/google-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: googleIdToken }),
@@ -120,7 +120,7 @@ const Login = () => {
       return;
     }
     setError("");
-    const response = await fetch("/api/user/login", {
+    const response = await fetch("http://localhost:3000/api/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -154,7 +154,7 @@ const Login = () => {
       return;
     }
     const response = await fetch(
-      "/api/user/forgotPassword",
+      "http://localhost:3000/api/user/forgotPassword",
       {
         method: "POST",
         headers: {
@@ -188,7 +188,7 @@ const Login = () => {
   const handleBiometricLogin = async () => {
     console.log(username, "usduse");
     const data = await fetch(
-      "/api/user/generateBioAuthOptions",
+      "http://localhost:3000/api/user/generateBioAuthOptions",
       {
         method: "POST",
         body: JSON.stringify({
@@ -228,7 +228,7 @@ const Login = () => {
       },
     };
 
-    const res = await fetch("/api/user/verifyBioLogin", {
+    const res = await fetch("http://localhost:3000/api/user/verifyBioLogin", {
       method: "POST",
       // body: JSON.stringify({
       //   emailId: username
