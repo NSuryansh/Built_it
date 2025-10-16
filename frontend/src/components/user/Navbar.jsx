@@ -20,7 +20,7 @@ const Navbar = () => {
 
   const links = [
     { name: "Home", link: "/user/dashboard" },
-    { name: "Mood", link: "/user/mood" },
+    // { name: "Mood", link: "/user/mood" },
     { name: "Peer", link: "/user/peer" },
     { name: "Book", link: "/user/book" },
     { name: "Stress", link: "/user/stress" },

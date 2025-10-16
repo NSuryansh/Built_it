@@ -99,16 +99,16 @@ const Calendar = ({ onDateSelect }) => {
             onClick={() => setCurrentMonth(addDays(currentMonth, -30))}
             className="p-2 rounded-lg bg-[var(--custom-gray-200)] hover:bg-[var(--custom-gray-300)] transition-all"
           >
-            <ChevronLeft className="w-5 h-5 text-[var(--custom-gray-700)]" />
+            <ChevronLeft className="w-4 h-4 text-[var(--custom-gray-700)]" />
           </button>
-          <h2 className="text-2xl font-bold text-[var(--custom-gray-900)]">
+          <h2 className="text-2xl font-semibold text-[var(--custom-gray-900)]">
             {format(currentMonth, "MMMM yyyy")}
           </h2>
           <button
             onClick={() => setCurrentMonth(addDays(currentMonth, 30))}
             className="p-2 rounded-lg bg-[var(--custom-gray-200)] hover:bg-[var(--custom-gray-300)] transition-all"
           >
-            <ChevronRight className="w-5 h-5 text-[var(--custom-gray-700)]" />
+            <ChevronRight className="w-4 h-4 text-[var(--custom-gray-700)]" />
           </button>
         </div>
 

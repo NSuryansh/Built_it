@@ -6,7 +6,7 @@ import { getMessaging, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
 import Landing from "./pages/user/landing";
 import Peer from "./pages/user/peer";
-import Mood from "./pages/user/mood";
+// import Mood from "./pages/user/mood";
 import Book from "./pages/user/book";
 import Stress from "./pages/user/stress";
 import Entertainment from "./pages/user/entertainment";
@@ -171,7 +171,7 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/sso" element={<LoadingPage />} />
           <Route path="/user/peer" element={<Peer />} />
-          <Route path="/user/mood" element={<Mood />} />
+          {/* <Route path="/user/mood" element={<Mood />} /> */}
           <Route path="/user/book" element={<Book />} />
           <Route path="/user/stress" element={<Stress />} />
           <Route path="/user/entertainment" element={<Entertainment />} />
