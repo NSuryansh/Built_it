@@ -5,6 +5,7 @@ import AdminNavbar from "../../components/admin/Navbar";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/common/CustomToast";
 import SessionExpired from "../../components/common/SessionExpired";
+import AddBatchPopup from "../../components/admin/BatchPopup";
 import {
   Calendar,
   Clock,
@@ -25,7 +26,13 @@ const AddEvent = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [batches, setBatches] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
   const token = localStorage.getItem("token");
+
+  const removeBatch = (index) => {
+    setBatches(prev => prev.filter((_, i) => i !== index));
+  };
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -53,6 +60,7 @@ const AddEvent = () => {
           description: description,
           dateTime: dateTime,
           venue: location,
+          batches: batches,
         }),
       });
 
@@ -158,6 +166,49 @@ const AddEvent = () => {
                   required
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <div>
+                <button
+                  onClick={() => setShowPopup(true)}
+                  className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                >
+                  + Add Batch
+                </button>
+
+                <p className="mt-2 text-sm text-gray-500">
+                  If none selected, the event will be visible to <b>all students</b>.
+                </p>
+              </div>
+
+              {/* Selected batches */}
+              <div className="flex flex-wrap gap-2">
+                {batches.map((b, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
+                  >
+                    <span>
+                      {b.program} • {b.year} • {b.dept}
+                    </span>
+                    <button
+                      onClick={() => removeBatch(i)}
+                      className="ml-1 text-gray-500 hover:text-red-500"
+                      title="Remove"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {showPopup && (
+                <AddBatchPopup
+                  onAdd={batch => setBatches(prev => [...prev, batch])}
+                  onClose={() => setShowPopup(false)}
+                />
+              )}
             </div>
 
             <div className="space-y-3">
