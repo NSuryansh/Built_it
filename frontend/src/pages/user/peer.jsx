@@ -458,7 +458,8 @@ const Peer = () => {
               <div className="overflow-y-auto">
                 <div className="w-full px-3 py-2 absolute bg-gray-100 flex justify-center items-center text-[var(--custom-gray-400)] text-xs font-light">
                   <InfoIcon size={12} className="mr-1 !w-4 !h-4" />
-                  Something appears here
+                   Therapist may be busy sometimes in an appointment. Hence it is
+                  better to book an appointment.
                 </div>
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
                   {editedMessages.map((msg, index) => (
