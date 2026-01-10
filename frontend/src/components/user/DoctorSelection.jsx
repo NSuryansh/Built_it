@@ -70,7 +70,7 @@ const DoctorSelectionStep = ({ doctors, onSelect, selectable }) => {
         <div className="text-center py-12">
           <User className="w-16 h-16 text-[var(--custom-orange-300)] mx-auto mb-4" />
           <p className="text-xl font-semibold text-[var(--custom-orange-700)]">
-            No doctors available at the moment.
+            No Therapist available at the moment.
           </p>
           <p className="mt-2 text-[var(--custom-orange-600)]">
             Please check back later or contact support for assistance.

@@ -382,7 +382,7 @@ const Peer = () => {
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Search doctors..."
+                    placeholder="Search Therapist..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 bg-[var(--custom-gray-50)] border border-[var(--custom-gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-400)] text-[var(--custom-gray-900)] placeholder-[var(--custom-gray-500)] transition-all duration-200"
@@ -414,7 +414,7 @@ const Peer = () => {
                 No Conversations Yet
               </h3>
               <p className="text-[var(--custom-gray-600)] mt-2">
-                Start chatting with a doctor to begin your consultation.
+                Start chatting with a Therapist to begin your consultation.
               </p>
             </div>
           )}
@@ -488,7 +488,7 @@ const Peer = () => {
                   Select a Conversation
                 </h3>
                 <p className="text-[var(--custom-gray-600)] mt-2">
-                  Choose a doctor to start chatting.
+                  Choose a Therapist to start chatting.
                 </p>
               </div>
             </div>
@@ -505,7 +505,7 @@ const Peer = () => {
                   <div className="relative">
                     <input
                       type="text"
-                      placeholder="Search doctors..."
+                      placeholder="Search Therapist..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-10 pr-4 py-1 bg-[var(--custom-gray-50)] border border-[var(--custom-gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-400)] text-[var(--custom-gray-900)] placeholder-[var(--custom-gray-500)] transition-all duration-200"
@@ -537,7 +537,7 @@ const Peer = () => {
                     No Conversations Yet
                   </h3>
                   <p className="text-[var(--custom-gray-600)] mt-2">
-                    Start chatting with a doctor to begin your consultation.
+                    Start chatting with a Therapist to begin your consultation.
                   </p>
                 </div>
               </div>

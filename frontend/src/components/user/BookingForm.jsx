@@ -275,7 +275,7 @@ const BookingFormStep = ({
             className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[var(--custom-white)] border-2 border-[var(--custom-orange-400)] text-[var(--custom-orange-600)] font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Doctors
+            Back to Therpaist
           </button>
 
           <button

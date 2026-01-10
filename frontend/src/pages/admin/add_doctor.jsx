@@ -57,7 +57,7 @@ const AddDoctor = () => {
         }),
       });
       const resp = await res.json();
-      CustomToast("Doctor Added", "green");
+      CustomToast("Therapist Added", "green");
       navigate("/admin/doctor_list");
     } catch (e) {
       CustomToast("Some error occured", "green");
@@ -85,7 +85,7 @@ const AddDoctor = () => {
       <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-2xl">
           <h1 className="text-2xl sm:text-3xl font-bold text-[var(--custom-green-900)] mb-8 text-center">
-            Add New Doctor
+            Add New Therapist
           </h1>
 
           <div className="bg-[var(--custom-white)] p-6 sm:p-8 rounded-xl shadow-lg">
@@ -105,7 +105,7 @@ const AddDoctor = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Enter doctor's full name"
+                    placeholder="Enter Therapist's full name"
                     className="w-full px-4 py-2 border border-[var(--custom-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-green-500)] focus:border-transparent transition-all duration-200"
                     required
                   />
@@ -125,7 +125,7 @@ const AddDoctor = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="doctor@example.com"
+                    placeholder="therapist@example.com"
                     className="w-full px-4 py-2 border border-[var(--custom-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-green-500)] focus:border-transparent transition-all duration-200"
                     required
                   />
@@ -187,7 +187,7 @@ const AddDoctor = () => {
                   name="desc"
                   value={formData.desc}
                   onChange={handleChange}
-                  placeholder="Enter doctor's specialization and details"
+                  placeholder="Enter Therapist's specialization and details"
                   rows="3"
                   className="w-full px-4 py-2 border border-[var(--custom-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-green-500)] focus:border-transparent transition-all duration-200 resize-y"
                   required
@@ -228,7 +228,7 @@ const AddDoctor = () => {
                   type="submit"
                   className="px-6 py-2 bg-[var(--custom-green-600)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-green-700)] transition-colors duration-200 font-medium"
                 >
-                  Add Doctor
+                  Add Therapist
                 </button>
               </div>
             </form>

@@ -205,7 +205,7 @@ const Book = () => {
             <div className="min-h-[40.5rem] flex items-center justify-center animate-fade-in">
               <div className="text-center">
                 <h2 className="text-3xl font-bold text-[var(--custom-gray-900)] mb-6">
-                  Select Your Buddy
+                  Select Your Therapist
                 </h2>
                 <DoctorSelectionStep
                   doctors={doctors}
