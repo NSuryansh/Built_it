@@ -83,6 +83,9 @@ const UserProfile = () => {
             <p className="text-sm text-[var(--custom-gray-500)] mt-1">
               Patient ID: {user.id}
             </p>
+            <p className="text-sm text-[var(--custom-gray-500)] mt-1">
+              Emergency Contact Number : {user.alt_mobile}
+            </p>
           </div>
           <div className="">
             {isEditing ? (

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/common/SessionExpired";
 import { TimeChange, TimeReduce } from "../../components/common/TimeChange";
 import CustomToast from "../../components/common/CustomToast";
+import { TfiEmail } from "react-icons/tfi";
 import {
   BarChart,
   Bar,
@@ -523,6 +524,13 @@ const DoctorAppointment = () => {
                             <span className="font-semibold tracking-tight">
                               {appointment.user.username}
                             </span>
+
+                          </div>
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <TfiEmail className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                            <span className="tracking-tight">
+                              {appointment.user.email}
+                            </span>
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
@@ -717,6 +725,13 @@ const DoctorAppointment = () => {
                             <CircleUser className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             <span className="font-semibold tracking-tight">
                               {appointment.user.username}
+                            </span>
+
+                          </div>
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <TfiEmail className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                            <span className=" tracking-tight">
+                              {appointment.user.email}
                             </span>
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">

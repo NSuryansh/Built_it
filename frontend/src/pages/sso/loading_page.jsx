@@ -213,8 +213,8 @@ const LoadingPage = () => {
       restrictionText: "",
     },
     {
-      type: "doctor",
-      title: "Join as Doctor",
+      type: "Therapist",
+      title: "Join as Therapist",
       description:
         "Provide professional support, manage patient care, and contribute to mental wellness",
       icon: Stethoscope,
@@ -223,7 +223,7 @@ const LoadingPage = () => {
       buttonText: "Contact Admin",
       buttonIcon: Mail,
       isRestricted: true,
-      restrictionText: "Doctor registration requires admin approval",
+      restrictionText: "Therapist registration requires admin approval",
     },
     {
       type: "admin",

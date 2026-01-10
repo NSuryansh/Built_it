@@ -83,17 +83,17 @@ const DoctorsList = () => {
       await fetchDoctors();
       if (res.ok) {
         if (doctor.isInactive) {
-          CustomToast("Doctor activated successfully", "green");
+          CustomToast("Therapist activated successfully", "green");
         } else {
-          CustomToast("Doctor deactivated successfully", "green");
+          CustomToast("Therapist deactivated successfully", "green");
         }
       } else {
-        CustomToast("Error updating doctor", "green");
+        CustomToast("Error updating Therapist", "green");
       }
       setToggleDocPopupOpen(false);
     } catch (error) {
       console.error(error);
-      CustomToast("Error updating doctor", "green");
+      CustomToast("Error updating Therapist", "green");
     }
   };
 
@@ -145,7 +145,7 @@ const DoctorsList = () => {
           <div className="relative flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[var(--custom-green-700)] mb-2 tracking-tight">
-                Doctors Directory
+                Therapists Directory
               </h1>
               <p className="text-[var(--custom-teal-700)] text-md md:text-lg">
                 Managing {doctors.length} Healthcare Professionals
@@ -165,7 +165,7 @@ const DoctorsList = () => {
                 className="inline-flex items-center gap-2 bg-[var(--custom-white)] text-[var(--custom-green-700)] font-semibold px-3 py-1.5 md:px-6 md:py-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-102 hover:bg-[var(--custom-white)]/80"
               >
                 <UserPlus size={20} />
-                Add Doctor
+                Add Therapist
               </Link>
             </div>
           </div>
@@ -251,7 +251,7 @@ const DoctorsList = () => {
                             ? "text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)]"
                             : "text-[var(--custom-red-600)] hover:text-[var(--custom-red-700)]"
                           } transition-colors rounded-full hover:bg-[var(--custom-red-50)] group relative`}
-                        title="Set Doctor Inactive"
+                        title="Set Therapist Inactive"
                       >
                         {doctor.isInactive ? (
                           <UserPlus size={18} />
@@ -354,8 +354,8 @@ const DoctorsList = () => {
           handleToggleDoc={handleToggleDoc}
           text={
             selectedDoc.isInactive
-              ? "Are you sure you want to activate the doctor?"
-              : "Are you sure you want to deactivate the doctor?"
+              ? "Are you sure you want to activate the Therapist?"
+              : "Are you sure you want to deactivate the Therapist?"
           }
         />
       )}

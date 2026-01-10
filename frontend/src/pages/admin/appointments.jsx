@@ -278,7 +278,7 @@ const AdminAppointments = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-[var(--custom-gray-600)] font-medium">
-                  Total Doctors
+                  Total Therapists
                 </p>
                 <p className="text-3xl font-bold text-[var(--custom-gray-900)] mt-2">
                   {doctors.length}
@@ -400,7 +400,7 @@ const AdminAppointments = () => {
                       <div className="flex items-center gap-3 mb-3">
                         <Stethoscope className="h-5 w-5 text-[var(--custom-green-600)]" />
                         <h3 className="font-semibold text-[var(--custom-gray-900)]">
-                          Doctor Details
+                          Therapist Details
                         </h3>
                       </div>
                       <p className="text-lg font-medium text-[var(--custom-green-900)] mb-1">

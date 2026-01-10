@@ -105,7 +105,7 @@ const AdminDoctorProfile = () => {
         setfetched(true);
       } catch (e) {
         console.error(e);
-        CustomToast("Error fetching doctor details", "green");
+        CustomToast("Error fetching Therapist details", "green");
         setfetched(false);
       }
     };
