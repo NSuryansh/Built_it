@@ -51,11 +51,32 @@ const Events = () => {
     );
   }
 
+  function isEventVisibleToUser(event) {
+    // No batch restriction → visible to all
+    if (!event.batches || event.batches.length === 0) {
+      return true;
+    }
+
+    // Check if any batch matches user
+    return event.batches.some(
+      b =>
+        b.program === localStorage.getItem("user_prog") &&
+        b.year === localStorage.getItem("user_batch") &&
+        b.dept === localStorage.getItem("user_dept")
+    );
+  }
+
+
   async function getCurrEvents() {
     const res = await fetch("http://localhost:3000/api/common/events", {
       headers: { Authorization: "Bearer " + token },
     });
     const resp = await res.json();
+    // const filtered = resp.filter(event =>
+    //   isEventVisibleToUser(event)
+    // );
+    console.log(resp);
+    // console.log(filtered);
     setCurrentEvents(resp);
   }
 
@@ -64,7 +85,10 @@ const Events = () => {
       headers: { Authorization: "Bearer " + token },
     });
     const resp = await res.json();
-    setPastEvents(resp);
+    const filtered = resp.filter(event =>
+      isEventVisibleToUser(event)
+    );
+    setPastEvents(filtered);
   }
 
   const filterEvents = (events) => {

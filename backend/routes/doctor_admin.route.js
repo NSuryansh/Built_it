@@ -21,6 +21,7 @@ docAdminRouter.post("/addEvent", authorizeRoles("doc", "admin"), async (req, res
     const dateTime = req.body["dateTime"];
     const venue = req.body["venue"];
     const url = req.body["url"];
+    const batches = req.body["batches"];
 
     // Validate required fields
     if (!title || !dateTime || !venue) {
@@ -28,6 +29,12 @@ docAdminRouter.post("/addEvent", authorizeRoles("doc", "admin"), async (req, res
         .status(400)
         .json({ error: "Title, DateTime, and Venue are required" });
     }
+    // Validate batch is an array
+    // if (batches && !Array.isArray(batches)) {
+    //   return res.status(400).json({
+    //     error: "Batches must be an array",
+    //   });
+    // }
 
     // Create the event in Prisma
     const event = await prisma.events.create({
@@ -37,8 +44,10 @@ docAdminRouter.post("/addEvent", authorizeRoles("doc", "admin"), async (req, res
         dateTime: new Date(dateTime), // Ensure it's a valid Date object
         venue: venue,
         url: url,
+        batches: batches ?? [],
       },
     });
+
 
     res.json(event); // Return created event
   } catch (error) {

@@ -32,6 +32,7 @@ export const checkAuth = async (userType) => {
 
     const res2 = await response.json();
     console.log(res2);
+    localStorage.clear()
 
     if (userType === "user") {
       localStorage.setItem("userid", res2["user"]["id"]);
@@ -41,6 +42,9 @@ export const checkAuth = async (userType) => {
       localStorage.setItem("user_alt_mobile", res2["user"]["alt_mobile"]);
       localStorage.setItem("user_rollNo", res2["user"]["rollNo"]);
       localStorage.setItem("user_type", userType);
+      localStorage.setItem("user_batch", res2["user"]["batch"]);
+      localStorage.setItem("user_prog", res2["user"]["acadProg"]);
+      localStorage.setItem("user_dept", res2["user"]["department"]);
     } else if (userType === "doc") {
       localStorage.setItem("userid", res2["doctor"]["id"]);
       localStorage.setItem("username", res2["doctor"]["name"]);
