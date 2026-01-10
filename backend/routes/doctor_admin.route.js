@@ -13,7 +13,39 @@ docAdminRouter.get("/getUsers", authorizeRoles("doc", "admin"), async (req, res)
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+docAdminRouter.get("/user-feedback", authorizeRoles("admin"), async (req, res) => {
+  try {
+    const userId = Number(req.query.userId);
 
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    // Fetch past appointments where feedback (stars) exists
+    const feedbacks = await prisma.pastAppointments.findMany({
+      where: {
+        user_id: userId,
+        stars: { not: null }, // Only fetch if feedback was submitted
+      },
+      include: {
+        doc: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.json(feedbacks);
+  } catch (error) {
+    console.error("Error fetching user feedback:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 docAdminRouter.post("/addEvent", authorizeRoles("doc", "admin"), async (req, res) => {
   try {
     const title = req.body["title"];
