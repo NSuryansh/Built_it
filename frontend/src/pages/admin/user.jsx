@@ -69,7 +69,7 @@ const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig }) => {
         <table className="min-w-full divide-y divide-[var(--custom-gray-100)]">
           <thead className="bg-[var(--custom-gray-50)]">
             <tr>
-              {["User", "Degree", "Doctors", "Appointments"].map(
+              {["User", "Degree", "Therapist", "Appointments"].map(
                 (header, idx) => (
                   <th
                     key={header}

@@ -383,7 +383,7 @@ const DoctorProfile = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center animate-fade-in-down">
           <div>
             <h1 className="text-center text-3xl lg:text-4xl xl:text-5xl sm:text-start font-extrabold bg-[var(--custom-blue-950)] bg-clip-text text-[var(--custom-blue-800)]">
-              Doctor Profile
+              Therapist Profile
             </h1>
             <p className="mt-3 text-sm sm:text-md lg:text-lg text-[var(--custom-gray-600)] font-medium">
               Curate your professional identity effortlessly

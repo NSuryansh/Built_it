@@ -76,7 +76,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
             },
             body: JSON.stringify({
               userId: userId,
-              message: "Doctor has requested an appointment with you",
+              message: "Therapist has requested an appointment with you",
               userType: "user",
             }),
           }
