@@ -1,5 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { MessageSquare, Search, X, UserCircle2, User } from "lucide-react";
+import {
+  MessageSquare,
+  Search,
+  X,
+  UserCircle2,
+  User,
+  InfoIcon,
+} from "lucide-react";
 import ChatList from "../../components/common/ChatList";
 import ChatMessage from "../../components/common/ChatMessage";
 import ChatInput from "../../components/common/ChatInput";
@@ -421,7 +428,7 @@ const Peer = () => {
         </div>
 
         {/* Chat Area */}
-        <div className="flex flex-col h-full flex-1 bg-gradient-to-b from-[var(--custom-gray-50)] to-[var(--custom-white)]">
+        <div className="relative flex flex-col h-full flex-1 bg-gradient-to-b from-[var(--custom-gray-50)] to-[var(--custom-white)]">
           {selectedChat !== null ? (
             <>
               <div className="p-4 flex items-center justify-between border-b border-[var(--custom-gray-200)] bg-[var(--custom-white)] shadow-sm">
@@ -448,20 +455,26 @@ const Peer = () => {
                   <X className="w-6 h-6 text-[var(--custom-gray-500)]" />
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {editedMessages.map((msg, index) => (
-                  <ChatMessage
-                    key={index}
-                    message={msg.decryptedText}
-                    isSent={msg.senderType === "user"}
-                  />
-                ))}
-                <div ref={messagesEndRef} />
+              <div className="overflow-y-auto">
+                <div className="w-full px-3 py-2 absolute bg-gray-100 flex justify-center items-center text-[var(--custom-gray-400)] text-xs font-light">
+                  <InfoIcon size={12} className="mr-1 !w-4 !h-4" />
+                  Something appears here
+                </div>
+                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                  {editedMessages.map((msg, index) => (
+                    <ChatMessage
+                      key={index}
+                      message={msg.decryptedText}
+                      isSent={msg.senderType === "user"}
+                    />
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
               </div>
-              <div className="border-t border-[var(--custom-gray-200)] p-4 bg-[var(--custom-white)] shadow-sm">
+              <div className="absolute w-full bottom-0 border-t border-[var(--custom-gray-200)] p-4 bg-[var(--custom-white)] shadow-sm">
                 {isChatDisabled() ? (
                   <div className="text-center text-[var(--custom-gray-600)]">
-                    <p className="mb-2">Chat is disabled from 8 PM to 11 PM.</p>
+                    <p className="mb-2">Chat is disabled from 8 PM to 11 AM.</p>
                     <p>
                       For emergencies, please contact:{" "}
                       <strong>
@@ -567,10 +580,11 @@ const Peer = () => {
                   key={index}
                   message={msg.decryptedText}
                   isSent={msg.senderType === "user"}
-                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${msg.senderId === userId
+                  className={`p-4 rounded-2xl max-w-[70%] shadow-md transition-all duration-300 ${
+                    msg.senderId === userId
                       ? "bg-gradient-to-r from-[var(--custom-orange-400)] to-[var(--custom-blue-400)] ml-auto text-[var(--custom-white)]"
                       : "bg-[var(--custom-gray-100)] text-[var(--custom-gray-800)]"
-                    }`}
+                  }`}
                 />
               ))}
               <div ref={messagesEndRef} />
