@@ -647,21 +647,31 @@ userRouter.post("/resetPassword", async (req, res) => {
 });
 
 userRouter.post("/setFeedback", authorizeRoles("user"), async (req, res) => {
-  const stars = req.body["stars"];
-  const id = Number(req.body["id"]);
-  const docId = req.body["doctorId"];
-  const userId = req.body["userId"];
-  if (userId !== req.user.userId) {
-    return res.status(403).json({ error: "Access denied" });
-  }
-  const question1 = req.body["question1"];
-  const question2 = req.body["question2"];
-  const question3 = req.body["question3"];
-  const question4 = req.body["question4"];
-  const question5 = req.body["question5"];
-  // console.log(id);
-  // console.log(docId);
   try {
+    const stars = req.body["stars"];
+    const id = Number(req.body["id"]);
+    const docId = req.body["doctorId"];
+    
+    
+    const bodyUserId = Number(req.body["userId"]);
+    
+    const tokenUserId = req.user.userId;
+
+    if (!bodyUserId || bodyUserId !== tokenUserId) {
+      console.log(`❌ Mismatch: Body(${bodyUserId}) !== Token(${tokenUserId})`);
+      return res.status(403).json({ 
+        error: "Access denied: User ID mismatch",
+        details: `Frontend sent: ${req.body["userId"]}, Token has: ${tokenUserId}`
+      });
+    }
+    
+
+    const question1 = req.body["question1"];
+    const question2 = req.body["question2"];
+    const question3 = req.body["question3"];
+    const question4 = req.body["question4"];
+    const question5 = req.body["question5"];
+
     const response = await prisma.pastAppointments.update({
       where: {
         id: id,
@@ -693,10 +703,6 @@ userRouter.post("/setFeedback", authorizeRoles("user"), async (req, res) => {
         avgRating: setRating._avg.stars,
       },
     });
-
-    // console.log(updateRating)
-
-    // console.log(setRating)
 
     res.json({ message: "Rating updated successfully" });
   } catch (error) {
