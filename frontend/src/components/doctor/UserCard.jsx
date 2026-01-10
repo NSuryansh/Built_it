@@ -48,7 +48,7 @@ const UserCard = ({ userWithAppointments }) => {
         <div className="flex items-center gap-2 mb-3">
           <FileText className="h-5 w-5 text-[var(--custom-blue-500)]" />
           <span className="font-medium text-[var(--custom-gray-700)]">
-            Doctor's Note
+            Therapist's Note
           </span>
         </div>
         
