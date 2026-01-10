@@ -87,6 +87,7 @@ const DoctorPeer = () => {
       // console.log(contacts, "hallo")
       const updatedChats = contacts.map((contact) => ({
         name: contact.username,
+        email: contact.email,
         id: contact.id,
         messages: [],
       }));
@@ -394,6 +395,9 @@ const DoctorPeer = () => {
                     <h2 className="text-xl font-bold text-[var(--custom-gray-900)] drop-shadow-sm">
                       {userList[selectedChat]?.name}
                     </h2>
+                    <h3 className="text-xl font-bold text-[var(--custom-gray-900)] drop-shadow-sm">
+                      {userList[selectedChat]?.email}
+                    </h3>
                   </div>
                 </div>
                 <button
