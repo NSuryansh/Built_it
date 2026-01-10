@@ -32,7 +32,6 @@ export const checkAuth = async (userType) => {
 
     const res2 = await response.json();
     console.log(res2);
-    localStorage.clear()
 
     if (userType === "user") {
       localStorage.setItem("userid", res2["user"]["id"]);
