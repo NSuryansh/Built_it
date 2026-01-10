@@ -41,6 +41,8 @@ import AdminAppointments from "./pages/admin/appointments";
 import ErrorBoundaryFallback from "./pages/easter_egg/error_boundary_fallback";
 import AdminUser from "./pages/admin/user";
 import LoadingPage from "./pages/sso/loading_page";
+import DoctorEventsList from "./pages/doctor/event_list";
+import DoctorAddEvent from "./pages/doctor/add_event";
 
 export default function App() {
   const SERVER_KEY = import.meta.env.VITE_PUBLIC_VAPID_KEY;
@@ -197,6 +199,8 @@ export default function App() {
           <Route path="/doctor/book" element={<DoctorBook />} />
           <Route path="/doctor/history" element={<History />} />
           <Route path="/doctor/user" element={<UserDetail />} />
+          <Route path="/doctor/event_list" element={<DoctorEventsList/>}/>
+          <Route path="/doctor/add_event" element={<DoctorAddEvent/>}/>
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/reset_password" element={<AdminResetPassword />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

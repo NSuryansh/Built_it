@@ -16,6 +16,7 @@ const DoctorNavbar = () => {
     { name: "Peer", link: "/doctor/peer" },
     { name: "Profile", link: "/doctor/profile" },
     { name: "History", link: "/doctor/history" },
+    { name: "Events", link: "/doctor/event_list"}
   ];
   const navigate = useNavigate();
   const [showCustomModal, setShowCustomModal] = useState(false);
