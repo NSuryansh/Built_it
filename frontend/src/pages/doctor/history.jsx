@@ -79,7 +79,8 @@ const History = () => {
     return allUsers.filter(
       (item) =>
         item.user.username.toLowerCase().includes(lowerSearchTerm) ||
-        item.user.email.toLowerCase().includes(lowerSearchTerm)
+        item.user.email.toLowerCase().includes(lowerSearchTerm) ||
+        (item.category && item.category.toLowerCase().includes(lowerSearchTerm)) // Added Search by Category
     );
   };
 
@@ -118,7 +119,7 @@ const History = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Search patients by name or email..."
+                  placeholder="Search patients by name, email or category..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-[var(--custom-gray-200)] focus:outline-none focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent bg-[var(--custom-white)]/50 backdrop-black transition-all duration-200 placeholder-[var(--custom-gray-400)] text-sm sm:text-base"
