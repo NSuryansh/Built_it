@@ -288,6 +288,7 @@ docRouter.get("/reqApp", authorizeRoles("doc"), async (req, res) => {
       user: {
         select: {
           username: true,
+          alt_mobile: true,
           mobile: true,
           email: true,
         },
@@ -404,6 +405,7 @@ docRouter.get("/currentdocappt", authorizeRoles("doc"), async (req, res) => {
         user: {
           select: {
             username: true, // assuming "name" is the username
+            alt_mobile: true,
             mobile: true,
             email: true,
           },
@@ -491,7 +493,7 @@ docRouter.put("/modifySlots", authorizeRoles("doc"), async (req, res) => {
   if (doctorId !== req.user.userId.toString()) {
     return res.status(403).json({ error: "Access denied" });
   }
-  
+
   const slots = JSON.parse(slotsArray);
   try {
     const delSlots = await prisma.slots.deleteMany({

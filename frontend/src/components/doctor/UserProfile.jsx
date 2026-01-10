@@ -83,9 +83,6 @@ const UserProfile = () => {
             <p className="text-sm text-[var(--custom-gray-500)] mt-1">
               Patient ID: {user.id}
             </p>
-            <p className="text-sm text-[var(--custom-gray-500)] mt-1">
-              Emergency Contact Number : {user.alt_mobile}
-            </p>
           </div>
           <div className="">
             {isEditing ? (
@@ -176,7 +173,7 @@ const UserProfile = () => {
                   <PhoneCallIcon className="h-5 w-5 text-[var(--custom-blue-500)] mr-3 mt-0.5" />
                   <div>
                     <p className="text-xs text-[var(--custom-gray-500)] mb-0.5">
-                      Alternate Number
+                      Emergency Contact Number
                     </p>
                     <p className="font-medium">{user.alt_mobile}</p>
                   </div>

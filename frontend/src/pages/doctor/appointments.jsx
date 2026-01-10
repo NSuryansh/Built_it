@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { User, CircleUser, Clock, Phone, FileText, Loader } from "lucide-react";
+import {
+  User,
+  CircleUser,
+  Clock,
+  Phone,
+  FileText,
+  Loader,
+  Mail,
+} from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import emailjs from "@emailjs/browser";
 import Footer from "../../components/common/Footer";
@@ -189,18 +197,21 @@ const DoctorAppointment = () => {
 
   const sendNotif = async (appointment) => {
     try {
-      const res = await fetch("http://localhost:3000/api/common/send-notification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          userid: appointment["user_id"],
-          message: `Your appointment request has been accepted!`,
-          userType: "user",
-        }),
-      });
+      const res = await fetch(
+        "http://localhost:3000/api/common/send-notification",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            userid: appointment["user_id"],
+            message: `Your appointment request has been accepted!`,
+            userType: "user",
+          }),
+        }
+      );
 
       if (!res.ok) {
         console.error("Failed to send notification");
@@ -223,12 +234,18 @@ const DoctorAppointment = () => {
     if (!docId) return;
     const fetchData = async () => {
       const docId = localStorage.getItem("userid");
-      const res = await fetch(`http://localhost:3000/api/doc/reqApp?docId=${docId}`, {
-        headers: { Authorization: "Bearer " + token },
-      });
-      const res2 = await fetch(`http://localhost:3000/api/doc/currentdocappt?doctorId=${docId}`, {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/doc/reqApp?docId=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      const res2 = await fetch(
+        `http://localhost:3000/api/doc/currentdocappt?doctorId=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
       const resp2 = await res2.json();
       const resp = await res.json();
       for (let i = 0; i < resp2.length; i++) {
@@ -251,9 +268,12 @@ const DoctorAppointment = () => {
 
     const fetchPastAppointments = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/doc/pastdocappt?doctorId=${docId}`, {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          `http://localhost:3000/api/doc/pastdocappt?doctorId=${docId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const data = await response.json();
         if (response.ok) {
           const periods = {
@@ -524,13 +544,6 @@ const DoctorAppointment = () => {
                             <span className="font-semibold tracking-tight">
                               {appointment.user.username}
                             </span>
-
-                          </div>
-                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
-                            <TfiEmail className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            <span className="tracking-tight">
-                              {appointment.user.email}
-                            </span>
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
@@ -542,9 +555,19 @@ const DoctorAppointment = () => {
                             )}
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <Mail className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                            {appointment.user.email}
+                          </div>
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             {appointment.user.mobile}
                           </div>
+                          {appointment.user.alt_mobile ? (
+                            <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                              <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                              {appointment.user.alt_mobile}
+                            </div>
+                          ) : null}
                           <div className="flex items-start text-lg text-[var(--custom-gray-800)]">
                             <FileText className="h-6 w-6 mr-4 mt-1 text-[var(--custom-blue-600)]" />
                             <span>{appointment.reason}</span>
@@ -726,13 +749,6 @@ const DoctorAppointment = () => {
                             <span className="font-semibold tracking-tight">
                               {appointment.user.username}
                             </span>
-
-                          </div>
-                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
-                            <TfiEmail className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            <span className=" tracking-tight">
-                              {appointment.user.email}
-                            </span>
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
@@ -744,9 +760,19 @@ const DoctorAppointment = () => {
                             )}
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                            <Mail className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                            {appointment.user.email}
+                          </div>
+                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             {appointment.user.mobile}
                           </div>
+                          {appointment.user.alt_mobile ? (
+                            <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                              <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                              {appointment.user.alt_mobile}
+                            </div>
+                          ) : null}
                           <div className="flex items-start text-lg text-[var(--custom-gray-800)]">
                             <FileText className="h-6 w-6 mr-4 mt-1 text-[var(--custom-blue-600)]" />
                             <span>{appointment.reason}</span>
