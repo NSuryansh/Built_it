@@ -208,39 +208,6 @@ adminRouter.get("/profile", authorizeRoles("admin"), async (req, res) => {
   }
 });
 
-adminRouter.post("/addEvent", authorizeRoles("admin"), async (req, res) => {
-  try {
-    const title = req.body["title"];
-    const description = req.body["description"];
-    const dateTime = req.body["dateTime"];
-    const venue = req.body["venue"];
-    const url = req.body["url"];
-
-    // Validate required fields
-    if (!title || !dateTime || !venue) {
-      return res
-        .status(400)
-        .json({ error: "Title, DateTime, and Venue are required" });
-    }
-
-    // Create the event in Prisma
-    const event = await prisma.events.create({
-      data: {
-        title: title,
-        description: description,
-        dateTime: new Date(dateTime), // Ensure it's a valid Date object
-        venue: venue,
-        url: url,
-      },
-    });
-
-    res.json(event); // Return created event
-  } catch (error) {
-    console.error("Error adding event:", error);
-    res.json({ error: "Internal server error" });
-  }
-});
-
 adminRouter.post("/toggleDoc", authorizeRoles("admin"), async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
   const isInactive = Boolean(req.body["isInactive"]);
