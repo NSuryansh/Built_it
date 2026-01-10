@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { User, CircleUser, Clock, Phone, FileText, Loader } from "lucide-react";
+import { User, CircleUser, Clock, Phone, FileText, Loader, ChevronDown } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import emailjs from "@emailjs/browser";
 import Footer from "../../components/common/Footer";
@@ -43,10 +43,24 @@ const DoctorAppointment = () => {
     "Last 12 Months": { UG: 0, PG: 0, PHD: 0 },
   });
   const [note, setNote] = useState("");
+  // Added Category State
+  const [category, setCategory] = useState("");
   const navigate = useNavigate();
   const [slots, setAvailableSlots] = useState([]);
   const [time, setSelectedTime] = useState("");
   const token = localStorage.getItem("token");
+
+  // Define Appointment Categories
+  const APPOINTMENT_CATEGORIES = [
+    "General Consultation",
+    "Mental Health",
+    "Routine Checkup",
+    "Prescription Refill",
+    "Lab Results",
+    "Follow-up",
+    "Emergency",
+    "Other"
+  ];
 
   const fetchAvailableSlots = async (date) => {
     try {
@@ -310,6 +324,11 @@ const DoctorAppointment = () => {
     setNote(e.target.value);
   };
 
+  // Added handler for category change
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+  };
+
   const acceptApp = async (appointment) => {
     appointment.dateTime = new Date(appointment.dateTime);
     const res = await fetch("http://localhost:3000/api/doc/book", {
@@ -331,28 +350,14 @@ const DoctorAppointment = () => {
     const docName = localStorage.getItem("username");
     const office_address = localStorage.getItem("office_address");
 
-    // var params = {
-    //   doctor: docName,
-    //   dateTime: format(appointment.dateTime, "dd-MMM-yyyy hh:mm a"),
-    //   email: appointment.user.email,
-    //   office_address: office_address,
-    // };
-    // emailjs
-    //   .send("service_coucldi", "template_9at0fnv", params, "5rqHkmhJJfAxWBFNo")
-    //   .then(
-    //     (response) => {
-    //       console.log("success", response.status);
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-
     sendNotif(appointment);
     setFixed(!fixed);
   };
 
   const deleteApp = async (appointment) => {
+    // If you want to enforce a category selection, check here
+    // if (!category) { CustomToast("Please select a category", "red"); return; }
+    
     const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
       method: "POST",
       headers: {
@@ -364,23 +369,18 @@ const DoctorAppointment = () => {
         doctorId: appointment["doctor_id"],
         userId: appointment["user_id"],
         note: note,
+        category: category, // Added category to body
       }),
     });
     const resp = await res.json();
+    setNote(""); // Reset note
+    setCategory(""); // Reset category
     setFixed(!fixed);
   };
 
   const emailParams = async (appointment, time) => {
     const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
-    // var params = {
-    //   id: appointment["id"],
-    //   username: appointment["user"]["username"],
-    //   doctor: docName,
-    //   origTime: format(appointment["dateTime"], "dd-MMM-yy hh:mm a"),
-    //   newTime: format(newTime, "dd-MMM-yy hh:mm a"),
-    //   email: appointment["user"]["email"],
-    // };
     try {
       console.log("hello");
       const res = await fetch("http://localhost:3000/api/doc/reschedule", {
@@ -416,31 +416,6 @@ const DoctorAppointment = () => {
       const resp = await res.json();
       console.log(resp, "response");
       setFixed(!fixed);
-      // if (res.status !== 400) {
-      //   emailjs
-      //     .send(
-      //       "service_coucldi",
-      //       "template_b96adyb",
-      //       params,
-      //       "5rqHkmhJJfAxWBFNo"
-      //     )
-      //     .then(
-      //       (response) => {
-      //         console.log("success", response.status);
-      //         CustomToast("Rescheduling request successfully sent", "blue");
-      //         setSelectedDate("");
-      //         setSelectedTime("");
-      //       },
-      //       (error) => {
-      //         console.log(error);
-      //         CustomToast("Error rescheduling appointment", "blue");
-      //       }
-      //     );
-      // } else {
-      //   CustomToast("Error rescheduling appointment", "blue");
-      //   setSelectedDate("");
-      //   setSelectedTime("");
-      // }
       CustomToast("Rescheduling request successfully sent", "blue");
       setSelectedDate("");
       setSelectedTime("");
@@ -635,9 +610,10 @@ const DoctorAppointment = () => {
                                       key={slot.id}
                                       value={slot.starting_time}
                                     >
-                                      {slot.starting_time
-                                        .split("T")[1]
-                                        .slice(0, 5)}
+                                      {format(
+                                        new Date(slot.starting_time).getTime(),
+                                        "HH:mm"
+                                      )}
                                     </option>
                                   ))}
                               </select>
@@ -658,7 +634,26 @@ const DoctorAppointment = () => {
                           </div>
                         )}
                         {completedNotes[appointment.id] !== undefined && (
-                          <div className="mt-6">
+                          <div className="mt-6 space-y-4">
+                             {/* Category Dropdown */}
+                            <div className="relative">
+                              <select
+                                value={category}
+                                onChange={handleCategoryChange}
+                                className="w-full p-4 bg-[var(--custom-white)]/50 backdrop-blur-sm border border-[var(--custom-blue-200)] rounded-xl focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300 text-[var(--custom-gray-800)] outline-none appearance-none"
+                              >
+                                <option value="" disabled>Select Category</option>
+                                {APPOINTMENT_CATEGORIES.map((cat) => (
+                                  <option key={cat} value={cat}>
+                                    {cat}
+                                  </option>
+                                ))}
+                              </select>
+                              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[var(--custom-blue-600)]">
+                                <ChevronDown className="h-5 w-5" />
+                              </div>
+                            </div>
+                            {/* Notes Input */}
                             <input
                               type="text"
                               placeholder="Enter completion notes..."

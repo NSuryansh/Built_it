@@ -367,6 +367,7 @@ docRouter.post("/deleteApp", authorizeRoles("doc"), async (req, res) => {
           doc_id: doc_id,
           user_id: user_id,
           createdAt: dateTime,
+          category: category,
         },
       });
       // console.log(pastApp);
