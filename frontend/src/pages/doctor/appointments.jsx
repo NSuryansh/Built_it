@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { User, CircleUser, Clock, Phone, FileText, Loader } from "lucide-react";
+import { User, CircleUser, Clock, Phone, FileText, Loader, Mail, ChevronDown } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import emailjs from "@emailjs/browser";
 import Footer from "../../components/common/Footer";
