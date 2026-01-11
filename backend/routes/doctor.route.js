@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
 import { uploadToGoogleDrive } from "../utils/GoogleDriveUpload.js";
+import { multerupload } from "../middlewares/multer.middleware.js";
 dotenv.config();
 
 const docRouter = Router();
@@ -748,7 +749,7 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
 docRouter.post(
   "/deleteApp",
   authorizeRoles("doc"),
-  upload.array("files", 10),
+  multerupload.array("files", 10),
   async (req, res) => {
     try {
       const appId = Number(req.body.appId);
@@ -765,9 +766,16 @@ docRouter.post(
         return res.status(400).json({ error: "PDF files missing" });
       }
 
+      const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
+      const user = await prisma.user.findUnique({ where: { id: user_id } });
+
       const driveLinks = [];
       for (const file of files) {
-        const link = await uploadToGoogleDrive(file);
+        const link = await uploadToGoogleDrive(file, {
+          therapistName: doc.name,
+          patientName: user.username,
+          dateTime: `${dateTime.getDate()}-${dateTime.getMonth()}-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+        });
         driveLinks.push(link);
       }
 

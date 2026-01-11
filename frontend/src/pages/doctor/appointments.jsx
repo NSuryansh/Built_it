@@ -1,5 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { User, CircleUser, Clock, Phone, FileText, Loader, Mail, ChevronDown } from "lucide-react";
+import {
+  User,
+  CircleUser,
+  Clock,
+  Phone,
+  FileText,
+  Loader,
+  Mail,
+  ChevronDown,
+} from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import Footer from "../../components/common/Footer";
 import { format } from "date-fns";
@@ -49,7 +58,7 @@ const DoctorAppointment = () => {
   const [slots, setAvailableSlots] = useState([]);
   const [time, setSelectedTime] = useState("");
   const token = localStorage.getItem("token");
-  const fileInputRef = useRef(null)
+  const fileInputRef = useRef(null);
   const [files, setFiles] = useState([]);
   const urlSetRef = useRef(new Set());
 
@@ -62,7 +71,7 @@ const DoctorAppointment = () => {
     "Lab Results",
     "Follow-up",
     "Emergency",
-    "Other"
+    "Other",
   ];
 
   const fetchAvailableSlots = async (date) => {
@@ -232,7 +241,9 @@ const DoctorAppointment = () => {
   useEffect(() => {
     return () => {
       urlSetRef.current.forEach((u) => {
-        try { URL.revokeObjectURL(u); } catch (e) { }
+        try {
+          URL.revokeObjectURL(u);
+        } catch (e) {}
       });
       urlSetRef.current.clear();
     };
@@ -390,7 +401,8 @@ const DoctorAppointment = () => {
   };
 
   const handleView = (fileObj) => {
-    if (fileObj?.blobUrl) window.open(fileObj.blobUrl, "_blank", "noopener,noreferrer");
+    if (fileObj?.blobUrl)
+      window.open(fileObj.blobUrl, "_blank", "noopener,noreferrer");
     else alert("No preview available.");
   };
 
@@ -398,7 +410,10 @@ const DoctorAppointment = () => {
     try {
       const toRemove = files.find((p) => p.id === id);
       if (toRemove?.blobUrl) {
-        try { URL.revokeObjectURL(toRemove.blobUrl); urlSetRef.current.delete(toRemove.blobUrl); } catch (e) {}
+        try {
+          URL.revokeObjectURL(toRemove.blobUrl);
+          urlSetRef.current.delete(toRemove.blobUrl);
+        } catch (e) {}
       }
       await pdfDB.pdfs.delete(id);
       setFiles((prev) => prev.filter((p) => p.id !== id));
@@ -406,7 +421,6 @@ const DoctorAppointment = () => {
       console.error("Failed to delete:", err);
     }
   };
-
 
   // Added handler for category change
   const handleCategoryChange = (e) => {
@@ -439,17 +453,16 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    
     const formData = new FormData();
     for (const f of files) {
-    const pdf = await pdfDB.pdfs.get(f.id);
+      const pdf = await pdfDB.pdfs.get(f.id);
 
-    const blob = new Blob([pdf.data], { type: pdf.type });
-    const file = new File([blob], pdf.name, { type: pdf.type });
+      const blob = new Blob([pdf.data], { type: pdf.type });
+      const file = new File([blob], pdf.name, { type: pdf.type });
 
-    formData.append("files", file);        
-    formData.append("pdfIds[]", f.id);     
-  }
+      formData.append("files", file);
+      formData.append("pdfIds[]", f.id);
+    }
     formData.append("appId", appointment.id);
     formData.append("doctorId", appointment.doctor_id);
     formData.append("userId", appointment.user_id);
@@ -465,7 +478,7 @@ const DoctorAppointment = () => {
     });
 
     const resp = await res.json();
- 
+
     setNote("");
     setCategory("");
     setFiles([]);
@@ -746,7 +759,9 @@ const DoctorAppointment = () => {
                                 onChange={handleCategoryChange}
                                 className="w-full p-4 bg-[var(--custom-white)]/50 backdrop-blur-sm border border-[var(--custom-blue-200)] rounded-xl focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300 text-[var(--custom-gray-800)] outline-none appearance-none"
                               >
-                                <option value="" disabled>Select Category</option>
+                                <option value="" disabled>
+                                  Select Category
+                                </option>
                                 {APPOINTMENT_CATEGORIES.map((cat) => (
                                   <option key={cat} value={cat}>
                                     {cat}
@@ -773,23 +788,40 @@ const DoctorAppointment = () => {
                               onChange={handleUpload}
                               style={{ display: "none" }}
                             />
-                            <button className="btn upload-btn" onClick={() => fileInputRef.current.click()}>
+                            <button
+                              className="btn upload-btn"
+                              onClick={() => fileInputRef.current.click()}
+                            >
                               Upload PDFs
                             </button>
                             <div className="dashboard-list">
                               {files.length === 0 ? (
-                                <p className="empty-msg">No PDFs uploaded yet.</p>
+                                <p className="empty-msg">
+                                  No PDFs uploaded yet.
+                                </p>
                               ) : (
                                 <ul>
                                   {files.map((f) => (
                                     <li key={f.id} className="pdf-item">
                                       <div className="pdf-meta">
                                         <strong>{f.name}</strong>
-                                        <small>{Math.round(f.size / 1024)} KB • {new Date(f.uploadedAt).toLocaleString()}</small>
+                                        <small>
+                                          {Math.round(f.size / 1024)} KB •{" "}
+                                          {new Date(
+                                            f.uploadedAt
+                                          ).toLocaleString()}
+                                        </small>
                                       </div>
                                       <div className="pdf-actions">
-                                        <button onClick={() => handleView(f)}>View</button>
-                                        <button className="remove-btn" onClick={() => handleRemove(f.id)}>Remove</button>
+                                        <button onClick={() => handleView(f)}>
+                                          View
+                                        </button>
+                                        <button
+                                          className="remove-btn"
+                                          onClick={() => handleRemove(f.id)}
+                                        >
+                                          Remove
+                                        </button>
                                       </div>
                                     </li>
                                   ))}

@@ -1,37 +1,44 @@
-import { google } from "googleapis";
-import stream from "stream";
+import { exec } from "child_process";
+import fs from "fs/promises";
 
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI;
-const REFRESH_TOKEN = process.env.REFRESH_TOKEN; 
+const RCLONE_ROOT = "gdrive:/Wellness Notes";
 
-const auth = new google.auth.OAuth2(
-  CLIENT_ID,
-  CLIENT_SECRET,
-  REDIRECT_URI
-);
+function sanitize(name) {
+  return name.replace(/[\/\\?%*:|"<>]/g, "-").trim();
+}
 
-auth.setCredentials({ refresh_token: REFRESH_TOKEN });
+export function uploadToGoogleDrive(file, meta) {
+  return new Promise((resolve, reject) => {
+    const therapist = sanitize(meta.therapistName);
+    const patient = sanitize(meta.patientName);
+    const datetime = sanitize(meta.dateTime); // "2026-01-11 19-30"
 
-const drive = google.drive({ version: "v3", auth });
+    const remoteFolder = `${RCLONE_ROOT}/${therapist}/${patient}/${datetime}`;
+    const remoteFilePath = `${remoteFolder}/${file.originalname}`;
 
-export const uploadToGoogleDrive = async (file) => {
-  const bufferStream = new stream.PassThrough();
-  bufferStream.end(file.buffer);
+    // Step 1: Create folder structure (safe even if exists)
+    exec(`rclone mkdir "${remoteFolder}"`, (err) => {
+      if (err) return reject(err);
 
-  const response = await drive.files.create({
-    requestBody: {
-      name: file.originalname,
-      mimeType: file.mimetype,
-      parents: [process.env.FOLDER_ID], 
-    },
-    media: {
-      mimeType: file.mimetype,
-      body: bufferStream,
-    },
-    fields: "id, webViewLink",
+      // Step 2: Upload file
+      exec(`rclone copy "${file.path}" "${remoteFolder}"`, async (error) => {
+        if (error) return reject(error);
+
+        // Step 3: Generate shareable folder link
+        exec(`rclone link "${remoteFolder}"`, async (err, stdout) => {
+          if (err) return reject(err);
+
+          const folderLink = stdout.trim();
+
+          // Step 4: Delete temp file
+          await fs.unlink(file.path);
+
+          resolve({
+            folder: remoteFolder,
+            shareableLink: folderLink
+          });
+        });
+      });
+    });
   });
-
-  return response.data.webViewLink;
-};
+}

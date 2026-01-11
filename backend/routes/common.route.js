@@ -199,7 +199,7 @@ commonRouter.post(
               body: message,
             },
           };
-          const response = await admin.messaging().send(payload);
+          // const response = await admin.messaging().send(payload);
         } catch (err) {
           console.error("Failed to send to one subscription:", err);
         }
