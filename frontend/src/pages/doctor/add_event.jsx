@@ -4,6 +4,8 @@ import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/Navbar";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "../../components/common/CustomToast";
+import AddBatchPopup from "../../components/admin/BatchPopup";
+import DoctorNavbar from "../../components/doctor/Navbar";
 import SessionExpired from "../../components/common/SessionExpired";
 import {
   Calendar,
@@ -25,7 +27,13 @@ const DoctorAddEvent = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [batches, setBatches] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
   const token = localStorage.getItem("token");
+
+  const removeBatch = (index) => {
+    setBatches(prev => prev.filter((_, i) => i !== index));
+  };
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -53,6 +61,7 @@ const DoctorAddEvent = () => {
           description: description,
           dateTime: dateTime,
           venue: location,
+          batches: batches,
         }),
       });
 
@@ -71,7 +80,7 @@ const DoctorAddEvent = () => {
   };
 
   const handleClosePopup = () => {
-    navigate("/admin/login");
+    navigate("/doctor/login");
   };
 
   if (isAuthenticated === null) {
@@ -84,7 +93,7 @@ const DoctorAddEvent = () => {
 
   return (
     <div className="bg-gradient-to-b from-[var(--custom-blue-50)] to-[var(--custom-white)] min-h-screen">
-      <AdminNavbar />
+      <DoctorNavbar />
       <ToastContainer />
       <div className="space-y-10 px-4 sm:px-6 lg:px-8 py-6 w-full mx-auto flex flex-col justify-center items-center">
         <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-blue-900)] to-[var(--custom-blue-600)] tracking-tight">
@@ -159,6 +168,44 @@ const DoctorAddEvent = () => {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <div>
+                <button
+                  onClick={() => setShowPopup(true)}
+                  className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                >
+                  + Add Batch
+                </button>
+
+                <p className="mt-2 text-sm text-gray-500">
+                  If none selected, the event will be visible to <b>all students</b>.
+                </p>
+              </div>
+
+              {/* Selected batches */}
+              <div className="flex flex-wrap gap-2">
+                {batches.map((b, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
+                  >
+                    <span>
+                      {b.program} • {b.year} • {b.dept}
+                    </span>
+                    <button
+                      onClick={() => removeBatch(i)}
+                      className="ml-1 text-gray-500 hover:text-red-500"
+                      title="Remove"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+
+            </div>
+
             <div className="space-y-3">
               <label
                 htmlFor="location"
@@ -203,7 +250,7 @@ const DoctorAddEvent = () => {
             <div className="flex gap-4 justify-end pt-2">
               <button
                 type="button"
-                onClick={() => navigate("/admin/event_list")}
+                onClick={() => navigate("/doctor/event_list")}
                 className="px-6 py-3 bg-gradient-to-r from-[var(--custom-gray-100)] to-[var(--custom-gray-50)] text-[var(--custom-blue-900)] rounded-xl hover:from-[var(--custom-gray-200)] hover:to-[var(--custom-gray-100)] transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center gap-2"
               >
                 <X size={18} />
@@ -220,6 +267,12 @@ const DoctorAddEvent = () => {
           </form>
         </div>
       </div>
+      {showPopup && (
+        <AddBatchPopup
+          onAdd={batch => setBatches(prev => [...prev, batch])}
+          onClose={() => setShowPopup(false)}
+        />
+      )}
     </div>
   );
 };

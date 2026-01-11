@@ -17,7 +17,7 @@ const DoctorNotificationPanel = () => {
       if (docId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/api/user_doc/chatContacts?userId=${docId}`,
+            `http://localhost:3000/api/user_doc/chatContacts?userId=${docId}&userType=doc`,
             { headers: { Authorization: "Bearer " + token } }
           );
           const contacts = await response.json();
@@ -115,7 +115,7 @@ const DoctorNotificationPanel = () => {
   };
 
   const handleAccept = async (notif) => {
-    navigate(`/doctor/peer?userId=${notif.userId}&username=${notif.username}`);
+    navigate(`/doctor/peer?userId=${notif.user_id}&username=${notif.username}`);
   };
 
   return (

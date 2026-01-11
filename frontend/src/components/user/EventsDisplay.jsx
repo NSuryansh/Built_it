@@ -7,6 +7,21 @@ import { format } from "date-fns";
 const EventsDisplay = () => {
   const token = localStorage.getItem("token");
 
+  function isEventVisibleToUser(event) {
+    // No batch restriction → visible to all
+    if (!event.batches || event.batches.length === 0) {
+      return true;
+    }
+
+    // Check if any batch matches user
+    return event.batches.some(
+      b =>
+        b.program === localStorage.getItem("user_prog") &&
+        b.year === localStorage.getItem("user_batch") &&
+        b.dept === localStorage.getItem("user_dept")
+    );
+  }
+
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const fetchEvents = async () => {
@@ -14,7 +29,10 @@ const EventsDisplay = () => {
         headers: { Authorization: "Bearer " + token },
       });
       const resp = await res.json();
-      setEvents(resp);
+      const filtered = resp.filter(event =>
+        isEventVisibleToUser(event)
+      );
+      setEvents(filtered);
     };
 
     fetchEvents();

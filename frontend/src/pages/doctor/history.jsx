@@ -1,9 +1,7 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Users,
   Search,
-  Calendar as CalendarIcon,
-  Clock as ClockIcon,
 } from "lucide-react";
 import Footer from "../../components/common/Footer";
 import DoctorNavbar from "../../components/doctor/Navbar";
@@ -42,10 +40,6 @@ const History = () => {
     }
   }, [searchUsername]);
 
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const minDate = tomorrow.toISOString().split("T")[0];
-
   const getPastAppointments = async () => {
     try {
       const docId = localStorage.getItem("userid");
@@ -68,7 +62,6 @@ const History = () => {
     if (searchTerm.trim() === "") {
       setFilteredUsers(allUsers);
     } else {
-      console.log(searchTerm);
       setFilteredUsers(searchUsers(searchTerm));
     }
   }, [searchTerm, allUsers]);
@@ -80,7 +73,7 @@ const History = () => {
       (item) =>
         item.user.username.toLowerCase().includes(lowerSearchTerm) ||
         item.user.email.toLowerCase().includes(lowerSearchTerm) ||
-        (item.category && item.category.toLowerCase().includes(lowerSearchTerm)) // Added Search by Category
+        (item.category && item.category.toLowerCase().includes(lowerSearchTerm))
     );
   };
 
@@ -140,6 +133,7 @@ const History = () => {
                 <UserCard
                   key={userWithAppointments.id}
                   userWithAppointments={userWithAppointments}
+                  showViewProfile={true} // <--- Added this to show the arrow
                 />
               ))
             )}

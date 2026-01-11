@@ -172,7 +172,7 @@ const AddEvent = () => {
               <div>
                 <button
                   onClick={() => setShowPopup(true)}
-                  className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                  className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
                 >
                   + Add Batch
                 </button>
@@ -202,13 +202,6 @@ const AddEvent = () => {
                   </div>
                 ))}
               </div>
-
-              {showPopup && (
-                <AddBatchPopup
-                  onAdd={batch => setBatches(prev => [...prev, batch])}
-                  onClose={() => setShowPopup(false)}
-                />
-              )}
             </div>
 
             <div className="space-y-3">
@@ -271,6 +264,12 @@ const AddEvent = () => {
             </div>
           </form>
         </div>
+        {showPopup && (
+          <AddBatchPopup
+            onAdd={batch => setBatches(prev => [...prev, batch])}
+            onClose={() => setShowPopup(false)}
+          />
+        )}
       </div>
     </div>
   );

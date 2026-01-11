@@ -283,7 +283,7 @@ const Peer = () => {
   async function fetchMessages(userId, recipientId) {
     try {
       const response = await fetch(
-        `http://localhost:3000/api//user_doc/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
+        `http://localhost:3000/api/user_doc/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const messages = await response.json();
@@ -323,7 +323,8 @@ const Peer = () => {
 
   useEffect(() => {
     if (userId && docList.length > 0 && selectedChat !== null) {
-      fetchMessages(userId, docList[selectedChat]?.id);
+      const patient_id = localStorage.getItem("userid");
+      fetchMessages(patient_id, docList[selectedChat]?.id);
     }
   }, [selectedChat, userId, reloader, docList]);
 
@@ -458,7 +459,7 @@ const Peer = () => {
               <div className="overflow-y-auto">
                 <div className="w-full px-3 py-2 absolute bg-gray-100 flex justify-center items-center text-[var(--custom-gray-400)] text-xs font-light">
                   <InfoIcon size={12} className="mr-1 !w-4 !h-4" />
-                   Therapist may be busy sometimes in an appointment. Hence it is
+                  Therapist may be busy sometimes in an appointment. Hence it is
                   better to book an appointment.
                 </div>
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
