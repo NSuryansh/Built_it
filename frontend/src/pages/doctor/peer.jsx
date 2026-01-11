@@ -155,7 +155,7 @@ const DoctorPeer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("/", {
+    socketRef.current = io("http://localhost:3000", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {

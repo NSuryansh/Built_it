@@ -176,7 +176,7 @@ const Peer = () => {
 
   useEffect(() => {
     if (!userId) return;
-    socketRef.current = io("/", {
+    socketRef.current = io("http://localhost:3000", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -304,15 +304,17 @@ const Peer = () => {
           };
         })
       );
-      console.log(decrypted_api_messages, "messgaesjpoas");
+      // console.log(decrypted_api_messages, "messgaesjpoas");
       setMessagesApi(decrypted_api_messages);
       const filteredMessages = decrypted_api_messages.filter((msg) => {
+        // console.log(typeof(msg.senderId), "msesagfsfdjkfhakjfhakdsjhjk")
+        // console.log(typeof(userId), "redi")
         return (
-          (msg.senderId === userId && msg.recipientId === recipientId) ||
-          (msg.senderId === recipientId && msg.recipientId === userId)
+          (msg.senderId === Number(userId) && msg.recipientId === Number(recipientId)) ||
+          (msg.senderId === Number(recipientId) && msg.recipientId === Number(userId))
         );
       });
-
+      // console.log(filteredMessages, "fileter")
       setShowMessages(filteredMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -330,16 +332,19 @@ const Peer = () => {
 
   useEffect(() => {
     // console.log(showMessages, "JSA")
-    // console.log(showMessages, "hal");
+    console.log(showMessages, "hal");
+    console.log(userId, "userId")
     const filteredMessages = showMessages.filter((msg) => {
-      // console.log(msg, "msg")
+      console.log(msg, "msg")
+      console.log("HELOLO")
       if (msg.senderType === "user") {
+        console.log("HELfdsahj")
         return msg.senderId === userId;
       } else {
         return msg.recipientId === userId;
       }
     });
-    // console.log(filteredMessages, "filtered")
+    console.log(filteredMessages, "filtered")
     setEditedMessages(filteredMessages);
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
