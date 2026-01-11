@@ -30,22 +30,6 @@ adminRouter.put("/uploadURL", authorizeRoles("admin"), async (req, res) => {
   }
 });
 
-adminRouter.post("/events", authorizeRoles("admin"), async (req, res) => {
-  const id = req.body["id"];
-
-  try {
-    const resp = await prisma.events.delete({
-      where: {
-        id: id,
-      },
-    });
-    res.json(resp);
-  } catch (error) {
-    console.error("Error deleting event:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
 adminRouter.post("/addSlot", authorizeRoles("admin"), async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
   if (doc_id !== req.user.userId) {
