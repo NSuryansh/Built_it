@@ -155,7 +155,7 @@ model PastAppointments {
   doc_id    Int?
   user_id   Int?
   createdAt DateTime
-  pdfLinks  Json?
+  pdfLink  String?
   isDoctor  Boolean  @default(false)
   stars     Int?
   category  String?

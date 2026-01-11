@@ -417,6 +417,38 @@ docRouter.get("/pastdocappt", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
+docRouter.get("/uniquePatients", authorizeRoles("doc"), async (req, res) => {
+  const doctorId = Number(req.query["doctorId"]);
+  if (!doctorId) {
+    return res.status(400).json({ message: "Doctor ID is required" });
+  }
+  if (doctorId !== req.user.userId) {
+    return res.status(403).json({ error: "Access denied" });
+  }
+  try {
+    const doctor = await prisma.doctor.findUnique({
+      where: { id: doctorId },
+    });
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+    
+    const appt = await prisma.pastAppointments.findMany({
+      where: { doc_id: doctorId },
+      distinct: ["user_id"],
+      include: {
+        user: true,
+      },
+    });
+
+    res.json(appt);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Error fetching past appointments" });
+  }
+});
+
 docRouter.get("/getFeelings", authorizeRoles("doc"), async (req, res) => {
   try {
     const feelings = await prisma.feelings.findMany({
@@ -769,14 +801,16 @@ docRouter.post(
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
       const user = await prisma.user.findUnique({ where: { id: user_id } });
 
-      const driveLinks = [];
+      let driveLink = "";
       for (const file of files) {
-        const link = await uploadToGoogleDrive(file, {
+        const data = await uploadToGoogleDrive(file, {
           therapistName: doc.name,
           patientName: user.username,
-          dateTime: `${dateTime.getDate()}-${dateTime.getMonth()}-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+          dateTime: `${dateTime.getDate()}-${
+            dateTime.getMonth() + 1
+          }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
         });
-        driveLinks.push(link);
+        driveLink = data.shareableLink;
       }
 
       await prisma.appointments.delete({
@@ -789,7 +823,7 @@ docRouter.post(
           doc_id,
           user_id,
           category,
-          pdfLinks: driveLinks,
+          pdfLink: driveLink,
           createdAt: dateTime,
         },
       });

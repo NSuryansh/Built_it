@@ -20,7 +20,7 @@ const AppointmentList = ({ onFollowUp }) => {
       try {
         console.log(token);
         const response = await fetch(
-          `http:localhost:3000/api/doc/getAppointmentForDoctorUser?userId=${userId}&docId=${doc_id}`,
+          `http://localhost:3000/api/doc/getAppointmentForDoctorUser?userId=${userId}&docId=${doc_id}`,
           {
             headers: {
               Authorization: "Bearer " + token,
@@ -64,10 +64,18 @@ const AppointmentList = ({ onFollowUp }) => {
                   <div className="bg-[var(--custom-purple-100)] p-2 rounded-lg">
                     <Clock className="h-4 w-4 text-[var(--custom-purple-600)]" />
                   </div>
-                  <p className="font-medium text-[var(--custom-purple-900)]">
-                    {format(parseISO(appointment.createdAt), "dd MMM yyyy")}
-                  </p>
+
+                  <div>
+                    <p className="font-medium text-[var(--custom-purple-900)]">
+                      {format(parseISO(appointment.createdAt), "dd MMM yyyy")}
+                    </p>
+
+                    <span className="text-xs text-[var(--custom-gray-500)]">
+                      {appointment.category || "General"}
+                    </span>
+                  </div>
                 </div>
+
                 <span
                   className={`px-2.5 py-1 text-xs rounded-full ${
                     appointment.status === "completed"
@@ -113,6 +121,20 @@ const AppointmentList = ({ onFollowUp }) => {
                   </div>
                 </div>
               </div>
+
+              {appointment.pdfLink && (
+                <div className="mt-3 flex items-center space-x-2">
+                  <FileText className="h-4 w-4 text-[var(--custom-blue-600)]" />
+                  <a
+                    href={appointment.pdfLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[var(--custom-blue-500)] hover:underline"
+                  >
+                    View Prescription / Report
+                  </a>
+                </div>
+              )}
 
               <div className="mt-4 flex justify-end">
                 <button

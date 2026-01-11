@@ -80,37 +80,6 @@ const UserCard = ({ userWithAppointments, showViewProfile = false }) => {
           <ChevronRight className="h-5 w-5" />
         </button>
       )}
-
-      {/* Bottom Section: Notes and Category */}
-      <div className="mt-5 pt-4 border-t border-[var(--custom-gray-100)]">
-        <div className="bg-[var(--custom-blue-50)]/30 p-4 rounded-lg border border-[var(--custom-blue-100)]/50 relative">
-          
-          {/* Label for Notes */}
-          <div className="flex items-center gap-2 mb-2">
-            <FileText className="h-4 w-4 text-[var(--custom-blue-600)]" />
-            <span className="text-xs font-bold text-[var(--custom-blue-700)] uppercase tracking-wider">
-              Doctor's Note
-            </span>
-          </div>
-
-          {/* Actual Note Text */}
-          <p className="text-[var(--custom-gray-700)] text-sm leading-relaxed whitespace-pre-wrap">
-            {note || <span className="italic text-gray-400">No notes recorded for this session.</span>}
-          </p>
-
-          {/* Category Badge */}
-          {category && (
-            <div className="mt-4 flex justify-end">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--custom-blue-100)] text-[var(--custom-blue-700)] border border-[var(--custom-blue-200)] shadow-sm">
-                <Tag className="h-3.5 w-3.5" />
-                <span className="text-xs font-semibold">
-                  Category: {category}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 };
