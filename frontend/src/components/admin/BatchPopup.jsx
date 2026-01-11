@@ -21,7 +21,7 @@ export default function AddBatchPopup({ onAdd, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed w-screen h-screen inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
         <h3 className="mb-4 text-lg font-semibold">Add Batch</h3>
 

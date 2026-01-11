@@ -203,12 +203,7 @@ const DoctorAddEvent = () => {
                 ))}
               </div>
 
-              {showPopup && (
-                <AddBatchPopup
-                  onAdd={batch => setBatches(prev => [...prev, batch])}
-                  onClose={() => setShowPopup(false)}
-                />
-              )}
+
             </div>
 
             <div className="space-y-3">
@@ -255,7 +250,7 @@ const DoctorAddEvent = () => {
             <div className="flex gap-4 justify-end pt-2">
               <button
                 type="button"
-                onClick={() => navigate("/admin/event_list")}
+                onClick={() => navigate("/doctor/event_list")}
                 className="px-6 py-3 bg-gradient-to-r from-[var(--custom-gray-100)] to-[var(--custom-gray-50)] text-[var(--custom-blue-900)] rounded-xl hover:from-[var(--custom-gray-200)] hover:to-[var(--custom-gray-100)] transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center gap-2"
               >
                 <X size={18} />
@@ -272,6 +267,12 @@ const DoctorAddEvent = () => {
           </form>
         </div>
       </div>
+      {showPopup && (
+        <AddBatchPopup
+          onAdd={batch => setBatches(prev => [...prev, batch])}
+          onClose={() => setShowPopup(false)}
+        />
+      )}
     </div>
   );
 };

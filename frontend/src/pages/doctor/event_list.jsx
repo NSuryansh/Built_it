@@ -137,6 +137,7 @@ const DoctorEventsList = () => {
             }),
             location: event.venue,
             link: event.url,
+            batches: event.batches,
           };
         });
 
@@ -365,6 +366,21 @@ const DoctorEventsList = () => {
                   </div>
                 </div>
               </div>
+
+              {/* {console.log(event)} */}
+              {event.batches.length>0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {event.batches.map((b, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700"
+                  >
+                    <span>
+                      {b.program} • {b.year} • {b.dept}
+                    </span>
+                  </div>
+                ))}
+              </div>)}
 
               {/* Document Link Section */}
               <div className="mt-4 pt-4 border-t border-[var(--custom-gray-100)]">
