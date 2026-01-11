@@ -493,7 +493,7 @@ docRouter.put("/modifySlots", authorizeRoles("doc"), async (req, res) => {
   if (doctorId !== req.user.userId.toString()) {
     return res.status(403).json({ error: "Access denied" });
   }
-  
+
   const slots = JSON.parse(slotsArray);
   try {
     const delSlots = await prisma.slots.deleteMany({
@@ -679,9 +679,78 @@ docRouter.post("/add-slot", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
+docRouter.get("/getDocs", authorizeRoles("doc"), async (req, res) => {
+  const { doc_id } = req.query;
+
+  try {
+    const docs = await prisma.doctor.findMany({
+      where: { id: { not: Number(doc_id) } },
+      select: {
+        name: true,
+        email: true,
+        id: true,
+      },
+    });
+
+    res.status(200).json(docs);
+  } catch (error) {
+    console.error("Error while fetching doctors:", error);
+    res.status(500).json({
+      message: "Failed to fetch doctors",
+      error: error.message,
+    });
+  }
+});
+
+docRouter.post("/create-referral", authorizeRoles("doc"), async (req, res) => {
+  const { roll_no, referred_by, referred_to, reason } = req.body;
+
+  if (!roll_no || !referred_by || !referred_to || !reason) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  // Step 1: Find user by roll number
+  const user = await prisma.user.findUnique({
+    where: {
+      rollNo: roll_no, // make sure rollNo matches the field in your Prisma schema
+    },
+  });
+
+  if (user === null) {
+    return res
+      .status(404)
+      .json({ message: "User with given roll number not found" });
+  }
+
+  const user_id = user.id;
+  try {
+    const newReferral = await prisma.referrals.create({
+      data: {
+        user_id: user_id,
+        doctor_id: Number(referred_to),
+        referred_by: referred_by,
+        username: user.username,
+        reason: reason,
+      },
+    });
+
+    res.status(201).json({
+      message: "Referral added successfully",
+      referral: newReferral,
+    });
+  } catch (error) {
+    console.error("Error adding referral:", error);
+    res.status(500).json({
+      message: "Failed to add referral",
+      error: error.message,
+    });
+  }
+});
+
 docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   const { doctor_id } = req.query;
-  if (doctor_id !== req.user.userId) {
+
+  if (doctor_id != req.user.userId) {
     return res.status(403).json({ error: "Access denied" });
   }
   try {

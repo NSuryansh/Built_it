@@ -160,12 +160,12 @@ commonRouter.post(
       var subscription;
       if (userType == "user") {
         subscription = await prisma.subscription.findMany({
-          where: { userId: userid },
+          where: { userId: Number(userid) },
         });
       } else if (userType == "doc") {
         subscription = await prisma.subscription.findMany({
           where: {
-            doctorId: userid,
+            doctorId: Number(userid),
           },
         });
       }

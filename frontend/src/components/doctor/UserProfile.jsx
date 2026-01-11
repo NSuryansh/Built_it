@@ -5,6 +5,8 @@ import {
   Mail,
   Book,
   PhoneCallIcon,
+  FileText,
+  User,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CustomToast from "../common/CustomToast";
@@ -20,6 +22,12 @@ const UserProfile = () => {
   const [roomNumber, setRoomNumber] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [docs, setDocs] = useState(null);
+  const [showReferralForm, setShowReferralForm] = useState(false);
+  const [referralData, setReferralData] = useState({
+    referredTo: "",
+    reason: "",
+  });
 
   useEffect(() => {
     if (userId) {
@@ -47,6 +55,26 @@ const UserProfile = () => {
     }
   }, [userId, navigate]);
 
+  const fetchDoctors = async () => {
+    const doc_id = localStorage.getItem("userid");
+    console.log(doc_id);
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/doc/getDocs?doc_id=${doc_id}`,
+        { headers: { Authorization: "Bearer " + token } }
+      );
+      const data = await response.json();
+      setDocs(data);
+    } catch (error) {
+      console.error(error);
+      CustomToast("Error while fetching doctors", "blue");
+    }
+  };
+
+  useEffect(() => {
+    fetchDoctors();
+  }, []);
+
   const handleSaveRoom = async () => {
     if (roomNumber != "") {
       try {
@@ -65,6 +93,61 @@ const UserProfile = () => {
       }
     } else {
       CustomToast("Provide a room number", "blue");
+    }
+  };
+
+  const handleReferralSubmit = (e) => {
+    e.preventDefault();
+    if (referralSub()) {
+      setShowReferralForm(false);
+      setReferralData({ referredTo: "", reason: "" });
+      // CustomToast("Referral submitted successfully", "blue");
+    }
+  };
+
+  const referralSub = async () => {
+    const doc_email = localStorage.getItem("user_email");
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/doc/create-referral",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            roll_no: String(user.rollNo),
+            referred_by: doc_email,
+            referred_to: referralData.referredTo,
+            reason: referralData.reason,
+          }),
+        }
+      );
+      const data = await response.json();
+
+      if (data.message === "User with given roll number not found") {
+        CustomToast("User with given roll number not found", "blue");
+        return false;
+      }
+      CustomToast("Referral created successfully", "blue");
+      await fetch("http://localhost:3000/api/common/send-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userType: "doc",
+          userid: referralData.referredTo,
+          message: "A new referral has been added",
+        }),
+      });
+      return true;
+    } catch (err) {
+      console.error("Error adding event:", err);
+      CustomToast("Internal error while adding referral", "blue");
+      return false;
     }
   };
 
@@ -190,6 +273,86 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="px-4 sm:px-6 md:px-8 lg:px-[60px] pt-6">
+          {/* Referral Button */}
+          <button
+            onClick={() => setShowReferralForm(!showReferralForm)}
+            className="mx-auto w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] transition-all duration-300 transform hover:scale-105 overflow-hidden"
+          >
+            <FileText className="w-5 h-5 group-hover:animate-pulse" />
+            {showReferralForm ? "Close Referral" : "Create Referral"}
+            <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
+          </button>
+
+          {/* Referral Form */}
+          {showReferralForm && docs != null && (
+            <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
+              <form onSubmit={handleReferralSubmit} className="space-y-6">
+                <div className="space-y-6">
+                  {/* Referred By */}
+                  <div className="relative">
+                    <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
+                      Referred To
+                    </label>
+                    <div>
+                      <select
+                        name="date"
+                        value={referralData.referredTo}
+                        onChange={(e) =>
+                          setReferralData({
+                            ...referralData,
+                            referredTo: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
+                        required
+                      >
+                        <option value="">Select Therapist</option>
+                        {docs.map((doc, i) => {
+                          return (
+                            <option key={i} value={doc.id}>
+                              {doc.name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Reason */}
+                  <div className="relative">
+                    <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
+                      Reason
+                    </label>
+                    <textarea
+                      value={referralData.reason}
+                      onChange={(e) =>
+                        setReferralData({
+                          ...referralData,
+                          reason: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-[var(--custom-gray-50)]/50 border border-[var(--custom-blue-300)] rounded-lg focus:ring-2 focus:ring-[var(--custom-blue-400)] focus:border-[var(--custom-blue-500)] outline-none h-36 resize-none transition-all duration-300 shadow-sm hover:shadow-md"
+                      required
+                    />
+                    <div className="absolute inset-y-0 right-3 top-10 flex items-start pointer-events-none">
+                      <FileText className="w-5 h-5 text-[var(--custom-blue-500)] opacity-60" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="relative w-full bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] py-3 px-6 rounded-lg font-semibold  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] group"
+                >
+                  <span className="relative ">Done</span>
+                  <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-lg"></div>
+                </button>
+              </form>
+            </div>
+          )}
         </div>
       </div>
     </div>
