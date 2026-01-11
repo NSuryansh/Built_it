@@ -457,7 +457,7 @@ docRouter.put("/modifySlots", authorizeRoles("doc"), async (req, res) => {
   if (doctorId !== req.user.userId.toString()) {
     return res.status(403).json({ error: "Access denied" });
   }
-  
+
   const slots = JSON.parse(slotsArray);
   try {
     const delSlots = await prisma.slots.deleteMany({
@@ -698,6 +698,16 @@ docRouter.post("/create-referral", authorizeRoles("doc"), async (req, res) => {
       },
     });
 
+    await prisma.appointments.updateMany({
+      where: { user_id: user_id },
+      data: { doctor_id: Number(referred_to) },
+    });
+
+    await prisma.pastAppointments.updateMany({
+      where: { user_id: user_id },
+      data: { doc_id: Number(referred_to) },
+    });
+
     res.status(201).json({
       message: "Referral added successfully",
       referral: newReferral,
@@ -735,7 +745,11 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-docRouter.post("/deleteApp", authorizeRoles("doc"), upload.array("files", 10), async (req, res) => {
+docRouter.post(
+  "/deleteApp",
+  authorizeRoles("doc"),
+  upload.array("files", 10),
+  async (req, res) => {
     try {
       const appId = Number(req.body.appId);
       const doc_id = Number(req.body.doctorId);
@@ -746,7 +760,7 @@ docRouter.post("/deleteApp", authorizeRoles("doc"), upload.array("files", 10), a
       if (doc_id !== req.user.userId) {
         return res.status(403).json({ error: "Access denied" });
       }
-      const files = req.files; 
+      const files = req.files;
       if (!files || files.length === 0) {
         return res.status(400).json({ error: "PDF files missing" });
       }
@@ -767,7 +781,7 @@ docRouter.post("/deleteApp", authorizeRoles("doc"), upload.array("files", 10), a
           doc_id,
           user_id,
           category,
-          pdfLinks: driveLinks, 
+          pdfLinks: driveLinks,
           createdAt: dateTime,
         },
       });
@@ -779,6 +793,5 @@ docRouter.post("/deleteApp", authorizeRoles("doc"), upload.array("files", 10), a
     }
   }
 );
-
 
 export default docRouter;

@@ -15,13 +15,12 @@ const AppointmentList = ({ onFollowUp }) => {
   };
 
   useEffect(() => {
+    const doc_id = localStorage.getItem("userid");
     const getAppointments = async () => {
       try {
         console.log(token);
         const response = await fetch(
-          `/api/doc/getAppointmentForDoctorUser?userId=${userId}&docId=${localStorage.getItem(
-            "userid"
-          )}`,
+          `http:localhost:3000/api/doc/getAppointmentForDoctorUser?userId=${userId}&docId=${doc_id}`,
           {
             headers: {
               Authorization: "Bearer " + token,
@@ -29,6 +28,7 @@ const AppointmentList = ({ onFollowUp }) => {
           }
         );
         const data = await response.json();
+        console.log(data);
         setappointments(data.appointments);
       } catch (error) {
         console.error(error);
@@ -69,12 +69,13 @@ const AppointmentList = ({ onFollowUp }) => {
                   </p>
                 </div>
                 <span
-                  className={`px-2.5 py-1 text-xs rounded-full ${appointment.status === "completed"
+                  className={`px-2.5 py-1 text-xs rounded-full ${
+                    appointment.status === "completed"
                       ? "bg-[var(--custom-green-100)] text-[var(--custom-green-800)]"
                       : appointment.status === "scheduled"
-                        ? "bg-[var(--custom-blue-100)] text-[var(--custom-blue-800)]"
-                        : "bg-[var(--custom-gray-100)] text-[var(--custom-gray-800)]"
-                    }`}
+                      ? "bg-[var(--custom-blue-100)] text-[var(--custom-blue-800)]"
+                      : "bg-[var(--custom-gray-100)] text-[var(--custom-gray-800)]"
+                  }`}
                 >
                   {appointment.status || "Completed"}
                 </span>
@@ -90,11 +91,12 @@ const AppointmentList = ({ onFollowUp }) => {
                       Notes
                     </h4>
                     <p
-                      className={`text-sm text-[var(--custom-gray-600)] ${expandedId !== appointment.id &&
-                          appointment.note.length > 100
+                      className={`text-sm text-[var(--custom-gray-600)] ${
+                        expandedId !== appointment.id &&
+                        appointment.note.length > 100
                           ? "line-clamp-2"
                           : ""
-                        }`}
+                      }`}
                     >
                       {appointment.note}
                     </p>
