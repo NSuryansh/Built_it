@@ -35,7 +35,7 @@ const DoctorEventsList = () => {
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [eventId, setEventId] = useState(null);
   const token = localStorage.getItem("token");
-
+  
   const handleDelete = async (id) => {
     // if (!window.confirm("Are you sure you want to delete this event?")) return;
 
@@ -368,7 +368,7 @@ const DoctorEventsList = () => {
               </div>
 
               {/* {console.log(event)} */}
-              {event.batches.length>0 && (
+              {event.batches && event.batches.length>0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {event.batches.map((b, i) => (
                   <div
