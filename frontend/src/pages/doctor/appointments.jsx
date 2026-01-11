@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { User, CircleUser, Clock, Phone, FileText, Loader, Mail, ChevronDown } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
-import emailjs from "@emailjs/browser";
 import Footer from "../../components/common/Footer";
 import { format } from "date-fns";
 import { checkAuth } from "../../utils/profile";
@@ -9,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/common/SessionExpired";
 import { TimeChange, TimeReduce } from "../../components/common/TimeChange";
 import CustomToast from "../../components/common/CustomToast";
-import { TfiEmail } from "react-icons/tfi";
 import {
   BarChart,
   Bar,
@@ -24,6 +22,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import CustomLoader from "../../components/common/CustomLoader";
+import { pdfDB } from "../../db/pdfDB";
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -50,6 +49,9 @@ const DoctorAppointment = () => {
   const [slots, setAvailableSlots] = useState([]);
   const [time, setSelectedTime] = useState("");
   const token = localStorage.getItem("token");
+  const fileInputRef = useRef(null)
+  const [files, setFiles] = useState([]);
+  const urlSetRef = useRef(new Set());
 
   // Define Appointment Categories
   const APPOINTMENT_CATEGORIES = [
@@ -228,6 +230,56 @@ const DoctorAppointment = () => {
   };
 
   useEffect(() => {
+    return () => {
+      urlSetRef.current.forEach((u) => {
+        try { URL.revokeObjectURL(u); } catch (e) { }
+      });
+      urlSetRef.current.clear();
+    };
+  }, []);
+
+  const handleUpload = async (e) => {
+    const chosen = e.target.files;
+    if (!chosen || !chosen.length) return;
+
+    const newEntries = [];
+
+    for (const f of chosen) {
+      if (f.type !== "application/pdf") continue;
+      try {
+        const buffer = await f.arrayBuffer();
+        const id = await pdfDB.pdfs.add({
+          name: f.name,
+          size: f.size,
+          type: f.type,
+          uploadedAt: new Date().toISOString(),
+          data: buffer,
+        });
+
+        const savedFile = new File([buffer], f.name, { type: f.type });
+        const blobUrl = URL.createObjectURL(savedFile);
+        urlSetRef.current.add(blobUrl);
+
+        newEntries.push({
+          id,
+          name: f.name,
+          size: f.size,
+          uploadedAt: new Date().toISOString(),
+          type: f.type,
+          data: buffer,
+          file: savedFile,
+          blobUrl,
+        });
+      } catch (err) {
+        console.error("Failed to save file:", f.name, err);
+      }
+    }
+
+    if (newEntries.length) setFiles((prev) => [...newEntries, ...prev]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("doc");
       setIsAuthenticated(authStatus);
@@ -337,6 +389,25 @@ const DoctorAppointment = () => {
     setNote(e.target.value);
   };
 
+  const handleView = (fileObj) => {
+    if (fileObj?.blobUrl) window.open(fileObj.blobUrl, "_blank", "noopener,noreferrer");
+    else alert("No preview available.");
+  };
+
+  const handleRemove = async (id) => {
+    try {
+      const toRemove = files.find((p) => p.id === id);
+      if (toRemove?.blobUrl) {
+        try { URL.revokeObjectURL(toRemove.blobUrl); urlSetRef.current.delete(toRemove.blobUrl); } catch (e) {}
+      }
+      await pdfDB.pdfs.delete(id);
+      setFiles((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      console.error("Failed to delete:", err);
+    }
+  };
+
+
   // Added handler for category change
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
@@ -368,26 +439,36 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
-    // If you want to enforce a category selection, check here
-    // if (!category) { CustomToast("Please select a category", "red"); return; }
     
+    const formData = new FormData();
+    for (const f of files) {
+    const pdf = await pdfDB.pdfs.get(f.id);
+
+    const blob = new Blob([pdf.data], { type: pdf.type });
+    const file = new File([blob], pdf.name, { type: pdf.type });
+
+    formData.append("files", file);        
+    formData.append("pdfIds[]", f.id);     
+  }
+    formData.append("appId", appointment.id);
+    formData.append("doctorId", appointment.doctor_id);
+    formData.append("userId", appointment.user_id);
+    formData.append("note", note);
+    formData.append("category", category);
+
     const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({
-        appId: appointment["id"],
-        doctorId: appointment["doctor_id"],
-        userId: appointment["user_id"],
-        note: note,
-        category: category, // Added category to body
-      }),
+      body: formData,
     });
+
     const resp = await res.json();
-    setNote(""); // Reset note
-    setCategory(""); // Reset category
+ 
+    setNote("");
+    setCategory("");
+    setFiles([]);
     setFixed(!fixed);
   };
 
@@ -658,7 +739,7 @@ const DoctorAppointment = () => {
                         )}
                         {completedNotes[appointment.id] !== undefined && (
                           <div className="mt-6 space-y-4">
-                             {/* Category Dropdown */}
+                            {/* Category Dropdown */}
                             <div className="relative">
                               <select
                                 value={category}
@@ -684,6 +765,37 @@ const DoctorAppointment = () => {
                               value={note}
                               onChange={handleNoteChange}
                             />
+                            <input
+                              ref={fileInputRef}
+                              type="file"
+                              accept="application/pdf"
+                              multiple
+                              onChange={handleUpload}
+                              style={{ display: "none" }}
+                            />
+                            <button className="btn upload-btn" onClick={() => fileInputRef.current.click()}>
+                              Upload PDFs
+                            </button>
+                            <div className="dashboard-list">
+                              {files.length === 0 ? (
+                                <p className="empty-msg">No PDFs uploaded yet.</p>
+                              ) : (
+                                <ul>
+                                  {files.map((f) => (
+                                    <li key={f.id} className="pdf-item">
+                                      <div className="pdf-meta">
+                                        <strong>{f.name}</strong>
+                                        <small>{Math.round(f.size / 1024)} KB • {new Date(f.uploadedAt).toLocaleString()}</small>
+                                      </div>
+                                      <div className="pdf-actions">
+                                        <button onClick={() => handleView(f)}>View</button>
+                                        <button className="remove-btn" onClick={() => handleRemove(f.id)}>Remove</button>
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
                           </div>
                         )}
                       </div>

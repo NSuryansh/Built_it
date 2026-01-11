@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
+import { uploadToGoogleDrive } from "../utils/GoogleDriveUpload.js";
 dotenv.config();
 
 const docRouter = Router();
@@ -288,6 +289,7 @@ docRouter.get("/reqApp", authorizeRoles("doc"), async (req, res) => {
       user: {
         select: {
           username: true,
+          alt_mobile: true,
           mobile: true,
           email: true,
         },
@@ -342,45 +344,6 @@ docRouter.post("/changeRoomNo", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-docRouter.post("/deleteApp", authorizeRoles("doc"), async (req, res) => {
-  const appId = Number(req.body["appId"]);
-  const doc_id = Number(req.body["doctorId"]);
-  if (doc_id !== req.user.userId) {
-    return res.status(403).json({ error: "Access denied" });
-  }
-  const user_id = Number(req.body["userId"]);
-  const note = req.body["note"];
-  const category = req.body["category"]; // <--- ADDED THIS TO EXTRACT CATEGORY
-  const dateTime = new Date();
-  // console.log(note);
-  try {
-    const deletedApp = await prisma.appointments.delete({
-      where: {
-        id: appId,
-      },
-    });
-    // console.log(deletedApp);
-    // console.log(dateTime);
-    try {
-      const pastApp = await prisma.pastAppointments.create({
-        data: {
-          note: note,
-          doc_id: doc_id,
-          user_id: user_id,
-          createdAt: dateTime,
-          category: category, // <--- SAVING CATEGORY TO DB
-        },
-      });
-      // console.log(pastApp);
-      res.json({ message: "Appointment done" });
-    } catch (e) {
-      res.json(e);
-    }
-  } catch (e) {
-    res.json({ error: e });
-  }
-});
-
 docRouter.get("/currentdocappt", authorizeRoles("doc"), async (req, res) => {
   const doctorId = Number(req.query["doctorId"]);
   // Get today's date range (start and end of today)
@@ -406,6 +369,7 @@ docRouter.get("/currentdocappt", authorizeRoles("doc"), async (req, res) => {
         user: {
           select: {
             username: true, // assuming "name" is the username
+            alt_mobile: true,
             mobile: true,
             email: true,
           },
@@ -734,6 +698,16 @@ docRouter.post("/create-referral", authorizeRoles("doc"), async (req, res) => {
       },
     });
 
+    await prisma.appointments.updateMany({
+      where: { user_id: user_id },
+      data: { doctor_id: Number(referred_to) },
+    });
+
+    await prisma.pastAppointments.updateMany({
+      where: { user_id: user_id },
+      data: { doc_id: Number(referred_to) },
+    });
+
     res.status(201).json({
       message: "Referral added successfully",
       referral: newReferral,
@@ -771,48 +745,53 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-docRouter.post("/request-to-user", authorizeRoles("doc"), async (req, res) => {
-  const userId = Number(req.body["userId"]);
-  const doctorId = Number(req.body["doctorId"]);
-  if (doctorId.toString() !== req.user.userId.toString()) {
-    return res.status(403).json({ error: "Access denied" });
-  }
-  const dateTime = req.body["dateTime"];
-  const reason = req.body["reason"];
+docRouter.post(
+  "/deleteApp",
+  authorizeRoles("doc"),
+  upload.array("files", 10),
+  async (req, res) => {
+    try {
+      const appId = Number(req.body.appId);
+      const doc_id = Number(req.body.doctorId);
+      const user_id = Number(req.body.userId);
+      const note = req.body.note;
+      const category = req.body.category;
+      const dateTime = new Date();
+      if (doc_id !== req.user.userId) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      const files = req.files;
+      if (!files || files.length === 0) {
+        return res.status(400).json({ error: "PDF files missing" });
+      }
 
-  try {
-    // Check if user exists
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      const driveLinks = [];
+      for (const file of files) {
+        const link = await uploadToGoogleDrive(file);
+        driveLinks.push(link);
+      }
+
+      await prisma.appointments.delete({
+        where: { id: appId },
+      });
+
+      await prisma.pastAppointments.create({
+        data: {
+          note,
+          doc_id,
+          user_id,
+          category,
+          pdfLinks: driveLinks,
+          createdAt: dateTime,
+        },
+      });
+
+      res.json({ message: "Appointment done" });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Internal server error" });
     }
-
-    // Check if doctor exists
-    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
-    if (!doctor) {
-      return res.status(404).json({ message: "Doctor not found" });
-    }
-
-    const date = new Date(dateTime);
-    // Create appointment
-    const appointment = await prisma.requests.create({
-      data: {
-        user_id: userId,
-        doctor_id: doctorId,
-        dateTime: new Date(dateTime),
-        reason: reason,
-        forDoctor: false,
-      },
-    });
-    // console.log(appointment);
-    res.json({
-      message: "Appointment requested successfully",
-      appointment,
-    });
-  } catch (error) {
-    console.error(error);
-    res.json({ message: "Internal Server Error" });
   }
-});
+);
 
 export default docRouter;
