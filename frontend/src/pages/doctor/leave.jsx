@@ -155,7 +155,7 @@ const DoctorLeave = () => {
               )}
               <div className="ml-4">
                 <h2 className="text-xl font-semibold text-[var(--custom-blue-800)]">
-                  Dr. {name}
+                  Therapist {name}
                 </h2>
                 <p className="text-[var(--custom-blue-600)]">{desc}</p>
               </div>

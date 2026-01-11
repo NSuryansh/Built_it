@@ -292,7 +292,7 @@ const AdminDashboard = () => {
                         className="bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-teal-50)] p-6 rounded-xl"
                       >
                         <h3 className="text-xl font-semibold mb-4 text-[var(--custom-green-900)] text-center">
-                          Dr. {doc}
+                          Therapist {doc}
                         </h3>
                         <ResponsiveContainer width="100%" height={300}>
                           <PieChart>
@@ -395,7 +395,7 @@ const AdminDashboard = () => {
                         className="bg-gradient-to-br from-[var(--custom-green-50)] to-[var(--custom-teal-50)] p-6 rounded-xl"
                       >
                         <h3 className="text-xl font-semibold mb-4 text-[var(--custom-green-900)] text-center">
-                          Dr. {doc}
+                          Therapist {doc}
                         </h3>
                         <ResponsiveContainer width="100%" height={300}>
                           <PieChart>

@@ -78,7 +78,7 @@ const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, userName }) => {
                   <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 pb-4 border-b border-gray-100 gap-2">
                     <div>
                       <h3 className="font-bold text-lg text-gray-800">
-                        Dr. {fb.doc?.name || "Unknown Doctor"}
+                        Therapist {fb.doc?.name || "Unknown Doctor"}
                       </h3>
                       <div className="flex items-center text-sm text-gray-500 mt-1">
                         <Calendar className="h-3 w-3 mr-1" />

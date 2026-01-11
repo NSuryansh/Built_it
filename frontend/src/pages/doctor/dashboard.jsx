@@ -190,7 +190,7 @@ const DoctorDashboard = () => {
                   {greeting},
                 </h1>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--custom-blue-800)] mb-2">
-                  Dr. {localStorage.getItem("username")}
+                  Therapist {localStorage.getItem("username")}
                 </h2>
                 <p className="text-[var(--custom-gray-600)] flex items-center">
                   <Clock className="h-4 w-4 mr-2" />

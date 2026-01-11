@@ -121,7 +121,7 @@ const NotificationPanel = () => {
                   )}
                 </p>
                 <p className="font-semibold text-[var(--custom-gray-900)]">
-                  Dr. {notif.doctor.name}?
+                  Therapist {notif.doctor.name}?
                 </p>
               </div>
               <div className="flex gap-2">
