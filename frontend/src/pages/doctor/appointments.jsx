@@ -489,7 +489,7 @@ const DoctorAppointment = () => {
     const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
     try {
-      console.log("hello");
+      console.log(appointment, docName, newTime, "HI");
       const res = await fetch("http://localhost:3000/api/doc/reschedule", {
         method: "POST",
         headers: {
@@ -498,7 +498,6 @@ const DoctorAppointment = () => {
         },
         body: JSON.stringify({
           id: appointment["id"],
-          docId: localStorage.getItem("userid"),
           username: appointment["user"]["username"],
           docName: docName,
           origTime: format(

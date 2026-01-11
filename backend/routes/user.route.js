@@ -823,67 +823,50 @@ userRouter.post("/emerApp", async (req, res) => {
   }
 });
 
-userRouter.post(
-  "/accept-booking-by-user",
-  authorizeRoles("user"),
-  async (req, res) => {
-    const userId = Number(req.body["userId"]);
-    const doctorId = Number(req.body["doctorId"]);
-    if (userId.toString() !== req.user.userId) {
-      return res.status(403).json({ error: "Access denied" });
-    }
-    const dateTime = req.body["dateTime"];
-    const date = new Date();
-    const newDate = new Date(dateTime);
-    var userTimezoneOffset = date.getTimezoneOffset() * 60000;
-    const some = new Date(newDate.getTime() - userTimezoneOffset);
-    const reason = req.body["reason"];
-    const appId = req.body["id"];
-    // console.log(req.body);
+userRouter.post("/accept-booking-by-user", authorizeRoles("user"), async (req, res) => {
     try {
-      // Check if user exists
+      const userId = Number(req.body["userId"]);
+      const doctorId = Number(req.body["doctorId"]);
+      const appId = Number(req.body["id"]);
+      const dateTimeRaw = req.body["dateTime"];
+      const reason = req.body["reason"] || "";
+      const authUserId = Number(req.user?.userId);
+      
+      const parsedDate = new Date(dateTimeRaw);
+      const appointmentDate = parsedDate;
       const user = await prisma.user.findUnique({ where: { id: userId } });
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      // Check if doctor exists
-      const doctor = await prisma.doctor.findUnique({
-        where: { id: doctorId },
-      });
-      if (!doctor) {
-        return res.status(404).json({ message: "Doctor not found" });
-      }
-
-      const result = await prisma.$transaction(async (prisma) => {
-        // Create appointment
-        const appointment = await prisma.appointments.create({
+      if (!user) return res.status(404).json({ message: "User not found" });
+      const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+      if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+      const result = await prisma.$transaction(async (tx) => {
+        const appointment = await tx.appointments.create({
           data: {
             user_id: userId,
             doctor_id: doctorId,
-            dateTime: some,
-            reason: reason,
+            dateTime: appointmentDate,
+            reason,
             isDoctor: true,
           },
         });
-        // console.log(appointment);
-        //Remove from requests table
-        const reqDel = await prisma.requests.delete({
-          where: { id: parseInt(appId) },
+
+        const reqDel = await tx.requests.delete({
+          where: { id: appId },
         });
-        // console.log(reqDel);
+
         return { appointment, reqDel };
       });
-      res.json({
-        message: "Appointment accepted and booked with student successfully",
+
+      return res.status(201).json({
+        message: "Appointment accepted and booked successfully",
         result,
       });
     } catch (error) {
-      console.error(error);
-      res.json({ message: "Internal Server Error" });
+      console.error("Error in accept-booking-by-user:", error);
+      return res.status(500).json({ message: "Internal Server Error", detail: String(error) });
     }
   }
 );
+
 
 userRouter.get(
   "/isUpcomingAppointment",

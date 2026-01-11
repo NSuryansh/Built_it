@@ -8,10 +8,10 @@ import { TimeChange } from "../common/TimeChange";
 
 const NotificationPanel = () => {
   const [notifications, setNotifications] = useState([]);
-  const navigate = useNavigate(); // Initialize navigate function
-  const userId = localStorage.getItem("userid");
+  const navigate = useNavigate(); 
+  const userId = Number(localStorage.getItem("userid"));
   const token = localStorage.getItem("token");
-
+  const [loadingId, setLoadingId] = useState(null);
   const deleteRequest = async (id) => {
     try {
       const response = await fetch(
@@ -53,25 +53,29 @@ const NotificationPanel = () => {
     }
   };
 
-  const confirmAppointment = async (notif) => {
+    const confirmAppointment = async (notif) => {
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/user/accept-booking-by-user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({
-            userId: userId,
-            doctorId: notif.doctor_id,
-            dateTime: new Date(TimeChange(new Date(notif.dateTime).getTime())),
-            reason: notif.reason,
-            id: notif.id,
-          }),
-        }
-      );
+      setLoadingId(notif.id);
+      const isoDate = new Date(adjustedMs).toISOString();
+
+      const payload = {
+        userId: userId, 
+        doctorId: notif.doctor_id, 
+        dateTime: isoDate,
+        reason: notif.reason,
+        id: notif.id,
+      };
+
+      const res = await fetch(`http://localhost:3000/api/user/accept-booking-by-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const resBody = await res.json().catch(() => ({}));
 
       if (res.ok) {
         CustomToast("Appointment Confirmed!");
@@ -89,10 +93,14 @@ const NotificationPanel = () => {
         });
         getRequests();
       } else {
-        console.error("Failed to confirm appointment");
+        console.error("Failed to confirm appointment:", res.status, resBody);
+        CustomToast("Failed to confirm appointment: " + (resBody.message || res.status));
       }
     } catch (error) {
       console.error("Error confirming appointment:", error);
+      CustomToast("Error confirming appointment");
+    } finally {
+      setLoadingId(null);
     }
   };
 

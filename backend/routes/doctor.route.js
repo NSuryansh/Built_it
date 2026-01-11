@@ -156,37 +156,36 @@ docRouter.get(
 );
 
 docRouter.post("/reschedule", async (req, res) => {
-  console.log("hi");
-  const { id, docId, username, docName, origTime, newTime, email } = req.body;
-  // if (docId !== req.user.userId) {
-  //   return res.status(400).json({ error: "Access denied" });
-  // }
-  console.log(id);
+  // console.log("hi");
+  const { id, username, docName, origTime, newTime, email } = req.body;
   try {
-    const reschedule = await prisma.requests.delete({ where: { id } });
+    const reschedule = await prisma.requests.update({
+      where: { id: Number(id) },
+      data: {
+        dateTime: new Date(newTime),
+        forDoctor: false,
+      },
+    });
+
     await sendEmail(
       email,
       "Appointment Reschedule",
-      `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nCalm Connect`
+      `Dear ${username},
+Your appointment with ${docName} at ${origTime} has been rescheduled.
+New Date: ${newTime}
+Regards  
+Calm Connect`
     );
-    console.log("he");
     res.json(reschedule);
   } catch (e) {
-    if (e.code == "P2025") {
-      const reschedule = await prisma.appointments.delete({
-        where: { id: id },
-      });
-      await sendEmail(
-        email,
-        "Appointment Reschedule",
-        `Dear ${username}, \n\nYour appointment with ${docName} at ${origTime} has to be rescheduled due to another engagement of the counsellor. You can book another appointment at the timings given below: \n\nDate: ${newTime}\n\nRegards\nCalm Connect`
-      );
-      res.json(reschedule);
-    } else {
-      res.status(400).json(e);
+    console.error(e);
+    if (e.code === "P2025") {
+      return res.status(404).json({ message: "Request not found" });
     }
+    res.status(400).json({ error: e.message });
   }
 });
+
 
 docRouter.post("/addLeave", authorizeRoles("doc"), async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
@@ -251,24 +250,20 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
     await sendEmail(
       user.email,
       "Appointment Scheduled",
-      `Dear ${user.username}, \n\nYour appointment with ${
-        doctor.name
+      `Dear ${user.username}, \n\nYour appointment with ${doctor.name
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
         some
-      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
-        doctor.office_address
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${doctor.office_address
       }\n\nRegards\nCalm Connect`
     );
 
     await sendEmail(
       doctor.email,
       "Appointment Scheduled",
-      `Dear ${doctor.name}, \n\nYour appointment with ${
-        user.username
+      `Dear ${doctor.name}, \n\nYour appointment with ${user.username
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
         some
-      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
-        doctor.office_address
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${doctor.office_address
       }\n\nRegards\nCalm Connect`
     );
 
@@ -433,7 +428,7 @@ docRouter.get("/uniquePatients", authorizeRoles("doc"), async (req, res) => {
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
-    
+
     const appt = await prisma.pastAppointments.findMany({
       where: { doc_id: doctorId },
       distinct: ["user_id"],
@@ -806,9 +801,8 @@ docRouter.post(
         const data = await uploadToGoogleDrive(file, {
           therapistName: doc.name,
           patientName: user.username,
-          dateTime: `${dateTime.getDate()}-${
-            dateTime.getMonth() + 1
-          }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+          dateTime: `${dateTime.getDate()}-${dateTime.getMonth() + 1
+            }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
         });
         driveLink = data.shareableLink;
       }
