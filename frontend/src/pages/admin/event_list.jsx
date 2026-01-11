@@ -460,9 +460,9 @@ const EventsList = () => {
 
       {deletePopupOpen && (
         <DeletePopup
-          docId={eventId}
-          handleDeletePopup={handleDeletePopup}
-          handleDelete={handleDelete}
+          doc={eventId}
+          handleToggleDocPopup={handleDeletePopup}
+          handleToggleDoc={handleDelete}
           text={"Are you sure you want to remove the event?"}
         />
       )}
