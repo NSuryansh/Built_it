@@ -13,7 +13,7 @@ const DoctorNavbar = () => {
   const links = [
     { name: "Home", link: "/doctor/dashboard" },
     { name: "Appointments", link: "/doctor/appointments" },
-    { name: "Peer", link: "/doctor/peer" },
+    { name: "Chat", link: "/doctor/peer" },
     { name: "Profile", link: "/doctor/profile" },
     { name: "History", link: "/doctor/history" },
     { name: "Events", link: "/doctor/event_list"}
