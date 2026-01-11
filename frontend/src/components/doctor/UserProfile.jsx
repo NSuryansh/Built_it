@@ -157,7 +157,7 @@ const UserProfile = () => {
 
   return (
     <div className="bg-[var(--custom-white)] rounded-xl shadow-sm border border-[var(--custom-blue-100)]/50 overflow-hidden">
-      <div className="py-6 px-6 sm:px-8 sm:py-8">
+      <div className="py-6 px-3 sm:px-8 sm:py-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between">
           <div>
             <h2 className="text-2xl font-bold text-[var(--custom-gray-900)]">
@@ -274,7 +274,7 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
-        <div className="px-4 sm:px-6 md:px-8 lg:px-[60px] pt-6">
+        <div className="sm:px-6 md:px-8 lg:px-[60px] pt-6">
           {/* Referral Button */}
           <button
             onClick={() => setShowReferralForm(!showReferralForm)}
@@ -287,7 +287,7 @@ const UserProfile = () => {
 
           {/* Referral Form */}
           {showReferralForm && docs != null && (
-            <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
+            <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-4 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
               <form onSubmit={handleReferralSubmit} className="space-y-6">
                 <div className="space-y-6">
                   {/* Referred By */}
