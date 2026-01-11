@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-# Load environment variables from backup.env
+# Load environment variables safely
 if [ -f "backup.env" ]; then
-  export $(grep -v '^[[:space:]]*#' backup.env | xargs)
+  set -a
+  source backup.env
+  set +a
+
+  echo "$DATABASE_HOST"
 else
   echo "backup.env file not found!"
   exit 1

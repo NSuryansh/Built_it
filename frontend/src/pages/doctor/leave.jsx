@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import CustomToast from "../../components/common/CustomToast";
 import SessionExpired from "../../components/common/SessionExpired";
 import CustomLoader from "../../components/common/CustomLoader";
+import { format } from "date-fns";
 
 const DoctorLeave = () => {
   const [leaveDetails, setLeaveDetails] = useState({
@@ -49,6 +50,7 @@ const DoctorLeave = () => {
       }
     } catch (error) {
       console.error("Error fetching available slots:", error);
+      CustomToast("Error fetching slots", "blue");
     }
   };
 
@@ -65,11 +67,11 @@ const DoctorLeave = () => {
     e.preventDefault();
     const startDate = new Date(
       new Date(leaveDetails.startDate).getTime() +
-      new Date(startSelectedSlot).getTime()
+        new Date(startSelectedSlot).getTime()
     );
     const endDate = new Date(
       new Date(leaveDetails.endDate).getTime() +
-      new Date(endSelectedSlot).getTime()
+        new Date(endSelectedSlot).getTime()
     );
     console.log(startDate, endDate);
 
@@ -155,7 +157,7 @@ const DoctorLeave = () => {
               )}
               <div className="ml-4">
                 <h2 className="text-xl font-semibold text-[var(--custom-blue-800)]">
-                  Therapist {name}
+                  {name}
                 </h2>
                 <p className="text-[var(--custom-blue-600)]">{desc}</p>
               </div>
@@ -207,7 +209,10 @@ const DoctorLeave = () => {
                     <option value="">Choose a slot</option>
                     {startSlots.map((slot) => (
                       <option key={slot.id} value={slot.starting_time}>
-                        {slot.starting_time.split("T")[1].slice(0, 5)}
+                        {format(
+                          new Date(slot.starting_time).getTime(),
+                          "HH:mm"
+                        )}
                       </option>
                     ))}
                   </select>
@@ -246,7 +251,10 @@ const DoctorLeave = () => {
                     <option value="">Choose a slot</option>
                     {endSlots.map((slot) => (
                       <option key={slot.id} value={slot.starting_time}>
-                        {slot.starting_time.split("T")[1].slice(0, 5)}
+                        {format(
+                          new Date(slot.starting_time).getTime(),
+                          "HH:mm"
+                        )}
                       </option>
                     ))}
                   </select>

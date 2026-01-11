@@ -8,26 +8,26 @@ datasource db {
 }
 
 model User {
-  id          Int                  @id @default(autoincrement())
-  username    String               @unique
-  mobile      String               @unique
-  email       String               @unique
+  id          Int                @id @default(autoincrement())
+  username    String             @unique
+  mobile      String             @unique
+  email       String             @unique
   password    String
   alt_mobile  String
   publicKey   String
   department  String
-  batch       String               @default("2024")
-  rollNo      String               @unique
+  batch       String             @default("2024")
+  rollNo      String             @unique
   acadProg    String
-  roomNo      String               @default("")
+  roomNo      String             @default("")
   gender      Gender
-  challenge   String               @default("")
+  challenge   String             @default("")
   credentials Authenticator[]
   appointment Appointments[]
   chatbot     Chatbot[]
   feelings    feelings?
-  invite      Notifications[]      @relation("ChatInvite")
-  notif       Notifications[]      @relation("User")
+  invite      Notifications[]    @relation("ChatInvite")
+  notif       Notifications[]    @relation("User")
   // resetTokens PasswordResetToken[]
   pastApp     PastAppointments[]
   referral    Referrals[]
@@ -37,16 +37,16 @@ model User {
   @@map("user")
 }
 
-model Authenticator{
-  id                     Int @id @default(autoincrement())
-  credentialID           Bytes    @unique  
-  publicKey              Bytes             
-  counter                Int
-  transports             String[] 
-  deviceType             String   
-  backedUp               Boolean
-  userId                 Int
-  user                   User     @relation(fields: [userId], references: [id])
+model Authenticator {
+  id           Int      @id @default(autoincrement())
+  credentialID Bytes    @unique
+  publicKey    Bytes
+  counter      Int
+  transports   String[]
+  deviceType   String
+  backedUp     Boolean
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model PasswordResetToken {
@@ -69,31 +69,31 @@ model otpVerification {
 }
 
 model Doctor {
-  name           String
-  mobile         String             @unique
-  email          String             @unique
-  password       String
-  reg_id         String             @unique
-  desc           String?
-  img            String?
-  id             Int                @id @default(autoincrement())
-  address        String?
-  office_address String?
-  experience     String?
+  name                 String
+  mobile               String             @unique
+  email                String             @unique
+  password             String
+  reg_id               String             @unique
+  desc                 String?
+  img                  String?
+  id                   Int                @id @default(autoincrement())
+  address              String?
+  office_address       String?
+  experience           String?
   additionalExperience String?
-  isProfileDone  Boolean            @default(false)
-  avgRating      Decimal            @default(0)
-  isInactive     Boolean            @default(false)
-  certificaition DocCertification[]
-  education      DocEducation[]
-  emerApp        EmergencyApp[]
-  docApp         Appointments[]
-  leave          DoctorLeave[]
-  pastApp        PastAppointments[]
-  referral       Referrals[]
-  request        Requests[]
-  slot           Slots[]
-  messages       Message[]
+  isProfileDone        Boolean            @default(false)
+  avgRating            Decimal            @default(0)
+  isInactive           Boolean            @default(false)
+  certificaition       DocCertification[]
+  education            DocEducation[]
+  emerApp              EmergencyApp[]
+  docApp               Appointments[]
+  leave                DoctorLeave[]
+  pastApp              PastAppointments[]
+  referral             Referrals[]
+  request              Requests[]
+  slot                 Slots[]
+  messages             Message[]
 
   @@map("doctor")
 }
@@ -118,9 +118,9 @@ model Message {
   encryptedAESKey String
   authTag         String
   senderType      String
-  read            Boolean @default(false)
-  user            User @relation(fields: [userId], references: [id])
-  doctor          Doctor @relation(fields: [doctorId], references: [id])
+  read            Boolean  @default(false)
+  user            User     @relation(fields: [userId], references: [id])
+  doctor          Doctor   @relation(fields: [doctorId], references: [id])
 }
 
 model Events {
@@ -155,7 +155,7 @@ model PastAppointments {
   doc_id    Int?
   user_id   Int?
   createdAt DateTime
-  pdfLink  String?
+  pdfLink   String?
   isDoctor  Boolean  @default(false)
   stars     Int?
   category  String?
@@ -230,6 +230,7 @@ model DoctorLeave {
   doctor_id  Int
   date_start DateTime
   date_end   DateTime
+  reason     String   @default("Abc")
   doctor     Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
 
   @@map("doctor_leave")

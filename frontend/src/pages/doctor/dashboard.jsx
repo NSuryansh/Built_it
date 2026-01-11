@@ -9,6 +9,8 @@ import {
   Bell,
   Calendar,
   Activity,
+  UserCog,
+  UserX,
 } from "lucide-react";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/common/SessionExpired";
@@ -33,6 +35,7 @@ const DoctorDashboard = () => {
   const token = localStorage.getItem("token");
   const isProfileDone = localStorage.getItem("isProfileDone");
   const [showCustomModal, setShowCustomModal] = useState(false);
+  const [leave, setLeave] = useState(null);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -135,6 +138,27 @@ const DoctorDashboard = () => {
     setNewAppoinments(appointments.slice(0, 5));
   }, [appointments]);
 
+  const fetchLeave = async () => {
+    const docId = localStorage.getItem("userid");
+    if (!docId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/doc/latestLeave?doc_id=${docId}`,
+        { headers: { Authorization: "Bearer " + token } }
+      );
+      const data = await response.json();
+      setLeave(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching leave details:", error);
+      CustomToast("Error leave details", "blue");
+    }
+  };
+
+  useEffect(() => {
+    fetchLeave();
+  }, []);
+
   if (isAuthenticated === null) {
     return <CustomLoader color="blue" text="Loading your dashboard..." />;
   }
@@ -190,12 +214,20 @@ const DoctorDashboard = () => {
                   {greeting},
                 </h1>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--custom-blue-800)] mb-2">
-                  Therapist {localStorage.getItem("username")}
+                  {localStorage.getItem("username")}
                 </h2>
                 <p className="text-[var(--custom-gray-600)] flex items-center">
                   <Clock className="h-4 w-4 mr-2" />
                   {format(new Date(), "EEEE, dd MMM yyyy")}
                 </p>
+                {leave && leave.length > 0 ? (
+                  <p className="text-[var(--custom-red-600)] flex items-center">
+                    <UserX className="h-4 w-4 mr-2" />
+                    On Leave:{" "}
+                    {format(new Date(leave[0].date_start), "dd-MM-yy")} to{" "}
+                    {format(new Date(leave[0].date_end), "dd-MM-yy")}
+                  </p>
+                ) : null}
               </div>
               <div className="hidden md:flex items-center space-x-4">
                 <motion.div

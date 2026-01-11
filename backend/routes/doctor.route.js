@@ -186,7 +186,6 @@ Calm Connect`
   }
 });
 
-
 docRouter.post("/addLeave", authorizeRoles("doc"), async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
   if (doc_id !== req.user.userId) {
@@ -250,20 +249,24 @@ docRouter.post("/book", authorizeRoles("doc"), async (req, res) => {
     await sendEmail(
       user.email,
       "Appointment Scheduled",
-      `Dear ${user.username}, \n\nYour appointment with ${doctor.name
+      `Dear ${user.username}, \n\nYour appointment with ${
+        doctor.name
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
         some
-      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${doctor.office_address
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+        doctor.office_address
       }\n\nRegards\nCalm Connect`
     );
 
     await sendEmail(
       doctor.email,
       "Appointment Scheduled",
-      `Dear ${doctor.name}, \n\nYour appointment with ${user.username
+      `Dear ${doctor.name}, \n\nYour appointment with ${
+        user.username
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
         some
-      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${doctor.office_address
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+        doctor.office_address
       }\n\nRegards\nCalm Connect`
     );
 
@@ -773,6 +776,28 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
+docRouter.get("/latestLeave", authorizeRoles("doc"), async (req, res) => {
+  const { doc_id } = req.query;
+  try {
+    const today = new Date();
+    const leave = await prisma.doctorLeave.findMany({
+      where: {
+        doctor_id: Number(doc_id),
+        date_start: { lte: today },
+        date_end: { gte: today },
+      },
+      orderBy: {
+        date_start: "desc",
+      },
+    });
+
+    res.status(200).json(leave);
+  } catch (error) {
+    console.error("Error fetching latest leave:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 docRouter.post(
   "/deleteApp",
   authorizeRoles("doc"),
@@ -801,8 +826,9 @@ docRouter.post(
         const data = await uploadToGoogleDrive(file, {
           therapistName: doc.name,
           patientName: user.username,
-          dateTime: `${dateTime.getDate()}-${dateTime.getMonth() + 1
-            }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+          dateTime: `${dateTime.getDate()}-${
+            dateTime.getMonth() + 1
+          }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
         });
         driveLink = data.shareableLink;
       }
