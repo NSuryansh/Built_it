@@ -13,6 +13,23 @@ docAdminRouter.get("/getUsers", authorizeRoles("doc", "admin"), async (req, res)
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+docAdminRouter.post("/events", authorizeRoles("admin", "doc"), async (req, res) => {
+  const id = req.body["id"];
+
+  try {
+    const resp = await prisma.events.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.json(resp);
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 docAdminRouter.get("/user-feedback", authorizeRoles("admin"), async (req, res) => {
   try {
     const userId = Number(req.query.userId);

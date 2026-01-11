@@ -40,7 +40,7 @@ const EventsList = () => {
     // if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/events`, {
+      const response = await fetch(`http://localhost:3000/api/doc_admin/events`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -460,9 +460,9 @@ const EventsList = () => {
 
       {deletePopupOpen && (
         <DeletePopup
-          docId={eventId}
-          handleDeletePopup={handleDeletePopup}
-          handleDelete={handleDelete}
+          doc={eventId}
+          handleToggleDocPopup={handleDeletePopup}
+          handleToggleDoc={handleDelete}
           text={"Are you sure you want to remove the event?"}
         />
       )}
