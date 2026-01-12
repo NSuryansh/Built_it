@@ -367,7 +367,7 @@ const EventsList = () => {
                 </div>
               </div>
 
-              {event.batches.length>0 && (
+              {event.batches && event.batches.length>0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {event.batches.map((b, i) => (
                   <div
