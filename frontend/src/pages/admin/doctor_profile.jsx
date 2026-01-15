@@ -516,7 +516,7 @@ const AdminDoctorProfile = () => {
                   </h2>
                   <span className="ml-auto text-center bg-[var(--custom-yellow-300)]/20 text-[var(--custom-yellow-200)] px-4 py-2 rounded-full text-sm font-semibold border border-[var(--custom-yellow-300)]/50">
                     {leaves && leaves.length}{" "}
-                    {leaves.length === 1 ? "Leave" : "Leaves"}
+                    {leaves && leaves.length === 1 ? "Leave" : "Leaves"}
                   </span>
                 </div>
               </div>
