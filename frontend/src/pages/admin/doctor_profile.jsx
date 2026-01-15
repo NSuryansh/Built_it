@@ -13,6 +13,7 @@ import {
   FileText,
   StarIcon,
   UserX,
+  Calendar,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/Navbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -137,6 +138,29 @@ const AdminDoctorProfile = () => {
     fetchLeave();
   }, []);
 
+  const fetchLeaves = async () => {
+    const docId = search.split("=")[1];
+    if (!docId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/doc_admin/leaves?doc_id=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      setLeaves(data);
+    } catch (error) {
+      console.error(error);
+      CustomToast("Error in fetching leaves", "blue");
+    }
+  };
+
+  useEffect(() => {
+    fetchLeaves();
+  }, []);
+
   const handleClosePopup = () => {
     navigate("/admin/login");
   };
@@ -193,6 +217,14 @@ const AdminDoctorProfile = () => {
       CustomToast("Internal error while adding referral", "green");
       return false;
     }
+  };
+
+  const calculateLeaveDuration = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
   };
 
   if (isAuthenticated === null || fetched === null) {
@@ -472,6 +504,124 @@ const AdminDoctorProfile = () => {
                 </form>
               </div>
             )}
+
+            <div className="mt-8 bg-[var(--custom-white)]/70 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden border border-[var(--custom-purple-300)]">
+              {/* Header Section */}
+              <div className="bg-gradient-to-br from-[var(--custom-red-600)] via-[var(--custom-red-500)] to-[var(--custom-red-400)] py-8 px-4 sm:px-8 md:px-12 relative overflow-hidden rounded-t-3xl">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(239,68,68,0.9),red)]"></div>
+                <div className="flex items-center gap-4 relative">
+                  <UserX className="w-8 h-8 text-[var(--custom-yellow-300)]" />
+                  <h2 className="text-2xl md:text-3xl font-bold text-[var(--custom-white)] tracking-tight drop-shadow-lg">
+                    Leave History
+                  </h2>
+                  <span className="ml-auto text-center bg-[var(--custom-yellow-300)]/20 text-[var(--custom-yellow-200)] px-4 py-2 rounded-full text-sm font-semibold border border-[var(--custom-yellow-300)]/50">
+                    {leaves && leaves.length}{" "}
+                    {leaves.length === 1 ? "Leave" : "Leaves"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Content Section */}
+              <div className="p-4 sm:p-6 md:p-8 lg:p-12 bg-[var(--custom-gray-50)]/50">
+                {leaves.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {leaves.map((leave) => (
+                      <div
+                        key={leave.id}
+                        className="group bg-[var(--custom-white)]/80 backdrop-blur-md rounded-2xl p-6 border border-[var(--custom-red-200)] hover:border-[var(--custom-red-400)] shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:bg-[var(--custom-white)]"
+                      >
+                        {/* Header with Icons */}
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="bg-gradient-to-br from-[var(--custom-red-100)] to-[var(--custom-red-200)] p-3 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                            <UserX className="h-6 w-6 text-[var(--custom-red-600)]" />
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xs font-semibold text-[var(--custom-red-500)] uppercase tracking-wider">
+                              Leave Period
+                            </div>
+                            <div className="text-sm text-[var(--custom-gray-600)] font-medium mt-1">
+                              {calculateLeaveDuration(
+                                leave.date_start,
+                                leave.date_end
+                              )}{" "}
+                              {calculateLeaveDuration(
+                                leave.date_start,
+                                leave.date_end
+                              ) === 1
+                                ? "day"
+                                : "days"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Date Range */}
+                        <div className="bg-[var(--custom-red-50)] rounded-xl p-4 border border-[var(--custom-red-100)] mb-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-[var(--custom-red-600)]" />
+                              <span className="text-sm text-[var(--custom-gray-600)] font-medium">
+                                From
+                              </span>
+                              <span className="text-sm font-semibold text-[var(--custom-red-700)]">
+                                {format(
+                                  new Date(leave.date_start),
+                                  "dd MMM yyyy"
+                                )}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-[var(--custom-red-600)]" />
+                              <span className="text-sm text-[var(--custom-gray-600)] font-medium">
+                                To
+                              </span>
+                              <span className="text-sm font-semibold text-[var(--custom-red-700)]">
+                                {format(
+                                  new Date(leave.date_end),
+                                  "dd MMM yyyy"
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Reason Section */}
+                        <div>
+                          <div className="text-xs font-semibold text-[var(--custom-gray-600)] uppercase tracking-wider mb-2">
+                            Reason for Leave
+                          </div>
+                          <div className="bg-white rounded-lg p-3 border border-[var(--custom-gray-200)]">
+                            <p className="text-[var(--custom-gray-800)] leading-relaxed text-sm">
+                              {leave.reason || "No reason provided"}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Status Badge */}
+                        <div className="mt-4 flex items-center gap-2">
+                          <div className="w-2 h-2 bg-[var(--custom-red-500)] rounded-full animate-pulse"></div>
+                          <span className="text-xs font-semibold text-[var(--custom-red-600)]">
+                            Approved Leave
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-gradient-to-br from-[var(--custom-red-50)] to-white rounded-2xl border-2 border-dashed border-[var(--custom-red-200)]">
+                    <div className="bg-[var(--custom-red-100)] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Calendar className="h-8 w-8 text-[var(--custom-red-400)]" />
+                    </div>
+                    <p className="text-[var(--custom-gray-700)] text-lg font-semibold mb-2">
+                      No Leave History
+                    </p>
+                    <p className="text-[var(--custom-gray-500)] text-sm max-w-md mx-auto">
+                      This doctor has not taken any leaves or all leaves have
+                      expired.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </main>
