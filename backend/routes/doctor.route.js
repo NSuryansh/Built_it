@@ -776,28 +776,6 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-docRouter.get("/latestLeave", authorizeRoles("doc"), async (req, res) => {
-  const { doc_id } = req.query;
-  try {
-    const today = new Date();
-    const leave = await prisma.doctorLeave.findMany({
-      where: {
-        doctor_id: Number(doc_id),
-        date_start: { lte: today },
-        date_end: { gte: today },
-      },
-      orderBy: {
-        date_start: "desc",
-      },
-    });
-
-    res.status(200).json(leave);
-  } catch (error) {
-    console.error("Error fetching latest leave:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
 docRouter.post(
   "/deleteApp",
   authorizeRoles("doc"),

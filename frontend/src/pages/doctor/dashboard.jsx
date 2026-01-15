@@ -143,7 +143,7 @@ const DoctorDashboard = () => {
     if (!docId) return;
     try {
       const response = await fetch(
-        `http://localhost:3000/api/doc/latestLeave?doc_id=${docId}`,
+        `http://localhost:3000/api/doc_admin/latestLeave?doc_id=${docId}`,
         { headers: { Authorization: "Bearer " + token } }
       );
       const data = await response.json();

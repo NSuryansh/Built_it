@@ -12,6 +12,7 @@ import {
   AlignCenterVertical as Certificate,
   FileText,
   StarIcon,
+  UserX,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/Navbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -20,6 +21,7 @@ import CustomToast from "../../components/common/CustomToast";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/common/SessionExpired";
 import CustomLoader from "../../components/common/CustomLoader";
+import { format } from "date-fns";
 
 const AdminDoctorProfile = () => {
   const search = useLocation().search;
@@ -49,6 +51,8 @@ const AdminDoctorProfile = () => {
     avgRating: 0,
   });
   const token = localStorage.getItem("token");
+  const [leave, setLeave] = useState(null);
+  const [leaves, setLeaves] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -110,6 +114,27 @@ const AdminDoctorProfile = () => {
       }
     };
     fetchData();
+  }, []);
+
+  const fetchLeave = async () => {
+    const doctorId = search.split("=")[1];
+    if (!doctorId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/doc_admin/latestLeave?doc_id=${doctorId}`,
+        { headers: { Authorization: "Bearer " + token } }
+      );
+      const data = await response.json();
+      setLeave(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching leave details:", error);
+      CustomToast("Error leave details", "green");
+    }
+  };
+
+  useEffect(() => {
+    fetchLeave();
   }, []);
 
   const handleClosePopup = () => {
@@ -216,10 +241,11 @@ const AdminDoctorProfile = () => {
                 </h1>
                 <div className="flex">
                   <p className="text-[var(--custom-yellow-200)] text-xl font-medium italic">
-                    {`${doctor.field} (${doctor.avgRating != 0.0
+                    {`${doctor.field} (${
+                      doctor.avgRating != 0.0
                         ? parseFloat(doctor.avgRating).toPrecision(2)
                         : "Unrated"
-                      }`}
+                    }`}
                   </p>
                   {doctor.avgRating != 0.0 && (
                     <div className="flex">
@@ -234,6 +260,14 @@ const AdminDoctorProfile = () => {
                     )
                   </p>
                 </div>
+                {leave && leave.length > 0 ? (
+                  <p className="text-[var(--custom-red-600)] flex items-center">
+                    <UserX className="h-4 w-4 mr-2" />
+                    On Leave:{" "}
+                    {format(new Date(leave[0].date_start), "dd-MM-yy")} to{" "}
+                    {format(new Date(leave[0].date_end), "dd-MM-yy")}
+                  </p>
+                ) : null}
               </div>
             </div>
           </div>

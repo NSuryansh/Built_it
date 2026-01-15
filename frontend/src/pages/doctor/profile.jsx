@@ -68,6 +68,7 @@ const DoctorProfile = () => {
     "Friday",
     "Saturday",
   ];
+  const [leaves, setLeaves] = useState(null);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -81,9 +82,12 @@ const DoctorProfile = () => {
     const fetchData = async () => {
       try {
         const doctorId = localStorage.getItem("userid");
-        const response = await fetch(`http://localhost:3000/api/common/getDoc?docId=${doctorId}`, {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          `http://localhost:3000/api/common/getDoc?docId=${doctorId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
         const response2 = await fetch(
           `http://localhost:3000/api/doc/general-slots?docId=${doctorId}`,
           { headers: { Authorization: "Bearer " + token } }
@@ -180,6 +184,46 @@ const DoctorProfile = () => {
     };
     fetchData();
   }, []);
+
+  const fetchLeaves = async () => {
+    const docId = localStorage.getItem("userid");
+    if (!docId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/doc_admin/leaves?doc_id=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      setLeaves(data);
+    } catch (error) {
+      console.error(error);
+      CustomToast("Error in fetching leaves", "blue");
+    }
+  };
+
+  useEffect(() => {
+    fetchLeaves();
+  }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const calculateLeaveDuration = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
 
   const handleAddSlot = (day) => {
     console.log(profile);
@@ -745,7 +789,7 @@ const DoctorProfile = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-2xl shadow-xl border border-[var(--custom-blue-100)] p-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-[var(--custom-blue-100)] p-4 md:p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center text-[var(--custom-blue-600)] font-bold text-2xl md:text-3xl">
@@ -892,6 +936,100 @@ const DoctorProfile = () => {
                   );
                 })}
               </div>
+            </div>
+          )}
+        </div>
+
+        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-4 md:p-8 border border-[var(--custom-blue-100)]/30 transition-all duration-500 hover:shadow-[var(--custom-blue-200)]/20 animate-fade-in-up">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center text-[var(--custom-blue-600)] font-bold text-2xl md:text-3xl">
+              <Calendar className="h-8 w-8 mr-3" />
+              Leave History
+            </div>
+            <span className="bg-[var(--custom-blue-100)] text-[var(--custom-blue-700)] px-4 py-2 rounded-full text-sm font-semibold">
+              {leaves.length} {leaves.length === 1 ? "Leave" : "Leaves"}
+            </span>
+          </div>
+
+          {leaves.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {leaves.map((leave) => (
+                <div
+                  key={leave.id}
+                  className="group bg-gradient-to-br from-[var(--custom-blue-50)] to-white rounded-2xl p-6 border border-[var(--custom-blue-200)] hover:shadow-xl hover:border-[var(--custom-blue-400)] transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  {/* Header with Date Range */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center flex-1">
+                      <div className="bg-gradient-to-br from-[var(--custom-blue-100)] to-[var(--custom-blue-200)] p-3 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-300">
+                        <Calendar className="h-6 w-6 text-[var(--custom-blue-600)]" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-xs text-[var(--custom-gray-500)] font-semibold uppercase tracking-wider mb-1">
+                          Leave Period
+                        </div>
+                        <div className="text-base lg:text-lg font-bold text-[var(--custom-blue-800)]">
+                          {formatDate(leave.date_start)}
+                        </div>
+                        <div className="text-sm text-[var(--custom-gray-600)] font-medium">
+                          to
+                        </div>
+                        <div className="text-base lg:text-lg font-bold text-[var(--custom-blue-800)]">
+                          {formatDate(leave.date_end)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Reason Box */}
+                  <div className="bg-white rounded-xl p-4 border border-[var(--custom-blue-100)] shadow-sm mb-4">
+                    <div className="text-xs text-[var(--custom-gray-500)] font-semibold uppercase tracking-wider mb-2">
+                      Reason
+                    </div>
+                    <div className="text-[var(--custom-gray-800)] leading-relaxed">
+                      {leave.reason || "No reason provided"}
+                    </div>
+                  </div>
+
+                  {/* Duration Badge */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-sm text-[var(--custom-gray-600)] bg-[var(--custom-blue-50)] px-3 py-2 rounded-lg">
+                      <Clock className="h-4 w-4 mr-2 text-[var(--custom-blue-600)]" />
+                      <span className="font-semibold">
+                        {calculateLeaveDuration(
+                          leave.date_start,
+                          leave.date_end
+                        )}{" "}
+                        {calculateLeaveDuration(
+                          leave.date_start,
+                          leave.date_end
+                        ) === 1
+                          ? "day"
+                          : "days"}
+                      </span>
+                    </div>
+
+                    {/* Status indicator (you can customize this based on your needs) */}
+                    <div className="flex items-center text-xs text-[var(--custom-green-600)] bg-[var(--custom-green-50)] px-3 py-2 rounded-lg font-semibold">
+                      <div className="w-2 h-2 bg-[var(--custom-green-500)] rounded-full mr-2 animate-pulse"></div>
+                      Approved
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16 bg-gradient-to-br from-[var(--custom-blue-50)] to-white rounded-2xl border-2 border-dashed border-[var(--custom-blue-200)]">
+              <div className="bg-[var(--custom-blue-100)] w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Calendar className="h-10 w-10 text-[var(--custom-blue-400)]" />
+              </div>
+              <p className="text-[var(--custom-gray-700)] text-xl font-semibold mb-2">
+                No Leave History
+              </p>
+              <p className="text-[var(--custom-gray-500)] text-sm max-w-md mx-auto">
+                You haven't taken any leaves yet. Your leave requests will
+                appear here once approved.
+              </p>
             </div>
           )}
         </div>
