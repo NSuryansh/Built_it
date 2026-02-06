@@ -309,27 +309,25 @@ model WellnessArticle {
   url         String
   source      String
   readTime    String
-  iconName    String   
+  iconName    String
   createdAt   DateTime @default(now())
 }
 
 model WellnessVideo {
   id          Int      @id @default(autoincrement())
-  sectionTitle String  
+  sectionTitle String
   title       String
   description String
-  youtubeUrl  String   
-  thumbnail   String?
+  youtubeUrl  String
   createdAt   DateTime @default(now())
 }
 
-// 3. Model for Entertainment Items (Movies, Books, Music, Games)
 model EntertainmentItem {
   id          Int      @id @default(autoincrement())
-  type        String   
-  category    String 
+  type        String
+  category    String
   title       String
-  link        String 
+  link        String
   imageUrl    String
   createdAt   DateTime @default(now())
 }

@@ -832,6 +832,10 @@ docRouter.post(
       res.status(500).json({ error: "Internal server error" });
     }
   });
+// ==========================================
+// PASTE THIS IN docRouter.js
+// ==========================================
+
 // --- 1. WELLNESS ARTICLES ---
 
 docRouter.post("/add-article", authorizeRoles("doc"), async (req, res) => {
@@ -897,7 +901,7 @@ docRouter.post("/add-video", authorizeRoles("doc"), async (req, res) => {
 docRouter.get("/get-videos", async (req, res) => {
   try {
     const videos = await prisma.wellnessVideo.findMany();
-    // Group videos by sectionTitle for the frontend structure
+    // Group videos by sectionTitle
     const groupedVideos = videos.reduce((acc, video) => {
       const section = acc.find((s) => s.title === video.sectionTitle);
       if (section) {
@@ -905,7 +909,7 @@ docRouter.get("/get-videos", async (req, res) => {
       } else {
         acc.push({
           title: video.sectionTitle,
-          description: "Curated videos for this category", 
+          description: "Curated videos", 
           videos: [video],
         });
       }
@@ -949,7 +953,7 @@ docRouter.post("/add-entertainment", authorizeRoles("doc"), upload.single("image
     const file = req.file;
     if (!file) return res.status(400).json({ error: "Image is required" });
 
-    // Upload image to Cloudinary
+    // Upload to Cloudinary
     const imageUrl = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream((error, result) => {
         if (error) return reject(error);
