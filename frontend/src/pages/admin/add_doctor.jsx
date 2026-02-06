@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { checkAuth } from "../../utils/profile";
 import AdminNavbar from "../../components/admin/Navbar";
 import SessionExpired from "../../components/common/SessionExpired";
 import CustomToast from "../../components/common/CustomToast";
 import { ToastContainer } from "react-toastify";
 import CustomLoader from "../../components/common/CustomLoader";
+import { ChevronDown, X } from "lucide-react";
 
 const AddDoctor = () => {
   const navigate = useNavigate();
@@ -17,9 +18,21 @@ const AddDoctor = () => {
     password: "",
     regId: "",
     desc: "",
+    weekOffs: [],
   });
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const token = localStorage.getItem("token");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -29,12 +42,31 @@ const AddDoctor = () => {
     verifyAuth();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleDay = (day) => {
+    const currentDays = formData.weekOffs || [];
+    const updatedDays = currentDays.includes(day)
+      ? currentDays.filter((d) => d !== day)
+      : [...currentDays, day];
+
+    setFormData({ ...formData, weekOffs: updatedDays });
+  };
+
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, mobile, password, regId, desc } = formData;
+    const { name, email, mobile, password, regId, desc, weekOffs } = formData;
 
     try {
       const res = await fetch("http://localhost:3000/api/admin/addDoc", {
@@ -50,6 +82,7 @@ const AddDoctor = () => {
           password: password,
           reg_id: regId,
           desc: desc,
+          weekOff: weekOffs,
           address: "<Please Change>",
           office_address: "<Please Change>",
           experience: "<Please Change>",
@@ -171,6 +204,75 @@ const AddDoctor = () => {
                     className="w-full px-4 py-2 border border-[var(--custom-green-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-green-500)] focus:border-transparent transition-all duration-200"
                     required
                   />
+                </div>
+              </div>
+
+              <div className="space-y-2" ref={dropdownRef}>
+                <label className="block text-sm font-medium text-[var(--custom-green-900)]">
+                  WeekOffs{" "}
+                  <span className="text-[var(--custom-red-500)]">*</span>
+                </label>
+
+                <div className="relative">
+                  <div
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="min-h-[42px] w-full px-3 py-1.5 border border-[var(--custom-green-200)] rounded-lg bg-white cursor-pointer flex flex-wrap gap-2 items-center focus-within:ring-2 focus-within:ring-[var(--custom-green-500)] transition-all duration-200"
+                  >
+                    {formData.weekOffs && formData.weekOffs.length > 0 ? (
+                      formData.weekOffs.map((day) => (
+                        <span
+                          key={day}
+                          className="flex items-center gap-1 px-2 py-0.5 bg-[var(--custom-green-100)] text-[var(--custom-green-800)] text-xs font-semibold rounded-md border border-[var(--custom-green-200)]"
+                        >
+                          {day}
+                          <X
+                            size={12}
+                            className="cursor-pointer hover:text-[var(--custom-red-500)]"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleDay(day);
+                            }}
+                          />
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-400 text-sm">
+                        Select off days...
+                      </span>
+                    )}
+
+                    <ChevronDown
+                      size={18}
+                      className={`ml-auto text-[var(--custom-green-600)] transition-transform duration-200 ${
+                        isDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </div>
+
+                  {/* Dropdown Menu */}
+                  {isDropdownOpen && (
+                    <div className="absolute z-50 mt-1 w-full bg-white border border-[var(--custom-green-200)] rounded-lg shadow-xl py-1 animate-in fade-in zoom-in-95 duration-100">
+                      {daysOfWeek.map((day) => {
+                        const isSelected = formData.weekOffs?.includes(day);
+                        return (
+                          <div
+                            key={day}
+                            onClick={() => toggleDay(day)}
+                            className={`px-4 py-2 text-sm cursor-pointer flex items-center justify-between transition-colors ${
+                              isSelected
+                                ? "bg-[var(--custom-green-50)] text-[var(--custom-green-800)] font-medium"
+                                : "text-gray-700 hover:bg-gray-50"
+                            }`}
+                          >
+                            {day}
+                            {isSelected && (
+                              <div className="w-2 h-2 rounded-full bg-[var(--custom-green-500)]" />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
 
