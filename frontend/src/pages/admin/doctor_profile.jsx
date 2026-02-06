@@ -14,6 +14,7 @@ import {
   StarIcon,
   UserX,
   Calendar,
+  CalendarCog,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/Navbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -49,6 +50,7 @@ const AdminDoctorProfile = () => {
     experience: "",
     education: [],
     certifications: [],
+    weekOffs: [],
     avgRating: 0,
   });
   const token = localStorage.getItem("token");
@@ -71,7 +73,7 @@ const AdminDoctorProfile = () => {
           `http://localhost:3000/api/common/getDoc?docId=${doctorId}`,
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await response.json();
         let certifications = [];
@@ -104,6 +106,7 @@ const AdminDoctorProfile = () => {
           field: data.doctor.desc,
           certifications: certifications,
           education: educations,
+          weekOffs: data.doctor.weekOff,
           avgRating: data.doctor.avgRating,
         });
         setProfileImage(data.doctor.img);
@@ -123,7 +126,7 @@ const AdminDoctorProfile = () => {
     try {
       const response = await fetch(
         `http://localhost:3000/api/doc_admin/latestLeave?doc_id=${doctorId}`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       const data = await response.json();
       setLeave(data);
@@ -146,7 +149,7 @@ const AdminDoctorProfile = () => {
         `http://localhost:3000/api/doc_admin/leaves?doc_id=${docId}`,
         {
           headers: { Authorization: "Bearer " + token },
-        }
+        },
       );
       const data = await response.json();
       console.log(data);
@@ -190,7 +193,7 @@ const AdminDoctorProfile = () => {
             referred_by: referralData.referredBy,
             reason: referralData.reason,
           }),
-        }
+        },
       );
       const data = await response.json();
 
@@ -310,7 +313,7 @@ const AdminDoctorProfile = () => {
             <div className="space-y-5 md:space-y-10">
               {/* Contact Information */}
               <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-[var(--custom-green-600)] flex items-center gap-[10px] bg-[var(--custom-purple-100)]/50 p-[20px] rounded-lg shadow-md">
-                <User className="w-[30px] h-[30px] text-coral-500 animate-pulse" />
+                <User className="w-[30px] h-[30px] text-coral-500 " />
                 Contact Information
               </h2>
               <div className="bg-[var(--custom-white)]/60 backdrop-blur-md p-[30px] rounded-xl shadow-lg border border-[var(--custom-purple-100)] space-y-[20px] transform hover:-translate-y-[5px] transition-transform duration-[300ms]">
@@ -345,6 +348,21 @@ const AdminDoctorProfile = () => {
                   >
                     <GraduationCap className="w-[25px] h-[25px]" />
                     <span className="text-lg">{edu}</span>
+                  </li>
+                ))}
+              </ul>
+              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-[var(--custom-green-600)] flex items-center gap-[10px] bg-[var(--custom-purple-100)]/50 p-[20px] rounded-lg shadow-md">
+                <CalendarCog className="w-[30px] h-[30px] text-coral-500 " />
+                WeekOffs
+              </h2>
+              <ul className="space-y-[20px]">
+                {doctor.weekOffs.map((weekOff, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-[15px] text-[var(--custom-gray-800)] bg-[var(--custom-white)]/70 backdrop-blur-md p-[20px] rounded-xl shadow-md hover:shadow-xl hover:bg-[var(--custom-yellow-50)] transition-all duration-[300ms]"
+                  >
+                    <Award className="w-[25px] h-[25px]" />
+                    <span className="text-lg">{weekOff}</span>
                   </li>
                 ))}
               </ul>
@@ -385,7 +403,8 @@ const AdminDoctorProfile = () => {
                     <Clock className="w-5 h-5 text-[var(--custom-green-500)]" />
                     <span>
                       Practicing since{" "}
-                      {new Date().getFullYear() - parseInt(doctor.experience)}{" "}
+                      {new Date().getFullYear() -
+                        parseInt(doctor.experience)}{" "}
                     </span>
                   </div>
                 </div>
@@ -393,7 +412,7 @@ const AdminDoctorProfile = () => {
 
               {/* Certifications */}
               <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-[var(--custom-green-600)] flex items-center gap-[10px] bg-[var(--custom-purple-100)]/50 p-[20px] rounded-lg shadow-md">
-                <Certificate className="w-[30px] h-[30px] text-coral-500 animate-pulse" />
+                <Certificate className="w-[30px] h-[30px] text-coral-500 " />
                 Certifications
               </h2>
               <ul className="space-y-[20px]">
@@ -417,7 +436,7 @@ const AdminDoctorProfile = () => {
               onClick={() => setShowReferralForm(!showReferralForm)}
               className="mx-auto w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[var(--custom-green-500)] to-[var(--custom-green-700)] text-[var(--custom-white)] rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-[var(--custom-green-600)] hover:to-[var(--custom-green-800)] transition-all duration-300 transform hover:scale-105 overflow-hidden"
             >
-              <FileText className="w-5 h-5 group-hover:animate-pulse" />
+              <FileText className="w-5 h-5" />
               {showReferralForm ? "Close Referral" : "Create Referral"}
               <div className="absolute inset-0 bg-[var(--custom-green-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
             </button>
@@ -542,11 +561,11 @@ const AdminDoctorProfile = () => {
                             <div className="text-sm text-[var(--custom-gray-600)] font-medium mt-1">
                               {calculateLeaveDuration(
                                 leave.date_start,
-                                leave.date_end
+                                leave.date_end,
                               )}{" "}
                               {calculateLeaveDuration(
                                 leave.date_start,
-                                leave.date_end
+                                leave.date_end,
                               ) === 1
                                 ? "day"
                                 : "days"}
@@ -565,7 +584,7 @@ const AdminDoctorProfile = () => {
                               <span className="text-sm font-semibold text-[var(--custom-red-700)]">
                                 {format(
                                   new Date(leave.date_start),
-                                  "dd MMM yyyy"
+                                  "dd MMM yyyy",
                                 )}
                               </span>
                             </div>
@@ -577,7 +596,7 @@ const AdminDoctorProfile = () => {
                               <span className="text-sm font-semibold text-[var(--custom-red-700)]">
                                 {format(
                                   new Date(leave.date_end),
-                                  "dd MMM yyyy"
+                                  "dd MMM yyyy",
                                 )}
                               </span>
                             </div>
@@ -598,7 +617,7 @@ const AdminDoctorProfile = () => {
 
                         {/* Status Badge */}
                         <div className="mt-4 flex items-center gap-2">
-                          <div className="w-2 h-2 bg-[var(--custom-red-500)] rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-[var(--custom-red-500)] rounded-full "></div>
                           <span className="text-xs font-semibold text-[var(--custom-red-600)]">
                             Approved Leave
                           </span>

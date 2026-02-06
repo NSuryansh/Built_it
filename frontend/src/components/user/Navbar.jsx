@@ -23,7 +23,7 @@ const Navbar = () => {
     // { name: "Mood", link: "/user/mood" },
     { name: "Chat", link: "/user/peer" },
     { name: "Book", link: "/user/book" },
-    { name: "Stress", link: "/user/stress" },
+    { name: "Resources", link: "/user/stress" },
     { name: "Events", link: "/user/events" },
     { name: "Entertainment", link: "/user/entertainment" },
   ];
