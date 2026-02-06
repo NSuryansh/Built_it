@@ -17,7 +17,7 @@ import {
   CalendarCog,
   Edit2,
   Check,
-  X
+  X,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/Navbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -78,10 +78,33 @@ const AdminDoctorProfile = () => {
     );
   };
 
-  const saveWeekOffs = () => {
-    // Logic to update backend here
-    doctor.weekOffs = tempWeekOffs;
-    setIsEditingWeekOffs(false);
+  const saveWeekOffs = async () => {
+    const doctorId = search.split("=")[1];
+    if (!doctorId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/doc_admin/weekOffs`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            doc_id: doctorId,
+            weekOffs: tempWeekOffs,
+          }),
+        },
+      );
+      const data = await response.json();
+      console.log(data);
+      setDoctor({ ...doctor, weekOffs: tempWeekOffs });
+    } catch (error) {
+      console.error("Error updating weekOffs:", error);
+      CustomToast("Error updating weekOffs", "green");
+    } finally {
+      setIsEditingWeekOffs(false);
+    }
   };
 
   useEffect(() => {
