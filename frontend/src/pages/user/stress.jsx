@@ -1,22 +1,59 @@
 import React, { useState, useEffect } from "react";
-import { Clock, Building, Youtube, ChevronRight } from "lucide-react";
+import { Clock, Building, Youtube, ChevronRight, BookOpen, Sun, Brain, Heart, Headphones } from "lucide-react"; // Import potential icons
 import VideoSection from "../../components/user/VideoSection";
 import Navbar from "../../components/user/Navbar";
 import Footer from "../../components/common/Footer";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/common/SessionExpired";
 import { useNavigate } from "react-router-dom";
-import { articles, videoSections } from "../../utils/data";
 import CustomLoader from "../../components/common/CustomLoader";
+import axios from "axios"; // Ensure axios is installed
+
+// Map string names from DB to actual Icon components
+const iconMap = {
+  Book: BookOpen,
+  Sun: Sun,
+  Brain: Brain,
+  Heart: Heart,
+  Headphones: Headphones,
+  Default: BookOpen
+};
 
 const Stress = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [articles, setArticles] = useState([]);
+  const [videoSections, setVideoSections] = useState([]);
+  const [loadingData, setLoadingData] = useState(true);
+  
   const navigate = useNavigate();
+
+  // Fetch Data Function
+  const fetchStressData = async () => {
+    try {
+      // Replace with your actual backend URL
+      const backendUrl = "http://localhost:3000/doctor"; 
+      
+      const [articlesRes, videosRes] = await Promise.all([
+        axios.get(`${backendUrl}/get-articles`),
+        axios.get(`${backendUrl}/get-videos`)
+      ]);
+
+      setArticles(articlesRes.data);
+      setVideoSections(videosRes.data);
+    } catch (error) {
+      console.error("Error fetching stress data:", error);
+    } finally {
+      setLoadingData(false);
+    }
+  };
 
   useEffect(() => {
     const verifyAuth = async () => {
       const authStatus = await checkAuth("user");
       setIsAuthenticated(authStatus);
+      if (authStatus) {
+        fetchStressData();
+      }
     };
     verifyAuth();
   }, []);
@@ -25,14 +62,12 @@ const Stress = () => {
     navigate("/user/login");
   };
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || (isAuthenticated && loadingData)) {
     return <CustomLoader text="Loading your wellness journey..." />;
   }
 
   if (!isAuthenticated) {
-    return (
-      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
-    );
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />;
   }
 
   return (
@@ -63,8 +98,9 @@ const Stress = () => {
             Expert Resources
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {articles.map((article) => {
-              const Icon = article.icon;
+            {articles.length > 0 ? articles.map((article) => {
+              // Dynamically select icon
+              const Icon = iconMap[article.iconName] || iconMap.Default;
               return (
                 <a
                   key={article.id}
@@ -103,13 +139,15 @@ const Stress = () => {
                   </div>
                 </a>
               );
-            })}
+            }) : (
+              <p className="text-center col-span-2 text-gray-500">No articles available at the moment.</p>
+            )}
           </div>
         </section>
 
         {/* Video Sections */}
         <div className="space-y-12 mb-16">
-          {videoSections.map((section, index) => (
+          {videoSections.length > 0 ? videoSections.map((section, index) => (
             <section
               key={index}
               className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:shadow-2xl"
@@ -129,7 +167,9 @@ const Stress = () => {
               </div>
               <VideoSection videos={section.videos} />
             </section>
-          ))}
+          )) : (
+             <p className="text-center text-gray-500">No videos available.</p>
+          )}
         </div>
       </div>
       <Footer color="orange" />

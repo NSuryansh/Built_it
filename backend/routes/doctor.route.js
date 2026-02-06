@@ -832,6 +832,195 @@ docRouter.post(
       res.status(500).json({ error: "Internal server error" });
     }
   }
-);
+// --- 1. WELLNESS ARTICLES ---
+
+docRouter.post("/add-article", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const { title, description, url, source, readTime, iconName } = req.body;
+    const article = await prisma.wellnessArticle.create({
+      data: { title, description, url, source, readTime, iconName },
+    });
+    res.json({ message: "Article added successfully", article });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to add article" });
+  }
+});
+
+docRouter.get("/get-articles", async (req, res) => {
+  try {
+    const articles = await prisma.wellnessArticle.findMany();
+    res.json(articles);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to fetch articles" });
+  }
+});
+
+docRouter.put("/update-article/:id", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, url, source, readTime, iconName } = req.body;
+    const updated = await prisma.wellnessArticle.update({
+      where: { id: Number(id) },
+      data: { title, description, url, source, readTime, iconName },
+    });
+    res.json({ message: "Article updated", updated });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to update article" });
+  }
+});
+
+docRouter.delete("/delete-article/:id", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.wellnessArticle.delete({ where: { id: Number(id) } });
+    res.json({ message: "Article deleted successfully" });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to delete article" });
+  }
+});
+
+// --- 2. WELLNESS VIDEOS ---
+
+docRouter.post("/add-video", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const { sectionTitle, title, description, youtubeUrl } = req.body;
+    const video = await prisma.wellnessVideo.create({
+      data: { sectionTitle, title, description, youtubeUrl },
+    });
+    res.json({ message: "Video added successfully", video });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to add video" });
+  }
+});
+
+docRouter.get("/get-videos", async (req, res) => {
+  try {
+    const videos = await prisma.wellnessVideo.findMany();
+    // Group videos by sectionTitle for the frontend structure
+    const groupedVideos = videos.reduce((acc, video) => {
+      const section = acc.find((s) => s.title === video.sectionTitle);
+      if (section) {
+        section.videos.push(video);
+      } else {
+        acc.push({
+          title: video.sectionTitle,
+          description: "Curated videos for this category", 
+          videos: [video],
+        });
+      }
+      return acc;
+    }, []);
+    res.json(groupedVideos);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to fetch videos" });
+  }
+});
+
+docRouter.put("/update-video/:id", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { sectionTitle, title, description, youtubeUrl } = req.body;
+    const updated = await prisma.wellnessVideo.update({
+      where: { id: Number(id) },
+      data: { sectionTitle, title, description, youtubeUrl },
+    });
+    res.json({ message: "Video updated", updated });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to update video" });
+  }
+});
+
+docRouter.delete("/delete-video/:id", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.wellnessVideo.delete({ where: { id: Number(id) } });
+    res.json({ message: "Video deleted successfully" });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to delete video" });
+  }
+});
+
+// --- 3. ENTERTAINMENT ---
+
+docRouter.post("/add-entertainment", authorizeRoles("doc"), upload.single("image"), async (req, res) => {
+  try {
+    const { type, category, title, link } = req.body;
+    const file = req.file;
+    if (!file) return res.status(400).json({ error: "Image is required" });
+
+    // Upload image to Cloudinary
+    const imageUrl = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream((error, result) => {
+        if (error) return reject(error);
+        resolve(result.secure_url);
+      });
+      stream.end(file.buffer);
+    });
+
+    const item = await prisma.entertainmentItem.create({
+      data: { type, category, title, link, imageUrl },
+    });
+    res.json({ message: "Entertainment item added", item });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to add item" });
+  }
+});
+
+docRouter.get("/get-entertainment", async (req, res) => {
+  try {
+    const items = await prisma.entertainmentItem.findMany();
+    const organizedData = {
+      movies: items.filter(i => i.type === "MOVIE"),
+      books: items.filter(i => i.type === "BOOK"),
+      music: items.filter(i => i.type === "MUSIC"),
+      games: items.filter(i => i.type === "GAME"),
+    };
+    res.json(organizedData);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to fetch entertainment items" });
+  }
+});
+
+docRouter.put("/update-entertainment/:id", authorizeRoles("doc"), upload.single("image"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { type, category, title, link } = req.body;
+    const file = req.file;
+    
+    let updateData = { type, category, title, link };
+
+    if (file) {
+      const imageUrl = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream((error, result) => {
+          if (error) return reject(error);
+          resolve(result.secure_url);
+        });
+        stream.end(file.buffer);
+      });
+      updateData.imageUrl = imageUrl;
+    }
+
+    const updated = await prisma.entertainmentItem.update({
+      where: { id: Number(id) },
+      data: updateData,
+    });
+    res.json({ message: "Item updated", updated });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to update item" });
+  }
+});
+
+docRouter.delete("/delete-entertainment/:id", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.entertainmentItem.delete({ where: { id: Number(id) } });
+    res.json({ message: "Item deleted successfully" });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to delete item" });
+  }
+});
 
 export default docRouter;
