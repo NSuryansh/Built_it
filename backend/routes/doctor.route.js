@@ -831,7 +831,7 @@ docRouter.post(
       console.error(e);
       res.status(500).json({ error: "Internal server error" });
     }
-  }
+  });
 // --- 1. WELLNESS ARTICLES ---
 
 docRouter.post("/add-article", authorizeRoles("doc"), async (req, res) => {
