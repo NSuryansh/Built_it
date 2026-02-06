@@ -1,7 +1,0 @@
-.venv/
-tmp/agent_memory.db
-tmp/agents.db
-tmp/memory.csv
-.env
-venv/
-node_modules

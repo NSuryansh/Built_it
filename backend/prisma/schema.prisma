@@ -84,6 +84,7 @@ model Doctor {
   isProfileDone        Boolean            @default(false)
   avgRating            Decimal            @default(0)
   isInactive           Boolean            @default(false)
+  weekOff              String[]
   certificaition       DocCertification[]
   education            DocEducation[]
   emerApp              EmergencyApp[]
