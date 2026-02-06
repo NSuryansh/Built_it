@@ -124,7 +124,7 @@ const NotificationPanel = () => {
               <div>
                 <p className="text-sm text-[var(--custom-gray-600)]">
                   {format(
-                    TimeChange(new Date(notif.dateTime).getTime()),
+                    (new Date(notif.dateTime).getTime()),
                     "dd MMMM   hh:mm a"
                   )}
                 </p>
