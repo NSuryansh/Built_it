@@ -25,8 +25,6 @@ function EntertainmentSection({ title, items, icon: Icon }) {
 
   const getFilteredItems = () => {
     if (selectedCategory === "Top Picks") {
-        // If "Top Picks" is selected, show everything (or logic to show specific top picks)
-        // For now, let's show all diverse items
         return items; 
     }
     return items.filter((item) => item.category === selectedCategory);
@@ -94,7 +92,7 @@ function EntertainmentSection({ title, items, icon: Icon }) {
                 >
                   <div className="aspect-[4/3] overflow-hidden">
                     <img
-                      src={item.imageUrl} // Changed from image to imageUrl to match DB
+                      src={item.imageUrl} 
                       alt={item.title}
                       className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
                     />
@@ -145,7 +143,8 @@ function Entertainment() {
 
       if (authStatus) {
          try {
-             const backendUrl = "http://localhost:3000/doctor"; // Replace with real URL
+             // ✅ FIXED: Added "/api" to match server.js configuration
+             const backendUrl = "http://localhost:3000/api/doc"; 
              const res = await axios.get(`${backendUrl}/get-entertainment`);
              setEntertainmentData(res.data);
          } catch(e) {

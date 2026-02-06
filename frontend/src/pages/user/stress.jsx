@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Clock, Building, Youtube, ChevronRight, BookOpen, Sun, Brain, Heart, Headphones } from "lucide-react"; // Import potential icons
+import { Clock, Building, Youtube, ChevronRight, BookOpen, Sun, Brain, Heart, Headphones } from "lucide-react"; 
 import VideoSection from "../../components/user/VideoSection";
 import Navbar from "../../components/user/Navbar";
 import Footer from "../../components/common/Footer";
@@ -7,9 +7,8 @@ import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/common/SessionExpired";
 import { useNavigate } from "react-router-dom";
 import CustomLoader from "../../components/common/CustomLoader";
-import axios from "axios"; // Ensure axios is installed
+import axios from "axios"; 
 
-// Map string names from DB to actual Icon components
 const iconMap = {
   Book: BookOpen,
   Sun: Sun,
@@ -30,8 +29,8 @@ const Stress = () => {
   // Fetch Data Function
   const fetchStressData = async () => {
     try {
-      // Replace with your actual backend URL
-      const backendUrl = "http://localhost:3000/doctor"; 
+      // ✅ FIXED: Added "/api" to match server.js configuration
+      const backendUrl = "http://localhost:3000/api/doc"; 
       
       const [articlesRes, videosRes] = await Promise.all([
         axios.get(`${backendUrl}/get-articles`),
@@ -99,7 +98,6 @@ const Stress = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {articles.length > 0 ? articles.map((article) => {
-              // Dynamically select icon
               const Icon = iconMap[article.iconName] || iconMap.Default;
               return (
                 <a
