@@ -12,7 +12,9 @@ import CustomLoader from "../../components/common/CustomLoader";
 const UserAppointments = () => {
   const [previousAppointments, setpreviousAppointments] = useState([]);
   const [upcomingAppointments, setupcomingAppointments] = useState([]);
+  const [requestedAppoinments, setrequestedAppoinments] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [fixed, setFixed] = useState(false); // toggled after accept/reject to refresh lists
   const user_id = localStorage.getItem("userid");
   const [submittedRatings, setSubmittedRatings] = useState({});
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const UserAppointments = () => {
         `http://localhost:3000/api/user/pastuserappt?userId=${user_id}`,
         { headers: { Authorization: "Bearer " + token } }
       );
+      if (!res.ok) throw new Error("Failed to fetch past appointments");
       const resp = await res.json();
       setpreviousAppointments(resp);
     } catch (error) {
@@ -48,6 +51,7 @@ const UserAppointments = () => {
           headers: { Authorization: "Bearer " + token },
         }
       );
+      if (!res.ok) throw new Error("Failed to fetch current appointments");
       const resp = await res.json();
       setupcomingAppointments(resp);
     } catch (error) {
@@ -56,10 +60,131 @@ const UserAppointments = () => {
     }
   }
 
+  async function getReqApp() {
+    try {
+      const res = await fetch(`http://localhost:3000/api/user/getRequests?userId=${user_id}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
+      if (!res.ok) throw new Error("Failed to fetch appointment requests");
+      const resp = await res.json();
+      console.log(resp)
+      setrequestedAppoinments(resp)
+    } catch (error) {
+      console.error(error);
+      CustomToast("Error fetching appointment requests");
+    }
+  }
+  const sendNotif = async (appointment, type = "accepted") => {
+    try {
+      await fetch("http://localhost:3000/api/notifications/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          toUserId: appointment.user_id || appointment.userId,
+          title: type === "accepted" ? "Appointment confirmed" : "Appointment response",
+          message:
+            type === "accepted"
+              ? `Your appointment with ${appointment.doctor?.name || "doctor"} on ${new Date(
+                  appointment.dateTime
+                ).toLocaleString()} is confirmed.`
+              : `Your appointment request was ${type}.`,
+          metadata: { appointmentId: appointment.id },
+        }),
+      });
+    } catch (err) {
+      console.warn("Failed to send notification", err);
+    }
+  };
+
+  const onAccepted = async (appointment) => {
+    try {
+      const dateTime = new Date(appointment.dateTime);
+      const res = await fetch("http://localhost:3000/api/user_doc/book", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          userId: appointment.user_id || appointment.userId,
+          doctorId: appointment.doctor_id || appointment.doctorId,
+          dateTime,
+          reason: appointment.reason || "",
+          id: appointment.id,
+          forDoctor: false
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err || "Failed to accept appointment");
+      }
+
+      const resp = await res.json();
+
+      // Update UI locally: remove from requested and add to upcoming (if booking returns booked appt use that)
+      setrequestedAppoinments((prev) => prev.filter((a) => a.id !== appointment.id));
+
+      const bookedAppointment = resp.appointment || {
+        ...appointment,
+        dateTime: dateTime.toISOString(),
+      };
+      setupcomingAppointments((prev) => [bookedAppointment, ...prev]);
+
+      // notify user
+      await sendNotif(appointment, "accepted");
+
+      CustomToast("Appointment accepted and booked");
+      setFixed((f) => !f); // trigger refetch if desired
+    } catch (error) {
+      console.error(error);
+      CustomToast("Failed to accept appointment");
+    }
+  };
+
+  // Called when user rejects a requested appointment
+  const onRejected = async (appointment) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/user_doc/respondRequest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          id: appointment.id,
+          status: "rejected",
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err || "Failed to reject appointment");
+      }
+
+      // update local UI
+      setrequestedAppoinments((prev) => prev.filter((a) => a.id !== appointment.id));
+
+      await sendNotif(appointment, "rejected");
+      CustomToast("Appointment request rejected");
+      setFixed((f) => !f);
+    } catch (error) {
+      console.error(error);
+      CustomToast("Failed to reject appointment");
+    }
+  };
+
   useEffect(() => {
     getPrevApp();
     getCurrApp();
-  }, [submittedRatings]);
+    getReqApp();
+    // include fixed so lists refresh after accept/reject
+  }, [submittedRatings, fixed]);
 
   const handleClosePopup = () => {
     navigate("/user/login");
@@ -91,6 +216,41 @@ const UserAppointments = () => {
             <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
                 <Calendar className="w-6 h-6 text-[var(--custom-orange-600)]" />
+                Requested Appoinments
+              </h2>
+              <span className="px-4 py-1 mt-4 sm:mt-0 bg-gradient-to-r from-[var(--custom-gray-100)] to-[var(--custom-gray-200)] text-[var(--custom-gray-700)] rounded-full text-sm font-semibold shadow-sm">
+                {requestedAppoinments.length} Total
+              </span>
+            </div>
+
+            <div className="max-h-[350px] overflow-y-auto custom-scrollbar">
+              {requestedAppoinments.length > 0 ? (
+                <div className="space-y-6">
+                  {requestedAppoinments.map((appointment) => (
+                    <AppointmentCard
+                      key={appointment.id}
+                      appointment={appointment}
+                      feedbackSubmitted={appointment.stars !== null}
+                      requested={true}
+                      upcoming={false}
+                      onAccepted={onAccepted}
+                      onRejected={onRejected}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10">
+                  <NoAppointmentsMessage message="No appoinments requested" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Upcoming */}
+          <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
+              <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
+                <Calendar className="w-6 h-6 text-[var(--custom-orange-600)]" />
                 Upcoming Appointments
               </h2>
               <span className="px-4 py-1 mt-4 sm:mt-0 bg-gradient-to-r from-[var(--custom-gray-100)] to-[var(--custom-gray-200)] text-[var(--custom-gray-700)] rounded-full text-sm font-semibold shadow-sm">
@@ -106,6 +266,8 @@ const UserAppointments = () => {
                       key={appointment.id}
                       appointment={appointment}
                       feedbackSubmitted={appointment.stars !== null}
+                      requested={false}
+                      upcoming={true}
                     />
                   ))}
                 </div>
@@ -116,6 +278,8 @@ const UserAppointments = () => {
               )}
             </div>
           </div>
+
+          {/* Previous */}
           <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
             <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
@@ -135,6 +299,7 @@ const UserAppointments = () => {
                       key={appointment.id}
                       appointment={appointment}
                       feedbackSubmitted={appointment.stars !== null}
+                      requested={false}
                       upcoming={false}
                     />
                   ))}

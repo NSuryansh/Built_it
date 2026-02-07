@@ -429,7 +429,7 @@ const DoctorAppointment = () => {
 
   const acceptApp = async (appointment) => {
     appointment.dateTime = new Date(appointment.dateTime);
-    const res = await fetch("http://localhost:3000/api/doc/book", {
+    const res = await fetch("http://localhost:3000/api/user_doc/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

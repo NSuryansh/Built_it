@@ -143,6 +143,84 @@ userDocRouter.get(
   }
 );
 
+userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
+  const forDoctor = req.body["forDoctor"]|| true
+  const userId = req.body["userId"];
+  const doctorId = req.body["doctorId"];
+  // if (doctorId !== req.user.userId) {
+  //   console.log(userId)
+  //   console.log("H", doctorId)
+  //   console.log(req.user.id)
+  //   console.log("HELLO")
+  //   return res.status(403).json({ error: "Access denied" });
+  // }
+  const dateTime = req.body["dateTime"];
+  const date = new Date();
+  const newDate = new Date(dateTime);
+  var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+  const some = new Date(newDate.getTime() - userTimezoneOffset);
+  const reason = req.body["reason"];
+  const appId = req.body["id"];
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    const result = await prisma.$transaction(async (prisma) => {
+      const appointment = await prisma.appointments.create({
+        data: {
+          user_id: userId,
+          doctor_id: doctorId,
+          dateTime: some,
+          reason: reason,
+          isDoctor: forDoctor,
+        },
+      });
+
+      const reqDel = await prisma.requests.delete({
+        where: { id: parseInt(appId) },
+      });
+
+      return { appointment, reqDel };
+    });
+
+    await sendEmail(
+      user.email,
+      "Appointment Scheduled",
+      `Dear ${user.username}, \n\nYour appointment with ${
+        doctor.name
+      } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
+        some
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+        doctor.office_address
+      }\n\nRegards\nCalm Connect`
+    );
+
+    await sendEmail(
+      doctor.email,
+      "Appointment Scheduled",
+      `Dear ${doctor.name}, \n\nYour appointment with ${
+        user.username
+      } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
+        some
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+        doctor.office_address
+      }\n\nRegards\nCalm Connect`
+    );
+
+    res.json({ message: "Appointment booked successfully", result });
+  } catch (error) {
+    console.error(error);
+    res.json({ message: "Internal Server Error" });
+  }
+});
+
 userDocRouter.post(
   "/requests",
   authorizeRoles("user", "doc"),
