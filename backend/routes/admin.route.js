@@ -57,6 +57,7 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
     office_address,
     experenice,
     img,
+    weekOff,
   } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   // const imgUrl = uploadImage(img)
@@ -73,6 +74,7 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
         experience: experenice,
         desc: desc,
         img: img,
+        weekOff: weekOff,
       },
     });
     res.json({ message: "doc added", doc: doc });
@@ -104,7 +106,7 @@ adminRouter.post("/login", async (req, res) => {
     SECRET_KEY,
     {
       expiresIn: "1h",
-    }
+    },
   );
 
   res.json({ message: "Login successful", token });
@@ -297,7 +299,7 @@ adminRouter.get(
         error: error.message,
       });
     }
-  }
+  },
 );
 
 adminRouter.post("/referrals", authorizeRoles("admin"), async (req, res) => {
@@ -376,7 +378,7 @@ adminRouter.get(
       console.error("Error fetching appointment count:", error);
       res.status(500).json({ error: "Internal server error" });
     }
-  }
+  },
 );
 
 adminRouter.get("/user-doctors", authorizeRoles("admin"), async (req, res) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   User,
   Mail,
@@ -15,6 +15,9 @@ import {
   UserX,
   Calendar,
   CalendarCog,
+  Edit2,
+  Check,
+  X,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/Navbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -56,6 +59,53 @@ const AdminDoctorProfile = () => {
   const token = localStorage.getItem("token");
   const [leave, setLeave] = useState(null);
   const [leaves, setLeaves] = useState(null);
+  const [isEditingWeekOffs, setIsEditingWeekOffs] = useState(false);
+  const [tempWeekOffs, setTempWeekOffs] = useState(doctor.weekOffs);
+
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const handleWeekOffToggle = (day) => {
+    setTempWeekOffs((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
+    );
+  };
+
+  const saveWeekOffs = async () => {
+    const doctorId = search.split("=")[1];
+    if (!doctorId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/doc_admin/weekOffs`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            doc_id: doctorId,
+            weekOffs: tempWeekOffs,
+          }),
+        },
+      );
+      const data = await response.json();
+      console.log(data);
+      setDoctor({ ...doctor, weekOffs: tempWeekOffs });
+    } catch (error) {
+      console.error("Error updating weekOffs:", error);
+      CustomToast("Error updating weekOffs", "green");
+    } finally {
+      setIsEditingWeekOffs(false);
+    }
+  };
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -239,404 +289,302 @@ const AdminDoctorProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[var(--custom-gray-100)] via-[var(--custom-gray-200)] to-[var(--custom-gray-300)]">
+    <div className="min-h-screen bg-green-50">
       <AdminNavbar />
       <ToastContainer />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 lg:py-14">
-        {/* Back Button */}
+
+      <main className="max-w-6xl mx-auto px-4 py-8 lg:py-12">
+        {/* Back Button - Simplified */}
         <Link
           to="/admin/doctor_list"
-          className="mb-12 inline-flex items-center gap-3 px-6 py-3 font-semibold text-[var(--custom-white)] bg-gradient-to-r from-[var(--custom-green-500)] to-[var(--custom-green-700)] rounded-full hover:bg-gradient-to-l hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
+          className="mb-8 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-green-600 bg-white border border-green-200 rounded-lg hover:bg-green-50 transition-all shadow-sm"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4" />
           Back to List
         </Link>
 
-        {/* Doctor Profile Card */}
-        <div className="relative bg-[var(--custom-white)]/70 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden border border-[var(--custom-purple-300)]">
-          {/* Header Section */}
-          <div className="bg-gradient-to-br from-[var(--custom-green-600)] via-[var(--custom-green-500)] to-[var(--custom-green-400)] py-8 sm:px-8 md:py-14 relative overflow-hidden rounded-t-3xl">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.2),transparent)]"></div>
-            <div className="flex flex-col sm:flex-row items-center sm:space-x-8 relative">
-              <div className="relative group">
+        <div className="bg-white rounded-2xl shadow-sm border border-green-200 overflow-hidden">
+          {/* Header Section - Toned Down */}
+          <div className="bg-green-900 p-8 md:p-12 relative">
+            <div className="flex flex-col sm:flex-row items-center sm:space-x-8">
+              <div className="relative">
                 {profileImage ? (
                   <img
                     src={profileImage}
                     alt="Profile"
-                    className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-[var(--custom-yellow-300)] object-cover shadow-xl group-hover:scale-[1.15] transition-transform duration-500 ease-out"
+                    className="w-24 h-24 lg:w-28 lg:h-28 rounded-full border-4 border-green-800 object-cover shadow-lg"
                   />
                 ) : (
-                  <User className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-[6px] border-[var(--custom-yellow-400)] text-[var(--custom-yellow-400)] transform transition-all duration-300 group-hover:scale-110" />
+                  <div className="w-24 h-24 lg:w-28 lg:h-28 rounded-full bg-green-800 flex items-center justify-center border-2 border-green-700">
+                    <User className="w-12 h-12 text-green-500" />
+                  </div>
                 )}
-                <div className="absolute inset-0 rounded-full bg-coral-400/20 opacity-0 group-hover:opacity-[0.6] transition-opacity duration-500"></div>
               </div>
-              <div className="text-[var(--custom-white)]">
-                <h1 className="md:text-[2.5rem] text-[2rem] text-center sm:text-start lg:text-[3rem] font-extrabold tracking-tight drop-shadow-lg">
-                  {doctor.name.toUpperCase()}
+
+              <div className="text-center sm:text-left mt-4 sm:mt-0">
+                <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                  {doctor.name}
                 </h1>
-                <div className="flex">
-                  <p className="text-[var(--custom-yellow-200)] text-xl font-medium italic">
-                    {`${doctor.field} (${
-                      doctor.avgRating != 0.0
+                <div className="flex items-center justify-center sm:justify-start gap-2 mt-1">
+                  <span className="text-green-400 font-medium">
+                    {doctor.field}
+                  </span>
+                  <span className="text-green-600">|</span>
+                  <div className="flex items-center text-yellow-500">
+                    <span className="text-sm font-bold mr-1">
+                      {doctor.avgRating != 0.0
                         ? parseFloat(doctor.avgRating).toPrecision(2)
-                        : "Unrated"
-                    }`}
-                  </p>
-                  {doctor.avgRating != 0.0 && (
-                    <div className="flex">
-                      <p>&nbsp;</p>
-                      <StarIcon
-                        fill="#FFF085"
-                        className="text-[var(--custom-yellow-200)]"
-                      />
+                        : "N/A"}
+                    </span>
+                    <StarIcon size={14} fill="currentColor" />
+                  </div>
+                </div>
+                {leave && leave.length > 0 && (
+                  <div className="mt-3 inline-flex items-center px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium">
+                    <UserX className="h-3 w-3 mr-1.5" />
+                    On Leave until{" "}
+                    {format(new Date(leave[0].date_end), "dd MMM")}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Grid Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-green-100">
+            {/* Left & Middle Column (Main Info) */}
+            <div className="lg:col-span-2 p-6 md:p-10 space-y-10">
+              {/* Contact Info */}
+              <section>
+                <div className="flex items-center gap-2 mb-6 text-green-800">
+                  <User className="w-5 h-5 text-indigo-500" />
+                  <h2 className="text-lg font-bold">Contact Details</h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { icon: Mail, label: doctor.contact.email },
+                    { icon: Phone, label: doctor.contact.phone },
+                    { icon: MapPin, label: doctor.contact.address },
+                    { icon: MapPin, label: doctor.contact.office_address },
+                  ].map((info, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-3 p-3 rounded-xl bg-green-50 border border-green-100"
+                    >
+                      <info.icon className="w-4 h-4 mt-1 text-green-400" />
+                      <span className="text-sm text-green-600 break-all">
+                        {info.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Education */}
+              <section>
+                <div className="flex items-center gap-2 mb-6 text-green-800">
+                  <GraduationCap className="w-5 h-5 text-indigo-500" />
+                  <h2 className="text-lg font-bold">
+                    Education & Qualifications
+                  </h2>
+                </div>
+                <div className="space-y-2">
+                  {doctor.education.map((edu, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 p-3 text-sm text-green-600 bg-white border border-green-100 rounded-lg"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
+                      {edu}
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Week Offs Section - EDITABLE */}
+              <section className="p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2 text-indigo-900">
+                    <CalendarCog className="w-5 h-5" />
+                    <h2 className="text-lg font-bold">Weekly Offs</h2>
+                  </div>
+                  {!isEditingWeekOffs ? (
+                    <button
+                      onClick={() => setIsEditingWeekOffs(true)}
+                      className="text-xs font-bold text-indigo-600 flex items-center gap-1 hover:underline"
+                    >
+                      <Edit2 size={12} /> Edit
+                    </button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={saveWeekOffs}
+                        className="p-1.5 bg-green-600 text-white rounded-md hover:bg-green-700"
+                      >
+                        <Check size={14} />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsEditingWeekOffs(false);
+                          setTempWeekOffs(doctor.weekOffs);
+                        }}
+                        className="p-1.5 bg-green-200 text-green-600 rounded-md hover:bg-green-300"
+                      >
+                        <X size={14} />
+                      </button>
                     </div>
                   )}
-                  <p className="text-[var(--custom-yellow-200)] text-xl font-medium italic">
-                    )
-                  </p>
                 </div>
-                {leave && leave.length > 0 ? (
-                  <p className="text-[var(--custom-red-600)] flex items-center">
-                    <UserX className="h-4 w-4 mr-2" />
-                    On Leave:{" "}
-                    {format(new Date(leave[0].date_start), "dd-MM-yy")} to{" "}
-                    {format(new Date(leave[0].date_end), "dd-MM-yy")}
-                  </p>
-                ) : null}
-              </div>
-            </div>
-          </div>
 
-          {/* Content Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-[50px] gap-x-[30px] p-4 sm:p-[60px] bg-[var(--custom-gray-50)]/50 rounded-b-[2rem]">
-            {/* Left Column */}
-            <div className="space-y-5 md:space-y-10">
-              {/* Contact Information */}
-              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-[var(--custom-green-600)] flex items-center gap-[10px] bg-[var(--custom-purple-100)]/50 p-[20px] rounded-lg shadow-md">
-                <User className="w-[30px] h-[30px] text-coral-500 " />
-                Contact Information
-              </h2>
-              <div className="bg-[var(--custom-white)]/60 backdrop-blur-md p-[30px] rounded-xl shadow-lg border border-[var(--custom-purple-100)] space-y-[20px] transform hover:-translate-y-[5px] transition-transform duration-[300ms]">
-                {[
-                  { icon: Mail, label: doctor.contact.email },
-                  { icon: Phone, label: doctor.contact.phone },
-                  { icon: MapPin, label: doctor.contact.address },
-                  { icon: MapPin, label: doctor.contact.office_address },
-                ].map((info, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center space-x-3 md:space-x-[15px] text-[var(--custom-gray-800)] hover:text-coral-500 transition-colors duration-[200ms]"
-                  >
-                    {<info.icon className="!w-6 !h-6 text-coral-500" />}
-                    <span className="text-md sm:text-lg font-medium">
-                      {info.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Educational Qualification */}
-              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-[var(--custom-green-600)] flex items-center gap-[10px] bg-[var(--custom-purple-100)]/50 p-[20px] rounded-lg shadow-md">
-                <GraduationCap className="w-[30px] h-[30px] text-coral-500" />
-                Educational Qualification
-              </h2>
-              <ul className="space-y-[20px]">
-                {doctor.education.map((edu, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center space-x-[15px] text-[var(--custom-gray-800)] bg-[var(--custom-white)]/70 backdrop-blur-md p-[20px] rounded-xl shadow-md hover:shadow-xl hover:bg-[var(--custom-yellow-50)] transition-all duration-[300ms]"
-                  >
-                    <GraduationCap className="w-[25px] h-[25px]" />
-                    <span className="text-lg">{edu}</span>
-                  </li>
-                ))}
-              </ul>
-              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-[var(--custom-green-600)] flex items-center gap-[10px] bg-[var(--custom-purple-100)]/50 p-[20px] rounded-lg shadow-md">
-                <CalendarCog className="w-[30px] h-[30px] text-coral-500 " />
-                WeekOffs
-              </h2>
-              <ul className="space-y-[20px]">
-                {doctor.weekOffs.map((weekOff, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center space-x-[15px] text-[var(--custom-gray-800)] bg-[var(--custom-white)]/70 backdrop-blur-md p-[20px] rounded-xl shadow-md hover:shadow-xl hover:bg-[var(--custom-yellow-50)] transition-all duration-[300ms]"
-                  >
-                    <Award className="w-[25px] h-[25px]" />
-                    <span className="text-lg">{weekOff}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-5 md:space-y-10">
-              {/* Professional Information */}
-              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-[var(--custom-green-600)] flex items-center gap-[10px] bg-[var(--custom-purple-100)]/50 p-[20px] rounded-lg shadow-md">
-                <Briefcase className="w-[30px] h-[30px] text-coral-500 animate-spin-slow" />
-                Professional Information
-              </h2>
-              {/* Work Experience */}
-              <div className="bg-[var(--custom-white)]/60 backdrop-blur-md p-[30px] rounded-xl shadow-lg border border-[var(--custom-purple-100)] transform hover:-translate-y-[5px] transition-transform duration-[300ms]">
-                <div className="flex flex-col sm:flex-row items-center justify-between">
-                  <div className="space-y-2">
-                    <h3 className="text-2xl font-bold text-[var(--custom-gray-800)]">
-                      Years of Experience
-                    </h3>
-                    <p className="text-[var(--custom-gray-600)]">
-                      Professional Medical Practice
-                    </p>
-                  </div>
-                  <div className="relative mt-4 sm:mt-0 w-32 h-32 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-[var(--custom-green-100)] rounded-full"></div>
-                    <div className="relative  text-center">
-                      <span className="block text-4xl font-bold text-[var(--custom-green-600)]">
-                        {doctor.experience}
-                      </span>
-                      <span className="text-sm text-[var(--custom-gray-600)]">
-                        Years
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6 pt-6 border-t border-[var(--custom-gray-200)]">
-                  <div className="flex items-center space-x-3 text-[var(--custom-gray-600)]">
-                    <Clock className="w-5 h-5 text-[var(--custom-green-500)]" />
-                    <span>
-                      Practicing since{" "}
-                      {new Date().getFullYear() -
-                        parseInt(doctor.experience)}{" "}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Certifications */}
-              <h2 className="text-[1.5rem] md:text-[2rem] font-bold text-[var(--custom-green-600)] flex items-center gap-[10px] bg-[var(--custom-purple-100)]/50 p-[20px] rounded-lg shadow-md">
-                <Certificate className="w-[30px] h-[30px] text-coral-500 " />
-                Certifications
-              </h2>
-              <ul className="space-y-[20px]">
-                {doctor.certifications.map((cert, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center space-x-[15px] text-[var(--custom-gray-800)] bg-[var(--custom-white)]/70 backdrop-blur-md p-[20px] rounded-xl shadow-md hover:shadow-xl hover:bg-[var(--custom-yellow-50)] transition-all duration-[300ms]"
-                  >
-                    <Award className="w-[25px] h-[25px]" />
-                    <span className="text-lg">{cert}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Referral Section */}
-          <div className="px-4 sm:px-6 md:px-8 lg:px-[60px] pt-0 pb-4 md:pb-8">
-            {/* Referral Button */}
-            <button
-              onClick={() => setShowReferralForm(!showReferralForm)}
-              className="mx-auto w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[var(--custom-green-500)] to-[var(--custom-green-700)] text-[var(--custom-white)] rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-[var(--custom-green-600)] hover:to-[var(--custom-green-800)] transition-all duration-300 transform hover:scale-105 overflow-hidden"
-            >
-              <FileText className="w-5 h-5" />
-              {showReferralForm ? "Close Referral" : "Create Referral"}
-              <div className="absolute inset-0 bg-[var(--custom-green-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
-            </button>
-
-            {/* Referral Form */}
-            {showReferralForm && (
-              <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-[var(--custom-green-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
-                <form onSubmit={handleReferralSubmit} className="space-y-6">
-                  <div className="space-y-6">
-                    {/* Roll No. */}
-                    <div className="relative">
-                      <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
-                        Roll No.
-                      </label>
-                      <input
-                        type="text"
-                        value={referralData.rollNo}
-                        onChange={(e) =>
-                          setReferralData({
-                            ...referralData,
-                            rollNo: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 bg-[var(--custom-gray-50)]/50 border border-[var(--custom-green-300)] rounded-lg focus:ring-2 focus:ring-[var(--custom-green-400)] focus:border-[var(--custom-green-500)] outline-none transition-all duration-300 shadow-sm hover:shadow-md"
-                        required
-                      />
-                      <div className="absolute inset-y-0 right-3 top-8 flex items-center pointer-events-none">
-                        <User className="w-5 h-5 text-[var(--custom-green-500)] opacity-60" />
-                      </div>
-                    </div>
-
-                    {/* Referred By */}
-                    <div className="relative">
-                      <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
-                        Referred By
-                      </label>
-                      <input
-                        type="text"
-                        value={referralData.referredBy}
-                        onChange={(e) =>
-                          setReferralData({
-                            ...referralData,
-                            referredBy: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 bg-custom-gray-50/50 border border-[var(--custom-green-300)] rounded-lg focus:ring-2 focus:ring-[var(--custom-green-400)] focus:border-[var(--custom-green-500)] outline-none transition-all duration-300 shadow-sm hover:shadow-md"
-                        required
-                      />
-                      <div className="absolute inset-y-0 right-3 top-8 flex items-center pointer-events-none">
-                        <Mail className="w-5 h-5 text-[var(--custom-green-500)] opacity-60" />
-                      </div>
-                    </div>
-
-                    {/* Reason */}
-                    <div className="relative">
-                      <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
-                        Reason
-                      </label>
-                      <textarea
-                        value={referralData.reason}
-                        onChange={(e) =>
-                          setReferralData({
-                            ...referralData,
-                            reason: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 bg-[var(--custom-gray-50)]/50 border border-[var(--custom-green-300)] rounded-lg focus:ring-2 focus:ring-[var(--custom-green-400)] focus:border-[var(--custom-green-500)] outline-none h-36 resize-none transition-all duration-300 shadow-sm hover:shadow-md"
-                        required
-                      />
-                      <div className="absolute inset-y-0 right-3 top-10 flex items-start pointer-events-none">
-                        <FileText className="w-5 h-5 text-[var(--custom-green-500)] opacity-60" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    className="relative w-full bg-gradient-to-r from-[var(--custom-green-500)] to-[var(--custom-green-700)] text-[var(--custom-white)] py-3 px-6 rounded-lg font-semibold  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-[var(--custom-green-600)] hover:to-[var(--custom-green-800)] group"
-                  >
-                    <span className="relative ">Done</span>
-                    <div className="absolute inset-0 bg-[var(--custom-green-600)] opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-lg"></div>
-                  </button>
-                </form>
-              </div>
-            )}
-
-            <div className="mt-8 bg-[var(--custom-white)]/70 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden border border-[var(--custom-purple-300)]">
-              {/* Header Section */}
-              <div className="bg-gradient-to-br from-[var(--custom-red-600)] via-[var(--custom-red-500)] to-[var(--custom-red-400)] py-8 px-4 sm:px-8 md:px-12 relative overflow-hidden rounded-t-3xl">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(239,68,68,0.9),red)]"></div>
-                <div className="flex items-center gap-4 relative">
-                  <UserX className="w-8 h-8 text-[var(--custom-yellow-300)]" />
-                  <h2 className="text-2xl md:text-3xl font-bold text-[var(--custom-white)] tracking-tight drop-shadow-lg">
-                    Leave History
-                  </h2>
-                  <span className="ml-auto text-center bg-[var(--custom-yellow-300)]/20 text-[var(--custom-yellow-200)] px-4 py-2 rounded-full text-sm font-semibold border border-[var(--custom-yellow-300)]/50">
-                    {leaves && leaves.length}{" "}
-                    {leaves && leaves.length === 1 ? "Leave" : "Leaves"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Content Section */}
-              <div className="p-4 sm:p-6 md:p-8 lg:p-12 bg-[var(--custom-gray-50)]/50">
-                {leaves.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {leaves.map((leave) => (
-                      <div
-                        key={leave.id}
-                        className="group bg-[var(--custom-white)]/80 backdrop-blur-md rounded-2xl p-6 border border-[var(--custom-red-200)] hover:border-[var(--custom-red-400)] shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:bg-[var(--custom-white)]"
+                {isEditingWeekOffs ? (
+                  <div className="flex flex-wrap gap-2">
+                    {daysOfWeek.map((day) => (
+                      <button
+                        key={day}
+                        onClick={() => handleWeekOffToggle(day)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                          tempWeekOffs.includes(day)
+                            ? "bg-indigo-600 text-white"
+                            : "bg-white text-green-500 border border-green-200"
+                        }`}
                       >
-                        {/* Header with Icons */}
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="bg-gradient-to-br from-[var(--custom-red-100)] to-[var(--custom-red-200)] p-3 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                            <UserX className="h-6 w-6 text-[var(--custom-red-600)]" />
-                          </div>
-                          <div className="text-right">
-                            <div className="text-xs font-semibold text-[var(--custom-red-500)] uppercase tracking-wider">
-                              Leave Period
-                            </div>
-                            <div className="text-sm text-[var(--custom-gray-600)] font-medium mt-1">
-                              {calculateLeaveDuration(
-                                leave.date_start,
-                                leave.date_end,
-                              )}{" "}
-                              {calculateLeaveDuration(
-                                leave.date_start,
-                                leave.date_end,
-                              ) === 1
-                                ? "day"
-                                : "days"}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Date Range */}
-                        <div className="bg-[var(--custom-red-50)] rounded-xl p-4 border border-[var(--custom-red-100)] mb-4">
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4 text-[var(--custom-red-600)]" />
-                              <span className="text-sm text-[var(--custom-gray-600)] font-medium">
-                                From
-                              </span>
-                              <span className="text-sm font-semibold text-[var(--custom-red-700)]">
-                                {format(
-                                  new Date(leave.date_start),
-                                  "dd MMM yyyy",
-                                )}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4 text-[var(--custom-red-600)]" />
-                              <span className="text-sm text-[var(--custom-gray-600)] font-medium">
-                                To
-                              </span>
-                              <span className="text-sm font-semibold text-[var(--custom-red-700)]">
-                                {format(
-                                  new Date(leave.date_end),
-                                  "dd MMM yyyy",
-                                )}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Reason Section */}
-                        <div>
-                          <div className="text-xs font-semibold text-[var(--custom-gray-600)] uppercase tracking-wider mb-2">
-                            Reason for Leave
-                          </div>
-                          <div className="bg-white rounded-lg p-3 border border-[var(--custom-gray-200)]">
-                            <p className="text-[var(--custom-gray-800)] leading-relaxed text-sm">
-                              {leave.reason || "No reason provided"}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Status Badge */}
-                        <div className="mt-4 flex items-center gap-2">
-                          <div className="w-2 h-2 bg-[var(--custom-red-500)] rounded-full "></div>
-                          <span className="text-xs font-semibold text-[var(--custom-red-600)]">
-                            Approved Leave
-                          </span>
-                        </div>
-                      </div>
+                        {day}
+                      </button>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12 bg-gradient-to-br from-[var(--custom-red-50)] to-white rounded-2xl border-2 border-dashed border-[var(--custom-red-200)]">
-                    <div className="bg-[var(--custom-red-100)] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Calendar className="h-8 w-8 text-[var(--custom-red-400)]" />
+                  <div className="flex flex-wrap gap-2">
+                    {doctor.weekOffs.map((day, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 bg-white border border-indigo-200 text-indigo-700 rounded-full text-xs font-semibold shadow-sm"
+                      >
+                        {day}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
+
+            {/* Right Column (Experience & Certificates) */}
+            <div className="p-6 md:p-10 bg-green-50/50 space-y-10">
+              <section>
+                <div className="flex items-center gap-2 mb-6 text-green-800">
+                  <Briefcase className="w-5 h-5 text-indigo-500" />
+                  <h2 className="text-lg font-bold">Experience</h2>
+                </div>
+                <div className="bg-white p-6 rounded-2xl border border-green-200 shadow-sm text-center">
+                  <div className="text-4xl font-black text-indigo-600">
+                    {doctor.experience}
+                  </div>
+                  <div className="text-xs font-bold text-green-400 uppercase tracking-widest mt-1">
+                    Years Practice
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-green-50 flex items-center justify-center gap-2 text-green-500 text-xs">
+                    <Clock size={14} /> Practicing since{" "}
+                    {new Date().getFullYear() - parseInt(doctor.experience)}
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <div className="flex items-center gap-2 mb-6 text-green-800">
+                  <Award className="w-5 h-5 text-indigo-500" />
+                  <h2 className="text-lg font-bold">Certifications</h2>
+                </div>
+                <div className="space-y-3">
+                  {doctor.certifications.map((cert, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-3 text-sm text-green-600"
+                    >
+                      <Award className="w-4 h-4 text-orange-400 shrink-0" />
+                      <span>{cert}</span>
                     </div>
-                    <p className="text-[var(--custom-gray-700)] text-lg font-semibold mb-2">
-                      No Leave History
-                    </p>
-                    <p className="text-[var(--custom-gray-500)] text-sm max-w-md mx-auto">
-                      This doctor has not taken any leaves or all leaves have
-                      expired.
-                    </p>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </div>
+
+          {/* Referral & Leave Section - Streamlined */}
+          <div className="border-t border-green-100 p-6 md:p-10 bg-green-50/30">
+            <div className="flex flex-col items-center gap-6">
+              <button
+                onClick={() => setShowReferralForm(!showReferralForm)}
+                className="flex items-center gap-2 px-6 py-2.5 bg-green-900 text-white rounded-full text-sm font-bold hover:bg-green-800 transition-all shadow-md"
+              >
+                <FileText size={16} />
+                {showReferralForm ? "Cancel Referral" : "Create New Referral"}
+              </button>
+
+              {showReferralForm && (
+                <div className="w-full max-w-2xl bg-white p-6 rounded-xl border border-green-200 shadow-xl animate-in fade-in slide-in-from-bottom-4">
+                  {/* Simplified Form Inputs */}
+                  <form
+                    onSubmit={handleReferralSubmit}
+                    className="grid grid-cols-1 gap-4"
+                  >
+                    <input
+                      placeholder="Patient Roll No."
+                      className="w-full p-3 bg-green-50 border border-green-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                      required
+                    />
+                    <textarea
+                      placeholder="Reason for referral..."
+                      className="w-full p-3 bg-green-50 border border-green-200 rounded-lg text-sm h-28 focus:ring-2 focus:ring-indigo-500 outline-none"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="w-full py-3 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700"
+                    >
+                      Submit Referral
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+
+            {/* Leave History - Simplified to a List/Table view */}
+            <div className="mt-12">
+              <h3 className="text-lg font-bold text-green-800 mb-6 flex items-center gap-2">
+                <Calendar className="text-red-500" /> Leave History
+              </h3>
+              <div className="overflow-hidden rounded-xl border border-green-200 bg-white">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-green-50 text-green-500 uppercase text-[10px] font-bold">
+                    <tr>
+                      <th className="px-6 py-3">Dates</th>
+                      <th className="px-6 py-3">Duration</th>
+                      <th className="px-6 py-3">Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-green-100">
+                    {leaves.map((l, i) => (
+                      <tr
+                        key={i}
+                        className="hover:bg-green-50 transition-colors"
+                      >
+                        <td className="px-6 py-4 font-medium text-green-700">
+                          {format(new Date(l.date_start), "dd MMM")} -{" "}
+                          {format(new Date(l.date_end), "dd MMM yyyy")}
+                        </td>
+                        <td className="px-6 py-4 text-green-500">
+                          {calculateLeaveDuration(l.date_start, l.date_end)}{" "}
+                          days
+                        </td>
+                        <td className="px-6 py-4 text-green-500 italic">
+                          "{l.reason || "Personal"}"
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {leaves.length === 0 && (
+                  <div className="p-8 text-center text-green-400 text-sm italic">
+                    No leave records found for this doctor.
                   </div>
                 )}
               </div>

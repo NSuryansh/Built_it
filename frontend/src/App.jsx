@@ -27,6 +27,7 @@ import DoctorAppointment from "./pages/doctor/appointments";
 import DoctorPeer from "./pages/doctor/peer";
 import DoctorLeave from "./pages/doctor/leave";
 import DoctorBook from "./pages/doctor/book";
+import DoctorContentManager from "./pages/doctor/DoctorContentManager";
 import History from "./pages/doctor/history";
 import UserDetail from "./pages/doctor/user";
 import AdminLogin from "./pages/admin/login";
@@ -197,6 +198,7 @@ export default function App() {
           <Route path="/doctor/peer" element={<DoctorPeer />} />
           <Route path="/doctor/leave" element={<DoctorLeave />} />
           <Route path="/doctor/book" element={<DoctorBook />} />
+          <Route path="/doctor/DoctorContentManager" element={<DoctorContentManager />} />
           <Route path="/doctor/history" element={<History />} />
           <Route path="/doctor/user" element={<UserDetail />} />
           <Route path="/doctor/event_list" element={<DoctorEventsList/>}/>

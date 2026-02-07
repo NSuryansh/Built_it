@@ -14,6 +14,7 @@ import {
   Plus,
   BriefcaseBusiness,
   Calendar,
+  UserX,
 } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import Footer from "../../components/common/Footer";
@@ -39,6 +40,7 @@ const DoctorProfile = () => {
     experience: "<Please Change>",
     additionalExperience: "<Please Change>",
     education: ["<Add>"],
+    weekOff: [],
     availability: {
       Monday: [],
       Tuesday: [],
@@ -59,7 +61,7 @@ const DoctorProfile = () => {
   const [file, setfile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const token = localStorage.getItem("token");
-  const DAYS_OF_WEEK = [
+  let DAYS_OF_WEEK = [
     "Sunday",
     "Monday",
     "Tuesday",
@@ -86,11 +88,11 @@ const DoctorProfile = () => {
           `http://localhost:3000/api/common/getDoc?docId=${doctorId}`,
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const response2 = await fetch(
           `http://localhost:3000/api/doc/general-slots?docId=${doctorId}`,
-          { headers: { Authorization: "Bearer " + token } }
+          { headers: { Authorization: "Bearer " + token } },
         );
 
         const data = await response.json();
@@ -107,7 +109,7 @@ const DoctorProfile = () => {
         data2.generalSlots.map((slot) => {
           console.log(format(new Date(slot.starting_time).getTime(), "HH:mm"));
           avail[DAYS_OF_WEEK[slot.day_of_week]].push(
-            format(new Date(slot.starting_time).getTime(), "HH:mm")
+            format(new Date(slot.starting_time).getTime(), "HH:mm"),
           );
         });
 
@@ -123,7 +125,7 @@ const DoctorProfile = () => {
         } else if (Array.isArray(data.certifications)) {
           certifications = data.certifications
             .map((cert) =>
-              typeof cert === "object" ? cert.certification : cert
+              typeof cert === "object" ? cert.certification : cert,
             )
             .filter((cert) => cert !== "");
         }
@@ -159,6 +161,7 @@ const DoctorProfile = () => {
           certifications: certifications,
           education: educations,
           availability: avail,
+          weekOff: data.doctor.weekOff,
         });
         setProfileImage(data.doctor.img);
         localStorage.setItem("docImage", data.doctor.img);
@@ -174,6 +177,7 @@ const DoctorProfile = () => {
           certifications: certifications,
           education: educations,
           availability: avail,
+          weekOff: data.doctor.weekOff,
         });
         setFetched(true);
       } catch (error) {
@@ -193,10 +197,9 @@ const DoctorProfile = () => {
         `http://localhost:3000/api/doc_admin/leaves?doc_id=${docId}`,
         {
           headers: { Authorization: "Bearer " + token },
-        }
+        },
       );
       const data = await response.json();
-      console.log(data);
       setLeaves(data);
     } catch (error) {
       console.error(error);
@@ -260,7 +263,7 @@ const DoctorProfile = () => {
   const getTotalSlots = (availability) => {
     return Object.values(availability).reduce(
       (total, daySlots) => total + daySlots.length,
-      0
+      0,
     );
   };
 
@@ -287,10 +290,10 @@ const DoctorProfile = () => {
     try {
       const doctorId = localStorage.getItem("userid");
       const filteredEducation = editedProfile.education.filter(
-        (edu) => edu.trim() !== "" && edu !== "<Add>"
+        (edu) => edu.trim() !== "" && edu !== "<Add>",
       );
       const filteredCertifications = editedProfile.certifications.filter(
-        (cert) => cert.trim() !== "" && cert !== "<Add>"
+        (cert) => cert.trim() !== "" && cert !== "<Add>",
       );
 
       const formData = new FormData();
@@ -300,16 +303,16 @@ const DoctorProfile = () => {
       formData.append("experience", editedProfile.experience);
       formData.append(
         "additionalExperience",
-        editedProfile.additionalExperience || ""
+        editedProfile.additionalExperience || "",
       );
       formData.append("desc", editedProfile.specialization);
       formData.append(
         "educ",
-        filteredEducation.length > 0 ? filteredEducation : ["<Add>"]
+        filteredEducation.length > 0 ? filteredEducation : ["<Add>"],
       );
       formData.append(
         "certifi",
-        filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"]
+        filteredCertifications.length > 0 ? filteredCertifications : ["<Add>"],
       );
       formData.append("image", file);
 
@@ -344,7 +347,7 @@ const DoctorProfile = () => {
           const date = new Date(
             "1970-01-01T" +
               editedProfile.availability[DAYS_OF_WEEK[i]][j] +
-              ":00.000Z"
+              ":00.000Z",
           );
           const newDate = TimeChange(date.getTime());
           console.log("inside");
@@ -355,12 +358,12 @@ const DoctorProfile = () => {
       if (dates.length !== 0) {
         await fetch(
           `http://localhost:3000/api/doc/modifySlots?slotsArray=${JSON.stringify(
-            dates
+            dates,
           )}&doctorId=${doctorId}`,
           {
             method: "PUT",
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
       }
 
@@ -371,8 +374,6 @@ const DoctorProfile = () => {
           filteredCertifications.length > 0
             ? filteredCertifications
             : ["<Add>"],
-        // availability:
-        //   filteredAvailability.length > 0 ? filteredAvailability : ["<Add>"],
       });
 
       setIsLoading(false);
@@ -803,7 +804,7 @@ const DoctorProfile = () => {
             <div className="text-[var(--custom-blue-800)] font-semibold">
               Total Availability:{" "}
               {getTotalSlots(
-                isEditing ? editedProfile.availability : profile.availability
+                isEditing ? editedProfile.availability : profile.availability,
               )}{" "}
               time slots across the week
             </div>
@@ -816,7 +817,13 @@ const DoctorProfile = () => {
                 ? editedProfile.availability
                 : profile.availability;
               const daySlots = currentAvailability[day] || [];
-
+              let found = false;
+              for (var i = 0; i < profile.weekOff.length; i++) {
+                if (day == profile.weekOff[i]) {
+                  found = true;
+                  break;
+                }
+              }
               return (
                 <div
                   key={day}
@@ -835,67 +842,78 @@ const DoctorProfile = () => {
 
                   {/* Slots Display/Edit */}
                   <div className="space-y-3">
-                    {isEditing ? (
-                      <>
-                        {daySlots.map((slot, slotIndex) => (
-                          <div
-                            key={slotIndex}
-                            className="flex items-center space-x-2"
-                          >
-                            <input
-                              type="time"
-                              value={slot}
-                              onChange={(e) =>
-                                handleSlotTimeChange(
-                                  day,
-                                  slotIndex,
-                                  e.target.value
-                                )
-                              }
-                              className="flex-1 bg-white border border-[var(--custom-blue-200)] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300"
-                            />
-                            <button
-                              onClick={() => handleRemoveSlot(day, slotIndex)}
-                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-300"
-                            >
-                              <X className="h-4 w-4" />
-                            </button>
-                          </div>
-                        ))}
-                        <button
-                          onClick={() => handleAddSlot(day)}
-                          className="group flex items-center justify-center w-full py-3 border-2 border-dashed border-[var(--custom-blue-300)] hover:border-[var(--custom-blue-500)] text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-700)] rounded-lg font-semibold transition-all duration-300 hover:bg-[var(--custom-blue-50)]"
-                        >
-                          <Plus className="h-5 w-5 mr-2 transform group-hover:rotate-90 transition-transform duration-300" />
-                          Add Time Slot
-                        </button>
-                      </>
+                    {found ? (
+                      <div className="text-center py-8 text-gray-400">
+                        <UserX className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                        <div className="text-sm italic">WeekOff</div>
+                      </div>
                     ) : (
                       <>
-                        {daySlots.length > 0 ? (
-                          <div className="space-y-2">
+                        {isEditing ? (
+                          <>
                             {daySlots.map((slot, slotIndex) => (
                               <div
                                 key={slotIndex}
-                                className="flex items-center justify-between bg-white px-4 py-3 rounded-lg border border-[var(--custom-blue-200)] shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-102"
+                                className="flex items-center space-x-2"
                               >
-                                <div className="flex items-center">
-                                  <Clock className="h-4 w-4 mr-2 text-[var(--custom-blue-500)]" />
-                                  <span className="font-medium text-gray-800">
-                                    {slot}
-                                  </span>
-                                </div>
-                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <input
+                                  type="time"
+                                  value={slot}
+                                  onChange={(e) =>
+                                    handleSlotTimeChange(
+                                      day,
+                                      slotIndex,
+                                      e.target.value,
+                                    )
+                                  }
+                                  className="flex-1 bg-white border border-[var(--custom-blue-200)] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300"
+                                />
+                                <button
+                                  onClick={() =>
+                                    handleRemoveSlot(day, slotIndex)
+                                  }
+                                  className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-300"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
                               </div>
                             ))}
-                          </div>
+                            <button
+                              onClick={() => handleAddSlot(day)}
+                              className="group flex items-center justify-center w-full py-3 border-2 border-dashed border-[var(--custom-blue-300)] hover:border-[var(--custom-blue-500)] text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-700)] rounded-lg font-semibold transition-all duration-300 hover:bg-[var(--custom-blue-50)]"
+                            >
+                              <Plus className="h-5 w-5 mr-2 transform group-hover:rotate-90 transition-transform duration-300" />
+                              Add Time Slot
+                            </button>
+                          </>
                         ) : (
-                          <div className="text-center py-8 text-gray-400">
-                            <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                            <div className="text-sm italic">
-                              No slots available
-                            </div>
-                          </div>
+                          <>
+                            {daySlots.length > 0 ? (
+                              <div className="space-y-2">
+                                {daySlots.map((slot, slotIndex) => (
+                                  <div
+                                    key={slotIndex}
+                                    className="flex items-center justify-between bg-white px-4 py-3 rounded-lg border border-[var(--custom-blue-200)] shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-102"
+                                  >
+                                    <div className="flex items-center">
+                                      <Clock className="h-4 w-4 mr-2 text-[var(--custom-blue-500)]" />
+                                      <span className="font-medium text-gray-800">
+                                        {slot}
+                                      </span>
+                                    </div>
+                                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="text-center py-8 text-gray-400">
+                                <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                                <div className="text-sm italic">
+                                  No slots available
+                                </div>
+                              </div>
+                            )}
+                          </>
                         )}
                       </>
                     )}
@@ -916,21 +934,33 @@ const DoctorProfile = () => {
                 {DAYS_OF_WEEK.map((day) => {
                   const daySlots = profile.availability[day] || [];
                   const hasSlots = daySlots.length > 0;
-
+                  let found = false;
+                  for (var i = 0; i < profile.weekOff.length; i++) {
+                    if (day == profile.weekOff[i]) {
+                      found = true;
+                      break;
+                    }
+                  }
                   return (
                     <div
                       key={day}
                       className={`text-center p-3 rounded-lg border-2 transition-all duration-300 ${
-                        hasSlots
-                          ? "bg-green-50 border-green-200 text-green-800"
-                          : "bg-gray-50 border-gray-200 text-gray-500"
+                        found
+                          ? "bg-red-50 border-red-200 text-red-800"
+                          : hasSlots
+                            ? "bg-green-50 border-green-200 text-green-800"
+                            : "bg-gray-50 border-gray-200 text-gray-500"
                       }`}
                     >
                       <div className="font-semibold text-sm">
                         {day.slice(0, 3)}
                       </div>
                       <div className="text-xs mt-1">
-                        {hasSlots ? `${daySlots.length} slots` : "Unavailable"}
+                        {found
+                          ? "WeekOff"
+                          : hasSlots
+                            ? `${daySlots.length} slots`
+                            : "Unavailable"}
                       </div>
                     </div>
                   );
@@ -998,11 +1028,11 @@ const DoctorProfile = () => {
                       <span className="font-semibold">
                         {calculateLeaveDuration(
                           leave.date_start,
-                          leave.date_end
+                          leave.date_end,
                         )}{" "}
                         {calculateLeaveDuration(
                           leave.date_start,
-                          leave.date_end
+                          leave.date_end,
                         ) === 1
                           ? "day"
                           : "days"}

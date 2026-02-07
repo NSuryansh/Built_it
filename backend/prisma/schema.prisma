@@ -301,3 +301,33 @@ enum Gender {
   FEMALE @map("Female")
   OTHER  @map("Other")
 }
+
+model WellnessArticle {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  url         String
+  source      String
+  readTime    String
+  iconName    String
+  createdAt   DateTime @default(now())
+}
+
+model WellnessVideo {
+  id          Int      @id @default(autoincrement())
+  sectionTitle String
+  title       String
+  description String
+  youtubeUrl  String
+  createdAt   DateTime @default(now())
+}
+
+model EntertainmentItem {
+  id          Int      @id @default(autoincrement())
+  type        String
+  category    String
+  title       String
+  link        String
+  imageUrl    String
+  createdAt   DateTime @default(now())
+}

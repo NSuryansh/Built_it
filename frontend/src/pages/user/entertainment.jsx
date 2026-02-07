@@ -4,44 +4,28 @@ import Navbar from "../../components/user/Navbar";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/common/SessionExpired";
-import { movies, games, books, categories, music } from "../../utils/data";
 import CustomLoader from "../../components/common/CustomLoader";
+import axios from "axios";
 
-function EntertainmentSection({ title, items, icon: Icon, categories }) {
+// Helper to extract unique categories from a list of items
+const getUniqueCategories = (items) => {
+  const cats = [...new Set(items.map((item) => item.category))];
+  // Ensure "Top Picks" is always first if it exists, otherwise just list them
+  if(cats.length === 0) return ["Top Picks"];
+  return ["Top Picks", ...cats.filter(c => c !== "Top Picks")];
+};
+
+function EntertainmentSection({ title, items, icon: Icon }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Top Picks");
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const verifyAuth = async () => {
-      const authStatus = await checkAuth("user");
-      setIsAuthenticated(authStatus);
-    };
-    verifyAuth();
-  }, []);
-
-  const handleClosePopup = () => {
-    navigate("/user/login");
-  };
-
-  if (isAuthenticated === null) {
-    return <CustomLoader text="Loading your wellness journey..." />;
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />
-    );
-  }
+  // Calculate categories dynamically based on the items passed
+  const sectionCategories = getUniqueCategories(items);
 
   const getFilteredItems = () => {
     if (selectedCategory === "Top Picks") {
-      const uniqueCategories = [...new Set(items.map((item) => item.category))];
-      return uniqueCategories
-        .map((category) => items.find((item) => item.category === category))
-        .filter(Boolean);
+        return items; 
     }
     return items.filter((item) => item.category === selectedCategory);
   };
@@ -77,8 +61,9 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
         } overflow-hidden`}
       >
         <div className="p-6 pt-2">
+          {/* Category Pills */}
           <div className="flex flex-wrap gap-2 mb-8">
-            {categories.map((category) => (
+            {sectionCategories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
@@ -94,39 +79,45 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-            {filteredItems.map((item, index) => (
-              <a
-                key={index}
-                href={item.spotifyLink || item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative rounded-lg md:rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
-                onMouseEnter={() => setHoveredItem(index)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-                <div
-                  className={`absolute inset-0 bg-gradient-to-t from-[var(--custom-black)]/90 via-[var(--custom-black)]/40 to-transparent flex items-end transition-opacity duration-300 ${
-                    hoveredItem === index ? "opacity-100" : "opacity-90"
-                  }`}
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
+                <a
+                  key={item.id || index}
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative rounded-lg md:rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                  onMouseEnter={() => setHoveredItem(index)}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
-                  <div className="p-2 sm:p-4 md:p-6 w-full transform transition-transform duration-300 group-hover:translate-y-0">
-                    <h3 className="text-sm sm:text-md md:text-lg font-semibold md:font-bold text-[var(--custom-white)] mb-1 md:mb-2 group-hover:text-[var(--custom-purple-300)] transition-colors duration-300">
-                      {item.title}
-                    </h3>
-                    <span className="sm:inline-block hidden px-2 md:px-3 py-1 rounded-full bg-[var(--custom-white)]/20 text-xs md:text-sm text-[var(--custom-white)] backdrop-blur-sm">
-                      {item.category}
-                    </span>
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={item.imageUrl} 
+                      alt={item.title}
+                      className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+                    />
                   </div>
-                </div>
-              </a>
-            ))}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-t from-[var(--custom-black)]/90 via-[var(--custom-black)]/40 to-transparent flex items-end transition-opacity duration-300 ${
+                      hoveredItem === index ? "opacity-100" : "opacity-90"
+                    }`}
+                  >
+                    <div className="p-2 sm:p-4 md:p-6 w-full transform transition-transform duration-300 group-hover:translate-y-0">
+                      <h3 className="text-sm sm:text-md md:text-lg font-semibold md:font-bold text-[var(--custom-white)] mb-1 md:mb-2 group-hover:text-[var(--custom-purple-300)] transition-colors duration-300">
+                        {item.title}
+                      </h3>
+                      <span className="sm:inline-block hidden px-2 md:px-3 py-1 rounded-full bg-[var(--custom-white)]/20 text-xs md:text-sm text-[var(--custom-white)] backdrop-blur-sm">
+                        {item.category}
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              ))
+            ) : (
+               <div className="col-span-full text-center text-gray-500 py-4">
+                 No items found in this category.
+               </div>
+            )}
           </div>
         </div>
       </div>
@@ -135,6 +126,49 @@ function EntertainmentSection({ title, items, icon: Icon, categories }) {
 }
 
 function Entertainment() {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [entertainmentData, setEntertainmentData] = useState({
+    movies: [],
+    books: [],
+    music: [],
+    games: []
+  });
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const init = async () => {
+      const authStatus = await checkAuth("user");
+      setIsAuthenticated(authStatus);
+
+      if (authStatus) {
+         try {
+             // ✅ FIXED: Added "/api" to match server.js configuration
+             const backendUrl = "http://localhost:3000/api/doc"; 
+             const res = await axios.get(`${backendUrl}/get-entertainment`);
+             setEntertainmentData(res.data);
+         } catch(e) {
+             console.error("Failed to load entertainment", e);
+         } finally {
+             setLoading(false);
+         }
+      }
+    };
+    init();
+  }, []);
+
+  const handleClosePopup = () => {
+    navigate("/user/login");
+  };
+
+  if (isAuthenticated === null || (isAuthenticated && loading)) {
+    return <CustomLoader text="Loading your wellness journey..." />;
+  }
+
+  if (!isAuthenticated) {
+    return <SessionExpired handleClosePopup={handleClosePopup} theme="orange" />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[var(--custom-orange-100)] via-[var(--custom-white)] to-indigo-50">
       <Navbar />
@@ -151,27 +185,23 @@ function Entertainment() {
 
         <EntertainmentSection
           title="Movies"
-          items={movies}
+          items={entertainmentData.movies}
           icon={Film}
-          categories={categories.movies}
         />
         <EntertainmentSection
           title="Books"
-          items={books}
+          items={entertainmentData.books}
           icon={Book}
-          categories={categories.books}
         />
         <EntertainmentSection
           title="Music"
-          items={music}
+          items={entertainmentData.music}
           icon={Music}
-          categories={categories.music}
         />
         <EntertainmentSection
           title="Games"
-          items={games}
+          items={entertainmentData.games}
           icon={Gamepad2}
-          categories={categories.games}
         />
       </div>
     </div>

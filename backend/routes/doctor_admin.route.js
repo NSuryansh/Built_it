@@ -15,7 +15,7 @@ docAdminRouter.get(
       console.error("Error fetching users:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
-  }
+  },
 );
 
 docAdminRouter.post(
@@ -35,7 +35,30 @@ docAdminRouter.post(
       console.error("Error deleting event:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-  }
+  },
+);
+
+docAdminRouter.post(
+  "/weekOffs",
+  authorizeRoles("admin", "doc"),
+  async (req, res) => {
+    const { doc_id, weekOffs } = req.body;
+
+    try {
+      const resp = await prisma.doctor.update({
+        where: {
+          id: Number(doc_id),
+        },
+        data:{
+          weekOff: weekOffs
+        }
+      });
+      res.json(resp);
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 );
 
 docAdminRouter.get(
@@ -54,7 +77,7 @@ docAdminRouter.get(
       console.error("Error fetching leave:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-  }
+  },
 );
 
 docAdminRouter.get(
@@ -80,7 +103,7 @@ docAdminRouter.get(
       console.error("Error fetching latest leave:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-  }
+  },
 );
 
 docAdminRouter.get(
@@ -118,7 +141,7 @@ docAdminRouter.get(
       console.error("Error fetching user feedback:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
-  }
+  },
 );
 docAdminRouter.post(
   "/addEvent",
@@ -162,7 +185,7 @@ docAdminRouter.post(
       console.error("Error adding event:", error);
       res.json({ error: "Internal server error" });
     }
-  }
+  },
 );
 
 export default docAdminRouter;
