@@ -55,35 +55,35 @@ const Book = () => {
     fetchDoctors();
   }, []);
 
-  useEffect(() => {
-    const checkPreviousBooking = async () => {
-      const userId = localStorage.getItem("userid");
-      if (!userId) return;
+  // useEffect(() => {
+  //   const checkPreviousBooking = async () => {
+  //     const userId = localStorage.getItem("userid");
+  //     if (!userId) return;
 
-      try {
-        const res = await fetch(
-          `http://localhost:3000/api/user/isUpcomingAppointment?userId=${userId}`,
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        );
-        const data = await res.json();
-        console.log("Previous booking check response:", data);
-        if (data.hasUpcomingAppointment) {
-          setdoctorSelectable(false);
-          CustomToast("You already have an upcoming appointment");
-        }
-      } catch (err) {
-        console.error("Error checking previous bookings:", err);
-        CustomToast("Error while checking previous bookings");
-      }
-    };
-    if (isAuthenticated) {
-      checkPreviousBooking();
-    }
-  }, []);
+  //     try {
+  //       const res = await fetch(
+  //         `http://localhost:3000/api/user/isUpcomingAppointment?userId=${userId}`,
+  //         {
+  //           headers: { Authorization: "Bearer " + token },
+  //         }
+  //       );
+  //       const data = await res.json();
+  //       console.log("Previous booking check response:", data);
+  //       if (data.hasUpcomingAppointment) {
+  //         setdoctorSelectable(false);
+  //         CustomToast("You already have an upcoming appointment");
+  //       }
+  //     } catch (err) {
+  //       console.error("Error checking previous bookings:", err);
+  //       CustomToast("Error while checking previous bookings");
+  //     }
+  //   };
+  //   if (isAuthenticated) {
+  //     checkPreviousBooking();
+  //   }
+  // }, [isAuthenticated]);
 
-  // Populate formData fields if authenticated; allow manual input if not authenticated.
+  // Populate formData fields if authenticated (runs once on login)
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({
@@ -94,6 +94,19 @@ const Book = () => {
       }));
     }
   }, [isAuthenticated]);
+
+  // ←←← NEW: Re-fill user details every time user goes to Step 2 (booking form)
+  useEffect(() => {
+    if (isAuthenticated && step === 2) {
+      setFormData((prev) => ({
+        ...prev,
+        name: localStorage.getItem("username") || "",
+        email: localStorage.getItem("user_email") || "",
+        phone: localStorage.getItem("user_mobile") || "",
+      }));
+    }
+  }, [step, isAuthenticated]);
+  // ←←← End of new effect
 
   const handleDoctorSelect = (doctor) => {
     setSelectedDoctor(doctor);
@@ -149,7 +162,6 @@ const Book = () => {
         }),
       });
       const respData = await res.json();
-      // alert("Booking Confirmed!");
       CustomToast("Appointment Requested");
       setStep(1);
       setSelectedDoctor(null);
