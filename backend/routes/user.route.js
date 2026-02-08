@@ -433,13 +433,7 @@ userRouter.get("/getRequests", authorizeRoles("user"), async (req, res) => {
     const reqs = await prisma.requests.findMany({
       where: { user_id: userId, forDoctor: false },
       include: {
-        doctor: {
-          select: {
-            name: true, // assuming "name" is the username
-            mobile: true,
-            email: true,
-          },
-        },
+        doctor: true
       },
     });
     res.json(reqs);
@@ -479,7 +473,6 @@ userRouter.get("/pastuserappt", authorizeRoles("user"), async (req, res) => {
   if (userId !== req.user.userId) {
     return res.status(403).json({ error: "Access denied" });
   }
-  // console.log(userId);
   if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
   }

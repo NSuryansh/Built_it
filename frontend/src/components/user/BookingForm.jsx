@@ -10,9 +10,8 @@ import {
   Calendar,
   Loader,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { TimeChange } from "../common/TimeChange";
 
 const BookingFormStep = ({
   formData,
@@ -27,13 +26,41 @@ const BookingFormStep = ({
   const [date, setSelectedDate] = useState("");
   const [time, setSelectedTime] = useState("");
   const token = localStorage.getItem("token");
+  const [dates, setDates] = useState([]);
+  const DAYS_OF_WEEK = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thrusday",
+    "Friday",
+    "Saturday",
+  ];
+
+  useEffect(() => {
+    let dates_to_be_added = [];
+    [...Array(14)].map((_, index) => {
+      const date = new Date();
+      date.setDate(date.getDate() + index);
+      const day = DAYS_OF_WEEK[date.getDay()];
+      let found = false;
+      for (var i = 0; i < selectedDoctor.weekOff.length; i++) {
+        if (selectedDoctor.weekOff[i] == day) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) dates_to_be_added.push(date);
+    });
+    setDates(dates_to_be_added);
+  }, []);
 
   const fetchAvailableSlots = async (date) => {
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
         `http://localhost:3000/api/common/available-slots?date=${date}&docId=${doctorId}`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       const data = await response.json();
       console.log(data.availableSlots);
@@ -56,18 +83,21 @@ const BookingFormStep = ({
   //to get notifs for incoming requests
   const sendNotif = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/common/send-notification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
+      const res = await fetch(
+        "http://localhost:3000/api/common/send-notification",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            userid: selectedDoctor.id,
+            message: `You have a new incoming appointment request!`,
+            userType: "doc",
+          }),
         },
-        body: JSON.stringify({
-          userid: selectedDoctor.id,
-          message: `You have a new incoming appointment request!`,
-          userType: "doc",
-        }),
-      });
+      );
 
       if (res.ok) {
         console.log("HALLELUJAH");
@@ -206,9 +236,8 @@ const BookingFormStep = ({
                   required
                 >
                   <option value="">Select Date</option>
-                  {[...Array(14)].map((_, index) => {
-                    const date = new Date();
-                    date.setDate(date.getDate() + index);
+                  {dates.map((date, _) => {
+                    console.log(dates);
                     const formattedDate = format(date, "yyyy-MM-dd");
                     const displayDate = format(date, "d MMM");
                     return (
@@ -243,7 +272,7 @@ const BookingFormStep = ({
                       <option key={slot.id} value={slot.starting_time}>
                         {format(
                           new Date(slot.starting_time).getTime(),
-                          "HH:mm"
+                          "HH:mm",
                         )}
                       </option>
                     ))}
