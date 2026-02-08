@@ -211,7 +211,7 @@ docRouter.get("/reqApp", authorizeRoles("doc"), async (req, res) => {
     return res.status(403).json({ error: "Access denied" });
   }
   const appt = await prisma.requests.findMany({
-    where: { doctor_id: docId, forDoctor: true },
+    where: { doctor_id: docId },
     include: {
       user: {
         select: {
