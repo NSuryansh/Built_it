@@ -750,9 +750,8 @@ docRouter.post(
         const data = await uploadToGoogleDrive(file, {
           therapistName: doc.name,
           patientName: user.username,
-          dateTime: `${dateTime.getDate()}-${
-            dateTime.getMonth() + 1
-          }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+          dateTime: `${dateTime.getDate()}-${dateTime.getMonth() + 1
+            }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
         });
         driveLink = data.shareableLink;
       }
@@ -1004,5 +1003,34 @@ docRouter.delete(
     }
   },
 );
+
+docRouter.get("/fetchCancelledAppoinments", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const docId = Number(req.query["doctorId"]);
+    // if (docId !== req.user.userId) {
+    //   return res.status(403).json({ error: "Access denied" });
+    // }
+    console.log(docId)
+    const app = await prisma.cancelledRequest.findMany({
+      where: {
+        doctor_id: docId
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+            alt_mobile: true,
+            mobile: true,
+            email: true,
+          },
+        },
+      }
+    })
+    // console.log(app, "app")
+    res.json(app)
+  }catch (e) {
+      res.status(500).json({ error: "Failed to delete item" });
+    }
+})
 
 export default docRouter;
