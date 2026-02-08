@@ -187,10 +187,10 @@ const DoctorsList = () => {
                 className="w-full pl-12 pr-4 py-3 rounded-xl border border-[var(--custom-gray-200)] focus:ring-2 focus:ring-[var(--custom-green-500)] focus:border-transparent transition-all duration-300"
               />
             </div>
-            <button className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--custom-gray-200)] hover:border-[var(--custom-green-500)] hover:bg-[var(--custom-green-50)] transition-all duration-300">
+            {/* <button className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--custom-gray-200)] hover:border-[var(--custom-green-500)] hover:bg-[var(--custom-green-50)] transition-all duration-300">
               <Filter size={20} className="text-[var(--custom-gray-500)]" />
               <span className="text-[var(--custom-gray-700)]">Filters</span>
-            </button>
+            </button> */}
           </div>
         </div>
 

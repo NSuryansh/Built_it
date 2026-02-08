@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Clock, Building, Youtube, ChevronRight, BookOpen, Sun, Brain, Heart, Headphones, PlayCircle } from "lucide-react"; 
+import { Clock, Building, Youtube, ChevronRight, BookOpen, Sun, Brain, Heart, Headphones, PlayCircle, VideoOff } from "lucide-react"; 
 import Navbar from "../../components/user/Navbar";
 import Footer from "../../components/common/Footer";
 import { checkAuth } from "../../utils/profile";
@@ -18,18 +18,88 @@ const iconMap = {
   Default: BookOpen
 };
 
-// ✅ HELPER: Extract Thumbnail from YouTube URL
-const getYouTubeThumbnail = (url) => {
-  if (!url) return "https://via.placeholder.com/640x360?text=No+Video+Link";
+// ✅ HELPER: Robust YouTube ID Extractor using URL Object (No Regex)
+const getYouTubeVideoId = (url) => {
+  if (!url) return null;
+  try {
+    const urlObj = new URL(url);
+    
+    // Case 1: Short links (youtu.be/ID)
+    if (urlObj.hostname.includes("youtu.be")) {
+      return urlObj.pathname.slice(1);
+    }
+    
+    // Case 2: Standard/Live/Shorts (youtube.com/...)
+    if (urlObj.hostname.includes("youtube.com")) {
+      if (urlObj.pathname.includes("/shorts/")) {
+        return urlObj.pathname.split("/shorts/")[1];
+      }
+      if (urlObj.pathname.includes("/live/")) {
+        return urlObj.pathname.split("/live/")[1];
+      }
+      if (urlObj.pathname.includes("/embed/")) {
+        return urlObj.pathname.split("/embed/")[1];
+      }
+      // Standard watch?v=ID
+      return urlObj.searchParams.get("v");
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
+};
+
+// ✅ SUB-COMPONENT: Video Card handles its own image state
+const VideoCard = ({ video }) => {
+  const videoId = getYouTubeVideoId(video.youtubeUrl);
+  const [imageError, setImageError] = useState(false);
   
-  // Regex to handle various YouTube URL formats (standard, short, embed)
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  const videoId = (match && match[2].length === 11) ? match[2] : null;
-  
-  return videoId 
+  // Construct thumbnail URL (hqdefault is most reliable)
+  const thumbnailUrl = videoId 
     ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` 
-    : "https://via.placeholder.com/640x360?text=Invalid+Link";
+    : null;
+
+  const handleClick = () => {
+    if (video.youtubeUrl) window.open(video.youtubeUrl, "_blank");
+  };
+
+  return (
+    <div 
+      onClick={handleClick}
+      className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
+    >
+      <div className="relative h-48 bg-gray-900 overflow-hidden flex items-center justify-center">
+        {!imageError && thumbnailUrl ? (
+          <img 
+            src={thumbnailUrl} 
+            alt={video.title} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          // Fallback: CSS Gradient (No external network request)
+          <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex flex-col items-center justify-center text-gray-400">
+            <VideoOff className="w-8 h-8 mb-2 opacity-50" />
+            <span className="text-xs font-medium">Preview Unavailable</span>
+          </div>
+        )}
+        
+        {/* Play Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
+          <PlayCircle className="w-12 h-12 text-white opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all drop-shadow-lg" />
+        </div>
+      </div>
+      
+      <div className="p-4">
+        <h3 className="font-bold text-lg text-gray-800 line-clamp-2 group-hover:text-[var(--custom-orange-600)] transition-colors">
+          {video.title}
+        </h3>
+        <p className="text-sm text-gray-500 mt-2 line-clamp-2">
+          {video.description}
+        </p>
+      </div>
+    </div>
+  );
 };
 
 const Stress = () => {
@@ -43,7 +113,6 @@ const Stress = () => {
   // Fetch Data Function
   const fetchStressData = async () => {
     try {
-      // Ensure this matches your server.js /api/doc
       const backendUrl = "http://localhost:3000/api/doc"; 
       
       const [articlesRes, videosRes] = await Promise.all([
@@ -52,18 +121,7 @@ const Stress = () => {
       ]);
 
       setArticles(articlesRes.data);
-
-      // Process videos to add Thumbnail URL
-      const processedVideos = videosRes.data.map(section => ({
-        ...section,
-        videos: section.videos.map(video => ({
-          ...video,
-          thumbnail: getYouTubeThumbnail(video.youtubeUrl), // Generate thumbnail
-          url: video.youtubeUrl // Ensure URL is accessible
-        }))
-      }));
-
-      setVideoSections(processedVideos);
+      setVideoSections(videosRes.data); // We pass raw data to sections, VideoCard handles parsing
 
     } catch (error) {
       console.error("Error fetching stress data:", error);
@@ -169,7 +227,7 @@ const Stress = () => {
           </div>
         </section>
 
-        {/* Video Sections - DIRECTLY RENDERED (No VideoSection Component) */}
+        {/* Video Sections */}
         <div className="space-y-12 mb-16">
           {videoSections.length > 0 ? videoSections.map((section, index) => (
             <section
@@ -190,36 +248,10 @@ const Stress = () => {
                 </div>
               </div>
 
-              {/* DIRECT VIDEO GRID RENDERING */}
+              {/* VIDEO GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {section.videos.map((video, idx) => (
-                  <div 
-                    key={video.id || idx}
-                    onClick={() => {
-                        if (video.url) window.open(video.url, "_blank");
-                    }}
-                    className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
-                  >
-                     <div className="relative h-48 bg-gray-200 overflow-hidden">
-                       <img 
-                         src={video.thumbnail || "https://via.placeholder.com/640x360?text=No+Thumbnail"} 
-                         alt={video.title} 
-                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                         onError={(e) => { e.target.src = "https://via.placeholder.com/640x360?text=Video"; }}
-                       />
-                       <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                         <PlayCircle className="w-12 h-12 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all drop-shadow-lg" />
-                       </div>
-                     </div>
-                     <div className="p-4">
-                       <h3 className="font-bold text-lg text-gray-800 line-clamp-2 group-hover:text-[var(--custom-orange-600)] transition-colors">
-                         {video.title}
-                       </h3>
-                       <p className="text-sm text-gray-500 mt-2 line-clamp-2">
-                         {video.description}
-                       </p>
-                     </div>
-                  </div>
+                  <VideoCard key={video.id || idx} video={video} />
                 ))}
               </div>
 

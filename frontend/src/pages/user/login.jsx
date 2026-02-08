@@ -40,6 +40,7 @@ const Login = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setisLoading] = useState(false);
   const [showBiometricModal, setShowBiometricModal] = useState(false);
+
   const handleGoogleResponse = async (response) => {
     const googleIdToken = response.credential;
 
@@ -62,6 +63,7 @@ const Login = () => {
       CustomToast("Something went wrong with Google login");
     }
   };
+
   useEffect(() => {
     const verifyAuth = async () => {
       const userAuthStatus = await checkAuth("user");
@@ -73,43 +75,11 @@ const Login = () => {
       }
     };
     verifyAuth();
-
-    // if (window.google) {
-    //   window.google.accounts.id.initialize({
-    //     client_id: "1042332428597-o0mn6raqjiqfg7datesv9cbq9u96oj5r.apps.googleusercontent.com",
-    //     callback: handleGoogleResponse,
-    //   });
-
-    //   window.google.accounts.id.renderButton(
-    //     document.getElementById("googleSignInDiv"),
-    //     { theme: "outline", size: "large", width: "100%" }
-    //   );
-    // }
   }, []);
 
   if (isAuthenticated === null) {
     return <CustomLoader text="Loading your wellness journey..." />;
   }
-
-  // useEffect(() => {
-  //   const initGoogle = () => {
-  //     if (window.google) {
-  //       window.google.accounts.id.initialize({
-  //         client_id: "1042332428597-o0mn6raqjiqfg7datesv9cbq9u96oj5r.apps.googleusercontent.com",
-  //         callback: handleGoogleResponse,
-  //       });
-  //       window.google.accounts.id.renderButton(
-  //         document.getElementById("googleSignInDiv"),
-  //         { theme: "outline", size: "large", width: "100%" }
-  //       );
-  //     } else {
-  //       setTimeout(initGoogle, 100); // retry in 100ms
-  //     }
-  //   };
-
-  //   initGoogle();
-  // }, []);
-
 
   const handlelogin = async (e) => {
     e.preventDefault();
@@ -135,8 +105,7 @@ const Login = () => {
 
     if (res.success) {
       localStorage.setItem("userid", res.user.id);
-
-      subscribeToPush(res.user.id);
+      // subscribeToPush(res.user.id);   // ← commented out – function not defined in this file
     }
 
     if (res["message"] === "Login successful") {
@@ -178,6 +147,7 @@ const Login = () => {
     }
     return base64;
   };
+
   const bufferToBase64url = (buffer) => {
     return btoa(String.fromCharCode(...new Uint8Array(buffer)))
       .replace(/\+/g, "-")
@@ -230,9 +200,6 @@ const Login = () => {
 
     const res = await fetch("http://localhost:3000/api/user/verifyBioLogin", {
       method: "POST",
-      // body: JSON.stringify({
-      //   emailId: username
-      // }),
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...response,
@@ -265,94 +232,97 @@ const Login = () => {
           )}
         </div>
 
-        <div className="space-y-4">
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-[var(--custom-orange-900)]"
-            >
-              Email
-            </label>
-            <input
-              id="username"
-              type="email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
-              placeholder="EmailId"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-[var(--custom-orange-900)]"
-            >
-              Password
-            </label>
-            <div className="relative">
+        <form onSubmit={handlelogin} className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-[var(--custom-orange-900)]"
+              >
+                Email
+              </label>
               <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                id="username"
+                type="email"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
-                placeholder="••••••••"
+                placeholder="EmailId"
                 required
               />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-500)] hover:text-[var(--custom-orange-900)]"
-                onClick={() => setShowPassword(!showPassword)}
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-[var(--custom-orange-900)]"
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="mt-1 w-full px-4 py-2 border border-[var(--custom-orange-200)] rounded-lg focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:border-transparent"
+                  placeholder="••••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--custom-gray-500)] hover:text-[var(--custom-orange-900)]"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              <button
+                type="button"   
+                onClick={() => setShowForgotModal(true)}
+                className="mt-1 text-sm text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)] transition-colors"
+              >
+                Forgot Password?
               </button>
             </div>
-            <button
-              onClick={() => setShowForgotModal(true)}
-              className="mt-1 text-sm text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)] transition-colors"
-            >
-              Forgot Password?
-            </button>
           </div>
-        </div>
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-          {/* <h2>Or</h2> */}
-          <GoogleLogin
-            onSuccess={handleGoogleResponse}
-            // onError={handleGoogleFailure}
-          />
-        </div>
-        <button
-          onClick={() => setShowBiometricModal(true)}
-          disabled={isLoading}
-          className="w-full flex justify-center items-center py-3 px-4 bg-[var(--custom-orange-100)] text-[var(--custom-orange-600)] rounded-lg hover:bg-[var(--custom-orange-200)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] "
-        >
-          <div className="flex items-center">
-            <Fingerprint className="h-5 w-5 mr-2" />
-            <span>Login with Biometric</span>
-          </div>
-        </button>
 
-        <button
-          disabled={isLoading}
-          onClick={handlelogin}
-          className="w-full flex justify-center items-center mt-3 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2 min-h-[48px]"
-        >
-          {isLoading ? (
-            <div className="flex items-center justify-center w-[24px] h-[24px]">
-              <CircularLoader
-                color="#ffffff"
-                size={24}
-                text={null}
-                className="inline-block"
-              />
+          <div style={{ textAlign: "center", marginTop: "30px" }}>
+            <GoogleLogin onSuccess={handleGoogleResponse} />
+          </div>
+
+          <button
+            type="button" 
+            onClick={() => setShowBiometricModal(true)}
+            disabled={isLoading}
+            className="w-full flex justify-center items-center py-3 px-4 bg-[var(--custom-orange-100)] text-[var(--custom-orange-600)] rounded-lg hover:bg-[var(--custom-orange-200)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] "
+          >
+            <div className="flex items-center">
+              <Fingerprint className="h-5 w-5 mr-2" />
+              <span>Login with Biometric</span>
             </div>
-          ) : (
-            <>Login</>
-          )}
-        </button>
+          </button>
+
+          <button
+            disabled={isLoading}
+            type="submit"   
+            className="w-full flex justify-center items-center mt-3 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2 min-h-[48px]"
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center w-[24px] h-[24px]">
+                <CircularLoader
+                  color="#ffffff"
+                  size={24}
+                  text={null}
+                  className="inline-block"
+                />
+              </div>
+            ) : (
+              <>Login</>
+            )}
+          </button>
+        </form>
+
         <p className="mt-4 text-sm text-center text-[var(--custom-black)]">
           If not registered{" "}
           <button
@@ -368,6 +338,7 @@ const Login = () => {
           <div className="flex-1/3 text-center">OR</div>
           <hr className="flex-1/3" />
         </div>
+
         <div className="flex w-full mt-2">
           <p className="w-full text-center">
             Login as a&nbsp;
