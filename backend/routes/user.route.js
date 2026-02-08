@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import bcrypt from "bcryptjs";
 import base64url from "base64url";
-import { webcrypto } from 'node:crypto';
+import { webcrypto } from "node:crypto";
 import {
   generateAuthenticationOptions,
   generateRegistrationOptions,
@@ -15,7 +15,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from "@prisma/client";
 // const prisma = new PrismaClient();
 
 dotenv.config();
@@ -65,8 +65,13 @@ userRouter.post("/signup", async (req, res) => {
     });
     res.status(201).json({ message: "User added" });
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-      return res.status(409).json({ error: `${e.meta.target[0]} already exists` });
+    if (
+      e instanceof Prisma.PrismaClientKnownRequestError &&
+      e.code === "P2002"
+    ) {
+      return res
+        .status(409)
+        .json({ error: `${e.meta.target[0]} already exists` });
     }
     console.error(e);
   }
@@ -116,9 +121,9 @@ userRouter.post(
       const options = await biometricOptions(user);
       return res.json({ options: options });
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  },
 );
 
 userRouter.post(
@@ -153,7 +158,7 @@ userRouter.post(
     });
 
     res.json({ options: options });
-  }
+  },
 );
 
 userRouter.post("/verifyBioLogin", async (req, res) => {
@@ -172,14 +177,14 @@ userRouter.post("/verifyBioLogin", async (req, res) => {
   // console.log(req.body)
   // console.log(user.credentials)
   const credential = user.credentials.find(
-    (c) => base64url.encode(Buffer.from(c.credentialID)) === req.body.id
+    (c) => base64url.encode(Buffer.from(c.credentialID)) === req.body.id,
   );
   // console.log(credential)
   if (!credential) {
     return res.status(400).json({ error: "Credential not recognized" });
   }
   const encodedCredentialId = base64url.encode(
-    Buffer.from(credential.credentialID)
+    Buffer.from(credential.credentialID),
   );
   // console.log(credential.counter)
   const verification = await verifyAuthenticationResponse({
@@ -218,7 +223,7 @@ userRouter.post("/verifyBioLogin", async (req, res) => {
     SECRET_KEY,
     {
       expiresIn: "1h",
-    }
+    },
   );
   return res.json({ success: true, token });
 });
@@ -317,14 +322,14 @@ userRouter.post("/google-login", async (req, res) => {
       SECRET_KEY,
       {
         expiresIn: "1h",
-      }
+      },
     );
 
     res.json({ success: true, token: appJwt, user: user });
   } catch (err) {
     res.status(401).json({ success: false, message: err.message });
   }
-})
+});
 userRouter.post("/login", async (req, res) => {
   const email = req.body["email"];
   const password = req.body["password"];
@@ -347,7 +352,7 @@ userRouter.post("/login", async (req, res) => {
     SECRET_KEY,
     {
       expiresIn: "1h",
-    }
+    },
   );
 
   res.json({ message: "Login successful", token });
@@ -403,10 +408,10 @@ userRouter.post(
         await prisma.authenticator.create({
           data: {
             credentialID: base64urlToBuffer(
-              verification.registrationInfo.credential.id
+              verification.registrationInfo.credential.id,
             ),
             publicKey: Buffer.from(
-              verification.registrationInfo.credential.publicKey
+              verification.registrationInfo.credential.publicKey,
             ),
             counter: verification.registrationInfo.credential.counter,
             deviceType: verification.registrationInfo.credentialDeviceType,
@@ -421,7 +426,7 @@ userRouter.post(
       console.log(e);
       return res.status(400).json({ error: e });
     }
-  }
+  },
 );
 
 userRouter.get("/getRequests", authorizeRoles("user"), async (req, res) => {
@@ -431,9 +436,9 @@ userRouter.get("/getRequests", authorizeRoles("user"), async (req, res) => {
       return res.status(403).json({ error: "Access denied" });
     }
     const reqs = await prisma.requests.findMany({
-      where: { user_id: userId, forDoctor: false },
+      where: { user_id: userId },
       include: {
-        doctor: true
+        doctor: true,
       },
     });
     res.json(reqs);
@@ -465,7 +470,7 @@ userRouter.delete(
       console.error("Error deleting notification: ", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
-  }
+  },
 );
 
 userRouter.get("/pastuserappt", authorizeRoles("user"), async (req, res) => {
@@ -572,7 +577,7 @@ userRouter.get(
     } catch (e) {
       return res.status(400).json({ message: "Error in appointment" });
     }
-  }
+  },
 );
 
 userRouter.post("/forgotPassword", async (req, res) => {
@@ -644,20 +649,18 @@ userRouter.post("/setFeedback", authorizeRoles("user"), async (req, res) => {
     const stars = req.body["stars"];
     const id = Number(req.body["id"]);
     const docId = req.body["doctorId"];
-    
-    
+
     const bodyUserId = Number(req.body["userId"]);
-    
+
     const tokenUserId = req.user.userId;
 
     if (!bodyUserId || bodyUserId !== tokenUserId) {
       console.log(`❌ Mismatch: Body(${bodyUserId}) !== Token(${tokenUserId})`);
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: "Access denied: User ID mismatch",
-        details: `Frontend sent: ${req.body["userId"]}, Token has: ${tokenUserId}`
+        details: `Frontend sent: ${req.body["userId"]}, Token has: ${tokenUserId}`,
       });
     }
-    
 
     const question1 = req.body["question1"];
     const question2 = req.body["question2"];
@@ -816,7 +819,10 @@ userRouter.post("/emerApp", async (req, res) => {
   }
 });
 
-userRouter.post("/accept-booking-by-user", authorizeRoles("user"), async (req, res) => {
+userRouter.post(
+  "/accept-booking-by-user",
+  authorizeRoles("user"),
+  async (req, res) => {
     try {
       const userId = Number(req.body["userId"]);
       const doctorId = Number(req.body["doctorId"]);
@@ -824,12 +830,14 @@ userRouter.post("/accept-booking-by-user", authorizeRoles("user"), async (req, r
       const dateTimeRaw = req.body["dateTime"];
       const reason = req.body["reason"] || "";
       const authUserId = Number(req.user?.userId);
-      
+
       const parsedDate = new Date(dateTimeRaw);
       const appointmentDate = parsedDate;
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (!user) return res.status(404).json({ message: "User not found" });
-      const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+      const doctor = await prisma.doctor.findUnique({
+        where: { id: doctorId },
+      });
       if (!doctor) return res.status(404).json({ message: "Doctor not found" });
       const result = await prisma.$transaction(async (tx) => {
         const appointment = await tx.appointments.create({
@@ -855,11 +863,12 @@ userRouter.post("/accept-booking-by-user", authorizeRoles("user"), async (req, r
       });
     } catch (error) {
       console.error("Error in accept-booking-by-user:", error);
-      return res.status(500).json({ message: "Internal Server Error", detail: String(error) });
+      return res
+        .status(500)
+        .json({ message: "Internal Server Error", detail: String(error) });
     }
-  }
+  },
 );
-
 
 userRouter.get(
   "/isUpcomingAppointment",
@@ -893,7 +902,35 @@ userRouter.get(
       console.error("Error checking for upcoming appointment:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
-  }
+  },
 );
+
+userRouter.get("/allSlots", authorizeRoles("user"), async (req, res) => {
+  const doc_id = Number(req.query["doc_id"]);
+  try {
+    const allSlots = await prisma.slots.findMany({
+      where: {
+        doctor_id: doc_id,
+      },
+      orderBy: [{ day_of_week: "asc" }, { starting_time: "asc" }],
+    });
+
+    const groupedSlots = allSlots.reduce((acc, slot) => {
+      const day = slot.day_of_week;
+
+      if (!acc[day]) {
+        acc[day] = [];
+      }
+
+      acc[day].push(slot);
+      return acc;
+    }, {});
+
+    res.json(groupedSlots);
+  } catch (error) {
+    console.error("Error checking for upcoming appointment:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 export default userRouter;

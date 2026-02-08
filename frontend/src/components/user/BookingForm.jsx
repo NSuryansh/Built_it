@@ -22,59 +22,40 @@ const BookingFormStep = ({
   isAuthenticated,
   isLoading,
 }) => {
-  const [slots, setAvailableSlots] = useState([]);
-  const [date, setSelectedDate] = useState("");
+  const [slots, setAvailableSlots] = useState([[]]);
+  const [date, setSelectedDate] = useState(0);
   const [time, setSelectedTime] = useState("");
   const token = localStorage.getItem("token");
   const [dates, setDates] = useState([]);
-  const DAYS_OF_WEEK = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thrusday",
-    "Friday",
-    "Saturday",
-  ];
 
-  useEffect(() => {
-    let dates_to_be_added = [];
-    [...Array(14)].map((_, index) => {
-      const date = new Date();
-      date.setDate(date.getDate() + index);
-      const day = DAYS_OF_WEEK[date.getDay()];
-      let found = false;
-      for (var i = 0; i < selectedDoctor.weekOff.length; i++) {
-        if (selectedDoctor.weekOff[i] == day) {
-          found = true;
-          break;
-        }
-      }
-      if (!found) dates_to_be_added.push(date);
-    });
-    setDates(dates_to_be_added);
-  }, []);
-
-  const fetchAvailableSlots = async (date) => {
+  const fetchAvailableSlots = async () => {
     try {
       const doctorId = selectedDoctor.id;
       const response = await fetch(
-        `http://localhost:3000/api/common/available-slots?date=${date}&docId=${doctorId}`,
+        `http://localhost:3000/api/user/allSlots?doc_id=${doctorId}`,
         { headers: { Authorization: "Bearer " + token } },
       );
       const data = await response.json();
-      console.log(data.availableSlots);
-      setAvailableSlots(data.availableSlots);
+      let tempDates = [];
+      let tempSlots = [];
+      [...Array(14)].map((_, index) => {
+        const date = new Date();
+        if (data[(date.getDay() + index) % 7]) {
+          date.setDate(date.getDate() + index);
+          tempDates.push(date);
+          tempSlots.push(data[index % 7]);
+        }
+      });
+      setDates(tempDates);
+      setAvailableSlots(tempSlots);
     } catch (error) {
       console.error("Error fetching available slots:", error);
     }
   };
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    setSelectedTime("");
-    fetchAvailableSlots(date);
-  };
+  useEffect(() => {
+    fetchAvailableSlots();
+  }, []);
 
   const handleTimeChange = (event) => {
     setSelectedTime(event.target.value);
@@ -220,24 +201,23 @@ const BookingFormStep = ({
                   name="date"
                   value={formData.date.split("T")[0]}
                   onChange={(e) => {
-                    setAvailableSlots([]);
-                    const newDate = e.target.value;
-                    const currentTime = formData.date.split("T")[2] || "09:00";
+                    setSelectedDate(new Date(e.target.value).getDay());
+                    setSelectedTime("");
+                    const currentTime =
+                      formData.date.split("T")[2] || "03:30:00.000Z";
                     handleChange({
                       target: {
                         name: "date",
-                        value: `${newDate}T${currentTime}`,
+                        value: `${e.target.value}T${currentTime}`,
                       },
                     });
-                    handleDateChange(newDate);
-                    fetchAvailableSlots(newDate);
+                    console.log(slots, date);
                   }}
                   className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                   required
                 >
                   <option value="">Select Date</option>
                   {dates.map((date, _) => {
-                    console.log(dates);
                     const formattedDate = format(date, "yyyy-MM-dd");
                     const displayDate = format(date, "d MMM");
                     return (
@@ -267,8 +247,8 @@ const BookingFormStep = ({
                   className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                 >
                   <option value="">Select Time</option>
-                  {Array.isArray(slots) &&
-                    slots.map((slot) => (
+                  {Array.isArray(slots[date]) &&
+                    slots[date].map((slot) => (
                       <option key={slot.id} value={slot.starting_time}>
                         {format(
                           new Date(slot.starting_time).getTime(),
