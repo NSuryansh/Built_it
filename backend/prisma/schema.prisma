@@ -147,6 +147,7 @@ model Appointments {
   dateTime    DateTime
   reason      String?
   isDoctor    Boolean  @default(false)
+  caseStatus CaseStatus @default(NEW)
   isEmergency Boolean  @default(false)
   stars       Int?
   doctor      Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
@@ -164,6 +165,7 @@ model PastAppointments {
   pdfLink   String?
   isDoctor  Boolean  @default(false)
   stars     Int?
+  caseStatus CaseStatus @default(OPEN)
   category  String?
   question1 String?
   question2 String?
@@ -321,6 +323,12 @@ enum Gender {
   MALE   @map("Male")
   FEMALE @map("Female")
   OTHER  @map("Other")
+}
+
+enum CaseStatus {
+  NEW
+  OPEN
+  CLOSED
 }
 
 model WellnessArticle {

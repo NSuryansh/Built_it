@@ -41,6 +41,7 @@ import AddDoctor from "./pages/admin/add_doctor";
 import AdminAppointments from "./pages/admin/appointments";
 import ErrorBoundaryFallback from "./pages/easter_egg/error_boundary_fallback";
 import AdminUser from "./pages/admin/user";
+import AdminCaseStats from "./pages/admin/AdminCaseStats";
 import LoadingPage from "./pages/sso/loading_page";
 import DoctorEventsList from "./pages/doctor/event_list";
 import DoctorAddEvent from "./pages/doctor/add_event";
@@ -211,6 +212,7 @@ export default function App() {
           <Route path="/admin/event_list" element={<EventsList />} />
           <Route path="/admin/add_event" element={<AddEvent />} />
           <Route path="/admin/add_doctor" element={<AddDoctor />} />
+          <Route path="/admin/AdminCaseStats" element={<AdminCaseStats />} />
           <Route path="/admin/user" element={<AdminUser />} />
           <Route path="/admin/appointments" element={<AdminAppointments />} />
           <Route

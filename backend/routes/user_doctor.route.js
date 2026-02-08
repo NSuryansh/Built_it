@@ -144,16 +144,9 @@ userDocRouter.get(
 );
 
 userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
-  const forDoctor = req.body["forDoctor"]|| true
+  const forDoctor = req.body["forDoctor"] || true;
   const userId = req.body["userId"];
   const doctorId = req.body["doctorId"];
-  // if (doctorId !== req.user.userId) {
-  //   console.log(userId)
-  //   console.log("H", doctorId)
-  //   console.log(req.user.id)
-  //   console.log("HELLO")
-  //   return res.status(403).json({ error: "Access denied" });
-  // }
   const dateTime = req.body["dateTime"];
   const date = new Date();
   const newDate = new Date(dateTime);
@@ -161,6 +154,7 @@ userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
   const some = new Date(newDate.getTime() - userTimezoneOffset);
   const reason = req.body["reason"];
   const appId = req.body["id"];
+
   try {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
@@ -172,6 +166,18 @@ userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
+    // 1. Determine Case Status
+    // Check past appointments to see if this is a returning patient
+    const pastVisits = await prisma.pastAppointments.count({
+      where: {
+        user_id: userId,
+        doc_id: doctorId,
+      },
+    });
+
+    // If 0 visits => NEW. If > 0 visits => OPEN (regardless of if previous was closed)
+    const status = pastVisits === 0 ? "NEW" : "OPEN";
+
     const result = await prisma.$transaction(async (prisma) => {
       const appointment = await prisma.appointments.create({
         data: {
@@ -180,14 +186,17 @@ userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
           dateTime: some,
           reason: reason,
           isDoctor: forDoctor,
+          caseStatus: status, // ✅ Save the status
         },
       });
 
-      const reqDel = await prisma.requests.delete({
-        where: { id: parseInt(appId) },
-      });
+      if (appId) {
+        await prisma.requests.delete({
+          where: { id: parseInt(appId) },
+        });
+      }
 
-      return { appointment, reqDel };
+      return { appointment, reqDel: appId ? "deleted" : "none" };
     });
 
     await sendEmail(
