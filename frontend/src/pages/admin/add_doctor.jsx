@@ -84,7 +84,7 @@ const AddDoctor = () => {
           password: password,
           reg_id: regId,
           desc: desc,
-          weekOff: weekOffs, 
+          weekOff: weekOffs,
           address: "<Please Change>",
           office_address: "<Please Change>",
           experience: "<Please Change>",
@@ -104,7 +104,6 @@ const AddDoctor = () => {
       // Only run this if success
       CustomToast("Therapist Added Successfully", "green");
       navigate("/admin/doctor_list");
-      
     } catch (e) {
       console.error(e);
       CustomToast("Network connection failed", "red");

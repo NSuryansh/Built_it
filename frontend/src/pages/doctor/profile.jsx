@@ -15,6 +15,7 @@ import {
   BriefcaseBusiness,
   Calendar,
   UserX,
+  Link2,
 } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import Footer from "../../components/common/Footer";
@@ -39,6 +40,7 @@ const DoctorProfile = () => {
     specialization: "<Please Change>",
     experience: "<Please Change>",
     additionalExperience: "<Please Change>",
+    folderLink: "<Please Change>",
     education: ["<Add>"],
     weekOff: [],
     availability: {
@@ -162,6 +164,7 @@ const DoctorProfile = () => {
           education: educations,
           availability: avail,
           weekOff: data.doctor.weekOff,
+          folderLink: data.doctor.folderLink,
         });
         setProfileImage(data.doctor.img);
         localStorage.setItem("docImage", data.doctor.img);
@@ -178,6 +181,7 @@ const DoctorProfile = () => {
           education: educations,
           availability: avail,
           weekOff: data.doctor.weekOff,
+          folderLink: data.doctor.folderLink,
         });
         setFetched(true);
       } catch (error) {
@@ -301,6 +305,7 @@ const DoctorProfile = () => {
       formData.append("address", editedProfile.address);
       formData.append("office_address", editedProfile.office_address);
       formData.append("experience", editedProfile.experience);
+      formData.append("folderLink", editedProfile.folderLink);
       formData.append(
         "additionalExperience",
         editedProfile.additionalExperience || "",
@@ -604,6 +609,29 @@ const DoctorProfile = () => {
                         {profile.office_address}
                       </p>
                     </div>
+                  )}
+                </div>
+                <div className="flex items-center group">
+                  <Link2 className="h-5 w-5 text-[var(--custom-blue-600)] mr-3 transition-transform group-hover:scale-125" />
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editedProfile.folderLink}
+                      onChange={(e) =>
+                        setEditedProfile({
+                          ...editedProfile,
+                          folderLink: e.target.value,
+                        })
+                      }
+                      placeholder={
+                        editedProfile.folderLink || "Enter folder link"
+                      }
+                      className="w-4/5 sm:w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
+                    />
+                  ) : (
+                    <span className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
+                      {profile.folderLink || "<Please Change>"}
+                    </span>
                   )}
                 </div>
               </div>

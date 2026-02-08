@@ -52,6 +52,8 @@ export const checkAuth = async (userType) => {
       localStorage.setItem("reg_id", res2["doctor"]["reg_id"]);
       localStorage.setItem("desc", res2["doctor"]["desc"]);
       localStorage.setItem("address", res2["doctor"]["address"]);
+      localStorage.setItem("weekOff", res2["doctor"]["weekOff"]);
+      localStorage.setItem("folderLink", res2["doctor"]["folderLink"]);
       localStorage.setItem("isProfileDone", res2["doctor"]["isProfileDone"]);
       localStorage.setItem("office_address", res2["doctor"]["office_address"]);
       localStorage.setItem("experience", res2["doctor"]["experience"]);
