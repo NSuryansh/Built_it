@@ -247,6 +247,7 @@ const AdminLogin = () => {
                 </button>
               </div>
               <button
+                type="button"
                 onClick={() => setShowForgotModal(true)}
                 className="mt-1 text-sm text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)] transition-colors"
               >
