@@ -44,6 +44,8 @@ const DoctorAppointment = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isBar, setIsBar] = useState(false);
   const [isRescheduling, setisRescheduling] = useState(false);
+  const [acceptingId, setAcceptingId] = useState(null);
+  const [doneId, setDoneId] = useState(null);
   const [isFetched, setisFetched] = useState(null);
   const [timePeriodData, setTimePeriodData] = useState({
     "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
@@ -243,7 +245,7 @@ const DoctorAppointment = () => {
       urlSetRef.current.forEach((u) => {
         try {
           URL.revokeObjectURL(u);
-        } catch (e) {}
+        } catch (e) { }
       });
       urlSetRef.current.clear();
     };
@@ -390,6 +392,7 @@ const DoctorAppointment = () => {
   }, []);
 
   const handleMarkAsDone = (id) => {
+    
     setCompletedNotes((prev) => ({
       ...prev,
       [id]: prev[id] ? "" : "",
@@ -413,7 +416,7 @@ const DoctorAppointment = () => {
         try {
           URL.revokeObjectURL(toRemove.blobUrl);
           urlSetRef.current.delete(toRemove.blobUrl);
-        } catch (e) {}
+        } catch (e) { }
       }
       await pdfDB.pdfs.delete(id);
       setFiles((prev) => prev.filter((p) => p.id !== id));
@@ -428,6 +431,7 @@ const DoctorAppointment = () => {
   };
 
   const acceptApp = async (appointment) => {
+    setAcceptingId(appointment.id);
     appointment.dateTime = new Date(appointment.dateTime);
     const res = await fetch("http://localhost:3000/api/user_doc/book", {
       method: "POST",
@@ -453,6 +457,7 @@ const DoctorAppointment = () => {
   };
 
   const deleteApp = async (appointment) => {
+    setDoneId(appointment.id)
     const formData = new FormData();
     for (const f of files) {
       const pdf = await pdfDB.pdfs.get(f.id);
@@ -634,21 +639,23 @@ const DoctorAppointment = () => {
                           </div>
                         </div>
                         <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
-                          {completedNotes[appointment.id] !== undefined ? (
+                          {completedNotes[appointment.id] !== undefined ?  doneId !== appointment.id ? (
                             <button
                               onClick={() => deleteApp(appointment)}
                               className="px-6 py-2.5 bg-[var(--custom-red-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-red-600)] transform hover:scale-105 transition-all duration-300"
                             >
                               Done
                             </button>
-                          ) : (
-                            <button
-                              onClick={() => handleMarkAsDone(appointment.id)}
-                              className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
-                            >
-                              Mark as Done
-                            </button>
-                          )}
+                          ) : 
+                              (<Loader className="mx-auto animate-spin" />) :
+                              (<button
+                                onClick={() => handleMarkAsDone(appointment.id)}
+                                className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
+                              >
+                                Mark as Done
+                              </button>
+
+                              )}
                           {selectedAppointment !== appointment.id && (
                             <button
                               onClick={() => handleReschedule(appointment)}
@@ -909,12 +916,16 @@ const DoctorAppointment = () => {
                           </div>
                         </div>
                         <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
-                          <button
-                            onClick={() => acceptApp(appointment)}
-                            className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
-                          >
-                            Accept
-                          </button>
+                          {acceptingId === appointment.id ? (
+                            <Loader className="mx-auto animate-spin" />
+                          ) : (
+                            <button
+                              onClick={() => acceptApp(appointment)}
+                              className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
+                            >
+                              Accept
+                            </button>
+                          )}
                           {selectedAppointment !== appointment.id && (
                             <button
                               onClick={() => handleReschedule(appointment)}

@@ -720,9 +720,9 @@ docRouter.post(
         return res.status(403).json({ error: "Access denied" });
       }
       const files = req.files;
-      if (!files || files.length === 0) {
-        return res.status(400).json({ error: "PDF files missing" });
-      }
+      // if (!files || files.length === 0) {
+      //   return res.status(400).json({ error: "PDF files missing" });
+      // }
 
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
       const user = await prisma.user.findUnique({ where: { id: user_id } });

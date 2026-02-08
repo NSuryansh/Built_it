@@ -14,7 +14,7 @@ const UserAppointments = () => {
   const [upcomingAppointments, setupcomingAppointments] = useState([]);
   const [requestedAppoinments, setrequestedAppoinments] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [fixed, setFixed] = useState(false); // toggled after accept/reject to refresh lists
+  const [fixed, setFixed] = useState(false); 
   const user_id = localStorage.getItem("userid");
   const [submittedRatings, setSubmittedRatings] = useState({});
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ const UserAppointments = () => {
       )
       if (!res.ok) throw new Error("Failed to fetch appointment requests");
       const resp = await res.json();
-      console.log(resp)
+      console.log(resp, "re")
       setrequestedAppoinments(resp)
     } catch (error) {
       console.error(error);
@@ -127,7 +127,7 @@ const UserAppointments = () => {
 
       const resp = await res.json();
 
-      // Update UI locally: remove from requested and add to upcoming (if booking returns booked appt use that)
+      
       setrequestedAppoinments((prev) => prev.filter((a) => a.id !== appointment.id));
 
       const bookedAppointment = resp.appointment || {
@@ -136,21 +136,20 @@ const UserAppointments = () => {
       };
       setupcomingAppointments((prev) => [bookedAppointment, ...prev]);
 
-      // notify user
       await sendNotif(appointment, "accepted");
 
       CustomToast("Appointment accepted and booked");
-      setFixed((f) => !f); // trigger refetch if desired
+      setFixed((f) => !f);
     } catch (error) {
       console.error(error);
       CustomToast("Failed to accept appointment");
     }
   };
 
-  // Called when user rejects a requested appointment
-  const onRejected = async (appointment) => {
+  const onRejected = async (appointment, reason) => {
+    console.log(appointment, "Rejected", reason)
     try {
-      const res = await fetch("http://localhost:3000/api/user_doc/respondRequest", {
+      const res = await fetch("http://localhost:3000/api/user_doc/cancelRequest", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -158,16 +157,15 @@ const UserAppointments = () => {
         },
         body: JSON.stringify({
           id: appointment.id,
-          status: "rejected",
+          reason: reason,
         }),
       });
-
+ 
       if (!res.ok) {
         const err = await res.text();
         throw new Error(err || "Failed to reject appointment");
       }
 
-      // update local UI
       setrequestedAppoinments((prev) => prev.filter((a) => a.id !== appointment.id));
 
       await sendNotif(appointment, "rejected");
@@ -183,7 +181,6 @@ const UserAppointments = () => {
     getPrevApp();
     getCurrApp();
     getReqApp();
-    // include fixed so lists refresh after accept/reject
   }, [submittedRatings, fixed]);
 
   const handleClosePopup = () => {
@@ -246,7 +243,6 @@ const UserAppointments = () => {
             </div>
           </div>
 
-          {/* Upcoming */}
           <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
             <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
@@ -279,7 +275,6 @@ const UserAppointments = () => {
             </div>
           </div>
 
-          {/* Previous */}
           <div className="bg-[var(--custom-white)] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-[var(--custom-orange-100)] transition-all duration-300 hover:shadow-2xl">
             <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-[var(--custom-orange-900)] flex items-center gap-3">
