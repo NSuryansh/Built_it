@@ -55,31 +55,46 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
     desc,
     address,
     office_address,
-    experenice,
+    experience,
     img,
     weekOff,
   } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  // const imgUrl = uploadImage(img)
+
   try {
-    const doc = await prisma.doctor.create({
-      data: {
-        name: name,
-        email: email,
-        mobile: mobile,
-        password: hashedPassword,
-        reg_id: reg_id,
-        address: address,
-        office_address: office_address,
-        experience: experenice,
-        desc: desc,
-        img: img,
-        weekOff: weekOff,
+    const existingDoc = await prisma.doctor.findFirst({
+      where: {
+        OR: [{ email: email }, { mobile: mobile }, { reg_id: reg_id }],
       },
     });
-    res.json({ message: "doc added", doc: doc });
+
+    if (existingDoc) {
+      return res.status(400).json({ 
+        error: "Doctor with this Email, Mobile, or Reg ID already exists." 
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const doc = await prisma.doctor.create({
+      data: {
+        name,
+        email,
+        mobile,
+        password: hashedPassword,
+        reg_id,
+        address,
+        office_address,
+        experience,
+        desc,
+        img,
+        weekOff,
+      },
+    });
+    
+    res.json({ message: "doc added", doc });
   } catch (e) {
-    res.json({ error: e });
+    console.error("Error adding doctor:", e);
+    res.status(500).json({ error: e.message || "Internal Server Error" });
   }
 });
 

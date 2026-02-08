@@ -30,10 +30,11 @@ model User {
   invite      Notifications[]    @relation("ChatInvite")
   notif       Notifications[]    @relation("User")
   // resetTokens PasswordResetToken[]
-  pastApp     PastAppointments[]
-  referral    Referrals[]
-  request     Requests[]
-  messages    Message[]
+  pastApp          PastAppointments[]
+  referral         Referrals[]
+  request          Requests[]
+  messages         Message[]
+  CancelledRequest CancelledRequest[]
 
   @@map("user")
 }
@@ -86,6 +87,7 @@ model Doctor {
   avgRating            Decimal            @default(0)
   isInactive           Boolean            @default(false)
   weekOff              String[]
+  folderLink           String?
   certificaition       DocCertification[]
   education            DocEducation[]
   emerApp              EmergencyApp[]
@@ -96,6 +98,7 @@ model Doctor {
   request              Requests[]
   slot                 Slots[]
   messages             Message[]
+  CancelledRequest     CancelledRequest[]
 
   @@map("doctor")
 }
@@ -170,6 +173,22 @@ model PastAppointments {
   user      User?    @relation(fields: [user_id], references: [id])
 
   @@map("pastApp")
+}
+
+model CancelledRequest {
+  id              Int       @id @default(autoincrement())
+  user_id         Int
+  doctor_id       Int
+  reason          String
+  forDoctor       Boolean   @default(false)
+  appointmentTime DateTime?
+  dateTime        DateTime  @default(now())
+  doctor          Doctor    @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([doctor_id])
+  @@map("cancelled_request")
 }
 
 model Requests {
@@ -315,20 +334,20 @@ model WellnessArticle {
 }
 
 model WellnessVideo {
-  id          Int      @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   sectionTitle String
-  title       String
-  description String
-  youtubeUrl  String
-  createdAt   DateTime @default(now())
+  title        String
+  description  String
+  youtubeUrl   String
+  createdAt    DateTime @default(now())
 }
 
 model EntertainmentItem {
-  id          Int      @id @default(autoincrement())
-  type        String
-  category    String
-  title       String
-  link        String
-  imageUrl    String
-  createdAt   DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  type      String
+  category  String
+  title     String
+  link      String
+  imageUrl  String
+  createdAt DateTime @default(now())
 }

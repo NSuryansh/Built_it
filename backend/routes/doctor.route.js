@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
 import { uploadToGoogleDrive } from "../utils/GoogleDriveUpload.js";
 import { multerupload } from "../middlewares/multer.middleware.js";
+import { drive } from "../utils/GoogleDriveSetup.js";
 dotenv.config();
 
 const docRouter = Router();
@@ -26,6 +27,24 @@ async function uploadImage(path) {
   const results = await cloudinary.uploader.upload(path);
   return results["url"];
 }
+
+const validateDriveFolder = async (folderLink) => {
+  const folderId = folderLink.split("/")[folderLink.split("/").length - 1];
+  try {
+    const res = await drive.files.get({
+      fileId: folderId,
+      fields: "id, name, mimeType",
+    });
+
+    if (res.data.mimeType !== "application/vnd.google-apps.folder") {
+      return "Not a folder";
+    }
+
+    return "OK";
+  } catch {
+    return "Folder not accessible by service account";
+  }
+};
 
 docRouter.post("/login", async (req, res) => {
   // console.log(req.body);
@@ -50,7 +69,7 @@ docRouter.post("/login", async (req, res) => {
     SECRET_KEY,
     {
       expiresIn: "1h",
-    }
+    },
   );
 
   res.json({ message: "Login successful", token });
@@ -152,7 +171,7 @@ docRouter.get(
     } catch (e) {
       return res.status(400).json({ message: "Error in appointments" });
     }
-  }
+  },
 );
 
 docRouter.post("/reschedule", async (req, res) => {
@@ -174,7 +193,7 @@ docRouter.post("/reschedule", async (req, res) => {
 Your appointment with ${docName} at ${origTime} has been rescheduled.
 New Date: ${newTime}
 Regards  
-Calm Connect`
+Calm Connect`,
     );
     res.json(reschedule);
   } catch (e) {
@@ -211,7 +230,7 @@ docRouter.get("/reqApp", authorizeRoles("doc"), async (req, res) => {
     return res.status(403).json({ error: "Access denied" });
   }
   const appt = await prisma.requests.findMany({
-    where: { doctor_id: docId, forDoctor: true },
+    where: { doctor_id: docId },
     include: {
       user: {
         select: {
@@ -240,7 +259,7 @@ docRouter.get("/profile", authorizeRoles("doc"), async (req, res) => {
     });
     // console.log(doctor);
     res.json(
-      JSON.parse(JSON.stringify({ doctor: doctor, message: "Doctor found" }))
+      JSON.parse(JSON.stringify({ doctor: doctor, message: "Doctor found" })),
     );
   } catch (e) {
     console.error(e);
@@ -456,8 +475,8 @@ docRouter.put(
         certifi,
         isProfileDone,
         desc,
+        folderLink,
       } = req.body;
-      console.log(additionalExperience);
       if (id !== req.user.userId.toString()) {
         return res.status(403).json({ error: "Access denied" });
       }
@@ -487,14 +506,6 @@ docRouter.put(
         return res.status(400).json({ error: "Invalid doctor ID" });
       }
 
-      const orConditions = [];
-      if (address) orConditions.push({ address });
-      if (office_address) orConditions.push({ office_address });
-      if (desc) orConditions.push({ desc });
-      if (experience != "null") orConditions.push({ experience });
-      if (additionalExperience != "null")
-        orConditions.push({ additionalExperience });
-
       const existingDoctor = await prisma.doctor.findUnique({
         where: {
           id: doctorId,
@@ -515,6 +526,12 @@ docRouter.put(
       if (experience != null) updatedData.experience = experience.trim();
       if (additionalExperience?.trim())
         updatedData.additionalExperience = additionalExperience.trim();
+      if (folderLink?.trim()) {
+        if (await validateDriveFolder(folderLink) == "OK")
+          updatedData.folderLink = folderLink.trim();
+        else
+          return res.status(400).json({ error: "Folder Link not accessible" });
+      }
 
       if (url) updatedData.img = url;
       if (isProfileDone) updatedData.isProfileDone = isProfileDone;
@@ -571,7 +588,7 @@ docRouter.put(
       console.error("Error updating Doctor: ", error);
       res.status(500).json({ error: error.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 docRouter.post("/add-slot", authorizeRoles("doc"), async (req, res) => {
@@ -720,9 +737,9 @@ docRouter.post(
         return res.status(403).json({ error: "Access denied" });
       }
       const files = req.files;
-      if (!files || files.length === 0) {
-        return res.status(400).json({ error: "PDF files missing" });
-      }
+      // if (!files || files.length === 0) {
+      //   return res.status(400).json({ error: "PDF files missing" });
+      // }
 
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
       const user = await prisma.user.findUnique({ where: { id: user_id } });
@@ -732,9 +749,8 @@ docRouter.post(
         const data = await uploadToGoogleDrive(file, {
           therapistName: doc.name,
           patientName: user.username,
-          dateTime: `${dateTime.getDate()}-${
-            dateTime.getMonth() + 1
-          }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+          dateTime: `${dateTime.getDate()}-${dateTime.getMonth() + 1
+            }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
         });
         driveLink = data.shareableLink;
       }
@@ -759,7 +775,8 @@ docRouter.post(
       console.error(e);
       res.status(500).json({ error: "Internal server error" });
     }
-  });
+  },
+);
 // ==========================================
 // PASTE THIS IN docRouter.js
 // ==========================================
@@ -788,29 +805,37 @@ docRouter.get("/get-articles", async (req, res) => {
   }
 });
 
-docRouter.put("/update-article/:id", authorizeRoles("doc"), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, description, url, source, readTime, iconName } = req.body;
-    const updated = await prisma.wellnessArticle.update({
-      where: { id: Number(id) },
-      data: { title, description, url, source, readTime, iconName },
-    });
-    res.json({ message: "Article updated", updated });
-  } catch (e) {
-    res.status(500).json({ error: "Failed to update article" });
-  }
-});
+docRouter.put(
+  "/update-article/:id",
+  authorizeRoles("doc"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title, description, url, source, readTime, iconName } = req.body;
+      const updated = await prisma.wellnessArticle.update({
+        where: { id: Number(id) },
+        data: { title, description, url, source, readTime, iconName },
+      });
+      res.json({ message: "Article updated", updated });
+    } catch (e) {
+      res.status(500).json({ error: "Failed to update article" });
+    }
+  },
+);
 
-docRouter.delete("/delete-article/:id", authorizeRoles("doc"), async (req, res) => {
-  try {
-    const { id } = req.params;
-    await prisma.wellnessArticle.delete({ where: { id: Number(id) } });
-    res.json({ message: "Article deleted successfully" });
-  } catch (e) {
-    res.status(500).json({ error: "Failed to delete article" });
-  }
-});
+docRouter.delete(
+  "/delete-article/:id",
+  authorizeRoles("doc"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      await prisma.wellnessArticle.delete({ where: { id: Number(id) } });
+      res.json({ message: "Article deleted successfully" });
+    } catch (e) {
+      res.status(500).json({ error: "Failed to delete article" });
+    }
+  },
+);
 
 // --- 2. WELLNESS VIDEOS ---
 
@@ -837,7 +862,7 @@ docRouter.get("/get-videos", async (req, res) => {
       } else {
         acc.push({
           title: video.sectionTitle,
-          description: "Curated videos", 
+          description: "Curated videos",
           videos: [video],
         });
       }
@@ -863,49 +888,58 @@ docRouter.put("/update-video/:id", authorizeRoles("doc"), async (req, res) => {
   }
 });
 
-docRouter.delete("/delete-video/:id", authorizeRoles("doc"), async (req, res) => {
-  try {
-    const { id } = req.params;
-    await prisma.wellnessVideo.delete({ where: { id: Number(id) } });
-    res.json({ message: "Video deleted successfully" });
-  } catch (e) {
-    res.status(500).json({ error: "Failed to delete video" });
-  }
-});
+docRouter.delete(
+  "/delete-video/:id",
+  authorizeRoles("doc"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      await prisma.wellnessVideo.delete({ where: { id: Number(id) } });
+      res.json({ message: "Video deleted successfully" });
+    } catch (e) {
+      res.status(500).json({ error: "Failed to delete video" });
+    }
+  },
+);
 
 // --- 3. ENTERTAINMENT ---
 
-docRouter.post("/add-entertainment", authorizeRoles("doc"), upload.single("image"), async (req, res) => {
-  try {
-    const { type, category, title, link } = req.body;
-    const file = req.file;
-    if (!file) return res.status(400).json({ error: "Image is required" });
+docRouter.post(
+  "/add-entertainment",
+  authorizeRoles("doc"),
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { type, category, title, link } = req.body;
+      const file = req.file;
+      if (!file) return res.status(400).json({ error: "Image is required" });
 
-    // Upload to Cloudinary
-    const imageUrl = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream((error, result) => {
-        if (error) return reject(error);
-        resolve(result.secure_url);
+      // Upload to Cloudinary
+      const imageUrl = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream((error, result) => {
+          if (error) return reject(error);
+          resolve(result.secure_url);
+        });
+        stream.end(file.buffer);
       });
-      stream.end(file.buffer);
-    });
 
-    const item = await prisma.entertainmentItem.create({
-      data: { type, category, title, link, imageUrl },
-    });
-    res.json({ message: "Entertainment item added", item });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Failed to add item" });
-  }
-});
+      const item = await prisma.entertainmentItem.create({
+        data: { type, category, title, link, imageUrl },
+      });
+      res.json({ message: "Entertainment item added", item });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Failed to add item" });
+    }
+  },
+);
 
 docRouter.get("/get-entertainment", async (req, res) => {
   try {
     const items = await prisma.entertainmentItem.findMany();
-    
+
     const groupedData = items.reduce((acc, item) => {
-      const typeKey = item.type; 
+      const typeKey = item.type;
       if (!acc[typeKey]) {
         acc[typeKey] = [];
       }
@@ -920,44 +954,82 @@ docRouter.get("/get-entertainment", async (req, res) => {
   }
 });
 
-docRouter.put("/update-entertainment/:id", authorizeRoles("doc"), upload.single("image"), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { type, category, title, link } = req.body;
-    const file = req.file;
-    
-    let updateData = { type, category, title, link };
+docRouter.put(
+  "/update-entertainment/:id",
+  authorizeRoles("doc"),
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { type, category, title, link } = req.body;
+      const file = req.file;
 
-    if (file) {
-      const imageUrl = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream((error, result) => {
-          if (error) return reject(error);
-          resolve(result.secure_url);
+      let updateData = { type, category, title, link };
+
+      if (file) {
+        const imageUrl = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream((error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url);
+          });
+          stream.end(file.buffer);
         });
-        stream.end(file.buffer);
+        updateData.imageUrl = imageUrl;
+      }
+
+      const updated = await prisma.entertainmentItem.update({
+        where: { id: Number(id) },
+        data: updateData,
       });
-      updateData.imageUrl = imageUrl;
+      res.json({ message: "Item updated", updated });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Failed to update item" });
     }
+  },
+);
 
-    const updated = await prisma.entertainmentItem.update({
-      where: { id: Number(id) },
-      data: updateData,
-    });
-    res.json({ message: "Item updated", updated });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Failed to update item" });
-  }
-});
+docRouter.delete(
+  "/delete-entertainment/:id",
+  authorizeRoles("doc"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      await prisma.entertainmentItem.delete({ where: { id: Number(id) } });
+      res.json({ message: "Item deleted successfully" });
+    } catch (e) {
+      res.status(500).json({ error: "Failed to delete item" });
+    }
+  },
+);
 
-docRouter.delete("/delete-entertainment/:id", authorizeRoles("doc"), async (req, res) => {
+docRouter.get("/fetchCancelledAppoinments", authorizeRoles("doc"), async (req, res) => {
   try {
-    const { id } = req.params;
-    await prisma.entertainmentItem.delete({ where: { id: Number(id) } });
-    res.json({ message: "Item deleted successfully" });
-  } catch (e) {
-    res.status(500).json({ error: "Failed to delete item" });
-  }
-});
+    const docId = Number(req.query["doctorId"]);
+    // if (docId !== req.user.userId) {
+    //   return res.status(403).json({ error: "Access denied" });
+    // }
+    console.log(docId)
+    const app = await prisma.cancelledRequest.findMany({
+      where: {
+        doctor_id: docId
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+            alt_mobile: true,
+            mobile: true,
+            email: true,
+          },
+        },
+      }
+    })
+    // console.log(app, "app")
+    res.json(app)
+  }catch (e) {
+      res.status(500).json({ error: "Failed to delete item" });
+    }
+})
 
 export default docRouter;

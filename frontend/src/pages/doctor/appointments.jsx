@@ -1,14 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  User,
-  CircleUser,
-  Clock,
-  Phone,
-  FileText,
-  Loader,
-  Mail,
-  ChevronDown,
-} from "lucide-react";
+import { User, CircleUser, Clock, Phone, FileText, Loader, Mail, ChevronDown } from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import Footer from "../../components/common/Footer";
 import { format } from "date-fns";
@@ -17,21 +8,16 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/common/SessionExpired";
 import { TimeChange, TimeReduce } from "../../components/common/TimeChange";
 import CustomToast from "../../components/common/CustomToast";
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import CustomLoader from "../../components/common/CustomLoader";
 import { pdfDB } from "../../db/pdfDB";
+
+const REASONS = [
+  "Man nahi kar raha ab",
+  "backchodi kar raha tha haahhaha",
+  "Nahi aunga jao jo karna karo",
+  "None of the above",
+];
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -44,7 +30,13 @@ const DoctorAppointment = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isBar, setIsBar] = useState(false);
   const [isRescheduling, setisRescheduling] = useState(false);
+  const [acceptingId, setAcceptingId] = useState(null);
+  const [doneId, setDoneId] = useState(null);
   const [isFetched, setisFetched] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [selectedReason, setSelectedReason] = useState("");
+  const [customReason, setCustomReason] = useState("");
+  const [cancellingAppointment, setCancellingAppointment] = useState(null);
   const [timePeriodData, setTimePeriodData] = useState({
     "Last 1 Month": { UG: 0, PG: 0, PHD: 0 },
     "Last 3 Months": { UG: 0, PG: 0, PHD: 0 },
@@ -52,7 +44,6 @@ const DoctorAppointment = () => {
     "Last 12 Months": { UG: 0, PG: 0, PHD: 0 },
   });
   const [note, setNote] = useState("");
-  // Added Category State
   const [category, setCategory] = useState("");
   const navigate = useNavigate();
   const [slots, setAvailableSlots] = useState([]);
@@ -60,9 +51,9 @@ const DoctorAppointment = () => {
   const token = localStorage.getItem("token");
   const fileInputRef = useRef(null);
   const [files, setFiles] = useState([]);
+  const [cancelledAppoinments, setCancelledAppoinments] = useState([])
   const urlSetRef = useRef(new Set());
 
-  // Define Appointment Categories
   const APPOINTMENT_CATEGORIES = [
     "General Consultation",
     "Mental Health",
@@ -224,7 +215,7 @@ const DoctorAppointment = () => {
           },
           body: JSON.stringify({
             userid: appointment["user_id"],
-            message: `Your appointment request has been accepted!`,
+            message: `Your appointment request has been updated.`,
             userType: "user",
           }),
         }
@@ -243,7 +234,7 @@ const DoctorAppointment = () => {
       urlSetRef.current.forEach((u) => {
         try {
           URL.revokeObjectURL(u);
-        } catch (e) {}
+        } catch (e) { }
       });
       urlSetRef.current.clear();
     };
@@ -315,16 +306,28 @@ const DoctorAppointment = () => {
           headers: { Authorization: "Bearer " + token },
         }
       );
-      const resp2 = await res2.json();
+
+      const res3 = await fetch(
+        `http://localhost:3000/api/doc/fetchCancelledAppoinments?doctorId=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token }
+        }
+      )
       const resp = await res.json();
-      for (let i = 0; i < resp2.length; i++) {
-        resp2[i].dateTime = TimeChange(new Date(resp2[i].dateTime).getTime());
-      }
+      const resp2 = await res2.json();
+      const resp3 = await res3.json();
       for (let i = 0; i < resp.length; i++) {
         resp[i].dateTime = TimeChange(new Date(resp[i].dateTime).getTime());
       }
+      for (let i = 0; i < resp2.length; i++) {
+        resp2[i].dateTime = TimeChange(new Date(resp2[i].dateTime).getTime());
+      }
+      for (let i = 0; i < resp3.length; i++) {
+        resp3[i].dateTime = TimeChange(new Date(resp3[i].dateTime).getTime());
+      }
       setapp(resp);
       setcurr(resp2);
+      setCancelledAppoinments(resp3)
       setisFetched(true);
     };
 
@@ -413,7 +416,7 @@ const DoctorAppointment = () => {
         try {
           URL.revokeObjectURL(toRemove.blobUrl);
           urlSetRef.current.delete(toRemove.blobUrl);
-        } catch (e) {}
+        } catch (e) { }
       }
       await pdfDB.pdfs.delete(id);
       setFiles((prev) => prev.filter((p) => p.id !== id));
@@ -422,12 +425,12 @@ const DoctorAppointment = () => {
     }
   };
 
-  // Added handler for category change
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
   };
 
   const acceptApp = async (appointment) => {
+    setAcceptingId(appointment.id);
     appointment.dateTime = new Date(appointment.dateTime);
     const res = await fetch("http://localhost:3000/api/user_doc/book", {
       method: "POST",
@@ -445,21 +448,17 @@ const DoctorAppointment = () => {
     });
 
     const resp = await res.json();
-    const docName = localStorage.getItem("username");
-    const office_address = localStorage.getItem("office_address");
-
     sendNotif(appointment);
     setFixed(!fixed);
   };
 
   const deleteApp = async (appointment) => {
+    setDoneId(appointment.id);
     const formData = new FormData();
     for (const f of files) {
       const pdf = await pdfDB.pdfs.get(f.id);
-
       const blob = new Blob([pdf.data], { type: pdf.type });
       const file = new File([blob], pdf.name, { type: pdf.type });
-
       formData.append("files", file);
       formData.append("pdfIds[]", f.id);
     }
@@ -489,7 +488,6 @@ const DoctorAppointment = () => {
     const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
     try {
-      console.log(appointment, docName, newTime, "HI");
       const res = await fetch("http://localhost:3000/api/doc/reschedule", {
         method: "POST",
         headers: {
@@ -510,9 +508,7 @@ const DoctorAppointment = () => {
           ),
           newTime: format(
             new Date(
-              new Date(newTime).setTime(
-                newTime.getTime() + 5.5 * 60 * 60 * 1000
-              )
+              new Date(newTime).setTime(newTime.getTime() + 5.5 * 60 * 60 * 1000)
             ),
             "dd-MMM-yy hh:mm a"
           ),
@@ -520,7 +516,6 @@ const DoctorAppointment = () => {
         }),
       });
       const resp = await res.json();
-      console.log(resp, "response");
       setFixed(!fixed);
       CustomToast("Rescheduling request successfully sent", "blue");
       setSelectedDate("");
@@ -555,10 +550,64 @@ const DoctorAppointment = () => {
       );
       handleDateSelect(selectedDate, appointmentId);
     }
-    setSelectedAppointment(
-      appointmentId === selectedAppointment ? null : appointmentId
-    );
+    setSelectedAppointment(appointmentId === selectedAppointment ? null : appointmentId);
     setisRescheduling(false);
+  };
+
+  const openCancelModal = (e, appointment) => {
+    e && e.stopPropagation();
+    setSelectedReason("");
+    setCustomReason("");
+    setCancellingAppointment(appointment);
+    setShowCancelModal(true);
+  };
+
+  const closeCancelModal = () => {
+    setShowCancelModal(false);
+    setCancellingAppointment(null);
+    setSelectedReason("");
+    setCustomReason("");
+  };
+
+  const submitRejection = async () => {
+    const reason = selectedReason === "None of the above" ? customReason.trim() : selectedReason;
+    if (!reason || reason.length === 0) {
+      CustomToast("Please select or type a reason for cancelling.", "blue");
+      return;
+    }
+    if (!cancellingAppointment) {
+      CustomToast("No appointment selected.", "blue");
+      closeCancelModal();
+      return;
+    }
+    try {
+      const res = await fetch("http://localhost:3000/api/user_doc/cancelRequest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          id: cancellingAppointment.id,
+          reason: reason,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err || "Failed to reject appointment");
+      }
+
+      setapp((prev) => prev.filter((a) => a.id !== cancellingAppointment.id));
+      sendNotif(cancellingAppointment);
+      CustomToast("Appointment request rejected", "blue");
+      setFixed((f) => !f);
+    } catch (error) {
+      console.error(error);
+      CustomToast("Failed to reject appointment", "blue");
+    } finally {
+      closeCancelModal();
+    }
   };
 
   if (isAuthenticated === null || isFetched === null) {
@@ -608,9 +657,7 @@ const DoctorAppointment = () => {
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             {format(
-                              TimeReduce(
-                                new Date(appointment.dateTime).getTime()
-                              ),
+                              TimeReduce(new Date(appointment.dateTime).getTime()),
                               "dd MMM h:mm a"
                             )}
                           </div>
@@ -634,21 +681,23 @@ const DoctorAppointment = () => {
                           </div>
                         </div>
                         <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
-                          {completedNotes[appointment.id] !== undefined ? (
+                          {completedNotes[appointment.id] !== undefined ? doneId !== appointment.id ? (
                             <button
                               onClick={() => deleteApp(appointment)}
                               className="px-6 py-2.5 bg-[var(--custom-red-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-red-600)] transform hover:scale-105 transition-all duration-300"
                             >
                               Done
                             </button>
-                          ) : (
-                            <button
+                          ) :
+                            (<Loader className="mx-auto animate-spin" />) :
+                            (<button
                               onClick={() => handleMarkAsDone(appointment.id)}
                               className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
                             >
                               Mark as Done
                             </button>
-                          )}
+
+                            )}
                           {selectedAppointment !== appointment.id && (
                             <button
                               onClick={() => handleReschedule(appointment)}
@@ -679,8 +728,6 @@ const DoctorAppointment = () => {
                                 value={selectedDate.split("T")[0]}
                                 onChange={(e) => {
                                   const newDate = e.target.value;
-                                  const currentTime =
-                                    selectedDate.split("T")[2] || "09:00";
                                   handleDateChange(newDate);
                                   fetchAvailableSlots(newDate);
                                 }}
@@ -751,7 +798,6 @@ const DoctorAppointment = () => {
                         )}
                         {completedNotes[appointment.id] !== undefined && (
                           <div className="mt-6 space-y-4">
-                            {/* Category Dropdown */}
                             <div className="relative">
                               <select
                                 value={category}
@@ -771,7 +817,6 @@ const DoctorAppointment = () => {
                                 <ChevronDown className="h-5 w-5" />
                               </div>
                             </div>
-                            {/* Notes Input */}
                             <input
                               type="text"
                               placeholder="Enter completion notes..."
@@ -795,9 +840,7 @@ const DoctorAppointment = () => {
                             </button>
                             <div className="dashboard-list">
                               {files.length === 0 ? (
-                                <p className="empty-msg">
-                                  No PDFs uploaded yet.
-                                </p>
+                                <p className="empty-msg">No PDFs uploaded yet.</p>
                               ) : (
                                 <ul>
                                   {files.map((f) => (
@@ -806,9 +849,7 @@ const DoctorAppointment = () => {
                                         <strong>{f.name}</strong>
                                         <small>
                                           {Math.round(f.size / 1024)} KB •{" "}
-                                          {new Date(
-                                            f.uploadedAt
-                                          ).toLocaleString()}
+                                          {new Date(f.uploadedAt).toLocaleString()}
                                         </small>
                                       </div>
                                       <div className="pdf-actions">
@@ -863,162 +904,173 @@ const DoctorAppointment = () => {
 
             {appointments.length > 0 ? (
               <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-scroll overflow-x-hidden max-h-150">
-                {appointments.map((appointment) => (
-                  <div
-                    key={appointment.id}
-                    className="p-4 sm:p-8 border-b border-[var(--custom-blue-100)] hover:bg-custom-blue-50/50 transition-all duration-500"
-                  >
-                    <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-7">
-                      <div className="h-16 w-16 rounded-full bg-[var(--custom-blue-100)] flex items-center justify-center shadow-lg shrink-0">
-                        <User className="h-8 w-8 text-[var(--custom-blue-600)]" />
-                      </div>
-                      <div className="flex-1 mt-4 sm:mt-0 scale-90 sm:scale-100 space-y-6">
-                        <div className="space-y-4">
-                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
-                            <CircleUser className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            <span className="font-semibold tracking-tight">
-                              {appointment.user.username}
-                            </span>
-                          </div>
-                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
-                            <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            {format(
-                              TimeReduce(
-                                new Date(appointment.dateTime).getTime()
-                              ),
-                              "dd MMM h:mm a"
-                            )}
-                          </div>
-                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
-                            <Mail className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            {appointment.user.email}
-                          </div>
-                          <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
-                            <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            {appointment.user.mobile}
-                          </div>
-                          {appointment.user.alt_mobile ? (
+                {appointments.map((appointment) => {
+                  return (
+                    <div
+                      key={appointment.id}
+                      className="p-4 sm:p-8 border-b border-[var(--custom-blue-100)] hover:bg-custom-blue-50/50 transition-all duration-500"
+                    >
+                      <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-7">
+                        <div className="h-16 w-16 rounded-full bg-[var(--custom-blue-100)] flex items-center justify-center shadow-lg shrink-0">
+                          <User className="h-8 w-8 text-[var(--custom-blue-600)]" />
+                        </div>
+
+                        <div className="flex-1 mt-4 sm:mt-0 scale-90 sm:scale-100 space-y-6">
+                          <div className="space-y-4">
                             <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
-                              <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                              {appointment.user.alt_mobile}
-                            </div>
-                          ) : null}
-                          <div className="flex items-start text-lg text-[var(--custom-gray-800)]">
-                            <FileText className="h-6 w-6 mr-4 mt-1 text-[var(--custom-blue-600)]" />
-                            <span>{appointment.reason}</span>
-                          </div>
-                        </div>
-                        <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
-                          <button
-                            onClick={() => acceptApp(appointment)}
-                            className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
-                          >
-                            Accept
-                          </button>
-                          {selectedAppointment !== appointment.id && (
-                            <button
-                              onClick={() => handleReschedule(appointment)}
-                              className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
-                            >
-                              Reschedule
-                            </button>
-                          )}
-                          <button
-                            onClick={() =>
-                              navigate(
-                                `/doctor/history?username=${appointment.user.username}`
-                              )
-                            }
-                            className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
-                          >
-                            Check History
-                          </button>
-                        </div>
-                        {selectedAppointment === appointment.id && (
-                          <div className="mt-6 bg-[var(--custom-white)]/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-[var(--custom-blue-200)]">
-                            <h2 className="text-xl font-semibold mb-4 text-[var(--custom-blue-600)]">
-                              Select Date and Time
-                            </h2>
-                            <div>
-                              <select
-                                name="date"
-                                value={selectedDate.split("T")[0]}
-                                onChange={(e) => {
-                                  const newDate = e.target.value;
-                                  const currentTime =
-                                    selectedDate.split("T")[2] || "09:00";
-                                  handleDateChange(newDate);
-                                  fetchAvailableSlots(newDate);
-                                }}
-                                className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
-                                required
-                              >
-                                <option value="">Select Date</option>
-                                {[...Array(14)].map((_, index) => {
-                                  const date = new Date();
-                                  date.setDate(date.getDate() + index);
-                                  const formattedDate = format(
-                                    date,
-                                    "yyyy-MM-dd"
-                                  );
-                                  const displayDate = format(date, "d MMM");
-                                  return (
-                                    <option
-                                      key={formattedDate}
-                                      value={formattedDate}
-                                    >
-                                      {displayDate}
-                                    </option>
-                                  );
-                                })}
-                              </select>
+                              <CircleUser className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                              <span className="font-semibold tracking-tight">
+                                {appointment.user.username}
+                              </span>
                             </div>
 
-                            <div className="mt-4">
-                              <select
-                                name="time"
-                                value={time}
-                                onChange={(e) => {
-                                  const currentDate =
-                                    selectedDate.split("T")[0];
-                                  handleTimeChange(e);
-                                }}
-                                className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
-                              >
-                                <option value="">Select Time</option>
-                                {Array.isArray(slots) &&
-                                  slots.map((slot) => (
-                                    <option
-                                      key={slot.id}
-                                      value={slot.starting_time}
-                                    >
-                                      {format(
-                                        new Date(slot.starting_time).getTime(),
-                                        "HH:mm"
-                                      )}
-                                    </option>
-                                  ))}
-                              </select>
+                            <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                              <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                              {format(
+                                TimeReduce(new Date(appointment.dateTime).getTime()),
+                                "dd MMM h:mm a"
+                              )}
                             </div>
-                            <center>
-                              <button
-                                disabled={isRescheduling}
-                                onClick={() => handleReschedule(appointment)}
-                                className="px-6 mt-4 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
-                              >
-                                {isRescheduling ? (
-                                  <Loader className="mx-auto" />
-                                ) : (
-                                  <div>Reschedule</div>
-                                )}
-                              </button>
-                            </center>
+
+                            <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                              <Mail className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                              {appointment.user.email}
+                            </div>
+
+                            <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                              <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                              {appointment.user.mobile}
+                            </div>
+
+                            {appointment.user.alt_mobile && (
+                              <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
+                                <Phone className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
+                                {appointment.user.alt_mobile}
+                              </div>
+                            )}
+
+                            <div className="flex items-start text-lg text-[var(--custom-gray-800)]">
+                              <FileText className="h-6 w-6 mr-4 mt-1 text-[var(--custom-blue-600)]" />
+                              <span>{appointment.reason}</span>
+                            </div>
                           </div>
-                        )}
+
+                          {appointment.forDoctor ? (
+                            <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
+                              {acceptingId === appointment.id ? (
+                                <Loader className="mx-auto animate-spin" />
+                              ) : (
+                                <button
+                                  onClick={() => acceptApp(appointment)}
+                                  className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Accept
+                                </button>
+                              )}
+
+                              {selectedAppointment !== appointment.id && (
+                                <button
+                                  onClick={() => handleReschedule(appointment)}
+                                  className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Reschedule
+                                </button>
+                              )}
+
+                              {selectedAppointment !== appointment.id && (
+                                <button
+                                  onClick={(e) => openCancelModal(e, appointment)}
+                                  className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Cancel
+                                </button>
+                              )}
+
+                              <button
+                                onClick={() =>
+                                  navigate(
+                                    `/doctor/history?username=${appointment.user.username}`
+                                  )
+                                }
+                                className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
+                              >
+                                Check History
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="text-sm text-[var(--custom-gray-600)]">
+                              You have asked to reschedulethe appointment. Waiting for the user response
+                            </div>
+                          )}
+
+                          {selectedAppointment === appointment.id && (
+                            <div className="mt-6 bg-[var(--custom-white)]/50 backdrop-blur-sm rounded-xl p-6 shadow-inner border border-[var(--custom-blue-200)]">
+                              <h2 className="text-xl font-semibold mb-4 text-[var(--custom-blue-600)]">
+                                Select Date and Time
+                              </h2>
+
+                              <div>
+                                <select
+                                  name="date"
+                                  value={selectedDate.split("T")[0]}
+                                  onChange={(e) => {
+                                    const newDate = e.target.value;
+                                    handleDateChange(newDate);
+                                    fetchAvailableSlots(newDate);
+                                  }}
+                                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
+                                  required
+                                >
+                                  <option value="">Select Date</option>
+                                  {[...Array(14)].map((_, index) => {
+                                    const date = new Date();
+                                    date.setDate(date.getDate() + index);
+                                    const formattedDate = format(date, "yyyy-MM-dd");
+                                    const displayDate = format(date, "d MMM");
+                                    return (
+                                      <option key={formattedDate} value={formattedDate}>
+                                        {displayDate}
+                                      </option>
+                                    );
+                                  })}
+                                </select>
+                              </div>
+
+                              <div className="mt-4">
+                                <select
+                                  name="time"
+                                  value={time}
+                                  onChange={(e) => {
+                                    handleTimeChange(e);
+                                  }}
+                                  className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
+                                >
+                                  <option value="">Select Time</option>
+                                  {Array.isArray(slots) &&
+                                    slots.map((slot) => (
+                                      <option key={slot.id} value={slot.starting_time}>
+                                        {format(new Date(slot.starting_time).getTime(), "HH:mm")}
+                                      </option>
+                                    ))}
+                                </select>
+                              </div>
+
+                              <center>
+                                <button
+                                  disabled={isRescheduling}
+                                  onClick={() => handleReschedule(appointment)}
+                                  className="px-6 mt-4 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
+                                >
+                                  {isRescheduling ? <Loader className="mx-auto" /> : "Reschedule"}
+                                </button>
+                              </center>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-md border border-[var(--custom-blue-100)] items-center justify-center py-8 px-4">
@@ -1035,6 +1087,59 @@ const DoctorAppointment = () => {
             )}
           </div>
         </div>
+        <div className="w-full mt-6">
+          <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
+            Cancelled Appoinments
+          </h1>
+          <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-[var(--custom-gray-600)] tracking-wide font-light">
+            This our the appoinments that got cancelled
+          </p>
+        </div>
+
+        {cancelledAppoinments?.length > 0 ? (
+          <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-auto max-h-150 p-4 space-y-4">
+
+            {cancelledAppoinments.map((app) => (
+              <div
+                key={app.id}
+                className="w-full bg-[var(--custom-gray-50)] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-[var(--custom-gray-200)]"
+              >
+                
+                <div className="flex flex-col gap-1">
+                  <p className="text-lg font-semibold text-[var(--custom-orange-900)]">
+                    {app.user?.username || "Unknown User"}
+                  </p>
+
+                  <p className="text-sm text-[var(--custom-gray-600)]">
+                    Appointment Time:{" "}
+                    {app.appointmentTime
+                      ? new Date(app.appointmentTime).toLocaleString()
+                      : "Not specified"}
+                  </p>
+
+                  <p className="text-sm text-[var(--custom-gray-600)]">
+                    Cancelled On: {new Date(app.dateTime).toLocaleString()}
+                  </p>
+
+                  <p className="text-sm text-[var(--custom-red-500)] font-medium">
+                    Reason: {app.reason}
+                  </p>
+                </div>
+
+                <div className="self-start sm:self-center">
+                  <span className="bg-[var(--custom-red-100)] text-[var(--custom-red-700)] px-3 py-1 rounded-full text-sm font-semibold">
+                    Cancelled
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] flex items-center justify-center py-8">
+            You do not have any cancelled appointments
+          </div>
+        )
+        }
 
         <PastAppointmentGraphs
           timePeriodData={timePeriodData}
@@ -1044,6 +1149,56 @@ const DoctorAppointment = () => {
           isBar={isBar}
         />
       </div>
+
+      {showCancelModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 backdrop-blur-sm" onClick={closeCancelModal} />
+          <div className="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg z-10">
+            <h4 className="text-lg font-semibold mb-3">Reason for cancelling</h4>
+            <label className="block text-sm font-medium mb-2">Select reason</label>
+            <select
+              value={selectedReason}
+              onChange={(e) => {
+                setSelectedReason(e.target.value);
+              }}
+              className="w-full border rounded-md px-3 py-2 mb-3"
+            >
+              <option value="">-- Select a reason --</option>
+              {REASONS.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+
+            {selectedReason === "None of the above" && (
+              <div className="mb-3">
+                <label className="block text-sm font-medium mb-2">Please type your reason</label>
+                <textarea
+                  value={customReason}
+                  onChange={(e) => setCustomReason(e.target.value)}
+                  rows={4}
+                  className="w-full border rounded-md px-3 py-2"
+                  placeholder="Type the reason for cancelling..."
+                />
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3 mt-4">
+              <button onClick={closeCancelModal} className="px-4 py-2 rounded-md border">
+                Cancel
+              </button>
+              <button
+                onClick={submitRejection}
+                className="px-4 py-2 rounded-md bg-[var(--custom-red-500)] text-white font-semibold"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer color={"blue"} />
     </div>
   );
