@@ -431,7 +431,7 @@ userRouter.get("/getRequests", authorizeRoles("user"), async (req, res) => {
       return res.status(403).json({ error: "Access denied" });
     }
     const reqs = await prisma.requests.findMany({
-      where: { user_id: userId, forDoctor: false },
+      where: { user_id: userId },
       include: {
         doctor: true
       },
