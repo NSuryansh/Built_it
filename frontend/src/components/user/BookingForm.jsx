@@ -211,7 +211,6 @@ const BookingFormStep = ({
                         value: `${e.target.value}T${currentTime}`,
                       },
                     });
-                    console.log(slots, date);
                   }}
                   className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-orange-200)] focus:border-[var(--custom-orange-400)] focus:ring-2 focus:ring-[var(--custom-orange-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
                   required
