@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import CustomLoader from "../../components/common/CustomLoader";
 import axios from "axios"; 
 
+// Map string names from DB to actual Icon components
 const iconMap = {
   Book: BookOpen,
   Sun: Sun,
@@ -16,6 +17,19 @@ const iconMap = {
   Heart: Heart,
   Headphones: Headphones,
   Default: BookOpen
+};
+
+// ✅ HELPER: Extract Thumbnail from YouTube URL
+const getYouTubeThumbnail = (url) => {
+  if (!url) return "https://via.placeholder.com/640x360?text=Video";
+  // Regex to handle various YouTube URL formats
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  const videoId = (match && match[2].length === 11) ? match[2] : null;
+  
+  return videoId 
+    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` 
+    : "https://via.placeholder.com/640x360?text=Invalid+Link";
 };
 
 const Stress = () => {
@@ -29,7 +43,7 @@ const Stress = () => {
   // Fetch Data Function
   const fetchStressData = async () => {
     try {
-      // ✅ FIXED: Added "/api" to match server.js configuration
+      // Ensure this matches your server.js (likely /api/doc)
       const backendUrl = "http://localhost:3000/api/doc"; 
       
       const [articlesRes, videosRes] = await Promise.all([
@@ -38,7 +52,28 @@ const Stress = () => {
       ]);
 
       setArticles(articlesRes.data);
-      setVideoSections(videosRes.data);
+
+      // ✅ CRITICAL FIX: Map DB fields (youtubeUrl) to UI fields (url, image)
+      const processedVideos = videosRes.data.map(section => ({
+        ...section,
+        videos: section.videos.map(video => {
+          const thumb = getYouTubeThumbnail(video.youtubeUrl);
+          return {
+            ...video,
+            // 1. Fix Thumbnail: Map to all common names
+            thumbnail: thumb, 
+            image: thumb,     
+            img: thumb,       
+            
+            // 2. Fix Click Action: Map 'youtubeUrl' to 'url' and 'link'
+            url: video.youtubeUrl,   
+            link: video.youtubeUrl   
+          };
+        })
+      }));
+
+      setVideoSections(processedVideos);
+
     } catch (error) {
       console.error("Error fetching stress data:", error);
     } finally {

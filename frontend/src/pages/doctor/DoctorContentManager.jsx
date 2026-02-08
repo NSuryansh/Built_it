@@ -20,20 +20,19 @@ const DoctorContentManager = () => {
   const [doctorToken, setDoctorToken] = useState(null);
   const [dataList, setDataList] = useState([]);
 
+  // Store existing types for the dropdown suggestion
+  const [existingTypes, setExistingTypes] = useState([]);
+
   const navigate = useNavigate();
-  
-  // ✅ FIX: Updated URL to match your server.js configuration (/api/doc)
   const backendUrl = "http://localhost:3000/api/doc";
 
   // Auth Check
   useEffect(() => {
     const verifyAuth = async () => {
-      // Assuming "doc" is the role string used in your checkAuth function
       const authStatus = await checkAuth("doc");
       if (!authStatus) {
-        navigate("/doctor/login"); // Adjust this route if your login path is different
+        navigate("/doctor/login"); 
       } else {
-        // Retrieve the token. Ensure "token" is the key you use in localStorage
         const token = localStorage.getItem("token"); 
         setDoctorToken(token);
       }
@@ -41,21 +40,18 @@ const DoctorContentManager = () => {
     verifyAuth();
   }, [navigate]);
 
-  // Fetch data on tab/token change
   useEffect(() => {
     if (doctorToken) fetchData(activeTab);
   }, [activeTab, doctorToken]);
 
-  // Forms
   const initialArticleState = { title: "", description: "", url: "", source: "", readTime: "", iconName: "Book" };
   const initialVideoState = { sectionTitle: "Meditation", title: "", description: "", youtubeUrl: "" };
-  const initialEntState = { type: "MOVIE", category: "Top Picks", title: "", link: "", image: null, currentImageUrl: "" };
+  const initialEntState = { type: "", category: "Top Picks", title: "", link: "", image: null, currentImageUrl: "" };
 
   const [articleForm, setArticleForm] = useState(initialArticleState);
   const [videoForm, setVideoForm] = useState(initialVideoState);
   const [entForm, setEntForm] = useState(initialEntState);
 
-  // Helper for image preview
   const getPreviewUrl = () => {
     if (entForm.image) return URL.createObjectURL(entForm.image);
     return entForm.currentImageUrl;
@@ -69,17 +65,23 @@ const DoctorContentManager = () => {
       else if (tab === "videos") endpoint = "/get-videos";
       else if (tab === "entertainment") endpoint = "/get-entertainment";
 
-      // console.log("Fetching from:", `${backendUrl}${endpoint}`); // Debug log
-
       const res = await axios.get(`${backendUrl}${endpoint}`);
       
       if (tab === "videos") {
-        // Flatten videos for the list view since the API returns them grouped
         const flatVideos = res.data.flatMap(section => section.videos);
         setDataList(flatVideos);
       } else if (tab === "entertainment") {
-         // Flatten entertainment object
-         const flatEnt = [...res.data.movies, ...res.data.books, ...res.data.music, ...res.data.games];
+         // Flatten the dynamic grouped object into a list
+         const groupedData = res.data;
+         const flatEnt = [];
+         const typesFound = new Set();
+         
+         Object.keys(groupedData).forEach(type => {
+            typesFound.add(type);
+            flatEnt.push(...groupedData[type]);
+         });
+
+         setExistingTypes(Array.from(typesFound)); // Save types for suggestions
          setDataList(flatEnt);
       } else {
         setDataList(res.data);
@@ -161,7 +163,8 @@ const DoctorContentManager = () => {
       } else if (activeTab === "entertainment") {
           endpoint = editMode ? `/update-entertainment/${editId}` : "/add-entertainment";
           const formData = new FormData();
-          formData.append("type", entForm.type);
+          // Ensure TYPE is uppercase or capitalized for consistency
+          formData.append("type", entForm.type.toUpperCase()); 
           formData.append("category", entForm.category);
           formData.append("title", entForm.title);
           formData.append("link", entForm.link);
@@ -291,13 +294,33 @@ const DoctorContentManager = () => {
                     {activeTab === "entertainment" && (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <SelectField label="Type" value={entForm.type} onChange={(e) => setEntForm({...entForm, type: e.target.value})} options={["MOVIE", "BOOK", "MUSIC", "GAME"]} />
+                                {/* DYNAMIC TYPE INPUT */}
+                                <div>
+                                    <label className="block text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Type</label>
+                                    <input 
+                                        list="type-options" 
+                                        type="text" 
+                                        className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[var(--custom-orange-500)] outline-none" 
+                                        value={entForm.type} 
+                                        onChange={(e) => setEntForm({...entForm, type: e.target.value})} 
+                                        placeholder="Select or Type New (e.g. Podcast)" 
+                                        required
+                                    />
+                                    <datalist id="type-options">
+                                        {/* Suggest standard types + any dynamic ones found in DB */}
+                                        <option value="MOVIE" />
+                                        <option value="BOOK" />
+                                        <option value="MUSIC" />
+                                        <option value="GAME" />
+                                        {existingTypes.map(t => <option key={t} value={t} />)}
+                                    </datalist>
+                                </div>
+
                                 <InputField label="Category" value={entForm.category} onChange={(e) => setEntForm({...entForm, category: e.target.value})} placeholder="e.g. Top Picks, Action" />
                                 <InputField label="Title" value={entForm.title} onChange={(e) => setEntForm({...entForm, title: e.target.value})} />
                                 <InputField label="Link" value={entForm.link} onChange={(e) => setEntForm({...entForm, link: e.target.value})} placeholder="External URL" />
                             </div>
                             
-                            {/* FIXED IMAGE UPLOAD & PREVIEW */}
                             <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition-colors">
                                 <input type="file" id="file-upload" className="hidden" accept="image/*" onChange={(e) => setEntForm({...entForm, image: e.target.files[0]})} />
                                 <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">

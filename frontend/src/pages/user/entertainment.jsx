@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Music, Book, Gamepad2, Film, ChevronDown } from "lucide-react";
+import { Music, Book, Gamepad2, Film, ChevronDown, PlayCircle, Headphones, Tv } from "lucide-react";
 import Navbar from "../../components/user/Navbar";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../../utils/profile";
@@ -7,26 +7,35 @@ import SessionExpired from "../../components/common/SessionExpired";
 import CustomLoader from "../../components/common/CustomLoader";
 import axios from "axios";
 
-// Helper to extract unique categories from a list of items
+// Helper to map dynamic types to icons
+const getIconForType = (type) => {
+  const lowerType = type.toLowerCase();
+  if (lowerType.includes("movie") || lowerType.includes("film")) return Film;
+  if (lowerType.includes("book") || lowerType.includes("novel")) return Book;
+  if (lowerType.includes("music") || lowerType.includes("song")) return Music;
+  if (lowerType.includes("game") || lowerType.includes("gaming")) return Gamepad2;
+  if (lowerType.includes("podcast")) return Headphones;
+  if (lowerType.includes("series") || lowerType.includes("show")) return Tv;
+  return PlayCircle; // Default icon for custom types
+};
+
 const getUniqueCategories = (items) => {
+  if (!items || items.length === 0) return ["Top Picks"];
   const cats = [...new Set(items.map((item) => item.category))];
-  // Ensure "Top Picks" is always first if it exists, otherwise just list them
   if(cats.length === 0) return ["Top Picks"];
   return ["Top Picks", ...cats.filter(c => c !== "Top Picks")];
 };
 
-function EntertainmentSection({ title, items, icon: Icon }) {
+function EntertainmentSection({ title, items }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Top Picks");
   const [hoveredItem, setHoveredItem] = useState(null);
 
-  // Calculate categories dynamically based on the items passed
+  const Icon = getIconForType(title);
   const sectionCategories = getUniqueCategories(items);
 
   const getFilteredItems = () => {
-    if (selectedCategory === "Top Picks") {
-        return items; 
-    }
+    if (selectedCategory === "Top Picks") return items;
     return items.filter((item) => item.category === selectedCategory);
   };
 
@@ -42,26 +51,17 @@ function EntertainmentSection({ title, items, icon: Icon }) {
           <div className="p-3 rounded-full bg-[var(--custom-gray-100)]">
             <Icon className="w-7 h-7 text-[var(--custom-orange-600)]" />
           </div>
-          <h2 className="text-2xl font-bold text-[var(--custom-gray-800)]">
-            {title}
+          <h2 className="text-2xl font-bold text-[var(--custom-gray-800)] capitalize">
+            {title.toLowerCase()}
           </h2>
         </div>
-        <div
-          className={`transform transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        >
+        <div className={`transform transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}>
           <ChevronDown className="w-6 h-6 text-[var(--custom-gray-500)]" />
         </div>
       </button>
 
-      <div
-        className={`transition-all duration-500 ease-in-out ${
-          isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
-        } overflow-hidden`}
-      >
+      <div className={`transition-all duration-500 ease-in-out ${isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}>
         <div className="p-6 pt-2">
-          {/* Category Pills */}
           <div className="flex flex-wrap gap-2 mb-8">
             {sectionCategories.map((category) => (
               <button
@@ -97,11 +97,7 @@ function EntertainmentSection({ title, items, icon: Icon }) {
                       className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
                     />
                   </div>
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-t from-[var(--custom-black)]/90 via-[var(--custom-black)]/40 to-transparent flex items-end transition-opacity duration-300 ${
-                      hoveredItem === index ? "opacity-100" : "opacity-90"
-                    }`}
-                  >
+                  <div className={`absolute inset-0 bg-gradient-to-t from-[var(--custom-black)]/90 via-[var(--custom-black)]/40 to-transparent flex items-end transition-opacity duration-300 ${hoveredItem === index ? "opacity-100" : "opacity-90"}`}>
                     <div className="p-2 sm:p-4 md:p-6 w-full transform transition-transform duration-300 group-hover:translate-y-0">
                       <h3 className="text-sm sm:text-md md:text-lg font-semibold md:font-bold text-[var(--custom-white)] mb-1 md:mb-2 group-hover:text-[var(--custom-purple-300)] transition-colors duration-300">
                         {item.title}
@@ -114,9 +110,7 @@ function EntertainmentSection({ title, items, icon: Icon }) {
                 </a>
               ))
             ) : (
-               <div className="col-span-full text-center text-gray-500 py-4">
-                 No items found in this category.
-               </div>
+               <div className="col-span-full text-center text-gray-500 py-4">No items found.</div>
             )}
           </div>
         </div>
@@ -127,12 +121,7 @@ function EntertainmentSection({ title, items, icon: Icon }) {
 
 function Entertainment() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [entertainmentData, setEntertainmentData] = useState({
-    movies: [],
-    books: [],
-    music: [],
-    games: []
-  });
+  const [entertainmentData, setEntertainmentData] = useState({}); // Start empty
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -143,7 +132,7 @@ function Entertainment() {
 
       if (authStatus) {
          try {
-             // ✅ FIXED: Added "/api" to match server.js configuration
+             // Make sure this matches your server.js prefix (/api/doc)
              const backendUrl = "http://localhost:3000/api/doc"; 
              const res = await axios.get(`${backendUrl}/get-entertainment`);
              setEntertainmentData(res.data);
@@ -178,31 +167,24 @@ function Entertainment() {
             Entertainment Hub
           </h1>
           <p className="text-sm lg:text-lg text-[var(--custom-gray-600)] max-w-2xl mx-auto">
-            Discover and explore your favorite movies, books, music, and games
-            all in one place
+            Discover and explore your favorite movies, books, music, games, and more.
           </p>
         </div>
 
-        <EntertainmentSection
-          title="Movies"
-          items={entertainmentData.movies}
-          icon={Film}
-        />
-        <EntertainmentSection
-          title="Books"
-          items={entertainmentData.books}
-          icon={Book}
-        />
-        <EntertainmentSection
-          title="Music"
-          items={entertainmentData.music}
-          icon={Music}
-        />
-        <EntertainmentSection
-          title="Games"
-          items={entertainmentData.games}
-          icon={Gamepad2}
-        />
+        {/* DYNAMIC RENDERING: Only sections that exist in DB will show */}
+        {Object.keys(entertainmentData).length > 0 ? (
+          Object.keys(entertainmentData).map((type) => (
+            <EntertainmentSection
+              key={type}
+              title={type}
+              items={entertainmentData[type]}
+            />
+          ))
+        ) : (
+          <div className="text-center text-gray-500 mt-12">
+            No items found. Check back later!
+          </div>
+        )}
       </div>
     </div>
   );

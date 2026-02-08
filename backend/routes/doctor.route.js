@@ -975,14 +975,19 @@ docRouter.post("/add-entertainment", authorizeRoles("doc"), upload.single("image
 docRouter.get("/get-entertainment", async (req, res) => {
   try {
     const items = await prisma.entertainmentItem.findMany();
-    const organizedData = {
-      movies: items.filter(i => i.type === "MOVIE"),
-      books: items.filter(i => i.type === "BOOK"),
-      music: items.filter(i => i.type === "MUSIC"),
-      games: items.filter(i => i.type === "GAME"),
-    };
-    res.json(organizedData);
+    
+    const groupedData = items.reduce((acc, item) => {
+      const typeKey = item.type; 
+      if (!acc[typeKey]) {
+        acc[typeKey] = [];
+      }
+      acc[typeKey].push(item);
+      return acc;
+    }, {});
+
+    res.json(groupedData);
   } catch (e) {
+    console.error(e);
     res.status(500).json({ error: "Failed to fetch entertainment items" });
   }
 });
