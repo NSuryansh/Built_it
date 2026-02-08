@@ -912,9 +912,7 @@ userRouter.get("/allSlots", authorizeRoles("user"), async (req, res) => {
       where: {
         doctor_id: doc_id,
       },
-      orderBy: {
-        day_of_week: "asc",
-      },
+      orderBy: [{ day_of_week: "asc" }, { starting_time: "asc" }],
     });
 
     const groupedSlots = allSlots.reduce((acc, slot) => {
