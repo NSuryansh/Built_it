@@ -279,4 +279,48 @@ userDocRouter.post(
   }
 );
 
+userDocRouter.post("/cancelRequest", authorizeRoles("user", "doc"), async (req, res) => {
+    try {
+      const requestId = Number(req.body.id);
+      const reason = req.body.reason;
+
+      if (!requestId || !reason) {
+        return res.status(400).json({ message: "Both request id and reason are required" });
+      }
+
+      const cancelled = await prisma.$transaction(async (tx) => {
+        const request = await tx.requests.findUnique({
+          where: { id: requestId },
+        });
+        if (!request) {
+          throw new Error("Request not found");
+        }
+        const cancelledRequest = await tx.cancelledRequest.create({
+          data: {
+            user_id: request.user_id,
+            doctor_id: request.doctor_id,
+            reason,
+            forDoctor: request.forDoctor,
+            appointmentTime: request.dateTime,
+            dateTime: new Date(),             
+          },
+        });
+        await tx.requests.delete({
+          where: { id: requestId },
+        });
+        return cancelledRequest;
+      });
+      return res.status(200).json({
+        message: "Request cancelled successfully",
+        cancelled,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: error.message || "Failed to cancel request",
+      });
+    }
+  }
+);
+
 export default userDocRouter;
