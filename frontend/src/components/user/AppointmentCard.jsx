@@ -128,14 +128,6 @@ const AppointmentCard = ({
                   >
                     Give Feedback <ArrowRight className="w-4 h-4" />
                   </button>
-
-                  {/* Reject now opens modal */}
-                  <button
-                    onClick={openRejectModal}
-                    className="bg-[var(--custom-red-500)] text-white px-3 py-1 rounded-md text-sm font-semibold hover:opacity-90"
-                  >
-                    Reject
-                  </button>
                 </div>
               )
             ) : (
