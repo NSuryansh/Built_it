@@ -141,15 +141,16 @@ model Events {
 }
 
 model Appointments {
-  id        Int      @id @default(autoincrement())
-  user_id   Int
-  doctor_id Int
-  dateTime  DateTime
-  reason    String?
-  isDoctor  Boolean  @default(false)
-  stars     Int?
-  doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  doctor_id   Int
+  dateTime    DateTime
+  reason      String?
+  isDoctor    Boolean  @default(false)
+  isEmergency Boolean  @default(false)
+  stars       Int?
+  doctor      Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("appointments")
 }

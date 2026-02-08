@@ -246,6 +246,70 @@ docRouter.get("/reqApp", authorizeRoles("doc"), async (req, res) => {
   res.json(appt);
 });
 
+docRouter.post("/emergencyBook", authorizeRoles("doc"), async (req, res) => {
+  const userId = req.body["userId"];
+  const doctorId = req.body["doctorId"];
+  const dateTime = req.body["dateTime"];
+  const date = new Date();
+  const newDate = new Date(dateTime);
+  var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+  const some = new Date(newDate.getTime() - userTimezoneOffset);
+  const reason = req.body["reason"];
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    const result = await prisma.$transaction(async (prisma) => {
+      const appointment = await prisma.appointments.create({
+        data: {
+          user_id: userId,
+          doctor_id: doctorId,
+          dateTime: some,
+          reason: reason,
+          isDoctor: true,
+          isEmergency: true,
+        },
+      });
+
+      return { appointment };
+    });
+
+    await sendEmail(
+      user.email,
+      "Emergency Appointment Scheduled!",
+      `Dear ${user.username}, \n\nThis is to inform you that an EMERGENCY appointment has been scheduled with ${doctor.name}.\n\nThe details of the appointment are given below: \n\nDate: ${new Date(
+        some
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+        doctor.office_address
+      }\n\nRegards\nCalm Connect`
+    );
+
+    await sendEmail(
+      doctor.email,
+      "Emergency Appointment Scheduled",
+      `Dear ${doctor.name}, \n\nYour emergency appointment with ${
+        user.username
+      } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
+        some
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+        doctor.office_address
+      }\n\nRegards\nCalm Connect`
+    );
+
+    res.json({ message: "Emergency Appointment booked successfully", result });
+  } catch (error) {
+    console.error(error);
+    res.json({ message: "Internal Server Error" });
+  }
+});
+
 docRouter.get("/profile", authorizeRoles("doc"), async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -311,6 +375,7 @@ docRouter.get("/currentdocappt", authorizeRoles("doc"), async (req, res) => {
     // });
     const appt = await prisma.appointments.findMany({
       where: { doctor_id: doctorId },
+      orderBy: { isEmergency: "desc" },
       include: {
         user: {
           select: {
