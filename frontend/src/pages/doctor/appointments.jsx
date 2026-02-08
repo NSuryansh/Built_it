@@ -665,7 +665,10 @@ const DoctorAppointment = () => {
     <div className="min-h-screen bg-gradient-to-b from-[var(--custom-white)] via-[var(--custom-purple-50)] to-[var(--custom-teal-50)]">
       <DoctorNavbar />
       <div className="container mx-auto px-4 sm:px-8 lg:px-4 xl:px-16 py-5 md:py-10 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
+        {/* CHANGED: Replaced grid with flex-col to stack vertically */}
+        <div className="flex flex-col gap-12">
+          
+          {/* SECTION 1: Current Appointments */}
           <div className="space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
@@ -940,7 +943,8 @@ const DoctorAppointment = () => {
             )}
           </div>
 
-          <div className="mt-5 lg:mt-0 space-y-8">
+          {/* SECTION 2: Incoming Requests */}
+          <div className="space-y-8">
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
