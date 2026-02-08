@@ -150,7 +150,7 @@ const DoctorProfile = () => {
         if (educations.length === 0) {
           educations = ["<Add>"];
         }
-
+        console.log(data.doctor);
         setProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -305,7 +305,8 @@ const DoctorProfile = () => {
       formData.append("address", editedProfile.address);
       formData.append("office_address", editedProfile.office_address);
       formData.append("experience", editedProfile.experience);
-      formData.append("folderLink", editedProfile.folderLink);
+      if (profile.folderLink != editedProfile.folderLink)
+        formData.append("folderLink", editedProfile.folderLink);
       formData.append(
         "additionalExperience",
         editedProfile.additionalExperience || "",
@@ -629,9 +630,14 @@ const DoctorProfile = () => {
                       className="w-4/5 sm:w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
                     />
                   ) : (
-                    <span className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors">
-                      {profile.folderLink || "<Please Change>"}
-                    </span>
+                    <a
+                      href={profile.folderLink}
+                      target="_blank"
+                      className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors"
+                    >
+                      {profile.folderLink.slice(0, 25) + "..." ||
+                        "<Please Change>"}
+                    </a>
                   )}
                 </div>
               </div>
