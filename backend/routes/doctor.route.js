@@ -28,8 +28,7 @@ async function uploadImage(path) {
   return results["url"];
 }
 
-const validateDriveFolder = async (folderLink) => {
-  const folderId = folderLink.split("/")[folderLink.split("/").length - 1];
+const validateDriveFolder = async (folderId) => {
   try {
     const res = await drive.files.get({
       fileId: folderId,
@@ -37,12 +36,12 @@ const validateDriveFolder = async (folderLink) => {
     });
 
     if (res.data.mimeType !== "application/vnd.google-apps.folder") {
-      return "Not a folder";
+      throw new Error("Not a folder");
     }
 
-    return "OK";
+    return res.data;
   } catch {
-    return "Folder not accessible by service account";
+    throw new Error("Folder not accessible by service account");
   }
 };
 
@@ -720,6 +719,7 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
     });
   }
 });
+// In routes/doctor.route.js
 
 docRouter.post(
   "/deleteApp",
@@ -732,15 +732,26 @@ docRouter.post(
       const user_id = Number(req.body.userId);
       const note = req.body.note;
       const category = req.body.category;
+      // Get the explicit status sent from frontend
+      const statusAction = req.body.statusAction; 
+      
       const dateTime = new Date();
+
       if (doc_id !== req.user.userId) {
         return res.status(403).json({ error: "Access denied" });
       }
-      const files = req.files;
-      // if (!files || files.length === 0) {
-      //   return res.status(400).json({ error: "PDF files missing" });
-      // }
 
+      // 1. Fetch current appointment to check existing status
+      const currentApp = await prisma.appointments.findUnique({
+        where: { id: appId }
+      });
+
+      // 2. Determine Final Status
+      // If closing, set to CLOSED. 
+      // If marking as done, keep existing status (NEW or OPEN)
+      const finalStatus = statusAction === "CLOSED" ? "CLOSED" : (currentApp?.caseStatus || "OPEN");
+
+      const files = req.files;
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
       const user = await prisma.user.findUnique({ where: { id: user_id } });
 
@@ -767,6 +778,7 @@ docRouter.post(
           category,
           pdfLink: driveLink,
           createdAt: dateTime,
+          caseStatus: finalStatus, // ✅ Save status
         },
       });
 

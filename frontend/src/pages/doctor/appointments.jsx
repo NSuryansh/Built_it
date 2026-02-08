@@ -1,5 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { User, CircleUser, Clock, Phone, FileText, Loader, Mail, ChevronDown } from "lucide-react";
+import {
+  User,
+  CircleUser,
+  Clock,
+  Phone,
+  FileText,
+  Loader,
+  Mail,
+  ChevronDown,
+  X,
+} from "lucide-react";
 import DoctorNavbar from "../../components/doctor/Navbar";
 import Footer from "../../components/common/Footer";
 import { format } from "date-fns";
@@ -8,7 +18,19 @@ import { useNavigate } from "react-router-dom";
 import SessionExpired from "../../components/common/SessionExpired";
 import { TimeChange, TimeReduce } from "../../components/common/TimeChange";
 import CustomToast from "../../components/common/CustomToast";
-import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import CustomLoader from "../../components/common/CustomLoader";
 import { pdfDB } from "../../db/pdfDB";
 
@@ -18,6 +40,22 @@ const REASONS = [
   "Nahi aunga jao jo karna karo",
   "None of the above",
 ];
+
+// ✅ NEW: Component to display Case Status Badge
+const StatusBadge = ({ status }) => {
+  const styles = {
+    NEW: "bg-green-100 text-green-800 border-green-200",
+    OPEN: "bg-blue-100 text-blue-800 border-blue-200",
+    CLOSED: "bg-gray-100 text-gray-800 border-gray-200",
+  };
+  const currentStatus = status || "OPEN";
+  
+  return (
+    <span className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border ${styles[currentStatus]}`}>
+      {currentStatus} CASE
+    </span>
+  );
+};
 
 const DoctorAppointment = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
@@ -452,7 +490,8 @@ const DoctorAppointment = () => {
     setFixed(!fixed);
   };
 
-  const deleteApp = async (appointment) => {
+  // ✅ UPDATED: deleteApp to handle Close Case vs Mark as Done
+  const deleteApp = async (appointment, isClosing = false) => {
     setDoneId(appointment.id);
     const formData = new FormData();
     for (const f of files) {
@@ -467,6 +506,9 @@ const DoctorAppointment = () => {
     formData.append("userId", appointment.user_id);
     formData.append("note", note);
     formData.append("category", category);
+    
+    // ✅ PASS THE STATUS ACTION
+    formData.append("statusAction", isClosing ? "CLOSED" : "DONE");
 
     const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
       method: "POST",
@@ -482,6 +524,7 @@ const DoctorAppointment = () => {
     setCategory("");
     setFiles([]);
     setFixed(!fixed);
+    setDoneId(null);
   };
 
   const emailParams = async (appointment, time) => {
@@ -629,9 +672,7 @@ const DoctorAppointment = () => {
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
                   Current Appointments
                 </h1>
-                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-[var(--custom-gray-600)] tracking-wide font-light">
-                  Seamlessly manage your upcoming appointments
-                </p>
+                
               </div>
             </div>
 
@@ -650,9 +691,11 @@ const DoctorAppointment = () => {
                         <div className="space-y-4">
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <CircleUser className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
-                            <span className="font-semibold tracking-tight">
+                            <span className="font-semibold tracking-tight mr-2">
                               {appointment.user.username}
                             </span>
+                            {/* ✅ ADDED BADGE HERE */}
+                            <StatusBadge status={appointment.caseStatus} />
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
@@ -682,19 +725,28 @@ const DoctorAppointment = () => {
                         </div>
                         <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
                           {completedNotes[appointment.id] !== undefined ? doneId !== appointment.id ? (
-                            <button
-                              onClick={() => deleteApp(appointment)}
-                              className="px-6 py-2.5 bg-[var(--custom-red-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-red-600)] transform hover:scale-105 transition-all duration-300"
-                            >
-                              Done
-                            </button>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                {/* ✅ UPDATED BUTTONS */}
+                                <button
+                                  onClick={() => deleteApp(appointment, false)}
+                                  className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Mark as Done
+                                </button>
+                                <button
+                                  onClick={() => deleteApp(appointment, true)}
+                                  className="px-6 py-2.5 bg-[var(--custom-red-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-red-600)] transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Close Case
+                                </button>
+                            </div>
                           ) :
                             (<Loader className="mx-auto animate-spin" />) :
                             (<button
                               onClick={() => handleMarkAsDone(appointment.id)}
                               className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
                             >
-                              Mark as Done
+                              Action
                             </button>
 
                             )}
@@ -760,8 +812,6 @@ const DoctorAppointment = () => {
                                 name="time"
                                 value={time}
                                 onChange={(e) => {
-                                  const currentDate =
-                                    selectedDate.split("T")[0];
                                   handleTimeChange(e);
                                 }}
                                 className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
@@ -896,9 +946,7 @@ const DoctorAppointment = () => {
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
                   Incoming Requests
                 </h1>
-                <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-[var(--custom-gray-600)] tracking-wide font-light">
-                  Review and accept new appointment requests with ease
-                </p>
+                
               </div>
             </div>
 
@@ -1054,7 +1102,6 @@ const DoctorAppointment = () => {
                                     ))}
                                 </select>
                               </div>
-
                               <center>
                                 <button
                                   disabled={isRescheduling}
@@ -1091,9 +1138,7 @@ const DoctorAppointment = () => {
           <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
             Cancelled Appoinments
           </h1>
-          <p className="mt-2 text-center sm:text-left text-md sm:text-lg text-[var(--custom-gray-600)] tracking-wide font-light">
-            This our the appoinments that got cancelled
-          </p>
+          
         </div>
 
         {cancelledAppoinments?.length > 0 ? (

@@ -45,6 +45,46 @@ adminRouter.post("/addSlot", authorizeRoles("admin"), async (req, res) => {
   res.json(slot);
 });
 
+adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
+  try {
+    // 1. Fetch all doctors
+    const doctors = await prisma.doctor.findMany({
+      select: { id: true, name: true, email: true }
+    });
+
+    // 2. Aggregate stats from PastAppointments
+    const stats = await prisma.pastAppointments.groupBy({
+      by: ['doc_id', 'caseStatus'],
+      _count: {
+        _all: true
+      }
+    });
+
+    // 3. Map stats to doctors
+    const doctorStats = doctors.map(doc => {
+      const docData = stats.filter(s => s.doc_id === doc.id);
+      
+      const newCases = docData.find(s => s.caseStatus === 'NEW')?._count._all || 0;
+      const openCases = docData.find(s => s.caseStatus === 'OPEN')?._count._all || 0;
+      const closedCases = docData.find(s => s.caseStatus === 'CLOSED')?._count._all || 0;
+
+      return {
+        ...doc,
+        stats: {
+          new: newCases,
+          open: openCases,
+          closed: closedCases,
+          total: newCases + openCases + closedCases
+        }
+      };
+    });
+
+    res.json(doctorStats);
+  } catch (error) {
+    console.error("Error fetching case stats:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
   const {
     name,

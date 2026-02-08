@@ -14,6 +14,7 @@ const AdminNavbar = () => {
     { name: "Events", link: "/admin/event_list" },
     { name: "Appointments", link: "/admin/appointments" },
     { name: "User", link: "/admin/User" },
+    { name: "Cases", link: "/admin/AdminCaseStats" },
   ];
   const navigate = useNavigate();
   const [showCustomModal, setShowCustomModal] = useState(false);
