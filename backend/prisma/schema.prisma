@@ -86,7 +86,7 @@ model Doctor {
   avgRating            Decimal            @default(0)
   isInactive           Boolean            @default(false)
   weekOff              String[]
-  driveFolderId        String?
+  folderLink           String?
   certificaition       DocCertification[]
   education            DocEducation[]
   emerApp              EmergencyApp[]

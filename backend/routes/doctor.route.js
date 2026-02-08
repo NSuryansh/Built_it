@@ -28,7 +28,8 @@ async function uploadImage(path) {
   return results["url"];
 }
 
-const validateDriveFolder = async (folderId) => {
+const validateDriveFolder = async (folderLink) => {
+  const folderId = folderLink.split("/")[folderLink.split("/").length - 1];
   try {
     const res = await drive.files.get({
       fileId: folderId,
@@ -36,12 +37,12 @@ const validateDriveFolder = async (folderId) => {
     });
 
     if (res.data.mimeType !== "application/vnd.google-apps.folder") {
-      throw new Error("Not a folder");
+      return "Not a folder";
     }
 
-    return res.data;
+    return "OK";
   } catch {
-    throw new Error("Folder not accessible by service account");
+    return "Folder not accessible by service account";
   }
 };
 
@@ -474,8 +475,8 @@ docRouter.put(
         certifi,
         isProfileDone,
         desc,
+        folderLink,
       } = req.body;
-      console.log(additionalExperience);
       if (id !== req.user.userId.toString()) {
         return res.status(403).json({ error: "Access denied" });
       }
@@ -505,14 +506,6 @@ docRouter.put(
         return res.status(400).json({ error: "Invalid doctor ID" });
       }
 
-      const orConditions = [];
-      if (address) orConditions.push({ address });
-      if (office_address) orConditions.push({ office_address });
-      if (desc) orConditions.push({ desc });
-      if (experience != "null") orConditions.push({ experience });
-      if (additionalExperience != "null")
-        orConditions.push({ additionalExperience });
-
       const existingDoctor = await prisma.doctor.findUnique({
         where: {
           id: doctorId,
@@ -533,6 +526,12 @@ docRouter.put(
       if (experience != null) updatedData.experience = experience.trim();
       if (additionalExperience?.trim())
         updatedData.additionalExperience = additionalExperience.trim();
+      if (folderLink?.trim()) {
+        if (await validateDriveFolder(folderLink) == "OK")
+          updatedData.folderLink = folderLink.trim();
+        else
+          return res.status(400).json({ error: "Folder Link not accessible" });
+      }
 
       if (url) updatedData.img = url;
       if (isProfileDone) updatedData.isProfileDone = isProfileDone;
