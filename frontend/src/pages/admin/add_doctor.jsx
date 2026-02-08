@@ -64,6 +64,8 @@ const AddDoctor = () => {
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
+  // In add_doctor.jsx
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, mobile, password, regId, desc, weekOffs } = formData;
@@ -82,20 +84,31 @@ const AddDoctor = () => {
           password: password,
           reg_id: regId,
           desc: desc,
-          weekOff: weekOffs,
+          weekOff: weekOffs, 
           address: "<Please Change>",
           office_address: "<Please Change>",
           experience: "<Please Change>",
           img: "",
         }),
       });
+
       const resp = await res.json();
-      CustomToast("Therapist Added", "green");
+
+      // ✅ CRITICAL FIX: Check if the request failed
+      if (!res.ok || resp.error) {
+        CustomToast(resp.error || "Failed to add therapist", "red"); // Show RED error
+        console.error("Server Error:", resp);
+        return; // Stop here, do not redirect
+      }
+
+      // Only run this if success
+      CustomToast("Therapist Added Successfully", "green");
       navigate("/admin/doctor_list");
+      
     } catch (e) {
-      CustomToast("Some error occured", "green");
+      console.error(e);
+      CustomToast("Network connection failed", "red");
     }
-    // Handle form submission
   };
 
   const handleClosePopup = () => {
