@@ -85,7 +85,7 @@ const AdminAppointments = () => {
         const formattedCurData = data.appts.map((appt) => ({
           id: appt.id,
           doctorId: appt.doctor_id,
-          patientName: appt.user.username,
+          patientName: appt.user.randomName,
           time: new Date(appt.dateTime).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -96,7 +96,7 @@ const AdminAppointments = () => {
         const formattedPastData = data.pastApp.map((appt) => ({
           id: appt.id,
           doctorId: appt.doc_id,
-          patientName: appt.user.username,
+          patientName: appt.user.randomName,
           time: new Date(appt.createdAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",

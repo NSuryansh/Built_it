@@ -23,7 +23,7 @@ import { format } from "date-fns";
 
 // --- Components ---
 
-const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, userName }) => {
+const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, randomName }) => {
   if (!isOpen) return null;
 
   // Question mapping based on your FeedbackPage.jsx
@@ -45,7 +45,7 @@ const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, userName }) => {
               Feedback History
             </h2>
             <p className="text-sm text-[var(--custom-gray-600)]">
-              User: <span className="font-semibold">{userName}</span>
+              User: <span className="font-semibold">{randomName}</span>
             </p>
           </div>
           <button
@@ -211,7 +211,7 @@ const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig, onViewFeedback }
               >
                 <td className="px-6 py-5 whitespace-nowrap">
                   <div className="text-sm font-medium text-[var(--custom-gray-900)] group-hover:text-[var(--custom-green-900)]">
-                    {user.username}
+                    {user.randomName}
                   </div>
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap">
@@ -266,7 +266,7 @@ const MobileLayout = ({ filteredAndSortedUsers, onViewFeedback }) => (
               </div>
               <div>
                 <h3 className="font-medium text-[var(--custom-gray-900)]">
-                  {user.username}
+                  {user.randomName}
                 </h3>
                 <div className="mt-1">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--custom-green-100)] text-[var(--custom-green-800)]">
@@ -323,7 +323,7 @@ const AdminUser = () => {
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [selectedUserFeedback, setSelectedUserFeedback] = useState([]);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
-  const [selectedUserName, setSelectedUserName] = useState("");
+  const [selectedrandomName, setSelectedrandomName] = useState("");
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -397,7 +397,7 @@ const AdminUser = () => {
 
   const fetchFeedback = async (user) => {
     setFeedbackLoading(true);
-    setSelectedUserName(user.username);
+    setSelectedrandomName(user.randomName);
     setFeedbackModalOpen(true);
     
     try {
@@ -437,7 +437,7 @@ const AdminUser = () => {
       })
       .filter((user) => {
         const matchesSearch =
-          user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.randomName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.doctors.some((doc) =>
             doc.name?.toLowerCase().includes(searchTerm.toLowerCase())
           );
@@ -519,7 +519,7 @@ const AdminUser = () => {
         onClose={() => setFeedbackModalOpen(false)}
         feedbacks={selectedUserFeedback}
         loading={feedbackLoading}
-        userName={selectedUserName}
+        randomName={selectedrandomName}
       />
       
       <Footer color="green" />
