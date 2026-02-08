@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Clock, Building, Youtube, ChevronRight, BookOpen, Sun, Brain, Heart, Headphones } from "lucide-react"; 
-import VideoSection from "../../components/user/VideoSection";
+import { Clock, Building, Youtube, ChevronRight, BookOpen, Sun, Brain, Heart, Headphones, PlayCircle } from "lucide-react"; 
 import Navbar from "../../components/user/Navbar";
 import Footer from "../../components/common/Footer";
 import { checkAuth } from "../../utils/profile";
@@ -21,8 +20,9 @@ const iconMap = {
 
 // ✅ HELPER: Extract Thumbnail from YouTube URL
 const getYouTubeThumbnail = (url) => {
-  if (!url) return "https://via.placeholder.com/640x360?text=Video";
-  // Regex to handle various YouTube URL formats
+  if (!url) return "https://via.placeholder.com/640x360?text=No+Video+Link";
+  
+  // Regex to handle various YouTube URL formats (standard, short, embed)
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   const videoId = (match && match[2].length === 11) ? match[2] : null;
@@ -43,7 +43,7 @@ const Stress = () => {
   // Fetch Data Function
   const fetchStressData = async () => {
     try {
-      // Ensure this matches your server.js (likely /api/doc)
+      // Ensure this matches your server.js /api/doc
       const backendUrl = "http://localhost:3000/api/doc"; 
       
       const [articlesRes, videosRes] = await Promise.all([
@@ -53,23 +53,14 @@ const Stress = () => {
 
       setArticles(articlesRes.data);
 
-      // ✅ CRITICAL FIX: Map DB fields (youtubeUrl) to UI fields (url, image)
+      // Process videos to add Thumbnail URL
       const processedVideos = videosRes.data.map(section => ({
         ...section,
-        videos: section.videos.map(video => {
-          const thumb = getYouTubeThumbnail(video.youtubeUrl);
-          return {
-            ...video,
-            // 1. Fix Thumbnail: Map to all common names
-            thumbnail: thumb, 
-            image: thumb,     
-            img: thumb,       
-            
-            // 2. Fix Click Action: Map 'youtubeUrl' to 'url' and 'link'
-            url: video.youtubeUrl,   
-            link: video.youtubeUrl   
-          };
-        })
+        videos: section.videos.map(video => ({
+          ...video,
+          thumbnail: getYouTubeThumbnail(video.youtubeUrl), // Generate thumbnail
+          url: video.youtubeUrl // Ensure URL is accessible
+        }))
       }));
 
       setVideoSections(processedVideos);
@@ -178,7 +169,7 @@ const Stress = () => {
           </div>
         </section>
 
-        {/* Video Sections */}
+        {/* Video Sections - DIRECTLY RENDERED (No VideoSection Component) */}
         <div className="space-y-12 mb-16">
           {videoSections.length > 0 ? videoSections.map((section, index) => (
             <section
@@ -198,7 +189,40 @@ const Stress = () => {
                   </p>
                 </div>
               </div>
-              <VideoSection videos={section.videos} />
+
+              {/* DIRECT VIDEO GRID RENDERING */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {section.videos.map((video, idx) => (
+                  <div 
+                    key={video.id || idx}
+                    onClick={() => {
+                        if (video.url) window.open(video.url, "_blank");
+                    }}
+                    className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
+                  >
+                     <div className="relative h-48 bg-gray-200 overflow-hidden">
+                       <img 
+                         src={video.thumbnail || "https://via.placeholder.com/640x360?text=No+Thumbnail"} 
+                         alt={video.title} 
+                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                         onError={(e) => { e.target.src = "https://via.placeholder.com/640x360?text=Video"; }}
+                       />
+                       <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
+                         <PlayCircle className="w-12 h-12 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all drop-shadow-lg" />
+                       </div>
+                     </div>
+                     <div className="p-4">
+                       <h3 className="font-bold text-lg text-gray-800 line-clamp-2 group-hover:text-[var(--custom-orange-600)] transition-colors">
+                         {video.title}
+                       </h3>
+                       <p className="text-sm text-gray-500 mt-2 line-clamp-2">
+                         {video.description}
+                       </p>
+                     </div>
+                  </div>
+                ))}
+              </div>
+
             </section>
           )) : (
              <p className="text-center text-gray-500">No videos available.</p>
