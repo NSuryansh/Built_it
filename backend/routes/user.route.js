@@ -520,6 +520,7 @@ userRouter.get("/currentuserappt", authorizeRoles("user"), async (req, res) => {
     }
     const appt = await prisma.appointments.findMany({
       where: { user_id: userId },
+      orderBy: { isEmergency: "desc" },
       include: {
         doctor: true,
       },

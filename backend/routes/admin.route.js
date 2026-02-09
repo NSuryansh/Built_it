@@ -332,6 +332,7 @@ adminRouter.get(
           doctor: true,
           user: true,
         },
+        orderBy: { isEmergency: "desc" },
       });
 
       // Fetch past appointments with related doctor and user
