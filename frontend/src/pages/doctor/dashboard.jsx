@@ -85,6 +85,7 @@ const DoctorDashboard = () => {
               day: "numeric",
             }),
             type: appt.reason,
+            isEmergency: appt.isEmergency,
           };
         });
 
@@ -320,6 +321,9 @@ const DoctorDashboard = () => {
                             <p className="text-sm text-[var(--custom-gray-600)]">
                               {appointment.date}
                             </p>
+                            {appointment.isEmergency && (<span className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}>
+                              EMERGENCY
+                            </span>)}
                           </div>
                         </motion.div>
                       ))}

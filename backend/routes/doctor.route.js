@@ -164,6 +164,7 @@ docRouter.get(
       const docId = Number(req.query["docId"]);
       const appointments = await prisma.pastAppointments.findMany({
         where: { user_id: userId, doc_id: docId },
+        orderBy: { createdAt: "desc" },
       });
       // console.log(appointments);
       res.json({ appointments: appointments });
@@ -374,7 +375,7 @@ docRouter.get("/currentdocappt", authorizeRoles("doc"), async (req, res) => {
     // });
     const appt = await prisma.appointments.findMany({
       where: { doctor_id: doctorId },
-      orderBy: { isEmergency: "desc" },
+      orderBy: {dateTime: "asc"},
       include: {
         user: {
           select: {
@@ -417,6 +418,7 @@ docRouter.get("/pastdocappt", authorizeRoles("doc"), async (req, res) => {
       include: {
         user: true,
       },
+      orderBy: { createdAt: "desc" },
     });
     // console.log(appt);
     res.json(appt);
@@ -449,6 +451,7 @@ docRouter.get("/uniquePatients", authorizeRoles("doc"), async (req, res) => {
       include: {
         user: true,
       },
+      orderBy: { createdAt: "desc" },
     });
 
     res.json(appt);
@@ -844,6 +847,7 @@ docRouter.post(
           pdfLink: driveLink,
           createdAt: dateTime,
           caseStatus: finalStatus, // ✅ Save status
+          isEmergency: currentApp?.isEmergency || false, // Preserve emergency flag
         },
       });
 

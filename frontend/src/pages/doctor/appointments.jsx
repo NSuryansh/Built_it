@@ -699,6 +699,10 @@ const DoctorAppointment = () => {
                             </span>
                             {/* ✅ ADDED BADGE HERE */}
                             <StatusBadge status={appointment.caseStatus} />
+                            {appointment.isEmergency && (
+                            <span className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}>
+                              EMERGENCY
+                            </span>)}
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />

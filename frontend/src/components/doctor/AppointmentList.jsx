@@ -75,7 +75,7 @@ const AppointmentList = ({ onFollowUp }) => {
                     </span>
                   </div>
                 </div>
-
+                {/* {console.log(appointment)}
                 <span
                   className={`px-2.5 py-1 text-xs rounded-full ${
                     appointment.status === "completed"
@@ -86,7 +86,10 @@ const AppointmentList = ({ onFollowUp }) => {
                   }`}
                 >
                   {appointment.status || "Completed"}
-                </span>
+                </span> */}
+                {appointment.isEmergency && (<span className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}>
+                  EMERGENCY
+                </span>)}
               </div>
 
               <div className="mt-3">

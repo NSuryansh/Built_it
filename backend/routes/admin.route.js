@@ -312,6 +312,7 @@ adminRouter.get("/pastApp", authorizeRoles("admin"), async (req, res) => {
         user: true,
         doc: true,
       },
+      orderBy: { createdAt: "desc" },
     });
     // console.log(pastApp);
     res.json(pastApp);
@@ -341,6 +342,8 @@ adminRouter.get(
           doc: true,
           user: true,
         },
+        orderBy: { createdAt: "desc" },
+
       });
 
       res.status(200).json({

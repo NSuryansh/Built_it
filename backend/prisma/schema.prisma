@@ -164,6 +164,7 @@ model PastAppointments {
   createdAt DateTime
   pdfLink   String?
   isDoctor  Boolean  @default(false)
+  isEmergency Boolean @default(false)
   stars     Int?
   caseStatus CaseStatus @default(OPEN)
   category  String?
