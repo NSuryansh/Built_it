@@ -45,13 +45,15 @@ const REASONS = [
 const StatusBadge = ({ status }) => {
   const styles = {
     NEW: "bg-green-100 text-green-800 border-green-200",
-    OPEN: "bg-blue-100 text-blue-800 border-blue-200",
-    CLOSED: "bg-gray-100 text-gray-800 border-gray-200",
+    ONGOING: "bg-blue-100 text-blue-800 border-blue-200",
+    TERMINATED: "bg-gray-100 text-gray-800 border-gray-200",
   };
-  const currentStatus = status || "OPEN";
-  
+  const currentStatus = status || "ONGOING";
+
   return (
-    <span className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border ${styles[currentStatus]}`}>
+    <span
+      className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border ${styles[currentStatus]}`}
+    >
       {currentStatus} CASE
     </span>
   );
@@ -89,7 +91,7 @@ const DoctorAppointment = () => {
   const token = localStorage.getItem("token");
   const fileInputRef = useRef(null);
   const [files, setFiles] = useState([]);
-  const [cancelledAppoinments, setCancelledAppoinments] = useState([])
+  const [cancelledAppoinments, setCancelledAppoinments] = useState([]);
   const urlSetRef = useRef(new Set());
 
   const APPOINTMENT_CATEGORIES = [
@@ -110,7 +112,7 @@ const DoctorAppointment = () => {
         `http://localhost:3000/api/common/available-slots?date=${date}&docId=${doctorId}`,
         {
           headers: { Authorization: "Bearer " + token },
-        }
+        },
       );
       const data = await response.json();
       setAvailableSlots(data.availableSlots);
@@ -256,7 +258,7 @@ const DoctorAppointment = () => {
             message: `Your appointment request has been updated.`,
             userType: "user",
           }),
-        }
+        },
       );
 
       if (!res.ok) {
@@ -272,7 +274,7 @@ const DoctorAppointment = () => {
       urlSetRef.current.forEach((u) => {
         try {
           URL.revokeObjectURL(u);
-        } catch (e) { }
+        } catch (e) {}
       });
       urlSetRef.current.clear();
     };
@@ -336,21 +338,21 @@ const DoctorAppointment = () => {
         `http://localhost:3000/api/doc/reqApp?docId=${docId}`,
         {
           headers: { Authorization: "Bearer " + token },
-        }
+        },
       );
       const res2 = await fetch(
         `http://localhost:3000/api/doc/currentdocappt?doctorId=${docId}`,
         {
           headers: { Authorization: "Bearer " + token },
-        }
+        },
       );
 
       const res3 = await fetch(
         `http://localhost:3000/api/doc/fetchCancelledAppoinments?doctorId=${docId}`,
         {
-          headers: { Authorization: "Bearer " + token }
-        }
-      )
+          headers: { Authorization: "Bearer " + token },
+        },
+      );
       const resp = await res.json();
       const resp2 = await res2.json();
       const resp3 = await res3.json();
@@ -365,7 +367,7 @@ const DoctorAppointment = () => {
       }
       setapp(resp);
       setcurr(resp2);
-      setCancelledAppoinments(resp3)
+      setCancelledAppoinments(resp3);
       setisFetched(true);
     };
 
@@ -382,7 +384,7 @@ const DoctorAppointment = () => {
           `http://localhost:3000/api/doc/pastdocappt?doctorId=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await response.json();
         if (response.ok) {
@@ -454,7 +456,7 @@ const DoctorAppointment = () => {
         try {
           URL.revokeObjectURL(toRemove.blobUrl);
           urlSetRef.current.delete(toRemove.blobUrl);
-        } catch (e) { }
+        } catch (e) {}
       }
       await pdfDB.pdfs.delete(id);
       setFiles((prev) => prev.filter((p) => p.id !== id));
@@ -506,7 +508,7 @@ const DoctorAppointment = () => {
     formData.append("userId", appointment.user_id);
     formData.append("note", note);
     formData.append("category", category);
-    
+
     // ✅ PASS THE STATUS ACTION
     formData.append("statusAction", isClosing ? "CLOSED" : "DONE");
 
@@ -544,16 +546,18 @@ const DoctorAppointment = () => {
           origTime: format(
             new Date(
               new Date(appointment["dateTime"]).setTime(
-                appointment["dateTime"].getTime() + 5.5 * 60 * 60 * 1000
-              )
+                appointment["dateTime"].getTime() + 5.5 * 60 * 60 * 1000,
+              ),
             ),
-            "dd-MMM-yy hh:mm a"
+            "dd-MMM-yy hh:mm a",
           ),
           newTime: format(
             new Date(
-              new Date(newTime).setTime(newTime.getTime() + 5.5 * 60 * 60 * 1000)
+              new Date(newTime).setTime(
+                newTime.getTime() + 5.5 * 60 * 60 * 1000,
+              ),
             ),
-            "dd-MMM-yy hh:mm a"
+            "dd-MMM-yy hh:mm a",
           ),
           email: appointment["user"]["email"],
         }),
@@ -589,11 +593,13 @@ const DoctorAppointment = () => {
       setisRescheduling(true);
       await emailParams(
         appointment,
-        new Date(new Date(selectedDate).getTime() + new Date(time).getTime())
+        new Date(new Date(selectedDate).getTime() + new Date(time).getTime()),
       );
       handleDateSelect(selectedDate, appointmentId);
     }
-    setSelectedAppointment(appointmentId === selectedAppointment ? null : appointmentId);
+    setSelectedAppointment(
+      appointmentId === selectedAppointment ? null : appointmentId,
+    );
     setisRescheduling(false);
   };
 
@@ -613,7 +619,10 @@ const DoctorAppointment = () => {
   };
 
   const submitRejection = async () => {
-    const reason = selectedReason === "None of the above" ? customReason.trim() : selectedReason;
+    const reason =
+      selectedReason === "None of the above"
+        ? customReason.trim()
+        : selectedReason;
     if (!reason || reason.length === 0) {
       CustomToast("Please select or type a reason for cancelling.", "blue");
       return;
@@ -624,17 +633,20 @@ const DoctorAppointment = () => {
       return;
     }
     try {
-      const res = await fetch("http://localhost:3000/api/user_doc/cancelRequest", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
+      const res = await fetch(
+        "http://localhost:3000/api/user_doc/cancelRequest",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            id: cancellingAppointment.id,
+            reason: reason,
+          }),
         },
-        body: JSON.stringify({
-          id: cancellingAppointment.id,
-          reason: reason,
-        }),
-      });
+      );
 
       if (!res.ok) {
         const err = await res.text();
@@ -667,7 +679,6 @@ const DoctorAppointment = () => {
       <div className="container mx-auto px-4 sm:px-8 lg:px-4 xl:px-16 py-5 md:py-10 lg:py-20">
         {/* CHANGED: Replaced grid with flex-col to stack vertically */}
         <div className="flex flex-col gap-12">
-          
           {/* SECTION 1: Current Appointments */}
           <div className="space-y-8">
             <div className="flex items-center justify-between w-full">
@@ -675,7 +686,6 @@ const DoctorAppointment = () => {
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
                   Current Appointments
                 </h1>
-                
               </div>
             </div>
 
@@ -698,17 +708,30 @@ const DoctorAppointment = () => {
                               {appointment.user.username}
                             </span>
                             {/* ✅ ADDED BADGE HERE */}
-                            <StatusBadge status={appointment.caseStatus} />
+                            <StatusBadge
+                              status={
+                                appointment.caseStatus == "OPEN"
+                                  ? "ONGOING"
+                                  : appointment.caseStatus == "CLOSED"
+                                    ? "TERMINATED"
+                                    : "NEW"
+                              }
+                            />
                             {appointment.isEmergency && (
-                            <span className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}>
-                              EMERGENCY
-                            </span>)}
+                              <span
+                                className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}
+                              >
+                                EMERGENCY
+                              </span>
+                            )}
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                             <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                             {format(
-                              TimeReduce(new Date(appointment.dateTime).getTime()),
-                              "dd MMM h:mm a"
+                              TimeReduce(
+                                new Date(appointment.dateTime).getTime(),
+                              ),
+                              "dd MMM h:mm a",
                             )}
                           </div>
                           <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
@@ -731,8 +754,9 @@ const DoctorAppointment = () => {
                           </div>
                         </div>
                         <div className="flex flex-col xl:flex-row xl:space-x-5 space-y-3 xl:space-y-0">
-                          {completedNotes[appointment.id] !== undefined ? doneId !== appointment.id ? (
-                            <div className="flex flex-col sm:flex-row gap-2">
+                          {completedNotes[appointment.id] !== undefined ? (
+                            doneId !== appointment.id ? (
+                              <div className="flex flex-col sm:flex-row gap-2">
                                 {/* ✅ UPDATED BUTTONS */}
                                 <button
                                   onClick={() => deleteApp(appointment, false)}
@@ -746,17 +770,18 @@ const DoctorAppointment = () => {
                                 >
                                   Close Case
                                 </button>
-                            </div>
-                          ) :
-                            (<Loader className="mx-auto animate-spin" />) :
-                            (<button
+                              </div>
+                            ) : (
+                              <Loader className="mx-auto animate-spin" />
+                            )
+                          ) : (
+                            <button
                               onClick={() => handleMarkAsDone(appointment.id)}
                               className="px-6 py-2.5 bg-[var(--custom-blue-500)] text-[var(--custom-white)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-blue-600)] transform hover:scale-105 transition-all duration-300"
                             >
                               Action
                             </button>
-
-                            )}
+                          )}
                           {selectedAppointment !== appointment.id && (
                             <button
                               onClick={() => handleReschedule(appointment)}
@@ -768,7 +793,7 @@ const DoctorAppointment = () => {
                           <button
                             onClick={() =>
                               navigate(
-                                `/doctor/history?username=${appointment.user.username}`
+                                `/doctor/history?username=${appointment.user.username}`,
                               )
                             }
                             className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
@@ -799,7 +824,7 @@ const DoctorAppointment = () => {
                                   date.setDate(date.getDate() + index);
                                   const formattedDate = format(
                                     date,
-                                    "yyyy-MM-dd"
+                                    "yyyy-MM-dd",
                                   );
                                   const displayDate = format(date, "d MMM");
                                   return (
@@ -832,7 +857,7 @@ const DoctorAppointment = () => {
                                     >
                                       {format(
                                         new Date(slot.starting_time).getTime(),
-                                        "HH:mm"
+                                        "HH:mm",
                                       )}
                                     </option>
                                   ))}
@@ -897,7 +922,9 @@ const DoctorAppointment = () => {
                             </button>
                             <div className="dashboard-list">
                               {files.length === 0 ? (
-                                <p className="empty-msg">No PDFs uploaded yet.</p>
+                                <p className="empty-msg">
+                                  No PDFs uploaded yet.
+                                </p>
                               ) : (
                                 <ul>
                                   {files.map((f) => (
@@ -906,7 +933,9 @@ const DoctorAppointment = () => {
                                         <strong>{f.name}</strong>
                                         <small>
                                           {Math.round(f.size / 1024)} KB •{" "}
-                                          {new Date(f.uploadedAt).toLocaleString()}
+                                          {new Date(
+                                            f.uploadedAt,
+                                          ).toLocaleString()}
                                         </small>
                                       </div>
                                       <div className="pdf-actions">
@@ -954,7 +983,6 @@ const DoctorAppointment = () => {
                 <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
                   Incoming Requests
                 </h1>
-                
               </div>
             </div>
 
@@ -983,8 +1011,10 @@ const DoctorAppointment = () => {
                             <div className="flex items-center text-lg text-[var(--custom-gray-800)]">
                               <Clock className="h-6 w-6 mr-4 text-[var(--custom-blue-600)]" />
                               {format(
-                                TimeReduce(new Date(appointment.dateTime).getTime()),
-                                "dd MMM h:mm a"
+                                TimeReduce(
+                                  new Date(appointment.dateTime).getTime(),
+                                ),
+                                "dd MMM h:mm a",
                               )}
                             </div>
 
@@ -1035,7 +1065,9 @@ const DoctorAppointment = () => {
 
                               {selectedAppointment !== appointment.id && (
                                 <button
-                                  onClick={(e) => openCancelModal(e, appointment)}
+                                  onClick={(e) =>
+                                    openCancelModal(e, appointment)
+                                  }
                                   className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                                 >
                                   Cancel
@@ -1045,7 +1077,7 @@ const DoctorAppointment = () => {
                               <button
                                 onClick={() =>
                                   navigate(
-                                    `/doctor/history?username=${appointment.user.username}`
+                                    `/doctor/history?username=${appointment.user.username}`,
                                   )
                                 }
                                 className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
@@ -1055,7 +1087,8 @@ const DoctorAppointment = () => {
                             </div>
                           ) : (
                             <div className="text-sm text-[var(--custom-gray-600)]">
-                              You have asked to reschedulethe appointment. Waiting for the user response
+                              You have asked to reschedulethe appointment.
+                              Waiting for the user response
                             </div>
                           )}
 
@@ -1081,10 +1114,16 @@ const DoctorAppointment = () => {
                                   {[...Array(14)].map((_, index) => {
                                     const date = new Date();
                                     date.setDate(date.getDate() + index);
-                                    const formattedDate = format(date, "yyyy-MM-dd");
+                                    const formattedDate = format(
+                                      date,
+                                      "yyyy-MM-dd",
+                                    );
                                     const displayDate = format(date, "d MMM");
                                     return (
-                                      <option key={formattedDate} value={formattedDate}>
+                                      <option
+                                        key={formattedDate}
+                                        value={formattedDate}
+                                      >
                                         {displayDate}
                                       </option>
                                     );
@@ -1104,8 +1143,16 @@ const DoctorAppointment = () => {
                                   <option value="">Select Time</option>
                                   {Array.isArray(slots) &&
                                     slots.map((slot) => (
-                                      <option key={slot.id} value={slot.starting_time}>
-                                        {format(new Date(slot.starting_time).getTime(), "HH:mm")}
+                                      <option
+                                        key={slot.id}
+                                        value={slot.starting_time}
+                                      >
+                                        {format(
+                                          new Date(
+                                            slot.starting_time,
+                                          ).getTime(),
+                                          "HH:mm",
+                                        )}
                                       </option>
                                     ))}
                                 </select>
@@ -1116,7 +1163,11 @@ const DoctorAppointment = () => {
                                   onClick={() => handleReschedule(appointment)}
                                   className="px-6 mt-4 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                                 >
-                                  {isRescheduling ? <Loader className="mx-auto" /> : "Reschedule"}
+                                  {isRescheduling ? (
+                                    <Loader className="mx-auto" />
+                                  ) : (
+                                    "Reschedule"
+                                  )}
                                 </button>
                               </center>
                             </div>
@@ -1146,18 +1197,15 @@ const DoctorAppointment = () => {
           <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
             Cancelled Appoinments
           </h1>
-          
         </div>
 
         {cancelledAppoinments?.length > 0 ? (
           <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-auto max-h-150 p-4 space-y-4">
-
             {cancelledAppoinments.map((app) => (
               <div
                 key={app.id}
                 className="w-full bg-[var(--custom-gray-50)] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-[var(--custom-gray-200)]"
               >
-                
                 <div className="flex flex-col gap-1">
                   <p className="text-lg font-semibold text-[var(--custom-orange-900)]">
                     {app.user?.username || "Unknown User"}
@@ -1191,8 +1239,7 @@ const DoctorAppointment = () => {
           <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] flex items-center justify-center py-8">
             You do not have any cancelled appointments
           </div>
-        )
-        }
+        )}
 
         <PastAppointmentGraphs
           timePeriodData={timePeriodData}
@@ -1205,10 +1252,17 @@ const DoctorAppointment = () => {
 
       {showCancelModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 backdrop-blur-sm" onClick={closeCancelModal} />
+          <div
+            className="absolute inset-0 backdrop-blur-sm"
+            onClick={closeCancelModal}
+          />
           <div className="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg z-10">
-            <h4 className="text-lg font-semibold mb-3">Reason for cancelling</h4>
-            <label className="block text-sm font-medium mb-2">Select reason</label>
+            <h4 className="text-lg font-semibold mb-3">
+              Reason for cancelling
+            </h4>
+            <label className="block text-sm font-medium mb-2">
+              Select reason
+            </label>
             <select
               value={selectedReason}
               onChange={(e) => {
@@ -1226,7 +1280,9 @@ const DoctorAppointment = () => {
 
             {selectedReason === "None of the above" && (
               <div className="mb-3">
-                <label className="block text-sm font-medium mb-2">Please type your reason</label>
+                <label className="block text-sm font-medium mb-2">
+                  Please type your reason
+                </label>
                 <textarea
                   value={customReason}
                   onChange={(e) => setCustomReason(e.target.value)}
@@ -1238,7 +1294,10 @@ const DoctorAppointment = () => {
             )}
 
             <div className="flex justify-end gap-3 mt-4">
-              <button onClick={closeCancelModal} className="px-4 py-2 rounded-md border">
+              <button
+                onClick={closeCancelModal}
+                className="px-4 py-2 rounded-md border"
+              >
                 Cancel
               </button>
               <button

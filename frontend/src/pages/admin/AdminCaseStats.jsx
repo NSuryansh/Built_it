@@ -44,8 +44,8 @@ const AdminCaseStats = () => {
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Doctor Name</th>
                 <th className="px-6 py-4 text-center text-sm font-semibold text-green-600">New Cases</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-blue-600">Open Cases</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-600">Closed Cases</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-blue-600">Ongoing Cases</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-600">Terminated Cases</th>
                 <th className="px-6 py-4 text-center text-sm font-semibold text-gray-800">Total</th>
               </tr>
             </thead>
@@ -74,8 +74,8 @@ const AdminCaseStats = () => {
                     <Tooltip />
                     <Legend />
                     <Bar dataKey="new" name="New" fill="#10B981" />
-                    <Bar dataKey="open" name="Open" fill="#3B82F6" />
-                    <Bar dataKey="closed" name="Closed" fill="#6B7280" />
+                    <Bar dataKey="open" name="Ongoing" fill="#3B82F6" />
+                    <Bar dataKey="closed" name="Terminated" fill="#6B7280" />
                 </BarChart>
             </ResponsiveContainer>
         </div>
