@@ -57,7 +57,7 @@ const DoctorBook = ({ onBookAppointment }) => {
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.phone.includes(searchTerm)
+      user.phone.includes(searchTerm),
   );
 
   return (
@@ -148,7 +148,6 @@ function AppointmentForm({ user, onBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", { ...formData, user });
     onBack();
   };
 

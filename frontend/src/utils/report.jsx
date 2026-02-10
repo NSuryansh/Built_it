@@ -12,8 +12,7 @@ export const Report = forwardRef(function Report({ stats }, ref) {
           <strong>Order No:</strong> {1}
         </p>
         <p>
-          <strong>Date:</strong>{" "}
-          {new Date().toLocaleDateString()}
+          <strong>Date:</strong> {new Date().toLocaleDateString()}
         </p>
         <p>
           <strong>Status:</strong> {1}
@@ -23,9 +22,7 @@ export const Report = forwardRef(function Report({ stats }, ref) {
       <hr className="my-4" />
 
       <h3 className="font-bold mb-2">Customer</h3>
-      <p>
-        ABC
-      </p>
+      <p>ABC</p>
       <p>b</p>
       <p>9</p>
 

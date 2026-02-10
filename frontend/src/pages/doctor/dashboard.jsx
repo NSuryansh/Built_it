@@ -66,7 +66,7 @@ const DoctorDashboard = () => {
       try {
         const response = await fetch(
           `http://localhost:3000/api/doc/currentdocappt?doctorId=${docId}`,
-          { headers: { Authorization: "Bearer " + token } }
+          { headers: { Authorization: "Bearer " + token } },
         );
         const data = await response.json();
 
@@ -106,7 +106,7 @@ const DoctorDashboard = () => {
           "http://localhost:3000/api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await response.json();
 
@@ -145,11 +145,10 @@ const DoctorDashboard = () => {
     try {
       const response = await fetch(
         `http://localhost:3000/api/doc_admin/latestLeave?doc_id=${docId}`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       const data = await response.json();
       setLeave(data);
-      console.log(data);
     } catch (error) {
       console.error("Error fetching leave details:", error);
       CustomToast("Error leave details", "blue");
@@ -321,9 +320,13 @@ const DoctorDashboard = () => {
                             <p className="text-sm text-[var(--custom-gray-600)]">
                               {appointment.date}
                             </p>
-                            {appointment.isEmergency && (<span className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}>
-                              EMERGENCY
-                            </span>)}
+                            {appointment.isEmergency && (
+                              <span
+                                className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}
+                              >
+                                EMERGENCY
+                              </span>
+                            )}
                           </div>
                         </motion.div>
                       ))}

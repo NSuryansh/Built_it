@@ -48,7 +48,7 @@ const DoctorsList = () => {
         "http://localhost:3000/api/user_admin/getdoctors?user_type=admin",
         {
           headers: { Authorization: "Bearer " + token },
-        }
+        },
       );
       const resp = await res.json();
       setDoctors(resp);
@@ -65,8 +65,6 @@ const DoctorsList = () => {
   }, []);
 
   const handleToggleDoc = async (doctor) => {
-    console.log(doctor.id);
-    console.log(doctor);
     try {
       const res = await fetch("http://localhost:3000/api/admin/toggleDoc", {
         method: "POST",
@@ -120,7 +118,7 @@ const DoctorsList = () => {
     (doctor) =>
       doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       doctor.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
+      doctor.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   if (isAuthenticated === null || fetched === null) {
@@ -154,8 +152,9 @@ const DoctorsList = () => {
             <div className="flex gap-4">
               <button
                 onClick={handleRefresh}
-                className={`p-3 bg-[var(--custom-white)] hover:scale-105 shadow-sm hover:shadow-md hover:bg-[var(--custom-white)]/80 rounded-xl transition-all duration-300 text-[var(--custom-green-700)] ${isRefreshing ? "animate-spin" : ""
-                  }`}
+                className={`p-3 bg-[var(--custom-white)] hover:scale-105 shadow-sm hover:shadow-md hover:bg-[var(--custom-white)]/80 rounded-xl transition-all duration-300 text-[var(--custom-green-700)] ${
+                  isRefreshing ? "animate-spin" : ""
+                }`}
                 title="Refresh List"
               >
                 <RefreshCw size={24} />
@@ -247,10 +246,11 @@ const DoctorsList = () => {
                     <div className="flex items-center justify-center gap-5">
                       <button
                         onClick={() => handleToggleDocPopup(doctor, true)}
-                        className={`p-2 ${doctor.isInactive
+                        className={`p-2 ${
+                          doctor.isInactive
                             ? "text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)]"
                             : "text-[var(--custom-red-600)] hover:text-[var(--custom-red-700)]"
-                          } transition-colors rounded-full hover:bg-[var(--custom-red-50)] group relative`}
+                        } transition-colors rounded-full hover:bg-[var(--custom-red-50)] group relative`}
                         title="Set Therapist Inactive"
                       >
                         {doctor.isInactive ? (
@@ -316,10 +316,11 @@ const DoctorsList = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={() => handleToggleDocPopup(doctor, true)}
-                    className={`p-2 ${doctor.isInactive
+                    className={`p-2 ${
+                      doctor.isInactive
                         ? "text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)]"
                         : "text-[var(--custom-red-600)] hover:text-[var(--custom-red-700)]"
-                      } transition-colors rounded-full hover:bg-custom-red-50`}
+                    } transition-colors rounded-full hover:bg-custom-red-50`}
                   >
                     {doctor.isInactive ? (
                       <UserPlus size={20} />

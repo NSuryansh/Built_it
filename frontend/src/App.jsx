@@ -62,7 +62,6 @@ export default function App() {
   // const messaging = getMessaging(app);
 
   // onMessage(messaging, (payload) => {
-  //   console.log('Foreground message received:', payload);
   //   if (Notification.permission === "granted") {
   //     new Notification(payload.notification.title, {
   //       body: payload.notification.body,
@@ -116,8 +115,6 @@ export default function App() {
     });
 
     if (fcmToken) {
-      console.log("FCM Token:", fcmToken);
-
       const res = await fetch(
         "http://localhost:3000/api/common/save-subscription",
         {
@@ -130,7 +127,7 @@ export default function App() {
             subscription: fcmToken,
             userType: userType,
           }),
-        }
+        },
       );
     }
 
@@ -164,7 +161,6 @@ export default function App() {
     setTimeout(() => {
       const userid = localStorage.getItem("userid");
       const userType = localStorage.getItem("user_type");
-      console.log(userType, "USER type");
       requestNotificationPermission(userid, userType);
     }, 4000);
   }, [type]);
@@ -200,17 +196,26 @@ export default function App() {
           <Route path="/doctor/peer" element={<DoctorPeer />} />
           <Route path="/doctor/leave" element={<DoctorLeave />} />
           <Route path="/doctor/book" element={<DoctorBook />} />
-          <Route path="/doctor/content_manager" element={<DoctorContentManager />} />
+          <Route
+            path="/doctor/content_manager"
+            element={<DoctorContentManager />}
+          />
           <Route path="/doctor/history" element={<History />} />
-          <Route path="/doctor/emergency" element={< DoctorEmergency/>} />
+          <Route path="/doctor/emergency" element={<DoctorEmergency />} />
           <Route path="/doctor/user" element={<UserDetail />} />
-          <Route path="/doctor/event_list" element={<DoctorEventsList/>}/>
-          <Route path="/doctor/add_event" element={<DoctorAddEvent/>}/>
+          <Route path="/doctor/event_list" element={<DoctorEventsList />} />
+          <Route path="/doctor/add_event" element={<DoctorAddEvent />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/reset_password" element={<AdminResetPassword />} />
+          <Route
+            path="/admin/reset_password"
+            element={<AdminResetPassword />}
+          />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/doctor_list" element={<DoctorsList />} />
-          <Route path="/admin/doctor_profile" element={<AdminDoctorProfile />} />
+          <Route
+            path="/admin/doctor_profile"
+            element={<AdminDoctorProfile />}
+          />
           <Route path="/admin/event_list" element={<EventsList />} />
           <Route path="/admin/add_event" element={<AddEvent />} />
           <Route path="/admin/add_doctor" element={<AddDoctor />} />

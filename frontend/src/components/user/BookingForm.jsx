@@ -80,9 +80,7 @@ const BookingFormStep = ({
         },
       );
 
-      if (res.ok) {
-        console.log("HALLELUJAH");
-      } else {
+      if (!res.ok) {
         console.error("Failed to send notification");
       }
     } catch (error) {

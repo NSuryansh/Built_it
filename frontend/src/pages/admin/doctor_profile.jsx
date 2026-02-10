@@ -97,7 +97,6 @@ const AdminDoctorProfile = () => {
         },
       );
       const data = await response.json();
-      console.log(data);
       setDoctor({ ...doctor, weekOffs: tempWeekOffs });
     } catch (error) {
       console.error("Error updating weekOffs:", error);
@@ -180,7 +179,6 @@ const AdminDoctorProfile = () => {
       );
       const data = await response.json();
       setLeave(data);
-      console.log(data);
     } catch (error) {
       console.error("Error fetching leave details:", error);
       CustomToast("Error leave details", "green");
@@ -202,7 +200,6 @@ const AdminDoctorProfile = () => {
         },
       );
       const data = await response.json();
-      console.log(data);
       setLeaves(data);
     } catch (error) {
       console.error(error);

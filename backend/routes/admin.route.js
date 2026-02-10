@@ -46,27 +46,32 @@ adminRouter.post("/addSlot", authorizeRoles("admin"), async (req, res) => {
 });
 
 adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
+  const { period } = req.query;
+  console.log(period);
   try {
     // 1. Fetch all doctors
     const doctors = await prisma.doctor.findMany({
-      select: { id: true, name: true, email: true }
+      select: { id: true, name: true, email: true },
     });
 
     // 2. Aggregate stats from PastAppointments
     const stats = await prisma.pastAppointments.groupBy({
-      by: ['doc_id', 'caseStatus'],
+      by: ["doc_id", "caseStatus"],
       _count: {
-        _all: true
-      }
+        _all: true,
+      },
     });
 
     // 3. Map stats to doctors
-    const doctorStats = doctors.map(doc => {
-      const docData = stats.filter(s => s.doc_id === doc.id);
-      
-      const newCases = docData.find(s => s.caseStatus === 'NEW')?._count._all || 0;
-      const openCases = docData.find(s => s.caseStatus === 'OPEN')?._count._all || 0;
-      const closedCases = docData.find(s => s.caseStatus === 'CLOSED')?._count._all || 0;
+    const doctorStats = doctors.map((doc) => {
+      const docData = stats.filter((s) => s.doc_id === doc.id);
+
+      const newCases =
+        docData.find((s) => s.caseStatus === "NEW")?._count._all || 0;
+      const openCases =
+        docData.find((s) => s.caseStatus === "OPEN")?._count._all || 0;
+      const closedCases =
+        docData.find((s) => s.caseStatus === "CLOSED")?._count._all || 0;
 
       return {
         ...doc,
@@ -74,8 +79,8 @@ adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
           new: newCases,
           open: openCases,
           closed: closedCases,
-          total: newCases + openCases + closedCases
-        }
+          total: newCases + openCases + closedCases,
+        },
       };
     });
 
@@ -108,13 +113,13 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
     });
 
     if (existingDoc) {
-      return res.status(400).json({ 
-        error: "Doctor with this Email, Mobile, or Reg ID already exists." 
+      return res.status(400).json({
+        error: "Doctor with this Email, Mobile, or Reg ID already exists.",
       });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const doc = await prisma.doctor.create({
       data: {
         name,
@@ -130,7 +135,7 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
         weekOff,
       },
     });
-    
+
     res.json({ message: "doc added", doc });
   } catch (e) {
     console.error("Error adding doctor:", e);
@@ -139,7 +144,6 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
 });
 
 adminRouter.post("/login", async (req, res) => {
-  // console.log(req.body);
   const emailId = req.body["email"];
   const password = req.body["password"];
 
@@ -175,7 +179,6 @@ adminRouter.post("/forgotPassword", async (req, res) => {
         email: email,
       },
     });
-    // console.log(admin);
     if (!admin) {
       res.json({ message: "No user admin with this email" });
     }
@@ -188,7 +191,6 @@ adminRouter.post("/forgotPassword", async (req, res) => {
         userId: admin.id,
       },
     });
-    // console.log(tokengen);
     const resetLink = `https://wellness.iiti.ac.in/admin/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
@@ -234,7 +236,6 @@ adminRouter.post("/resetPassword", async (req, res) => {
 adminRouter.get("/profile", authorizeRoles("admin"), async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    // console.log(token);
     return res.status(401).json({ message: "Unauthorized", token });
   }
   try {
@@ -242,19 +243,16 @@ adminRouter.get("/profile", authorizeRoles("admin"), async (req, res) => {
     const admin = await prisma.admin.findUnique({
       where: { email: decoded.email },
     });
-    // console.log(admin);
     res.json({ admin: admin, message: "Admin found" });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 });
 
 adminRouter.post("/toggleDoc", authorizeRoles("admin"), async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
   const isInactive = Boolean(req.body["isInactive"]);
-  // console.log(doctorId);
   try {
-    // Find the doctor
     const doctor = await prisma.doctor.findUnique({
       where: { id: doctorId },
     });
@@ -314,7 +312,6 @@ adminRouter.get("/pastApp", authorizeRoles("admin"), async (req, res) => {
       },
       orderBy: { createdAt: "desc" },
     });
-    // console.log(pastApp);
     res.json(pastApp);
   } catch (e) {
     console.error(e);
@@ -343,7 +340,6 @@ adminRouter.get(
           user: true,
         },
         orderBy: { createdAt: "desc" },
-
       });
 
       res.status(200).json({

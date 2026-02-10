@@ -18,17 +18,15 @@ const AppointmentList = ({ onFollowUp }) => {
     const doc_id = localStorage.getItem("userid");
     const getAppointments = async () => {
       try {
-        console.log(token);
         const response = await fetch(
           `http://localhost:3000/api/doc/getAppointmentForDoctorUser?userId=${userId}&docId=${doc_id}`,
           {
             headers: {
               Authorization: "Bearer " + token,
             },
-          }
+          },
         );
         const data = await response.json();
-        console.log(data);
         setappointments(data.appointments);
       } catch (error) {
         console.error(error);
@@ -75,7 +73,7 @@ const AppointmentList = ({ onFollowUp }) => {
                     </span>
                   </div>
                 </div>
-                {/* {console.log(appointment)}
+                {/*
                 <span
                   className={`px-2.5 py-1 text-xs rounded-full ${
                     appointment.status === "completed"
@@ -87,9 +85,13 @@ const AppointmentList = ({ onFollowUp }) => {
                 >
                   {appointment.status || "Completed"}
                 </span> */}
-                {appointment.isEmergency && (<span className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}>
-                  EMERGENCY
-                </span>)}
+                {appointment.isEmergency && (
+                  <span
+                    className={`ml-3 px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase rounded-md border bg-red-100 text-red-800 border-red-200`}
+                  >
+                    EMERGENCY
+                  </span>
+                )}
               </div>
 
               <div className="mt-3">

@@ -46,7 +46,6 @@ const validateDriveFolder = async (folderId) => {
 };
 
 docRouter.post("/login", async (req, res) => {
-  // console.log(req.body);
   const email = req.body["email"];
   const password = req.body["password"];
 
@@ -82,7 +81,6 @@ docRouter.post("/forgotPassword", async (req, res) => {
         email: email,
       },
     });
-    // console.log(doctor);
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const tokengen = await prisma.passwordResetToken.create({
@@ -92,7 +90,6 @@ docRouter.post("/forgotPassword", async (req, res) => {
         userId: doctor.id,
       },
     });
-    // console.log(tokengen);
     const resetLink = `https://wellness.iiti.ac.in/doctor/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
@@ -166,7 +163,6 @@ docRouter.get(
         where: { user_id: userId, doc_id: docId },
         orderBy: { createdAt: "desc" },
       });
-      // console.log(appointments);
       res.json({ appointments: appointments });
     } catch (e) {
       return res.status(400).json({ message: "Error in appointments" });
@@ -175,7 +171,6 @@ docRouter.get(
 );
 
 docRouter.post("/reschedule", async (req, res) => {
-  // console.log("hi");
   const { id, username, docName, origTime, newTime, email } = req.body;
   try {
     const reschedule = await prisma.requests.update({
@@ -242,7 +237,6 @@ docRouter.get("/reqApp", authorizeRoles("doc"), async (req, res) => {
       },
     },
   });
-  // console.log(appt);
   res.json(appt);
 });
 
@@ -285,10 +279,10 @@ docRouter.post("/emergencyBook", authorizeRoles("doc"), async (req, res) => {
       user.email,
       "Emergency Appointment Scheduled!",
       `Dear ${user.username}, \n\nThis is to inform you that an EMERGENCY appointment has been scheduled with ${doctor.name}.\n\nThe details of the appointment are given below: \n\nDate: ${new Date(
-        some
+        some,
       ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
         doctor.office_address
-      }\n\nRegards\nCalm Connect`
+      }\n\nRegards\nCalm Connect`,
     );
 
     await sendEmail(
@@ -297,10 +291,10 @@ docRouter.post("/emergencyBook", authorizeRoles("doc"), async (req, res) => {
       `Dear ${doctor.name}, \n\nYour emergency appointment with ${
         user.username
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
-        some
+        some,
       ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
         doctor.office_address
-      }\n\nRegards\nCalm Connect`
+      }\n\nRegards\nCalm Connect`,
     );
 
     res.json({ message: "Emergency Appointment booked successfully", result });
@@ -313,7 +307,6 @@ docRouter.post("/emergencyBook", authorizeRoles("doc"), async (req, res) => {
 docRouter.get("/profile", authorizeRoles("doc"), async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    // console.log(token);
     return res.status(401).json({ message: "Unauthorized", token });
   }
   try {
@@ -321,7 +314,6 @@ docRouter.get("/profile", authorizeRoles("doc"), async (req, res) => {
     const doctor = await prisma.doctor.findUnique({
       where: { email: decoded.email },
     });
-    // console.log(doctor);
     res.json(
       JSON.parse(JSON.stringify({ doctor: doctor, message: "Doctor found" })),
     );
@@ -334,7 +326,6 @@ docRouter.post("/changeRoomNo", authorizeRoles("doc"), async (req, res) => {
   try {
     const user_Id = Number(req.query["user_Id"]);
     const room_no = req.query["roomNo"];
-    // console.log(room_no);
 
     // Validate input
     if (!user_Id || !room_no) {
@@ -375,7 +366,7 @@ docRouter.get("/currentdocappt", authorizeRoles("doc"), async (req, res) => {
     // });
     const appt = await prisma.appointments.findMany({
       where: { doctor_id: doctorId },
-      orderBy: {dateTime: "asc"},
+      orderBy: { dateTime: "asc" },
       include: {
         user: {
           select: {
@@ -412,7 +403,6 @@ docRouter.get("/pastdocappt", authorizeRoles("doc"), async (req, res) => {
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
-    // console.log("HH");
     const appt = await prisma.pastAppointments.findMany({
       where: { doc_id: doctorId },
       include: {
@@ -420,7 +410,6 @@ docRouter.get("/pastdocappt", authorizeRoles("doc"), async (req, res) => {
       },
       orderBy: { createdAt: "desc" },
     });
-    // console.log(appt);
     res.json(appt);
   } catch (e) {
     console.error(e);
@@ -547,10 +536,7 @@ docRouter.put(
       if (id !== req.user.userId.toString()) {
         return res.status(403).json({ error: "Access denied" });
       }
-      // console.log(req.body);
       const file = req.file;
-      // console.log(file);
-      // console.log(image)
       var url = null;
       if (file) {
         url = await new Promise((resolve, reject) => {
@@ -560,11 +546,9 @@ docRouter.put(
           });
           stream.end(file.buffer);
         });
-        // console.log(url);
       }
 
       // const doc_id = Number(id);
-      // console.log(req.query);
       const certifications = certifi.split(",");
       const education = educ.split(",");
       const doctorId = Number(id);
@@ -578,13 +562,11 @@ docRouter.put(
           id: doctorId,
         },
       });
-      // console.log(existingDoctor);
       if (existingDoctor && existingDoctor.id !== doctorId) {
         return res
           .status(400)
           .json({ error: "The updated field is already in use" });
       }
-      // console.log(url);
       const updatedData = {};
       if (address?.trim()) updatedData.address = address.trim();
       if (office_address?.trim())
@@ -594,7 +576,7 @@ docRouter.put(
       if (additionalExperience?.trim())
         updatedData.additionalExperience = additionalExperience.trim();
       if (folderLink?.trim()) {
-        if (await validateDriveFolder(folderLink) == "OK")
+        if ((await validateDriveFolder(folderLink)) == "OK")
           updatedData.folderLink = folderLink.trim();
         else
           return res.status(400).json({ error: "Folder Link not accessible" });
@@ -603,7 +585,6 @@ docRouter.put(
       if (url) updatedData.img = url;
       if (isProfileDone) updatedData.isProfileDone = isProfileDone;
       updatedData.isProfileDone = isProfileDone === "true";
-      // console.log(updatedData);
       if (Object.keys(updatedData).length === 0) {
         return res
           .status(400)
@@ -615,8 +596,6 @@ docRouter.put(
           where: { id: doctorId },
           data: updatedData,
         });
-
-        // console.log(updatedDoctor);
 
         const certificate = await prisma.docCertification.deleteMany({
           where: {
@@ -664,7 +643,6 @@ docRouter.post("/add-slot", authorizeRoles("doc"), async (req, res) => {
     return res.status(403).json({ error: "Access denied" });
   }
   const startTime = req.body["startTime"];
-  // console.log(req.body);
   try {
     // Check if doctor exists
     const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
@@ -801,8 +779,8 @@ docRouter.post(
       const note = req.body.note;
       const category = req.body.category;
       // Get the explicit status sent from frontend
-      const statusAction = req.body.statusAction; 
-      
+      const statusAction = req.body.statusAction;
+
       const dateTime = new Date();
 
       if (doc_id !== req.user.userId) {
@@ -811,13 +789,14 @@ docRouter.post(
 
       // 1. Fetch current appointment to check existing status
       const currentApp = await prisma.appointments.findUnique({
-        where: { id: appId }
+        where: { id: appId },
       });
 
       // 2. Determine Final Status
-      // If closing, set to CLOSED. 
+      // If closing, set to CLOSED.
       // If marking as done, keep existing status (NEW or OPEN)
-      const finalStatus = statusAction === "CLOSED" ? "CLOSED" : (currentApp?.caseStatus || "OPEN");
+      const finalStatus =
+        statusAction === "CLOSED" ? "CLOSED" : currentApp?.caseStatus || "OPEN";
 
       const files = req.files;
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
@@ -828,8 +807,9 @@ docRouter.post(
         const data = await uploadToGoogleDrive(file, {
           therapistName: doc.name,
           patientName: user.username,
-          dateTime: `${dateTime.getDate()}-${dateTime.getMonth() + 1
-            }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+          dateTime: `${dateTime.getDate()}-${
+            dateTime.getMonth() + 1
+          }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
         });
         driveLink = data.shareableLink;
       }
@@ -1084,33 +1064,35 @@ docRouter.delete(
   },
 );
 
-docRouter.get("/fetchCancelledAppoinments", authorizeRoles("doc"), async (req, res) => {
-  try {
-    const docId = Number(req.query["doctorId"]);
-    // if (docId !== req.user.userId) {
-    //   return res.status(403).json({ error: "Access denied" });
-    // }
-    console.log(docId)
-    const app = await prisma.cancelledRequest.findMany({
-      where: {
-        doctor_id: docId
-      },
-      include: {
-        user: {
-          select: {
-            username: true,
-            alt_mobile: true,
-            mobile: true,
-            email: true,
+docRouter.get(
+  "/fetchCancelledAppoinments",
+  authorizeRoles("doc"),
+  async (req, res) => {
+    try {
+      const docId = Number(req.query["doctorId"]);
+      // if (docId !== req.user.userId) {
+      //   return res.status(403).json({ error: "Access denied" });
+      // }
+      const app = await prisma.cancelledRequest.findMany({
+        where: {
+          doctor_id: docId,
+        },
+        include: {
+          user: {
+            select: {
+              username: true,
+              alt_mobile: true,
+              mobile: true,
+              email: true,
+            },
           },
         },
-      }
-    })
-    // console.log(app, "app")
-    res.json(app)
-  }catch (e) {
+      });
+      res.json(app);
+    } catch (e) {
       res.status(500).json({ error: "Failed to delete item" });
     }
-})
+  },
+);
 
 export default docRouter;

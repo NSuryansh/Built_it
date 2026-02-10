@@ -133,7 +133,7 @@ const Login = () => {
         body: JSON.stringify({
           email: email,
         }),
-      }
+      },
     );
     const res = await response.json();
     CustomToast(res.message);
@@ -156,7 +156,6 @@ const Login = () => {
   };
 
   const handleBiometricLogin = async () => {
-    console.log(username, "usduse");
     const data = await fetch(
       "http://localhost:3000/api/user/generateBioAuthOptions",
       {
@@ -165,18 +164,17 @@ const Login = () => {
           emailId: username,
         }),
         headers: { "Content-type": "application/json" },
-      }
+      },
     ).then((res) => res.json());
     const options = data.options;
-    console.log(options);
     options.challenge = Uint8Array.from(
       atob(base64urlToBase64(options.challenge)),
-      (c) => c.charCodeAt(0)
+      (c) => c.charCodeAt(0),
     );
     options.allowCredentials = options.allowCredentials.map((cred) => ({
       ...cred,
       id: Uint8Array.from(atob(base64urlToBase64(cred.id)), (c) =>
-        c.charCodeAt(0)
+        c.charCodeAt(0),
       ),
     }));
 
@@ -189,7 +187,7 @@ const Login = () => {
       response: {
         clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
         authenticatorData: bufferToBase64url(
-          assertion.response.authenticatorData
+          assertion.response.authenticatorData,
         ),
         signature: bufferToBase64url(assertion.response.signature),
         userHandle: assertion.response.userHandle
@@ -206,7 +204,6 @@ const Login = () => {
         emailId: username,
       }),
     }).then((res) => res.json());
-    console.log(res);
     if (res.success === true) {
       localStorage.setItem("token", res["token"]);
       navigate("/user/dashboard");
@@ -278,7 +275,7 @@ const Login = () => {
                 </button>
               </div>
               <button
-                type="button"   
+                type="button"
                 onClick={() => setShowForgotModal(true)}
                 className="mt-1 text-sm text-[var(--custom-orange-600)] hover:text-[var(--custom-orange-700)] transition-colors"
               >
@@ -292,7 +289,7 @@ const Login = () => {
           </div>
 
           <button
-            type="button" 
+            type="button"
             onClick={() => setShowBiometricModal(true)}
             disabled={isLoading}
             className="w-full flex justify-center items-center py-3 px-4 bg-[var(--custom-orange-100)] text-[var(--custom-orange-600)] rounded-lg hover:bg-[var(--custom-orange-200)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] "
@@ -305,7 +302,7 @@ const Login = () => {
 
           <button
             disabled={isLoading}
-            type="submit"   
+            type="submit"
             className="w-full flex justify-center items-center mt-3 py-3 px-4 bg-[var(--custom-orange-400)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange-500)] focus:ring-offset-2 min-h-[48px]"
           >
             {isLoading ? (

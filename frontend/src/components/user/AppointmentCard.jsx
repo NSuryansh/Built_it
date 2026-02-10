@@ -8,7 +8,7 @@ const REASONS = [
   "Man nahi kar raha ab",
   "backchodi kar raha tha haahhaha",
   "Nahi aunga jao jo karna karo",
-  "None of the above"
+  "None of the above",
 ];
 
 const AppointmentCard = ({
@@ -26,21 +26,22 @@ const AppointmentCard = ({
   const [error, setError] = useState("");
 
   const handleAppointmentClick = () => {
-    if (upcoming === false && requested === false && feedbackSubmitted === false) {
+    if (
+      upcoming === false &&
+      requested === false &&
+      feedbackSubmitted === false
+    ) {
       navigate(`/user/feedback?id=${appointment.id}`);
     }
   };
 
-  // if (requested || upcoming) {
-  //   console.log(appointment, "ap");
-  // }
-
   const hasFeedback = feedbackSubmitted;
   const doctor = appointment.doctor || appointment.doc || {};
 
-  const displayDate = (upcoming || requested)
-    ? new Date(appointment.dateTime).getTime()
-    : new Date(appointment.createdAt);
+  const displayDate =
+    upcoming || requested
+      ? new Date(appointment.dateTime).getTime()
+      : new Date(appointment.createdAt);
 
   useEffect(() => {
     if (showRejectModal) {
@@ -65,7 +66,10 @@ const AppointmentCard = ({
   };
 
   const submitRejection = () => {
-    const reason = selectedReason === "None of the above" ? customReason.trim() : selectedReason;
+    const reason =
+      selectedReason === "None of the above"
+        ? customReason.trim()
+        : selectedReason;
     if (!reason || reason.length === 0) {
       setError("Please select or type a reason for cancelling.");
       return;
@@ -79,10 +83,11 @@ const AppointmentCard = ({
       <div
         onClick={handleAppointmentClick}
         className={`bg-[var(--custom-gray-50)] bg-opacity-80 rounded-xl p-6 transition-all duration-300 
-        ${!upcoming && !requested && !hasFeedback
+        ${
+          !upcoming && !requested && !hasFeedback
             ? "hover:bg-[var(--custom-gray-100)] hover:shadow-md cursor-pointer"
             : ""
-          }`}
+        }`}
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4">
           <div className="flex items-center space-x-5">
@@ -175,10 +180,13 @@ const AppointmentCard = ({
             onClick={closeRejectModal}
           />
           <div className="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg z-10">
-            <h4 className="text-lg font-semibold mb-3">Reason for cancelling</h4>
-            
+            <h4 className="text-lg font-semibold mb-3">
+              Reason for cancelling
+            </h4>
 
-            <label className="block text-sm font-medium mb-2">Select reason</label>
+            <label className="block text-sm font-medium mb-2">
+              Select reason
+            </label>
             <select
               value={selectedReason}
               onChange={(e) => {
@@ -189,13 +197,17 @@ const AppointmentCard = ({
             >
               <option value="">-- Select a reason --</option>
               {REASONS.map((r) => (
-                <option key={r} value={r}>{r}</option>
+                <option key={r} value={r}>
+                  {r}
+                </option>
               ))}
             </select>
 
             {selectedReason === "None of the above" && (
               <div className="mb-3">
-                <label className="block text-sm font-medium mb-2">Please type your reason</label>
+                <label className="block text-sm font-medium mb-2">
+                  Please type your reason
+                </label>
                 <textarea
                   value={customReason}
                   onChange={(e) => setCustomReason(e.target.value)}

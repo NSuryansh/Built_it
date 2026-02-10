@@ -1,19 +1,17 @@
 export const checkAuth = async (userType) => {
   function isTokenExpired(token) {
     if (token === null) return true;
-    console.log(token);
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const currentTime = Math.floor(Date.now() / 1000);
       return payload.exp < currentTime;
     } catch (error) {
-      console.log("Error in validating the JWST Token: ", error);
+      console.error("Error in validating the JWST Token: ", error);
       return false;
     }
   }
 
   const token = localStorage.getItem("token");
-  // console.log(token)
   if (isTokenExpired(token)) {
     return false;
   }
@@ -23,7 +21,7 @@ export const checkAuth = async (userType) => {
       {
         method: "GET",
         headers: { Authorization: "Bearer " + token },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -31,7 +29,6 @@ export const checkAuth = async (userType) => {
     }
 
     const res2 = await response.json();
-    console.log(res2);
 
     if (userType === "user") {
       localStorage.setItem("userid", res2["user"]["id"]);
@@ -66,7 +63,7 @@ export const checkAuth = async (userType) => {
       localStorage.setItem("user_type", userType);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 

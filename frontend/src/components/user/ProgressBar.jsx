@@ -17,18 +17,17 @@ const ProgressBar = ({ label, value }) => {
   }
 
   const getBarColor = (value) => {
-    // console.log(label)
- if(label === "Stress" || label ){
-    if (value <= 2.5) return "#EF4444";
-    if (value <= 5 && value>2.5) return "#EAB308";   
-    if (value <= 7.5 && value>5) return "#3B82F6"; 
-    return "#22C55E";                
-    }else{
+    if (label === "Stress" || label) {
+      if (value <= 2.5) return "#EF4444";
+      if (value <= 5 && value > 2.5) return "#EAB308";
+      if (value <= 7.5 && value > 5) return "#3B82F6";
+      return "#22C55E";
+    } else {
       if (value <= 2.5) return "#22C55E";
-    if (value <= 5 && value>2.5) return "#3B82F6";   
-    if (value <= 7.5 && value>5) return "#EAB308"; 
-    return "#EF4444";   
-    }       
+      if (value <= 5 && value > 2.5) return "#3B82F6";
+      if (value <= 7.5 && value > 5) return "#EAB308";
+      return "#EF4444";
+    }
   };
 
   return (

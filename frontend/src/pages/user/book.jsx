@@ -43,7 +43,7 @@ const Book = () => {
           "http://localhost:3000/api/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await res.json();
         setDoctors(data);
@@ -68,7 +68,6 @@ const Book = () => {
   //         }
   //       );
   //       const data = await res.json();
-  //       console.log("Previous booking check response:", data);
   //       if (data.hasUpcomingAppointment) {
   //         setdoctorSelectable(false);
   //         CustomToast("You already have an upcoming appointment");
@@ -194,19 +193,21 @@ const Book = () => {
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-4">
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${step === 1
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${
+                  step === 1
                     ? "bg-[var(--custom-orange-500)] scale-110"
                     : "bg-[var(--custom-gray-300)]"
-                  }`}
+                }`}
               >
                 1
               </div>
               <div className="w-16 h-1 bg-[var(--custom-gray-300)] rounded-full" />
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${step === 2
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[var(--custom-white)] transition-all duration-300 ${
+                  step === 2
                     ? "bg-[var(--custom-orange-500)] scale-110"
                     : "bg-[var(--custom-gray-300)]"
-                  }`}
+                }`}
               >
                 2
               </div>

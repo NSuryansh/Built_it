@@ -12,7 +12,6 @@ userDocRouter.get(
     try {
       const userId = req.query["userId"];
       const userType = req.query["userType"];
-      // console.log(req.user, "req");
       if (
         userId.toString() !== req.user.userId.toString() ||
         userType.toString() !== req.user.role.toString()
@@ -35,7 +34,6 @@ userDocRouter.get(
         },
         distinct: ["userId", "doctorId"],
       });
-      // console.log(chatPartners, "chat ")
       const uniqueUserIds = new Set();
       chatPartners.forEach((chat) => {
         if (chat.userId !== id) uniqueUserIds.add(chat.userId);
@@ -59,7 +57,7 @@ userDocRouter.get(
         .status(500)
         .json({ message: "Internal Server Error", error: error.message });
     }
-  }
+  },
 );
 
 userDocRouter.get(
@@ -82,7 +80,6 @@ userDocRouter.get(
           _all: true,
         },
       });
-      // console.log(unreadCount, "HALLLO")
       res.json(unreadCount);
     } else if (senderType == "doc") {
       const unreadCount = await prisma.message.groupBy({
@@ -96,10 +93,9 @@ userDocRouter.get(
           _all: true,
         },
       });
-      // console.log(unreadCount)
       res.json(unreadCount);
     }
-  }
+  },
 );
 
 userDocRouter.get(
@@ -117,7 +113,6 @@ userDocRouter.get(
           return res.status(403).json({ error: "Access denied" });
         }
       }
-      // console.log(userId, recId, userType, recType);
       const messages = await prisma.message.findMany({
         where: {
           OR: [
@@ -135,12 +130,11 @@ userDocRouter.get(
         },
         orderBy: { createdAt: "asc" },
       });
-      // console.log(messages, "hello");
       res.json(messages);
     } catch (e) {
       console.error(e);
     }
-  }
+  },
 );
 
 userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
@@ -205,10 +199,10 @@ userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
       `Dear ${user.username}, \n\nYour appointment with ${
         doctor.name
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
-        some
+        some,
       ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
         doctor.office_address
-      }\n\nRegards\nCalm Connect`
+      }\n\nRegards\nCalm Connect`,
     );
 
     await sendEmail(
@@ -217,10 +211,10 @@ userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
       `Dear ${doctor.name}, \n\nYour appointment with ${
         user.username
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
-        some
+        some,
       ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
         doctor.office_address
-      }\n\nRegards\nCalm Connect`
+      }\n\nRegards\nCalm Connect`,
     );
 
     res.json({ message: "Appointment booked successfully", result });
@@ -271,10 +265,10 @@ userDocRouter.post(
         `Dear ${doctor.name}, \n\nAn appointment has been requested by ${
           user.username
         }. The details of the request are given below: \n\nDate: ${new Date(
-          date
+          date,
         ).toDateString()}\nTime: ${new Date(
-          date
-        ).toTimeString()}\nReason: ${reason}\n\nRegards\nCalm Connect`
+          date,
+        ).toTimeString()}\nReason: ${reason}\n\nRegards\nCalm Connect`,
       );
 
       res.json({
@@ -285,16 +279,21 @@ userDocRouter.post(
       console.error(error);
       res.json({ message: "Internal Server Error" });
     }
-  }
+  },
 );
 
-userDocRouter.post("/cancelRequest", authorizeRoles("user", "doc"), async (req, res) => {
+userDocRouter.post(
+  "/cancelRequest",
+  authorizeRoles("user", "doc"),
+  async (req, res) => {
     try {
       const requestId = Number(req.body.id);
       const reason = req.body.reason;
 
       if (!requestId || !reason) {
-        return res.status(400).json({ message: "Both request id and reason are required" });
+        return res
+          .status(400)
+          .json({ message: "Both request id and reason are required" });
       }
 
       const cancelled = await prisma.$transaction(async (tx) => {
@@ -311,7 +310,7 @@ userDocRouter.post("/cancelRequest", authorizeRoles("user", "doc"), async (req, 
             reason,
             forDoctor: request.forDoctor,
             appointmentTime: request.dateTime,
-            dateTime: new Date(),             
+            dateTime: new Date(),
           },
         });
         await tx.requests.delete({
@@ -329,7 +328,7 @@ userDocRouter.post("/cancelRequest", authorizeRoles("user", "doc"), async (req, 
         message: error.message || "Failed to cancel request",
       });
     }
-  }
+  },
 );
 
 export default userDocRouter;

@@ -14,7 +14,6 @@ const ProgressPage = ({ isLandingPage }) => {
   //         body: JSON.stringify({ user_id: localStorage.getItem("userid") }),
   //       });
   //       const data = await response.json();
-  //       console.log(data.error);
   //       if (data.error === "User not found") {
   //         setScores({
   //           mental_health_score: 11,
@@ -26,7 +25,6 @@ const ProgressPage = ({ isLandingPage }) => {
   //         throw new Error(`HTTP error!!!!! status: ${response.status}`);
   //       } else {
   //         // const data = await response.json();
-  //         // console.log(data);
   //         setScores({
   //           mental_health_score: data.mental_health_score || 0,
   //           stress_score: 10 - data.stress_score || 0,
@@ -35,7 +33,6 @@ const ProgressPage = ({ isLandingPage }) => {
   //         });
   //       }
   //     } catch (error) {
-  //       console.log(error);
   //       // if(data.error == "User not found"){
   //       //     setScores({
   //       //     mental_health_score: 0,

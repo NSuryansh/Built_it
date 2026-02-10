@@ -9,17 +9,15 @@ export default function ChatList({
   unread,
   isDoc = false,
 }) {
-  // console.log(names, "Unread CHht List");
   return (
     <div className="bg-[var(--custom-white)] border-r border-[var(--custom-gray-200)] overflow-y-auto">
       <div className="space-y-1">
         {names && names.length > 0 ? (
           names.map((chat, index) => {
             const unreadEntry = unread.find(
-              (u) => u.senderId === chat.senderId
+              (u) => u.senderId === chat.senderId,
             );
             const unreadCount = unreadEntry?.count || 0;
-            // console.log(chat);
             return (
               <button
                 key={chat.senderId}
