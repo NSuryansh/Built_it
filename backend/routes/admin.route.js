@@ -6,6 +6,15 @@ import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
+import {
+  startOfWeek,
+  endOfWeek,
+  subWeeks,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  subYears,
+} from "date-fns";
 dotenv.config();
 
 const adminRouter = Router();
@@ -47,40 +56,110 @@ adminRouter.post("/addSlot", authorizeRoles("admin"), async (req, res) => {
 
 adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
   const { period } = req.query;
-  console.log(period);
+
   try {
-    // 1. Fetch all doctors
+    const now = new Date();
+    let startDate;
+    let endDate = now;
+
+    // 1. Define Time Boundaries
+    switch (period) {
+      case "this-week":
+        startDate = startOfWeek(now, { weekStartsOn: 1 }); // Monday
+        break;
+      case "past-week":
+        const lastWeek = subWeeks(now, 1);
+        startDate = startOfWeek(lastWeek, { weekStartsOn: 1 });
+        endDate = endOfWeek(lastWeek, { weekStartsOn: 1 });
+        break;
+      case "this-month":
+        startDate = startOfMonth(now);
+        break;
+      case "past-month":
+        const lastMonth = subMonths(now, 1);
+        startDate = startOfMonth(lastMonth);
+        endDate = endOfMonth(lastMonth);
+        break;
+      case "last-3-months":
+        startDate = subMonths(now, 3);
+        break;
+      case "last-6-months":
+        startDate = subMonths(now, 6);
+        break;
+      case "last-12-months":
+        startDate = subYears(now, 1);
+        break;
+      case "all-time":
+      default:
+        startDate = new Date(0);
+    }
+
+    // 2. Fetch all Doctors (to ensure even those with 0 cases appear)
     const doctors = await prisma.doctor.findMany({
       select: { id: true, name: true, email: true },
     });
 
-    // 2. Aggregate stats from PastAppointments
-    const stats = await prisma.pastAppointments.groupBy({
-      by: ["doc_id", "caseStatus"],
-      _count: {
-        _all: true,
+    // 3. Fetch filtered Appointments with User (Student) details
+    const appointments = await prisma.pastAppointments.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            gender: true,
+            acadProg: true, // BTech, PG, PhD, etc.
+          },
+        },
       },
     });
 
-    // 3. Map stats to doctors
+    // 4. Map data to the Doctor list
     const doctorStats = doctors.map((doc) => {
-      const docData = stats.filter((s) => s.doc_id === doc.id);
+      const docApps = appointments.filter((app) => app.doc_id === doc.id);
 
-      const newCases =
-        docData.find((s) => s.caseStatus === "NEW")?._count._all || 0;
-      const openCases =
-        docData.find((s) => s.caseStatus === "OPEN")?._count._all || 0;
-      const closedCases =
-        docData.find((s) => s.caseStatus === "CLOSED")?._count._all || 0;
+      // Initialize aggregation object
+      const stats = {
+        status: { NEW: 0, OPEN: 0, CLOSED: 0 },
+        categories: {},
+        isEmergencyCount: 0,
+        demographics: {
+          gender: {},
+          acadProg: {},
+        },
+        total: docApps.length,
+      };
+
+      docApps.forEach((app) => {
+        // Status tracking
+        if (stats.status.hasOwnProperty(app.caseStatus)) {
+          stats.status[app.caseStatus]++;
+        }
+
+        // Category tracking
+        const cat = app.category || "Uncategorized";
+        stats.categories[cat] = (stats.categories[cat] || 0) + 1;
+
+        // Emergency tracking
+        if (app.isEmergency) stats.isEmergencyCount++;
+
+        // Student Demographic tracking
+        if (app.user) {
+          const gen = app.user.gender || "Not Specified";
+          const deg = app.user.acadProg || "Other";
+          stats.demographics.gender[gen] =
+            (stats.demographics.gender[gen] || 0) + 1;
+          stats.demographics.acadProg[deg] =
+            (stats.demographics.acadProg[deg] || 0) + 1;
+        }
+      });
 
       return {
         ...doc,
-        stats: {
-          new: newCases,
-          open: openCases,
-          closed: closedCases,
-          total: newCases + openCases + closedCases,
-        },
+        stats,
       };
     });
 
@@ -90,6 +169,7 @@ adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
   const {
     name,
