@@ -85,8 +85,8 @@ export const Report = forwardRef(function Report({ stats }, ref) {
             <th className="border p-3 text-left">ID</th>
             <th className="border p-3 text-left">Contributor</th>
             <th className="border p-3 text-center">New</th>
-            <th className="border p-3 text-center">Open</th>
-            <th className="border p-3 text-center">Closed</th>
+            <th className="border p-3 text-center">Ongoing</th>
+            <th className="border p-3 text-center">Terminated</th>
             <th className="border p-3 text-right">Total</th>
           </tr>
         </thead>
