@@ -91,7 +91,7 @@ const AdminCaseStats = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-linear-to-r from-[var(--custom-green-50)] to-[var(--custom-green-100)]">
       <AdminNavbar />
       <div className="container mx-auto px-6 py-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">

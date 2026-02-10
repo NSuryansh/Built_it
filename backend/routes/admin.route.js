@@ -394,21 +394,69 @@ adminRouter.get(
   "/all-appointments",
   authorizeRoles("admin"),
   async (req, res) => {
+    const { period } = req.query;
     try {
+      const now = new Date();
+      let startDate;
+      let endDate = now;
+
+      switch (period) {
+        case "this-week":
+          startDate = startOfWeek(now, { weekStartsOn: 1 });
+          break;
+        case "past-week":
+          const lastWeek = subWeeks(now, 1);
+          startDate = startOfWeek(lastWeek, { weekStartsOn: 1 });
+          endDate = endOfWeek(lastWeek, { weekStartsOn: 1 });
+          break;
+        case "this-month":
+          startDate = startOfMonth(now);
+          break;
+        case "past-month":
+          const lastMonth = subMonths(now, 1);
+          startDate = startOfMonth(lastMonth);
+          endDate = endOfMonth(lastMonth);
+          break;
+        case "last-3-months":
+          startDate = subMonths(now, 3);
+          break;
+        case "last-6-months":
+          startDate = subMonths(now, 6);
+          break;
+        case "last-12-months":
+          startDate = subYears(now, 1);
+          break;
+        case "all-time":
+        default:
+          startDate = new Date(0);
+      }
       // Fetch upcoming/current appointments with related doctor and user
-      const appts = await prisma.appointments.findMany({
-        include: {
-          doctor: true,
-          user: true,
-        },
-        orderBy: { isEmergency: "desc" },
-      });
+      const appts =
+        period == "past-week" ||
+        period == "past-month" ||
+        period == "last-3-months" ||
+        period == "last-6-months" ||
+        period == "last-12-months"
+          ? []
+          : await prisma.appointments.findMany({
+              include: {
+                doctor: true,
+                user: true,
+              },
+              orderBy: { isEmergency: "desc" },
+            });
 
       // Fetch past appointments with related doctor and user
       const pastApp = await prisma.pastAppointments.findMany({
         include: {
           doc: true,
           user: true,
+        },
+        where: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
         },
         orderBy: { createdAt: "desc" },
       });

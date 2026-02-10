@@ -57,7 +57,7 @@ const AdminNavbar = () => {
     <nav className="bg-transperent">
       <div className="px-4 md:px-8 py-3">
         <div className="flex items-center justify-between">
-          <div className="md:hidden transition-all flex items-center z-2">
+          <div className="lg:hidden transition-all flex items-center z-2">
             <button
               onClick={() => {
                 setShowDetails(false);
@@ -105,7 +105,7 @@ const AdminNavbar = () => {
             />
             <div className="text-xl font-bold">Calm Connect</div>
           </div>
-          <div className="hidden md:flex space-x-8 items-center">
+          <div className="hidden lg:flex space-x-8 items-center">
             {links.map((item, i) => (
               <button
                 key={i}
