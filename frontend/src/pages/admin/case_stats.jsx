@@ -169,7 +169,7 @@ const AdminCaseStats = () => {
 
             {/* Table View */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-              <table className="min-w-full">
+              <table className="hidden md:table min-w-full">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">
@@ -217,6 +217,60 @@ const AdminCaseStats = () => {
                   ))}
                 </tbody>
               </table>
+
+              {/* Mobile Card View (Visible on mobile, hidden on MD screens and up) */}
+              <div className="md:hidden divide-y divide-gray-100">
+                {stats.map((doc) => (
+                  <div
+                    key={doc.id}
+                    className="p-4 hover:bg-green-50/30 transition"
+                  >
+                    {/* Header: Name and Email */}
+                    <div className="mb-4">
+                      <div className="font-bold text-gray-800 text-lg">
+                        {doc.name}
+                      </div>
+                      <div className="text-sm text-gray-400">{doc.email}</div>
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-gray-50 p-2 rounded-lg">
+                        <p className="text-[10px] font-bold text-green-600 uppercase">
+                          New
+                        </p>
+                        <p className="text-lg font-bold text-green-700">
+                          {doc.stats.status.NEW}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-2 rounded-lg">
+                        <p className="text-[10px] font-bold text-blue-600 uppercase">
+                          Ongoing
+                        </p>
+                        <p className="text-lg font-bold text-blue-700">
+                          {doc.stats.status.OPEN}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-2 rounded-lg">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase">
+                          Terminated
+                        </p>
+                        <p className="text-lg font-bold text-gray-600">
+                          {doc.stats.status.CLOSED}
+                        </p>
+                      </div>
+                      <div className="bg-green-100 p-2 rounded-lg">
+                        <p className="text-[10px] font-bold text-gray-800 uppercase">
+                          Total
+                        </p>
+                        <p className="text-lg font-black text-gray-900">
+                          {doc.stats.total}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </>
         )}
