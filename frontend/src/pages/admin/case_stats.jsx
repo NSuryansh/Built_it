@@ -16,6 +16,8 @@ import { useReactToPrint } from "react-to-print";
 import CustomLoader from "../../components/common/CustomLoader";
 import SessionExpired from "../../components/common/SessionExpired";
 import { Loader } from "lucide-react";
+import { Report } from "../../utils/report";
+import Footer from "../../components/common/Footer";
 
 const AdminCaseStats = () => {
   const [stats, setStats] = useState([]);
@@ -80,7 +82,7 @@ const AdminCaseStats = () => {
 
   const summary = aggregateTotals();
 
-  if (isAuthenticated === null || (isLoading && stats.length === 0)) {
+  if (isAuthenticated === null) {
     return <CustomLoader color="green" text="Loading analytics..." />;
   }
 
@@ -89,7 +91,7 @@ const AdminCaseStats = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-12">
+    <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
       <div className="container mx-auto px-6 py-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -331,6 +333,12 @@ const AdminCaseStats = () => {
             </ResponsiveContainer>
           </div>
         </div>
+      </div>
+      <div className="hidden">
+        <Report stats={stats} ref={reportRef} />
+      </div>
+      <div className="mt-auto">
+        <Footer color="green" />
       </div>
     </div>
   );

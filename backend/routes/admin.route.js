@@ -56,16 +56,15 @@ adminRouter.post("/addSlot", authorizeRoles("admin"), async (req, res) => {
 
 adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
   const { period } = req.query;
-
+  console.log(period);
   try {
     const now = new Date();
     let startDate;
     let endDate = now;
 
-    // 1. Define Time Boundaries
     switch (period) {
       case "this-week":
-        startDate = startOfWeek(now, { weekStartsOn: 1 }); // Monday
+        startDate = startOfWeek(now, { weekStartsOn: 1 });
         break;
       case "past-week":
         const lastWeek = subWeeks(now, 1);
@@ -94,12 +93,10 @@ adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
         startDate = new Date(0);
     }
 
-    // 2. Fetch all Doctors (to ensure even those with 0 cases appear)
     const doctors = await prisma.doctor.findMany({
       select: { id: true, name: true, email: true },
     });
 
-    // 3. Fetch filtered Appointments with User (Student) details
     const appointments = await prisma.pastAppointments.findMany({
       where: {
         createdAt: {
@@ -111,17 +108,15 @@ adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
         user: {
           select: {
             gender: true,
-            acadProg: true, // BTech, PG, PhD, etc.
+            acadProg: true,
           },
         },
       },
     });
 
-    // 4. Map data to the Doctor list
     const doctorStats = doctors.map((doc) => {
       const docApps = appointments.filter((app) => app.doc_id === doc.id);
 
-      // Initialize aggregation object
       const stats = {
         status: { NEW: 0, OPEN: 0, CLOSED: 0 },
         categories: {},
@@ -134,19 +129,15 @@ adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
       };
 
       docApps.forEach((app) => {
-        // Status tracking
         if (stats.status.hasOwnProperty(app.caseStatus)) {
           stats.status[app.caseStatus]++;
         }
 
-        // Category tracking
         const cat = app.category || "Uncategorized";
         stats.categories[cat] = (stats.categories[cat] || 0) + 1;
 
-        // Emergency tracking
         if (app.isEmergency) stats.isEmergencyCount++;
 
-        // Student Demographic tracking
         if (app.user) {
           const gen = app.user.gender || "Not Specified";
           const deg = app.user.acadProg || "Other";
