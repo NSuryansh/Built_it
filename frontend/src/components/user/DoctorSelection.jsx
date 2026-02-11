@@ -1,6 +1,9 @@
 import { Mail, MapPin, Phone, User } from "lucide-react";
+import { useState } from "react";
 
 const DoctorSelectionStep = ({ doctors, onSelect, selectable }) => {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <div className="bg-[var(--custom-orange-100)] w-full p-2 sm:p-8 rounded-[20px] border-2 border-[var(--custom-orange-200)] flex items-center justify-center shadow-md">
       {doctors.length > 0 ? (
@@ -38,9 +41,24 @@ const DoctorSelectionStep = ({ doctors, onSelect, selectable }) => {
                   <h3 className="text-xl text-center sm:text-left font-bold text-[var(--custom-orange-800)] group-hover:text-[var(--custom-orange-900)] transition-colors duration-300">
                     {doctor.name}
                   </h3>
-                  <p className="text-center sm:text-left text-sm text-[var(--custom-gray-600)] line-clamp-2">
-                    {doctor.desc || "No description available."}
-                  </p>
+                  <div className="flex flex-row text-wrap items-end">
+                    <p
+                      className={`text-center gap-2 sm:text-left text-sm text-[var(--custom-gray-600)] ${expanded ? "" : "line-clamp-2"}`}
+                    >
+                      {doctor.desc || "No description available."}
+                    </p>
+                    {doctor.desc.length > 20 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpanded(!expanded);
+                        }}
+                        className="text-center text-orange-500 w-full sm:text-left text-sm"
+                      >
+                        {expanded ? "Read Less" : "Read More"}
+                      </button>
+                    )}
+                  </div>
                   <div className="flex-1 space-y-2 mt-5 sm:mt-3 text-left">
                     <div className="flex items-center gap-2 text-sm text-[var(--custom-gray-600)] group-hover:text-[var(--custom-orange-700)] transition-colors duration-300">
                       <div className="bg-[var(--custom-orange-100)] p-1.5 rounded-full">
@@ -58,7 +76,11 @@ const DoctorSelectionStep = ({ doctors, onSelect, selectable }) => {
                       <div className="bg-[var(--custom-orange-100)] p-1.5 rounded-full">
                         <MapPin className="w-4 h-4" />
                       </div>
-                      <span>{doctor.office_address || "IIT Indore"}</span>
+                      <span>
+                        {doctor.office_address == "<Please Change>"
+                          ? "IIT Indore"
+                          : doctor.office_address}
+                      </span>
                     </div>
                   </div>
                 </div>
