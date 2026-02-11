@@ -65,7 +65,9 @@ const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, randomName }) => {
           ) : feedbacks.length === 0 ? (
             <div className="text-center py-10">
               <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No feedback submitted by this user yet.</p>
+              <p className="text-gray-500">
+                No feedback submitted by this user yet.
+              </p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -112,7 +114,11 @@ const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, randomName }) => {
                           {questionsMap[key]}
                         </p>
                         <p className="text-gray-600 bg-gray-50 p-2 rounded-lg border border-gray-100">
-                          {fb[key] || <span className="italic text-gray-400">No answer provided</span>}
+                          {fb[key] || (
+                            <span className="italic text-gray-400">
+                              No answer provided
+                            </span>
+                          )}
                         </p>
                       </div>
                     ))}
@@ -166,7 +172,11 @@ const Controls = ({
   </div>
 );
 
-const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig, onViewFeedback }) => {
+const DesktopLayout = ({
+  filteredAndSortedUsers,
+  setSortConfig,
+  onViewFeedback,
+}) => {
   const handleSort = () => {
     setSortConfig((current) => ({
       key: "appointmentsCount",
@@ -199,7 +209,7 @@ const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig, onViewFeedback }
                       )}
                     </div>
                   </th>
-                )
+                ),
               )}
             </tr>
           </thead>
@@ -234,13 +244,13 @@ const DesktopLayout = ({ filteredAndSortedUsers, setSortConfig, onViewFeedback }
                   </div>
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap">
-                   <button 
-                     onClick={() => onViewFeedback(user)}
-                     className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--custom-green-700)] bg-[var(--custom-green-50)] hover:bg-[var(--custom-green-100)] rounded-lg transition-colors border border-[var(--custom-green-200)]"
-                   >
-                     <MessageSquare className="h-3.5 w-3.5" />
-                     Feedback
-                   </button>
+                  <button
+                    onClick={() => onViewFeedback(user)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--custom-green-700)] bg-[var(--custom-green-50)] hover:bg-[var(--custom-green-100)] rounded-lg transition-colors border border-[var(--custom-green-200)]"
+                  >
+                    <MessageSquare className="h-3.5 w-3.5" />
+                    Feedback
+                  </button>
                 </td>
               </tr>
             ))}
@@ -291,12 +301,12 @@ const MobileLayout = ({ filteredAndSortedUsers, onViewFeedback }) => (
                 {user.doctors.map((doc) => doc.name).join(", ")}
               </span>
             </div>
-            <button 
-                onClick={() => onViewFeedback(user)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--custom-green-700)] bg-[var(--custom-green-50)] hover:bg-[var(--custom-green-100)] rounded-lg transition-colors border border-[var(--custom-green-200)]"
+            <button
+              onClick={() => onViewFeedback(user)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--custom-green-700)] bg-[var(--custom-green-50)] hover:bg-[var(--custom-green-100)] rounded-lg transition-colors border border-[var(--custom-green-200)]"
             >
-                <MessageSquare className="h-3.5 w-3.5" />
-                Feedback
+              <MessageSquare className="h-3.5 w-3.5" />
+              Feedback
             </button>
           </div>
         </div>
@@ -340,7 +350,7 @@ const AdminUser = () => {
           "http://localhost:3000/api/doc_admin/getUsers",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await res.json();
         setUsersData(data);
@@ -354,13 +364,13 @@ const AdminUser = () => {
                   `http://localhost:3000/api/admin/appointments-count?id=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
-                  }
+                  },
                 ),
                 fetch(
                   `http://localhost:3000/api/admin/user-doctors?userId=${userId}`,
                   {
                     headers: { Authorization: "Bearer " + token },
-                  }
+                  },
                 ),
               ]);
 
@@ -382,7 +392,7 @@ const AdminUser = () => {
                 doctors: [],
               };
             }
-          })
+          }),
         );
 
         setUserCounts(counts);
@@ -399,29 +409,32 @@ const AdminUser = () => {
     setFeedbackLoading(true);
     setSelectedrandomName(user.randomName);
     setFeedbackModalOpen(true);
-    
+
     try {
-        const res = await fetch(`http://localhost:3000/api/doc_admin/user-feedback?userId=${user.id}`, {
-            headers: { Authorization: "Bearer " + token },
-        });
-        const data = await res.json();
-        if(res.ok) {
-            setSelectedUserFeedback(data);
-        } else {
-            CustomToast("Failed to fetch feedback", "red");
-            setSelectedUserFeedback([]);
-        }
+      const res = await fetch(
+        `http://localhost:3000/api/doc_admin/user-feedback?userId=${user.id}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        },
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setSelectedUserFeedback(data);
+      } else {
+        CustomToast("Failed to fetch feedback", "red");
+        setSelectedUserFeedback([]);
+      }
     } catch (e) {
-        console.error(e);
-        CustomToast("Error loading feedback", "red");
+      console.error(e);
+      CustomToast("Error loading feedback", "red");
     } finally {
-        setFeedbackLoading(false);
+      setFeedbackLoading(false);
     }
   };
 
   const degrees = useMemo(
     () => ["all", ...new Set(usersData.map((user) => user.acadProg))],
-    [usersData]
+    [usersData],
   );
 
   const filteredAndSortedUsers = useMemo(() => {
@@ -439,7 +452,7 @@ const AdminUser = () => {
         const matchesSearch =
           user.randomName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.doctors.some((doc) =>
-            doc.name?.toLowerCase().includes(searchTerm.toLowerCase())
+            doc.name?.toLowerCase().includes(searchTerm.toLowerCase()),
           );
 
         const matchesDegree =
@@ -501,8 +514,8 @@ const AdminUser = () => {
             setSearchTerm={setSearchTerm}
             degrees={degrees}
           />
-          <MobileLayout 
-            filteredAndSortedUsers={filteredAndSortedUsers} 
+          <MobileLayout
+            filteredAndSortedUsers={filteredAndSortedUsers}
             onViewFeedback={fetchFeedback}
           />
           <DesktopLayout
@@ -512,17 +525,19 @@ const AdminUser = () => {
           />
         </div>
       </div>
-      
+
       {/* Feedback Modal */}
-      <FeedbackModal 
+      <FeedbackModal
         isOpen={feedbackModalOpen}
         onClose={() => setFeedbackModalOpen(false)}
         feedbacks={selectedUserFeedback}
         loading={feedbackLoading}
         randomName={selectedrandomName}
       />
-      
-      <Footer color="green" />
+
+      <div className="fixed bottom-0 w-full">
+        <Footer color="green" />
+      </div>
     </div>
   );
 };

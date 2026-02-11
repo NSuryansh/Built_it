@@ -1192,54 +1192,66 @@ const DoctorAppointment = () => {
               </div>
             )}
           </div>
-        </div>
-        <div className="w-full mt-6">
-          <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
-            Cancelled Appoinments
-          </h1>
-        </div>
-
-        {cancelledAppoinments?.length > 0 ? (
-          <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-auto max-h-150 p-4 space-y-4">
-            {cancelledAppoinments.map((app) => (
-              <div
-                key={app.id}
-                className="w-full bg-[var(--custom-gray-50)] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-[var(--custom-gray-200)]"
-              >
-                <div className="flex flex-col gap-1">
-                  <p className="text-lg font-semibold text-[var(--custom-orange-900)]">
-                    {app.user?.username || "Unknown User"}
-                  </p>
-
-                  <p className="text-sm text-[var(--custom-gray-600)]">
-                    Appointment Time:{" "}
-                    {app.appointmentTime
-                      ? new Date(app.appointmentTime).toLocaleString()
-                      : "Not specified"}
-                  </p>
-
-                  <p className="text-sm text-[var(--custom-gray-600)]">
-                    Cancelled On: {new Date(app.dateTime).toLocaleString()}
-                  </p>
-
-                  <p className="text-sm text-[var(--custom-red-500)] font-medium">
-                    Reason: {app.reason}
-                  </p>
-                </div>
-
-                <div className="self-start sm:self-center">
-                  <span className="bg-[var(--custom-red-100)] text-[var(--custom-red-700)] px-3 py-1 rounded-full text-sm font-semibold">
-                    Cancelled
-                  </span>
-                </div>
+          <div className="space-y-8">
+            <div className="flex items-center justify-between w-full">
+              <div className="w-full">
+                <h1 className="text-center sm:text-left text-3xl sm:text-4xl font-extrabold text-[var(--custom-blue-600)]">
+                  Cancelled Appointments
+                </h1>
               </div>
-            ))}
+            </div>
+
+            {cancelledAppoinments?.length > 0 ? (
+              <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-auto max-h-150 p-4 space-y-4">
+                {cancelledAppoinments.map((app) => (
+                  <div
+                    key={app.id}
+                    className="w-full bg-[var(--custom-gray-50)] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-[var(--custom-gray-200)]"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <p className="text-lg font-semibold text-[var(--custom-orange-900)]">
+                        {app.user?.username || "Unknown User"}
+                      </p>
+
+                      <p className="text-sm text-[var(--custom-gray-600)]">
+                        Appointment Time:{" "}
+                        {app.appointmentTime
+                          ? new Date(app.appointmentTime).toLocaleString()
+                          : "Not specified"}
+                      </p>
+
+                      <p className="text-sm text-[var(--custom-gray-600)]">
+                        Cancelled On: {new Date(app.dateTime).toLocaleString()}
+                      </p>
+
+                      <p className="text-sm text-[var(--custom-red-500)] font-medium">
+                        Reason: {app.reason}
+                      </p>
+                    </div>
+
+                    <div className="self-start sm:self-center">
+                      <span className="bg-[var(--custom-red-100)] text-[var(--custom-red-700)] px-3 py-1 rounded-full text-sm font-semibold">
+                        Cancelled
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-md border border-[var(--custom-blue-100)] items-center justify-center py-8 px-4">
+                <div className="h-24 w-24 rounded-full bg-[var(--custom-blue-50)] flex items-center justify-center mb-6">
+                  <X className="h-12 w-12 text-[var(--custom-blue-400)]" />
+                </div>
+                <h3 className="text-xl font-semibold text-[var(--custom-gray-800)] mb-2">
+                  No Cancelled Appointments
+                </h3>
+                <p className="text-[var(--custom-gray-600)] text-center max-w-md">
+                  No appointments have been cancelled till yet.
+                </p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] flex items-center justify-center py-8">
-            You do not have any cancelled appointments
-          </div>
-        )}
+        </div>
 
         <PastAppointmentGraphs
           timePeriodData={timePeriodData}
