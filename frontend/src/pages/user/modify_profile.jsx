@@ -20,10 +20,52 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
     alt_mobile,
   });
 
+  // --- helpers (fixed) ---
   function bufferToBase64Url(buffer) {
     const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
     return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
+
+  function base64UrlToUint8Array(input) {
+    // already a Uint8Array / ArrayBuffer -> return Uint8Array
+    if (input instanceof Uint8Array) return input;
+    if (input instanceof ArrayBuffer) return new Uint8Array(input);
+
+    // non-string -> encode as UTF-8
+    if (typeof input !== "string") {
+      return new TextEncoder().encode(String(input));
+    }
+
+    const base64url = input;
+
+    // quick check: valid base64url chars (plus optional padding)
+    const base64urlPattern = /^[A-Za-z0-9\-_]+={0,2}$/;
+    if (!base64urlPattern.test(base64url)) {
+      // Not base64url — fallback to UTF-8 bytes (handles UUIDs or plain strings)
+      console.warn(
+        "base64UrlToUint8Array: input doesn't look like base64url, encoding as UTF-8:",
+        base64url,
+      );
+      return new TextEncoder().encode(base64url);
+    }
+
+    // Restore base64 padding and replace url-safe characters
+    let base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
+    base64 += "=".repeat((4 - (base64.length % 4)) % 4);
+
+    try {
+      const binary = atob(base64);
+      return Uint8Array.from(binary, (c) => c.charCodeAt(0));
+    } catch (err) {
+      console.warn(
+        "base64UrlToUint8Array: atob failed, falling back to UTF-8. input:",
+        base64url,
+        err,
+      );
+      return new TextEncoder().encode(base64url);
+    }
+  }
+  // --- end helpers ---
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -37,41 +79,63 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
     navigate("/user/login");
   };
 
-  const handleBiometricSetup = async () => {
+  // --- fixed biometric handler (only corrected part) ---
+  const handleBiometricSetup = async (e) => {
+    // prevent a form submit if the button is inside a form
+    if (e && e.preventDefault) e.preventDefault();
+
     try {
-      const data = await fetch(
-        "http://localhost:3000/api/user/generateOptions",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user: {
-              id: localStorage.getItem("userid"),
-              email: localStorage.getItem("user_email"),
-            },
-          }),
-        },
-      ).then((res) => res.json());
+      const res = await fetch("http://localhost:3000/api/user/generateOptions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user: {
+            id: localStorage.getItem("userid"),
+            email: localStorage.getItem("user_email"),
+          },
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!data || !data.options) {
+        console.error("No options returned from server:", data);
+        alert("Server did not return WebAuthn options. See console for details.");
+        return;
+      }
+
       const options = data.options;
-      options.challenge = Uint8Array.from(
-        atob(options.challenge.replace(/-/g, "+").replace(/_/g, "/")),
-        (c) => c.charCodeAt(0),
-      );
-      options.user.id = Uint8Array.from(
-        atob(options.user.id.replace(/-/g, "+").replace(/_/g, "/")),
-        (c) => c.charCodeAt(0),
-      );
-      options.excludeCredentials = options.excludeCredentials.map((cred) => ({
+
+      // Debug: inspect what server returned
+      console.log("WEBAUTHN options from server:", options);
+
+      // Defensive conversion using helper
+      if (options.challenge) {
+        options.challenge = base64UrlToUint8Array(options.challenge);
+      } else {
+        console.warn("No options.challenge present");
+      }
+
+      if (options.user && options.user.id != null) {
+        options.user.id = base64UrlToUint8Array(options.user.id);
+      } else {
+        console.warn("No options.user.id present");
+      }
+
+      options.excludeCredentials = (options.excludeCredentials || []).map((cred) => ({
         ...cred,
-        id: Uint8Array.from(
-          atob(cred.id.replace(/-/g, "+").replace(/_/g, "/")),
-          (c) => c.charCodeAt(0),
-        ),
+        id: base64UrlToUint8Array(cred.id),
       }));
 
       const credential = await navigator.credentials.create({
         publicKey: options,
       });
+
+      if (!credential) {
+        alert("Credential creation returned no result.");
+        return;
+      }
+
       const credentialID = bufferToBase64Url(credential.rawId);
 
       const credentialResponse = {
@@ -101,13 +165,15 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
       if (result.success) {
         alert("Biometric registration successful!");
       } else {
-        alert("Registration failed: " + result.error);
+        alert("Registration failed: " + (result.error || JSON.stringify(result)));
+        console.error("verifyBioRegistration result:", result);
       }
     } catch (err) {
-      console.error(err);
-      alert("Error during biometric registration");
+      console.error("Error during biometric registration:", err);
+      alert("Error during biometric registration. See console for details.");
     }
   };
+  // --- end biometric handler ---
 
   if (isAuthenticated === null) {
     return <CustomLoader text="Loading your wellness journey..." />;
@@ -270,7 +336,8 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
               <div className="realtive flex items-center">
                 <Fingerprint className="h-5 w-5 mr-2" />{" "}
-                <button onClick={handleBiometricSetup}>
+                {/* make this a non-submitting button */}
+                <button type="button" onClick={(e) => handleBiometricSetup(e)}>
                   Input for biometric
                 </button>
               </div>

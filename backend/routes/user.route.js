@@ -83,7 +83,7 @@ userRouter.post("/signup", async (req, res) => {
 const biometricOptions = async (user) => {
   const options = await generateRegistrationOptions({
     rpName: "wellness",
-    rpID: "wellness.iiti.ac.in",
+    rpID: "localhost",
     userID: Number(user.id),
     userName: user.email,
     userDisplayName: user.email,
@@ -185,8 +185,8 @@ userRouter.post("/verifyBioLogin", async (req, res) => {
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
-    expectedOrigin: "https://wellness.iiti.ac.in",
-    expectedRPID: "wellness.iiti.ac.in",
+    expectedOrigin: "http://localhost:5173",
+    expectedRPID: "localhost",
     credential: {
       credentialID: Buffer.from(credential.credentialID),
       publicKey: Buffer.from(credential.publicKey),
@@ -224,9 +224,11 @@ userRouter.post("/verifyBioLogin", async (req, res) => {
 
 userRouter.put("/modifyUser", async (req, res) => {
   try {
+    console.log(req.body, "Body")
     const { id, username, email, mobile, alt_mobile, gender } = req.body;
 
     if (!id) {
+      console.log('1')
       return res.status(400).json({ error: "User ID is required" });
     }
 
@@ -239,6 +241,7 @@ userRouter.put("/modifyUser", async (req, res) => {
         where: { username },
       });
       if (existingUsername && existingUsername.id !== Number(id)) {
+        console.log('2')
         return res.status(400).json({ error: "Username is already in use" });
       }
     }
@@ -273,19 +276,16 @@ userRouter.put("/modifyUser", async (req, res) => {
       ...(alt_mobile && { alt_mobile }),
       ...(gender && { gender }),
     };
-
-    if (Object.keys(updatedData).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "No valid fields provided for update." });
-    }
-
-    const updatedUser = await prisma.user.update({
+    // console.log(updatedData, "Data")
+    if (Object.keys(updatedData).length !== 0) {
+      const updatedUser = await prisma.user.update({
       where: { id: Number(id) },
       data: updatedData,
     });
-
-    res.json({ message: "User updated successfully", updatedUser });
+     res.json({ message: "User updated successfully", updatedUser });
+    }else{
+      res.json({message: "User not updateed as no new data was provided"})
+    }
   } catch (error) {
     console.error("Error updating user: ", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -385,8 +385,8 @@ userRouter.post(
       const verification = await verifyRegistrationResponse({
         response: req.body,
         expectedChallenge: user.challenge,
-        expectedOrigin: "https://wellness.iiti.ac.in",
-        expectedRPID: "wellness.iiti.ac.in",
+        expectedOrigin: "http://localhost:5173",
+        expectedRPID: "localhost",
         // authenticator: {
         //     credentialID: credential.credentialID,
         //     credentialPublicKey: credential.publicKey,
