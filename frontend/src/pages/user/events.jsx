@@ -51,22 +51,6 @@ const Events = () => {
     );
   }
 
-  function isEventVisibleToUser(event) {
-    // No batch restriction → visible to all
-    if (!event.batches || event.batches.length === 0) {
-      return true;
-    }
-
-    // Check if any batch matches user
-    return event.batches.some(
-      b =>
-        b.program === localStorage.getItem("user_prog") &&
-        b.year === localStorage.getItem("user_batch") &&
-        b.dept === localStorage.getItem("user_dept")
-    );
-  }
-
-
   async function getCurrEvents() {
     const res = await fetch("http://localhost:3000/api/common/events?user=user", {
       headers: { Authorization: "Bearer " + token },
