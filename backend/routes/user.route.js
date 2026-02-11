@@ -6,18 +6,11 @@ import { OAuth2Client } from "google-auth-library";
 import bcrypt from "bcryptjs";
 import base64url from "base64url";
 import { webcrypto } from "node:crypto";
-import {
-  generateAuthenticationOptions,
-  generateRegistrationOptions,
-  verifyAuthenticationResponse,
-  verifyRegistrationResponse,
-} from "@simplewebauthn/server";
+import { generateAuthenticationOptions, generateRegistrationOptions,verifyAuthenticationResponse, verifyRegistrationResponse } from "@simplewebauthn/server";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
 import { PrismaClient, Prisma } from "@prisma/client";
-// const prisma = new PrismaClient();
-
 dotenv.config();
 
 const userRouter = Router();
