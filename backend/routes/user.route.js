@@ -48,6 +48,8 @@ userRouter.post("/signup", async (req, res) => {
   const gender = req.body["gender"];
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  const batch = 2000 + Number(rollNo[0] + rollNo[1]);
+
   try {
     const user = await prisma.user.create({
       data: {
@@ -61,6 +63,7 @@ userRouter.post("/signup", async (req, res) => {
         acadProg: acadProg,
         department: department,
         gender: gender,
+        batch: String(batch),
       },
     });
     res.status(201).json({ message: "User added" });
