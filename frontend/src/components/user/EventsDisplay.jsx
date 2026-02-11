@@ -25,7 +25,7 @@ const EventsDisplay = () => {
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch("http://localhost:3000/api/common/events", {
+      const res = await fetch("http://localhost:3000/api/common/events?user=user", {
         headers: { Authorization: "Bearer " + token },
       });
       const resp = await res.json();

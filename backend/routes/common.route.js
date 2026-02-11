@@ -8,21 +8,59 @@ commonRouter.get(
   "/getPastEvents",
   authorizeRoles("user", "doc", "admin"),
   async (req, res) => {
-    try {
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const { user } = req.query;
 
-      const events = await prisma.events.findMany({
-        where: {
-          dateTime: {
-            gte: thirtyDaysAgo,
-            lte: new Date(),
-          },
-        },
+    if (user == "user") {
+      const existing = await prisma.user.findUnique({
+        where: { id: Number(req.user.userId) },
       });
-      res.json(events);
-    } catch (e) {
-      res.json(e);
+      try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const events = await prisma.events.findMany({
+          where: {
+            dateTime: {
+              gte: thirtyDaysAgo,
+              lte: new Date(),
+            },
+          },
+        });
+        const filteredEvents = events.filter((event) => {
+          if (!event.batches || event.batches.length === 0) {
+            return true;
+          }
+
+          return event.batches.some((batch) => {
+            return (
+              batch.dept === existing.department &&
+              Number(batch.year) === Number(existing.batch) &&
+              batch.program === existing.acadProg
+            );
+          });
+        });
+        console.log(filteredEvents);
+        res.json(filteredEvents);
+      } catch (e) {
+        res.json(e);
+      }
+    } else {
+      try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const events = await prisma.events.findMany({
+          where: {
+            dateTime: {
+              gte: thirtyDaysAgo,
+              lte: new Date(),
+            },
+          },
+        });
+        res.json(events);
+      } catch (e) {
+        res.json(e);
+      }
     }
   },
 );
@@ -31,18 +69,53 @@ commonRouter.get(
   "/events",
   authorizeRoles("user", "doc", "admin"),
   async (req, res) => {
-    try {
-      const events = await prisma.events.findMany({
-        where: {
-          dateTime: {
-            gte: new Date(),
+    const { user } = req.query;
+
+    if (user == "user") {
+      try {
+        const existing = await prisma.user.findUnique({
+          where: { id: Number(req.user.userId) },
+        });
+        const events = await prisma.events.findMany({
+          where: {
+            dateTime: {
+              gte: new Date(),
+            },
           },
-        },
-      });
-      res.json(events);
-    } catch (e) {
-      console.error(e);
-      res.status(0).json({ message: "Error fetching events" });
+        });
+        const filteredEvents = events.filter((event) => {
+          if (!event.batches || event.batches.length === 0) {
+            return true;
+          }
+
+          return event.batches.some((batch) => {
+            return (
+              batch.dept === existing.department &&
+              Number(batch.year) === Number(existing.batch) &&
+              batch.program === existing.acadProg
+            );
+          });
+        });
+        console.log(filteredEvents);
+        res.json(filteredEvents);
+      } catch (e) {
+        console.error(e);
+        res.status(0).json({ message: "Error fetching events" });
+      }
+    } else {
+      try {
+        const events = await prisma.events.findMany({
+          where: {
+            dateTime: {
+              gte: new Date(),
+            },
+          },
+        });
+        res.json(events);
+      } catch (e) {
+        console.error(e);
+        res.status(0).json({ message: "Error fetching events" });
+      }
     }
   },
 );

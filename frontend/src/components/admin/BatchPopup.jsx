@@ -1,8 +1,34 @@
 import { useState } from "react";
 
-const PROGRAMS = ["BTech", "Masters", "PhD"];
-const YEARS = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
-const DEPARTMENTS = ["CSE", "EE", "ME", "CE", "MEMS"];
+const PROGRAMS = ["UG", "PG", "PhD"];
+const YEARS = [
+  "2015",
+  "2016",
+  "2017",
+  "2018",
+  "2019",
+  "2020",
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+];
+const DEPARTMENTS = [
+  "Astronomy, Astrophysics and Space",
+  "Biosciences and Biomedical",
+  "Chemical",
+  "Chemistry",
+  "Civil",
+  "Computer Science",
+  "Electrical",
+  "Humanities and Social Sciences",
+  "Mathematics",
+  "Mechanical",
+  "Metallurgical and Materials Science",
+  "Physics",
+  "School of Innovation",
+];
 
 export default function AddBatchPopup({ onAdd, onClose }) {
   const [batch, setBatch] = useState({
@@ -29,11 +55,13 @@ export default function AddBatchPopup({ onAdd, onClose }) {
         <select
           className="mb-3 w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={batch.program}
-          onChange={e => setBatch({ ...batch, program: e.target.value })}
+          onChange={(e) => setBatch({ ...batch, program: e.target.value })}
         >
           <option value="">Select Program</option>
-          {PROGRAMS.map(p => (
-            <option key={p} value={p}>{p}</option>
+          {PROGRAMS.map((p) => (
+            <option key={p} value={p}>
+              {p}
+            </option>
           ))}
         </select>
 
@@ -41,11 +69,13 @@ export default function AddBatchPopup({ onAdd, onClose }) {
         <select
           className="mb-3 w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={batch.year}
-          onChange={e => setBatch({ ...batch, year: Number(e.target.value) })}
+          onChange={(e) => setBatch({ ...batch, year: Number(e.target.value) })}
         >
           <option value="">Select Year</option>
-          {YEARS.map(y => (
-            <option key={y} value={y}>{y}</option>
+          {YEARS.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
           ))}
         </select>
 
@@ -53,11 +83,13 @@ export default function AddBatchPopup({ onAdd, onClose }) {
         <select
           className="mb-5 w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={batch.dept}
-          onChange={e => setBatch({ ...batch, dept: e.target.value })}
+          onChange={(e) => setBatch({ ...batch, dept: e.target.value })}
         >
           <option value="">Select Department</option>
-          {DEPARTMENTS.map(d => (
-            <option key={d} value={d}>{d}</option>
+          {DEPARTMENTS.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
           ))}
         </select>
 

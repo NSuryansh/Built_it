@@ -113,13 +113,13 @@ const DoctorEventsList = () => {
     const fetchEvents = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/common/events",
+          "http://localhost:3000/api/common/events?user=doctor",
           {
             headers: { Authorization: "Bearer " + token },
           },
         );
         const response2 = await fetch(
-          "http://localhost:3000/api/common/getPastEvents",
+          "http://localhost:3000/api/common/getPastEvents?user=doctor",
           {
             headers: { Authorization: "Bearer " + token },
           },
