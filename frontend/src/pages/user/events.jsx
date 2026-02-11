@@ -72,10 +72,7 @@ const Events = () => {
       headers: { Authorization: "Bearer " + token },
     });
     const resp = await res.json();
-    const filtered = resp.filter(event =>
-      isEventVisibleToUser(event)
-    );
-    setCurrentEvents(filtered);
+    setCurrentEvents(resp);
   }
 
   async function getPastEvents() {
@@ -83,10 +80,7 @@ const Events = () => {
       headers: { Authorization: "Bearer " + token },
     });
     const resp = await res.json();
-    const filtered = resp.filter(event =>
-      isEventVisibleToUser(event)
-    );
-    setPastEvents(filtered);
+    setPastEvents(resp);
   }
 
   const filterEvents = (events) => {
