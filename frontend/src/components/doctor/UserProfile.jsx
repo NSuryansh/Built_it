@@ -39,7 +39,7 @@ const UserProfile = () => {
               headers: {
                 Authorization: "Bearer " + token,
               },
-            }
+            },
           );
           const data = await response.json();
           setUser(data.user);
@@ -57,11 +57,11 @@ const UserProfile = () => {
 
   const fetchDoctors = async () => {
     const doc_id = localStorage.getItem("userid");
-    console.log(doc_id);
+    doc_id;
     try {
       const response = await fetch(
         `http://localhost:3000/api/doc/getDocs?doc_id=${doc_id}`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       const data = await response.json();
       setDocs(data);
@@ -80,7 +80,7 @@ const UserProfile = () => {
       try {
         const response = await fetch(
           `http://localhost:3000/api/doc/changeRoomNo?user_Id=${userId}&roomNo=${roomNumber}`,
-          { method: "POST", headers: { Authorization: "Bearer " + token } }
+          { method: "POST", headers: { Authorization: "Bearer " + token } },
         );
         const data = await response.json();
         CustomToast("Room number updated successfully", "blue");
@@ -122,7 +122,7 @@ const UserProfile = () => {
             referred_to: referralData.referredTo,
             reason: referralData.reason,
           }),
-        }
+        },
       );
       const data = await response.json();
 

@@ -27,7 +27,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
           const doctorId = localStorage.getItem("userid");
           const response = await fetch(
             `http://localhost:3000/api/common/available-slots?date=${date}&docId=${doctorId}`,
-            { headers: { Authorization: "Bearer " + token } }
+            { headers: { Authorization: "Bearer " + token } },
           );
           const data = await response.json();
           setAvailableSlots(data.availableSlots);
@@ -43,9 +43,8 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
     setisScheduling(true);
     try {
       const datetime = new Date(
-        `${followupDate}T${followupTime.split("T")[1]}`
+        `${followupDate}T${followupTime.split("T")[1]}`,
       ).toISOString();
-      console.log(selectedAppointment);
       const response = await fetch(
         "http://localhost:3000/api/doc/request-to-user",
         {
@@ -60,7 +59,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
             dateTime: datetime,
             reason: reason,
           }),
-        }
+        },
       );
       const data = await response.json();
       CustomToast("Follow-up appointment scheduled", "blue");
@@ -79,7 +78,7 @@ const FollowUpModal = ({ isOpen, onClose, selectedAppointment }) => {
               message: "Therapist has requested an appointment with you",
               userType: "user",
             }),
-          }
+          },
         );
         setFollowupDate("");
         setFollowupTime("");

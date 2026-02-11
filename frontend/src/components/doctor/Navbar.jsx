@@ -17,7 +17,8 @@ const DoctorNavbar = () => {
     { name: "Profile", link: "/doctor/profile" },
     { name: "History", link: "/doctor/history" },
     { name: "Events", link: "/doctor/event_list"},
-    { name: "Data", link: "/doctor/DoctorContentManager"}
+    { name: "Data", link: "/doctor/content_manager"},
+    { name: "Emergency", link: "/doctor/emergency"}
   ];
   const navigate = useNavigate();
   const [showCustomModal, setShowCustomModal] = useState(false);
@@ -66,7 +67,7 @@ const DoctorNavbar = () => {
     <nav className="bg-transperent">
       <div className="px-4 md:px-8 py-3">
         <div className="flex items-center justify-between">
-          <div className="md:hidden transition-all flex items-center z-2">
+          <div className="lg:hidden transition-all flex items-center z-2">
             <button
               onClick={() => {
                 toggleMenu();
@@ -114,7 +115,7 @@ const DoctorNavbar = () => {
             />
             <div className="text-xl font-bold">Calm Connect</div>
           </div>
-          <div className="hidden md:flex space-x-8 items-center">
+          <div className="hidden lg:flex space-x-6 items-center">
             {links.map((item, i) => (
               <button
                 key={i}

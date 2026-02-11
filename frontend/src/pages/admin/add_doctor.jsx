@@ -7,7 +7,7 @@ import SessionExpired from "../../components/common/SessionExpired";
 import CustomToast from "../../components/common/CustomToast";
 import { ToastContainer } from "react-toastify";
 import CustomLoader from "../../components/common/CustomLoader";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, Loader, X } from "lucide-react";
 
 const AddDoctor = () => {
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ const AddDoctor = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const token = localStorage.getItem("token");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
   const daysOfWeek = [
     "Monday",
@@ -68,6 +69,7 @@ const AddDoctor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const { name, email, mobile, password, regId, desc, weekOffs } = formData;
 
     try {
@@ -107,6 +109,8 @@ const AddDoctor = () => {
     } catch (e) {
       console.error(e);
       CustomToast("Network connection failed", "red");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -339,10 +343,11 @@ const AddDoctor = () => {
                   Cancel
                 </button>
                 <button
+                  disabled={isLoading}
                   type="submit"
-                  className="px-6 py-2 bg-[var(--custom-green-600)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-green-700)] transition-colors duration-200 font-medium"
+                  className={`px-6 py-2 ${isLoading ? "cursor-not-allowed" : ""} bg-[var(--custom-green-600)] text-[var(--custom-white)] rounded-lg hover:bg-[var(--custom-green-700)] transition-colors duration-200 font-medium`}
                 >
-                  Add Therapist
+                  {!isLoading ? "Add Therapist" : <Loader />}
                 </button>
               </div>
             </form>

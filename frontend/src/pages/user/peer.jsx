@@ -59,7 +59,7 @@ const Peer = () => {
 
   // Filter doctors based on search query
   const filteredDoctors = docList.filter((doctor) =>
-    doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
+    doctor.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const Peer = () => {
   useEffect(() => {
     if (newChatId && newChatUsername) {
       const existingIndex = chats.findIndex(
-        (chat) => String(chat.id) === String(newChatId)
+        (chat) => String(chat.id) === String(newChatId),
       );
       if (existingIndex !== -1) {
         setSelectedChat(existingIndex);
@@ -103,11 +103,10 @@ const Peer = () => {
           "http://localhost:3000/api/user_admin/getdoctors?user_type=user",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
-        // console.log("Doctors data:", data); // Debug: Log doctor data to check phone field
         setDocList(data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -180,7 +179,6 @@ const Peer = () => {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
-      // console.log("Connected to WebSocket server");
       socketRef.current.emit("register", { userId });
     });
     return () => {
@@ -208,15 +206,13 @@ const Peer = () => {
       encryptedAESKey,
       senderType,
     }) => {
-      // console.log("hal")
       const decrypted = await decryptMessage(
         encryptedText,
         iv,
-        encryptedAESKey
+        encryptedAESKey,
       );
       if (lastMessageRef.current === decrypted) return;
       lastMessageRef.current = decrypted;
-      // console.log(decrypted, "decrypted");
       setShowMessages((prev) => [
         ...prev,
         { decryptedText: decrypted, senderId, senderType, recipientId: userId },
@@ -270,7 +266,6 @@ const Peer = () => {
           senderType: "user",
         });
         socketRef.current.on("unreadCount", (data) => {
-          // console.log(data, "Unread");
           setUnread(data);
         });
       } catch (error) {
@@ -284,10 +279,9 @@ const Peer = () => {
     try {
       const response = await fetch(
         `http://localhost:3000/api/user_doc/messages?userId=${userId}&recId=${recipientId}&userType=user&recType=doc`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       const messages = await response.json();
-      console.log(messages, "messgaes");
       const decrypted_api_messages = await Promise.all(
         messages.map(async (msg) => {
           const isUser = msg["senderType"] === "user";
@@ -298,23 +292,21 @@ const Peer = () => {
             decryptedText: await decryptMessage(
               msg["encryptedText"],
               msg["iv"],
-              msg["encryptedAESKey"]
+              msg["encryptedAESKey"],
             ),
             senderType: msg["senderType"],
           };
-        })
+        }),
       );
-      // console.log(decrypted_api_messages, "messgaesjpoas");
       setMessagesApi(decrypted_api_messages);
       const filteredMessages = decrypted_api_messages.filter((msg) => {
-        // console.log(typeof(msg.senderId), "msesagfsfdjkfhakjfhakdsjhjk")
-        // console.log(typeof(userId), "redi")
         return (
-          (msg.senderId === Number(userId) && msg.recipientId === Number(recipientId)) ||
-          (msg.senderId === Number(recipientId) && msg.recipientId === Number(userId))
+          (msg.senderId === Number(userId) &&
+            msg.recipientId === Number(recipientId)) ||
+          (msg.senderId === Number(recipientId) &&
+            msg.recipientId === Number(userId))
         );
       });
-      // console.log(filteredMessages, "fileter")
       setShowMessages(filteredMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -331,20 +323,13 @@ const Peer = () => {
   }, [selectedChat, userId, reloader, docList]);
 
   useEffect(() => {
-    // console.log(showMessages, "JSA")
-    console.log(showMessages, "hal");
-    console.log(userId, "userId")
     const filteredMessages = showMessages.filter((msg) => {
-      console.log(msg, "msg")
-      console.log("HELOLO")
       if (msg.senderType === "user") {
-        console.log("HELfdsahj")
         return msg.senderId === userId;
       } else {
         return msg.recipientId === userId;
       }
     });
-    console.log(filteredMessages, "filtered")
     setEditedMessages(filteredMessages);
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [showMessages]);
@@ -361,7 +346,6 @@ const Peer = () => {
         doctorId: docId,
       });
     }
-    // console.log(prevRecvId, "HALLO");
     if (prevRecvId !== 0) {
       const userId = localStorage.getItem("userid");
       const docId = prevRecvId;

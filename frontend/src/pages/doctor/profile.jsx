@@ -109,7 +109,6 @@ const DoctorProfile = () => {
           Saturday: [],
         };
         data2.generalSlots.map((slot) => {
-          console.log(format(new Date(slot.starting_time).getTime(), "HH:mm"));
           avail[DAYS_OF_WEEK[slot.day_of_week]].push(
             format(new Date(slot.starting_time).getTime(), "HH:mm"),
           );
@@ -150,7 +149,6 @@ const DoctorProfile = () => {
         if (educations.length === 0) {
           educations = ["<Add>"];
         }
-        console.log(data.doctor);
         setProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -233,8 +231,6 @@ const DoctorProfile = () => {
   };
 
   const handleAddSlot = (day) => {
-    console.log(profile);
-    console.log(editedProfile);
     const newAvailability = { ...editedProfile.availability };
     if (!newAvailability[day]) {
       newAvailability[day] = [];
@@ -356,11 +352,9 @@ const DoctorProfile = () => {
             ":00.000Z",
           );
           const newDate = TimeChange(date.getTime());
-          console.log("inside");
           dates.push({ time: newDate, day_of_week: i });
         }
       }
-      console.log(dates);
       if (dates.length !== 0) {
         await fetch(
           `http://localhost:3000/api/doc/modifySlots?slotsArray=${JSON.stringify(

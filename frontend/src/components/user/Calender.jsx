@@ -23,8 +23,6 @@ const Calendar = ({ onDateSelect }) => {
   const rollNo = localStorage.getItem("user_rollNo");
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  // console.log("hi");
-  // console.log(rollNo);
   const sendLink = (rollNo) => {
     if (rollNo.startsWith("24")) {
       return "https://academic.iiti.ac.in/New_student/2024-25_Academic%20Calendar_2024%20BTech%20batch%20-%20Copy.pdf"; // Acad calender for fy
@@ -43,11 +41,11 @@ const Calendar = ({ onDateSelect }) => {
           "http://localhost:3000/api/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await response.json();
         setPastEvents(
-          data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd"))
+          data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd")),
         );
       } catch (e) {
         CustomToast("Error fetching past events");
@@ -65,11 +63,11 @@ const Calendar = ({ onDateSelect }) => {
           "http://localhost:3000/api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await response.json();
         setFutureEvents(
-          data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd"))
+          data.map((event) => format(new Date(event.dateTime), "yyyy-MM-dd")),
         );
       } catch (e) {
         CustomToast("Error fetching future events");
@@ -136,31 +134,37 @@ const Calendar = ({ onDateSelect }) => {
                 className={`
                   relative p-2 rounded-lg aspect-square flex items-center justify-center
                   transition-all duration-200 text-sm font-medium
-                  ${isSameMonth(dayItem, currentMonth)
-                    ? "text-[var(--custom-gray-900)]"
-                    : "text-[var(--custom-gray-400)]"
+                  ${
+                    isSameMonth(dayItem, currentMonth)
+                      ? "text-[var(--custom-gray-900)]"
+                      : "text-[var(--custom-gray-400)]"
                   }
-                  ${isPastEvent && !isToday
-                    ? "bg-[var(--custom-red-500)] text-[var(--custom-white)] hover:bg-[var(--custom-red-600)]"
-                    : isFutureEvent && !isToday
-                      ? "bg-[var(--custom-blue-500)] text-[var(--custom-white)] hover:bg-[var(--custom-blue-600)]"
+                  ${
+                    isPastEvent && !isToday
+                      ? "bg-[var(--custom-red-500)] text-[var(--custom-white)] hover:bg-[var(--custom-red-600)]"
+                      : isFutureEvent && !isToday
+                        ? "bg-[var(--custom-blue-500)] text-[var(--custom-white)] hover:bg-[var(--custom-blue-600)]"
+                        : ""
+                  }
+                  ${
+                    isToday && isPastEvent
+                      ? "ring-2 ring-black text-[var(--custom-white)] bg-[var(--custom-blue-500)] hover:bg-[var(--custom-blue-600)] ring-offset-2 font-bold"
                       : ""
                   }
-                  ${isToday && isPastEvent
-                    ? "ring-2 ring-black text-[var(--custom-white)] bg-[var(--custom-blue-500)] hover:bg-[var(--custom-blue-600)] ring-offset-2 font-bold"
-                    : ""
+                  ${
+                    !isToday && !isPastEvent && !isFutureEvent
+                      ? "hover:bg-[var(--custom-gray-100)]"
+                      : ""
                   }
-                  ${!isToday && !isPastEvent && !isFutureEvent
-                    ? "hover:bg-[var(--custom-gray-100)]"
-                    : ""
+                  ${
+                    isToday && !isPastEvent
+                      ? "ring-2 ring-[var(--custom-black)] ring-offset-2 font-bold"
+                      : ""
                   }
-                  ${isToday && !isPastEvent
-                    ? "ring-2 ring-[var(--custom-black)] ring-offset-2 font-bold"
-                    : ""
-                  }
-                  ${isSameDay(dayItem, selectedDate) && !isToday
-                    ? "ring-2 ring-[var(--custom-blue-600)]"
-                    : ""
+                  ${
+                    isSameDay(dayItem, selectedDate) && !isToday
+                      ? "ring-2 ring-[var(--custom-blue-600)]"
+                      : ""
                   }
                 `}
                 onClick={() => {

@@ -39,10 +39,9 @@ const DoctorLeave = () => {
     try {
       const response = await fetch(
         `http://localhost:3000/api/common/available-slots?date=${date}&docId=${docId}`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       const data = await response.json();
-      console.log(data);
       if (start) {
         setStartSlots(data.availableSlots);
       } else {
@@ -55,7 +54,6 @@ const DoctorLeave = () => {
   };
 
   const handleInputChange = (e) => {
-    console.log(leaveDetails);
     const { name, value } = e.target;
     setLeaveDetails((prev) => ({
       ...prev,
@@ -67,13 +65,12 @@ const DoctorLeave = () => {
     e.preventDefault();
     const startDate = new Date(
       new Date(leaveDetails.startDate).getTime() +
-        new Date(startSelectedSlot).getTime()
+        new Date(startSelectedSlot).getTime(),
     );
     const endDate = new Date(
       new Date(leaveDetails.endDate).getTime() +
-        new Date(endSelectedSlot).getTime()
+        new Date(endSelectedSlot).getTime(),
     );
-    console.log(startDate, endDate);
 
     const today = new Date();
     if (startDate > endDate || startDate < today) {
@@ -95,7 +92,6 @@ const DoctorLeave = () => {
             end: endDate,
           }),
         });
-        console.log(response.json());
         navigate("/doctor/profile");
         CustomToast("Leave added successfully", "blue");
       } catch (e) {
@@ -211,7 +207,7 @@ const DoctorLeave = () => {
                       <option key={slot.id} value={slot.starting_time}>
                         {format(
                           new Date(slot.starting_time).getTime(),
-                          "HH:mm"
+                          "HH:mm",
                         )}
                       </option>
                     ))}
@@ -253,7 +249,7 @@ const DoctorLeave = () => {
                       <option key={slot.id} value={slot.starting_time}>
                         {format(
                           new Date(slot.starting_time).getTime(),
-                          "HH:mm"
+                          "HH:mm",
                         )}
                       </option>
                     ))}

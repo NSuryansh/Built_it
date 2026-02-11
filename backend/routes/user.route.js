@@ -48,6 +48,8 @@ userRouter.post("/signup", async (req, res) => {
   const gender = req.body["gender"];
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  const batch = 2000 + Number(rollNo[0] + rollNo[1]);
+
   try {
     const user = await prisma.user.create({
       data: {
@@ -61,6 +63,7 @@ userRouter.post("/signup", async (req, res) => {
         acadProg: acadProg,
         department: department,
         gender: gender,
+        batch: String(batch),
       },
     });
     res.status(201).json({ message: "User added" });
@@ -85,7 +88,6 @@ const biometricOptions = async (user) => {
     userName: user.email,
     userDisplayName: user.email,
   });
-  // console.log(options)
   const addChallenge = await prisma.user.update({
     where: {
       id: Number(user.id),
@@ -114,14 +116,13 @@ userRouter.post(
   async (req, res) => {
     try {
       const user = req.body["user"];
-      // console.log('hello')
       // if (user.id !== req.user.id) {
       //   return res.status(403).json({ error: "Access denied" })
       // }
       const options = await biometricOptions(user);
       return res.json({ options: options });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   },
 );
@@ -151,7 +152,6 @@ userRouter.post(
       })),
       userVerification: "preferred",
     });
-    // console.log(options)
     await prisma.user.update({
       where: { id: user.id },
       data: { challenge: options.challenge },
@@ -163,7 +163,6 @@ userRouter.post(
 
 userRouter.post("/verifyBioLogin", async (req, res) => {
   const emailId = req.body["emailId"];
-  // console.log(emailId, "hiihihih")
   const user = await prisma.user.findUnique({
     where: { email: emailId },
     include: {
@@ -174,19 +173,15 @@ userRouter.post("/verifyBioLogin", async (req, res) => {
   if (!user || user.credentials.length === 0) {
     return res.status(404).json({ error: "User or credentials not found" });
   }
-  // console.log(req.body)
-  // console.log(user.credentials)
   const credential = user.credentials.find(
     (c) => base64url.encode(Buffer.from(c.credentialID)) === req.body.id,
   );
-  // console.log(credential)
   if (!credential) {
     return res.status(400).json({ error: "Credential not recognized" });
   }
   const encodedCredentialId = base64url.encode(
     Buffer.from(credential.credentialID),
   );
-  // console.log(credential.counter)
   const verification = await verifyAuthenticationResponse({
     response: req.body,
     expectedChallenge: user.challenge,
@@ -206,7 +201,6 @@ userRouter.post("/verifyBioLogin", async (req, res) => {
       .status(403)
       .json({ success: false, error: "Verification failed" });
   }
-  // console.log(verification)
   await prisma.authenticator.update({
     where: { id: credential.id },
     data: {
@@ -383,7 +377,6 @@ userRouter.post(
   async (req, res) => {
     try {
       const emailId = req.body["emailId"];
-      // console.log(emailId)
       const user = await prisma.user.findUnique({
         where: {
           email: emailId,
@@ -402,7 +395,6 @@ userRouter.post(
         //     credentialBackedUp: credential.backedUp
         // },
       });
-      // console.log(verification)
 
       if (verification.verified && verification.registrationInfo) {
         await prisma.authenticator.create({
@@ -423,7 +415,7 @@ userRouter.post(
       }
       return res.status(200).json({ success: true });
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return res.status(400).json({ error: e });
     }
   },
@@ -494,7 +486,6 @@ userRouter.get("/pastuserappt", authorizeRoles("user"), async (req, res) => {
         doc: true,
       },
     }); // Fetch all appts
-    // console.log(appt);
     res.json(appt); // Send the appts as a JSON response
   } catch (e) {
     console.error(e);
@@ -520,6 +511,7 @@ userRouter.get("/currentuserappt", authorizeRoles("user"), async (req, res) => {
     }
     const appt = await prisma.appointments.findMany({
       where: { user_id: userId },
+      orderBy: { isEmergency: "desc" },
       include: {
         doctor: true,
       },
@@ -562,7 +554,6 @@ userRouter.get(
   "/getAppointmentById",
   authorizeRoles("user"),
   async (req, res) => {
-    // console.log(req.headers.authorization);
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(401).json({ message: "Unauthorized token" });
@@ -572,7 +563,6 @@ userRouter.get(
       const appointment = await prisma.pastAppointments.findUnique({
         where: { id: id },
       });
-      // console.log(appointments);
       res.json(appointment);
     } catch (e) {
       return res.status(400).json({ message: "Error in appointment" });
@@ -588,7 +578,6 @@ userRouter.post("/forgotPassword", async (req, res) => {
         email: email,
       },
     });
-    // console.log(user);
     if (!user) {
       res.json({ message: "No user found with this email" });
     }
@@ -601,7 +590,6 @@ userRouter.post("/forgotPassword", async (req, res) => {
         userId: user.id,
       },
     });
-    // console.log(tokengen);
     const resetLink = `https://wellness.iiti.ac.in/user/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
@@ -655,7 +643,9 @@ userRouter.post("/setFeedback", authorizeRoles("user"), async (req, res) => {
     const tokenUserId = req.user.userId;
 
     if (!bodyUserId || bodyUserId !== tokenUserId) {
-      console.log(`❌ Mismatch: Body(${bodyUserId}) !== Token(${tokenUserId})`);
+      console.error(
+        `❌ Mismatch: Body(${bodyUserId}) !== Token(${tokenUserId})`,
+      );
       return res.status(403).json({
         error: "Access denied: User ID mismatch",
         details: `Frontend sent: ${req.body["userId"]}, Token has: ${tokenUserId}`,
@@ -723,12 +713,9 @@ userRouter.get("/check-user", async (req, res) => {
 
 userRouter.post("/otpGenerate", async (req, res) => {
   const email = req.body["email"];
-  // console.log(email);
   try {
     const otp = Math.trunc(100000 + Math.random() * 900000);
-    // console.log(otp);
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    // console.log(expiresAt);
 
     const otpgen = await prisma.otpVerification.create({
       data: {
@@ -738,7 +725,6 @@ userRouter.post("/otpGenerate", async (req, res) => {
       },
     });
 
-    // console.log(otpgen);
     const subject = "OTP Verification";
     const message = `Use the following OTP to verify signup for Calm Connect: ${otp}`;
     sendEmail(email, subject, message);
@@ -753,7 +739,6 @@ userRouter.post("/otpGenerate", async (req, res) => {
 userRouter.post("/otpcheck", async (req, res) => {
   const otp = req.body["otp"];
   const email = req.body["email"];
-  // console.log(otp, "OTP");
 
   try {
     const otpRecord = await prisma.otpVerification.findFirstOrThrow({
@@ -765,8 +750,6 @@ userRouter.post("/otpcheck", async (req, res) => {
         expiresAt: "desc",
       },
     });
-    // console.log(otpRecord);
-    // console.log(email, "JKSFJK");
 
     if (!otpRecord) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -814,7 +797,6 @@ userRouter.post("/emerApp", async (req, res) => {
         doctor_id: Number(docId),
       },
     });
-    // console.log(app);
     res.json(app);
   }
 });

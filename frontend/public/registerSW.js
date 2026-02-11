@@ -4,9 +4,7 @@
 //   try {
 //     window.ServiceWorkerRegistration = await navigator.serviceWorker.register("/sw.js");
 //   } catch(registrationError) {
-//     console.log("SW registration failed: ", registrationError);
 //   }
-//   console.log("SW registered: ", window.ServiceWorkerRegistration);
 
 //   try {
 //     // call what ever starts your PWA here
@@ -25,22 +23,17 @@
 //   }
 //   if (window.ServiceWorkerRegistration) {
 //     const unregistered = await ServiceWorkerRegistration.unregister();
-//     console.log("SW unregistered");
 //   }
 
 //   const cacheKeys = await window.caches.keys();
 //   for (key of cacheKeys) {
-//     console.log("Working on cache: ", key);
 //     const cache = await caches.open(key);
 //     const requestKeys = await cache.keys();
 //     for (request of requestKeys) {
-//       console.log("Deleting request: ", request);
 //       await cache.delete(request);
 //     }
 //   }
-//   console.log("Cache deleted");
 //   window.localStorage.setItem("usedBigHammer", true);
-//   console.log("Reloading");
 //   window.location.reload();
 //   return true;
 // }

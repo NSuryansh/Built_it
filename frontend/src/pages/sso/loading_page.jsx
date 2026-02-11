@@ -36,11 +36,9 @@ const LoadingPage = () => {
             `http://localhost:3000/api/sso?token=${token}`,
             {
               method: "POST",
-            }
+            },
           );
           const data = await response.json();
-          console.log(response.data);
-          console.log(data);
           if (data.success) {
             if (data.role === "user") {
               const response = await fetch(
@@ -53,7 +51,7 @@ const LoadingPage = () => {
                   body: JSON.stringify({
                     username: data.username,
                   }),
-                }
+                },
               );
               const res = await response.json();
               if (res.success) {
@@ -80,7 +78,7 @@ const LoadingPage = () => {
                   body: JSON.stringify({
                     email: data.email,
                   }),
-                }
+                },
               );
               const res = await response.json();
               if (res["message"] === "Login successful") {
@@ -101,7 +99,7 @@ const LoadingPage = () => {
                   body: JSON.stringify({
                     email: data.email,
                   }),
-                }
+                },
               );
               const res = await response.json();
               if (res["message"] === "Login successful") {
@@ -371,8 +369,9 @@ const LoadingPage = () => {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className={`text-lg font-medium ${userFound === false ? "text-orange-600" : "text-gray-700"
-                  }`}
+                className={`text-lg font-medium ${
+                  userFound === false ? "text-orange-600" : "text-gray-700"
+                }`}
               >
                 {loadingText}
                 {userFound === null && (
@@ -504,8 +503,9 @@ const LoadingPage = () => {
                   onClick={() =>
                     !option.isRestricted ? navigate("/user/signup") : null
                   }
-                  className={`bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group border border-white border-opacity-50 ${option.isRestricted ? "relative" : ""
-                    }`}
+                  className={`bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group border border-white border-opacity-50 ${
+                    option.isRestricted ? "relative" : ""
+                  }`}
                 >
                   {/* Restricted badge */}
                   {option.isRestricted && (

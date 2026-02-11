@@ -8,26 +8,27 @@ datasource db {
 }
 
 model User {
-  id               Int                @id @default(autoincrement())
-  username         String             @unique
-  mobile           String             @unique
-  email            String             @unique
-  password         String
-  alt_mobile       String
-  publicKey        String
-  department       String
-  batch            String             @default("2024")
-  rollNo           String             @unique
-  acadProg         String
-  roomNo           String             @default("")
-  gender           Gender
-  challenge        String             @default("")
-  credentials      Authenticator[]
-  appointment      Appointments[]
-  chatbot          Chatbot[]
-  feelings         feelings?
-  invite           Notifications[]    @relation("ChatInvite")
-  notif            Notifications[]    @relation("User")
+  id          Int                @id @default(autoincrement())
+  username    String             @unique
+  randomName  String?            @unique
+  mobile      String             @unique
+  email       String             @unique
+  password    String
+  alt_mobile  String
+  publicKey   String
+  department  String
+  batch       String             @default("2024")
+  rollNo      String             @unique
+  acadProg    String
+  roomNo      String             @default("")
+  gender      Gender
+  challenge   String             @default("")
+  credentials Authenticator[]
+  appointment Appointments[]
+  chatbot     Chatbot[]
+  feelings    feelings?
+  invite      Notifications[]    @relation("ChatInvite")
+  notif       Notifications[]    @relation("User")
   // resetTokens PasswordResetToken[]
   pastApp          PastAppointments[]
   referral         Referrals[]
@@ -140,15 +141,17 @@ model Events {
 }
 
 model Appointments {
-  id        Int      @id @default(autoincrement())
-  user_id   Int
-  doctor_id Int
-  dateTime  DateTime
-  reason    String?
-  isDoctor  Boolean  @default(false)
-  stars     Int?
-  doctor    Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  doctor_id   Int
+  dateTime    DateTime
+  reason      String?
+  isDoctor    Boolean  @default(false)
+  caseStatus CaseStatus @default(NEW)
+  isEmergency Boolean  @default(false)
+  stars       Int?
+  doctor      Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("appointments")
 }
@@ -161,7 +164,9 @@ model PastAppointments {
   createdAt DateTime
   pdfLink   String?
   isDoctor  Boolean  @default(false)
+  isEmergency Boolean @default(false)
   stars     Int?
+  caseStatus CaseStatus @default(OPEN)
   category  String?
   question1 String?
   question2 String?
@@ -319,6 +324,12 @@ enum Gender {
   MALE   @map("Male")
   FEMALE @map("Female")
   OTHER  @map("Other")
+}
+
+enum CaseStatus {
+  NEW
+  OPEN
+  CLOSED
 }
 
 model WellnessArticle {

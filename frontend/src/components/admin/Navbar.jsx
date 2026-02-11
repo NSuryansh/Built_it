@@ -13,7 +13,8 @@ const AdminNavbar = () => {
     { name: "Therapist", link: "/admin/doctor_list" },
     { name: "Events", link: "/admin/event_list" },
     { name: "Appointments", link: "/admin/appointments" },
-    { name: "User", link: "/admin/User" },
+    { name: "User", link: "/admin/user" },
+    { name: "Cases", link: "/admin/case_stats" },
   ];
   const navigate = useNavigate();
   const [showCustomModal, setShowCustomModal] = useState(false);
@@ -56,7 +57,7 @@ const AdminNavbar = () => {
     <nav className="bg-transperent">
       <div className="px-4 md:px-8 py-3">
         <div className="flex items-center justify-between">
-          <div className="md:hidden transition-all flex items-center z-2">
+          <div className="lg:hidden transition-all flex items-center z-2">
             <button
               onClick={() => {
                 setShowDetails(false);
@@ -104,7 +105,7 @@ const AdminNavbar = () => {
             />
             <div className="text-xl font-bold">Calm Connect</div>
           </div>
-          <div className="hidden md:flex space-x-8 items-center">
+          <div className="hidden lg:flex space-x-8 items-center">
             {links.map((item, i) => (
               <button
                 key={i}

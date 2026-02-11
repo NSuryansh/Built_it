@@ -14,6 +14,7 @@ import {
   Plus,
   X,
   AlertCircle,
+  Loader,
 } from "lucide-react";
 import CustomLoader from "../../components/common/CustomLoader";
 const AddEvent = () => {
@@ -29,9 +30,10 @@ const AddEvent = () => {
   const [batches, setBatches] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const token = localStorage.getItem("token");
+  const [isLoading, setIsLoading] = useState(false);
 
   const removeBatch = (index) => {
-    setBatches(prev => prev.filter((_, i) => i !== index));
+    setBatches((prev) => prev.filter((_, i) => i !== index));
   };
 
   useEffect(() => {
@@ -44,25 +46,34 @@ const AddEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     // Combine date and time to form a valid ISO date-time string
     const dateTime = new Date(`${date}T${time}`);
+    const now = new Date();
+    if (dateTime < now) {
+      CustomToast("Can't add event in the past date", "green");
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const response = await fetch("http://localhost:3000/api/doc_admin/addEvent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
+      const response = await fetch(
+        "http://localhost:3000/api/doc_admin/addEvent",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            title: title,
+            description: description,
+            dateTime: dateTime,
+            venue: location,
+            batches: batches,
+          }),
         },
-        body: JSON.stringify({
-          title: title,
-          description: description,
-          dateTime: dateTime,
-          venue: location,
-          batches: batches,
-        }),
-      });
+      );
 
       const data = await response.json();
 
@@ -76,6 +87,8 @@ const AddEvent = () => {
       console.error("Error adding event:", err);
       CustomToast("Internal error while adding event", "green");
       setError("Internal error while adding event");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -178,7 +191,8 @@ const AddEvent = () => {
                 </button>
 
                 <p className="mt-2 text-sm text-gray-500">
-                  If none selected, the event will be visible to <b>all students</b>.
+                  If none selected, the event will be visible to{" "}
+                  <b>all students</b>.
                 </p>
               </div>
 
@@ -255,18 +269,18 @@ const AddEvent = () => {
                 Cancel
               </button>
               <button
+                disabled={isLoading}
                 type="submit"
-                className="px-6 py-3 bg-gradient-to-r from-[var(--custom-green-600)] to-[var(--custom-green-500)] text-[var(--custom-white)] rounded-xl hover:from-[var(--custom-green-700)] hover:to-[var(--custom-green-600)] transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center gap-2"
+                className={`px-6 py-3 bg-gradient-to-r ${isLoading ? "cursor-not-allowed" : ""} from-[var(--custom-green-600)] to-[var(--custom-green-500)] text-[var(--custom-white)] rounded-xl hover:from-[var(--custom-green-700)] hover:to-[var(--custom-green-600)] transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center gap-2`}
               >
-                <Plus size={18} />
-                Add Event
+                {!isLoading ? "Add Event" : <Loader />}
               </button>
             </div>
           </form>
         </div>
         {showPopup && (
           <AddBatchPopup
-            onAdd={batch => setBatches(prev => [...prev, batch])}
+            onAdd={(batch) => setBatches((prev) => [...prev, batch])}
             onClose={() => setShowPopup(false)}
           />
         )}

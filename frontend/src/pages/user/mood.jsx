@@ -50,7 +50,6 @@ export default function Mood() {
     if (browserSupportsSpeechRecognition) {
       setIsSpeechToTextSupported(true);
     } else {
-      console.log("Your browser does not support speech recognition.");
       setIsSpeechToTextSupported(false);
     }
   }, [browserSupportsSpeechRecognition]);
@@ -126,13 +125,11 @@ export default function Mood() {
   useEffect(() => {
     if (audioBlob) {
       const audioURL = URL.createObjectURL(audioBlob);
-      console.log("Audio blob available:", audioBlob);
 
       const audio = new Audio(audioURL);
       audio.play().catch((error) => {
         console.error("Error playing audio:", error);
       });
-      console.log("Audio URL:", audioURL);
       return () => {
         URL.revokeObjectURL(audioURL);
       };
@@ -155,8 +152,6 @@ export default function Mood() {
       }
 
       const result = await response.json();
-      console.log("Audio sent successfully:", result);
-      console.log("Emotion result:", result);
       // CustomToast(`Detected Emotion: ${result.emotion}`);
     } catch (error) {
       console.error("Error sending audio:", error);
@@ -257,10 +252,11 @@ export default function Mood() {
             <button
               type="button"
               onClick={isRecording ? stopRecording : startRecording}
-              className={`p-2 rounded-full transition-colors bg-gradient-to-r ${isRecording
+              className={`p-2 rounded-full transition-colors bg-gradient-to-r ${
+                isRecording
                   ? "to-[var(--custom-orange-500)] from-[var(--custom-purple-500)] text-[var(--custom-white)]"
                   : "from-[var(--custom-orange-500)] to-[var(--custom-purple-500)] text-[var(--custom-white)]"
-                }`}
+              }`}
               title={isRecording ? "Stop Recording" : "Start Recording"}
             >
               {isRecording ? (

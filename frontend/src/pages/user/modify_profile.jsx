@@ -39,8 +39,6 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
   const handleBiometricSetup = async () => {
     try {
-      console.log(window.location.origin);
-      console.log("hi");
       const data = await fetch(
         "http://localhost:3000/api/user/generateOptions",
         {
@@ -52,23 +50,22 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
               email: localStorage.getItem("user_email"),
             },
           }),
-        }
+        },
       ).then((res) => res.json());
       const options = data.options;
-      console.log(options);
       options.challenge = Uint8Array.from(
         atob(options.challenge.replace(/-/g, "+").replace(/_/g, "/")),
-        (c) => c.charCodeAt(0)
+        (c) => c.charCodeAt(0),
       );
       options.user.id = Uint8Array.from(
         atob(options.user.id.replace(/-/g, "+").replace(/_/g, "/")),
-        (c) => c.charCodeAt(0)
+        (c) => c.charCodeAt(0),
       );
       options.excludeCredentials = options.excludeCredentials.map((cred) => ({
         ...cred,
         id: Uint8Array.from(
           atob(cred.id.replace(/-/g, "+").replace(/_/g, "/")),
-          (c) => c.charCodeAt(0)
+          (c) => c.charCodeAt(0),
         ),
       }));
 
@@ -83,7 +80,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
         type: credential.type,
         response: {
           attestationObject: bufferToBase64Url(
-            credential.response.attestationObject
+            credential.response.attestationObject,
           ),
           clientDataJSON: bufferToBase64Url(credential.response.clientDataJSON),
         },
@@ -91,17 +88,14 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
         transports: credential.response.getTransports?.() || [],
       };
 
-      console.log(credentialResponse);
-
       const verifyRes = await fetch(
         "http://localhost:3000/api/user/verifyBioRegistration",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentialResponse),
-        }
+        },
       );
-      console.log(verifyRes);
 
       const result = await verifyRes.json();
       if (result.success) {
@@ -141,7 +135,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
             Authorization: "Bearer " + token,
           },
           body: JSON.stringify(dataToSend),
-        }
+        },
       );
 
       const result = await response.json();
@@ -218,7 +212,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                   placeholder={
                     localStorage.getItem("user_email") || "Your email"
                   }
-                  onChange={() => { }}
+                  onChange={() => {}}
                 />
                 <label
                   htmlFor="email"

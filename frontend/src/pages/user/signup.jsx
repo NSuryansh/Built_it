@@ -64,7 +64,7 @@ const SignUp = () => {
             Authorization: "Bearer " + token,
           },
           body: JSON.stringify({ email: formData.email }),
-        }
+        },
       );
       const data = await response.json();
       if (response.ok) {
@@ -91,9 +91,7 @@ const SignUp = () => {
           email: formData.email,
         }),
       });
-      console.log(response);
       const res = await response.json();
-      console.log(res);
       if (response.ok) {
         if (res.message === "Email verified") {
           return true;
@@ -121,7 +119,7 @@ const SignUp = () => {
         hash: "SHA-256",
       },
       true,
-      ["encrypt", "decrypt"]
+      ["encrypt", "decrypt"],
     );
     return keyPair;
   }
@@ -129,7 +127,7 @@ const SignUp = () => {
   async function exportKeyToPEM(key) {
     const exported = await window.crypto.subtle.exportKey("spki", key);
     const exportedAsBase64 = btoa(
-      String.fromCharCode(...new Uint8Array(exported))
+      String.fromCharCode(...new Uint8Array(exported)),
     );
     return exportedAsBase64.match(/.{1,64}/g).join("\n");
   }
@@ -137,7 +135,7 @@ const SignUp = () => {
   async function exportPrivateKeyToPEM(privateKey) {
     const exported = await window.crypto.subtle.exportKey("pkcs8", privateKey);
     const exportedAsBase64 = btoa(
-      String.fromCharCode(...new Uint8Array(exported))
+      String.fromCharCode(...new Uint8Array(exported)),
     );
     return exportedAsBase64.match(/.{1,64}/g).join("\n");
   }
@@ -163,7 +161,7 @@ const SignUp = () => {
     if (formData.mobile === formData.altNo) {
       setError("Phone number and Emergency contact number cannot be the same");
       CustomToast(
-        "Phone number and Emergency contact number cannot be the same"
+        "Phone number and Emergency contact number cannot be the same",
       );
       return;
     }
@@ -218,7 +216,7 @@ const SignUp = () => {
     try {
       const response = await fetch(
         `http://localhost:3000/api/user/check-user?username=${formData.username}`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       const data = await response.json();
       if (data.message === "Username already exists!") {
@@ -249,7 +247,6 @@ const SignUp = () => {
     setError("");
     setisLoading(true);
     const otpValid = await verifyOTP();
-    console.log(otpValid);
     if (!otpValid) {
       setisLoading(false);
       return;
@@ -290,7 +287,6 @@ const SignUp = () => {
         }),
       });
       const data = await response.json();
-      console.log("Signup successful:", data);
       CustomToast("Signup successful");
       setisLoading(false);
       navigate("/user/login");

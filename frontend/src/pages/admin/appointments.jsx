@@ -9,8 +9,6 @@ import {
   CalendarClock,
   CheckCircle2,
   Clock3,
-  CheckCircle,
-  AlertCircle,
 } from "lucide-react";
 import {
   AreaChart,
@@ -23,7 +21,16 @@ import {
 } from "recharts";
 import AdminNavbar from "../../components/admin/Navbar";
 import Footer from "../../components/common/Footer";
-import { format } from "date-fns";
+import {
+  format,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  startOfMonth,
+  endOfMonth,
+  isWithinInterval,
+  addDays,
+} from "date-fns";
 import { checkAuth } from "../../utils/profile";
 import SessionExpired from "../../components/common/SessionExpired";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +45,8 @@ const AdminAppointments = () => {
   const [searchDoctor, setSearchDoctor] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [fetched, setfetched] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [timeframe, setTimeframe] = useState("this-week");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -49,16 +58,60 @@ const AdminAppointments = () => {
     verifyAuth();
   }, []);
 
+  const fetchAppointments = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/admin/all-appointments?period=${timeframe}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        },
+      );
+      const data = await res.json();
+      const formattedCurData = data.appts.map((appt) => ({
+        id: appt.id,
+        doctorId: appt.doctor_id,
+        patientName: appt.user.randomName,
+        time: new Date(appt.dateTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        date: new Date(appt.dateTime).toISOString().split("T")[0],
+        fullDate: new Date(appt.dateTime),
+        status: "Pending",
+      }));
+      const formattedPastData = data.pastApp.map((appt) => ({
+        id: appt.id,
+        doctorId: appt.doc_id,
+        patientName: appt.user.randomName,
+        time: new Date(appt.createdAt).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        date: new Date(appt.createdAt).toISOString().split("T")[0],
+        fullDate: new Date(appt.createdAt),
+        status: "Done",
+      }));
+      setAppointments([...formattedCurData, ...formattedPastData]);
+      setfetched(true);
+    } catch (error) {
+      console.error("Failed to fetch appointments:", error);
+      CustomToast("Failed to fetch appointments", "green");
+      setfetched(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
-
     const fetchDoctors = async () => {
       try {
         const res = await fetch(
           "http://localhost:3000/api/user_admin/getdoctors?user_type=admin",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await res.json();
         const formattedData = data.map((doc) => ({
@@ -66,133 +119,67 @@ const AdminAppointments = () => {
           name: doc.name,
         }));
         if (isMounted) setDoctors(formattedData);
-        setfetched(true);
       } catch (error) {
         console.error("Failed to fetch doctors:", error);
-        setfetched(false);
       }
     };
 
-    const fetchAppointments = async () => {
-      try {
-        const res = await fetch(
-          "http://localhost:3000/api/admin/all-appointments",
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        );
-        const data = await res.json();
-        const formattedCurData = data.appts.map((appt) => ({
-          id: appt.id,
-          doctorId: appt.doctor_id,
-          patientName: appt.user.username,
-          time: new Date(appt.dateTime).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          date: new Date(appt.dateTime).toISOString().split("T")[0],
-          status: "Pending",
-        }));
-        const formattedPastData = data.pastApp.map((appt) => ({
-          id: appt.id,
-          doctorId: appt.doc_id,
-          patientName: appt.user.username,
-          time: new Date(appt.createdAt).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          date: new Date(appt.createdAt).toISOString().split("T")[0],
-          status: "Done",
-        }));
-         const formattedCancelledData = data.cancelledApp.map((appt) => ({
-          id: appt.id,
-          doctorId: appt.doc_id,
-          patientName: appt.user.username,
-          time: new Date(appt.dateTime).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          date: new Date(appt.dateTime).toISOString().split("T")[0],
-          status: "Done",
-        }));
-        if (isMounted)
-          setAppointments([...formattedCurData, ...formattedPastData, ...formattedCancelledData]);
-        setfetched(true);
-      } catch (error) {
-        console.error("Failed to fetch appointments:", error);
-        CustomToast("Failed to fetch appointments", "green");
-        setfetched(false);
-      }
-    };
-
-    const fetchData = async () => {
-      await Promise.all([fetchDoctors(), fetchAppointments()]);
-    };
-
-    fetchData();
-
+    fetchDoctors();
     return () => {
       isMounted = false;
     };
   }, []);
 
-  const getWeekDates = () => {
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchAppointments();
+    }
+  }, [isAuthenticated, timeframe]);
+
+  const graphRange = useMemo(() => {
     const today = new Date();
-    const dayOfWeek = today.getDay();
-    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    const monday = new Date(today);
-    monday.setDate(today.getDate() + mondayOffset);
+    let start, end;
 
-    const weekDates = [];
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + i);
-      weekDates.push(date);
+    switch (timeframe) {
+      case "this-week":
+        start = startOfWeek(today, { weekStartsOn: 1 });
+        end = addDays(endOfWeek(today, { weekStartsOn: 1 }), 14);
+        break;
+      case "past-week":
+        start = startOfWeek(addDays(today, -7), { weekStartsOn: 1 });
+        end = endOfWeek(addDays(today, -7), { weekStartsOn: 1 });
+        break;
+      case "this-month":
+        start = startOfMonth(today);
+        end = addDays(endOfMonth(today), 14);
+        break;
+      case "past-month":
+        const lastMonth = addDays(startOfMonth(today), -1);
+        start = startOfMonth(lastMonth);
+        end = endOfMonth(lastMonth);
+        break;
+      default:
+        const earliest = appointments.reduce(
+          (min, p) => (p.fullDate < min ? p.fullDate : min),
+          today,
+        );
+        start = earliest;
+        end = addDays(today, 14);
     }
-    return weekDates;
-  };
 
-  const weekDates = getWeekDates();
-  const formattedWeekDates = weekDates.map((date) => {
-    const dd = String(date.getDate()).padStart(2, "0");
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    return `${dd}/${mm}`;
-  });
+    return eachDayOfInterval({ start, end });
+  }, [timeframe, appointments]);
 
-  // Utility: safely formats a Date object to dd/mm
-  function formatDate(d) {
-    if (!(d instanceof Date)) {
-      d = new Date(d);
-    }
-    const dd = String(d.getDate()).padStart(2, "0");
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    return `${dd}/${mm}`;
-  }
-
-  // Function: returns appointments count for each day of the week
-  const appWeek = (weekDates, appointmentsArray) => {
-    return weekDates.map((date) => {
-      const formatted = formatDate(date);
-      const count = appointmentsArray.filter((appt) => {
-        return formatDate(appt.date) === formatted;
-      }).length;
-      return { date: formatted, appointments: count };
-    });
-  };
-
-  // Filtered appointment list based on doctor selection and search terms
   const filteredAppointments = useMemo(() => {
     let filtered = appointments;
-
     if (selectedDoctor !== "all") {
       filtered = filtered.filter((app) => app.doctorId === selectedDoctor);
     }
     if (searchUser.trim()) {
       filtered = filtered.filter((app) =>
-        app.patientName.toLowerCase().includes(searchUser.toLowerCase())
+        app.patientName.toLowerCase().includes(searchUser.toLowerCase()),
       );
     }
-
     if (searchDoctor.trim()) {
       filtered = filtered.filter((app) => {
         const doctorName =
@@ -200,13 +187,21 @@ const AdminAppointments = () => {
         return doctorName.toLowerCase().includes(searchDoctor.toLowerCase());
       });
     }
-
     return filtered;
   }, [appointments, doctors, selectedDoctor, searchUser, searchDoctor]);
 
-  const filteredGraphData = useMemo(() => {
-    return appWeek(weekDates, filteredAppointments);
-  }, [weekDates, filteredAppointments]);
+  const graphData = useMemo(() => {
+    return graphRange.map((date) => {
+      const formatted = format(date, "yyyy-MM-dd");
+      const count = filteredAppointments.filter(
+        (appt) => appt.date === formatted,
+      ).length;
+      return {
+        date: format(date, "dd/MM"),
+        appointments: count,
+      };
+    });
+  }, [graphRange, filteredAppointments]);
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -217,18 +212,17 @@ const AdminAppointments = () => {
     }
   };
 
-  // Prepare graph data in the format for Recharts
-  const graphData = formattedWeekDates.map((date, index) => ({
-    date,
-    appointments: filteredGraphData[index]?.appointments ?? 0,
-  }));
-
   const handleClosePopup = () => {
     navigate("/admin/login");
   };
 
-  if (isAuthenticated === null || fetched === null) {
-    return <CustomLoader color="green" text="Loading your dashboard..." />;
+  if (isAuthenticated === null || fetched === null || loading) {
+    return (
+      <CustomLoader
+        color="green"
+        text={loading ? "Updating data..." : "Loading your dashboard..."}
+      />
+    );
   }
 
   if (!isAuthenticated) {
@@ -239,27 +233,44 @@ const AdminAppointments = () => {
     <div className="min-h-screen bg-gradient-to-b from-[var(--custom-green-50)] to-[var(--custom-green-100)]">
       <AdminNavbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-12 py-6">
-        <div className="flex flex-col md:flex-row items-center justify-between mb-10">
+        <div className="flex flex-col gap-4 lg:flex-row items-center justify-between">
           <h1 className="text-2xl md:text-3xl lg:text-4xl text-center font-extrabold text-[var(--custom-gray-900)] flex items-center gap-4">
             <Calendar className="h-10 w-10 text-[var(--custom-blue-600)] animate-pulse" />
             Appointments Dashboard
           </h1>
-          <select
-            className="bg-[var(--custom-white)] mt-4 md:mt-0 border border-[var(--custom-gray-200)] rounded-xl px-5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--custom-blue-400)] shadow-md hover:shadow-lg transition-all duration-300 text-[var(--custom-gray-700)] font-medium cursor-pointer"
-            value={selectedDoctor}
-            onChange={(e) =>
-              setSelectedDoctor(
-                e.target.value === "all" ? "all" : Number(e.target.value)
-              )
-            }
-          >
-            <option value="all">All Doctors</option>
-            {doctors.map((doctor) => (
-              <option key={doctor.id} value={doctor.id}>
-                {doctor.name}
-              </option>
-            ))}
-          </select>
+          <div className="flex gap-3">
+            <select
+              value={timeframe}
+              onChange={(e) => setTimeframe(e.target.value)}
+              className="bg-[var(--custom-white)] border border-[var(--custom-gray-200)] rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--custom-green-400)] shadow-md hover:shadow-lg transition-all duration-300 text-[var(--custom-gray-700)] font-medium cursor-pointer"
+            >
+              <option value="this-week">This Week</option>
+              <option value="past-week">Past Week</option>
+              <option value="this-month">This Month</option>
+              <option value="past-month">Past Month</option>
+              <option value="last-3-months">Last 3 Months</option>
+              <option value="last-6-months">Last 6 Months</option>
+              <option value="last-12-months">Last 12 Months</option>
+              <option value="all-time">All Time</option>
+            </select>
+
+            <select
+              className="bg-[var(--custom-white)] border border-[var(--custom-gray-200)] rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--custom-green-400)] shadow-md hover:shadow-lg transition-all duration-300 text-[var(--custom-gray-700)] font-medium cursor-pointer"
+              value={selectedDoctor}
+              onChange={(e) =>
+                setSelectedDoctor(
+                  e.target.value === "all" ? "all" : Number(e.target.value),
+                )
+              }
+            >
+              <option value="all">All Doctors</option>
+              {doctors.map((doctor) => (
+                <option key={doctor.id} value={doctor.id}>
+                  {doctor.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -301,7 +312,8 @@ const AdminAppointments = () => {
                 <p className="text-3xl font-bold text-[var(--custom-gray-900)] mt-2">
                   {
                     filteredAppointments.filter(
-                      (app) => formatDate(app.date) === formatDate(new Date())
+                      (app) =>
+                        app.date === new Date().toISOString().split("T")[0],
                     ).length
                   }
                 </p>
@@ -320,7 +332,7 @@ const AdminAppointments = () => {
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={graphData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
-                <XAxis dataKey="date" stroke="#6b7280" fontSize={14} />
+                <XAxis dataKey="date" stroke="#6b7280" fontSize={12} />
                 <YAxis stroke="#6b7280" fontSize={14} />
                 <Tooltip
                   contentStyle={{
@@ -351,7 +363,6 @@ const AdminAppointments = () => {
 
         {/* Appointments List */}
         <div className="bg-[var(--custom-white)] rounded-2xl shadow-lg overflow-hidden border border-[var(--custom-gray-100)]">
-          {/* Search Inputs Moved Here */}
           <div className="px-6 py-5 border-b border-[var(--custom-gray-100)] bg-gradient-to-r from-[var(--custom-gray-50)] to-[var(--custom-blue-50)]">
             <h2 className="text-2xl font-semibold text-[var(--custom-gray-900)] mb-4">
               Recent Appointments
@@ -399,7 +410,6 @@ const AdminAppointments = () => {
                       </p>
                     </div>
 
-                    {/* Doctor Info */}
                     <div className="flex-1 bg-gradient-to-br from-[var(--custom-green-50)]/50 to-transparent p-4 rounded-xl">
                       <div className="flex items-center gap-3 mb-3">
                         <Stethoscope className="h-5 w-5 text-[var(--custom-green-600)]" />
@@ -416,7 +426,6 @@ const AdminAppointments = () => {
                     </div>
                   </div>
 
-                  {/* Appointment Info */}
                   <div className="flex justify-evenly flex-col sm:flex-row w-full lg:w-1/2">
                     <div className="flex-1 bg-gradient-to-br from-[var(--custom-purple-50)]/50 to-transparent p-4 rounded-xl">
                       <div className="flex items-center gap-3 mb-3">
@@ -439,10 +448,11 @@ const AdminAppointments = () => {
                     <div className="flex h-fit self-center items-center gap-2 px-4 py-2 rounded-lg bg-[var(--custom-white)] shadow-sm border border-[var(--custom-gray-100)]">
                       {getStatusIcon(appointment.status)}
                       <span
-                        className={`text-sm font-medium ${appointment.status === "Pending"
+                        className={`text-sm font-medium ${
+                          appointment.status === "Pending"
                             ? "text-[var(--custom-yellow-600)]"
                             : "text-[var(--custom-green-600)]"
-                          }`}
+                        }`}
                       >
                         {appointment.status}
                       </span>

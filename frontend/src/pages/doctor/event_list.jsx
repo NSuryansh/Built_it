@@ -35,25 +35,28 @@ const DoctorEventsList = () => {
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [eventId, setEventId] = useState(null);
   const token = localStorage.getItem("token");
-  
+
   const handleDelete = async (id) => {
     // if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/doc_admin/events`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: "Bearer " + token,
+      const response = await fetch(
+        `http://localhost:3000/api/doc_admin/events`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            id: id,
+          }),
         },
-        body: JSON.stringify({
-          id: id,
-        }),
-      });
+      );
 
       if (response.ok) {
         setEvents((prevEvents) =>
-          prevEvents.filter((event) => event.id !== id)
+          prevEvents.filter((event) => event.id !== id),
         );
 
         setDeletePopupOpen(false);
@@ -80,7 +83,7 @@ const DoctorEventsList = () => {
     try {
       const response = await fetch(
         `http://localhost:3000/api/admin/uploadURL?id=${eventId}&url=${newLink}`,
-        { method: "PUT", headers: { Authorization: "Bearer " + token } }
+        { method: "PUT", headers: { Authorization: "Bearer " + token } },
       );
       CustomToast("URL uploaded successfully", "blue");
     } catch (e) {
@@ -89,8 +92,8 @@ const DoctorEventsList = () => {
     }
     setEvents(
       events.map((event) =>
-        event.id === eventId ? { ...event, link: newLink } : event
-      )
+        event.id === eventId ? { ...event, link: newLink } : event,
+      ),
     );
     setEditingLinkId(null);
     setNewLink("");
@@ -113,13 +116,13 @@ const DoctorEventsList = () => {
           "http://localhost:3000/api/common/events",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const response2 = await fetch(
           "http://localhost:3000/api/common/getPastEvents",
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         const data = await response.json();
         const data2 = await response2.json();
@@ -191,7 +194,7 @@ const DoctorEventsList = () => {
       isWithinInterval(new Date(event.date), {
         start: startDate,
         end: today,
-      })
+      }),
     );
   };
 
@@ -204,7 +207,7 @@ const DoctorEventsList = () => {
 
   const dateFilteredEvents = getFilteredEventsByDate(
     filteredEvents,
-    dateFilter
+    dateFilter,
   );
 
   const isEventPast = (eventDate) => {
@@ -367,20 +370,20 @@ const DoctorEventsList = () => {
                 </div>
               </div>
 
-              {/* {console.log(event)} */}
-              {event.batches && event.batches.length>0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {event.batches.map((b, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700"
-                  >
-                    <span>
-                      {b.program} • {b.year} • {b.dept}
-                    </span>
-                  </div>
-                ))}
-              </div>)}
+              {event.batches && event.batches.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {event.batches.map((b, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700"
+                    >
+                      <span>
+                        {b.program} • {b.year} • {b.dept}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Document Link Section */}
               <div className="mt-4 pt-4 border-t border-[var(--custom-gray-100)]">

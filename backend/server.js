@@ -32,7 +32,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   );
   next();
 });
@@ -40,7 +40,7 @@ app.use(function (req, res, next) {
 webpush.setVapidDetails(
   "mailto:spython.webd@gmail.com",
   publicVapidKey,
-  privateVapidKey
+  privateVapidKey,
 );
 
 // const admin = require("firebase-admin");
@@ -70,19 +70,14 @@ const io = new Server(server, {
 
 const users = new Map();
 io.on("connection", (socket) => {
-  // console.log(`User connected: ${socket.id}`);
   socket.on("register", ({ userId }) => {
     users.set(userId, socket.id);
-    // console.log(userId);
   });
   socket.on("joinRoom", ({ userId, doctorId }) => {
     const room = `chat_${[Number(userId), Number(doctorId)]
       .sort((a, b) => a - b)
       .join("_")}`;
-    // console.log(userId, " ", doctorId);
     socket.join(room);
-    // console.log(room);
-    // console.log(`Socket id ${socket.id} joined room ${room}`);
   });
   socket.on("countUnseen", async ({ userId, senderType }) => {
     var unreadCount;
@@ -117,7 +112,6 @@ io.on("connection", (socket) => {
     socket.emit("unreadCount", unreadCount);
   });
   socket.on("markAsRead", async ({ userId, doctorId, senderType }) => {
-    // console.log(userId, " ", doctorId, " ", senderType)
     try {
       if (senderType === "user") {
         const result = await prisma.message.updateMany({
@@ -130,7 +124,6 @@ io.on("connection", (socket) => {
             read: true,
           },
         });
-        // console.log(result,"HHHHHHHHHHHHHHHHHHHHHHHHHh")
       } else if (senderType === "doc") {
         const result = await prisma.message.updateMany({
           where: {
@@ -180,7 +173,6 @@ io.on("connection", (socket) => {
         } else {
           senderId = userId;
         }
-        // console.log(senderId, ",mesgaerh");
         socket.to(room).emit("receiveMessage", {
           id: message.id,
           senderId,
@@ -192,7 +184,7 @@ io.on("connection", (socket) => {
       } catch (error) {
         console.error("Error sending message:", error);
       }
-    }
+    },
   );
 
   socket.on("leaveRoom", async ({ userId, doctorId }) => {
@@ -211,8 +203,6 @@ io.on("connection", (socket) => {
     }
   });
 });
-
-
 
 app.post("/notifications", async (req, res) => {});
 
@@ -308,7 +298,6 @@ app.delete("/deletenotifs", async (req, res) => {
 
 // app.post("/node-chat", async (req, res) => {
 //   try {
-//     // console.log("HELOE");
 //     const { user_id, message } = req.body;
 
 //     const response = await axios.post(
@@ -318,7 +307,6 @@ app.delete("/deletenotifs", async (req, res) => {
 //         message,
 //       }
 //     );
-//     // console.log(response.data);
 
 //     res.json(response.data);
 //   } catch (error) {
@@ -338,7 +326,6 @@ app.delete("/deletenotifs", async (req, res) => {
 //       }
 //     );
 
-//     // console.log(response.data.json);
 //     res.json(response.data);
 //   } catch (error) {
 //     console.error("Error calling the Flas API: ", error.message);
@@ -377,32 +364,20 @@ app.post("/sso", async (req, res) => {
       }),
     });
     const data = await response.json();
-    // console.log(data);
     if (data.success === true || data.success === "true") {
-      // console.log("Going in");
       const email = data.user.email;
       const user = await prisma.user.findUnique({ where: { email: email } });
-      // console.log("User check done");
-      // console.log(user);
       if (user) {
-        // console.log("In user block");
         return res
           .status(200)
           .json({ success: true, role: "user", username: user.username });
       }
-      // console.log("out of user block");
       const doc = await prisma.doctor.findUnique({ where: { email: email } });
-      // console.log("Doc check done");
-      // console.log(doc);
       if (doc) {
-        // console.log("In doc block");
         return res.status(200).json({ success: true, role: "doc" });
       }
       const admin = await prisma.admin.findUnique({ where: { email: email } });
-      // console.log("Admin check done");
-      // console.log(admin);
       if (admin) {
-        // console.log("In admin block");
         return res.status(200).json({ success: true, role: "admin" });
       }
       return res.status(200).json({ success: true, role: "none" });
@@ -416,11 +391,9 @@ const PYTHON_BASE = process.env.PYTHON_BASE || "http://127.0.0.1:5000";
 // 1) POST /chat → forwards to Flask /chatWithBot
 app.post("/api/chat", async (req, res) => {
   try {
-    const { data } = await axios.post(
-      `${PYTHON_BASE}/chatWithBot`,
-      req.body,
-      { headers: { "Content-Type": "application/json" } }
-    );
+    const { data } = await axios.post(`${PYTHON_BASE}/chatWithBot`, req.body, {
+      headers: { "Content-Type": "application/json" },
+    });
     res.json(data);
   } catch (err) {
     console.error("Error calling Flask /chatWithBot:", err.message);
@@ -431,19 +404,17 @@ app.post("/api/chat", async (req, res) => {
 // 2) POST /scores → forwards to Flask /analyze
 app.post("/api/scores", async (req, res) => {
   try {
-    const { data } = await axios.post(
-      `${PYTHON_BASE}/analyze`,
-      req.body,
-      { headers: { "Content-Type": "application/json" } }
-    );
+    const { data } = await axios.post(`${PYTHON_BASE}/analyze`, req.body, {
+      headers: { "Content-Type": "application/json" },
+    });
 
     res.json(data);
   } catch (err) {
-    if(err.response.data.error == 'User not found'){
-      res.status(200).json({error: err.response.data.error})
-    }else{
-    console.error("Error calling Flask /analyze:", err.response.data);
-    res.status(500).json({ error: err.response.data.error });
+    if (err.response.data.error == "User not found") {
+      res.status(200).json({ error: err.response.data.error });
+    } else {
+      console.error("Error calling Flask /analyze:", err.response.data);
+      res.status(500).json({ error: err.response.data.error });
     }
   }
 });
@@ -451,26 +422,19 @@ app.post("/api/scores", async (req, res) => {
 // 3) POST /emotion → forwards multipart‐form audio upload to Flask /emotion
 import multer from "multer";
 const upload = multer();
-app.post(
-  "/emotion",
-  upload.single("audio"),
-  async (req, res) => {
-    try {
-      // build form-data for Python
-      const form = new FormData();
-      form.append("audio", req.file.buffer, { filename: "audio.wav" });
-      const { data } = await axios.post(
-        `${PYTHON_BASE}/emotion`,
-        form,
-        { headers: form.getHeaders() }
-      );
-      res.json(data);
-    } catch (err) {
-      console.error("Error calling Flask /emotion:", err.message);
-      res.status(500).json({ error: err.message });
-    }
+app.post("/emotion", upload.single("audio"), async (req, res) => {
+  try {
+    // build form-data for Python
+    const form = new FormData();
+    form.append("audio", req.file.buffer, { filename: "audio.wav" });
+    const { data } = await axios.post(`${PYTHON_BASE}/emotion`, form, {
+      headers: form.getHeaders(),
+    });
+    res.json(data);
+  } catch (err) {
+    console.error("Error calling Flask /emotion:", err.message);
+    res.status(500).json({ error: err.message });
   }
-);
-
+});
 
 server.listen(port, () => console.log("Server running on port 3000"));

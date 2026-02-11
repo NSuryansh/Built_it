@@ -18,7 +18,7 @@ const DoctorNotificationPanel = () => {
         try {
           const response = await fetch(
             `http://localhost:3000/api/user_doc/chatContacts?userId=${docId}&userType=doc`,
-            { headers: { Authorization: "Bearer " + token } }
+            { headers: { Authorization: "Bearer " + token } },
           );
           const contacts = await response.json();
           setChats(contacts);
@@ -40,20 +40,16 @@ const DoctorNotificationPanel = () => {
             "http://localhost:3000/api/doc/getFeelings",
             {
               headers: { Authorization: "Bearer " + token },
-            }
+            },
           );
           if (!response.ok) throw new Error("Failed to fetch feelings");
           const data = await response.json();
-          // console.log(data, "hello")
           const filteredData = [];
-          console.log(data);
           for (let i = 0; i < data.length; i++) {
             const scores = calculateHappinessScore(data[i]);
             const sum =
               scores.reduce((acc, curr) => acc + curr, 0) / scores.length;
-            // console.log(sum);
             if (sum <= 3) {
-              console.log(data[i].user.id, data[i].user.username);
               if (chats.map((chat) => chat.id).includes(data[i].user.id)) {
                 filteredData.push({
                   userId: data[i].user.id,
@@ -86,11 +82,10 @@ const DoctorNotificationPanel = () => {
           `http://localhost:3000/api/doc/get-referrals?doctor_id=${docId}`,
           {
             headers: { Authorization: "Bearer " + token },
-          }
+          },
         );
         if (!response.ok) throw new Error("Failed to fetch referrals");
         const data = await response.json();
-        console.log(data);
         setreferrals(data.referrals);
       } catch (error) {
         console.error("Error fetching users:", error);

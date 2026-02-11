@@ -14,7 +14,7 @@ const UserAppointments = () => {
   const [upcomingAppointments, setupcomingAppointments] = useState([]);
   const [requestedAppoinments, setrequestedAppoinments] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [fixed, setFixed] = useState(false); 
+  const [fixed, setFixed] = useState(false);
   const user_id = localStorage.getItem("userid");
   const [submittedRatings, setSubmittedRatings] = useState({});
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const UserAppointments = () => {
     try {
       const res = await fetch(
         `http://localhost:3000/api/user/pastuserappt?userId=${user_id}`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       if (!res.ok) throw new Error("Failed to fetch past appointments");
       const resp = await res.json();
@@ -49,7 +49,7 @@ const UserAppointments = () => {
         `http://localhost:3000/api/user/currentuserappt?userId=${user_id}`,
         {
           headers: { Authorization: "Bearer " + token },
-        }
+        },
       );
       if (!res.ok) throw new Error("Failed to fetch current appointments");
       const resp = await res.json();
@@ -62,15 +62,15 @@ const UserAppointments = () => {
 
   async function getReqApp() {
     try {
-      const res = await fetch(`http://localhost:3000/api/user/getRequests?userId=${user_id}`,
+      const res = await fetch(
+        `http://localhost:3000/api/user/getRequests?userId=${user_id}`,
         {
           headers: { Authorization: "Bearer " + token },
-        }
-      )
+        },
+      );
       if (!res.ok) throw new Error("Failed to fetch appointment requests");
       const resp = await res.json();
-      console.log(resp, "re")
-      setrequestedAppoinments(resp)
+      setrequestedAppoinments(resp);
     } catch (error) {
       console.error(error);
       CustomToast("Error fetching appointment requests");
@@ -86,11 +86,14 @@ const UserAppointments = () => {
         },
         body: JSON.stringify({
           toUserId: appointment.user_id || appointment.userId,
-          title: type === "accepted" ? "Appointment confirmed" : "Appointment response",
+          title:
+            type === "accepted"
+              ? "Appointment confirmed"
+              : "Appointment response",
           message:
             type === "accepted"
               ? `Your appointment with ${appointment.doctor?.name || "doctor"} on ${new Date(
-                  appointment.dateTime
+                  appointment.dateTime,
                 ).toLocaleString()} is confirmed.`
               : `Your appointment request was ${type}.`,
           metadata: { appointmentId: appointment.id },
@@ -116,7 +119,7 @@ const UserAppointments = () => {
           dateTime,
           reason: appointment.reason || "",
           id: appointment.id,
-          forDoctor: false
+          forDoctor: false,
         }),
       });
 
@@ -127,8 +130,9 @@ const UserAppointments = () => {
 
       const resp = await res.json();
 
-      
-      setrequestedAppoinments((prev) => prev.filter((a) => a.id !== appointment.id));
+      setrequestedAppoinments((prev) =>
+        prev.filter((a) => a.id !== appointment.id),
+      );
 
       const bookedAppointment = resp.appointment || {
         ...appointment,
@@ -147,26 +151,30 @@ const UserAppointments = () => {
   };
 
   const onRejected = async (appointment, reason) => {
-    console.log(appointment, "Rejected", reason)
     try {
-      const res = await fetch("http://localhost:3000/api/user_doc/cancelRequest", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
+      const res = await fetch(
+        "http://localhost:3000/api/user_doc/cancelRequest",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            id: appointment.id,
+            reason: reason,
+          }),
         },
-        body: JSON.stringify({
-          id: appointment.id,
-          reason: reason,
-        }),
-      });
- 
+      );
+
       if (!res.ok) {
         const err = await res.text();
         throw new Error(err || "Failed to reject appointment");
       }
 
-      setrequestedAppoinments((prev) => prev.filter((a) => a.id !== appointment.id));
+      setrequestedAppoinments((prev) =>
+        prev.filter((a) => a.id !== appointment.id),
+      );
 
       await sendNotif(appointment, "rejected");
       CustomToast("Appointment request rejected");

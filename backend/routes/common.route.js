@@ -9,7 +9,6 @@ commonRouter.get(
   authorizeRoles("user", "doc", "admin"),
   async (req, res) => {
     try {
-      // console.log("hello");
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -21,12 +20,11 @@ commonRouter.get(
           },
         },
       });
-      // console.log(events);
       res.json(events);
     } catch (e) {
       res.json(e);
     }
-  }
+  },
 );
 
 commonRouter.get(
@@ -46,29 +44,22 @@ commonRouter.get(
       console.error(e);
       res.status(0).json({ message: "Error fetching events" });
     }
-  }
+  },
 );
 
 commonRouter.post("/save-subscription", async (req, res) => {
   try {
-    // console.log("HELLLLLOOOOOOO");
     const { userid, subscription, userType } = req.body;
-    // console.log(userid);
-    // console.log(subscription);
     if (!userid || !subscription) {
       return res.status(400).json({ error: "Missing userId or subscription" });
     }
 
-    // console.log(userType, " userType");
-
     // const { endpoint, keys } = subscription;
-    // console.log("hi");
     if (userType == "user") {
       // const existingSub = await prisma.subscription.findMany({
       //   where: { userId: Number(userid)
       //    },
       // });
-      // console.log("ECISTIING subscription");
       try {
         // if (existingSub) {
         //   await prisma.subscription.updateMany({
@@ -103,7 +94,6 @@ commonRouter.post("/save-subscription", async (req, res) => {
             // p256dhKey: keys.p256dh,
           },
         });
-        // console.log(subs);
         // }
       } catch (e) {
         console.error(e);
@@ -133,7 +123,6 @@ commonRouter.post("/save-subscription", async (req, res) => {
             // p256dhKey: keys.p256dh,
           },
         });
-        // console.log(subs);
         res.json({ success: true });
       } catch (e) {
         console.error(e);
@@ -155,7 +144,6 @@ commonRouter.post(
       if (!userid || !message) {
         return res.status(400).json({ error: "Missing userId or message" });
       }
-      // console.log("heyyyy");
       // Fetch the subscription from the database
       var subscription;
       if (userType == "user") {
@@ -169,8 +157,6 @@ commonRouter.post(
           },
         });
       }
-
-      // console.log(subscription);
 
       if (!subscription) {
         return res.status(404).json({ error: "User subscription not found" });
@@ -211,7 +197,7 @@ commonRouter.post(
       console.error("Push error:", error);
       res.status(500).json({ error: "Failed to send push notification" });
     }
-  }
+  },
 );
 
 commonRouter.get(
@@ -263,8 +249,6 @@ commonRouter.get(
         return dateObj.getUTCHours() * 60 + dateObj.getUTCMinutes();
       });
 
-      // console.log(bookedSlots);
-
       const leavePeriods = doctorLeaves.map((leave) => ({
         start: new Date(leave.date_start).getTime(),
         end: new Date(leave.date_end).getTime(),
@@ -286,21 +270,20 @@ commonRouter.get(
           slotTime.getUTCHours(),
           slotTime.getUTCMinutes(),
           0,
-          0
+          0,
         );
         const slotTimestamp = slotDateTime.getTime();
 
         return !leavePeriods.some(
-          (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end
+          (leave) => slotTimestamp >= leave.start && slotTimestamp <= leave.end,
         );
       });
-      // console.log(availableSlots);
       res.json({ availableSlots });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Couldn't fetch the slots" });
     }
-  }
+  },
 );
 
 commonRouter.get(
@@ -335,7 +318,7 @@ commonRouter.get(
       console.error(error);
       res.status(500).json({ error: "Couldn't fetch data" });
     }
-  }
+  },
 );
 
 export default commonRouter;

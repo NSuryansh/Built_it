@@ -6,6 +6,15 @@ import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
+import {
+  startOfWeek,
+  endOfWeek,
+  subWeeks,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  subYears,
+} from "date-fns";
 dotenv.config();
 
 const adminRouter = Router();
@@ -45,6 +54,113 @@ adminRouter.post("/addSlot", authorizeRoles("admin"), async (req, res) => {
   res.json(slot);
 });
 
+adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
+  const { period } = req.query;
+  console.log(period);
+  try {
+    const now = new Date();
+    let startDate;
+    let endDate = now;
+
+    switch (period) {
+      case "this-week":
+        startDate = startOfWeek(now, { weekStartsOn: 1 });
+        break;
+      case "past-week":
+        const lastWeek = subWeeks(now, 1);
+        startDate = startOfWeek(lastWeek, { weekStartsOn: 1 });
+        endDate = endOfWeek(lastWeek, { weekStartsOn: 1 });
+        break;
+      case "this-month":
+        startDate = startOfMonth(now);
+        break;
+      case "past-month":
+        const lastMonth = subMonths(now, 1);
+        startDate = startOfMonth(lastMonth);
+        endDate = endOfMonth(lastMonth);
+        break;
+      case "last-3-months":
+        startDate = subMonths(now, 3);
+        break;
+      case "last-6-months":
+        startDate = subMonths(now, 6);
+        break;
+      case "last-12-months":
+        startDate = subYears(now, 1);
+        break;
+      case "all-time":
+      default:
+        startDate = new Date(0);
+    }
+
+    const doctors = await prisma.doctor.findMany({
+      select: { id: true, name: true, email: true },
+    });
+
+    const appointments = await prisma.pastAppointments.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            gender: true,
+            acadProg: true,
+          },
+        },
+      },
+    });
+
+    const doctorStats = doctors.map((doc) => {
+      const docApps = appointments.filter((app) => app.doc_id === doc.id);
+
+      const stats = {
+        status: { NEW: 0, OPEN: 0, CLOSED: 0 },
+        categories: {},
+        isEmergencyCount: 0,
+        demographics: {
+          gender: {},
+          acadProg: {},
+        },
+        total: docApps.length,
+      };
+
+      docApps.forEach((app) => {
+        if (stats.status.hasOwnProperty(app.caseStatus)) {
+          stats.status[app.caseStatus]++;
+        }
+
+        const cat = app.category || "Uncategorized";
+        stats.categories[cat] = (stats.categories[cat] || 0) + 1;
+
+        if (app.isEmergency) stats.isEmergencyCount++;
+
+        if (app.user) {
+          const gen = app.user.gender || "Not Specified";
+          const deg = app.user.acadProg || "Other";
+          stats.demographics.gender[gen] =
+            (stats.demographics.gender[gen] || 0) + 1;
+          stats.demographics.acadProg[deg] =
+            (stats.demographics.acadProg[deg] || 0) + 1;
+        }
+      });
+
+      return {
+        ...doc,
+        stats,
+      };
+    });
+
+    res.json(doctorStats);
+  } catch (error) {
+    console.error("Error fetching case stats:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
   const {
     name,
@@ -68,13 +184,13 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
     });
 
     if (existingDoc) {
-      return res.status(400).json({ 
-        error: "Doctor with this Email, Mobile, or Reg ID already exists." 
+      return res.status(400).json({
+        error: "Doctor with this Email, Mobile, or Reg ID already exists.",
       });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const doc = await prisma.doctor.create({
       data: {
         name,
@@ -90,7 +206,7 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
         weekOff,
       },
     });
-    
+
     res.json({ message: "doc added", doc });
   } catch (e) {
     console.error("Error adding doctor:", e);
@@ -99,7 +215,6 @@ adminRouter.post("/addDoc", authorizeRoles("admin"), async (req, res) => {
 });
 
 adminRouter.post("/login", async (req, res) => {
-  // console.log(req.body);
   const emailId = req.body["email"];
   const password = req.body["password"];
 
@@ -135,7 +250,6 @@ adminRouter.post("/forgotPassword", async (req, res) => {
         email: email,
       },
     });
-    // console.log(admin);
     if (!admin) {
       res.json({ message: "No user admin with this email" });
     }
@@ -148,7 +262,6 @@ adminRouter.post("/forgotPassword", async (req, res) => {
         userId: admin.id,
       },
     });
-    // console.log(tokengen);
     const resetLink = `https://wellness.iiti.ac.in/admin/reset_password?token=${token}`;
     const subject = "Reset Your Password";
     const message = `Click the following link to reset your password. This link is valid for 15 minutes:\n\n${resetLink}`;
@@ -194,7 +307,6 @@ adminRouter.post("/resetPassword", async (req, res) => {
 adminRouter.get("/profile", authorizeRoles("admin"), async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    // console.log(token);
     return res.status(401).json({ message: "Unauthorized", token });
   }
   try {
@@ -202,19 +314,16 @@ adminRouter.get("/profile", authorizeRoles("admin"), async (req, res) => {
     const admin = await prisma.admin.findUnique({
       where: { email: decoded.email },
     });
-    // console.log(admin);
     res.json({ admin: admin, message: "Admin found" });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 });
 
 adminRouter.post("/toggleDoc", authorizeRoles("admin"), async (req, res) => {
   const doctorId = parseInt(req.body["doctorID"]);
   const isInactive = Boolean(req.body["isInactive"]);
-  // console.log(doctorId);
   try {
-    // Find the doctor
     const doctor = await prisma.doctor.findUnique({
       where: { id: doctorId },
     });
@@ -272,8 +381,8 @@ adminRouter.get("/pastApp", authorizeRoles("admin"), async (req, res) => {
         user: true,
         doc: true,
       },
+      orderBy: { createdAt: "desc" },
     });
-    // console.log(pastApp);
     res.json(pastApp);
   } catch (e) {
     console.error(e);
@@ -285,19 +394,70 @@ adminRouter.get(
   "/all-appointments",
   authorizeRoles("admin"),
   async (req, res) => {
+    const { period } = req.query;
     try {
-      const appts = await prisma.appointments.findMany({
-        include: {
-          doctor: true,
-          user: true,
-        },
-      });
+      const now = new Date();
+      let startDate;
+      let endDate = now;
+
+      switch (period) {
+        case "this-week":
+          startDate = startOfWeek(now, { weekStartsOn: 1 });
+          break;
+        case "past-week":
+          const lastWeek = subWeeks(now, 1);
+          startDate = startOfWeek(lastWeek, { weekStartsOn: 1 });
+          endDate = endOfWeek(lastWeek, { weekStartsOn: 1 });
+          break;
+        case "this-month":
+          startDate = startOfMonth(now);
+          break;
+        case "past-month":
+          const lastMonth = subMonths(now, 1);
+          startDate = startOfMonth(lastMonth);
+          endDate = endOfMonth(lastMonth);
+          break;
+        case "last-3-months":
+          startDate = subMonths(now, 3);
+          break;
+        case "last-6-months":
+          startDate = subMonths(now, 6);
+          break;
+        case "last-12-months":
+          startDate = subYears(now, 1);
+          break;
+        case "all-time":
+        default:
+          startDate = new Date(0);
+      }
+      // Fetch upcoming/current appointments with related doctor and user
+      const appts =
+        period == "past-week" ||
+        period == "past-month" ||
+        period == "last-3-months" ||
+        period == "last-6-months" ||
+        period == "last-12-months"
+          ? []
+          : await prisma.appointments.findMany({
+              include: {
+                doctor: true,
+                user: true,
+              },
+              orderBy: { isEmergency: "desc" },
+            });
 
       const pastApp = await prisma.pastAppointments.findMany({
         include: {
           doc: true,
           user: true,
         },
+        where: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        orderBy: { createdAt: "desc" },
       });
       
       const cancelledApp = await prisma.cancelledRequest.findMany({

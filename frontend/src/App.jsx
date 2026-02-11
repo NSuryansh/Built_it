@@ -27,7 +27,8 @@ import DoctorAppointment from "./pages/doctor/appointments";
 import DoctorPeer from "./pages/doctor/peer";
 import DoctorLeave from "./pages/doctor/leave";
 import DoctorBook from "./pages/doctor/book";
-import DoctorContentManager from "./pages/doctor/DoctorContentManager";
+import DoctorEmergency from "./pages/doctor/emergency";
+import DoctorContentManager from "./pages/doctor/content_manager";
 import History from "./pages/doctor/history";
 import UserDetail from "./pages/doctor/user";
 import AdminLogin from "./pages/admin/login";
@@ -41,6 +42,7 @@ import AddDoctor from "./pages/admin/add_doctor";
 import AdminAppointments from "./pages/admin/appointments";
 import ErrorBoundaryFallback from "./pages/easter_egg/error_boundary_fallback";
 import AdminUser from "./pages/admin/user";
+import AdminCaseStats from "./pages/admin/case_stats";
 import LoadingPage from "./pages/sso/loading_page";
 import DoctorEventsList from "./pages/doctor/event_list";
 import DoctorAddEvent from "./pages/doctor/add_event";
@@ -60,7 +62,6 @@ export default function App() {
   // const messaging = getMessaging(app);
 
   // onMessage(messaging, (payload) => {
-  //   console.log('Foreground message received:', payload);
   //   if (Notification.permission === "granted") {
   //     new Notification(payload.notification.title, {
   //       body: payload.notification.body,
@@ -114,8 +115,6 @@ export default function App() {
     });
 
     if (fcmToken) {
-      console.log("FCM Token:", fcmToken);
-
       const res = await fetch(
         "http://localhost:3000/api/common/save-subscription",
         {
@@ -128,7 +127,7 @@ export default function App() {
             subscription: fcmToken,
             userType: userType,
           }),
-        }
+        },
       );
     }
 
@@ -162,7 +161,6 @@ export default function App() {
     setTimeout(() => {
       const userid = localStorage.getItem("userid");
       const userType = localStorage.getItem("user_type");
-      console.log(userType, "USER type");
       requestNotificationPermission(userid, userType);
     }, 4000);
   }, [type]);
@@ -198,19 +196,30 @@ export default function App() {
           <Route path="/doctor/peer" element={<DoctorPeer />} />
           <Route path="/doctor/leave" element={<DoctorLeave />} />
           <Route path="/doctor/book" element={<DoctorBook />} />
-          <Route path="/doctor/DoctorContentManager" element={<DoctorContentManager />} />
+          <Route
+            path="/doctor/content_manager"
+            element={<DoctorContentManager />}
+          />
           <Route path="/doctor/history" element={<History />} />
+          <Route path="/doctor/emergency" element={<DoctorEmergency />} />
           <Route path="/doctor/user" element={<UserDetail />} />
-          <Route path="/doctor/event_list" element={<DoctorEventsList/>}/>
-          <Route path="/doctor/add_event" element={<DoctorAddEvent/>}/>
+          <Route path="/doctor/event_list" element={<DoctorEventsList />} />
+          <Route path="/doctor/add_event" element={<DoctorAddEvent />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/reset_password" element={<AdminResetPassword />} />
+          <Route
+            path="/admin/reset_password"
+            element={<AdminResetPassword />}
+          />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/doctor_list" element={<DoctorsList />} />
-          <Route path="/admin/doctor_profile" element={<AdminDoctorProfile />} />
+          <Route
+            path="/admin/doctor_profile"
+            element={<AdminDoctorProfile />}
+          />
           <Route path="/admin/event_list" element={<EventsList />} />
           <Route path="/admin/add_event" element={<AddEvent />} />
           <Route path="/admin/add_doctor" element={<AddDoctor />} />
+          <Route path="/admin/case_stats" element={<AdminCaseStats />} />
           <Route path="/admin/user" element={<AdminUser />} />
           <Route path="/admin/appointments" element={<AdminAppointments />} />
           <Route
