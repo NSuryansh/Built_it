@@ -286,7 +286,6 @@ adminRouter.get(
   authorizeRoles("admin"),
   async (req, res) => {
     try {
-      // Fetch upcoming/current appointments with related doctor and user
       const appts = await prisma.appointments.findMany({
         include: {
           doctor: true,
@@ -294,18 +293,25 @@ adminRouter.get(
         },
       });
 
-      // Fetch past appointments with related doctor and user
       const pastApp = await prisma.pastAppointments.findMany({
         include: {
           doc: true,
           user: true,
         },
       });
+      
+      const cancelledApp = await prisma.cancelledRequest.findMany({
+        include: {
+          doctor: true,
+          user: true
+        }
+      })
 
       res.status(200).json({
         message: "Fetched all appointment data",
         appts,
         pastApp,
+        cancelledApp,
       });
     } catch (error) {
       console.error("Error fetching appointments:", error);

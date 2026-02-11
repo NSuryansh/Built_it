@@ -104,8 +104,19 @@ const AdminAppointments = () => {
           date: new Date(appt.createdAt).toISOString().split("T")[0],
           status: "Done",
         }));
+         const formattedCancelledData = data.cancelledApp.map((appt) => ({
+          id: appt.id,
+          doctorId: appt.doc_id,
+          patientName: appt.user.username,
+          time: new Date(appt.dateTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          date: new Date(appt.dateTime).toISOString().split("T")[0],
+          status: "Done",
+        }));
         if (isMounted)
-          setAppointments([...formattedCurData, ...formattedPastData]);
+          setAppointments([...formattedCurData, ...formattedPastData, ...formattedCancelledData]);
         setfetched(true);
       } catch (error) {
         console.error("Failed to fetch appointments:", error);
@@ -125,7 +136,6 @@ const AdminAppointments = () => {
     };
   }, []);
 
-  // Return the dates of the current week (starting Monday)
   const getWeekDates = () => {
     const today = new Date();
     const dayOfWeek = today.getDay();
@@ -174,19 +184,15 @@ const AdminAppointments = () => {
   const filteredAppointments = useMemo(() => {
     let filtered = appointments;
 
-    // Filter by selected doctor if not "all"
     if (selectedDoctor !== "all") {
       filtered = filtered.filter((app) => app.doctorId === selectedDoctor);
     }
-
-    // Filter by patient name search term
     if (searchUser.trim()) {
       filtered = filtered.filter((app) =>
         app.patientName.toLowerCase().includes(searchUser.toLowerCase())
       );
     }
 
-    // Filter by doctor name search term
     if (searchDoctor.trim()) {
       filtered = filtered.filter((app) => {
         const doctorName =
@@ -198,7 +204,6 @@ const AdminAppointments = () => {
     return filtered;
   }, [appointments, doctors, selectedDoctor, searchUser, searchDoctor]);
 
-  // Prepare graph data based on the current week and filtered appointments
   const filteredGraphData = useMemo(() => {
     return appWeek(weekDates, filteredAppointments);
   }, [weekDates, filteredAppointments]);
@@ -382,7 +387,6 @@ const AdminAppointments = () => {
               >
                 <div className="flex flex-col items-center lg:flex-row gap-2">
                   <div className="flex justify-evenly flex-col sm:flex-row w-full lg:w-1/2">
-                    {/* Patient Info */}
                     <div className="flex-1 bg-gradient-to-br from-[var(--custom-blue-50)]/50 to-transparent p-4 rounded-xl">
                       <div className="flex items-center gap-3 mb-3">
                         <User className="h-5 w-5 text-[var(--custom-blue-600)]" />

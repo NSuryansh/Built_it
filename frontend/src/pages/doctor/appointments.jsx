@@ -1124,6 +1124,11 @@ const DoctorAppointment = () => {
                   <p className="text-sm text-[var(--custom-red-500)] font-medium">
                     Reason: {app.reason}
                   </p>
+
+                  <div className="text-sm text[var(--custom-gray-600)]">
+                    Cancelled {app.forDoctor? "by: Councellor" : "by: student"}
+                  </div>
+                  
                 </div>
 
                 <div className="self-start sm:self-center">

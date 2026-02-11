@@ -368,9 +368,9 @@ userRouter.get("/profile", authorizeRoles("user"), async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { username: decoded.username },
     });
-    if (user.id !== req.user.userId) {
-      res.json({ error: "Access Denied" });
-    }
+    // if (user.id !== req.user.userId) {
+    //   res.json({ error: "Access Denied" });
+    // }
     res.json(JSON.parse(JSON.stringify({ user: user, message: "User found" })));
   } catch (e) {
     console.error(e);
