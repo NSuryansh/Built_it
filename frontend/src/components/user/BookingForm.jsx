@@ -22,7 +22,15 @@ const BookingFormStep = ({
   isAuthenticated,
   isLoading,
 }) => {
-  const [slots, setAvailableSlots] = useState([[]]);
+  const [slots, setAvailableSlots] = useState({
+    0: [],
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+  });
   const [date, setSelectedDate] = useState(0);
   const [time, setSelectedTime] = useState("");
   const token = localStorage.getItem("token");
@@ -37,17 +45,18 @@ const BookingFormStep = ({
       );
       const data = await response.json();
       let tempDates = [];
-      let tempSlots = [];
+      let tempSlots = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
       [...Array(14)].map((_, index) => {
         const date = new Date();
         if (data[(date.getDay() + index) % 7]) {
           date.setDate(date.getDate() + index);
           tempDates.push(date);
-          tempSlots.push(data[index % 7]);
+          tempSlots[date.getDay()] = data[date.getDay()];
         }
       });
       setDates(tempDates);
       setAvailableSlots(tempSlots);
+      console.log(tempDates, tempSlots);
     } catch (error) {
       console.error("Error fetching available slots:", error);
     }
