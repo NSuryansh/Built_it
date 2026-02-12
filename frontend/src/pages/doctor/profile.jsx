@@ -40,7 +40,6 @@ const DoctorProfile = () => {
     specialization: "<Please Change>",
     experience: "<Please Change>",
     additionalExperience: "<Please Change>",
-    folderLink: "<Please Change>",
     education: ["<Add>"],
     weekOff: [],
     availability: {
@@ -54,6 +53,7 @@ const DoctorProfile = () => {
     },
     certifications: ["<Add>"],
   });
+  const [googleDriveLinked, setGoogleDriveLinked] = useState(false);
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [editedProfile, setEditedProfile] = useState(profile);
@@ -149,6 +149,9 @@ const DoctorProfile = () => {
         if (educations.length === 0) {
           educations = ["<Add>"];
         }
+
+        setGoogleDriveLinked(data.doctor.googleDriveLinked);
+
         setProfile({
           name: data.doctor.name,
           email: data.doctor.email,
@@ -162,7 +165,6 @@ const DoctorProfile = () => {
           education: educations,
           availability: avail,
           weekOff: data.doctor.weekOff,
-          folderLink: data.doctor.folderLink,
         });
         setProfileImage(data.doctor.img);
         localStorage.setItem("docImage", data.doctor.img);
@@ -179,7 +181,6 @@ const DoctorProfile = () => {
           education: educations,
           availability: avail,
           weekOff: data.doctor.weekOff,
-          folderLink: data.doctor.folderLink,
         });
         setFetched(true);
       } catch (error) {
@@ -212,6 +213,22 @@ const DoctorProfile = () => {
   useEffect(() => {
     fetchLeaves();
   }, []);
+
+  const linkGoogleDrive = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/google/connect", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      window.location.href = data.url;
+    } catch (error) {
+      console.error(error);
+      CustomToast("Internal Server Error", "blue");
+    }
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -301,8 +318,6 @@ const DoctorProfile = () => {
       formData.append("address", editedProfile.address);
       formData.append("office_address", editedProfile.office_address);
       formData.append("experience", editedProfile.experience);
-      if (profile.folderLink != editedProfile.folderLink)
-        formData.append("folderLink", editedProfile.folderLink);
       formData.append(
         "additionalExperience",
         editedProfile.additionalExperience || "",
@@ -348,8 +363,8 @@ const DoctorProfile = () => {
         ) {
           const date = new Date(
             "1970-01-01T" +
-            editedProfile.availability[DAYS_OF_WEEK[i]][j] +
-            ":00.000Z",
+              editedProfile.availability[DAYS_OF_WEEK[i]][j] +
+              ":00.000Z",
           );
           const newDate = TimeChange(date.getTime());
           dates.push({ time: newDate, day_of_week: i });
@@ -469,8 +484,9 @@ const DoctorProfile = () => {
             <div className="flex flex-col md:flex-row items-center md:space-x-8">
               <div
                 onClick={triggerImageUpload}
-                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-[var(--custom-blue-100)] to-[var(--custom-blue-100)] flex items-center justify-center shadow-xl overflow-hidden group ${isEditing ? "cursor-pointer" : ""
-                  }`}
+                className={`relative w-24 h-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-[var(--custom-blue-100)] to-[var(--custom-blue-100)] flex items-center justify-center shadow-xl overflow-hidden group ${
+                  isEditing ? "cursor-pointer" : ""
+                }`}
               >
                 {profileImage ? (
                   <img
@@ -607,34 +623,16 @@ const DoctorProfile = () => {
                 </div>
                 <div className="flex items-center group">
                   <Link2 className="h-5 w-5 text-[var(--custom-blue-600)] mr-3 transition-transform group-hover:scale-125" />
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={editedProfile.folderLink}
-                      onChange={(e) =>
-                        setEditedProfile({
-                          ...editedProfile,
-                          folderLink: e.target.value,
-                        })
-                      }
-                      placeholder={
-                        editedProfile.folderLink || "Enter folder link"
-                      }
-                      className="w-4/5 sm:w-full bg-[var(--custom-white)] border border-[var(--custom-blue-200)] rounded-xl px-4 py-2 focus:ring-4 focus:ring-[var(--custom-blue-300)] transition-all duration-300"
-                    />
-                  ) : (
-                    <a
-                      href={profile.folderLink}
-                      target="_blank"
-                      className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors"
-                    >
-                      {profile.folderLink
-                        ? profile.folderLink.length > 25
-                          ? profile.folderLink.slice(0, 25) + "..."
-                          : profile.folderLink
-                        : "<Please Change>"}
-                    </a>
-                  )}
+
+                  <button
+                    disabled={googleDriveLinked}
+                    onClick={linkGoogleDrive}
+                    className="text-[var(--custom-gray-700)] group-hover:text-[var(--custom-blue-600)] transition-colors"
+                  >
+                    {googleDriveLinked
+                      ? "Drive Linked"
+                      : "Link Google Drive Folder"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -792,14 +790,14 @@ const DoctorProfile = () => {
                           />
                           {index ===
                             editedProfile.certifications.length - 1 && (
-                              <button
-                                onClick={handleAddCertification}
-                                className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold mt-3 transition-colors"
-                              >
-                                <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
-                                Add Certification
-                              </button>
-                            )}
+                            <button
+                              onClick={handleAddCertification}
+                              className="group flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-600)] text-sm font-semibold mt-3 transition-colors"
+                            >
+                              <Plus className="h-5 w-5 mr-1 transform group-hover:rotate-180 transition-transform duration-500" />
+                              Add Certification
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -974,12 +972,13 @@ const DoctorProfile = () => {
                   return (
                     <div
                       key={day}
-                      className={`text-center p-3 rounded-lg border-2 transition-all duration-300 ${found
+                      className={`text-center p-3 rounded-lg border-2 transition-all duration-300 ${
+                        found
                           ? "bg-red-50 border-red-200 text-red-800"
                           : hasSlots
                             ? "bg-green-50 border-green-200 text-green-800"
                             : "bg-gray-50 border-gray-200 text-gray-500"
-                        }`}
+                      }`}
                     >
                       <div className="font-semibold text-sm">
                         {day.slice(0, 3)}
