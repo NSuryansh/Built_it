@@ -1,12 +1,12 @@
 // routes/google.js
-import express from "express";
+import { Router } from "express";
 import { google } from "googleapis";
 import { encrypt } from "../utils/encryption.js";
 import { getOAuthClient } from "../utils/google.js";
 import { authorizeRoles } from "../middlewares/auth.middleware.js";
 import { prisma } from "../server.js";
 
-const googleRouter = express.Router();
+const googleRouter = Router();
 
 googleRouter.get("/connect", authorizeRoles("doc"), async (req, res) => {
   const oauth2Client = getOAuthClient();
