@@ -1,35 +1,26 @@
 import { google } from "googleapis";
 import fs from "fs";
 
-const auth = new google.auth.GoogleAuth({
-  keyFile: "service-account.json",
-  scopes: ["https://www.googleapis.com/auth/drive"],
-});
+const key = JSON.parse(
+  fs.readFileSync(new URL("../service-account.json", import.meta.url))
+);
 
-// export const drive = google.drive({
-//   version: "v3",
-//   auth,
-// });
+export function getDriveAsUser(userEmail) {
+  const jwtClient = new google.auth.JWT({
+    email: key.client_email,
+    key: key.private_key,
+    scopes: ["https://www.googleapis.com/auth/drive"],
+    subject: userEmail, // impersonation
+  });
 
-// drive-auth-impersonate.js
-import { google } from "googleapis";
-import key from "./service-account.json" assert { type: "json" }; // or require()
-
-export async function getDriveAsUser(userEmail) {
-  const jwtClient = new google.auth.JWT(
-    key.client_email,
-    null,
-    key.private_key,
-    ["https://www.googleapis.com/auth/drive"],
-    userEmail // <-- IMPORTANT: impersonate this user
-  );
-
-  await jwtClient.authorize(); // ensures token is there
-  return google.drive({ version: "v3", auth: jwtClient });
+  return google.drive({
+    version: "v3",
+    auth: jwtClient,
+  });
 }
 
 // inside your route when you have doc and user
-export const drive = await getDriveAsUser("sse240021008@iiti.ac.in"); // e.g. the patient or an uploader account
+export const drive = getDriveAsUser("sse240021008@iiti.ac.in"); // e.g. the patient or an uploader account
 
 // use drive in getOrCreateFolder / uploadFileToFolder functions
 

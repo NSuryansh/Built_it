@@ -15,6 +15,7 @@ import {
   uploadFileToFolder,
   getOrCreateFolder,
 } from "../utils/GoogleDriveSetup.js";
+import fs from "fs";
 dotenv.config();
 
 const docRouter = Router();
