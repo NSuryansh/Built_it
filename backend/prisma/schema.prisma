@@ -8,27 +8,27 @@ datasource db {
 }
 
 model User {
-  id          Int                @id @default(autoincrement())
-  username    String             @unique
-  randomName  String?            @unique
-  mobile      String             @unique
-  email       String             @unique
-  password    String
-  alt_mobile  String
-  publicKey   String
-  department  String
-  batch       String             @default("2024")
-  rollNo      String             @unique
-  acadProg    String
-  roomNo      String             @default("")
-  gender      Gender
-  challenge   String             @default("")
-  credentials Authenticator[]
-  appointment Appointments[]
-  chatbot     Chatbot[]
-  feelings    feelings?
-  invite      Notifications[]    @relation("ChatInvite")
-  notif       Notifications[]    @relation("User")
+  id               Int                @id @default(autoincrement())
+  username         String             @unique
+  randomName       String?            @unique
+  mobile           String             @unique
+  email            String             @unique
+  password         String
+  alt_mobile       String
+  publicKey        String
+  department       String
+  batch            String             @default("2024")
+  rollNo           String             @unique
+  acadProg         String
+  roomNo           String             @default("")
+  gender           Gender
+  challenge        String             @default("")
+  credentials      Authenticator[]
+  appointment      Appointments[]
+  chatbot          Chatbot[]
+  feelings         feelings?
+  invite           Notifications[]    @relation("ChatInvite")
+  notif            Notifications[]    @relation("User")
   // resetTokens PasswordResetToken[]
   pastApp          PastAppointments[]
   referral         Referrals[]
@@ -87,7 +87,9 @@ model Doctor {
   avgRating            Decimal            @default(0)
   isInactive           Boolean            @default(false)
   weekOff              String[]
-  folderLink           String?
+  googleRefreshToken   String?
+  driveFolderId        String?
+  googleDriveLinked    Boolean            @default(false)
   certificaition       DocCertification[]
   education            DocEducation[]
   emerApp              EmergencyApp[]
@@ -141,40 +143,40 @@ model Events {
 }
 
 model Appointments {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   user_id     Int
   doctor_id   Int
   dateTime    DateTime
   reason      String?
-  isDoctor    Boolean  @default(false)
-  caseStatus CaseStatus @default(NEW)
-  isEmergency Boolean  @default(false)
+  isDoctor    Boolean    @default(false)
+  caseStatus  CaseStatus @default(NEW)
+  isEmergency Boolean    @default(false)
   stars       Int?
-  doctor      Doctor   @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  doctor      Doctor     @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("appointments")
 }
 
 model PastAppointments {
-  id        Int      @id @default(autoincrement())
-  note      String
-  doc_id    Int?
-  user_id   Int?
-  createdAt DateTime
-  pdfLink   String?
-  isDoctor  Boolean  @default(false)
-  isEmergency Boolean @default(false)
-  stars     Int?
-  caseStatus CaseStatus @default(OPEN)
-  category  String?
-  question1 String?
-  question2 String?
-  question3 String?
-  question4 String?
-  question5 String?
-  doc       Doctor?  @relation(fields: [doc_id], references: [id])
-  user      User?    @relation(fields: [user_id], references: [id])
+  id          Int        @id @default(autoincrement())
+  note        String
+  doc_id      Int?
+  user_id     Int?
+  createdAt   DateTime
+  pdfLink     String?
+  isDoctor    Boolean    @default(false)
+  isEmergency Boolean    @default(false)
+  stars       Int?
+  caseStatus  CaseStatus @default(OPEN)
+  category    String?
+  question1   String?
+  question2   String?
+  question3   String?
+  question4   String?
+  question5   String?
+  doc         Doctor?    @relation(fields: [doc_id], references: [id])
+  user        User?      @relation(fields: [user_id], references: [id])
 
   @@map("pastApp")
 }
@@ -308,14 +310,15 @@ model DocCertification {
 }
 
 model Referrals {
-  id          Int    @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   user_id     Int
   doctor_id   Int
   referred_by String
   reason      String
-  username    String @default("Hello")
-  doctor      Doctor @relation(fields: [doctor_id], references: [id])
-  user        User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  isShow      Boolean @default(false)
+  username    String  @default("Hello")
+  doctor      Doctor  @relation(fields: [doctor_id], references: [id])
+  user        User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("referrals")
 }

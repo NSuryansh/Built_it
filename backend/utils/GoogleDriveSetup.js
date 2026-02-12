@@ -10,7 +10,7 @@ export function getDriveAsUser(userEmail) {
     email: key.client_email,
     key: key.private_key,
     scopes: ["https://www.googleapis.com/auth/drive"],
-    subject: userEmail, // impersonation
+    subject: userEmail, 
   });
 
   return google.drive({
@@ -20,9 +20,7 @@ export function getDriveAsUser(userEmail) {
 }
 
 // inside your route when you have doc and user
-export const drive = getDriveAsUser("sse240021008@iiti.ac.in"); // e.g. the patient or an uploader account
-
-// use drive in getOrCreateFolder / uploadFileToFolder functions
+export const drive = getDriveAsUser("sse240021008@iiti.ac.in");
 
 export const getOrCreateFolder = async (name, parentId) => {
   const res = await drive.files.list({
