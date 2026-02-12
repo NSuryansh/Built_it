@@ -96,11 +96,12 @@ model Doctor {
   docApp               Appointments[]
   leave                DoctorLeave[]
   pastApp              PastAppointments[]
-  referral             Referrals[]
+  referral             Referrals[]        @relation("ReferredTo")
   request              Requests[]
   slot                 Slots[]
   messages             Message[]
   CancelledRequest     CancelledRequest[]
+  referralsMade        Referrals[]        @relation("ReferredBy")
 
   @@map("doctor")
 }
@@ -310,15 +311,16 @@ model DocCertification {
 }
 
 model Referrals {
-  id          Int     @id @default(autoincrement())
-  user_id     Int
-  doctor_id   Int
-  referred_by String
-  reason      String
-  isShow      Boolean @default(false)
-  username    String  @default("Hello")
-  doctor      Doctor  @relation(fields: [doctor_id], references: [id])
-  user        User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id               Int     @id @default(autoincrement())
+  user_id          Int
+  doctor_id        Int
+  referred_by      Int
+  reason           String
+  isShow           Boolean @default(false)
+  username         String  @default("Hello")
+  doctor           Doctor  @relation("ReferredTo", fields: [doctor_id], references: [id])
+  referredByDoctor Doctor  @relation("ReferredBy", fields: [referred_by], references: [id])
+  user             User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("referrals")
 }
