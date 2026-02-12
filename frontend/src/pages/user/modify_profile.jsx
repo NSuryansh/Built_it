@@ -106,9 +106,6 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
 
       const options = data.options;
 
-      // Debug: inspect what server returned
-      console.log("WEBAUTHN options from server:", options);
-
       // Defensive conversion using helper
       if (options.challenge) {
         options.challenge = base64UrlToUint8Array(options.challenge);
