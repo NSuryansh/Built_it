@@ -28,10 +28,11 @@ const StarRating = ({ value, onChange, label }) => {
             className="focus:outline-none transition-all duration-150"
           >
             <Star
-              className={`w-8 h-8 ${star <= value
+              className={`w-8 h-8 ${
+                star <= value
                   ? "fill-[var(--custom-orange-500)] text-[var(--custom-orange-500)]"
                   : "text-[var(--custom-gray-300)]"
-                } transition-all duration-200 hover:scale-110`}
+              } transition-all duration-200 hover:scale-110`}
             />
           </button>
         ))}
@@ -100,14 +101,14 @@ const FeedbackPage = () => {
     try {
       const res = await fetch(
         `http://localhost:3000/api/user/getAppointmentById?id=${appointmentId}`,
-        { headers: { Authorization: "Bearer " + token } }
+        { headers: { Authorization: "Bearer " + token } },
       );
       const data = await res.json();
       const res2 = await fetch(
         `http://localhost:3000/api/common/getDoc?docId=${data.doc_id}`,
         {
           headers: { Authorization: "Bearer " + token },
-        }
+        },
       );
       const data2 = await res2.json();
       setAppointment(data);
@@ -251,8 +252,8 @@ const FeedbackPage = () => {
 
           <div className="bg-[var(--custom-white)] rounded-2xl shadow-lg p-6 mb-8 border border-[var(--custom-orange-100)]">
             <div className="flex items-start gap-4">
-              <div className="bg-[var(--custom-orange-100)] h-[72px] w-[72px] rounded-full">
-                {doc.img != null ? (
+              <div className="bg-[var(--custom-orange-100)] h-[72px] w-[72px] flex items-center justify-center rounded-full">
+                {doc.img ? (
                   <img src={doc.img} className="h-full w-full rounded-full" />
                 ) : (
                   <User className="h-10 w-10 text-[var(--custom-orange-600)]" />

@@ -13,7 +13,6 @@ import fs from "fs";
 import { getOAuthClient } from "../utils/google.js";
 import { decrypt } from "../utils/encryption.js";
 import { google } from "googleapis";
-import { get } from "http";
 dotenv.config();
 
 const docRouter = Router();
@@ -30,6 +29,33 @@ async function uploadImage(path) {
   const results = await cloudinary.uploader.upload(path);
   return results["url"];
 }
+
+const getOrCreateFolder = async (drive, name, parentId) => {
+  const res = await drive.files.list({
+    q: `
+      name = '${name.replace(/'/g, "\\'")}' and
+      mimeType = 'application/vnd.google-apps.folder' and
+      '${parentId}' in parents and
+      trashed = false
+    `,
+    fields: "files(id, name)",
+  });
+
+  if (res.data.files.length > 0) {
+    return res.data.files[0];
+  }
+
+  const folder = await drive.files.create({
+    requestBody: {
+      name,
+      mimeType: "application/vnd.google-apps.folder",
+      parents: [parentId],
+    },
+    fields: "id, webViewLink",
+  });
+
+  return folder.data;
+};
 
 docRouter.post("/login", async (req, res) => {
   const email = req.body["email"];
@@ -782,6 +808,7 @@ docRouter.post(
 
       const files = req.files || [];
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
+      const user = await prisma.user.findUnique({ where: { id: user_id } });
 
       if (!doc.driveFolderId) {
         return res.status(400).json({
@@ -799,14 +826,17 @@ docRouter.post(
         auth: oauth2Client,
       });
 
-      const folder = await drive.files.create({
-        requestBody: {
-          name: dateTime.toISOString().replace(/[:.]/g, "-"),
-          mimeType: "application/vnd.google-apps.folder",
-          parents: [doc.driveFolderId],
-        },
-        fields: "id, webViewLink",
-      });
+      const userFolder = await getOrCreateFolder(
+        drive,
+        user.rollNo,
+        doc.driveFolderId,
+      );
+
+      const folder = await getOrCreateFolder(
+        drive,
+        dateTime.toISOString().replace(/[:.]/g, "-"),
+        userFolder.id,
+      );
 
       /* ---------- UPLOAD FILES ---------- */
       for (const file of files) {
@@ -814,7 +844,7 @@ docRouter.post(
           await drive.files.create({
             requestBody: {
               name: file.originalname,
-              parents: [folder.data.id],
+              parents: [folder.id],
             },
             media: {
               mimeType: file.mimetype,
@@ -851,7 +881,7 @@ docRouter.post(
           doc_id,
           user_id,
           category,
-          pdfLink: folder.data.webViewLink,
+          pdfLink: folder.webViewLink,
           createdAt: dateTime,
           caseStatus: finalStatus, // ✅ Save status
           isEmergency: currentApp?.isEmergency || false, // Preserve emergency flag
@@ -1119,47 +1149,48 @@ docRouter.get(
   },
 );
 
-docRouter.post("/createRefferalOfAppoinment", authorizeRoles("doc"), async (req, res) => {
-  try {
-    const appId = Number(req.body["Appoinmentid"]);
-    const refferedBy = Number(req.body["OriginaldoctorId"]);
-    const docId = Number(req.body["referred_to"]);
-    const reason = req.body["reason"];
-    console.log(appId, "AA", refferedBy, "AA", docId, "AA", reason)
-    if(!appId){
-      return res.status(400).json({message: "Invalid Request"})
+docRouter.post(
+  "/createRefferalOfAppoinment",
+  authorizeRoles("doc"),
+  async (req, res) => {
+    try {
+      const appId = Number(req.body["Appoinmentid"]);
+      const refferedBy = Number(req.body["OriginaldoctorId"]);
+      const docId = Number(req.body["referred_to"]);
+      const reason = req.body["reason"];
+      console.log(appId, "AA", refferedBy, "AA", docId, "AA", reason);
+      if (!appId) {
+        return res.status(400).json({ message: "Invalid Request" });
+      }
+      const response = await prisma.$transaction(async (tx) => {
+        const appointment = await tx.requests.update({
+          where: { id: appId },
+          data: {
+            doctor_id: docId,
+          },
+          select: {
+            user_id: true,
+          },
+        });
+
+        const referral = await tx.referrals.create({
+          data: {
+            user_id: appointment.user_id,
+            doctor_id: docId,
+            referred_by: refferedBy,
+            reason: reason,
+          },
+        });
+
+        return { appointment, referral };
+      });
+
+      res.status(200).json(response);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Internal server Error" });
     }
-    const response = await prisma.$transaction(async (tx) => {
-
-      const appointment = await tx.requests.update({
-        where: { id: appId },
-        data: {
-          doctor_id: docId
-        },
-        select: {
-          user_id: true
-        }
-      });
-
-      const referral = await tx.referrals.create({
-        data: {
-          user_id: appointment.user_id,
-          doctor_id: docId,
-          referred_by: refferedBy,
-          reason: reason,
-        }
-      });
-
-      return { appointment, referral };
-    });
-
-    res.status(200).json(response);
-
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Internal server Error" });
-  }
-});
-
+  },
+);
 
 export default docRouter;

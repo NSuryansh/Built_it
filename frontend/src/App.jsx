@@ -15,7 +15,7 @@ import Events from "./pages/user/events";
 import Login from "./pages/user/login";
 import SignUp from "./pages/user/signup";
 import ResetPassword from "./pages/user/reset_password";
-import ModifyProfile from "./pages/user/modify_profile";
+import ModifyProfile from "./pages/user/profile";
 import UserAppointments from "./pages/user/appointments";
 import FeedbackPage from "./pages/user/feedback";
 import Dashboard from "./pages/user/dashboard";
@@ -181,7 +181,7 @@ export default function App() {
           <Route path="/user/login" element={<Login />} />
           <Route path="/user/signup" element={<SignUp />} />
           <Route path="/user/reset_password" element={<ResetPassword />} />
-          <Route path="/user/modify_profile" element={<ModifyProfile />} />
+          <Route path="/user/profile" element={<ModifyProfile />} />
           <Route path="/user/appointments" element={<UserAppointments />} />
           <Route path="/user/feedback" element={<FeedbackPage />} />
           <Route path="/user/dashboard" element={<Dashboard />} />

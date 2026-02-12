@@ -85,22 +85,27 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
     if (e && e.preventDefault) e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:3000/api/user/generateOptions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user: {
-            id: localStorage.getItem("userid"),
-            email: localStorage.getItem("user_email"),
-          },
-        }),
-      });
+      const res = await fetch(
+        "http://localhost:3000/api/user/generateOptions",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user: {
+              id: localStorage.getItem("userid"),
+              email: localStorage.getItem("user_email"),
+            },
+          }),
+        },
+      );
 
       const data = await res.json();
 
       if (!data || !data.options) {
         console.error("No options returned from server:", data);
-        alert("Server did not return WebAuthn options. See console for details.");
+        alert(
+          "Server did not return WebAuthn options. See console for details.",
+        );
         return;
       }
 
@@ -119,10 +124,12 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
         console.warn("No options.user.id present");
       }
 
-      options.excludeCredentials = (options.excludeCredentials || []).map((cred) => ({
-        ...cred,
-        id: base64UrlToUint8Array(cred.id),
-      }));
+      options.excludeCredentials = (options.excludeCredentials || []).map(
+        (cred) => ({
+          ...cred,
+          id: base64UrlToUint8Array(cred.id),
+        }),
+      );
 
       const credential = await navigator.credentials.create({
         publicKey: options,
@@ -162,7 +169,9 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
       if (result.success) {
         alert("Biometric registration successful!");
       } else {
-        alert("Registration failed: " + (result.error || JSON.stringify(result)));
+        alert(
+          "Registration failed: " + (result.error || JSON.stringify(result)),
+        );
         console.error("verifyBioRegistration result:", result);
       }
     } catch (err) {
@@ -187,37 +196,37 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
     ...formData, // Spreading formData properties
   };
 
-  const onSave = async (dataToSend) => {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/user/modifyUser",
-        {
-          method: "PUT", // Use PUT to modify user details
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify(dataToSend),
-        },
-      );
+  // const onSave = async (dataToSend) => {
+  //   try {
+  //     const response = await fetch(
+  //       "http://localhost:3000/api/user/modifyUser",
+  //       {
+  //         method: "PUT", // Use PUT to modify user details
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: "Bearer " + token,
+  //         },
+  //         body: JSON.stringify(dataToSend),
+  //       },
+  //     );
 
-      const result = await response.json();
+  //     const result = await response.json();
 
-      if (response.ok) {
-        CustomToast("User details updated successfully!");
-      } else {
-        CustomToast("Error while updating details");
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-      CustomToast("Error while updating details");
-    }
-  };
+  //     if (response.ok) {
+  //       CustomToast("User details updated successfully!");
+  //     } else {
+  //       CustomToast("Error while updating details");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating user:", error);
+  //     CustomToast("Error while updating details");
+  //   }
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(dataToSend);
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   onSave(dataToSend);
+  // };
 
   const onCancel = (e) => {
     e.preventDefault();
@@ -233,29 +242,25 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
           <div className="px-10 py-12">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-extrabold text-[var(--custom-orange-900)] tracking-tight">
-                Modify Profile
+                Profile
               </h2>
               <p className="mt-3 text-[var(--custom-orange-600)]">
-                Update your profile information
+                Your profile information
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={() => {}} className="space-y-8">
               {/* Username Field */}
               <div className="relative">
                 <input
                   type="text"
                   id="username"
-                  className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                  value={localStorage.getItem("username") || "Your username"}
+                  className="peer w-full cursor-not-allowed rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
                   placeholder={
                     localStorage.getItem("username") || "Your username"
                   }
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      username: e.target.value,
-                    }))
-                  }
+                  onChange={() => {}}
                 />
                 <label
                   htmlFor="username"
@@ -290,13 +295,14 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 <input
                   type="tel"
                   id="mobile"
-                  className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                  value={
+                    localStorage.getItem("user_mobile") || "Your phone number"
+                  }
+                  className="peer w-full cursor-not-allowed rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
                   placeholder={
                     localStorage.getItem("user_mobile") || "Your phone number"
                   }
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, mobile: e.target.value }))
-                  }
+                  onChange={() => {}}
                 />
                 <label
                   htmlFor="mobile"
@@ -311,17 +317,16 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 <input
                   type="tel"
                   id="alt_mobile"
-                  className="peer w-full rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                  value={
+                    localStorage.getItem("user_alt_mobile") ||
+                    "Your emergency contact"
+                  }
+                  className="peer w-full cursor-not-allowed rounded-lg border border-[var(--custom-orange-300)] px-5 py-4 text-[var(--custom-orange-900)] bg-transparent focus:border-[var(--custom-orange-600)] focus:ring-2 focus:ring-[var(--custom-orange-200)] focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
                   placeholder={
                     localStorage.getItem("user_alt_mobile") ||
                     "Your emergency contact"
                   }
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      alt_mobile: e.target.value,
-                    }))
-                  }
+                  onChange={() => {}}
                 />
                 <label
                   htmlFor="alt_mobile"
@@ -339,7 +344,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 </button>
               </div>
 
-              {/* Buttons */}
+              {/* Buttons
               <div className="flex gap-6 pt-6">
                 <button
                   type="submit"
@@ -354,7 +359,7 @@ const ModifyProfile = ({ username, email, mobile, alt_mobile }) => {
                 >
                   Cancel
                 </button>
-              </div>
+              </div> */}
             </form>
           </div>
         </div>
