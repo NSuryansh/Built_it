@@ -39,7 +39,6 @@ commonRouter.get(
             );
           });
         });
-        console.log(filteredEvents);
         res.json(filteredEvents);
       } catch (e) {
         res.json(e);
@@ -96,7 +95,6 @@ commonRouter.get(
             );
           });
         });
-        console.log(filteredEvents);
         res.json(filteredEvents);
       } catch (e) {
         console.error(e);

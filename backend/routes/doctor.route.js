@@ -10,7 +10,11 @@ import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
 import { uploadToGoogleDrive } from "../utils/GoogleDriveUpload.js";
 import { multerupload } from "../middlewares/multer.middleware.js";
-import { drive } from "../utils/GoogleDriveSetup.js";
+import {
+  drive,
+  uploadFileToFolder,
+  getOrCreateFolder,
+} from "../utils/GoogleDriveSetup.js";
 dotenv.config();
 
 const docRouter = Router();
@@ -39,7 +43,7 @@ const validateDriveFolder = async (folderId) => {
       throw new Error("Not a folder");
     }
 
-    return res.data;
+    return "OK";
   } catch {
     throw new Error("Folder not accessible by service account");
   }
@@ -576,7 +580,11 @@ docRouter.put(
       if (additionalExperience?.trim())
         updatedData.additionalExperience = additionalExperience.trim();
       if (folderLink?.trim()) {
-        if ((await validateDriveFolder(folderLink)) == "OK")
+        if (
+          (await validateDriveFolder(
+            folderLink.split("/")[folderLink.split("/").length - 1],
+          )) == "OK"
+        )
           updatedData.folderLink = folderLink.trim();
         else
           return res.status(400).json({ error: "Folder Link not accessible" });
@@ -783,6 +791,10 @@ docRouter.post(
 
       const dateTime = new Date();
 
+      if (!note || !category) {
+        return res.status(400).json({ error: "All fields required" });
+      }
+
       if (doc_id !== req.user.userId) {
         return res.status(403).json({ error: "Access denied" });
       }
@@ -798,20 +810,45 @@ docRouter.post(
       const finalStatus =
         statusAction === "CLOSED" ? "CLOSED" : currentApp?.caseStatus || "OPEN";
 
-      const files = req.files;
+      const files = req.files || [];
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
       const user = await prisma.user.findUnique({ where: { id: user_id } });
 
-      let driveLink = "";
-      for (const file of files) {
-        const data = await uploadToGoogleDrive(file, {
-          therapistName: doc.name,
-          patientName: user.username,
-          dateTime: `${dateTime.getDate()}-${
-            dateTime.getMonth() + 1
-          }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+      // let driveLink = "";
+      // for (const file of files) {
+      //   const data = await uploadToGoogleDrive(file, {
+      //     therapistName: doc.name,
+      //     patientName: user.username,
+      //     dateTime: `${dateTime.getDate()}-${
+      //       dateTime.getMonth() + 1
+      //     }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
+      //   });
+      //   driveLink = data.shareableLink;
+      // }
+
+      if (!doc.folderLink) {
+        return res.status(400).json({
+          error: "Doctor drive folder not configured",
         });
-        driveLink = data.shareableLink;
+      }
+
+      const userFolderId = await getOrCreateFolder(
+        user.rollNo,
+        doc.folderLink.split("/")[doc.folderLink.split("/").length - 1],
+      );
+
+      const appointmentFolderId = await getOrCreateFolder(
+        dateTime.toISOString().replace(/[:.]/g, "-"),
+        userFolderId,
+      );
+
+      let webViewLink;
+
+      /* ---------- UPLOAD FILES ---------- */
+      for (const file of files) {
+        const data = await uploadFileToFolder(file, appointmentFolderId);
+        webViewLink = data.webViewLink;
+        await fs.unlink(file.path); // cleanup temp file
       }
 
       await prisma.appointments.delete({
@@ -824,7 +861,7 @@ docRouter.post(
           doc_id,
           user_id,
           category,
-          pdfLink: driveLink,
+          pdfLink: webViewLink,
           createdAt: dateTime,
           caseStatus: finalStatus, // ✅ Save status
           isEmergency: currentApp?.isEmergency || false, // Preserve emergency flag
@@ -838,9 +875,6 @@ docRouter.post(
     }
   },
 );
-// ==========================================
-// PASTE THIS IN docRouter.js
-// ==========================================
 
 // --- 1. WELLNESS ARTICLES ---
 

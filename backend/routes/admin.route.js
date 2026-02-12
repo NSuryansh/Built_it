@@ -56,7 +56,6 @@ adminRouter.post("/addSlot", authorizeRoles("admin"), async (req, res) => {
 
 adminRouter.get("/case-stats", authorizeRoles("admin"), async (req, res) => {
   const { period } = req.query;
-  console.log(period);
   try {
     const now = new Date();
     let startDate;

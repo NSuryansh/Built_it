@@ -56,7 +56,6 @@ const BookingFormStep = ({
       });
       setDates(tempDates);
       setAvailableSlots(tempSlots);
-      console.log(tempDates, tempSlots);
     } catch (error) {
       console.error("Error fetching available slots:", error);
     }

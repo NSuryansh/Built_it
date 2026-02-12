@@ -1,44 +1,43 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin, Users, ArrowRight, Clock } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  ArrowRight,
+  Clock,
+  Loader,
+} from "lucide-react";
 import { format } from "date-fns";
+import CustomToast from "../common/CustomToast";
 
 const EventsDisplay = () => {
   const token = localStorage.getItem("token");
-
-  function isEventVisibleToUser(event) {
-    // No batch restriction → visible to all
-    if (!event.batches || event.batches.length === 0) {
-      return true;
-    }
-
-    // Check if any batch matches user
-    return event.batches.some(
-      b =>
-        b.program === localStorage.getItem("user_prog") &&
-        b.year === localStorage.getItem("user_batch") &&
-        b.dept === localStorage.getItem("user_dept")
-    );
-  }
-
+  const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState([]);
   useEffect(() => {
+    setIsLoading(true);
     const fetchEvents = async () => {
-      const res = await fetch("http://localhost:3000/api/common/events?user=user", {
-        headers: { Authorization: "Bearer " + token },
-      });
-      const resp = await res.json();
-      const filtered = resp.filter(event =>
-        isEventVisibleToUser(event)
-      );
-      setEvents(filtered);
+      try {
+        const res = await fetch(
+          "http://localhost:3000/api/common/events?user=user",
+          {
+            headers: { Authorization: "Bearer " + token },
+          },
+        );
+        const resp = await res.json();
+        setEvents(resp);
+      } catch (error) {
+        console.error(error);
+        CustomToast("Error fetching upcoming events", "orange");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchEvents();
   }, []);
-
-  useEffect(() => { }, [events]);
 
   return (
     <div className="space-y-4">
@@ -83,7 +82,7 @@ const EventsDisplay = () => {
             </div>
           </div>
         ))
-      ) : (
+      ) : !isLoading ? (
         <div className="flex flex-col bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-md border border-[var(--custom-orange-100)] items-center justify-center py-8 px-4">
           <div className="h-24 w-24 rounded-full bg-[var(--custom-orange-50)] flex items-center justify-center mb-6">
             <Clock className="h-12 w-12 text-[var(--custom-orange-400)]" />
@@ -94,6 +93,10 @@ const EventsDisplay = () => {
           <p className="text-[var(--custom-gray-600)] text-center max-w-md">
             There are no upcoming events scheduled.
           </p>
+        </div>
+      ) : (
+        <div className="flex flex-col bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-md border border-[var(--custom-orange-100)] items-center justify-center py-8 px-4">
+          <Loader />
         </div>
       )}
     </div>

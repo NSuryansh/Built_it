@@ -217,11 +217,9 @@ userRouter.post("/verifyBioLogin", async (req, res) => {
 
 userRouter.put("/modifyUser", async (req, res) => {
   try {
-    console.log(req.body, "Body")
     const { id, username, email, mobile, alt_mobile, gender } = req.body;
 
     if (!id) {
-      console.log('1')
       return res.status(400).json({ error: "User ID is required" });
     }
 
@@ -234,7 +232,6 @@ userRouter.put("/modifyUser", async (req, res) => {
         where: { username },
       });
       if (existingUsername && existingUsername.id !== Number(id)) {
-        console.log('2')
         return res.status(400).json({ error: "Username is already in use" });
       }
     }
@@ -269,7 +266,6 @@ userRouter.put("/modifyUser", async (req, res) => {
       ...(alt_mobile && { alt_mobile }),
       ...(gender && { gender }),
     };
-    // console.log(updatedData, "Data")
     if (Object.keys(updatedData).length !== 0) {
       const updatedUser = await prisma.user.update({
       where: { id: Number(id) },
