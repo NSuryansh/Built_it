@@ -33,6 +33,7 @@ import {
 } from "recharts";
 import CustomLoader from "../../components/common/CustomLoader";
 import { pdfDB } from "../../db/pdfDB";
+import { ToastContainer } from "react-toastify";
 
 const REASONS = [
   "Man nahi kar raha ab",
@@ -495,38 +496,55 @@ const DoctorAppointment = () => {
   // ✅ UPDATED: deleteApp to handle Close Case vs Mark as Done
   const deleteApp = async (appointment, isClosing = false) => {
     setDoneId(appointment.id);
-    const formData = new FormData();
-    for (const f of files) {
-      const pdf = await pdfDB.pdfs.get(f.id);
-      const blob = new Blob([pdf.data], { type: pdf.type });
-      const file = new File([blob], pdf.name, { type: pdf.type });
-      formData.append("files", file);
-      formData.append("pdfIds[]", f.id);
+    try {
+      const formData = new FormData();
+      for (const f of files) {
+        const pdf = await pdfDB.pdfs.get(f.id);
+        const blob = new Blob([pdf.data], { type: pdf.type });
+        const file = new File([blob], pdf.name, { type: pdf.type });
+        formData.append("files", file);
+        formData.append("pdfIds[]", f.id);
+      }
+      formData.append("appId", appointment.id);
+      formData.append("doctorId", appointment.doctor_id);
+      formData.append("userId", appointment.user_id);
+      formData.append("note", note);
+      formData.append("category", category);
+
+      // ✅ PASS THE STATUS ACTION
+      formData.append("statusAction", isClosing ? "CLOSED" : "DONE");
+
+      const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        body: formData,
+      });
+
+      if (res.ok) {
+        CustomToast("Appointment completed successfully", "blue");
+      } else {
+        const data = await res.json();
+        if (data.error == "Doctor drive folder not configured") {
+          CustomToast(
+            "Please configure the drive folder to upload PDFs",
+            "blue",
+          );
+        } else {
+          CustomToast(data.error, "blue");
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      CustomToast("Some error occured", "blue");
+    } finally {
+      setNote("");
+      setCategory("");
+      setFiles([]);
+      setFixed(!fixed);
+      setDoneId(null);
     }
-    formData.append("appId", appointment.id);
-    formData.append("doctorId", appointment.doctor_id);
-    formData.append("userId", appointment.user_id);
-    formData.append("note", note);
-    formData.append("category", category);
-
-    // ✅ PASS THE STATUS ACTION
-    formData.append("statusAction", isClosing ? "CLOSED" : "DONE");
-
-    const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      body: formData,
-    });
-
-    const resp = await res.json();
-
-    setNote("");
-    setCategory("");
-    setFiles([]);
-    setFixed(!fixed);
-    setDoneId(null);
   };
 
   const emailParams = async (appointment, time) => {
@@ -676,6 +694,7 @@ const DoctorAppointment = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[var(--custom-white)] via-[var(--custom-purple-50)] to-[var(--custom-teal-50)]">
       <DoctorNavbar />
+      <ToastContainer />
       <div className="container mx-auto px-4 sm:px-8 lg:px-4 xl:px-16 py-5 md:py-10 lg:py-20">
         {/* CHANGED: Replaced grid with flex-col to stack vertically */}
         <div className="flex flex-col gap-12">

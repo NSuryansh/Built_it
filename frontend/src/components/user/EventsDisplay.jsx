@@ -1,23 +1,39 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin, Users, ArrowRight, Clock } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  ArrowRight,
+  Clock,
+  Loader,
+} from "lucide-react";
 import { format } from "date-fns";
+import CustomToast from "../common/CustomToast";
 
 const EventsDisplay = () => {
   const token = localStorage.getItem("token");
-
+  const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState([]);
   useEffect(() => {
+    setIsLoading(true);
     const fetchEvents = async () => {
-      const res = await fetch(
-        "http://localhost:3000/api/common/events?user=user",
-        {
-          headers: { Authorization: "Bearer " + token },
-        },
-      );
-      const resp = await res.json();
-      setEvents(resp);
+      try {
+        const res = await fetch(
+          "http://localhost:3000/api/common/events?user=user",
+          {
+            headers: { Authorization: "Bearer " + token },
+          },
+        );
+        const resp = await res.json();
+        setEvents(resp);
+      } catch (error) {
+        console.error(error);
+        CustomToast("Error fetching upcoming events", "orange");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchEvents();
@@ -66,7 +82,7 @@ const EventsDisplay = () => {
             </div>
           </div>
         ))
-      ) : (
+      ) : !isLoading ? (
         <div className="flex flex-col bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-md border border-[var(--custom-orange-100)] items-center justify-center py-8 px-4">
           <div className="h-24 w-24 rounded-full bg-[var(--custom-orange-50)] flex items-center justify-center mb-6">
             <Clock className="h-12 w-12 text-[var(--custom-orange-400)]" />
@@ -77,6 +93,10 @@ const EventsDisplay = () => {
           <p className="text-[var(--custom-gray-600)] text-center max-w-md">
             There are no upcoming events scheduled.
           </p>
+        </div>
+      ) : (
+        <div className="flex flex-col bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-md border border-[var(--custom-orange-100)] items-center justify-center py-8 px-4">
+          <Loader />
         </div>
       )}
     </div>
