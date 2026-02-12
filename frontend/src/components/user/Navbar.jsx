@@ -26,7 +26,7 @@ const Navbar = () => {
     { name: "Resources", link: "/user/stress" },
     { name: "Events", link: "/user/events" },
     { name: "Entertainment", link: "/user/entertainment" },
-    { name: "Appoinments", link: "/user/appointments"}
+    { name: "Appointments", link: "/user/appointments"}
   ];
 
   // Retrieve usertype from localStorage
@@ -252,14 +252,6 @@ const Navbar = () => {
 
                       {/* Actions */}
                       <div className="space-y-2">
-                        <button
-                          onClick={() => {
-                            navigate("/user/appointments");
-                          }}
-                          className="w-full px-4 py-2 text-sm font-medium text-[var(--custom-white)] bg-[var(--custom-orange-400)] rounded-lg hover:bg-[var(--custom-orange-500)] transition-colors duration-200"
-                        >
-                          Appointments
-                        </button>
                         <div className="grid grid-cols-2 gap-2">
                           <button
                             onClick={() => navigate("/user/profile")}
