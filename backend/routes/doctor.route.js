@@ -822,6 +822,21 @@ docRouter.post(
               body: fs.createReadStream(file.path),
             },
           });
+        } catch (error) {
+          if (
+            error.response?.data?.error === "invalid_grant" ||
+            error.response?.status === 401
+          ) {
+            // Mark drive as unlinked
+            await prisma.doctor.update({
+              where: { id: doc.id },
+              data: { googleDriveLinked: false },
+            });
+
+            return res.status(401).json({
+              error: "Google Drive access expired. Please reconnect.",
+            });
+          }
         } finally {
           await fs.promises.unlink(file.path);
         }
