@@ -49,11 +49,11 @@ const Peer = () => {
   const newChatUsername = searchParams.get("username");
   const token = localStorage.getItem("token");
 
-  // Function to check if current time is within chat restriction hours (8 PM to 11 PM)
+  // Function to check if current time is within chat restriction hours (9 PM to 8 AM)
   const isChatDisabled = () => {
     const now = new Date();
     const hours = now.getHours();
-    return hours >= 20 && hours <= 8;
+    return hours >= 21 || hours <= 8;
   };
 
   // Filter doctors based on search query
@@ -464,7 +464,7 @@ const Peer = () => {
               <div className="absolute w-full bottom-0 border-t border-[var(--custom-gray-200)] p-4 bg-[var(--custom-white)] shadow-sm">
                 {isChatDisabled() ? (
                   <div className="text-center text-[var(--custom-gray-600)]">
-                    <p className="mb-2">Chat is disabled from 8 PM to 11 AM.</p>
+                    <p className="mb-2">Chat is disabled from 9 PM to 8 AM.</p>
                     <p>
                       For emergencies, please contact:{" "}
                       <strong>
@@ -582,7 +582,7 @@ const Peer = () => {
             <div className="border-t border-[var(--custom-gray-200)] p-4 bg-[var(--custom-white)] shadow-sm">
               {isChatDisabled() ? (
                 <div className="text-center text-[var(--custom-gray-600)]">
-                  <p className="mb-2">Chat is disabled from 8 PM to 11 PM.</p>
+                  <p className="mb-2">Chat is disabled from 9 PM to 8 AM.</p>
                   <p>
                     For emergencies, please contact:{" "}
                     <strong>
