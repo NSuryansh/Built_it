@@ -1,16 +1,15 @@
 // routes/google.js
-import express from "express";
+import { Router } from "express";
 import { google } from "googleapis";
 import { encrypt } from "../utils/encryption.js";
 import { getOAuthClient } from "../utils/google.js";
 import { authorizeRoles } from "../middlewares/auth.middleware.js";
 import { prisma } from "../server.js";
 
-const router = express.Router();
+const googleRouter = Router();
 
-router.get("/connect", authorizeRoles("doc"), async (req, res) => {
+googleRouter.get("/connect", authorizeRoles("doc"), async (req, res) => {
   const oauth2Client = getOAuthClient();
-  console.log(req.user);
 
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
@@ -18,17 +17,16 @@ router.get("/connect", authorizeRoles("doc"), async (req, res) => {
     scope: ["https://www.googleapis.com/auth/drive.file"],
     state: req.user.userId.toString(),
   });
-
-  res.redirect(url);
+  //   console.log(url);
+  res.json({ url });
 });
 
-router.get("/callback", async (req, res) => {
+googleRouter.get("/callback", async (req, res) => {
   try {
     const { code, state } = req.query;
-
     const oauth2Client = getOAuthClient();
 
-    const { tokens } = oauth2Client.getToken(code);
+    const { tokens } = await oauth2Client.getToken(code);
     oauth2Client.setCredentials(tokens);
 
     const drive = google.drive({
@@ -54,11 +52,11 @@ router.get("/callback", async (req, res) => {
     });
 
     // Redirect back to frontend
-    res.redirect(`${process.env.FRONTEND_URL}/profile`);
+    res.redirect(`${process.env.FRONTEND_URL}/doctor/profile`);
   } catch (err) {
     console.error(err);
-    res.redirect(`${process.env.FRONTEND_URL}/profile`);
+    res.redirect(`${process.env.FRONTEND_URL}/doctor/profile`);
   }
 });
 
-export default router;
+export default googleRouter;

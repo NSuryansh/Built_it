@@ -8,14 +8,11 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
-import { uploadToGoogleDrive } from "../utils/GoogleDriveUpload.js";
 import { multerupload } from "../middlewares/multer.middleware.js";
-import {
-  drive,
-  uploadFileToFolder,
-  getOrCreateFolder,
-} from "../utils/GoogleDriveSetup.js";
 import fs from "fs";
+import { getOAuthClient } from "../utils/google.js";
+import { decrypt } from "../utils/encryption.js";
+import { google } from "googleapis";
 import { get } from "http";
 dotenv.config();
 
@@ -33,23 +30,6 @@ async function uploadImage(path) {
   const results = await cloudinary.uploader.upload(path);
   return results["url"];
 }
-
-const validateDriveFolder = async (folderId) => {
-  try {
-    const res = await drive.files.get({
-      fileId: folderId,
-      fields: "id, name, mimeType",
-    });
-
-    if (res.data.mimeType !== "application/vnd.google-apps.folder") {
-      throw new Error("Not a folder");
-    }
-
-    return "OK";
-  } catch {
-    throw new Error("Folder not accessible by service account");
-  }
-};
 
 docRouter.post("/login", async (req, res) => {
   const email = req.body["email"];
@@ -537,7 +517,6 @@ docRouter.put(
         certifi,
         isProfileDone,
         desc,
-        folderLink,
       } = req.body;
       if (id !== req.user.userId.toString()) {
         return res.status(403).json({ error: "Access denied" });
@@ -573,6 +552,7 @@ docRouter.put(
           .status(400)
           .json({ error: "The updated field is already in use" });
       }
+
       const updatedData = {};
       if (address?.trim()) updatedData.address = address.trim();
       if (office_address?.trim())
@@ -581,16 +561,6 @@ docRouter.put(
       if (experience != null) updatedData.experience = experience.trim();
       if (additionalExperience?.trim())
         updatedData.additionalExperience = additionalExperience.trim();
-      if (folderLink?.trim()) {
-        if (
-          (await validateDriveFolder(
-            folderLink.split("/")[folderLink.split("/").length - 1],
-          )) == "OK"
-        )
-          updatedData.folderLink = folderLink.trim();
-        else
-          return res.status(400).json({ error: "Folder Link not accessible" });
-      }
 
       if (url) updatedData.img = url;
       if (isProfileDone) updatedData.isProfileDone = isProfileDone;
@@ -814,43 +784,63 @@ docRouter.post(
 
       const files = req.files || [];
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
-      const user = await prisma.user.findUnique({ where: { id: user_id } });
 
-      // let driveLink = "";
-      // for (const file of files) {
-      //   const data = await uploadToGoogleDrive(file, {
-      //     therapistName: doc.name,
-      //     patientName: user.username,
-      //     dateTime: `${dateTime.getDate()}-${
-      //       dateTime.getMonth() + 1
-      //     }-${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`,
-      //   });
-      //   driveLink = data.shareableLink;
-      // }
-
-      if (!doc.folderLink) {
+      if (!doc.driveFolderId) {
         return res.status(400).json({
-          error: "Doctor drive folder not configured",
+          error: "Therapist drive folder not configured",
         });
       }
 
-      const userFolderId = await getOrCreateFolder(
-        user.rollNo,
-        doc.folderLink.split("/")[doc.folderLink.split("/").length - 1],
-      );
+      const oauth2Client = getOAuthClient();
+      oauth2Client.setCredentials({
+        refresh_token: decrypt(doc.googleRefreshToken),
+      });
 
-      const appointmentFolderId = await getOrCreateFolder(
-        dateTime.toISOString().replace(/[:.]/g, "-"),
-        userFolderId,
-      );
+      const drive = google.drive({
+        version: "v3",
+        auth: oauth2Client,
+      });
 
-      let webViewLink;
+      const folder = await drive.files.create({
+        requestBody: {
+          name: dateTime.toISOString().replace(/[:.]/g, "-"),
+          mimeType: "application/vnd.google-apps.folder",
+          parents: [doc.driveFolderId],
+        },
+        fields: "id, webViewLink",
+      });
 
       /* ---------- UPLOAD FILES ---------- */
       for (const file of files) {
-        const data = await uploadFileToFolder(file, appointmentFolderId);
-        webViewLink = data.webViewLink;
-        await fs.unlink(file.path); // cleanup temp file
+        try {
+          await drive.files.create({
+            requestBody: {
+              name: file.originalname,
+              parents: [folder.data.id],
+            },
+            media: {
+              mimeType: file.mimetype,
+              body: fs.createReadStream(file.path),
+            },
+          });
+        } catch (error) {
+          if (
+            error.response?.data?.error === "invalid_grant" ||
+            error.response?.status === 401
+          ) {
+            // Mark drive as unlinked
+            await prisma.doctor.update({
+              where: { id: doc.id },
+              data: { googleDriveLinked: false },
+            });
+
+            return res.status(401).json({
+              error: "Google Drive access expired. Please reconnect.",
+            });
+          }
+        } finally {
+          await fs.promises.unlink(file.path);
+        }
       }
 
       await prisma.appointments.delete({
@@ -863,7 +853,7 @@ docRouter.post(
           doc_id,
           user_id,
           category,
-          pdfLink: webViewLink,
+          pdfLink: folder.data.webViewLink,
           createdAt: dateTime,
           caseStatus: finalStatus, // ✅ Save status
           isEmergency: currentApp?.isEmergency || false, // Preserve emergency flag

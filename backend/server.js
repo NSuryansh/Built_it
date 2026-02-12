@@ -14,7 +14,6 @@ import userDocRouter from "./routes/user_doctor.route.js";
 import userAdminRouter from "./routes/user_admin.route.js";
 import docAdminRouter from "./routes/doctor_admin.route.js";
 import commonRouter from "./routes/common.route.js";
-// import serviceAccount from './serviceAccountKey.json' assert { type: 'json' };
 
 export const prisma = new PrismaClient();
 export const app = express();
@@ -43,9 +42,6 @@ webpush.setVapidDetails(
   privateVapidKey,
 );
 
-// const admin = require("firebase-admin");
-// const serviceAccount = require("./serviceAccountKey.json"); // from Firebase Console
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -58,6 +54,7 @@ app.use("/api/user_doc", userDocRouter);
 app.use("/api/user_admin", userAdminRouter);
 app.use("/api/doc_admin", docAdminRouter);
 app.use("/api/common", commonRouter);
+app.use("/api/google", googleRouter);
 
 const io = new Server(server, {
   cors: {
@@ -259,100 +256,6 @@ app.delete("/deletenotifs", async (req, res) => {
   }
 });
 
-// app.post("/feelings", authorizeRoles("") ,async (req, res) => {
-//   try {
-//     const { userId, menPeace, sleepQ, socLife, passion, lsScore, happyScore } =
-//       req.body;
-
-//     if (!userId) {
-//       return res.status(400).json({ error: "User ID is required" });
-//     }
-
-//     const feelings = await prisma.feelings.upsert({
-//       where: { user_id: userId },
-//       update: {
-//         mental_peace: menPeace,
-//         sleep_quality: sleepQ,
-//         social_life: socLife,
-//         passion: passion,
-//         less_stress_score: lsScore,
-//         happiness_score: happyScore,
-//       },
-//       create: {
-//         user_id: userId,
-//         mental_peace: menPeace,
-//         sleep_quality: sleepQ,
-//         social_life: socLife,
-//         passion: passion,
-//         less_stress_score: lsScore,
-//         happiness_score: happyScore,
-//       },
-//     });
-
-//     res.status(200).json(feelings);
-//   } catch (error) {
-//     console.error("Error adding/updating feelings:", error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
-
-// app.post("/node-chat", async (req, res) => {
-//   try {
-//     const { user_id, message } = req.body;
-
-//     const response = await axios.post(
-//       "https://built-it-python-895c.onrender.com/chatWithBot",
-//       {
-//         user_id,
-//         message,
-//       }
-//     );
-
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error("Error calling Flask API:", error.message);
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-// app.post("/scores-bot", async (req, res) => {
-//   try {
-//     const { user_id } = req.body;
-
-//     const response = await axios.post(
-//       "https://built-it-python-895c.onrender.com/analyze",
-//       {
-//         user_id,
-//       }
-//     );
-
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error("Error calling the Flas API: ", error.message);
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-// app.post("/rating", async (req, res) => {
-//   const stars = req.body["stars"];
-//   const appId = req.body["id"];
-//   try {
-//     const updatedApp = await prisma.appointments.update({
-//       where: { id: appId },
-//       data: {
-//         stars: stars,
-//       },
-//     });
-//     res.json({
-//       message: "Stars Added",
-//       updatedApp,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.json({ message: "Error adding stars" });
-//   }
-// });
-
 app.post("/sso", async (req, res) => {
   const { token } = req.query;
   try {
@@ -421,6 +324,7 @@ app.post("/api/scores", async (req, res) => {
 
 // 3) POST /emotion → forwards multipart‐form audio upload to Flask /emotion
 import multer from "multer";
+import googleRouter from "./routes/google.route.js";
 const upload = multer();
 app.post("/emotion", upload.single("audio"), async (req, res) => {
   try {
