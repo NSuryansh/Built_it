@@ -99,7 +99,7 @@ const Navbar = () => {
         location === "/user/peer" ||
         location === "/user/mood" ||
         location === "/user/book" ||
-        location === "/user/modify_profile" ||
+        location === "/user/profile" ||
         location === "/user/movies" ||
         location === "/user/entertainment" ||
         location === "/user/dashboard" ||
@@ -262,10 +262,10 @@ const Navbar = () => {
                         </button>
                         <div className="grid grid-cols-2 gap-2">
                           <button
-                            onClick={() => navigate("/user/modify_profile")}
+                            onClick={() => navigate("/user/profile")}
                             className="px-4 py-2 text-sm font-medium text-[var(--custom-orange-500)] bg-[var(--custom-orange-50)] rounded-lg hover:bg-[var(--custom-orange-100)] transition-colors duration-200"
                           >
-                            Modify Profile
+                            Profile
                           </button>
                           <button
                             onClick={() => setShowCustomModal(true)}
