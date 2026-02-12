@@ -16,6 +16,7 @@ import {
   getOrCreateFolder,
 } from "../utils/GoogleDriveSetup.js";
 import fs from "fs";
+import { get } from "http";
 dotenv.config();
 
 const docRouter = Router();
@@ -1129,5 +1130,48 @@ docRouter.get(
     }
   },
 );
+
+docRouter.post("/createRefferalOfAppoinment", authorizeRoles("doc"), async (req, res) => {
+  try {
+    const appId = Number(req.body["Appoinmentid"]);
+    const refferedBy = Number(req.body["OriginaldoctorId"]);
+    const docId = Number(req.body["referred_to"]);
+    const reason = req.body["reason"];
+    console.log(appId, "AA", refferedBy, "AA", docId, "AA", reason)
+    if(!appId){
+      return res.status(400).json({message: "Invalid Request"})
+    }
+    const response = await prisma.$transaction(async (tx) => {
+
+      const appointment = await tx.requests.update({
+        where: { id: appId },
+        data: {
+          doctor_id: docId
+        },
+        select: {
+          user_id: true
+        }
+      });
+
+      const referral = await tx.referrals.create({
+        data: {
+          user_id: appointment.user_id,
+          doctor_id: docId,
+          referred_by: refferedBy,
+          reason: reason,
+        }
+      });
+
+      return { appointment, referral };
+    });
+
+    res.status(200).json(response);
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal server Error" });
+  }
+});
+
 
 export default docRouter;
