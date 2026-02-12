@@ -414,7 +414,7 @@ const fetchDoctors = async () => {
     reason: "",
     appointmentId: appointment.id, 
   });
-  setShowReferralForm(true);
+  setShowReferralForm(!showReferralForm);
 };
 
   useEffect(() => {
@@ -1099,8 +1099,9 @@ const fetchDoctors = async () => {
                 </h1>
               </div>
             </div>
-
-            {appointments.length > 0 ? (
+             
+            {appointments.length > 0 ?(
+              
               <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-scroll overflow-x-hidden max-h-150">
                 {appointments.map((appointment) => {
                   console.log(appointment, "Appoinemnt")
@@ -1296,8 +1297,8 @@ const fetchDoctors = async () => {
                             <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
                           </button>
 
-                          {/* Referral Form */}
-                          {showReferralForm && docs != null && (
+                          {/* Referral Form */console.log(referralData, "AA", appointment)}
+                          {showReferralForm && docs != null && Number(referralData.appointmentId) == Number(appointment.id) && (
                             <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-4 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
                               <form onSubmit={handleReferralSubmit} className="space-y-6">
                                 <div className="space-y-6">

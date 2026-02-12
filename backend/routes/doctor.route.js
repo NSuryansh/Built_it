@@ -673,11 +673,9 @@ docRouter.post("/create-referral", authorizeRoles("doc"), async (req, res) => {
   if (!roll_no || !referred_by || !referred_to || !reason) {
     return res.status(400).json({ message: "All fields are required" });
   }
-
-  // Step 1: Find user by roll number
   const user = await prisma.user.findUnique({
     where: {
-      rollNo: roll_no, // make sure rollNo matches the field in your Prisma schema
+      rollNo: roll_no, 
     },
   });
 
