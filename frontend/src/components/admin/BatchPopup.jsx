@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const PROGRAMS = ["UG", "PG", "PhD"];
+const PROGRAMS = ["UG", "PG", "PHD"];
 const YEARS = [
   "2015",
   "2016",

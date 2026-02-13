@@ -46,12 +46,32 @@ const BookingFormStep = ({
       const data = await response.json();
       let tempDates = [];
       let tempSlots = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
-      [...Array(14)].map((_, index) => {
+      [...Array(14)].forEach((_, index) => {
         const date = new Date();
-        if (data[(date.getDay() + index) % 7]) {
+        if (data.groupedSlots[(date.getDay() + index) % 7]) {
           date.setDate(date.getDate() + index);
-          tempDates.push(date);
-          tempSlots[date.getDay()] = data[date.getDay()];
+          let found = false;
+          let temporaryslots = [];
+          data.groupedSlots[date.getDay()].forEach((slot) => {
+            let exists = false;
+            data.upcomingAppointments.forEach((appointment) => {
+              if (
+                new Date(appointment.dateTime).getDate() == date.getDate() &&
+                appointment.dateTime.split("T")[1] ==
+                  slot.starting_time.split("T")[1]
+              ) {
+                exists = true;
+              }
+            });
+            if (!exists) {
+              temporaryslots.push(slot);
+              found = true;
+            }
+          });
+          if (found) {
+            tempDates.push(date);
+            tempSlots[date.getDay()] = temporaryslots;
+          }
         }
       });
       setDates(tempDates);

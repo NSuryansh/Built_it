@@ -701,7 +701,7 @@ docRouter.post("/create-referral", authorizeRoles("doc"), async (req, res) => {
   }
   const user = await prisma.user.findUnique({
     where: {
-      rollNo: roll_no, 
+      rollNo: roll_no,
     },
   });
 
@@ -810,33 +810,33 @@ docRouter.post(
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
       const user = await prisma.user.findUnique({ where: { id: user_id } });
 
-      if (!doc.driveFolderId) {
-        return res.status(400).json({
-          error: "Therapist drive folder not configured",
-        });
-      }
+      // if (!doc.driveFolderId) {
+      //   return res.status(400).json({
+      //     error: "Therapist drive folder not configured",
+      //   });
+      // }
 
-      const oauth2Client = getOAuthClient();
-      oauth2Client.setCredentials({
-        refresh_token: decrypt(doc.googleRefreshToken),
-      });
+      // const oauth2Client = getOAuthClient();
+      // oauth2Client.setCredentials({
+      //   refresh_token: decrypt(doc.googleRefreshToken),
+      // });
 
-      const drive = google.drive({
-        version: "v3",
-        auth: oauth2Client,
-      });
+      // const drive = google.drive({
+      //   version: "v3",
+      //   auth: oauth2Client,
+      // });
 
-      const userFolder = await getOrCreateFolder(
-        drive,
-        user.rollNo,
-        doc.driveFolderId,
-      );
+      // const userFolder = await getOrCreateFolder(
+      //   drive,
+      //   user.rollNo,
+      //   doc.driveFolderId,
+      // );
 
-      const folder = await getOrCreateFolder(
-        drive,
-        dateTime.toISOString().replace(/[:.]/g, "-"),
-        userFolder.id,
-      );
+      // const folder = await getOrCreateFolder(
+      //   drive,
+      //   dateTime.toISOString().replace(/[:.]/g, "-"),
+      //   userFolder.id,
+      // );
 
       /* ---------- UPLOAD FILES ---------- */
       for (const file of files) {
@@ -881,7 +881,7 @@ docRouter.post(
           doc_id,
           user_id,
           category,
-          pdfLink: folder.webViewLink,
+          // pdfLink: folder?.webViewLink || "",
           createdAt: dateTime,
           caseStatus: finalStatus, // ✅ Save status
           isEmergency: currentApp?.isEmergency || false, // Preserve emergency flag
