@@ -21,8 +21,6 @@ import CustomToast from "../common/CustomToast";
 const Calendar = ({ onDateSelect }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
-
-  // Use Sets for fast lookups
   const [pastEvents, setPastEvents] = useState(new Set());
   const [futureEvents, setFutureEvents] = useState(new Set());
 
@@ -39,8 +37,7 @@ const Calendar = ({ onDateSelect }) => {
   };
 
   const linkAcadCalender = sendLink(rollNo);
-  const today = startOfDay(new Date()); // <- use Date-based comparison
-
+  const today = startOfDay(new Date()); 
   useEffect(() => {
     const controller = new AbortController();
     const fetchPastEvents = async () => {
@@ -110,7 +107,6 @@ const Calendar = ({ onDateSelect }) => {
     return () => controller.abort();
   }, [token]);
 
-  // Build days grid for current month view
   const startDate = startOfWeek(startOfMonth(currentMonth));
   const endDate = endOfWeek(endOfMonth(currentMonth));
   const days = [];
