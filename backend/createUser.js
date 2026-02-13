@@ -1,11 +1,11 @@
-import fs from "fs"
-import csv from "csv-parser"
-import bcrypt from "bcrypt"
+import fs from "fs";
+import csv from "csv-parser";
+import bcrypt from "bcrypt";
 import { prisma } from "./server.js";
-import crypto from "crypto"
+import crypto from "crypto";
 
 // const prisma = new Prismalient()
-const csvFilePath = "./students_data/2025_students_Bdes.csv"
+const csvFilePath = "./students_data/2025  students.csv";
 // const prisma = new Prismalient()
 import { generateKeyPairSync } from "crypto";
 
@@ -39,31 +39,36 @@ const processCSV = async () => {
   });
 
   for (const student of users) {
-    const username = "anon" + crypto.randomBytes(3).toString("hex");
+    const randomName = "anon" + crypto.randomBytes(3).toString("hex");
+    console.log(student);
     const hashedPassword = await bcrypt.hash(student.Mobile_Number, 10);
     const { publicKey, privateKey } = generateKeyPair();
     // const publicKeyPEM = await exportKeyToPEM(publicKey);
     // const privateKeyPEM = await exportPrivateKeyToPEM(privateKey);
     try {
       var gender = "OTHER";
-      if(student.Gender == "M"){
+      if (student.Gender == "M") {
         gender = "MALE";
-      }else if(student.Gender =="F"){
+      } else if (student.Gender == "F") {
         gender = "FEMALE";
       }
+      const batch = 2000 + Number(student.rollno[0] + student.rollno[1]);
+
       await prisma.user.create({
         data: {
-          username: username,
+          username: student.Applicant_Name,
+          randomName: randomName,
           email: student.Email_IDs,
           mobile: student.Mobile_Number,
           password: hashedPassword,
           alt_mobile: "",
-          publicKey: publicKey, 
+          publicKey: publicKey,
           department: student.Department,
-          acadProg: "B.Des.",
+          acadProg: "UG",
           rollNo: student.rollno,
+          batch: String(batch),
           roomNo: "",
-          gender: gender
+          gender: gender,
         },
       });
       console.log("created user, rollNo: ", student.rollno);
