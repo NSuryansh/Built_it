@@ -4,14 +4,9 @@ import {
   UserMinus,
   UserPlus,
   Search,
-  Filter,
   RefreshCw,
   Stethoscope,
   Mail,
-  Phone,
-  MapPin,
-  Calendar,
-  Star,
   StarIcon,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/Navbar";
@@ -351,6 +346,8 @@ const DoctorsList = () => {
       {toggleDocPopupOpen && (
         <DeletePopup
           doc={selectedDoc}
+          id={selectedDoc.id}
+          doctors={doctors}
           handleToggleDocPopup={handleToggleDocPopup}
           handleToggleDoc={handleToggleDoc}
           text={

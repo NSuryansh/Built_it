@@ -458,13 +458,13 @@ adminRouter.get(
         },
         orderBy: { createdAt: "desc" },
       });
-      
+
       const cancelledApp = await prisma.cancelledRequest.findMany({
         include: {
           doctor: true,
-          user: true
-        }
-      })
+          user: true,
+        },
+      });
 
       res.status(200).json({
         message: "Fetched all appointment data",
@@ -640,20 +640,57 @@ adminRouter.get("/getAllUsers", async (req, res) => {
     const users = await prisma.user.findMany({
       include: {
         appointment: true,
-        pastApp: true
-      }
+        pastApp: true,
+      },
     });
 
     const filteredUsers = users
-      .filter(user => user.pastApp.length > 0) 
-      .sort((a, b) => {return (a.appointment.length + a.pastApp.length) - (b.appointment.length + b.pastApp.length);});
+      .filter((user) => user.pastApp.length > 0)
+      .sort((a, b) => {
+        return (
+          a.appointment.length +
+          a.pastApp.length -
+          (b.appointment.length + b.pastApp.length)
+        );
+      });
 
     res.json(filteredUsers);
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching users" });
   }
 });
+
+adminRouter.get(
+  "/getUsersForDeactivation",
+  authorizeRoles("admin"),
+  async (req, res) => {
+    try {
+      const doc_id = Number(req.query["doc_id"]);
+      const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
+
+      if (!doc) {
+        return res.status(400).json({ message: "No therapist found" });
+      }
+
+      const users = await prisma.pastAppointments.findMany({
+        where: { doc_id: doc_id },
+        select: { user: { select: { username: true, id: true } } },
+      });
+
+      const uniqueUsers = Object.values(
+        users.reduce((acc, curr) => {
+          acc[curr.user.id] = curr.user;
+          return acc;
+        }, {}),
+      );
+
+      res.json(uniqueUsers);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error fetching student data" });
+    }
+  },
+);
 
 export default adminRouter;
