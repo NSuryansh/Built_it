@@ -46,6 +46,11 @@ const BookingFormStep = ({
       const data = await response.json();
       let tempDates = [];
       let tempSlots = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
+      let upcomingAppointmentsDict = {};
+
+      data.upcomingAppointments.forEach((appointment) => {
+        upcomingAppointmentsDict[new Date(appointment.dateTime).toString()] = 1;
+      });
       [...Array(14)].forEach((_, index) => {
         const date = new Date();
         if (data.groupedSlots[(date.getDay() + index) % 7]) {
@@ -53,17 +58,11 @@ const BookingFormStep = ({
           let found = false;
           let temporaryslots = [];
           data.groupedSlots[date.getDay()].forEach((slot) => {
-            let exists = false;
-            data.upcomingAppointments.forEach((appointment) => {
-              if (
-                new Date(appointment.dateTime).getDate() == date.getDate() &&
-                appointment.dateTime.split("T")[1] ==
-                  slot.starting_time.split("T")[1]
-              ) {
-                exists = true;
-              }
-            });
-            if (!exists) {
+            date.setHours(0, 0, 0);
+            date.setTime(
+              new Date(slot.starting_time).getTime() + date.getTime(),
+            );
+            if (!upcomingAppointmentsDict[ new Date(date.getTime() - date.getTimezoneOffset() * 60000).toString()]) {
               temporaryslots.push(slot);
               found = true;
             }

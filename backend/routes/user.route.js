@@ -912,7 +912,28 @@ userRouter.get("/allSlots", authorizeRoles("user"), async (req, res) => {
       return acc;
     }, {});
 
-    res.json({ groupedSlots, upcomingAppointments });
+    const today = new Date();
+    const two_weeks_later = new Date();
+    two_weeks_later.setDate(today.getDate() + 14);
+    const leave = await prisma.doctorLeave.findFirst({
+      where: {
+        doctor_id: doc_id,
+        AND: [
+          { date_end: { gte: today } },
+          {
+            OR: [
+              { date_start: { lte: two_weeks_later } },
+              { date_end: { lte: two_weeks_later } },
+            ],
+          },
+        ],
+      },
+      orderBy: {
+        date_start: "desc",
+      },
+    });
+
+    res.json({ groupedSlots, upcomingAppointments, leave });
   } catch (error) {
     console.error("Error checking for upcoming appointment:", error);
     res.status(500).json({ error: "Internal Server Error" });
