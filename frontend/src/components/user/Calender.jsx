@@ -164,7 +164,6 @@ const Calendar = ({ onDateSelect }) => {
             const currentDay = startOfDay(dayItem);
             const isToday = isEqual(currentDay, today);
             const isPastDayByDate = isBefore(currentDay, today);
-            console.log(currentDay, "AA", today, "AA", isPastDayByDate)
             const isPastEvent = pastEvents.has(dayString);
             const isFutureEvent = futureEvents.has(dayString);
             const isSameMonthFlag = isSameMonth(dayItem, currentMonth);

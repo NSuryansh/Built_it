@@ -1158,7 +1158,6 @@ docRouter.post(
       const refferedBy = Number(req.body["OriginaldoctorId"]);
       const docId = Number(req.body["referred_to"]);
       const reason = req.body["reason"];
-      console.log(appId, "AA", refferedBy, "AA", docId, "AA", reason);
       if (!appId) {
         return res.status(400).json({ message: "Invalid Request" });
       }

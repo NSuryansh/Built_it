@@ -40,7 +40,6 @@ const processCSV = async () => {
 
   for (const student of users) {
     const randomName = "anon" + crypto.randomBytes(3).toString("hex");
-    console.log(student);
     const hashedPassword = await bcrypt.hash(student.Mobile_Number, 10);
     const { publicKey, privateKey } = generateKeyPair();
     // const publicKeyPEM = await exportKeyToPEM(publicKey);

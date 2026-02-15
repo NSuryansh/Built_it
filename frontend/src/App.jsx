@@ -71,7 +71,6 @@ export default function App() {
   // });
 
   onMessage(messaging, async (payload) => {
-    console.log("Foreground message received:", payload);
 
     if (Notification.permission === "granted" && "serviceWorker" in navigator) {
       const registration = await navigator.serviceWorker.getRegistration();
@@ -80,7 +79,6 @@ export default function App() {
           body: payload.notification.body,
           icon: "https://res.cloudinary.com/dt7a9meug/image/upload/v1745488000/final-logo_l1fg7i.jpg",
         });
-        console.log("sent");
       } else {
         console.error("No service worker registration found.");
       }

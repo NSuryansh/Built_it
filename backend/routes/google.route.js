@@ -17,7 +17,6 @@ googleRouter.get("/connect", authorizeRoles("doc"), async (req, res) => {
     scope: ["https://www.googleapis.com/auth/drive.file"],
     state: req.user.userId.toString(),
   });
-  //   console.log(url);
   res.json({ url });
 });
 
