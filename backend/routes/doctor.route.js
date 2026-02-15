@@ -183,15 +183,43 @@ docRouter.get(
 );
 
 docRouter.post("/reschedule", async (req, res) => {
-  const { id, username, docName, origTime, newTime, email } = req.body;
+  const { id, username, docName, origTime, newTime, email, isAccepted } = req.body;
+
   try {
-    const reschedule = await prisma.requests.update({
-      where: { id: Number(id) },
-      data: {
-        dateTime: new Date(newTime),
-        forDoctor: false,
-      },
-    });
+    let reschedule;
+    if (isAccepted) {
+      reschedule = await prisma.$transaction(async (tx) => {
+        const appointment = await tx.appointments.findUnique({
+          where: { id: Number(id) },
+        });
+
+        if (!appointment) {
+          throw new Error("Appointment not found");
+        }
+        await tx.appointments.delete({
+          where: { id: Number(id) },
+        });
+        const newRequest = await tx.requests.create({
+          data: {
+            user_id: appointment.user_id,
+            doctor_id: appointment.doctor_id,
+            dateTime: new Date(newTime),
+            reason: appointment.reason,
+            forDoctor: false,
+          },
+        });
+
+        return newRequest;
+      });
+    } else {
+      reschedule = await prisma.requests.update({
+        where: { id: Number(id) },
+        data: {
+          dateTime: new Date(newTime),
+          forDoctor: false,
+        },
+      });
+    }
 
     await sendEmail(
       email,
@@ -200,17 +228,21 @@ docRouter.post("/reschedule", async (req, res) => {
 Your appointment with ${docName} at ${origTime} has been rescheduled.
 New Date: ${newTime}
 Regards  
-Calm Connect`,
+Calm Connect`
     );
+
     res.json(reschedule);
   } catch (e) {
     console.error(e);
+
     if (e.code === "P2025") {
       return res.status(404).json({ message: "Request not found" });
     }
+
     res.status(400).json({ error: e.message });
   }
 });
+
 
 docRouter.post("/addLeave", authorizeRoles("doc"), async (req, res) => {
   const doc_id = Number(req.body["doc_id"]);
@@ -245,6 +277,7 @@ docRouter.get("/reqApp", authorizeRoles("doc"), async (req, res) => {
           alt_mobile: true,
           mobile: true,
           email: true,
+          criticality: true
         },
       },
     },
@@ -292,20 +325,17 @@ docRouter.post("/emergencyBook", authorizeRoles("doc"), async (req, res) => {
       "Emergency Appointment Scheduled!",
       `Dear ${user.username}, \n\nThis is to inform you that an EMERGENCY appointment has been scheduled with ${doctor.name}.\n\nThe details of the appointment are given below: \n\nDate: ${new Date(
         some,
-      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
-        doctor.office_address
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${doctor.office_address
       }\n\nRegards\nCalm Connect`,
     );
 
     await sendEmail(
       doctor.email,
       "Emergency Appointment Scheduled",
-      `Dear ${doctor.name}, \n\nYour emergency appointment with ${
-        user.username
+      `Dear ${doctor.name}, \n\nYour emergency appointment with ${user.username
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
         some,
-      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
-        doctor.office_address
+      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${doctor.office_address
       }\n\nRegards\nCalm Connect`,
     );
 
@@ -386,6 +416,7 @@ docRouter.get("/currentdocappt", authorizeRoles("doc"), async (req, res) => {
             alt_mobile: true,
             mobile: true,
             email: true,
+            criticality: true,
           },
         },
       },
@@ -771,10 +802,7 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
 });
 // In routes/doctor.route.js
 
-docRouter.post(
-  "/deleteApp",
-  authorizeRoles("doc"),
-  multerupload.array("files", 10),
+docRouter.post("/deleteApp", authorizeRoles("doc"), multerupload.array("files", 10),
   async (req, res) => {
     try {
       const appId = Number(req.body.appId);
@@ -782,12 +810,11 @@ docRouter.post(
       const user_id = Number(req.body.userId);
       const note = req.body.note;
       const category = req.body.category;
-      // Get the explicit status sent from frontend
       const statusAction = req.body.statusAction;
-
+      const criticality = req.body.criticality;
       const dateTime = new Date();
 
-      if (!note || !category) {
+      if (!note || !category || !criticality) {
         return res.status(400).json({ error: "All fields required" });
       }
 
@@ -795,50 +822,16 @@ docRouter.post(
         return res.status(403).json({ error: "Access denied" });
       }
 
-      // 1. Fetch current appointment to check existing status
       const currentApp = await prisma.appointments.findUnique({
         where: { id: appId },
       });
 
-      // 2. Determine Final Status
-      // If closing, set to CLOSED.
-      // If marking as done, keep existing status (NEW or OPEN)
       const finalStatus =
         statusAction === "CLOSED" ? "CLOSED" : currentApp?.caseStatus || "OPEN";
 
       const files = req.files || [];
       const doc = await prisma.doctor.findUnique({ where: { id: doc_id } });
       const user = await prisma.user.findUnique({ where: { id: user_id } });
-
-      // if (!doc.driveFolderId) {
-      //   return res.status(400).json({
-      //     error: "Therapist drive folder not configured",
-      //   });
-      // }
-
-      // const oauth2Client = getOAuthClient();
-      // oauth2Client.setCredentials({
-      //   refresh_token: decrypt(doc.googleRefreshToken),
-      // });
-
-      // const drive = google.drive({
-      //   version: "v3",
-      //   auth: oauth2Client,
-      // });
-
-      // const userFolder = await getOrCreateFolder(
-      //   drive,
-      //   user.rollNo,
-      //   doc.driveFolderId,
-      // );
-
-      // const folder = await getOrCreateFolder(
-      //   drive,
-      //   dateTime.toISOString().replace(/[:.]/g, "-"),
-      //   userFolder.id,
-      // );
-
-      /* ---------- UPLOAD FILES ---------- */
       for (const file of files) {
         try {
           await drive.files.create({
@@ -856,7 +849,6 @@ docRouter.post(
             error.response?.data?.error === "invalid_grant" ||
             error.response?.status === 401
           ) {
-            // Mark drive as unlinked
             await prisma.doctor.update({
               where: { id: doc.id },
               data: { googleDriveLinked: false },
@@ -870,22 +862,32 @@ docRouter.post(
           await fs.promises.unlink(file.path);
         }
       }
+      console.log(criticality, "Critical")
+      await prisma.$transaction(async (tx) => {
+        await tx.appointments.delete({
+          where: { id: appId },
+        });
 
-      await prisma.appointments.delete({
-        where: { id: appId },
-      });
+        await tx.pastAppointments.create({
+          data: {
+            note,
+            doc_id,
+            user_id,
+            category,
+            createdAt: dateTime,
+            caseStatus: finalStatus,
+            isEmergency: currentApp?.isEmergency || false,
+          },
+        });
 
-      await prisma.pastAppointments.create({
-        data: {
-          note,
-          doc_id,
-          user_id,
-          category,
-          // pdfLink: folder?.webViewLink || "",
-          createdAt: dateTime,
-          caseStatus: finalStatus, // ✅ Save status
-          isEmergency: currentApp?.isEmergency || false, // Preserve emergency flag
-        },
+        await tx.user.update({
+          where: {
+            id: user_id
+          },
+          data:{
+            criticality: criticality
+          }
+        })
       });
 
       res.json({ message: "Appointment done" });
@@ -1138,6 +1140,7 @@ docRouter.get(
               alt_mobile: true,
               mobile: true,
               email: true,
+              criticality: true
             },
           },
         },
