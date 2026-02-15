@@ -21,10 +21,8 @@ const DoctorLeave = () => {
   const desc = localStorage.getItem(" اسپ");
   const docId = localStorage.getItem("userid");
   const img = localStorage.getItem("docImage");
-  const [startSlots, setStartSlots] = useState([]);
-  const [endSlots, setEndSlots] = useState([]);
-  const [startSelectedSlot, setstartSelectedSlot] = useState([]);
-  const [endSelectedSlot, setEndSelectedSlot] = useState([]);
+  const [startSelectedTime, setstartSelectedTime] = useState();
+  const [endSelectedTime, setEndSelectedTime] = useState();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -34,24 +32,6 @@ const DoctorLeave = () => {
     };
     verifyAuth();
   }, []);
-
-  const fetchAvailableSlots = async (date, start) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/common/available-slots?date=${date}&docId=${docId}`,
-        { headers: { Authorization: "Bearer " + token } },
-      );
-      const data = await response.json();
-      if (start) {
-        setStartSlots(data.availableSlots);
-      } else {
-        setEndSlots(data.availableSlots);
-      }
-    } catch (error) {
-      console.error("Error fetching available slots:", error);
-      CustomToast("Error fetching slots", "blue");
-    }
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,13 +43,14 @@ const DoctorLeave = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const startDate = new Date(
       new Date(leaveDetails.startDate).getTime() +
-        new Date(startSelectedSlot).getTime(),
+        new Date("1970-01-01T" + startSelectedTime + ":00.000Z").getTime(),
     );
     const endDate = new Date(
       new Date(leaveDetails.endDate).getTime() +
-        new Date(endSelectedSlot).getTime(),
+        new Date("1970-01-01T" + endSelectedTime + ":00.000Z").getTime(),
     );
 
     const today = new Date();
@@ -80,7 +61,7 @@ const DoctorLeave = () => {
 
     const setLeave = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/doc/addLeave`, {
+        await fetch(`http://localhost:3000/api/doc/addLeave`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -184,7 +165,6 @@ const DoctorLeave = () => {
                     value={leaveDetails.startDate}
                     onChange={(e) => {
                       handleInputChange(e);
-                      fetchAvailableSlots(e.target.value, true);
                     }}
                     className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
                     required
@@ -192,26 +172,15 @@ const DoctorLeave = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--custom-blue-900)] mb-2">
-                    Start Slot
+                    Start Time
                   </label>
-                  <select
-                    value={startSelectedSlot}
-                    onChange={(e) => {
-                      setstartSelectedSlot(e.target.value);
-                    }}
-                    className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
-                    required
-                  >
-                    <option value="">Choose a slot</option>
-                    {startSlots.map((slot) => (
-                      <option key={slot.id} value={slot.starting_time}>
-                        {format(
-                          new Date(slot.starting_time).getTime(),
-                          "HH:mm",
-                        )}
-                      </option>
-                    ))}
-                  </select>
+                  <input
+                    type="time"
+                    name="startTime"
+                    value={startSelectedTime}
+                    onChange={(e) => setstartSelectedTime(e.target.value)}
+                    className="flex-1 w-full bg-white border border-[var(--custom-blue-200)] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300"
+                  />
                 </div>
               </div>
 
@@ -226,7 +195,6 @@ const DoctorLeave = () => {
                     value={leaveDetails.endDate}
                     onChange={(e) => {
                       handleInputChange(e);
-                      fetchAvailableSlots(e.target.value, false);
                     }}
                     className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
                     required
@@ -234,26 +202,15 @@ const DoctorLeave = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--custom-blue-900)] mb-2">
-                    End Slot
+                    End Time
                   </label>
-                  <select
-                    value={endSelectedSlot}
-                    onChange={(e) => {
-                      setEndSelectedSlot(e.target.value);
-                    }}
-                    className="w-full p-2 border border-[var(--custom-gray-300)] rounded-md focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent"
-                    required
-                  >
-                    <option value="">Choose a slot</option>
-                    {endSlots.map((slot) => (
-                      <option key={slot.id} value={slot.starting_time}>
-                        {format(
-                          new Date(slot.starting_time).getTime(),
-                          "HH:mm",
-                        )}
-                      </option>
-                    ))}
-                  </select>
+                  <input
+                    type="time"
+                    name="endTime"
+                    value={endSelectedTime}
+                    onChange={(e) => setEndSelectedTime(e.target.value)}
+                    className="flex-1 w-full bg-white border border-[var(--custom-blue-200)] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300"
+                  />
                 </div>
               </div>
             </div>

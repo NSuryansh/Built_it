@@ -36,10 +36,9 @@ import { pdfDB } from "../../db/pdfDB";
 import { ToastContainer } from "react-toastify";
 
 const REASONS = [
-  "",
-  "backchodi kar raha tha haahhaha",
-  "Nahi aunga jao jo karna karo",
-  "None of the above",
+  "Non availability due to a meeting",
+  "Referred to another counselor",
+  "Overbooked",
 ];
 
 const StatusBadge = ({ status }) => {
@@ -1233,7 +1232,9 @@ const DoctorAppointment = () => {
                                 onClick={() => openReferralForm(appointment)}
                                 className=" px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                               >
-                                {showReferralForm ? "Close Referral" : "Create Referral"}
+                                {showReferralForm
+                                  ? "Close Referral"
+                                  : "Create Referral"}
                                 <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
                               </button>
                             </div>
@@ -1457,7 +1458,10 @@ const DoctorAppointment = () => {
                       </p>
 
                       <p className="text-sm text-[var(--custom-gray-600)]">
-                        Cancelled On: {TimeChange(new Date(app.dateTime).toISOString()).toLocaleString()}
+                        Cancelled On:{" "}
+                        {TimeChange(
+                          new Date(app.dateTime).toISOString(),
+                        ).toLocaleString()}
                       </p>
 
                       <p className="text-sm text-[var(--custom-red-500)] font-medium">

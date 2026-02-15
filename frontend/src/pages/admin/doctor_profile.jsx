@@ -565,7 +565,7 @@ const AdminDoctorProfile = () => {
                         className="hover:bg-green-50 transition-colors"
                       >
                         <td className="px-6 py-4 font-medium text-green-700">
-                          {format(new Date(l.date_start), "dd MMM")} -{" "}
+                          {format(new Date(l.date_start), "dd MMM yyyy")} -{" "}
                           {format(new Date(l.date_end), "dd MMM yyyy")}
                         </td>
                         <td className="px-6 py-4 text-green-500">
