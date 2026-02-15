@@ -915,7 +915,7 @@ userRouter.get("/allSlots", authorizeRoles("user"), async (req, res) => {
     const today = new Date();
     const two_weeks_later = new Date();
     two_weeks_later.setDate(today.getDate() + 14);
-    const leave = await prisma.doctorLeave.findFirst({
+    const leaves = await prisma.doctorLeave.findMany({
       where: {
         doctor_id: doc_id,
         AND: [
@@ -933,7 +933,7 @@ userRouter.get("/allSlots", authorizeRoles("user"), async (req, res) => {
       },
     });
 
-    res.json({ groupedSlots, upcomingAppointments, leave });
+    res.json({ groupedSlots, upcomingAppointments, leaves });
   } catch (error) {
     console.error("Error checking for upcoming appointment:", error);
     res.status(500).json({ error: "Internal Server Error" });

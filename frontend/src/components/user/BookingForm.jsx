@@ -62,7 +62,19 @@ const BookingFormStep = ({
             date.setTime(
               new Date(slot.starting_time).getTime() + date.getTime(),
             );
-            if (!upcomingAppointmentsDict[ new Date(date.getTime() - date.getTimezoneOffset() * 60000).toString()]) {
+            const slotDate = new Date(
+              date.getTime() - date.getTimezoneOffset() * 60000,
+            );
+            let isInLeave = false;
+            data.leaves.forEach((leave) => {
+              if (
+                date >= new Date(leave.date_start) &&
+                date <= new Date(leave.date_end)
+              ) {
+                isInLeave = true;
+              }
+            });
+            if (!upcomingAppointmentsDict[slotDate.toString()] && !isInLeave) {
               temporaryslots.push(slot);
               found = true;
             }
