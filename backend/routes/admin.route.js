@@ -635,4 +635,26 @@ adminRouter.post("/signup", async (req, res) => {
   res.json({ message: "Register successful" });
 });
 
+adminRouter.get("/getAllUsers", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        email: "sse240021008@iiti.ac.in"
+      },
+      include: {
+        appointment: true,
+        pastApp: true // fetch appointments
+      },
+    });
+    const filteredUsers = users.filter(
+      user => user.appointment.length > 1
+    );
+
+    res.json(filteredUsers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error fetching users" });
+  }
+});
+
 export default adminRouter;

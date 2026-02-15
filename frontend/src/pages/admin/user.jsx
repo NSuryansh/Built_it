@@ -535,7 +535,7 @@ const AdminUser = () => {
         randomName={selectedrandomName}
       />
 
-      <div className="fixed bottom-0 w-full">
+      <div className="w-full">
         <Footer color="green" />
       </div>
     </div>

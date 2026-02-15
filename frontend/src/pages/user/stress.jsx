@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import CustomLoader from "../../components/common/CustomLoader";
 import axios from "axios"; 
 
-// Map string names from DB to actual Icon components
 const iconMap = {
   Book: BookOpen,
   Sun: Sun,
@@ -18,45 +17,29 @@ const iconMap = {
   Default: BookOpen
 };
 
-// ✅ HELPER: Robust YouTube ID Extractor using URL Object (No Regex)
+/**
+ * FIXED: This Regex is much more powerful than the 'new URL' approach.
+ * It handles:
+ * - https://www.youtube.com/watch?v=ID
+ * - https://youtu.be/ID
+ * - https://www.youtube.com/shorts/ID
+ * - https://www.youtube.com/live/ID
+ * - URLs with extra parameters like ?si=... or &t=...
+ */
 const getYouTubeVideoId = (url) => {
   if (!url) return null;
-  try {
-    const urlObj = new URL(url);
-    
-    // Case 1: Short links (youtu.be/ID)
-    if (urlObj.hostname.includes("youtu.be")) {
-      return urlObj.pathname.slice(1);
-    }
-    
-    // Case 2: Standard/Live/Shorts (youtube.com/...)
-    if (urlObj.hostname.includes("youtube.com")) {
-      if (urlObj.pathname.includes("/shorts/")) {
-        return urlObj.pathname.split("/shorts/")[1];
-      }
-      if (urlObj.pathname.includes("/live/")) {
-        return urlObj.pathname.split("/live/")[1];
-      }
-      if (urlObj.pathname.includes("/embed/")) {
-        return urlObj.pathname.split("/embed/")[1];
-      }
-      // Standard watch?v=ID
-      return urlObj.searchParams.get("v");
-    }
-    return null;
-  } catch (error) {
-    return null;
-  }
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
 };
 
-// ✅ SUB-COMPONENT: Video Card handles its own image state
 const VideoCard = ({ video }) => {
   const videoId = getYouTubeVideoId(video.youtubeUrl);
   const [imageError, setImageError] = useState(false);
   
-  // Construct thumbnail URL (hqdefault is most reliable)
+  // 'mqdefault' is the most reliable thumbnail resolution for every video.
   const thumbnailUrl = videoId 
-    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` 
+    ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` 
     : null;
 
   const handleClick = () => {
@@ -69,7 +52,8 @@ const VideoCard = ({ video }) => {
       className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
     >
       <div className="relative h-48 bg-gray-900 overflow-hidden flex items-center justify-center">
-        {!imageError && thumbnailUrl ? (
+        {/* We only render the image if we successfully got an ID */}
+        {videoId && !imageError ? (
           <img 
             src={thumbnailUrl} 
             alt={video.title} 
@@ -77,16 +61,15 @@ const VideoCard = ({ video }) => {
             onError={() => setImageError(true)}
           />
         ) : (
-          // Fallback: CSS Gradient (No external network request)
-          <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex flex-col items-center justify-center text-gray-400">
+          <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex flex-col items-center justify-center text-gray-400">
             <VideoOff className="w-8 h-8 mb-2 opacity-50" />
-            <span className="text-xs font-medium">Preview Unavailable</span>
+            <span className="text-xs font-medium">Thumbnail Not Found</span>
           </div>
         )}
         
-        {/* Play Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-          <PlayCircle className="w-12 h-12 text-white opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all drop-shadow-lg" />
+        {/* Play Icon Overlay */}
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all flex items-center justify-center">
+          <PlayCircle className="w-12 h-12 text-white opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all drop-shadow-xl" />
         </div>
       </div>
       
@@ -110,7 +93,6 @@ const Stress = () => {
   
   const navigate = useNavigate();
 
-  // Fetch Data Function
   const fetchStressData = async () => {
     try {
       const backendUrl = "http://localhost:3000/api/doc"; 
@@ -121,7 +103,7 @@ const Stress = () => {
       ]);
 
       setArticles(articlesRes.data);
-      setVideoSections(videosRes.data); // We pass raw data to sections, VideoCard handles parsing
+      setVideoSections(videosRes.data);
 
     } catch (error) {
       console.error("Error fetching stress data:", error);
@@ -157,10 +139,10 @@ const Stress = () => {
     <div className="min-h-screen bg-gradient-to-br from-[var(--custom-orange-50)] to-[var(--custom-red-50)]">
       <Navbar />
 
-      {/* Hero Section */}
+      {/* Hero */}
       <div className="relative overflow-hidden bg-gradient-to-r from-[var(--custom-yellow-400)] to-[var(--custom-orange-500)] text-[var(--custom-white)] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative">
+          <div className="relative z-10">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4">
               Your Mental Wellness Journey
             </h1>
@@ -169,14 +151,12 @@ const Stress = () => {
               stress and improve your mental well-being
             </p>
           </div>
-          <div className="absolute inset-0 opacity-20 bg-pattern"></div>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        {/* Articles Section */}
-        <section className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8 mb-12 transform transition-all duration-500 hover:shadow-2xl">
+        {/* Articles */}
+        <section className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8 mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[var(--custom-gray-900)] mb-8 text-center">
             Expert Resources
           </h2>
@@ -196,7 +176,7 @@ const Stress = () => {
                       <div className="p-3 self-center sm:self-start rounded-lg bg-gradient-to-br from-[var(--custom-yellow-100)] to-[var(--custom-orange-500)] text-[var(--custom-white)]">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <div className="flex">
+                      <div className="flex flex-1">
                         <div className="flex-1">
                           <h3 className="text-xl font-semibold text-[var(--custom-gray-900)] group-hover:text-[var(--custom-red-500)] transition-colors duration-300">
                             {article.title}
@@ -208,21 +188,11 @@ const Stress = () => {
                         <ChevronRight className="w-5 h-5 text-[var(--custom-gray-400)] group-hover:text-[var(--custom-red-500)] transform group-hover:translate-x-1 transition-all duration-300" />
                       </div>
                     </div>
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between text-sm border-t border-[var(--custom-gray-100)] pt-4 mt-4">
-                      <span className="flex items-center text-[var(--custom-red-500)]">
-                        <Building className="w-4 h-4 mr-2" />
-                        {article.source}
-                      </span>
-                      <span className="flex items-center text-[var(--custom-gray-500)]">
-                        <Clock className="w-4 h-4 mr-2" />
-                        {article.readTime}
-                      </span>
-                    </div>
                   </div>
                 </a>
               );
             }) : (
-              <p className="text-center col-span-2 text-gray-500">No articles available at the moment.</p>
+              <p className="text-center col-span-2 text-gray-500">No articles available.</p>
             )}
           </div>
         </section>
@@ -232,7 +202,7 @@ const Stress = () => {
           {videoSections.length > 0 ? videoSections.map((section, index) => (
             <section
               key={index}
-              className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:shadow-2xl"
+              className="bg-[var(--custom-white)] rounded-2xl shadow-xl p-8"
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-3 rounded-lg bg-gradient-to-br from-[var(--custom-yellow-100)] to-[var(--custom-orange-500)] text-[var(--custom-white)]">
@@ -248,13 +218,11 @@ const Stress = () => {
                 </div>
               </div>
 
-              {/* VIDEO GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {section.videos.map((video, idx) => (
                   <VideoCard key={video.id || idx} video={video} />
                 ))}
               </div>
-
             </section>
           )) : (
              <p className="text-center text-gray-500">No videos available.</p>

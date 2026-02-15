@@ -279,7 +279,6 @@ const DoctorAppointment = () => {
   const handleReferralSubmit = (e) => {
     e.preventDefault();
     if (referralSub()) {
-
       setReferralData({ referredTo: "", reason: "", appoinmentId: null });
       setShowReferralForm(false);
       CustomToast("Referral submitted successfully", "blue");
@@ -287,10 +286,9 @@ const DoctorAppointment = () => {
   };
 
   const referralSub = async () => {
-    const doc_id = localStorage.getItem("userid")
+    const doc_id = localStorage.getItem("userid");
     try {
       const { appointmentId, reason, referredTo } = referralData;
-      console.log(appointmentId, " EEEE", referredTo)
 
       const response = await fetch(
         "http://localhost:3000/api/doc/createRefferalOfAppoinment",
@@ -354,13 +352,12 @@ const DoctorAppointment = () => {
     fetchDoctors();
   }, []);
 
-
   useEffect(() => {
     return () => {
       urlSetRef.current.forEach((u) => {
         try {
           URL.revokeObjectURL(u);
-        } catch (e) { }
+        } catch (e) {}
       });
       urlSetRef.current.clear();
     };
@@ -551,7 +548,7 @@ const DoctorAppointment = () => {
         try {
           URL.revokeObjectURL(toRemove.blobUrl);
           urlSetRef.current.delete(toRemove.blobUrl);
-        } catch (e) { }
+        } catch (e) {}
       }
       await pdfDB.pdfs.delete(id);
       setFiles((prev) => prev.filter((p) => p.id !== id));
@@ -1100,10 +1097,8 @@ const DoctorAppointment = () => {
             </div>
 
             {appointments.length > 0 ? (
-
               <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-scroll overflow-x-hidden max-h-150">
                 {appointments.map((appointment) => {
-                  console.log(appointment, "Appoinemnt")
                   return (
                     <div
                       key={appointment.id}
@@ -1295,76 +1290,92 @@ const DoctorAppointment = () => {
                               </center>
                             </div>
                           )}
+                          <button
+                            onClick={() => openReferralForm(appointment)}
+                            className="mx-auto w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] transition-all duration-300 transform hover:scale-105 overflow-hidden"
+                          >
+                            <FileText className="w-5 h-5 group-hover:animate-pulse" />
+                            {showReferralForm
+                              ? "Close Referral"
+                              : "Create Referral"}
+                            <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
+                          </button>
 
+                          {showReferralForm &&
+                            docs != null &&
+                            Number(referralData.appointmentId) ==
+                              Number(appointment.id) && (
+                              <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-4 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
+                                <form
+                                  onSubmit={handleReferralSubmit}
+                                  className="space-y-6"
+                                >
+                                  <div className="space-y-6">
+                                    {/* Referred By */}
+                                    <div className="relative">
+                                      <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
+                                        Referred To
+                                      </label>
+                                      <div>
+                                        <select
+                                          name="date"
+                                          value={referralData.referredTo}
+                                          onChange={(e) =>
+                                            setReferralData({
+                                              ...referralData,
+                                              referredTo: e.target.value,
+                                            })
+                                          }
+                                          className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
+                                          required
+                                        >
+                                          <option value="">
+                                            Select Therapist
+                                          </option>
+                                          {docs.map((doc, i) => {
+                                            return (
+                                              <option key={i} value={doc.id}>
+                                                {doc.name}
+                                              </option>
+                                            );
+                                          })}
+                                        </select>
+                                      </div>
+                                    </div>
 
-                          {/* Referral Form */console.log(referralData, "AA", appointment)}
-                          {showReferralForm && docs != null && Number(referralData.appointmentId) == Number(appointment.id) && (
-                            <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-4 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
-                              <form onSubmit={handleReferralSubmit} className="space-y-6">
-                                <div className="space-y-6">
-                                  {/* Referred By */}
-                                  <div className="relative">
-                                    <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
-                                      Referred To
-                                    </label>
-                                    <div>
-                                      <select
-                                        name="date"
-                                        value={referralData.referredTo}
+                                    {/* Reason */}
+                                    <div className="relative">
+                                      <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
+                                        Reason
+                                      </label>
+                                      <textarea
+                                        value={referralData.reason}
                                         onChange={(e) =>
                                           setReferralData({
                                             ...referralData,
-                                            referredTo: e.target.value,
+                                            reason: e.target.value,
                                           })
                                         }
-                                        className="w-full px-4 py-3 rounded-lg border-2 border-[var(--custom-blue-200)] focus:border-[var(--custom-blue-400)] focus:ring-2 focus:ring-[var(--custom-blue-200)] transition-all duration-200 outline-none bg-[var(--custom-white)]"
+                                        className="w-full px-4 py-3 bg-[var(--custom-gray-50)]/50 border border-[var(--custom-blue-300)] rounded-lg focus:ring-2 focus:ring-[var(--custom-blue-400)] focus:border-[var(--custom-blue-500)] outline-none h-36 resize-none transition-all duration-300 shadow-sm hover:shadow-md"
                                         required
-                                      >
-                                        <option value="">Select Therapist</option>
-                                        {docs.map((doc, i) => {
-                                          return (
-                                            <option key={i} value={doc.id}>
-                                              {doc.name}
-                                            </option>
-                                          );
-                                        })}
-                                      </select>
+                                      />
+                                      <div className="absolute inset-y-0 right-3 top-10 flex items-start pointer-events-none">
+                                        <FileText className="w-5 h-5 text-[var(--custom-blue-500)] opacity-60" />
+                                      </div>
                                     </div>
                                   </div>
 
-                                  {/* Reason */}
-                                  <div className="relative">
-                                    <label className="block text-[var(--custom-gray-700)] font-semibold mb-2 tracking-wide">
-                                      Reason
-                                    </label>
-                                    <textarea
-                                      value={referralData.reason}
-                                      onChange={(e) =>
-                                        setReferralData({
-                                          ...referralData,
-                                          reason: e.target.value,
-                                        })
-                                      }
-                                      className="w-full px-4 py-3 bg-[var(--custom-gray-50)]/50 border border-[var(--custom-blue-300)] rounded-lg focus:ring-2 focus:ring-[var(--custom-blue-400)] focus:border-[var(--custom-blue-500)] outline-none h-36 resize-none transition-all duration-300 shadow-sm hover:shadow-md"
-                                      required
-                                    />
-                                    <div className="absolute inset-y-0 right-3 top-10 flex items-start pointer-events-none">
-                                      <FileText className="w-5 h-5 text-[var(--custom-blue-500)] opacity-60" />
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* Submit Button */}
-                                <button
-                                  type="submit"
-                                  className="relative w-full bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] py-3 px-6 rounded-lg font-semibold  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] group"
-                                >
-                                  <span className="relative ">Done</span>
-                                  <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-lg"></div>
-                                </button>
-                              </form>
-                            </div>
-                          )}
+                                  {/* Submit Button */}
+                                  <button
+                                    type="submit"
+                                    className="relative w-full bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] py-3 px-6 rounded-lg font-semibold  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] group"
+                                  >
+                                    <span className="relative ">Done</span>
+                                    <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-lg"></div>
+                                  </button>
+                                </form>
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>

@@ -5,12 +5,18 @@ import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import bcrypt from "bcryptjs";
 import base64url from "base64url";
-import { webcrypto } from "node:crypto";
-import { generateAuthenticationOptions, generateRegistrationOptions,verifyAuthenticationResponse, verifyRegistrationResponse } from "@simplewebauthn/server";
+import { generateKeyPairSync, webcrypto } from "node:crypto";
+import {
+  generateAuthenticationOptions,
+  generateRegistrationOptions,
+  verifyAuthenticationResponse,
+  verifyRegistrationResponse,
+} from "@simplewebauthn/server";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import { sendEmail } from "../utils/sendEmail.js";
 import { PrismaClient, Prisma } from "@prisma/client";
+import crypto from "crypto";
 dotenv.config();
 
 const userRouter = Router();
@@ -40,6 +46,7 @@ userRouter.post("/signup", async (req, res) => {
   const rollNo = req.body["rollNo"];
   const gender = req.body["gender"];
   const hashedPassword = await bcrypt.hash(password, 10);
+  const randomName = "anon" + crypto.randomBytes(3).toString("hex");
 
   const batch = 2000 + Number(rollNo[0] + rollNo[1]);
 
@@ -50,11 +57,12 @@ userRouter.post("/signup", async (req, res) => {
         mobile: mobile,
         email: email,
         password: hashedPassword,
-        alt_mobile: altNo,
+        alt_mobile: altNo || "",
         publicKey: pubKey,
         rollNo: rollNo,
         acadProg: acadProg,
         department: department,
+        randomName: randomName,
         gender: gender,
         batch: String(batch),
       },
@@ -268,12 +276,12 @@ userRouter.put("/modifyUser", async (req, res) => {
     };
     if (Object.keys(updatedData).length !== 0) {
       const updatedUser = await prisma.user.update({
-      where: { id: Number(id) },
-      data: updatedData,
-    });
-     res.json({ message: "User updated successfully", updatedUser });
-    }else{
-      res.json({message: "User not updateed as no new data was provided"})
+        where: { id: Number(id) },
+        data: updatedData,
+      });
+      res.json({ message: "User updated successfully", updatedUser });
+    } else {
+      res.json({ message: "User not updateed as no new data was provided" });
     }
   } catch (error) {
     console.error("Error updating user: ", error);
@@ -886,6 +894,13 @@ userRouter.get("/allSlots", authorizeRoles("user"), async (req, res) => {
       orderBy: [{ day_of_week: "asc" }, { starting_time: "asc" }],
     });
 
+    const upcomingAppointments = await prisma.appointments.findMany({
+      where: { doctor_id: doc_id },
+      select: {
+        dateTime: true,
+      },
+    });
+
     const groupedSlots = allSlots.reduce((acc, slot) => {
       const day = slot.day_of_week;
 
@@ -897,7 +912,7 @@ userRouter.get("/allSlots", authorizeRoles("user"), async (req, res) => {
       return acc;
     }, {});
 
-    res.json(groupedSlots);
+    res.json({ groupedSlots, upcomingAppointments });
   } catch (error) {
     console.error("Error checking for upcoming appointment:", error);
     res.status(500).json({ error: "Internal Server Error" });

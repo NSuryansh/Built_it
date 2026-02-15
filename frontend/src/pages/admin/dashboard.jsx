@@ -60,7 +60,7 @@ const AdminDashboard = () => {
           const result = {};
           data.forEach((app) => {
             const branch = app.user.acadProg;
-            const docName = app.doc.name.split(" ")[0];
+            const docName = app.doc.name.split(" ")[1];
             const gender = app.user.gender;
             if (!result[docName]) {
               result[docName] = {
