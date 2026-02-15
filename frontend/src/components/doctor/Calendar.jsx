@@ -9,6 +9,8 @@ import {
   addDays,
   isSameMonth,
   isSameDay,
+  isBefore,
+  startOfDay,
 } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +25,7 @@ const DoctorCalendar = ({ onDateSelect }) => {
   const [futureAppointments, setFutureAppointments] = useState([]); // List for future event dates
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
+   const today = startOfDay(new Date()); 
   useEffect(() => {
     const docId = localStorage.getItem("userid");
     if (!docId) return;
@@ -159,7 +161,10 @@ const DoctorCalendar = ({ onDateSelect }) => {
             const isPastAppointment = pastAppointments.includes(dayString);
             const isFutureAppointment = futureAppointments.includes(dayString);
             const isSelected = isSameDay(dayItem, selectedDate);
-
+            const isSameMonthFlag = isSameMonth(dayItem, currentMonth);
+            const currentDay = startOfDay(dayItem);
+            const isPastDayByDate = isBefore(currentDay, today);
+          
             return (
               <button
                 key={index}
@@ -172,10 +177,7 @@ const DoctorCalendar = ({ onDateSelect }) => {
                 className={`
                   relative aspect-square p-1 flex items-center justify-center
                   text-sm font-medium rounded-md transition-all duration-200
-                  ${!isSameMonth(dayItem, currentMonth)
-                    ? "text-[var(--custom-gray-400)]"
-                    : "text-[var(--custom-gray-900)]"
-                  }
+                  ${isSameMonthFlag && !isPastDayByDate ? "text-[var(--custom-gray-900)]" : "text-[var(--custom-gray-400)] !cursor-not-allowed"}
                   ${isToday ? "ring-2 ring-black ring-offset-1 font-bold" : ""}
                   ${isSelected && !isToday
                     ? "ring-2 ring-[var(--custom-blue-500)]"
