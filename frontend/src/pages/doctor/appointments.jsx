@@ -86,6 +86,7 @@ const DoctorAppointment = () => {
   });
   const [note, setNote] = useState("");
   const [category, setCategory] = useState("");
+  const [criticality, setCriticality] = useState("");
   const navigate = useNavigate();
   const [slots, setAvailableSlots] = useState([]);
   const [time, setSelectedTime] = useState("");
@@ -111,6 +112,13 @@ const DoctorAppointment = () => {
     "Emergency",
     "Other",
   ];
+
+  const APPOINTMENT_CRITICALITIES = [
+    "Red",
+    "Orange",
+    "Yellow",
+    "Green"
+  ]
 
   const fetchAvailableSlots = async (date) => {
     try {
@@ -357,7 +365,7 @@ const DoctorAppointment = () => {
       urlSetRef.current.forEach((u) => {
         try {
           URL.revokeObjectURL(u);
-        } catch (e) {}
+        } catch (e) { }
       });
       urlSetRef.current.clear();
     };
@@ -548,7 +556,7 @@ const DoctorAppointment = () => {
         try {
           URL.revokeObjectURL(toRemove.blobUrl);
           urlSetRef.current.delete(toRemove.blobUrl);
-        } catch (e) {}
+        } catch (e) { }
       }
       await pdfDB.pdfs.delete(id);
       setFiles((prev) => prev.filter((p) => p.id !== id));
@@ -560,6 +568,10 @@ const DoctorAppointment = () => {
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
   };
+
+  const handleCriticalityChange = (e) => {
+    setCriticality(e.target.value);
+  }
 
   const acceptApp = async (appointment) => {
     setAcceptingId(appointment.id);
@@ -601,8 +613,7 @@ const DoctorAppointment = () => {
       formData.append("userId", appointment.user_id);
       formData.append("note", note);
       formData.append("category", category);
-
-      // ✅ PASS THE STATUS ACTION
+      formData.append("criticality", criticality)
       formData.append("statusAction", isClosing ? "CLOSED" : "DONE");
 
       const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
@@ -632,13 +643,14 @@ const DoctorAppointment = () => {
     } finally {
       setNote("");
       setCategory("");
+      setCriticality("");
       setFiles([]);
       setFixed(!fixed);
       setDoneId(null);
     }
   };
 
-  const emailParams = async (appointment, time) => {
+  const emailParams = async (appointment, time, isAccepted) => {
     const newTime = TimeChange(new Date(time).getTime());
     const docName = localStorage.getItem("username");
     try {
@@ -669,6 +681,7 @@ const DoctorAppointment = () => {
             "dd-MMM-yy hh:mm a",
           ),
           email: appointment["user"]["email"],
+          isAccepted: isAccepted,
         }),
       });
       const resp = await res.json();
@@ -696,13 +709,14 @@ const DoctorAppointment = () => {
     }
   };
 
-  const handleReschedule = async (appointment) => {
+  const handleReschedule = async (appointment, isAccepted = false) => {
     const appointmentId = appointment.id;
     if (selectedDate != "" && time != "") {
       setisRescheduling(true);
       await emailParams(
         appointment,
         new Date(new Date(selectedDate).getTime() + new Date(time).getTime()),
+        isAccepted,
       );
       handleDateSelect(selectedDate, appointmentId);
     }
@@ -894,7 +908,7 @@ const DoctorAppointment = () => {
                           )}
                           {selectedAppointment !== appointment.id && (
                             <button
-                              onClick={() => handleReschedule(appointment)}
+                              onClick={() => handleReschedule(appointment, true)}
                               className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                             >
                               Reschedule
@@ -976,7 +990,7 @@ const DoctorAppointment = () => {
                             <center>
                               <button
                                 disabled={isRescheduling}
-                                onClick={() => handleReschedule(appointment)}
+                                onClick={() => handleReschedule(appointment, true)}
                                 className="px-6 mt-4 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                               >
                                 {isRescheduling ? (
@@ -991,6 +1005,20 @@ const DoctorAppointment = () => {
                         {completedNotes[appointment.id] !== undefined && (
                           <div className="mt-6 space-y-4">
                             <div className="relative">
+                              <select
+                                value={criticality}
+                                onChange={handleCriticalityChange}
+                                className="w-full p-4 bg-[var(--custom-white)]/50 backdrop-blur-sm border border-[var(--custom-blue-200)] rounded-xl focus:ring-2 focus:ring-[var(--custom-blue-300)] focus:border-[var(--custom-blue-400)] transition-all duration-300 text-[var(--custom-gray-800)] outline-none appearance-none mb-4"
+                              >
+                                <option value="" disabled>
+                                  Update Criticality
+                                </option>
+                                {APPOINTMENT_CRITICALITIES.map((cat) => (
+                                  <option key={cat} value={cat}>
+                                    {cat}
+                                  </option>
+                                ))}
+                              </select>
                               <select
                                 value={category}
                                 onChange={handleCategoryChange}
@@ -1067,6 +1095,12 @@ const DoctorAppointment = () => {
                           </div>
                         )}
                       </div>
+                      <div
+                          className={`px-6 py-2.5 text-${appointment.user.criticality?.toLowerCase()}-500 font-semibold rounded-full shadow-lg transform hover:scale-105 transition-all duration-300
+                            bg-white`}
+                        >
+                          Criticality: {appointment.user.criticality}
+                        </div>
                     </div>
                   </div>
                 ))}
@@ -1290,21 +1324,11 @@ const DoctorAppointment = () => {
                               </center>
                             </div>
                           )}
-                          <button
-                            onClick={() => openReferralForm(appointment)}
-                            className="mx-auto w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] transition-all duration-300 transform hover:scale-105 overflow-hidden"
-                          >
-                            <FileText className="w-5 h-5 group-hover:animate-pulse" />
-                            {showReferralForm
-                              ? "Close Referral"
-                              : "Create Referral"}
-                            <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
-                          </button>
 
                           {showReferralForm &&
                             docs != null &&
                             Number(referralData.appointmentId) ==
-                              Number(appointment.id) && (
+                            Number(appointment.id) && (
                               <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-4 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
                                 <form
                                   onSubmit={handleReferralSubmit}
@@ -1376,7 +1400,15 @@ const DoctorAppointment = () => {
                                 </form>
                               </div>
                             )}
+
                         </div>
+                        <div
+                          className={`px-6 py-2.5 text-${appointment.user.criticality?.toLowerCase()}-500 font-semibold rounded-full shadow-lg transform hover:scale-105 transition-all duration-300
+                            bg-white`}
+                        >
+                          Criticality: {appointment.user.criticality}
+                        </div>
+
                       </div>
                     </div>
                   );
