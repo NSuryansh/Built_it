@@ -36,13 +36,12 @@ import { pdfDB } from "../../db/pdfDB";
 import { ToastContainer } from "react-toastify";
 
 const REASONS = [
-  "Man nahi kar raha ab",
+  "",
   "backchodi kar raha tha haahhaha",
   "Nahi aunga jao jo karna karo",
   "None of the above",
 ];
 
-// ✅ NEW: Component to display Case Status Badge
 const StatusBadge = ({ status }) => {
   const styles = {
     NEW: "bg-green-100 text-green-800 border-green-200",
@@ -280,7 +279,7 @@ const DoctorAppointment = () => {
   const handleReferralSubmit = (e) => {
     e.preventDefault();
     if (referralSub()) {
-      
+
       setReferralData({ referredTo: "", reason: "", appoinmentId: null });
       setShowReferralForm(false);
       CustomToast("Referral submitted successfully", "blue");
@@ -291,7 +290,7 @@ const DoctorAppointment = () => {
     const doc_id = localStorage.getItem("userid")
     try {
       const { appointmentId, reason, referredTo } = referralData;
-    console.log(appointmentId, " EEEE", referredTo)
+      console.log(appointmentId, " EEEE", referredTo)
 
       const response = await fetch(
         "http://localhost:3000/api/doc/createRefferalOfAppoinment",
@@ -335,7 +334,7 @@ const DoctorAppointment = () => {
       return false;
     }
   };
-const fetchDoctors = async () => {
+  const fetchDoctors = async () => {
     const doc_id = localStorage.getItem("userid");
     doc_id;
     try {
@@ -407,15 +406,15 @@ const fetchDoctors = async () => {
     if (newEntries.length) setFiles((prev) => [...newEntries, ...prev]);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
-  
+
   const openReferralForm = (appointment) => {
-  setReferralData({
-    referredTo: "",
-    reason: "",
-    appointmentId: appointment.id, 
-  });
-  setShowReferralForm(!showReferralForm);
-};
+    setReferralData({
+      referredTo: "",
+      reason: "",
+      appointmentId: appointment.id,
+    });
+    setShowReferralForm(!showReferralForm);
+  };
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -1099,9 +1098,9 @@ const fetchDoctors = async () => {
                 </h1>
               </div>
             </div>
-             
-            {appointments.length > 0 ?(
-              
+
+            {appointments.length > 0 ? (
+
               <div className="bg-[var(--custom-white)]/80 backdrop-blur-lg rounded-3xl shadow-xl border border-[var(--custom-blue-100)] overflow-y-scroll overflow-x-hidden max-h-150">
                 {appointments.map((appointment) => {
                   console.log(appointment, "Appoinemnt")
@@ -1200,6 +1199,14 @@ const fetchDoctors = async () => {
                               >
                                 Check History
                               </button>
+
+                              <button
+                                onClick={() => openReferralForm(appointment)}
+                                className=" px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
+                              >
+                                {showReferralForm ? "Close Referral" : "Create Referral"}
+                                <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
+                              </button>
                             </div>
                           ) : (
                             <div className="text-sm text-[var(--custom-gray-600)]">
@@ -1288,14 +1295,7 @@ const fetchDoctors = async () => {
                               </center>
                             </div>
                           )}
-                          <button
-                            onClick={() => openReferralForm(appointment)}
-                            className="mx-auto w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] transition-all duration-300 transform hover:scale-105 overflow-hidden"
-                          >
-                            <FileText className="w-5 h-5 group-hover:animate-pulse" />
-                            {showReferralForm ? "Close Referral" : "Create Referral"}
-                            <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
-                          </button>
+
 
                           {/* Referral Form */console.log(referralData, "AA", appointment)}
                           {showReferralForm && docs != null && Number(referralData.appointmentId) == Number(appointment.id) && (
@@ -1414,7 +1414,7 @@ const fetchDoctors = async () => {
                       </p>
 
                       <p className="text-sm text-[var(--custom-gray-600)]">
-                        Cancelled On: {new Date(app.dateTime).toLocaleString()}
+                        Cancelled On: {TimeChange(new Date(app.dateTime).toISOString()).toLocaleString()}
                       </p>
 
                       <p className="text-sm text-[var(--custom-red-500)] font-medium">
