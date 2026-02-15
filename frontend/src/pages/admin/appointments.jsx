@@ -68,6 +68,7 @@ const AdminAppointments = () => {
         },
       );
       const data = await res.json();
+      console.log(data, "data")
       const formattedCurData = data.appts.map((appt) => ({
         id: appt.id,
         doctorId: appt.doctor_id,
@@ -79,6 +80,7 @@ const AdminAppointments = () => {
         date: new Date(appt.dateTime).toISOString().split("T")[0],
         fullDate: new Date(appt.dateTime),
         status: "Pending",
+        criticality: appt.user.criticality,
       }));
       const formattedPastData = data.pastApp.map((appt) => ({
         id: appt.id,
@@ -91,6 +93,7 @@ const AdminAppointments = () => {
         date: new Date(appt.createdAt).toISOString().split("T")[0],
         fullDate: new Date(appt.createdAt),
         status: "Done",
+        criticality: appt.user.criticality,
       }));
       setAppointments([...formattedCurData, ...formattedPastData]);
       setfetched(true);

@@ -185,7 +185,7 @@ const DesktopLayout = ({
         <table className="min-w-full divide-y divide-[var(--custom-gray-100)]">
           <thead className="bg-[var(--custom-gray-50)]">
             <tr>
-              {["User", "Degree", "Therapist", "Appointments", "Actions"].map(
+              {["User", "Degree", "Therapist", "Criticality", "Appointments", "Actions"].map(
                 (header, idx) => (
                   <th
                     key={header}
@@ -230,6 +230,11 @@ const DesktopLayout = ({
                 <td className="px-6 py-5">
                   <div className="text-sm text-[var(--custom-gray-600)] max-w-md truncate">
                     {user.doctors.map((doc) => doc.name).join(", ")}
+                  </div>
+                </td>
+                <td className="px-6 py-5 whitespace-nowrap">
+                  <div className={`text-sm font-medium text-${user.criticality.toLowerCase()}-500`}>
+                    {user.criticality}
                   </div>
                 </td>
                 <td className="px-6 py-5 whitespace-nowrap">
@@ -348,6 +353,7 @@ const AdminUser = () => {
         );
         const data = await res.json();
         setUsersData(data);
+        console.log(data, "DAT")
 
         const counts = await Promise.all(
           data.map(async (user) => {
