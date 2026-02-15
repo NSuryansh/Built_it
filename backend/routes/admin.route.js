@@ -638,19 +638,18 @@ adminRouter.post("/signup", async (req, res) => {
 adminRouter.get("/getAllUsers", async (req, res) => {
   try {
     const users = await prisma.user.findMany({
-      where: {
-        email: "sse240021008@iiti.ac.in"
-      },
       include: {
         appointment: true,
-        pastApp: true // fetch appointments
-      },
+        pastApp: true
+      }
     });
-    const filteredUsers = users.filter(
-      user => user.appointment.length > 1
-    );
+
+    const filteredUsers = users
+      .filter(user => user.pastApp.length > 0) 
+      .sort((a, b) => {return (a.appointment.length + a.pastApp.length) - (b.appointment.length + b.pastApp.length);});
 
     res.json(filteredUsers);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching users" });

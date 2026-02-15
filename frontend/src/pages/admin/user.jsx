@@ -6,10 +6,10 @@ import {
   GraduationCap,
   ArrowUpDown,
   ChevronDown,
-  MessageSquare, // New Icon
-  X, // New Icon
-  Star, // New Icon
-  Calendar, // New Icon
+  MessageSquare, 
+  X, 
+  Star, 
+  Calendar,
   Loader,
 } from "lucide-react";
 import AdminNavbar from "../../components/admin/Navbar";
@@ -21,12 +21,9 @@ import { useNavigate } from "react-router-dom";
 import CustomLoader from "../../components/common/CustomLoader";
 import { format } from "date-fns";
 
-// --- Components ---
-
 const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, randomName }) => {
   if (!isOpen) return null;
 
-  // Question mapping based on your FeedbackPage.jsx
   const questionsMap = {
     question1: "How satisfied are you with the counselling session?",
     question2: "Did the counsellor listen to your concerns effectively?",
@@ -38,7 +35,6 @@ const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, randomName }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
-        {/* Header */}
         <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-[var(--custom-green-50)]">
           <div>
             <h2 className="text-xl font-bold text-[var(--custom-green-800)]">
@@ -56,7 +52,6 @@ const FeedbackModal = ({ isOpen, onClose, feedbacks, loading, randomName }) => {
           </button>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
           {loading ? (
             <div className="flex justify-center items-center h-40">
@@ -177,6 +172,7 @@ const DesktopLayout = ({
   setSortConfig,
   onViewFeedback,
 }) => {
+  console.log(filteredAndSortedUsers, "US")
   const handleSort = () => {
     setSortConfig((current) => ({
       key: "appointmentsCount",
@@ -328,8 +324,6 @@ const AdminUser = () => {
   const [fetched, setfetched] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const token = localStorage.getItem("token");
-
-  // Feedback Modal State
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [selectedUserFeedback, setSelectedUserFeedback] = useState([]);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
@@ -347,7 +341,7 @@ const AdminUser = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          "http://localhost:3000/api/doc_admin/getUsers",
+          "http://localhost:3000/api/admin/getAllUsers",
           {
             headers: { Authorization: "Bearer " + token },
           },
