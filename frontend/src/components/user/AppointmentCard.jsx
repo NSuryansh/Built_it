@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { User, Calendar, CheckCircle, ArrowRight } from "lucide-react";
-import { TimeChange } from "../common/TimeChange";
 
 const REASONS = [
-  "Man nahi kar raha ab",
-  "backchodi kar raha tha haahhaha",
-  "Nahi aunga jao jo karna karo",
-  "None of the above",
+  "Non availability due to class",
+  "Scheduled with another counselor",
+  "Out of campus",
 ];
 
 const AppointmentCard = ({
