@@ -45,11 +45,14 @@ const Landing = () => {
         <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center flex flex-col items-center">
-              <h1 className="lg:text-5xl md:text-4xl text-3xl font-bold text-[var(--custom-gray-900)] mb-6">
+              <h1 className="lg:text-6xl md:text-5xl text-4xl font-bold text-[var(--custom-gray-900)] mb-6">
+                Calm Connect
+              </h1>
+              <h1 className="lg:text-3xl md:text-2xl text-xl font-bold text-[var(--custom-gray-900)] mb-6">
                 Find Peace - Get Support - Thrive
               </h1>
               <p className="md:text-xl sm:text-md text-[var(--custom-gray-600)] mb-8 max-w-3xl mx-auto">
-                At CalmConnect we provide a safe space for your mental wellness
+                At CalmConnect we provide a safe space for your wellness
                 journey. Whether you are seeking mindfulness techniques,
                 emotional support, or expert guidance, we are here to help.
               </p>
@@ -72,9 +75,7 @@ const Landing = () => {
                 <div className="h-12 w-12 bg-[var(--custom-orange-100)] rounded-lg flex items-center justify-center mb-6">
                   <Brain className="h-6 w-6 text-[var(--custom-orange-500)]" />
                 </div>
-                <h3 className="text-xl font-semibold mb-4">
-                  Mental Health Support
-                </h3>
+                <h3 className="text-xl font-semibold mb-4">Wellness Support</h3>
                 <p className="text-[var(--custom-gray-600)]">
                   Access professional counseling and therapy services from the
                   comfort of your home.
@@ -84,9 +85,7 @@ const Landing = () => {
                 <div className="h-12 w-12 bg-[var(--custom-orange-100)] rounded-lg flex items-center justify-center mb-6">
                   <Users className="h-6 w-6 text-[var(--custom-orange-500)]" />
                 </div>
-                <h3 className="text-xl font-semibold mb-4">
-                  Community Connection
-                </h3>
+                <h3 className="text-xl font-semibold mb-4">Wellness Connect</h3>
                 <p className="text-[var(--custom-gray-600)]">
                   Join support groups and connect with others who understand
                   your journey.
