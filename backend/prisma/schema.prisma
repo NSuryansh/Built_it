@@ -23,6 +23,7 @@ model User {
   roomNo           String             @default("")
   gender           Gender
   challenge        String             @default("")
+  criticality      Criticality        @default(Green)
   credentials      Authenticator[]
   appointment      Appointments[]
   chatbot          Chatbot[]
@@ -335,6 +336,13 @@ enum CaseStatus {
   NEW
   OPEN
   CLOSED
+}
+
+enum Criticality {
+  Red
+  Orange
+  Yellow
+  Green
 }
 
 model WellnessArticle {
