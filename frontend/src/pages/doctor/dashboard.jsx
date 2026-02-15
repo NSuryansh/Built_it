@@ -69,7 +69,7 @@ const DoctorDashboard = () => {
           { headers: { Authorization: "Bearer " + token } },
         );
         const data = await response.json();
-
+        console.log(data, "Asf")
         const formattedAppointments = data.map((appt) => {
           const dateObj = new Date(appt.dateTime);
           return {
@@ -86,6 +86,7 @@ const DoctorDashboard = () => {
             }),
             type: appt.reason,
             isEmergency: appt.isEmergency,
+            criticality: appt.user.criticality,
           };
         });
 
@@ -309,6 +310,9 @@ const DoctorDashboard = () => {
                             <h3 className="font-medium text-[var(--custom-gray-900)] truncate group-hover:text-[var(--custom-blue-700)] transition-colors">
                               {appointment.patientName}
                             </h3>
+                            <span className="font-small text-[var(--custom-gray-900)] truncate group-hover:text-[var(--custom-blue-700)] transition-colors">
+                              Criticality: {appointment.criticality}
+                            </span>
                             <p className="text-sm text-[var(--custom-gray-600)]">
                               {appointment.type}
                             </p>
