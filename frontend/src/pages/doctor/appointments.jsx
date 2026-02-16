@@ -100,6 +100,7 @@ const DoctorAppointment = () => {
   });
   const [cancelledAppoinments, setCancelledAppoinments] = useState([]);
   const urlSetRef = useRef(new Set());
+  const [isLoading, setIsLoading] = useState(false);
 
   const APPOINTMENT_CATEGORIES = [
     "General Consultation",
@@ -112,12 +113,7 @@ const DoctorAppointment = () => {
     "Other",
   ];
 
-  const APPOINTMENT_CRITICALITIES = [
-    "Red",
-    "Orange",
-    "Yellow",
-    "Green"
-  ]
+  const APPOINTMENT_CRITICALITIES = ["Red", "Orange", "Yellow", "Green"];
 
   const fetchAvailableSlots = async (date) => {
     try {
@@ -364,7 +360,7 @@ const DoctorAppointment = () => {
       urlSetRef.current.forEach((u) => {
         try {
           URL.revokeObjectURL(u);
-        } catch (e) { }
+        } catch (e) {}
       });
       urlSetRef.current.clear();
     };
@@ -555,7 +551,7 @@ const DoctorAppointment = () => {
         try {
           URL.revokeObjectURL(toRemove.blobUrl);
           urlSetRef.current.delete(toRemove.blobUrl);
-        } catch (e) { }
+        } catch (e) {}
       }
       await pdfDB.pdfs.delete(id);
       setFiles((prev) => prev.filter((p) => p.id !== id));
@@ -570,7 +566,7 @@ const DoctorAppointment = () => {
 
   const handleCriticalityChange = (e) => {
     setCriticality(e.target.value);
-  }
+  };
 
   const acceptApp = async (appointment) => {
     setAcceptingId(appointment.id);
@@ -612,7 +608,7 @@ const DoctorAppointment = () => {
       formData.append("userId", appointment.user_id);
       formData.append("note", note);
       formData.append("category", category);
-      formData.append("criticality", criticality)
+      formData.append("criticality", criticality);
       formData.append("statusAction", isClosing ? "CLOSED" : "DONE");
 
       const res = await fetch("http://localhost:3000/api/doc/deleteApp", {
@@ -754,6 +750,7 @@ const DoctorAppointment = () => {
       closeCancelModal();
       return;
     }
+    setIsLoading(true);
     try {
       const res = await fetch(
         "http://localhost:3000/api/user_doc/cancelRequest",
@@ -783,6 +780,7 @@ const DoctorAppointment = () => {
       console.error(error);
       CustomToast("Failed to reject appointment", "blue");
     } finally {
+      setIsLoading(false);
       closeCancelModal();
     }
   };
@@ -907,7 +905,9 @@ const DoctorAppointment = () => {
                           )}
                           {selectedAppointment !== appointment.id && (
                             <button
-                              onClick={() => handleReschedule(appointment, true)}
+                              onClick={() =>
+                                handleReschedule(appointment, true)
+                              }
                               className="px-6 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                             >
                               Reschedule
@@ -989,7 +989,9 @@ const DoctorAppointment = () => {
                             <center>
                               <button
                                 disabled={isRescheduling}
-                                onClick={() => handleReschedule(appointment, true)}
+                                onClick={() =>
+                                  handleReschedule(appointment, true)
+                                }
                                 className="px-6 mt-4 py-2.5 bg-[var(--custom-gray-200)] text-[var(--custom-gray-800)] font-semibold rounded-full shadow-lg hover:bg-[var(--custom-gray-300)] transform hover:scale-105 transition-all duration-300"
                               >
                                 {isRescheduling ? (
@@ -1095,11 +1097,11 @@ const DoctorAppointment = () => {
                         )}
                       </div>
                       <div
-                          className={`px-6 py-2.5 text-${appointment.user.criticality?.toLowerCase()}-500 font-semibold rounded-full shadow-lg transform hover:scale-105 transition-all duration-300
+                        className={`px-6 py-2.5 text-${appointment.user.criticality?.toLowerCase()}-500 font-semibold rounded-full shadow-lg transform hover:scale-105 transition-all duration-300
                             bg-white`}
-                        >
-                          Criticality: {appointment.user.criticality}
-                        </div>
+                      >
+                        Criticality: {appointment.user.criticality}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1329,7 +1331,7 @@ const DoctorAppointment = () => {
                           {showReferralForm &&
                             docs != null &&
                             Number(referralData.appointmentId) ==
-                            Number(appointment.id) && (
+                              Number(appointment.id) && (
                               <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-4 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
                                 <form
                                   onSubmit={handleReferralSubmit}
@@ -1401,7 +1403,6 @@ const DoctorAppointment = () => {
                                 </form>
                               </div>
                             )}
-
                         </div>
                         <div
                           className={`px-6 py-2.5 text-${appointment.user.criticality?.toLowerCase()}-500 font-semibold rounded-full shadow-lg transform hover:scale-105 transition-all duration-300
@@ -1409,7 +1410,6 @@ const DoctorAppointment = () => {
                         >
                           Criticality: {appointment.user.criticality}
                         </div>
-
                       </div>
                     </div>
                   );
@@ -1553,10 +1553,11 @@ const DoctorAppointment = () => {
                 Cancel
               </button>
               <button
+                disabled={isLoading}
                 onClick={submitRejection}
-                className="px-4 py-2 rounded-md bg-[var(--custom-red-500)] text-white font-semibold"
+                className={`px-4 py-2 rounded-md bg-[var(--custom-red-500)] text-white font-semibold ${isLoading ? "!cursor-not-allowed" : ""}`}
               >
-                Submit
+                {isLoading ? <Loader /> : "Submit"}
               </button>
             </div>
           </div>

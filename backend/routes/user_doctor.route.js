@@ -200,7 +200,7 @@ userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
         doctor.name
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
         some,
-      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+      ).toDateString()}\nTime: ${new Date(some).toLocaleTimeString()}\nVenue: ${
         doctor.office_address
       }\n\nRegards\nCalm Connect`,
     );
@@ -212,7 +212,7 @@ userDocRouter.post("/book", authorizeRoles("doc", "user"), async (req, res) => {
         user.username
       } has been scheduled. The details of the appointment are given below: \n\nDate: ${new Date(
         some,
-      ).toDateString()}\nTime: ${new Date(some).toTimeString()}\nVenue: ${
+      ).toDateString()}\nTime: ${new Date(some).toLocaleTimeString()}\nVenue: ${
         doctor.office_address
       }\n\nRegards\nCalm Connect`,
     );
@@ -268,7 +268,7 @@ userDocRouter.post(
           date,
         ).toDateString()}\nTime: ${new Date(
           date,
-        ).toTimeString()}\nReason: ${reason}\n\nRegards\nCalm Connect`,
+        ).toLocaleTimeString()}\nReason: ${reason}\n\nRegards\nCalm Connect`,
       );
 
       res.json({
@@ -296,31 +296,63 @@ userDocRouter.post(
           .json({ message: "Both request id and reason are required" });
       }
 
-      const cancelled = await prisma.$transaction(async (tx) => {
-        const request = await tx.requests.findUnique({
-          where: { id: requestId },
+      const { cancelledRequest, user, doctor, request } =
+        await prisma.$transaction(async (tx) => {
+          const request = await tx.requests.findUnique({
+            where: { id: requestId },
+          });
+          if (!request) {
+            throw new Error("Request not found");
+          }
+          const user = await tx.user.findUnique({
+            where: { id: request.user_id },
+          });
+          const doctor = await tx.doctor.findUnique({
+            where: { id: request.doctor_id },
+          });
+          const cancelledRequest = await tx.cancelledRequest.create({
+            data: {
+              user_id: request.user_id,
+              doctor_id: request.doctor_id,
+              reason,
+              forDoctor: request.forDoctor,
+              appointmentTime: request.dateTime,
+              dateTime: new Date(),
+            },
+          });
+          await tx.requests.delete({
+            where: { id: requestId },
+          });
+          return { cancelledRequest, user, doctor, request };
         });
-        if (!request) {
-          throw new Error("Request not found");
-        }
-        const cancelledRequest = await tx.cancelledRequest.create({
-          data: {
-            user_id: request.user_id,
-            doctor_id: request.doctor_id,
-            reason,
-            forDoctor: request.forDoctor,
-            appointmentTime: request.dateTime,
-            dateTime: new Date(),
-          },
-        });
-        await tx.requests.delete({
-          where: { id: requestId },
-        });
-        return cancelledRequest;
-      });
+
+      await sendEmail(
+        user.email,
+        "Appointment Cancelled",
+        `Dear ${user.username}, \n\nYour appointment with ${
+          doctor.name
+        } scheduled at \n\nDate: ${new Date(
+          request.dateTime,
+        ).toDateString()}\nTime: ${new Date(request.dateTime).toLocaleTimeString()}\nVenue: ${
+          doctor.office_address
+        }\n\nhas been cancelled due to the following reason:\n\n${reason}.\n\nRegards\nCalm Connect`,
+      );
+
+      await sendEmail(
+        doctor.email,
+        "Appointment Cancelled",
+        `Dear ${doctor.name}, \n\nYour appointment with ${
+          user.username
+        } scheduled at \n\nDate: ${new Date(
+          request.dateTime,
+        ).toDateString()}\nTime: ${new Date(request.dateTime).toLocaleTimeString()}\nVenue: ${
+          doctor.office_address
+        }\n\nhas been cancelled due to the following reason:\n\n${reason}.\n\nRegards\nCalm Connect`,
+      );
+
       return res.status(200).json({
         message: "Request cancelled successfully",
-        cancelled,
+        cancelledRequest,
       });
     } catch (error) {
       console.error(error);
