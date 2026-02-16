@@ -136,7 +136,7 @@ const AppointmentList = ({ onFollowUp }) => {
                     rel="noopener noreferrer"
                     className="text-sm text-[var(--custom-blue-500)] hover:underline"
                   >
-                    View Prescription / Report
+                    View Session Notes
                   </a>
                 </div>
               )}

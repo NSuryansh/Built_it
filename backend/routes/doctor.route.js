@@ -1087,6 +1087,7 @@ docRouter.post(
             category,
             createdAt: dateTime,
             caseStatus: finalStatus,
+            pdfLink: folder.webViewLink,
             isEmergency: currentApp?.isEmergency || false,
           },
         });
