@@ -888,6 +888,7 @@ docRouter.post("/create-referral", authorizeRoles("doc"), async (req, res) => {
         referred_by: referred_by_doc.id,
         username: user.username,
         reason,
+        isShow: true,
       },
     });
 
@@ -929,7 +930,7 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   }
   try {
     const data = await prisma.referrals.findMany({
-      where: { doctor_id: Number(doctor_id) },
+      where: { doctor_id: Number(doctor_id), isShow: true },
       select: {
         id: true,
         user_id: true,
@@ -954,7 +955,30 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
     });
   }
 });
-// In routes/doctor.route.js
+
+docRouter.post("/update-referral", authorizeRoles("doc"), async (req, res) => {
+  const { doctor_id, referral_id } = req.query;
+
+  if (doctor_id != req.user.userId || !referral_id) {
+    return res.status(403).json({ error: "Invalid Access" });
+  }
+  try {
+    await prisma.referrals.update({
+      where: { id: Number(referral_id) },
+      data: { isShow: false },
+    });
+
+    res.status(200).json({
+      message: "Referral updated succesfully",
+    });
+  } catch (error) {
+    console.error("Error updating referral: ", error);
+    res.status(500).json({
+      message: "Failed to update referral",
+      error: error.message,
+    });
+  }
+});
 
 docRouter.post(
   "/deleteApp",

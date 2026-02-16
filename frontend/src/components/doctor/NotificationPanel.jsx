@@ -75,23 +75,23 @@ const DoctorNotificationPanel = () => {
     getUsers();
   }, [chats]);
 
+  const getReferrals = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/doc/get-referrals?doctor_id=${docId}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        },
+      );
+      if (!response.ok) throw new Error("Failed to fetch referrals");
+      const data = await response.json();
+      setreferrals(data.referrals);
+    } catch (error) {
+      console.error("Error fetching referrals:", error);
+      CustomToast("Error fetching referrals", "blue");
+    }
+  };
   useEffect(() => {
-    const getReferrals = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/doc/get-referrals?doctor_id=${docId}`,
-          {
-            headers: { Authorization: "Bearer " + token },
-          },
-        );
-        if (!response.ok) throw new Error("Failed to fetch referrals");
-        const data = await response.json();
-        setreferrals(data.referrals);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        CustomToast("Error fetching users", "blue");
-      }
-    };
     getReferrals();
   }, []);
 
@@ -110,7 +110,21 @@ const DoctorNotificationPanel = () => {
   };
 
   const handleAccept = async (notif) => {
-    navigate(`/doctor/peer?userId=${notif.user_id}&username=${notif.username}`);
+    try {
+      console.log(notif.id);
+      const response = await fetch(
+        `http://localhost:3000/api/doc/update-referral?doctor_id=${docId}&referral_id=${notif.id}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+          method: "POST",
+        },
+      );
+      if (!response.ok) throw new Error("Failed to update referrals");
+      getReferrals();
+    } catch (error) {
+      console.error("Error updating referral:", error);
+      CustomToast("Error updating referral", "blue");
+    }
   };
 
   return (
@@ -135,18 +149,12 @@ const DoctorNotificationPanel = () => {
                   {referral.reason}
                 </p>
                 <div className="flex gap-2">
-                  {referral.inChat === "Yes" ? (
-                    <div className="text-[var(--custom-green-600)] hover:bg-[var(--custom-green-100)] px-2 p-1 rounded-full transition">
-                      Chat
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => handleAccept(referral)}
-                      className="text-[var(--custom-red-600)] hover:bg-[var(--custom-red-100)] px-2 p-1 rounded-full transition"
-                    >
-                      Chat
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleAccept(referral)}
+                    className="text-[var(--custom-green-600)] hover:bg-[var(--custom-green-100)] px-2 p-1 rounded-full transition"
+                  >
+                    Ok
+                  </button>
                 </div>
               </div>
             </div>
