@@ -144,11 +144,11 @@ const Stress = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative z-10">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4">
-              Your Mental Wellness Journey
+              Your Wellness Journey
             </h1>
             <p className="text-md md:text-xl text-center text-[var(--custom-red-100)] max-w-3xl mx-auto">
               Discover resources, techniques, and exercises to help manage
-              stress and improve your mental well-being
+              stress and improve your well-being
             </p>
           </div>
         </div>

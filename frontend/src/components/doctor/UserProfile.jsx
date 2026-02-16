@@ -21,6 +21,7 @@ const UserProfile = () => {
   const [fetched, setfetched] = useState(null);
   const [roomNumber, setRoomNumber] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [docs, setDocs] = useState(null);
   const [showReferralForm, setShowReferralForm] = useState(false);
@@ -96,17 +97,11 @@ const UserProfile = () => {
     }
   };
 
-  const handleReferralSubmit = (e) => {
+  const referralSub = async (e) => {
     e.preventDefault();
-    if (referralSub()) {
-      setShowReferralForm(false);
-      setReferralData({ referredTo: "", reason: "" });
-      // CustomToast("Referral submitted successfully", "blue");
-    }
-  };
-
-  const referralSub = async () => {
     const doc_email = localStorage.getItem("user_email");
+    setIsLoading(true);
+    console.log("here");
     try {
       const response = await fetch(
         "http://localhost:3000/api/doc/create-referral",
@@ -148,6 +143,10 @@ const UserProfile = () => {
       console.error("Error adding event:", err);
       CustomToast("Internal error while adding referral", "blue");
       return false;
+    } finally {
+      setIsLoading(false);
+      setShowReferralForm(false);
+      setReferralData({ referredTo: "", reason: "" });
     }
   };
 
@@ -288,7 +287,7 @@ const UserProfile = () => {
           {/* Referral Form */}
           {showReferralForm && docs != null && (
             <div className="mt-8 bg-[var(--custom-white)]/90 backdrop-blur-lg p-4 rounded-2xl shadow-2xl border border-[var(--custom-blue-200)]/50 transition-all duration-500 ease-in-out transform animate-slide-in">
-              <form onSubmit={handleReferralSubmit} className="space-y-6">
+              <form onSubmit={referralSub} className="space-y-6">
                 <div className="space-y-6">
                   {/* Referred By */}
                   <div className="relative">

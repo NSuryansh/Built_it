@@ -214,7 +214,7 @@ const LoadingPage = () => {
       type: "Therapist",
       title: "Join as Therapist",
       description:
-        "Provide professional support, manage patient care, and contribute to mental wellness",
+        "Provide professional support, manage patient care, and contribute to wellness",
       icon: Stethoscope,
       color: "from-blue-400 to-blue-500",
       hoverColor: "hover:from-blue-500 hover:to-blue-600",
@@ -454,7 +454,7 @@ const LoadingPage = () => {
             >
               {userFound === false
                 ? "Let's get you set up with a new account"
-                : "Creating a safe space for your mental wellness journey"}
+                : "Creating a safe space for your wellness journey"}
             </motion.p>
           </motion.div>
         ) : (
@@ -485,7 +485,7 @@ const LoadingPage = () => {
               </h1>
 
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                Choose how you'd like to join our mental wellness community.
+                Choose how you'd like to join our wellness community.
                 Each role offers unique features tailored to your needs.
               </p>
             </motion.div>

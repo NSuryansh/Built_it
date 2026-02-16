@@ -662,7 +662,7 @@ export const articles = [
     id: 2,
     title: "The Science Behind Stress and Mental Health",
     description:
-      "Explore the biological mechanisms of stress and its impact on mental well-being.",
+      "Explore the biological mechanisms of stress and its impact on well-being.",
     url: "https://www.health.harvard.edu/staying-healthy/understanding-the-stress-response",
     readTime: "8 min read",
     source: "Harvard Health",

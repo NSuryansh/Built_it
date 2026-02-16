@@ -87,7 +87,7 @@ const FeedbackPage = () => {
     },
     {
       id: "q5",
-      text: "Is there anything you feel could be improved for future sessions?",
+      text: "Suggestions (if any)",
       type: "text",
     },
   ];

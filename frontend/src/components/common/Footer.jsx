@@ -18,7 +18,7 @@ const Footer = ({ color }) => {
               Calm Connect
             </h2>
             <p className="mt-2 text-sm text-[var(--custom-gray-500)]">
-              A sanctuary for students at IIT Indore, promoting mental wellness,
+              A sanctuary for students at IIT Indore, promoting wellness,
               balance, and growth.
             </p>
           </div>
@@ -28,10 +28,6 @@ const Footer = ({ color }) => {
               Contact Info
             </h3>
             <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
-                <Phone size={18} />
-                <span>0731-660-5550</span>
-              </div>
               <div className="flex items-center space-x-2 text-sm text-[var(--custom-gray-500)]">
                 <Mail size={18} />
                 <a

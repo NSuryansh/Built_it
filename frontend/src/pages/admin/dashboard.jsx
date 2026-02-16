@@ -67,7 +67,7 @@ const AdminDashboard = () => {
       if (response.ok) {
         const result = {};
         data.forEach((app) => {
-          const doc = app.doc.name.split(" ")[0];
+          const doc = app.doc.name.split(" ")[1];
           if (!result[doc]) {
             result[doc] = {
               UG: 0,

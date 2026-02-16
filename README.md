@@ -32,7 +32,7 @@ A comprehensive Mental Health Wellness web application that connects users with 
 ## Machine Learning Integration
 
 - **Chatbot Support**: AI-powered chatbot that helps users when doctors are unavailable.
-- **Happiness Score**: Automatically calculated from user interactions to assess mental wellness trends over time.
+- **Happiness Score**: Automatically calculated from user interactions to assess wellness trends over time.
 
 ---
 

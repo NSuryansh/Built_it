@@ -49,7 +49,7 @@ const Landing = () => {
                 Calm Connect
               </h1>
               <h1 className="lg:text-3xl md:text-2xl text-xl font-bold text-[var(--custom-gray-900)] mb-6">
-                Find Peace - Get Support - Thrive
+                Find Help - Get Support - Thrive
               </h1>
               <p className="md:text-xl sm:text-md text-[var(--custom-gray-600)] mb-8 max-w-3xl mx-auto">
                 At CalmConnect we provide a safe space for your wellness
@@ -77,8 +77,7 @@ const Landing = () => {
                 </div>
                 <h3 className="text-xl font-semibold mb-4">Wellness Support</h3>
                 <p className="text-[var(--custom-gray-600)]">
-                  Access professional counseling and therapy services from the
-                  comfort of your home.
+                  Access professional counseling and therapy services.
                 </p>
               </div>
               <div className="bg-[var(--custom-white)] p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
@@ -87,8 +86,7 @@ const Landing = () => {
                 </div>
                 <h3 className="text-xl font-semibold mb-4">Wellness Connect</h3>
                 <p className="text-[var(--custom-gray-600)]">
-                  Join support groups and connect with others who understand
-                  your journey.
+                  Round the clock accessibility for your well-being.
                 </p>
               </div>
               <div className="bg-[var(--custom-white)] p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
@@ -100,7 +98,7 @@ const Landing = () => {
                 </h3>
                 <p className="text-[var(--custom-gray-600)]">
                   Access guided meditations, exercises, and tools for your
-                  mental wellness.
+                  wellness.
                 </p>
               </div>
             </div>
@@ -120,7 +118,7 @@ const Landing = () => {
                 </p>
                 <Link to="/user/book">
                   <button className="bg-[var(--custom-white)] text-[var(--custom-orange-500)] px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[var(--custom-orange-50)] transition-colors duration-300">
-                    Book Free Consultation
+                    Consult Now!
                   </button>
                 </Link>
               </div>
