@@ -798,7 +798,7 @@ docRouter.post("/create-referral", authorizeRoles("doc"), async (req, res) => {
 
     const userFolder_referred_to = await getOrCreateFolder(
       drive_referred_to,
-      String(user.rollNo) + "-" + user.username.split[" "][0],
+      String(user.rollNo) + "-" + user.username.split(" ")[0],
       referred_to_doc.driveFolderId,
     );
 
@@ -930,6 +930,16 @@ docRouter.get("/get-referrals", authorizeRoles("doc"), async (req, res) => {
   try {
     const data = await prisma.referrals.findMany({
       where: { doctor_id: Number(doctor_id) },
+      select: {
+        id: true,
+        user_id: true,
+        username: true,
+        doctor_id: true,
+        referred_by: true,
+        reason: true,
+        isShow: true,
+        referredByDoctor: { select: { name: true } },
+      },
     });
 
     res.status(200).json({

@@ -7,6 +7,7 @@ import {
   PhoneCallIcon,
   FileText,
   User,
+  Loader,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CustomToast from "../common/CustomToast";
@@ -162,9 +163,6 @@ const UserProfile = () => {
             <h2 className="text-2xl font-bold text-[var(--custom-gray-900)]">
               {user.username}
             </h2>
-            <p className="text-sm text-[var(--custom-gray-500)] mt-1">
-              Client ID: {user.id}
-            </p>
           </div>
           <div className="">
             {isEditing ? (
@@ -276,12 +274,18 @@ const UserProfile = () => {
         <div className="sm:px-6 md:px-8 lg:px-[60px] pt-6">
           {/* Referral Button */}
           <button
+            disabled={isLoading}
             onClick={() => setShowReferralForm(!showReferralForm)}
-            className="ml-auto w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] transition-all duration-300 transform hover:scale-105 overflow-hidden"
+            className={`ml-auto ${isLoading ? "!cursor-not-allowed" : ""} w-fit flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] rounded-full font-semibold text-sm shadow-md hover:shadow-xl hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] transition-all duration-300 transform hover:scale-105 overflow-hidden`}
           >
-            <FileText className="w-5 h-5 group-hover:animate-pulse" />
-            {showReferralForm ? "Close" : "Transfer Client"}
-            <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <FileText className="w-5 h-5 group-hover:animate-pulse" />
+                {showReferralForm ? "Close" : "Transfer Client"}
+              </>
+            )}
           </button>
 
           {/* Referral Form */}
@@ -343,11 +347,15 @@ const UserProfile = () => {
 
                 {/* Submit Button */}
                 <button
+                  disabled={isLoading}
                   type="submit"
-                  className="relative w-full bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] py-3 px-6 rounded-lg font-semibold  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] group"
+                  className={`relative w-full ${isLoading ? "!cursor-not-allowed" : ""} bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-blue-700)] text-[var(--custom-white)] py-3 px-6 rounded-lg font-semibold  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:from-[var(--custom-blue-600)] hover:to-[var(--custom-blue-800)] group`}
                 >
-                  <span className="relative ">Done</span>
-                  <div className="absolute inset-0 bg-[var(--custom-blue-600)] opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-lg"></div>
+                  {isLoading ? (
+                    <Loader />
+                  ) : (
+                    <span className="relative ">Done</span>
+                  )}
                 </button>
               </form>
             </div>

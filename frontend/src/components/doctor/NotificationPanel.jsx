@@ -131,7 +131,7 @@ const DoctorNotificationPanel = () => {
                   {referral.username}
                 </p>
                 <p className="text-sm text-[var(--custom-gray-600)]">
-                  {referral.referred_by} has referred them beacuse of{" "}
+                  {referral.referredByDoctor.name} has referred them beacuse of{" "}
                   {referral.reason}
                 </p>
                 <div className="flex gap-2">
