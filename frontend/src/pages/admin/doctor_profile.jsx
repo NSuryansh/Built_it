@@ -524,7 +524,7 @@ const AdminDoctorProfile = () => {
                     className="grid grid-cols-1 gap-4"
                   >
                     <input
-                      placeholder="Patient Roll No."
+                      placeholder="Client Roll No."
                       className="w-full p-3 bg-green-50 border border-green-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       required
                     />

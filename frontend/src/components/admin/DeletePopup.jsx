@@ -69,7 +69,7 @@ const DeletePopup = ({
                 Deactivate Therapist
               </h3>
               <p className="text-xs text-red-600 font-medium uppercase tracking-wider">
-                Action Required: Patient Transfer
+                Action Required: Client Transfer
               </p>
             </div>
           </div>
@@ -86,14 +86,14 @@ const DeletePopup = ({
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
             <p className="text-sm text-slate-600 leading-relaxed">
               {text ||
-                "To deactivate this doctor, you must re-assign their current active patients to ensure continuous care."}
+                "To deactivate this doctor, you must re-assign their current active clients to ensure continuous care."}
             </p>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center gap-2 mb-4 text-slate-700 font-semibold text-sm border-b pb-2">
               <Users className="w-4 h-4" />
-              <h4>Patient Reassignment List ({patients.length})</h4>
+              <h4>Client Reassignment List ({patients.length})</h4>
             </div>
 
             {patients.length > 0 ? (
@@ -135,7 +135,7 @@ const DeletePopup = ({
             ) : (
               <div className="text-center py-8">
                 <p className="text-slate-400 text-sm italic">
-                  No patients currently assigned to this doctor.
+                  No clients currently assigned to this doctor.
                 </p>
               </div>
             )}

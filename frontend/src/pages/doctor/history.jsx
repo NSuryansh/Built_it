@@ -103,7 +103,7 @@ const History = () => {
                   <Users className="h-5 w-5 sm:h-6 sm:w-6 text-[var(--custom-blue-600)]" />
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--custom-blue-500)] to-[var(--custom-purple-500)]">
-                  Patient Directory
+                  Client Directory
                 </h2>
               </div>
               <div className="relative w-full sm:w-64 md:w-96">
@@ -112,7 +112,7 @@ const History = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Search patients by name, email or category..."
+                  placeholder="Search clients by name, email or category..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-[var(--custom-gray-200)] focus:outline-none focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-transparent bg-[var(--custom-white)]/50 backdrop-black transition-all duration-200 placeholder-[var(--custom-gray-400)] text-sm sm:text-base"
@@ -125,7 +125,7 @@ const History = () => {
             {filteredUsers.length === 0 ? (
               <div className="text-center py-12 bg-[var(--custom-gray-50)] rounded-xl">
                 <p className="text-[var(--custom-gray-500)]">
-                  No patients match your search criteria
+                  No clients match your search criteria
                 </p>
               </div>
             ) : (

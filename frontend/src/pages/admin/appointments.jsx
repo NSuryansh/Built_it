@@ -375,7 +375,7 @@ const AdminAppointments = () => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--custom-gray-400)] h-5 w-5" />
                 <input
                   type="text"
-                  placeholder="Search by patient name..."
+                  placeholder="Search by client name..."
                   value={searchUser}
                   onChange={(e) => setSearchUser(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--custom-gray-200)] focus:outline-none focus:ring-2 focus:ring-[var(--custom-blue-400)] shadow-md hover:shadow-lg transition-all duration-300 bg-[var(--custom-white)]"
@@ -405,7 +405,7 @@ const AdminAppointments = () => {
                       <div className="flex items-center gap-3 mb-3">
                         <User className="h-5 w-5 text-[var(--custom-blue-600)]" />
                         <h3 className="font-semibold text-[var(--custom-gray-900)]">
-                          Patient Details
+                          Client Details
                         </h3>
                       </div>
                       <p className="text-lg font-medium text-[var(--custom-blue-900)] mb-1">

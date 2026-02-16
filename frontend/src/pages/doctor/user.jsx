@@ -54,7 +54,7 @@ const UserDetail = () => {
           className="flex items-center text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-800)] transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
-          <span>Back to Patient List</span>
+          <span>Back to Client List</span>
         </button>
 
         <div className="space-y-6">

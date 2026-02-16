@@ -163,7 +163,7 @@ const UserProfile = () => {
               {user.username}
             </h2>
             <p className="text-sm text-[var(--custom-gray-500)] mt-1">
-              Patient ID: {user.id}
+              Client ID: {user.id}
             </p>
           </div>
           <div className="">

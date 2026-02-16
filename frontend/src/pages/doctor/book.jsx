@@ -66,14 +66,14 @@ const DoctorBook = ({ onBookAppointment }) => {
         <div className="flex items-center gap-2">
           <UserCircle className="w-6 h-6 text-[var(--custom-blue-600)]" />
           <h2 className="text-2xl font-semibold text-[var(--custom-gray-800)]">
-            Patients
+            Clients
           </h2>
         </div>
         <div className="relative">
           <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--custom-gray-400)]" />
           <input
             type="text"
-            placeholder="Search patients..."
+            placeholder="Search clients..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 pr-4 py-2 border border-[var(--custom-gray-300)] rounded-lg focus:ring-2 focus:ring-[var(--custom-blue-500)] focus:border-[var(--custom-blue-500)]"
@@ -158,7 +158,7 @@ function AppointmentForm({ user, onBack }) {
         className="mb-4 text-[var(--custom-blue-600)] hover:text-[var(--custom-blue-700)] flex items-center gap-2"
       >
         <ArrowLeft className="w-5 h-5" />
-        Back to Patients
+        Back to Clients
       </button>
 
       <div className="flex items-center gap-2 mb-6">
@@ -170,7 +170,7 @@ function AppointmentForm({ user, onBack }) {
 
       <div className="mb-6 p-4 bg-[var(--custom-blue-50)] rounded-lg">
         <h3 className="font-medium text-[var(--custom-gray-900)]">
-          Patient Information
+          Client Information
         </h3>
         <p className="text-sm text-[var(--custom-gray-600)]">{user.name}</p>
         <p className="text-sm text-[var(--custom-gray-600)]">{user.email}</p>

@@ -214,7 +214,7 @@ const LoadingPage = () => {
       type: "Therapist",
       title: "Join as Therapist",
       description:
-        "Provide professional support, manage patient care, and contribute to wellness",
+        "Provide professional support, manage client care, and contribute to wellness",
       icon: Stethoscope,
       color: "from-blue-400 to-blue-500",
       hoverColor: "hover:from-blue-500 hover:to-blue-600",

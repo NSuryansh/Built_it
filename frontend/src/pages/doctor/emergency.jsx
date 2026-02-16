@@ -94,7 +94,7 @@ const DoctorEmergency = () => {
     e.preventDefault();
 
     if (!selectedUser) {
-      CustomToast("Please select a patient from the search bar", "blue");
+      CustomToast("Please select a client from the search bar", "blue");
       return;
     }
     if (!dateTime) {
@@ -273,7 +273,7 @@ const DoctorEmergency = () => {
                 {/* Selected User Display */}
                 <div className="mb-8">
                   <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                    Selected Patient
+                    Selected Client
                   </label>
                   {selectedUser ? (
                     <div className="flex items-center gap-5 p-5 bg-gradient-to-r from-blue-50 to-white border border-blue-200 rounded-2xl relative group">
@@ -303,7 +303,7 @@ const DoctorEmergency = () => {
                   ) : (
                     <div className="p-8 border-2 border-dashed border-blue-200 rounded-2xl flex flex-col items-center justify-center text-blue-400 bg-blue-50/50">
                       <AlertTriangle className="w-10 h-10 mb-2 opacity-50" />
-                      <p className="font-medium">No patient selected</p>
+                      <p className="font-medium">No client selected</p>
                       <p className="text-xs opacity-70">
                         Use the search panel on the left
                       </p>
