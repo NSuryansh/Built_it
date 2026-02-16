@@ -81,7 +81,11 @@ const DoctorsList = () => {
           CustomToast("Therapist deactivated successfully", "green");
         }
       } else {
-        CustomToast("Error updating Therapist", "green");
+        if (
+          resp.error == "Counsellor has existing appointment or client history."
+        ) {
+          CustomToast(resp.error, "green");
+        } else CustomToast("Error updating Therapist", "green");
       }
       setToggleDocPopupOpen(false);
     } catch (error) {
@@ -203,14 +207,20 @@ const DoctorsList = () => {
               {filteredDoctors.map((doctor) => (
                 <tr
                   key={doctor.id}
-                  className="hover:bg-[var(--custom-green-50)]/50 transition-colors duration-300"
+                  className={`${doctor.isInactive ? "bg-[var(--custom-gray-200)]" : "hover:bg-[var(--custom-green-50)]/50"} transition-colors duration-300`}
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--custom-green-200)] to-[var(--custom-teal-300)] flex items-center justify-center">
+                      <div
+                        className={`w-12 h-12 rounded-full bg-gradient-to-br from-[var(--custom-${doctor.isInactive ? "gray" : "green"}-200)] to-[var(--custom-${doctor.isInactive ? "gray" : "teal"}-300)] flex items-center justify-center`}
+                      >
                         <Stethoscope
-                          size={20}
-                          className="text-[var(--custom-green-700)]"
+                          size={24}
+                          className={
+                            doctor.isInactive
+                              ? `text-[var(--custom-gray-700)]`
+                              : `text-[var(--custom-green-700)]`
+                          }
                         />
                       </div>
                       <div>
@@ -223,13 +233,19 @@ const DoctorsList = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex">
-                      <span className="px-1 py-1 rounded-full text-sm font-medium text-[var(--custom-green-700)]">
+                      <span
+                        className={`pr-2 py-1 rounded-full text-sm font-medium ${doctor.isInactive ? "text-[var(--custom-gray-700)]" : "text-[var(--custom-green-700)]"}`}
+                      >
                         {parseFloat(doctor.avgRating).toPrecision(2)}
                       </span>
                       <div>
                         <StarIcon
-                          fill="#ff7700"
-                          className="text-[var(--custom-orange-500)]"
+                          fill={doctor.isInactive ? "#6a7282" : "#ff7700"}
+                          className={
+                            doctor.isInactive
+                              ? `text-[var(--custom-gray-500)]`
+                              : `text-[var(--custom-orange-500)]`
+                          }
                         />
                       </div>
                     </div>
@@ -243,19 +259,16 @@ const DoctorsList = () => {
                         onClick={() => handleToggleDocPopup(doctor, true)}
                         className={`p-2 ${
                           doctor.isInactive
-                            ? "text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)]"
+                            ? "text-[var(--custom-gray-600)] hover:text-[var(--custom-gray-700)]"
                             : "text-[var(--custom-red-600)] hover:text-[var(--custom-red-700)]"
                         } transition-colors rounded-full hover:bg-[var(--custom-red-50)] group relative`}
                         title="Set Therapist Inactive"
                       >
-                        {doctor.isInactive ? (
-                          <UserPlus size={18} />
-                        ) : (
-                          <UserMinus size={18} />
-                        )}
+                        <UserMinus size={18} />
+
                         <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-[var(--custom-gray-800)] text-[var(--custom-white)] text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           {doctor.isInactive ? (
-                            <div>Set Active</div>
+                            <div>Inactive</div>
                           ) : (
                             <div>Set Inactive</div>
                           )}
@@ -263,7 +276,7 @@ const DoctorsList = () => {
                       </button>
                       <Link
                         to={`/admin/doctor_profile?id=${doctor.id}`}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--custom-green-100)] text-[var(--custom-green-700)] hover:bg-[var(--custom-green-200)] transition-colors duration-300"
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${doctor.isInactive ? "bg-[var(--custom-gray-100)] text-[var(--custom-gray-700)] hover:bg-[var(--custom-gray-200)]" : "bg-[var(--custom-green-100)] text-[var(--custom-green-700)] hover:bg-[var(--custom-green-200)]"} transition-colors duration-300`}
                         title="View Profile"
                       >
                         <span className="text-center">View Profile</span>
@@ -285,10 +298,16 @@ const DoctorsList = () => {
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--custom-green-200)] to-[var(--custom-teal-300)] flex items-center justify-center">
+                  <div
+                    className={`w-12 h-12 rounded-full bg-gradient-to-br from-[var(--custom-${doctor.isInactive ? "gray" : "green"}-200)] to-[var(--custom-${doctor.isInactive ? "gray" : "teal"}-300)] flex items-center justify-center`}
+                  >
                     <Stethoscope
                       size={24}
-                      className="text-[var(--custom-green-700)]"
+                      className={
+                        doctor.isInactive
+                          ? `text-[var(--custom-gray-700)]`
+                          : `text-[var(--custom-green-700)]`
+                      }
                     />
                   </div>
                   <div>
@@ -296,13 +315,19 @@ const DoctorsList = () => {
                       {doctor.name}
                     </h3>
                     <div className="flex">
-                      <span className="pr-2 py-1 rounded-full text-sm font-medium text-[var(--custom-green-700)]">
+                      <span
+                        className={`pr-2 py-1 rounded-full text-sm font-medium ${doctor.isInactive ? "text-[var(--custom-gray-700)]" : "text-[var(--custom-green-700)]"}`}
+                      >
                         {parseFloat(doctor.avgRating).toPrecision(2)}
                       </span>
                       <div>
                         <StarIcon
-                          fill="#ff7700"
-                          className="text-[var(--custom-orange-500)]"
+                          fill={doctor.isInactive ? "#6a7282" : "#ff7700"}
+                          className={
+                            doctor.isInactive
+                              ? `text-[var(--custom-gray-500)]`
+                              : `text-[var(--custom-orange-500)]`
+                          }
                         />
                       </div>
                     </div>
@@ -313,27 +338,30 @@ const DoctorsList = () => {
                     onClick={() => handleToggleDocPopup(doctor, true)}
                     className={`p-2 ${
                       doctor.isInactive
-                        ? "text-[var(--custom-green-600)] hover:text-[var(--custom-green-700)]"
+                        ? "text-[var(--custom-gray-600)] hover:text-[var(--custom-gray-700)]"
                         : "text-[var(--custom-red-600)] hover:text-[var(--custom-red-700)]"
                     } transition-colors rounded-full hover:bg-custom-red-50`}
                   >
-                    {doctor.isInactive ? (
-                      <UserPlus size={20} />
-                    ) : (
-                      <UserMinus size={20} />
-                    )}
+                    <UserMinus size={20} />
                   </button>
                 </div>
               </div>
 
               <div className="space-y-2 pt-4 border-t border-[var(--custom-green-100)]">
                 <div className="flex items-center gap-2 text-[var(--custom-gray-600)]">
-                  <Mail size={16} className="text-[var(--custom-green-600)]" />
+                  <Mail
+                    size={16}
+                    className={
+                      doctor.isInactive
+                        ? `text-[var(--custom-gray-500)]`
+                        : `text-[var(--custom-green-500)]`
+                    }
+                  />
                   <span>{doctor.email}</span>
                 </div>
                 <Link
                   to={`/admin/doctor_profile?id=${doctor.id}`}
-                  className="block w-full text-center py-3 mt-4 rounded-xl bg-[var(--custom-green-100)] text-[var(--custom-green-700)] font-semibold hover:bg-[var(--custom-green-200)] transition-all duration-300"
+                  className={`block w-full text-center py-3 mt-4 rounded-xl ${doctor.isInactive ? "bg-[var(--custom-gray-100)] text-[var(--custom-gray-700)] hover:bg-[var(--custom-gray-200)]" : "bg-[var(--custom-green-100)] text-[var(--custom-green-700)] hover:bg-[var(--custom-green-200)]"} font-semibold transition-all duration-300`}
                 >
                   View Full Profile
                 </Link>
@@ -343,7 +371,7 @@ const DoctorsList = () => {
         </div>
       </div>
 
-      {toggleDocPopupOpen && (
+      {toggleDocPopupOpen && !selectedDoc.isInactive && (
         <DeletePopup
           doc={selectedDoc}
           id={selectedDoc.id}
@@ -353,7 +381,7 @@ const DoctorsList = () => {
           text={
             selectedDoc.isInactive
               ? "Are you sure you want to activate the Therapist?"
-              : "Are you sure you want to deactivate the Therapist?"
+              : "Are you sure you want to deactivate the Therapist?\nThis action can't be undone."
           }
         />
       )}

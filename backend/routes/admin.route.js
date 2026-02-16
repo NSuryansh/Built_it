@@ -330,7 +330,27 @@ adminRouter.post("/toggleDoc", authorizeRoles("admin"), async (req, res) => {
     if (!doctorId || isNaN(doctorId)) {
       return res
         .status(404)
-        .json({ error: "Doctor not found OR Invalid Doctor ID" });
+        .json({ error: "Therapist not found OR Invalid Therapist ID" });
+    }
+
+    const pastAppointments = await prisma.pastAppointments.findMany({
+      where: { doc_id: doctorId },
+    });
+    const upcomingAppointments = await prisma.appointments.findMany({
+      where: { doctor_id: doctorId },
+    });
+    const incomingAppointments = await prisma.requests.findMany({
+      where: { doctor_id: doctorId },
+    });
+
+    if (
+      pastAppointments.length > 0 ||
+      upcomingAppointments.length > 0 ||
+      incomingAppointments.length > 0
+    ) {
+      return res
+        .status(404)
+        .json({ error: "Counsellor has existing appointment or client history." });
     }
 
     await prisma.doctor.update({
