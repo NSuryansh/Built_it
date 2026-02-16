@@ -798,7 +798,7 @@ docRouter.post("/create-referral", authorizeRoles("doc"), async (req, res) => {
 
     const userFolder_referred_to = await getOrCreateFolder(
       drive_referred_to,
-      user.rollNo,
+      String(user.rollNo) + "-" + user.username.split[" "][0],
       referred_to_doc.driveFolderId,
     );
 
@@ -998,7 +998,7 @@ docRouter.post(
 
       const userFolder = await getOrCreateFolder(
         drive,
-        user.rollNo,
+        String(user.rollNo) + "-" + user.username.split(" ")[0],
         doc.driveFolderId,
       );
 

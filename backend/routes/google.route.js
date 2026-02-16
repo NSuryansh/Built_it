@@ -33,19 +33,28 @@ googleRouter.get("/callback", async (req, res) => {
       auth: oauth2Client,
     });
 
-    // Create dedicated folder
-    const folder = await drive.files.create({
-      requestBody: {
-        name: "IITI Counselling Notes",
-        mimeType: "application/vnd.google-apps.folder",
-      },
+    const doctor = await prisma.doctor.findUnique({
+      where: { id: parseInt(state) },
     });
+
+    let folder;
+
+    if (!doctor.driveFolderId) {
+      folder = await drive.files.create({
+        requestBody: {
+          name: "IITI Counselling Notes",
+          mimeType: "application/vnd.google-apps.folder",
+        },
+      });
+    }
 
     await prisma.doctor.update({
       where: { id: parseInt(state) },
       data: {
         googleRefreshToken: encrypt(tokens.refresh_token),
-        driveFolderId: folder.data.id,
+        driveFolderId: doctor.driveFolderId
+          ? doctor.driveFolderId
+          : folder.data.id,
         googleDriveLinked: true,
       },
     });
